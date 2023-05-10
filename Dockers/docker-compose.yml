@@ -39,18 +39,18 @@ services:
       - transcendence
     restart: always
 
-#  frontend:
-#    build: ./Frontend
-#    container_name: React
-#    ports:
-#      - "3000:3000"
-#    volumes:
-#      - ../Frontend:/app
-#    env_file:
-#      - .env
-#    networks:
-#      - transcendence
-#    restart: always
+  frontend:
+    build: ./Frontend
+    container_name: React
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend_vol:/app
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
 
 networks:
   transcendence:
