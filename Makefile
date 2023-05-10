@@ -1,7 +1,7 @@
 DOCKER_COMPOSE = docker compose
-DOCKER_COMPOSE_FILE = ./docker-compose.yml
+DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : setup stop start re log clean build
+.phony : setup start stop re clean build log reback refront redata
 
 all : setup start
 
@@ -10,7 +10,7 @@ setup :
 
 start : build
 	@echo "----Starting all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up #-d
 	@echo "----All Docker started-----"
 
 stop :
@@ -21,18 +21,12 @@ stop :
 
 build :
 	@echo "----Building all Docker----"
-	mkdir -p /home/transcendence/Backend
-	mkdir -p /home/transcendence/Frontend
-	mkdir -p /home/transcendence/Database
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
 	@echo "----All Docker built-------"
 
 clean : stop
 	@echo "----Cleaning all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down --rmi all --remove-orphans
-	rm -rf /home/transcendence/Backend
-	rm -rf /home/transcendence/Frontend
-	rm -rf /home/transcendence/Database
 	@echo "----All Docker cleaned-----"
 
 log :
