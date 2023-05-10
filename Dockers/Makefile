@@ -1,7 +1,7 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./docker-compose.yml
 
-.phony : setup stop start re log clean build
+.phony : setup start stop re clean build log reback refront redata
 
 all : setup start
 
