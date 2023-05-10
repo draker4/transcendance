@@ -17,4 +17,4 @@ RUN npm install -g create-react-app
 # Entrypoint
 COPY ./tools/start_react.sh /
 RUN chmod +x start_react.sh
-ENTRYPOINT ["start_react.sh"]
+ENTRYPOINT ["./start_react.sh"]

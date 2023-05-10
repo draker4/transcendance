@@ -1,12 +1,14 @@
 #!/bin/bash
 
 echo "Begin NestJS configuration"
-mkdir -p 
+
+mkdir -p nest-project
+chmod -R 755 nest-project/
 
 #If no react projet , create one
-if [ ! -d "/app/node_modules" ]; then
+if [ ! -d "./nest-project/node_modules" ]; then
     echo "No NestJS project found, creating one..."
-    nest new nest-project
+    nest new nest-project --package-manager npm
     echo "NestJS project created"
 fi
 

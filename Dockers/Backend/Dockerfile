@@ -10,14 +10,7 @@ RUN apt-get update && apt-get install -y \
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 	&& apt-get install -y nodejs \
 	&& npm install -g @nestjs/cli
-
-WORKDIR /home/NestJS/
-
-EXPOSE 3000
-
 # Entrypoint
 COPY ./tools/start_nestjs.sh /
-#RUN chmod +x ./start_nestjs.sh
-#ENTRYPOINT ["start_nestjs.sh"]
-
-CMD ["tail", "-f", "/dev/null"]
+RUN chmod +x start_nestjs.sh
+ENTRYPOINT ["./start_nestjs.sh"]

@@ -2,21 +2,21 @@ version: "3"
 
 volumes:
 
-  frontend:
+  frontend_vol:
     driver: local
     driver_opts:
       device: ../Frontend
       o: bind
       type: none
 
-  backend:
+  backend_vol:
     driver: local
     driver_opts:
       device: ../Backend
       o: bind
       type: none
 
-  database:
+  database_vol:
     driver: local
     driver_opts:
       device: ../Database
@@ -30,27 +30,27 @@ services:
     build: ./Backend
     container_name: NestJS
     ports:
-      - 
+      - 3000:3000
     volumes:
-      - 
+      - backend_vol:/nest-project
     env_file:
       - .env
     networks:
       - transcendence
     restart: always
 
-  frontend:
-    build: ./Frontend
-    container_name: React
-    ports:
-      - "3000:3000"
-    volumes:
-      - ../Frontend:/app
-    env_file:
-      - .env
-    networks:
-      - transcendence
-    restart: always
+#  frontend:
+#    build: ./Frontend
+#    container_name: React
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ../Frontend:/app
+#    env_file:
+#      - .env
+#    networks:
+#      - transcendence
+#    restart: always
 
 networks:
   transcendence:
