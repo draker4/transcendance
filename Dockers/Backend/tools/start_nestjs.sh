@@ -3,7 +3,6 @@
 echo "Begin NestJS configuration"
 
 mkdir -p nest-project
-chmod -R 755 nest-project/
 
 #If no react projet , create one
 if [ ! -d "./nest-project/node_modules" ]; then

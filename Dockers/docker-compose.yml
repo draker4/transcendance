@@ -30,7 +30,7 @@ services:
     build: ./Backend
     container_name: NestJS
     ports:
-      - 3000:3000
+      - 4000:4000
     volumes:
       - backend_vol:/nest-project
     env_file:
