@@ -1,5 +1,29 @@
 version: "3"
 
+volumes:
+
+  frontend:
+    driver: local
+    driver_opts:
+      device: ../Frontend
+      o: bind
+      type: none
+
+  backend:
+    driver: local
+    driver_opts:
+      device: ../Backend
+      o: bind
+      type: none
+
+  database:
+    driver: local
+    driver_opts:
+      device: ../Database
+      o: bind
+      type: none
+      
+
 services:
 
   backend:
@@ -12,10 +36,22 @@ services:
     env_file:
       - .env
     networks:
-      - 
+      - transcendence
     restart: always
 
-volumes:
+  frontend:
+    build: ./Frontend
+    container_name: React
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../Frontend:/app
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
 
 networks:
-  inception:
+  transcendence:
+    name: transcendence
