@@ -10,8 +10,15 @@ setup :
 
 start : build
 	@echo "----Starting all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up #-d
+	mkdir -p ./Backend
+	mkdir -p ./Frontend
+	mkdir -p ./Database
+	chmod 777 ./Backend
+	chmod 777 ./Frontend
+	chmod 777 ./Database
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "----All Docker started-----"
+	rm -rf ./Backend/.git
 
 stop :
 	@echo "----Stopping all Docker----"
@@ -45,4 +52,4 @@ redata :
 	@echo "----Restarting Database----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart database
 
-re : clean stop start
+re : clean start

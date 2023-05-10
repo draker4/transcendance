@@ -3,6 +3,7 @@
 #Go to the react project folder
 echo "Creating folder for react project"
 mkdir -p /app
+chmod -R 777 /app
 
 #If no react projet , create one
 if [ ! -d "/app/node_modules" ]; then
