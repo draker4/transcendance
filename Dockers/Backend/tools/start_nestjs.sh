@@ -17,4 +17,8 @@ fi
 
 cd nest-project
 
+echo "install required dependencies"
+npm install
+
+echo "start server"
 npm run start:dev
