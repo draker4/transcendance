@@ -2,12 +2,12 @@
 
 # Ajout du 10/05
 
-- Creation structure projet ( docker , makefile , dossier...)
-- Creation du docker pour le frontend avec React
+## - Creation structure projet ( docker , makefile , dossier...)
+## - Creation du docker pour le frontend avec React
 
 # Ajout du 11/05
 
-- Modification du docker React pour ajouter NextJS
+## - Modification du docker React pour ajouter NextJS
 
     - React + NextJS
 
@@ -17,7 +17,7 @@
 
     - Ecoute sur le port 3000
 
-    - Configurer pour faire des requetes vers le port 4000
+    - Configuré pour faire des requetes vers le port 4000
 
     - Ajout configuration de base NextJS et Typescript
 
@@ -25,7 +25,7 @@
 
         Ajoute des fonctionalité pour le routage, la structuration du projet , la simplification de l'ecriture en React.
 
-- Ajout de code basique dans /Frontend/src a titre d'exemple
+## - Ajout de code basique dans /Frontend/src a titre d'exemple
 
 ![](./imgs/first.png)
 
