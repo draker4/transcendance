@@ -33,7 +33,9 @@
 
 - Tout le code associé au frontend est dans Frontend/transcendence-app
 
-- Seul le contenu du dossier src à besoin d'etre modifié, le reste c'est des package et de la configuration pour React , TypeScript et NextJS
+- Seul le contenu du dossier src et public à besoin d'etre modifié, le reste c'est des package et de la configuration pour React , TypeScript et NextJS
+
+- Public contient toutes les ressources utilisé ( icone , favicon ..)
 
 ![](./imgs/frontend.png)
 
