@@ -31,21 +31,21 @@
 
 ## Quelques infos utiles : 
 
-- Tout le code associer au frontend est dans Frontend/transcendence-app
+- Tout le code associé au frontend est dans Frontend/transcendence-app
 
-- Seul le contenu du dossier src à besoin d'etre modifier, le reste c'est des package et de la configuration pour React , TypeScript et NextJS
+- Seul le contenu du dossier src à besoin d'etre modifié, le reste c'est des package et de la configuration pour React , TypeScript et NextJS
 
 ![](./imgs/frontend.png)
 
-- Le dossier components contient tout les composant que l'on va faire et reutiliser au fur et a mesure ( des composant peuvent contenir d'autre composant ;) )
+- Le dossier components contient tout les composants que l'on va faire et réutiliser au fur et à mesure ( des composants peuvent contenir d'autres composants ;) )
 
-- Le dossier pages contient les pages de notre projet. Ces pages contiennent nos composant
+- Le dossier pages contient les pages de notre projet. Ces pages contiennent nos composants.
 
-- Le dossier services contient des classe utilisé pour stocker des données. Mais elle contiennent surtout toutes les fonctions utilisé pour faire les requettes vers le backend 
+- Le dossier services contient des classes utilisées pour stocker des données. Mais elle contiennent surtout toutes les fonctions utilisé pour faire les requettes vers le backend..
 
-- Le dossier styles contient toutes les fichier css utilisé dans nos pages et nos composant.
+- Le dossier styles contient toutes les fichiers css utilisés dans nos pages et nos composant.
 
-- Il existe aussi deux page _app et _document , c'est la configuration de la page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
+- Il existe aussi deux page "_app" et "_document" , c'est la configuration des page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
 
 
 
