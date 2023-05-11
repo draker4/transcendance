@@ -23,7 +23,7 @@
 
     - Pourquoi ajouter NextJS ?
 
-        Ajoute des fonctionalité pour le routage, la structuration du projet , la simplification de l'ecriture en React.
+        Ajoute des fonctionalité pour le routage, la structuration du projet , la simplification de l'écriture en React.
 
 ## - Ajout de code basique dans /Frontend/src a titre d'exemple
 
@@ -41,9 +41,9 @@
 
 - Le dossier pages contient les pages de notre projet. Ces pages contiennent nos composants.
 
-- Le dossier services contient des classes utilisées pour stocker des données. Mais elle contiennent surtout toutes les fonctions utilisé pour faire les requettes vers le backend..
+- Le dossier services contient des classes utilisées pour stocker des données. Mais elle contiennent surtout toutes les fonctions utilisées pour faire les requettes vers le backend..
 
-- Le dossier styles contient toutes les fichiers css utilisés dans nos pages et nos composant.
+- Le dossier styles contient toutes les fichiers css utilisés dans nos pages et nos composants.
 
 - Il existe aussi deux page "_app" et "_document" , c'est la configuration des page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
 
