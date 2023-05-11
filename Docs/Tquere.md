@@ -35,7 +35,7 @@
 
 - Seul le contenu du dossier src et public à besoin d'etre modifié, le reste c'est des package et de la configuration pour React , TypeScript et NextJS
 
-- Public contient toutes les ressources utilisé ( icone , favicon ..)
+- Public contient toutes les ressources utilisé ( icone , favicon , svg..)
 
 ![](./imgs/frontend.png)
 
