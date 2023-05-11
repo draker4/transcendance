@@ -37,7 +37,9 @@
 
 - Public contient toutes les ressources utilisé ( icone , favicon , svg..)
 
-![](./imgs/frontend.png)
+<p align="center">
+  <img src="./imgs/frontend.png" />
+</p>
 
 - Le dossier components contient tout les composants que l'on va faire et réutiliser au fur et à mesure ( des composants peuvent contenir d'autres composants ;) )
 
