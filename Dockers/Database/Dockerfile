@@ -10,8 +10,6 @@ RUN apt-get install -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-EXPOSE 5432
-
 COPY ./tools/start_db.sh /
 RUN chmod +x start_db.sh
 
@@ -19,5 +17,7 @@ COPY ./tools/migrate.sql /
 RUN chmod 777 migrate.sql
 
 USER postgres
+
+EXPOSE 5432
 
 ENTRYPOINT ["./start_db.sh"]
