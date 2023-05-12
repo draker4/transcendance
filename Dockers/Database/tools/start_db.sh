@@ -26,13 +26,16 @@ else
 
 	echo "migrate.sql loaded!"
 
-	pg_ctlcluster 13 main stop
-
 	echo "add addresses in configuration files"
 	sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
 	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
 
-	echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
+	echo "loading migrate.sql..."
+	psql -U postgres -d postgres -a -f migrate.sql
+
+	echo "migrate.sql loaded!"
+
+	pg_ctlcluster 13 main stop
 
 fi
 
