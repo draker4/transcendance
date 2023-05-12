@@ -51,7 +51,7 @@
 
 - Il existe aussi deux page "_app" et "_document" , c'est la configuration des page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
 
-# Ajout du 11/05
+# Ajout du 15/05
 
 - Creation du Docker database et configuration
 
@@ -59,7 +59,7 @@
   - Test avec creartion d'une table users
   - Creation d'un script executé à chaque redemarage pour creer les tables et les users.
 
-  - Petit soucis de persistance à regler , pour le moment la database est reconfiguré à chaque fois. Mais l'on ne perds pas les données à chaque redemarage
+  - Petit soucis de persistance à regler , main demande des permission qui empeche le volume d'etre patagé correctement
 
   - La database est configuré pour pouvoir comuniqué avec l'exterieur du docker aussi : 
 
