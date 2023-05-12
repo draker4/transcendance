@@ -10,9 +10,6 @@ cd /app
 if [ ! -d "/app/transcendence-app" ]; then
     echo "No react project found, creating one......."
 
-    #React only
-    #npx create-react-app app/transcendence-app
-    
     #React + next.js
     export CI=true
     npx create-next-app transcendence-app --ts --src-dir

@@ -1,5 +1,8 @@
 FROM debian:stable-20230320-slim
 
+#Create file
+RUN mkdir -p /app
+
 # Install react app
 RUN apt-get update && apt-get install -y \
     curl \

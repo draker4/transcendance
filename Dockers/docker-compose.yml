@@ -29,7 +29,7 @@ services:
     build: ./Database
     container_name: PostGreSQL
     ports:
-      - 2000:2000
+      - 5432:5432
     volumes:
       - database_vol:/data
     env_file:

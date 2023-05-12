@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Loading .env for database"
+
 #Change les variable d'environnement dans le fichier migrate.sql
 sed -i "s/DATA_BASE_PASSWORD/$DATA_BASE_PASSWORD/g" ./migrate.sql
 sed -i "s/DATA_BASE_USER/$DATA_BASE_USER/g" ./migrate.sql
@@ -21,6 +23,9 @@ if [ ! -d "/var/lib/postgresql/data" ]; then
 
 	echo "creating database"
 	createdb crunchydb -O crunchy
+
+    echo "loading migrate.sql"
+    psql -U crunchy -d crunchydb -a -f migrate.sql
 
 	pg_ctlcluster 13 main stop
 fi

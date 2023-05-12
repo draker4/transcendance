@@ -4,21 +4,22 @@ FROM debian:stable-20230320-slim
 RUN mkdir -p ./data
 RUN chmod -R 777 ./data
 
-#Update upgrade
-RUN apt-get update && apt-get install -y \
-    postgresql \
-    # postgresql-contrib \
-    # postgresql-client \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# Update and get postgresql
+RUN apt-get update
+RUN apt-get install -y \
+	postgresql-13 \
+	postgresql-client-13 \
+	&& apt-get clean \
+	&& rm -rf /var/lib/apt/lists/*
 
-#Copie le fichier de configuration de la database
+# Entrypoint
 COPY ./tools/migrate.sql /
 RUN chmod +x migrate.sql
 
 # Entrypoint
 COPY ./tools/start_database.sh /
 RUN chmod +x start_database.sh
-ENTRYPOINT ["./start_database.sh"]
 
-CMD ["postgres"]
+USER postgres
+
+ENTRYPOINT ["./start_database.sh"]
