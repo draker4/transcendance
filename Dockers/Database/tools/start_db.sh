@@ -11,26 +11,28 @@ echo "Begin Database configuration"
 echo "adding postgres command to path"
 export PATH+=:/usr/lib/postgresql/13/bin
 
-# if [ ! -d "/var/lib/postgresql/13/main" ]; then
+if [ psql -l | grep crunchy_db ]; then
+	echo "Database exists"
+else
 
-echo "No database found, creating one"
+	echo "No database found, creating one"
 
-pg_ctlcluster 13 main start
+	pg_ctlcluster 13 main start
 
-echo "loading migrate.sql..."
-psql -U postgres -d postgres -a -f migrate.sql
+	echo "loading migrate.sql..."
+	psql -U postgres -d postgres -a -f migrate.sql
 
-echo "migrate.sql loaded!"
+	echo "migrate.sql loaded!"
 
-pg_ctlcluster 13 main stop
+	pg_ctlcluster 13 main stop
 
-echo "add addresses in configuration files"
-sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
+	echo "add addresses in configuration files"
+	sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
+	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
 
-echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
+	echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
 
-# fi
+fi
 
 chmod 777 /var/lib/postgresql/13
 
