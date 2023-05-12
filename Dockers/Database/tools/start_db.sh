@@ -9,7 +9,6 @@ echo "Begin Database configuration"
 
 
 echo "adding postgres command to path"
-# echo "export PATH+=:/usr/lib/postgresql/13/bin" >> ~/.bashrc
 export PATH+=:/usr/lib/postgresql/13/bin
 
 # if [ ! -d "/var/lib/postgresql/13/main" ]; then
@@ -25,13 +24,11 @@ echo "migrate.sql loaded!"
 
 pg_ctlcluster 13 main stop
 
+echo "add addresses in configuration files"
 sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
 
 echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
-
-service postgresql restart
-service postgresql stop
 
 # fi
 
