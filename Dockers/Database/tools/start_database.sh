@@ -1,24 +1,29 @@
 #!/bin/bash
 
-#Change les variable d'environnement dans le fichier 
+#Change les variable d'environnement dans le fichier migrate.sql
 sed -i "s/DATA_BASE_PASSWORD/$DATA_BASE_PASSWORD/g" ./migrate.sql
 sed -i "s/DATA_BASE_USER/$DATA_BASE_USER/g" ./migrate.sql
-
 sed -i "s/port = .*/port = $DB_PORT/" /etc/postgresql/13/main/postgresql.conf
 
-echo "Starting PostgreSql..."
+echo "Begin Database configuration"
 
-init_base() {
-  until pg_isready -h localhost -p $DB_PORT -U postgres > /dev/null 2>&1; do
-    sleep 1
-  done
-  echo "PostgreSQL started."
-  psql -U postgres < .migrate.sql
-}
+echo "adding postgres command to path"
+echo "export PATH+=:/usr/lib/postgresql/13/bin" >> ~/.bashrc
+export PATH+=:/usr/lib/postgresql/13/bin
 
-# init_base & postgres -D /usr/local/pgsql/data
-#Start psql server
-init_base & pg_ctl -D /usr/local/pgsql/data -l logfile start
+if [ ! -d "/var/lib/postgresql/data" ]; then
 
-find /tmp/ -name .s.PGSQL.5432
-cat /etc/postgresql/13/main/postgresql.conf | grep "port ="
+	echo "no user or database created"
+	pg_ctlcluster 13 main start
+
+	echo "creating user"
+	createuser crunchy
+
+	echo "creating database"
+	createdb crunchydb -O crunchy
+
+	pg_ctlcluster 13 main stop
+fi
+
+echo "starting postgresql service"
+postgres -D /etc/postgresql/13/main
