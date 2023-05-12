@@ -14,7 +14,6 @@ if [ ! -d "./nest-project/node_modules" ]; then
     sed -i 's/3000/4000/g' ./nest-project/src/main.ts
 fi
 
-
 cd nest-project
 
 echo "install required dependencies"

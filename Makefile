@@ -16,7 +16,7 @@ start : build
 	chmod 777 ./Backend
 	chmod 777 ./Frontend
 	chmod 777 ./Database
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up #-d
 	@echo "----All Docker started-----"
 	rm -rf ./Backend/.git
 
