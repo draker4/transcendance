@@ -51,6 +51,36 @@
 
 - Il existe aussi deux page "_app" et "_document" , c'est la configuration des page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
 
+# Ajout du 11/05
 
+- Creation du Docker database et configuration
 
+  - Connection en local avec deux user : crunchy crunchy et postgres postgres
+  - Test avec creartion d'une table users
+  - Creation d'un script executé à chaque redemarage pour creer les tables et les users.
 
+  - Petit soucis de persistance à regler , pour le moment la database est reconfiguré à chaque fois. Mais l'on ne perds pas les données à chaque redemarage
+
+  - La database est configuré pour pouvoir comuniqué avec l'exterieur du docker aussi : 
+
+    ```console 
+    PGPASSWORD=postgres psql -h 127.0.0.1 -p 5432 -d crunchy_db -U postgres
+    ```
+  
+  - On peut aussi passer par l'extenssion : 
+
+  <p align="center">
+    <img src="./imgs/database_ext.png" />
+  </p>
+
+  On se connecte avec les identifiants
+
+  <p align="center">
+    <img src="./imgs/ext.png" />
+  </p>
+
+  Un fois connecté on peut gerer la database et la visualiser / executer des script dedans
+
+  <p align="center">
+    <img src="./imgs/script.png" />
+  </p>
