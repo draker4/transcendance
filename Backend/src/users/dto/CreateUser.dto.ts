@@ -1,7 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
 import { Entity } from "typeorm";
 
-@Entity()
 export class createUserDto {
 
 	@IsNotEmpty()
