@@ -17,3 +17,8 @@ Crunchy Team : bboisson tquere bperriol loumarti
 
 > le but de la partie `docker-compose` est tout d'abord de monter un environnement
 > simple avec 3 conteneurs (front + back + data)
+
+## jeudi 12 mai
+
+- La team `maquette` prend en main l'appli web figma, en collabaratif, premiers screens pret a etre echangés
+- la team `docker-compose` a reussi leur 1ere connection des 3 conteneurs avec `la database PostGreSQL` fonctionnelle
