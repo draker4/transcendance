@@ -10,7 +10,7 @@ export default function HomeContainer() {
 
     return (
         <div className={styles.main} style={{ textAlign: 'center' }}>
-            <p>Transcendence</p>
+            <p>Crunchy Pong !</p>
         </div>
     );
 }

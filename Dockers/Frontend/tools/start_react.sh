@@ -21,6 +21,9 @@ echo "Starting react project"
 chmod -R 777 transcendence-app
 cd transcendence-app
 
+echo "install required depedencies"
+npm install
+
 #As dev
 npm run dev
 
