@@ -13,7 +13,7 @@ chmod 750 /var/lib/postgresql/13/main
 echo "adding postgres command to path"
 export PATH+=:/usr/lib/postgresql/13/bin
 
-if [ psql -l | grep crunchy_db ]; then
+if [ psql -l | grep "crunchy_db" ]; then
 	echo "Database exists"
 else
 
