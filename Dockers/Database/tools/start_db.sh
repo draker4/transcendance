@@ -13,15 +13,11 @@ chmod 750 /var/lib/postgresql/13/main
 echo "adding postgres command to path"
 export PATH+=:/usr/lib/postgresql/13/bin
 
-<<<<<<< HEAD
 if [ psql -l | grep crunchy_db ]; then
 	echo "Database exists"
 else
 
 	echo "No database found, creating one"
-=======
-echo "No database found, creating one"
->>>>>>> cd6c7e3 (database update bug ?)
 
 	pg_ctlcluster 13 main start
 
@@ -32,7 +28,6 @@ echo "No database found, creating one"
 
 	pg_ctlcluster 13 main stop
 
-<<<<<<< HEAD
 	echo "add addresses in configuration files"
 	sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
 	sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
@@ -42,18 +37,6 @@ echo "No database found, creating one"
 fi
 
 chmod 777 /var/lib/postgresql/13
-=======
-sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
-echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
-
-service postgresql restart
-service postgresql stop
-
-sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
-sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /etc/postgresql/13/main/postgresql.conf
-echo "host  all  all 0.0.0.0/0 md5" >> /etc/postgresql/13/main/pg_hba.conf
->>>>>>> cd6c7e3 (database update bug ?)
 
 echo "starting postgresql service"
 postgres -D /etc/postgresql/13/main
