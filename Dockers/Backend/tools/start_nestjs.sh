@@ -9,6 +9,10 @@ chmod -R 777 nest-project
 if [ ! -d "./nest-project/node_modules" ]; then
     echo "No NestJS project found, creating one..."
     nest new nest-project --package-manager npm
+
+    echo "adding packages"
+    npm add @nestjs@typeorm typeorm pg class-validator class-transformer
+
     echo "NestJS project created"
 
     sed -i 's/3000/4000/g' ./nest-project/src/main.ts
