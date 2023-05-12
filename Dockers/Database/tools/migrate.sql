@@ -1,5 +1,5 @@
 -- Créer une base de données nommée "transcendence"
-CREATE DATABASE transcendence;
+CREATE DATABASE postgres;
 
 -- Créer un utilisateur avec tous les privilèges
 CREATE USER DATA_BASE_USER WITH PASSWORD DATA_BASE_PASSWORD;

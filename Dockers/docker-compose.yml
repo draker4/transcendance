@@ -38,31 +38,31 @@ services:
       - transcendence
     restart: always
 
-  # backend:
-  #   build: ./Backend
-  #   container_name: NestJS
-  #   ports:
-  #     - 4000:4000
-  #   volumes:
-  #     - backend_vol:/nest-project
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendence
-  #   restart: always
+  backend:
+    build: ./Backend
+    container_name: NestJS
+    ports:
+      - 4000:4000
+    volumes:
+      - backend_vol:/nest-project
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
 
-  # frontend:
-  #   build: ./Frontend
-  #   container_name: React
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - frontend_vol:/app
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - transcendence
-  #   restart: always
+  frontend:
+    build: ./Frontend
+    container_name: React
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend_vol:/app
+    env_file:
+      - .env
+    networks:
+      - transcendence
+    restart: always
 
 networks:
   transcendence:
