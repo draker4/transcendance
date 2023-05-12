@@ -22,21 +22,9 @@ volumes:
       device: ../Database
       o: bind
       type: none
+      
 
 services:
-
-  database:
-    build: ./Database
-    container_name: PostGreSQL
-    ports:
-      - 5432:5432
-    volumes:
-      - database_vol:/data
-    env_file:
-      - .env
-    networks:
-      - transcendence
-    restart: always
 
   backend:
     build: ./Backend
