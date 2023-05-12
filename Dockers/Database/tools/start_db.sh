@@ -3,9 +3,10 @@
 echo "Begin Database configuration"
 
 # Change les variable dans le script d'initialisation de la db
+sed -i "s/DATA_BASE_NAME/$DATA_BASE_NAME/g" ./migrate.sql
 sed -i "s/DATA_BASE_PASSWORD/$DATA_BASE_PASSWORD/g" ./migrate.sql
 sed -i "s/DATA_BASE_USER/$DATA_BASE_USER/g" ./migrate.sql
-sed -i "s/port = .*/port = $DB_PORT/" /etc/postgresql/13/main/postgresql.conf
+sed -i "s/port = .*/port = $DATA_BASE_PORT/" /etc/postgresql/13/main/postgresql.conf
 
 echo "adding postgres command to path"
 echo "export PATH+=:/usr/lib/postgresql/13/bin" >> ~/.bashrc

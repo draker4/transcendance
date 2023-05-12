@@ -16,7 +16,7 @@ COPY ./tools/start_db.sh /
 RUN chmod +x start_db.sh
 
 COPY ./tools/migrate.sql /
-RUN chmod +x migrate.sql
+RUN chmod 777 migrate.sql
 
 USER postgres
 
