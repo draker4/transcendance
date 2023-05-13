@@ -1,4 +1,4 @@
-# Module Settings
+# Module Settings - Section Gestion Channel
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -7,6 +7,18 @@
 # API Liée
 
 # Regle de gestion
+
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**
 
 11.5.	 Gestion des Channel
 Lister l’ensemble des channels de l’utilisateur (trié alphabétiquement) :

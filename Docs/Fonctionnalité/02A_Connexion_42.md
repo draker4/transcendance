@@ -1,4 +1,4 @@
-# Module Gestion Connexion
+# Module Gestion Connexion - Section Connexion 42
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -14,3 +14,15 @@ Analyser service de connexion OAuth de 42 :
 1. [42 OAuth](../API/01_42OAuth.md)
 
 # Regle de gestion
+
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**

@@ -1,4 +1,4 @@
-# Module Settings
+# Module Settings - Section Gestion Compte
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -7,6 +7,18 @@
 # API Liée
 
 # Regle de gestion
+
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**
 
 11.1.	Gestion Compte Utilisateur
 1.	Avatar : 

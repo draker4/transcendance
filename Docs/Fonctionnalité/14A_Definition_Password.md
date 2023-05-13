@@ -1,4 +1,4 @@
-# Module Profil Détaillé
+# Module Définition Password
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -19,5 +19,3 @@
 > **Gestion Erreur**
 
 > **Gestion Succès**
-
-utilisable pour l'utilisateur courant et les autres utilisateurs

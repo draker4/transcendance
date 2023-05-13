@@ -1,27 +1,35 @@
 # Sommaire des modules
 
 - [01 - Présentation](./01_Presentation.md)
-- [02A - Gestion Connexion](./02A_Gestion_Connexion.md)
-- [02B - Connexion 42](./02B_Connexion_42.md)
-- [02C - Gestion Connexion](./02C_Double_Authentification.md)
-- [03A - Inscription](./03A_Inscription.md)
-- [03B - Vérification Email](./03B_Verification_Email.md)
-- [04A - Password Perdu](./04_Password_Perdu.md)
-- [04B - Modification Password Perdu](./04B_Modification_Password_Perdu.md)
+- [02 - Gestion Connexion](./02_Gestion_Connexion.md)
+	- [02A - Gestion Connexion - Section Connexion 42](./02A_Connexion_42.md)
+	- [02B - Gestion Connexion - Section Double Authentification](./02B_Double_Authentification.md)
+- [03 - Inscription](./03_Inscription.md)
+	- [03A - Inscription - Section Vérification Email](./03A_Verification_Email.md)
+- [04 - Password Perdu](./04_Password_Perdu.md)
+	- [04A - Password Perdu - Section Modification Password Perdu](./04A_Modification_Password_Perdu.md)
 - [05 - Chat](./05_Chat.md)
-- [05A - Chat - Section Home](./05A_Chat_Home.md)
-- [05B - Chat - Section Recherche](./05B_Recherche_Chat.md)
-- [05C - Chat - Section Conversation](./05C_Conversation.md)
-- [05D - Chat - Section Détails Channel](./05D_Details_Channel.md)
-- [05E - Chat - Section Partie Privée](./05E_Partie_Privee.md)
+	- [05A - Chat - Section Home](./05A_Chat_Home.md)
+	- [05B - Chat - Section Recherche](./05B_Recherche_Chat.md)
+	- [05C - Chat - Section Conversation](./05C_Conversation.md)
+	- [05D - Chat - Section Détails Channel](./05D_Details_Channel.md)
+	- [05E - Chat - Section Partie Privée](./05E_Partie_Privee.md)
 - [06 - Profil Resumé](./06_Profil_Resume.md)
 - [07 - Profil Detail](./07_Profil_Detail.md)
 - [08 - Menu Jeu](08_Menu_Jeu.md)
 - [09 - Jeu](./09_Jeu.md)
 - [10 - LeaderBoard](./10_LeaderBoard.md)
 - [11 - Recherche Result](./11_Recherche.md)
-- [12 - Settings](12_Settings.md)
+- [12 - Settings](./12_Settings.md)
+	- [12A - Settings - Section Gestion de Compte](./12A_Gestion_Compte.md)
+	- [12B - Settings - Section Gestion de Game](./12B_Gestion_Game.md)
+	- [12C - Settings - Section Gestion de Channel](./12C_Gestion_Channel.md)
+	- [12D - Settings - Section Gestion de Contact](./12D_Gestion_Contact.md)
 - [13 - Terms](./13_Terms.md)
+- [14 - Module Générique](./14_Module_Generique.md)
+	- [14A - Module Générique - Définition Password](./14A_Definition_Password.md)
+	- [14B - Module Générique - Sélection Avatar](./14B_Selection_Avatar.md)
+	- [14C - Module Générique - Download Avatar](./14C_Download_Avatar%20copy.md)
 - [Annexe 1 - Sommaire API](../API/00_Sommaire_API.md)
 
 # Header
@@ -40,7 +48,7 @@
 	<img src="./Inspiration/Header_Reduce_Menu.png" />
 </p>
 
-## --- General ---
+## General
 
 ### **Logo**
 
@@ -48,7 +56,7 @@
 - Clic : revenir configuration Home
 - Passage : prévoir animation
 
-## --- Utilisateur Non Connecté ---
+## Utilisateur Non Connecté
 
 ### **Logo**
 
@@ -73,7 +81,7 @@
 > **Action**
 - Clic : ouverture / fermeture module [Inscription](./03_Inscription.md)
 - Passage : prévoir animation
-## --- Utilisateur Connecté ---
+## Utilisateur Connecté
 
 ### **Logo**
 
@@ -126,7 +134,7 @@ module en lien :
 
 # Main
 
-## --- General ---
+## General
 
 ### **Bouton "Remonter au header"**
 
@@ -139,7 +147,7 @@ module en lien :
 	- Clic : revenir au Header
 	- Passage : prévoir animation
 
-## --- Utilisateur Non connecté ---
+## Utilisateur Non connecté
 
 Module possible tous stand-alone : 
 
@@ -149,7 +157,7 @@ Module possible tous stand-alone :
 4. [Password Perdu](./04_Password_Perdu.md)
 5. [Terms](./13_Terms.md)
 
-## --- Utilisateur connecté ---
+## Utilisateur connecté
 
 Module page principal :
 1. [Profil Resumé](./06_Profil_Resume.md)
@@ -174,7 +182,7 @@ Module Stand-Alone :
 	<img src="./Inspiration/Footer.png" />
 </p>
 
-## --- General ---
+## General
 
 ### Ligne de lien vers module : 
 
@@ -197,8 +205,8 @@ Module Stand-Alone :
 - Clic : Retour Page Home
 - Passage : prévoir animation
 
-## --- Utilisateur Non connecté ---
+## Utilisateur Non connecté
 
-## --- Utilisateur connecté ---
+## Utilisateur connecté
 Ajouter le lien :
 - [Settings](./12_Settings.md)

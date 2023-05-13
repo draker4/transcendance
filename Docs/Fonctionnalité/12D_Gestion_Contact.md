@@ -1,4 +1,4 @@
-# Module Settings
+# Module Settings - Section Gestion Contact
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -7,6 +7,18 @@
 # API Liée
 
 # Regle de gestion
+
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**
 
 11.4.	Gestion Contact
 Lister l’ensemble des contacts de l’utilisateur (trié alphabétiquement) selon 2 sections (Contact / Ban) avec bouton à gauche permettant d’ouvrir (flèche orientée à droite) / réduire (flèche orientée vers le bas) la section :

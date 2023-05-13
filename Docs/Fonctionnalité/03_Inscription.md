@@ -8,6 +8,7 @@
 
 # Regle de gestion
 
+> **Affichage**
 1.	Login (uniquement pour se connecter – non modifiable par la suite – invisible des autres utilisateur):
 a.	Checker caractère interdit
 b.	Checker si disponible
@@ -35,3 +36,9 @@ a.	Si l’ensemble est ok :
 i.	Post info utilisateur pour création du compte
 ii.	Passer au module settings
 b.	Si une des conditions précédentes non remplis afficher erreur
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**

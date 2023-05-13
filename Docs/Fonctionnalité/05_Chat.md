@@ -8,6 +8,18 @@
 
 # Regle de gestion
 
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**
+
 Composé de 2 sections :
 1.	Bande latérale à gauche :
 a.	Icone recherche en haut pour revenir à la section « Home »

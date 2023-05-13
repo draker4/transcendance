@@ -8,3 +8,14 @@
 
 # Regle de gestion
 
+## Inspiration
+
+## Etape
+
+> **Affichage**
+
+> **Action**
+
+> **Gestion Erreur**
+
+> **Gestion Succès**
