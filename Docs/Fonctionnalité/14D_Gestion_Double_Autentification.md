@@ -1,4 +1,4 @@
-# Module Chat - Section Détails Channel
+# Module Gestion Double Authentification
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -22,4 +22,3 @@
 > **Gestion Erreur**
 
 > **Gestion Succès**
-

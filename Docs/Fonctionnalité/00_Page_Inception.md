@@ -29,7 +29,8 @@
 - [14 - Module Générique](./14_Module_Generique.md)
 	- [14A - Module Générique - Définition Password](./14A_Definition_Password.md)
 	- [14B - Module Générique - Sélection Avatar](./14B_Selection_Avatar.md)
-	- [14C - Module Générique - Download Avatar](./14C_Download_Avatar%20copy.md)
+	- [14C - Module Générique - Download Avatar](./14C_Download_Avatar.md)
+	- [14D - Module Générique - Gestion Double Authentification](./14D_Gestion_Double_Autentification.md)
 - [Annexe 1 - Sommaire API](../API/00_Sommaire_API.md)
 
 # Header

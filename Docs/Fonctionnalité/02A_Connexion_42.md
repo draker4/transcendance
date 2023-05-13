@@ -11,11 +11,14 @@ Analyser service de connexion OAuth de 42 :
 
 # API Liée
 
-1. [42 OAuth](../API/01_42OAuth.md)
+1. [01 - 42 OAuth](../API/01_42OAuth.md)
 
 # Regle de gestion
 
 ## Inspiration
+<p align="center">
+	<img src="./Inspiration/" />
+</p>
 
 ## Etape
 

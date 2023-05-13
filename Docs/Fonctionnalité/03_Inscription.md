@@ -5,40 +5,75 @@
 # Point Ouvert
 
 # API Liée
-
+- [03 - API Création Compte](../API/03_Creation_Compte.md)
 # Regle de gestion
 
+## Inspiration
+<p align="center">
+	<img src="./Inspiration/" />
+</p>
+
+## Etape
+
 > **Affichage**
-1.	Login (uniquement pour se connecter – non modifiable par la suite – invisible des autres utilisateur):
-a.	Checker caractère interdit
-b.	Checker si disponible
-2.	Username (modifiable par la suite – visible des autres utilisateur – minimum 3 chars) :
-a.	Checker caractère interdit
-b.	Checker si disponible
-3.	Nom :
-a.	Checker caractère interdit
-b.	Checker si disponible
-4.	Prénom :
-a.	Checker caractère interdit
-b.	Checker si disponible
-5.	Email :
-a.	Checker si format email valide
-6.	Téléphone :
-a.	Checker si format téléphone valide
-7.	Password : 
-a.	Prévoir module validation difficulté
-b.	« Œil » pour voir mot de passe
-8.	Confirmation Password :
-a.	Checker si pareil
-b.	Empêcher copier-coller
-9.	Bouton « Sign Up » - au click ou touche entrée :
-a.	Si l’ensemble est ok :
-i.	Post info utilisateur pour création du compte
-ii.	Passer au module settings
-b.	Si une des conditions précédentes non remplis afficher erreur
+
+***1. Inscription Classique :***
+
+Les champs s'afficher les un après les autres si ok (si ecran suffisament grand alors 2 côte à côte):
+- Champ texte "Login" : 
+	- icone info : "only for connexion, can't be change, invisible to other user, must be more than 3 characters, cannot be composed of # @ &"
+	- non modifiable si debuis 42 OAuth
+- Champ texte "Username" :
+	- icone info : "visible to other user, cannot be the same as the login, can be change, must be more than 3 characters, cannot be composed of # @ &"
+- Champ texte "Nom" :
+	- non modifiable si debuis 42 OAuth
+- Champ texte "Prénom" :
+	- non modifiable si debuis 42 OAuth
+- Champ texte "Email" :
+	- non modifiable si debuis 42 OAuth
+	- Checker si format email valide
+- Champ texte "Téléphone" :
+	- non modifiable si debuis 42 OAuth
+	- Checker si format téléphone valide
+- Password :
+	- non modifiable si debuis 42 OAuth
+	- ajouter le [module Password](./14A_Definition_Password.md)
+- Bouton "Confirm"
+	- au click ou touche entrée confirmer et envoyée [API Création Compte](../API/03_Creation_Compte.md)
+- Bouton "Cancel"
+	- au click ou au click sur la croix du navigateur afficher box confirmation : 
+		- Message "Your inscription will be cancel. Would you proceed?"
+		- Bouton "Confirm"
+		- Bouton "Back"
+
+***2. Incription avec 42 OAuth :***
+
+- Coupe la section avec "Or"
+- Bouton de connexion "Login with 42" chargée module [Connexion 42](./02B_Connexion_42.md)
 
 > **Action**
 
+- Clic bouton "Confirm" ou touche entrée
+	- Checker le champ, si erreur (voir gestion erreur) si ok afficher le champ suivant
+	- Si tous les champs ok alors envoyée [API Création Compte](../API/03_Creation_Compte.md)
+- Clic bouton "Cancel" ou sur la croix du navigateur afficher box confirmation et blocker modification du reste : 
+	- Message "Your inscription will be cancel. Would you proceed?"
+	- Bouton "Confirm" -> revenir à la page home
+	- Bouton "Back" -> fermer box et permettre modification
+
 > **Gestion Erreur**
 
+- Pour champ "login" et "username" :
+	- minimum 3 charactères (utile pour déclanchement recherche)
+	- charactères interdit : # @ &
+	- checker si déjà utilisé avec [API List User/Channel](../API/04_List_User_Channel.md) (attention si login utilisé mais avec 42 OAuth alors c'est ok pour éviter blocage à l'inverse)
+- Pour champ "Nom", "Prénom" et "Email" :
+	- doivent etre remplis
+- Pour champ "Email" :
+	- vérifié format donc char @ suive d'un .
+- Pour champ "téléphone" :
+	- obligatoire si sélection [double authentification](./02B_Double_Authentification.md)
+
 > **Gestion Succès**
+
+- Si l'ensemble est valide passer au module [Vérification d'email](./03A_Verification_Email.md)

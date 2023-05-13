@@ -9,6 +9,9 @@
 # Regle de gestion
 
 ## Inspiration
+<p align="center">
+	<img src="./Inspiration/" />
+</p>
 
 ## Etape
 

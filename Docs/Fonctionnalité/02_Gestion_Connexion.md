@@ -6,7 +6,7 @@
 
 # API Liée
 
-1. [API Connexion](../API/02_Connexion.md)
+1. [02 - API Connexion](../API/02_Connexion.md)
 
 # Regle de gestion
 
