@@ -1,4 +1,4 @@
-# Module Jeu en Cours
+# Module Chat - Section Partie Privée
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
@@ -7,3 +7,5 @@
 # API Liée
 
 # Regle de gestion
+
+

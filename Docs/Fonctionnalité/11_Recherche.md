@@ -1,4 +1,4 @@
-# Module Jeu en Cours
+# Module Recherche
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
