@@ -47,7 +47,7 @@
 - "Don't have an account?" "Sign Up" -> lien [Inscription](./03_Inscription.md)
 
 > **Action**
-- Chaque lien / bouton doit avoir animation de survol
+- Chaque lien / bouton doit avoir animation de survol / clic
 - Lors de la validation faire appel a l'[API Connexion](../API/02_Connexion.md)
 
 > **Gestion Erreur**

@@ -1,4 +1,4 @@
-# API Création de Compte
+# API Update Channel
 
 **[Retour Sommaire API](./00_Sommaire_API.md)**
 

@@ -17,6 +17,12 @@
 
 > **Affichage**
 
+Dans la section settings avoir 3 parties :
+1.	Gestion de compte
+2.	Gestion Channel
+3.	Gestion Contact
+Pour chaque avoir un bouton permettant d’ouvrir / réduire la partie.
+
 > **Action**
 
 > **Gestion Erreur**

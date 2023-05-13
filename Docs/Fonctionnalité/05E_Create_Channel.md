@@ -1,4 +1,4 @@
-# Module Chat - Section Détails Channel
+# Module Chat - Section Create Channel
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

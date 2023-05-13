@@ -4,8 +4,9 @@
 
 # Point Ouvert
 
+Regarder les possibilitées pour ce module
 # API Liée
-
+1. [06 - Double Authentification](../API/06_Double_Authentification.md)
 # Regle de gestion
 
 ## Inspiration

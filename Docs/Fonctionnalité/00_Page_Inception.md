@@ -6,6 +6,7 @@
 	- [02B - Gestion Connexion - Section Double Authentification](./02B_Double_Authentification.md)
 - [03 - Inscription](./03_Inscription.md)
 	- [03A - Inscription - Section Vérification Email](./03A_Verification_Email.md)
+	- [03B - Inscription - Section Email Vérifié](./03B_Email_Verifie.md)
 - [04 - Password Perdu](./04_Password_Perdu.md)
 	- [04A - Password Perdu - Section Modification Password Perdu](./04A_Modification_Password_Perdu.md)
 - [05 - Chat](./05_Chat.md)
@@ -13,7 +14,8 @@
 	- [05B - Chat - Section Recherche](./05B_Recherche_Chat.md)
 	- [05C - Chat - Section Conversation](./05C_Conversation.md)
 	- [05D - Chat - Section Détails Channel](./05D_Details_Channel.md)
-	- [05E - Chat - Section Partie Privée](./05E_Partie_Privee.md)
+	- [05E - Chat - Section Create Channel](./05E_Create_Channel.md)
+	- [05F - Chat - Section Partie Privée](./05F_Partie_Privee.md)
 - [06 - Profil Resumé](./06_Profil_Resume.md)
 - [07 - Profil Detail](./07_Profil_Detail.md)
 - [08 - Menu Jeu](08_Menu_Jeu.md)
@@ -32,6 +34,10 @@
 	- [14C - Module Générique - Download Avatar](./14C_Download_Avatar.md)
 	- [14D - Module Générique - Gestion Double Authentification](./14D_Gestion_Double_Autentification.md)
 - [Annexe 1 - Sommaire API](../API/00_Sommaire_API.md)
+
+# Point Ouvert
+
+# API Liée
 
 # Header
 
