@@ -20,16 +20,11 @@ export default function TestForm() {
 
         service.Register_User(username, password).then((response) => {
             
-            if (response.status === 201) {
-                console.log("User created");
-                console.log(response.data.message);
-                setMessage(response.data.message);
-                // router.push('/login');
-
-            } else {
-                console.log(response.status)
-                console.log(response.data.message);
-                setMessage(response.data.message);
+            if (response.status === 200) {
+                setMessage(JSON.stringify(response, null, 4));
+            }
+            else {
+                setMessage(JSON.stringify(response, null, 4));
             }
 
         }).catch((error) => {
@@ -38,8 +33,31 @@ export default function TestForm() {
 
         }).finally(() => {
             setLoading(false);
+            
         });
     }
+
+    const Get_All_User = () => {
+        setLoading(true);
+
+        service.Get_All_User().then((response) => {
+
+            if (response.status === 200) {
+                setMessage(JSON.stringify(response, null, 4));
+            }
+            else {
+                setMessage(JSON.stringify(response, null, 4));
+            }
+
+        }).catch((error) => {
+            console.log('Une erreur est survenue ( API down ? )');
+            setMessage('Une erreur est survenue ( API down ? )');
+
+        }).finally(() => {
+            setLoading(false);
+
+        });
+    }           
 
     return (
         <div className={styles.form_container}>
@@ -56,6 +74,9 @@ export default function TestForm() {
             }} />
 
             <button type="submit" className={styles.form_button} onClick={Register_User} disabled={loading}>{loading ? 'Inscription en cours...' : 'Créer un compte'}</button>
+
+            <button type="submit" className={styles.form_button} onClick={Get_All_User} disabled={loading}>{loading ? 'Requette en cours...' : 'Affichier les users de la base'}</button>
+            
             { message != "" && <p> {message} </p> }
         </div>
     );

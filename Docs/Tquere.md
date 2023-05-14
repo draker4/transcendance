@@ -51,7 +51,7 @@
 
 - Il existe aussi deux page "_app" et "_document" , c'est la configuration des page par defaut. Attention au modification. Ces pages utilisent le fichier css global.css
 
-# Ajout du 15/05
+# Ajout du 12/05
 
 - Creation du Docker database et configuration
 
@@ -85,7 +85,35 @@
     <img src="./imgs/script.png" />
   </p>
 
-  - RESTE A FAIRE : 
 
-      Gerer le probleme de persitence de la bdd 
+# Ajout du 14/05
+
+  - Creation d'un page /test pour tester la connection avec la database et les requettes backend
+
+  - Creation d'un controller UserController et UsersController pour departager les action sur un user et sur tout les users
+
+  - Creation d'un service UsersService et UserService pour gerer les requettes sur les user
+
+  - Creation d'une route GET /api/users pour recuperer tout les users
+  - Creation d'une route POST /api/adduser pour ajouter un user
+
+  - Test des route -> OK
+  <p align="center">
+    <img src="./imgs/user_1.png" />
+  </p>
+
+  - Test de la connection avec la database -> OK
+  <p align="center">
+    <img src="./imgs/user_2.png" />
+  </p>
+
+  - Test de connection front avec back -> OK
+    <p align="center">
+    <img src="./imgs/user_3.png" />
+  </p> 
+
+  - RESTE A FAIRE : 
+      
       Ajouter les mdp et user dans .env et conf la bdd avec
+
+      Rendre la db persistente
