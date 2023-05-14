@@ -23,9 +23,9 @@
 > **Affichage**
 - Champ texte "login"
 - Bouton "Continue" (si entrée valider ce bouton)
-"Don't have an account?" "Sign Up" -> lien [Inscription](./03_Inscription.md)
+"Don't have an account?" "Sign Up" -> lien [03 - Inscription](./03_Inscription.md)
 - Coupe la section avec "Or"
-- Bouton de connexion "Login with 42" chargée module [Connexion 42](./02B_Connexion_42.md)
+- Bouton de connexion "Login with 42" chargée module [02A - Connexion 42](./02A_Connexion_42.md)
 
 > **Action**
 - Chaque lien / bouton doit avoir animation de survol
@@ -42,13 +42,13 @@
 > **Affichage**
 - Champ texte "login" en conservant texte et bouton "Edit" revenant en arrière
 - Champ texte "Password" avec bouton "Oeil" pour voir mot de passe entrée
-- "Forgot Password?" -> lien [Password Perdu](./04_Password_Perdu.md)
+- "Forgot Password?" -> lien [04 - Password Perdu](./04_Password_Perdu.md)
 - Bouton "Continue" (si entrée valider ce bouton)
-- "Don't have an account?" "Sign Up" -> lien [Inscription](./03_Inscription.md)
+- "Don't have an account?" "Sign Up" -> lien [03 - Inscription](./03_Inscription.md)
 
 > **Action**
 - Chaque lien / bouton doit avoir animation de survol / clic
-- Lors de la validation faire appel a l'[API Connexion](../API/02_Connexion.md)
+- Lors de la validation faire appel a l'[API 02 - Connexion](../API/02_Connexion.md)
 
 > **Gestion Erreur**
 1. Si retour erreur API Connexion :
@@ -57,5 +57,5 @@
 
 > **Gestion Succès**
 
-- Si option double authentification chargé module [Double Authentification](./02C_Double_Authentification.md)
+- Si option double authentification chargé module [02B - Double Authentification](./02B_Double_Authentification.md)
 - Autrement chargé Page Home

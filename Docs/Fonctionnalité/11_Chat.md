@@ -29,14 +29,22 @@ Composé de 2 sections :
 
 2.	**Partie principale du chat à droite**
 
-- Composé de 4 sous-section/version :
-	- [Home](./05A_Chat_Home.md)
-	- [Recherche](./05B_Recherche_Chat.md)
-	- [Conversation](./05C_Conversation.md)
-	- [Details Channel](./05D_Details_Channel.md)
-	- [Partie Privée](./05E_Partie_Privee.md)
+- Composé de sous-module :
+	- [11A - Home](./11A_Chat_Home.md)
+	- [11B - Recherche](./11B_Recherche_Chat.md)
+	- [11C - Conversation](./11C_Conversation.md)
+	- [11D - Détails Channel](./11D_Details_Channel.md)
+	- [11E - Détails User](./11E_Details_User.md)
 
-> **Action Bande latérale à gauche**
+> **Action**
+
+### Général
+
+- Si le chat est en écran partagé alors en haut a droite en permanance 2 bouton :
+	- Croix : pour fermé module et ouvrir pleine écran les autres
+	- fleche : pour agrandir plein écran / revenir format sur la gauche
+
+### Bande latérale à gauche
 
 - Au clic sur icone "Home" :
 	- Afficher module Home

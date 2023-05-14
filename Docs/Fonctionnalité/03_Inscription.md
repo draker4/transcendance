@@ -42,7 +42,7 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 	- ajouter le [module Password](./14A_Definition_Password.md)
 - Bouton "Confirm"
 	- au click ou touche entrée confirmer et envoyée [API 03 - Création Compte](../API/03_Creation_Compte.md)
-- "Already have an account?" "Log In" -> lien [Module Connexion](./02_Gestion_Connexion.md)
+- "Already have an account?" "Log In" -> lien [02 - Connexion](./02_Gestion_Connexion.md)
 	- au click ou au click sur la croix du navigateur si un champ remplis afficher box confirmation : 
 		- Message "Your inscription will be cancel. Would you proceed?"
 		- Bouton "Confirm"
@@ -51,7 +51,7 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 ***2. Incription avec 42 OAuth :***
 
 - Coupe la section avec "Or"
-- Bouton de connexion "Login with 42" chargée module [Connexion 42](./02B_Connexion_42.md)
+- Bouton de connexion "Login with 42" chargée module [02A - Connexion 42](./02B_Connexion_42.md)
 
 > **Action**
 
@@ -75,8 +75,8 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 - Pour champ "Email" :
 	- vérifié format donc char @ suive d'un .
 - Pour champ "téléphone" :
-	- obligatoire si sélection [double authentification](./02B_Double_Authentification.md)
+	- obligatoire si sélection [02B - double authentification](./02B_Double_Authentification.md)
 
 > **Gestion Succès**
 
-- Si l'ensemble est valide passer au module [Vérification d'email](./03A_Verification_Email.md)
+- Si l'ensemble est valide passer au module [03A - Vérification d'email](./03A_Verification_Email.md)

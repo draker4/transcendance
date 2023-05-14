@@ -21,7 +21,7 @@
 - Texte "Enter your login and we will send you instructions to reset your password on your account email"
 - champ texte "Login"
 - Bouton "Continue"
-- Lien "Back to home" -> reviens a la configuration [Home](./00_Page_Inception.md)
+- Lien "Back to home" -> reviens a la configuration [00 - Home](./00_Page_Inception.md)
 
 > **Action**
 

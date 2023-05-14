@@ -10,4 +10,5 @@ Doit lister les user channel :
 - champ login ou username permettant de remonter liste channel / user liée à un user
 - remonter le nombre de message non lu
 - prévoir flag pour remonter uniquement user / channel liée à l'utilisateur
+- Si l’utilisateur courant est ban par un autre utilisateur ou channel ou l’inverse alors ne pas remonter dans la liste
 # Liste des EndPoints

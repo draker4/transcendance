@@ -9,31 +9,39 @@
 	- [03B - Inscription - Section Email Vérifié](./03B_Email_Verifie.md)
 - [04 - Password Perdu](./04_Password_Perdu.md)
 	- [04A - Password Perdu - Section Modification Password Perdu](./04A_Modification_Password_Perdu.md)
-- [05 - Chat](./05_Chat.md)
-	- [05A - Chat - Section Home](./05A_Chat_Home.md)
-	- [05B - Chat - Section Recherche](./05B_Recherche_Chat.md)
-	- [05C - Chat - Section Conversation](./05C_Conversation.md)
-	- [05D - Chat - Section Détails Channel](./05D_Details_Channel.md)
-	- [05E - Chat - Section Create Channel](./05E_Create_Channel.md)
-	- [05F - Chat - Section Partie Privée](./05F_Partie_Privee.md)
-- [06 - Profil Resumé](./06_Profil_Resume.md)
-- [07 - Profil Detail](./07_Profil_Detail.md)
-- [08 - Menu Jeu](08_Menu_Jeu.md)
-- [09 - Jeu](./09_Jeu.md)
-- [10 - LeaderBoard](./10_LeaderBoard.md)
-- [11 - Recherche Result](./11_Recherche.md)
-- [12 - Settings](./12_Settings.md)
-	- [12A - Settings - Section Gestion de Compte](./12A_Gestion_Compte.md)
-	- [12B - Settings - Section Gestion de Game](./12B_Gestion_Game.md)
-	- [12C - Settings - Section Gestion de Channel](./12C_Gestion_Channel.md)
-	- [12D - Settings - Section Gestion de Contact](./12D_Gestion_Contact.md)
-- [13 - Terms](./13_Terms.md)
-- [14 - Module Générique](./14_Module_Generique.md)
-	- [14A - Module Générique - Définition Password](./14A_Definition_Password.md)
-	- [14B - Module Générique - Sélection Avatar](./14B_Selection_Avatar.md)
-	- [14C - Module Générique - Download Avatar](./14C_Download_Avatar.md)
-	- [14D - Module Générique - Gestion Double Authentification](./14D_Gestion_Double_Autentification.md)
-- [Annexe 1 - Sommaire API](../API/00_Sommaire_API.md)
+- [05 - Terms](./05_Terms.md)
+- [10 - Home Connected](./10_Home_Connected.md)
+	- [10A - Profil Resumé](./10A_Profil_Resume.md)
+	- [10B - Jeu Résumé](./10B_Jeu_Resume.md)
+- [11 - Chat](./05_Chat.md)
+	- [11A - Chat - Section Home](./11A_Chat_Home.md)
+	- [11B - Chat - Section Recherche](./11B_Recherche_Chat.md)
+	- [11C - Chat - Section Conversation](./11C_Conversation.md)
+	- [11D - Chat - Section Détails Channel](./11D_Details_Channel.md)
+	- [11E - Chat - Section Détails User](./11E_Details_User.md)
+- [12 - LeaderBoard](./12_LeaderBoard.md)
+- [13 - Profil User](./13_Profil_Detail.md)
+- [14 - Profil Channel](./14_Profil_Channel.md)
+- [15 - Recherche](./15_Recherche.md)
+- [20 - Game](./20_Game.md)
+- [21 - Game Home](./21_Game_Home.md)
+- [22 - Game Classic](./22_Game_Classic.md)
+- [23 - Game Crunchy](./23_Game_Crunchy.md)
+- [24 - Game Partie Privée](./24_Game_Partie_Privee.md)
+- [25 - Game Resultat](./25_Game_Resultat.md)
+- [26 - Game Amélioration](./26_Game_Amelioration.md)
+- [30 - Settings](./30_Settings.md)
+- [31 - Gestion de Compte](./31_Gestion_Compte.md)
+- [32 - Gestion de Game](./32_Gestion_Game.md)
+- [33 - Gestion de Channel](./33_Gestion_Channel.md)
+	- [33A - Creation Channel](./33A_Creation_Channel.md)
+- [34 - Gestion de Contact](./34_Gestion_Contact.md)
+- [A00 - Module Générique](./A00_Module_Generique.md)
+- [A01 - Définition Password](./A01_Definition_Password.md)
+- [A02 - Sélection Avatar](./A02_Selection_Avatar.md)
+- [A03 - Download Avatar](./A03_Download_Avatar.md)
+- [A04 - Gestion Double Authentification](./A04_Double_Autentification.md)
+- [Sommaire API](../API/00_Sommaire_API.md)
 
 # Point Ouvert
 
@@ -105,8 +113,8 @@
 
 > **Action**
 - Clic : menu déroulant avec :
-	- [Profil](./07_Profil_Detail.md) = Profil détaillé de l'utilisateur courant
-	- [Settings](./12_Settings.md) 
+	- [Profil](./13_Profil_User.md)
+	- [Settings](./30_Settings.md) 
 	- "Log out"
 - Passage : prévoir animation
 
@@ -122,15 +130,15 @@
 
 ### **Menu**
 module en lien : 
-- [Game](./08_Menu_Jeu.md) = page d'acceuil + scroll menu jeu
-- [LeaderBoard](./10_LeaderBoard.md)
-- [Section de Recherche](./11_Recherche.md)
+- [Game](./20_Game.md)
+- [LeaderBoard](./12_LeaderBoard.md)
+- [Section de Recherche](./15_Recherche.md)
 
 > **Affichage**
 - Grand Ecran : afficher chaque section :
 	- Game & LeaderBoard à Gauche apres Bouton Chat
 	- Section de recherche à Droit avant utilisateur
-- Ecran Réduit : 
+- Ecran Réduit :
 	- bouton + plus menu déroulant
 	- Justifié à Gauche
 	- Section de Recherche en premier
@@ -138,6 +146,9 @@ module en lien :
 > **Action**
 - Clic : Ouverture module en lien
 - Passage : prévoir animation
+- Section Recherche : menu déroulant avec les résulats : voir [15 - Recherche](./15_Recherche.md) :
+	- Si click sur resultat alors ouvrir lien
+	- Si touch entrée alors affichage [15 - Recherche](./15_Recherche.md)
 
 # Main
 
@@ -156,31 +167,35 @@ module en lien :
 
 ## Utilisateur Non connecté
 
+Configuration par défaut : [01 - Présentation](./01_Presentation.md)
+
 Module possible tous stand-alone : 
 
-1. [Présentation](./01_Pr%C3%A9sentation.md)
-2. [Connexion](./02_Gestion_Connexion.md)
-3. [Inscription](./03_Inscription.md)
-4. [Password Perdu](./04_Password_Perdu.md)
-5. [Terms](./13_Terms.md)
+1. [01 - Présentation](./01_Presentation.md)
+2. [02 - Connexion](./02_Gestion_Connexion.md)
+3. [03 - Inscription](./03_Inscription.md)
+4. [04 - Password Perdu](./04_Password_Perdu.md)
+5. [05 - Terms](./05_Terms.md)
 
 ## Utilisateur connecté
 
-Module page principal :
-1. [Profil Resumé](./06_Profil_Resume.md)
-2. [Menu Jeu](08_Menu_Jeu.md)
+Configuration par défaut : [10 - Home Connected](./10_Home_Connected.md)
 
-Le module chat devra pouvoir s'ouvrir si la page est assez grande sur la gauche de l'écran en réduisant la place des autres modules affiché
-(voir [Chat](./05_Chat.md))
+Le module chat devra pouvoir s'ouvrir (si la page est assez grande) sur la gauche de l'écran en réduisant la place des autres modules affiché
+(voir [Chat](./11_Chat.md))
 
 Module Stand-Alone :
-1. [Profil Detail](./07_Profil_Detail.md)
-2. [Jeu](./09_Jeu.md)
-3. [LeaderBoard](./10_LeaderBoard.md)
-4. [Settings](12_Settings.md)
-5. [Recherche Result](./11_Recherche.md)
-5. [Présentation](./01_Pr%C3%A9sentation.md)
-6. [Terms](./13_Terms.md)
+- [01 - Présentation](./01_Presentation.md)
+- [05 - Terms](./05_Terms.md)
+- [10 - Home Connected](./10_Home_Connected.md)
+- [11 - Chat](./11_Chat.md)(Si pas assez de place ou agrandis par utilisateur)
+- [12 - Leaderboard](./12_LeaderBoard.md)
+- [13 - Profil User](./13_Profil_User.md)
+- [14 - Profil Channel](./14_Profil_Channel.md)
+- [15 - Recherche](./15_Recherche.md)
+- [20 - Game](./20_Game.md)
+- [30 - Settings](./30_Settings.md)
+
 
 # Footer
 
@@ -193,8 +208,8 @@ Module Stand-Alone :
 
 ### Ligne de lien vers module : 
 
-- [About](./01_Pr%C3%A9sentation.md)
-- [Terms](./13_Terms.md)
+- [About](./01_Presentation.md)
+- [Terms](./05_Terms.md)
 
 > **Action**
 - Clic : Ouverture module en lien
@@ -216,4 +231,4 @@ Module Stand-Alone :
 
 ## Utilisateur connecté
 Ajouter le lien :
-- [Settings](./12_Settings.md)
+- [Settings](./30_Settings.md)
