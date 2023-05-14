@@ -76,7 +76,7 @@
   On se connecte avec les identifiants
 
   <p align="center">
-    <img src="./imgs/ext.png" />
+    <img src="./imgs/app.png" />
   </p>
 
   Un fois connecté on peut gerer la database et la visualiser / executer des script dedans
