@@ -84,3 +84,8 @@
   <p align="center">
     <img src="./imgs/script.png" />
   </p>
+
+  - RESTE A FAIRE : 
+
+      Gerer le probleme de persitence de la bdd 
+      Ajouter les mdp et user dans .env et conf la bdd avec
