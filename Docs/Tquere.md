@@ -110,10 +110,10 @@
   - Test de connection front avec back -> OK
     <p align="center">
     <img src="./imgs/user_3.png" />
-  </p>
-
-  -Remarque : La base de données semble etre persitente ! 
+  </p> 
 
   - RESTE A FAIRE : 
       
       Ajouter les mdp et user dans .env et conf la bdd avec
+
+      Rendre la db persistente

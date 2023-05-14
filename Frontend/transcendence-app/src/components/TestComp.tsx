@@ -20,15 +20,11 @@ export default function TestForm() {
 
         service.Register_User(username, password).then((response) => {
             
-            if (response.status === 201) {
-                console.log("User created");
-                console.log(response.data.message);
-                setMessage(response.data.message);
-            } 
+            if (response.status === 200) {
+                setMessage(JSON.stringify(response, null, 4));
+            }
             else {
-                console.log(response.status)
-                console.log(response.data.message);
-                setMessage(response.data.message);
+                setMessage(JSON.stringify(response, null, 4));
             }
 
         }).catch((error) => {
@@ -47,14 +43,12 @@ export default function TestForm() {
         service.Get_All_User().then((response) => {
 
             if (response.status === 200) {
-                console.log("Got users");
-                console.log(response);
                 setMessage(JSON.stringify(response, null, 4));
             }
             else {
-                console.log(response);
                 setMessage(JSON.stringify(response, null, 4));
             }
+
         }).catch((error) => {
             console.log('Une erreur est survenue ( API down ? )');
             setMessage('Une erreur est survenue ( API down ? )');
