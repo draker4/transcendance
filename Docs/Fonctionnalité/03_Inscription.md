@@ -24,29 +24,22 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 - Titre "Create Your Account"
 - Champ texte "Login" : 
 	- icone info : "only for connexion, can't be change, invisible to other user, must be more than 3 characters, cannot be composed of # @ &"
-	- non modifiable si debuis 42 OAuth
+	- non modifiable si depuis 42 OAuth
 - Champ texte "Username" :
 	- icone info : "visible to other user, cannot be the same as the login, can be change, must be more than 3 characters, cannot be composed of # @ &"
-- Champ texte "Nom" :
-	- non modifiable si debuis 42 OAuth
+- Champ texte "Nom" : 
+	- non modifiable si depuis 42 OAuth
 - Champ texte "Prénom" :
-	- non modifiable si debuis 42 OAuth
-- Champ texte "Email" :
-	- non modifiable si debuis 42 OAuth
+	- non modifiable si depuis 42 OAuth
+- Champ texte "Email"
 	- Checker si format email valide
-- Champ texte "Téléphone" :
-	- non modifiable si debuis 42 OAuth
+- Champ texte "Téléphone"
 	- Checker si format téléphone valide
-- Password :
-	- non modifiable si debuis 42 OAuth
-	- ajouter le [module Password](./14A_Definition_Password.md)
+- Password (Ne pas afficher si depuis 42OAuth):
+	- ajouter le [module Password](./A04_Definition_Password.md)
 - Bouton "Confirm"
 	- au click ou touche entrée confirmer et envoyée [API 03 - Création Compte](../API/03_Creation_Compte.md)
-- "Already have an account?" "Log In" -> lien [02 - Connexion](./02_Gestion_Connexion.md)
-	- au click ou au click sur la croix du navigateur si un champ remplis afficher box confirmation : 
-		- Message "Your inscription will be cancel. Would you proceed?"
-		- Bouton "Confirm"
-		- Bouton "Back"
+- Texte "Already have an account?" et texte lien "Log In"
 
 ***2. Incription avec 42 OAuth :***
 
@@ -58,10 +51,10 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 - Clic bouton "Confirm" ou touche entrée
 	- Checker le champ, si erreur (voir gestion erreur) si ok afficher le champ suivant
 	- Si tous les champs ok alors envoyée [API 03 - Création Compte](../API/03_Creation_Compte.md)
-- Clic bouton "Cancel" ou sur la croix du navigateur afficher box confirmation et blocker modification du reste : 
+- Clic lien "Log In" -> lien [02 - Connexion](./02_Gestion_Connexion.md) : ou au click sur la croix du navigateur si un champ remplis afficher box confirmation : 
 	- Message "Your inscription will be cancel. Would you proceed?"
-	- Bouton "Confirm" -> revenir à la page home
-	- Bouton "Back" -> fermer box et permettre modification
+	- Bouton "Confirm"
+	- Bouton "Back"
 - Au survol / clic prévoir animation sur bouton et champ texte
 
 > **Gestion Erreur**
