@@ -1,5 +1,9 @@
 version: "3"
 
+networks:
+  transcendence:
+    name: transcendence
+
 volumes:
 
   frontend_vol:
@@ -56,6 +60,8 @@ services:
   frontend:
     build: ./Frontend
     container_name: React
+    depends_on:
+      - backend
     ports:
       - "3000:3000"
     volumes:
@@ -65,7 +71,3 @@ services:
     networks:
       - transcendence
     restart: always
-
-networks:
-  transcendence:
-    name: transcendence

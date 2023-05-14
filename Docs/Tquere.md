@@ -107,17 +107,13 @@
     <img src="./imgs/user_2.png" />
   </p>
 
-  - Test de connection front avec back -> A FAIRE
+  - Test de connection front avec back -> OK
     <p align="center">
     <img src="./imgs/user_3.png" />
   </p>
 
   -Remarque : La base de données semble etre persitente ! 
 
-
-
-
   - RESTE A FAIRE : 
-
-      Gerer le probleme de persitence de la bdd ? Verifiersi vraiment un probleme ? 
+      
       Ajouter les mdp et user dans .env et conf la bdd avec
