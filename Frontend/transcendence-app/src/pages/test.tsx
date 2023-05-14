@@ -1,13 +1,9 @@
-import Head from 'next/head';
-import React, {} from 'react';
+import Head from "next/head";
+import TestComp from "@/components/TestComp";
 
-import HomeContainer from '@/components/HomeContainer';
-
-import styles from '@/styles/Home.module.css';
-
-export default function Home() {
-  return (
-    <>
+export default function Register() {
+    return (
+        <>
       <Head>
         <title>Transcendence</title>
         <meta
@@ -20,11 +16,9 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.png" />
       </Head>
-
-      <main className={styles.main} style={{ textAlign: 'center' }}>
-        <HomeContainer />
-      </main>
-
-    </>
-  );
+        <main>
+            <TestComp />
+        </main>
+        </>
+    );
 }

@@ -1,3 +1,5 @@
+.gitignore
+
 # misc
 .DS_Store
 
@@ -6,3 +8,5 @@
 
 # Database
 Database
+
+install_docker.sh
