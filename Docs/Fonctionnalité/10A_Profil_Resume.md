@@ -1,4 +1,4 @@
-# Module Resume du Profile
+# Module Résumé du Profile
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

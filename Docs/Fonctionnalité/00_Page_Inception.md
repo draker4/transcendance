@@ -23,8 +23,8 @@
 - [13 - Profil User](./13_Profil_Detail.md)
 - [14 - Profil Channel](./14_Profil_Channel.md)
 - [15 - Recherche](./15_Recherche.md)
-- [20 - Game](./20_Game.md)
-- [21 - Game Home](./21_Game_Home.md)
+- [20 - Game Home](./20_Game_Home.md)
+- [21 - Game Matchmaking](./21_Game_Matchmaking.md)
 - [22 - Game Classic](./22_Game_Classic.md)
 - [23 - Game Crunchy](./23_Game_Crunchy.md)
 - [24 - Game Partie Privée](./24_Game_Partie_Privee.md)
@@ -125,7 +125,7 @@
 
 ### **Menu**
 module en lien : 
-- [Game](./20_Game.md)
+- [Game](./20_Game_Home.md)
 - [LeaderBoard](./12_LeaderBoard.md)
 - [Section de Recherche](./15_Recherche.md)
 
@@ -188,9 +188,7 @@ Module Stand-Alone :
 - [13 - Profil User](./13_Profil_User.md)
 - [14 - Profil Channel](./14_Profil_Channel.md)
 - [15 - Recherche](./15_Recherche.md)
-- [20 - Game](./20_Game.md)
-- [30 - Settings](./30_Settings.md)
-
+- [20 - Game Home](./20_Game_Home.md)
 
 # Footer
 

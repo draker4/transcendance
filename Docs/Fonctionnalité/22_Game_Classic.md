@@ -1,4 +1,4 @@
-# Module Jeu en Cours
+# Module Game version Classic
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

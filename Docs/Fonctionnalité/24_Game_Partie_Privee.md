@@ -1,4 +1,4 @@
-# Module Chat - Section Partie Privée
+# Module Game pour proposition d'une partie privée
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

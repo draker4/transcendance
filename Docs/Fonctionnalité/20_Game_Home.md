@@ -1,4 +1,4 @@
-# Module Jeu en Cours
+# Module Game Menu Principal Détaillé
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

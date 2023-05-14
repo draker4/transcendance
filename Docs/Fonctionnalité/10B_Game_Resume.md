@@ -1,4 +1,4 @@
-# Module menu du jeu
+# Module Game Résumé
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 

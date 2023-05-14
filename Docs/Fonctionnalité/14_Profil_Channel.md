@@ -1,4 +1,4 @@
-# Module Profil Détaillé
+# Module Profil Channel
 
 **[Retour Page Inception](./00_Page_Inception.md)**
 
