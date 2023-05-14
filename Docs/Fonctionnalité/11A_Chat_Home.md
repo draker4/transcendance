@@ -45,10 +45,12 @@
 - Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité : 
 	- Section "Channel" :
 		- Visage : ouverture [Détails Channel](./11D_Details_Channel.md)
+		- Conversation : ouverture [Conversation](./11C_Conversation.md)
 		- Settings : ouverture [Gestion Channel](./33_Gestion_Channel.md) avec présélection de cette channel
 		- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 	- Section "Contact" :
 		- Visage : ouverture [Détails User](./11E_Details_User.md)
+		- Conversation : ouverture [Conversation](./11C_Conversation.md)
 		- Raquette : ouverture [Partie Privée](./24_Partie_Privee.md)
 		- Croix : enlever de la liste d’amis + box confirmation voir [API 26 - Remove Contact](../API/26_Remove_Contact.md)
 		- Main : bloquer user et enlever de la liste d’amis + box confirmation voir [API 26 - Remove Contact](../API/26_Remove_Contact.md)

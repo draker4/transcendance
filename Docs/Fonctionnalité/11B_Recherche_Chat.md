@@ -47,6 +47,8 @@
 - Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité : 
 	- Section "Channel" :
 		- Visage : ouverture [Détails Channel](./11D_Details_Channel.md)
+		- Conversation : ouverture [Conversation](./11C_Conversation.md) :
+			- Si l'utilisateur n'est pas membre de la channel alors avant join avec [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si l'utilisateur n'est pas membre de la channel :
 			- Join : rejoindre la channel voir [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si l'utilisateur est membre de la channel :
@@ -54,6 +56,8 @@
 			- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 	- Section "Contact" :
 		- Visage : ouverture [Détails User](./11E_Details_User.md)
+		- Conversation : ouverture [Conversation](./11C_Conversation.md) :
+			- Si l'utilisateur n'est pas membre de la channel alors avant join avec [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si le user n'est pas dans la liste de contact de l'utilisateur : 
 			- "Add Contact" : ajout à la la liste de contact voir [API 25 - Add Contact](../API/25_Add_Contact.md)
 		- Si le user est dans la liste de contact de l'utilisateur :

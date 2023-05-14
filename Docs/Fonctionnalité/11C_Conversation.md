@@ -27,7 +27,7 @@ Le module sera composé de 3 partie :
 	- Justifié à Gauche
 		- Avatar Channel
 		- Nom Channel
-	- Justifié à Droite menu d'option avec Visage / Settings / Croix Rouge
+	- Justifié à Droite menu d'option avec Visage / Settings / Croix
 - Si conversation Privée :
 	- Justifié à Gauche
 		- Avatar User

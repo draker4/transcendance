@@ -30,12 +30,7 @@
 - [24 - Game Partie Privée](./24_Game_Partie_Privee.md)
 - [25 - Game Resultat](./25_Game_Resultat.md)
 - [26 - Game Amélioration](./26_Game_Amelioration.md)
-- [30 - Settings](./30_Settings.md)
-- [31 - Gestion de Compte](./31_Gestion_Compte.md)
-- [32 - Gestion de Game](./32_Gestion_Game.md)
-- [33 - Gestion de Channel](./33_Gestion_Channel.md)
-	- [33A - Creation Channel](./33A_Creation_Channel.md)
-- [34 - Gestion de Contact](./34_Gestion_Contact.md)
+- [27 - Game Settings](./27_Game_Settings.md)
 - [A00 - Module Générique](./A00_Module_Generique.md)
 - [A01 - Définition Password](./A01_Definition_Password.md)
 - [A02 - Sélection Avatar](./A02_Selection_Avatar.md)
@@ -114,7 +109,7 @@
 > **Action**
 - Clic : menu déroulant avec :
 	- [Profil](./13_Profil_User.md)
-	- [Settings](./30_Settings.md) 
+	- [Settings](./13_Profil_User.md) avec modification activé
 	- "Log out"
 - Passage : prévoir animation
 
@@ -231,4 +226,4 @@ Module Stand-Alone :
 
 ## Utilisateur connecté
 Ajouter le lien :
-- [Settings](./30_Settings.md)
+- [Settings](./13_Profil_User.md) avec modification activé
