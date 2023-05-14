@@ -10,6 +10,7 @@ const service = new Client();
 export default function TestForm() {
     const router = useRouter();
 
+    const [message, setMessage] = useState<string>("");
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,11 +19,23 @@ export default function TestForm() {
         setLoading(true);
 
         service.Register_User(username, password).then((response) => {
-            if(response.success) {
-                router.push(`/test`);
+            
+            if (response.status === 201) {
+                console.log("User created");
+                console.log(response.data.message);
+                setMessage(response.data.message);
+                // router.push('/login');
+
             } else {
-                alert(response.message);
+                console.log(response.status)
+                console.log(response.data.message);
+                setMessage(response.data.message);
             }
+
+        }).catch((error) => {
+            console.log('Une erreur est survenue ( API down ? )');
+            setMessage('Une erreur est survenue ( API down ? )');
+
         }).finally(() => {
             setLoading(false);
         });
@@ -43,7 +56,7 @@ export default function TestForm() {
             }} />
 
             <button type="submit" className={styles.form_button} onClick={Register_User} disabled={loading}>{loading ? 'Inscription en cours...' : 'Créer un compte'}</button>
-
+            { message != "" && <p> {message} </p> }
         </div>
     );
 }
