@@ -30,7 +30,7 @@
 	- [13C - Channel List](./13C_Channel_List.md)
 	- [13D - Contact List](./13D_Contact_List.md)
 - [14 - Profil Channel](./14_Profil_Channel.md)
-	- [14A - Edit Channel](./14A_Edit_Channel.md)
+	- [14A - Create Channel](./14A_Create_Channel.md)
 	- [14B - Overview](./14B_Overview.md)
 	- [14C - Member List](./14C_Member_List.md)
 - [15 - Recherche](./15_Recherche.md)

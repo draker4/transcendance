@@ -20,9 +20,7 @@
 
 Les champs s'afficher les un après les autres :
 - Champ texte non-modifiable "Login"
-- Champ texte "Username" :
-	- icone info : "visible to other user, cannot be the same as the login, can be change, must be more than 3 characters, cannot be composed of # @ &"
-- Champ texte "Bio"
+- Champ texte "Username" avec sous-module [A05 - Define Name](./A05_Define_Name.md)
 - Champ texte "Nom" :
 	- non modifiable si depuis 42 OAuth
 - Champ texte "Prénom" :
@@ -54,10 +52,6 @@ Les champs s'afficher les un après les autres :
 
 > **Gestion Erreur**
 
-- Pour champ "login" et "username" :
-	- minimum 3 charactères (utile pour déclanchement recherche)
-	- charactères interdit : # @ &
-	- checker si déjà utilisé avec [API 31 - List User/Channel](../API/31_List_User_Channel.md) (attention si login utilisé mais avec 42 OAuth alors c'est ok pour éviter blocage à l'inverse)
 - Pour champ "Nom", "Prénom" et "Email" :
 	- doivent etre remplis
 - Pour champ "Email" :

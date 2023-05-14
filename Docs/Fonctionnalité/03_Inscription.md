@@ -22,11 +22,10 @@
 
 Les champs s'afficher les un après les autres si ok (si ecran suffisament grand alors 2 côte à côte):
 - Titre "Create Your Account"
-- Champ texte "Login" : 
-	- icone info : "only for connexion, can't be change, invisible to other user, must be more than 3 characters, cannot be composed of # @ &"
+- Champ texte "Login" :
+	- utiliser [A05 - Define Name](./A05_Define_Name.md)
 	- non modifiable si depuis 42 OAuth
-- Champ texte "Username" :
-	- icone info : "visible to other user, cannot be the same as the login, can be change, must be more than 3 characters, cannot be composed of # @ &"
+- Champ texte "Username" : utiliser [A05 - Define Name](./A05_Define_Name.md)
 - Champ texte "Nom" : 
 	- non modifiable si depuis 42 OAuth
 - Champ texte "Prénom" :
@@ -60,9 +59,7 @@ Les champs s'afficher les un après les autres si ok (si ecran suffisament grand
 > **Gestion Erreur**
 
 - Pour champ "login" et "username" :
-	- minimum 3 charactères (utile pour déclanchement recherche)
-	- charactères interdit : # @ &
-	- checker si déjà utilisé avec [API 31 - List User/Channel](../API/31_List_User_Channel.md) (attention si login utilisé mais avec 42 OAuth alors c'est ok pour éviter blocage à l'inverse)
+	- checker qu'ils soit différent
 - Pour champ "Nom", "Prénom" et "Email" :
 	- doivent etre remplis
 - Pour champ "Email" :

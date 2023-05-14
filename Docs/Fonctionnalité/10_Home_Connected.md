@@ -17,6 +17,7 @@
 
 > **Affichage**
 
+Cette configuration servira de page d'acceuil pour les utilisateur connecté et sera composé 2 modules suivant :
 1. [Profil Resumé](./10A_Profil_Resume.md)
 2. [Game Résumé](10B_Game_Resume.md)
 
@@ -25,5 +26,3 @@
 > **Gestion Erreur**
 
 > **Gestion Succès**
-
-Utilisable uniquement pour l'utilisateur courant

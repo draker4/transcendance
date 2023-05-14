@@ -40,7 +40,7 @@ Utiliser l'[API 20 - Info User](../API/20_Info_User.md) pour obtenir les donnée
 			- Main
 
 2. **Info :**
-- Texte de présentation
+- Texte de présentation "Bio"
 - Niveau
 - Pourcentage de victoire
 - Resultat des match (Victoire / Nul / Défaite)
@@ -63,7 +63,7 @@ Utiliser l'[API 20 - Info User](../API/20_Info_User.md) pour obtenir les donnée
 	- Settings : [13 - Profil User](./13_Profil_User.md)
 - Si User est différent de l'utilisateur :
 	- Si le User n'est pas dans la list de contact :
-		- Conversation : join la channel avec [API 25 - Add Contact](../API/25_Add_Contact.md) puis ouverture [Conversation](./11C_Conversation.md)
+		- Conversation : ajouter contact avec [API 25 - Add Contact](../API/25_Add_Contact.md) puis ouverture [Conversation](./11C_Conversation.md)
 		- Add Contact : [API 25 - Add Contact](../API/25_Add_Contact.md)
 	- Si le User est dans la list de contact :
 		- Conversation : ouverture [Conversation](./11C_Conversation.md)
@@ -72,11 +72,11 @@ Utiliser l'[API 20 - Info User](../API/20_Info_User.md) pour obtenir les donnée
 
 2. **Info :**
 - Si User est l'utilisateur :
-	- Texte de présentation devient champ texte pour modification puis à la touche entrée ou clic ailleurs sauvegarde avec [API 11 - Update Channel](../API/11_Update_Channel.md) uniquement si modification détecté
+	- Texte de présentation devient champ texte pour modification puis à la touche entrée ou clic ailleurs sauvegarde avec [API 21 - Update User](../API/21_Update_User.md) uniquement si modification détecté
 
 3. **Liste Channels :**
 - Si User est l'utilisateur :
-	- Create Channel : ouverture [14 - Profil Channel](./14_Profil_Channel.md)
+	- Create Channel : ouverture [14A - Create Channel](./14A_Create_Channel.md)
 - Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité :
 	- Visage : ouverture [11D - Détails Channel](./11E_Details_User.md)
 	- Si l'utilisateur n'est pas membre de la channel : 
@@ -84,7 +84,6 @@ Utiliser l'[API 20 - Info User](../API/20_Info_User.md) pour obtenir les donnée
 		- Join : [API 12 - Join Channel](../API/12_Join_Channel.md)
 	- Si l'utilisateur est membre de la channel : Settings et Croix
 		- Conversation : ouverture [11C - Conversation](./11C_Conversation.md)
-		- Si Utilisateur est Admin/Owner : Settings : ouverture [14 - Profil Channel](./14_Profil_Channel.md) mode modification
 		- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 
 > **Gestion Erreur**

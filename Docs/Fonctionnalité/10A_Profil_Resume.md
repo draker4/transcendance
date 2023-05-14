@@ -17,10 +17,17 @@
 
 > **Affichage**
 
+- un Bloc avec : 
+	- Avatar
+	- Username en dessous
+- un Bloc avec : 
+	- Niveau
+	- Pourcentage de victoire
+	- Resultat des match (Victoire / Nul / Défaite)
+	- Nombre de Match
+
 > **Action**
 
 > **Gestion Erreur**
 
 > **Gestion Succès**
-
-Utilisable uniquement pour l'utilisateur courant

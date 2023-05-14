@@ -43,7 +43,6 @@
 		- Si l'utilisateur n'est pas membre de la channel alors avant join avec [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si le user n'est pas dans la liste de contact de l'utilisateur alors ajouter d'abord aux contacts voir [API 25 - Add Contact](../API/25_Add_Contact.md)
 	- Au clic droit ou clic maintenu ou survol sur la droite : afficher menu déroulant d’icone venant de la droite
-
 - Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité : 
 	- Section "Channel" :
 		- Visage : ouverture [Détails Channel](./11D_Details_Channel.md)
@@ -52,16 +51,14 @@
 		- Si l'utilisateur n'est pas membre de la channel :
 			- Join : rejoindre la channel voir [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si l'utilisateur est membre de la channel :
-			- Settings : ouverture [Gestion Channel](./33_Gestion_Channel.md) avec présélection de cette channel
 			- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 	- Section "Contact" :
 		- Visage : ouverture [Détails User](./11E_Details_User.md)
-		- Conversation : ouverture [Conversation](./11C_Conversation.md) :
-			- Si l'utilisateur n'est pas membre de la channel alors avant join avec [API 12 - Join Channel](../API/12_Join_Channel.md)
 		- Si le user n'est pas dans la liste de contact de l'utilisateur : 
 			- "Add Contact" : ajout à la la liste de contact voir [API 25 - Add Contact](../API/25_Add_Contact.md)
+			- Conversation : add contact avec [API 25 - Add Contact](../API/25_Add_Contact.md) puis ouverture [Conversation](./11C_Conversation.md)
 		- Si le user est dans la liste de contact de l'utilisateur :
-			- Raquette : ouverture [Partie Privée](./24_Partie_Privee.md)
+			- Conversation : ouverture [Conversation](./11C_Conversation.md)
 			- Croix : enlever de la liste d’amis + box confirmation voir [API 26 - Remove Contact](../API/26_Remove_Contact.md)
 			- Main : bloquer user et enlever de la liste d’amis + box confirmation voir [API 26 - Remove Contact](../API/26_Remove_Contact.md)
 

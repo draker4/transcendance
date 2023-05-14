@@ -35,7 +35,7 @@ Utiliser l'[API 15 - Info Channel](../API/15_Info_Channel.md) pour obtenir les d
 		- Croix
 
 2. **Info :**
-- Texte du topic
+- Texte "Channel Description"
 - Nombre d'utilisateur
 - Pourcentage de victoire
 - Resultat des match (Victoire / Nul / Défaite)
@@ -45,8 +45,7 @@ Utiliser l'[API 15 - Info Channel](../API/15_Info_Channel.md) pour obtenir les d
 - Titre section "Membres"
 - Bouton à gauche du titre permettant d’ouvrir / réduire la section
 - Récupérer l'ensemble des membres et afficher dans l’ordre suivant  :
-	- Trié par rang avec section
-	- Trié par status
+	- Trié par rang avec section (Owner/Admin/Member)
 	- Trié alphabétiquement
 	- Avatar User :
 		- Si membre de la channel afficher le statuts des user en bas à droite de l’avatar
@@ -56,7 +55,7 @@ Utiliser l'[API 15 - Info Channel](../API/15_Info_Channel.md) pour obtenir les d
 
 1. **Titre :**
 - Si Utilisateur est Admin/Owner :
-	- Nom Channel au clic devient champ texte pour modification puis à la touche entrée ou clic ailleurs sauvegarde avec [API 11 - Update Channel](../API/11_Update_Channel.md)
+	- Nom Channel au clic devient champ texte pour modification avec sous-module [A05 - Define Name](./A05_Define_Name.md) puis à la touche entrée ou clic ailleurs sauvegarde avec [API 11 - Update Channel](../API/11_Update_Channel.md)
 - Si l'utilisateur n'est pas membre de la channel : 
 	- Conversation : join la channel avec [API 12 - Join Channel](../API/12_Join_Channel.md) puis ouverture [11C - Conversation](./11C_Conversation.md)
 	- Join : [API 12 - Join Channel](../API/12_Join_Channel.md)
@@ -67,7 +66,7 @@ Utiliser l'[API 15 - Info Channel](../API/15_Info_Channel.md) pour obtenir les d
 
 2. **Info :**
 - Si Utilisateur est Admin/Owner :
-	- Texte du topic au clic devient champ texte pour modification puis à la touche entrée ou clic ailleurs sauvegarde avec [API 11 - Update Channel](../API/11_Update_Channel.md) uniquement si modification détecté
+	- Texte "Channel Description" au clic devient champ texte pour modification puis à la touche entrée ou clic ailleurs sauvegarde avec [API 11 - Update Channel](../API/11_Update_Channel.md) uniquement si modification détecté
 
 3. **Liste des membres :**
 - Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité : 
