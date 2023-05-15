@@ -1,9 +1,9 @@
 # Module Présentation Site
 
-**[Retour Page Inception](./00_Page_Inception.md)**
+**[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
-
+- gif pour montrer les 2 versions / partie en cours
 # API Liée
 
 # Regle de gestion

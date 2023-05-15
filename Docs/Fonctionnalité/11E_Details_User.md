@@ -1,6 +1,6 @@
 # Module Chat - Section Détails User
 
-**[Retour Page Inception](./00_Page_Inception.md)**
+**[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
 
@@ -82,7 +82,7 @@ Utiliser l'[API 20 - Info User](../API/20_Info_User.md) pour obtenir les donnée
 	- Si l'utilisateur n'est pas membre de la channel : 
 		- Conversation : join la channel avec [API 12 - Join Channel](../API/12_Join_Channel.md) puis ouverture [11C - Conversation](./11C_Conversation.md)
 		- Join : [API 12 - Join Channel](../API/12_Join_Channel.md)
-	- Si l'utilisateur est membre de la channel : Settings et Croix
+	- Si l'utilisateur est membre de la channel :
 		- Conversation : ouverture [11C - Conversation](./11C_Conversation.md)
 		- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 

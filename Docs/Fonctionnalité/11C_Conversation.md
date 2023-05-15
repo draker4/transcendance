@@ -1,9 +1,12 @@
 # Module Chat - Section Conversation
 
-**[Retour Page Inception](./00_Page_Inception.md)**
+**[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
-
+- Prévoir system de notification pour :
+	- message recu
+	- partie privée
+	- ...
 # API Liée
 - [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 - [API 14 - Remove Channel Member](../API/14_Remove_Channel_Member.md)
