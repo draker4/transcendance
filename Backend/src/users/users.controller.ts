@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Post, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { createUserDto } from './dto/CreateUser.dto';
 
@@ -7,7 +7,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('add')
-  @UsePipes(ValidationPipe)
+  @UsePipes(new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }))
   async addUser(
     @Body() createUserDto: createUserDto
   ) {
@@ -16,6 +19,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();
     return users;
