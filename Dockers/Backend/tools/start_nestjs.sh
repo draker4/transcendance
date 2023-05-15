@@ -2,7 +2,7 @@
 
 echo "Begin NestJS configuration"
 
-mkdir -p nest-project
+mkdir -p nest-project/config
 chmod -R 777 nest-project
 
 #If no react projet , create one
@@ -11,13 +11,12 @@ if [ ! -d "./nest-project/node_modules" ]; then
     nest new nest-project --package-manager npm
 
     echo "adding packages"
-    npm add @nestjs@typeorm typeorm pg class-validator class-transformer
+    npm add @nestjs@typeorm typeorm pg class-validator class-transformer @nestjs/config
 
     echo "NestJS project created"
 
     sed -i 's/3000/4000/g' ./nest-project/src/main.ts
 fi
-
 
 cd nest-project
 

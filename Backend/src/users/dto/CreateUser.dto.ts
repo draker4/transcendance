@@ -1,16 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString, MinLength } from "class-validator";
-import { Entity } from "typeorm";
+import { IsNotEmpty, IsString, MinLength } from "class-validator";
 
 export class createUserDto {
 
 	@IsNotEmpty()
-	@IsNumber()
-	id: number;
-
-	@IsNotEmpty()
 	@IsString()
 	@MinLength(3)
-	nickname: string;
+	username: string;
 
 	@IsNotEmpty()
 	@IsString()

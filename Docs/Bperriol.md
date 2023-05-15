@@ -13,3 +13,7 @@ Donc voici comment ca fonctionne:
 * La methode Get() permet d'afficher tous les users dans la database.
 * La methode Post() permet d'ajouter un utilisateur dans la database. Pour utiliser ceci, vous pouvez utiliser l'extension REST client dans vs code. Une fois téléchargée vous pouvez faire des requestes dans le fichier test.http a la racine du projet (juste appuyer sur le bouton send requets aui apparait automatiquement avec l'extension).
 * Cette fonction Post() utilise ce qu'on appelle un Dto (je sais plsu exactement le nom entier). Le Dto ici est dans le dossier src/users/dto. Dans ce dossier vous pouvez void le decorateur Entity() qui declare la classe comme une table de la database. Comme vous pouvez voir, c'est juste un user basique avec un id, un nickname et un password (evidemment on changera tout ca plus tard). Grace a la librairie class-transformer et class-validator, on peut ajouter des decoratuers au dessus de chaque propriete, du genre @IsNotEmpty() ou @IsNumber() qui sont tres comprehensibles. Cela nous permet de checker que les datas recues sont correctes a chaque requete POST() avant d'ajouter le user dans la table.
+
+# 15 mai
+
+Je rajoute la librairie @nestjs/config qui permet de configurer un module dans nest en fonction d'un fichier .env (ca nous permet de mettre le username, password, ... de la database en tant que variable d'environnement)

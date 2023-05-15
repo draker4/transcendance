@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -xv
+
 echo "Begin Database configuration"
 
 # Change les variable dans le script d'initialisation de la db
@@ -20,9 +22,16 @@ if [ ! -d "/etc/postgresql/13/conf_done" ]; then
 
     pg_ctlcluster 13 main start
 
-    echo "---------------Loading migrate.sql...---------------"
-    psql -U postgres -d postgres -a -f migrate.sql
-    echo "---------------Migrate.sql loaded!------------------"
+    #echo "---------------Loading migrate.sql...---------------"
+    #psql -U postgres -d postgres -a -f migrate.sql
+    echo "---------------Creating user and database...---------------"
+    createuser $DATA_BASE_USER
+    createdb $DATA_BASE_NAME -O $DATA_BASE_USER
+    psql -U $DATA_BASE_SUP_USER -c "ALTER USER $DATA_BASE_USER WITH PASSWORD '$DATA_BASE_PASSWORD';"
+    psql -U $DATA_BASE_SUP_USER -c "ALTER USER $DATA_BASE_SUP_USER WITH PASSWORD '$DATA_BASE_SUP_PW';"
+    psql -U $DATA_BASE_SUP_USER -c "GRANT ALL PRIVILEGES ON DATABASE $DATA_BASE_NAME TO $DATA_BASE_USER;"
+    psql -U $DATA_BASE_SUP_USER -c "GRANT ALL PRIVILEGES ON DATABASE $DATA_BASE_NAME TO $DATA_BASE_SUP_USER;"
+    echo "---------------Database configured!------------------"
 
     pg_ctlcluster 13 main stop
 
@@ -36,8 +45,8 @@ if [ ! -d "/etc/postgresql/13/conf_done" ]; then
     #On indique que la db est configuré
     touch /etc/postgresql/13/conf_done
 
-    service postgresql restart
-    service postgresql stop
+    #service postgresql restart
+    #service postgresql stop
 fi
 
 echo "---------------Starting postgresql service---------------"
