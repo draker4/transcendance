@@ -1,9 +1,9 @@
 # Module Inscription
 
-**[Retour Page Inception](./00_Page_Inception.md)**
+**[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
-
+- Ajouter une barre de % de progressions de l'inscription
 # API Liée
 - [03 - API Création Compte](../API/03_Creation_Compte.md)
 - [31 - API List User/Channel](../API/31_List_User_Channel.md)

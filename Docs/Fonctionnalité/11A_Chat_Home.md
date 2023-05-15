@@ -1,8 +1,9 @@
 # Module Chat - Section Home
 
-**[Retour Page Inception](./00_Page_Inception.md)**
+**[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
+- bouton de création rapide de conversation ouvrant le module conversation avec un champ de recherche a la place du titre permettant d'afficher en menu déroulant les user/channel
 
 # API Liée
 - [API 13 - Leave Channel](../API/13_Leave_Channel.md)
@@ -41,11 +42,11 @@
 - Sur la ligne d'une channel / d'un user :
 	- Au clic ouverture [Conversation](./11C_Conversation.md) 
 	- Au clic droit ou clic maintenu ou survol sur la droite : afficher menu déroulant d’icone venant de la droite
-- Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité : 
+- Chaque ligne disposera d'un menu déroulant d'icone pour lien vers fonctionnalité s'affichant si clic maintenu ou survol sur la partie droite ou bouton 3 petit point: 
 	- Section "Channel" :
 		- Visage : ouverture [Détails Channel](./11D_Details_Channel.md)
 		- Conversation : ouverture [Conversation](./11C_Conversation.md)
-		- Settings : ouverture [Gestion Channel](./33_Gestion_Channel.md) avec présélection de cette channel
+		- Settings : ouverture [Edit Channel](./14_Profil_Channel.md)
 		- Croix : quitter la channel + box confirmation voir [API 13 - Leave Channel](../API/13_Leave_Channel.md)
 	- Section "Contact" :
 		- Visage : ouverture [Détails User](./11E_Details_User.md)
