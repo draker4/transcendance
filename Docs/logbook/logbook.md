@@ -22,3 +22,8 @@ Crunchy Team : bboisson tquere bperriol loumarti
 
 - La team `maquette` prend en main l'appli web figma, en collabaratif, premiers screens pret a etre echangés
 - la team `docker-compose` a reussi leur 1ere connection des 3 conteneurs avec `la database PostGreSQL` fonctionnelle
+
+## lundi 15 mai
+
+- Point sur la `Doc` markdown realisee par `bboisson` avant son depart en vacances.
+- Premieres recherches d'info sur `OAuth 42`
