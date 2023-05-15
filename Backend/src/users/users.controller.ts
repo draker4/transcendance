@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, UsePipes, ValidationPipe } from '@nestjs/common';
-import { UsersService, UserService } from './users.service';
+import { UsersService } from './users.service';
 import { createUserDto } from './dto/CreateUser.dto';
 
 // @Controller('users')
@@ -21,27 +21,22 @@ import { createUserDto } from './dto/CreateUser.dto';
 // 	}
 // }
 
-@Controller('/api/adduser')
+@Controller('api/users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('add')
+  @UsePipes(ValidationPipe)
   async addUser(
-    @Body('username') username: string,
-    @Body('password') password: string,
+    @Body() createUserDto: createUserDto
   ) {
-    const result = await this.userService.addUser(username, password);
+    const result = await this.usersService.addUser(createUserDto);
     return result;
   }
-}
-
-@Controller('/api/users')
-export class UsersController {
-  constructor(private readonly userService: UsersService) {}
 
   @Get()
   async getAllUsers() {
-    const users = await this.userService.getAllUsers();
+    const users = await this.usersService.getAllUsers();
     return users;
   }
 }
