@@ -18,7 +18,7 @@ export class UsersController {
     return result;
   }
 
-  @Get()
+  @Get('getall')
   @UseInterceptors(ClassSerializerInterceptor)
   async getAllUsers() {
     const users = await this.usersService.getAllUsers();

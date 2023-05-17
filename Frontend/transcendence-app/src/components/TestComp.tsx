@@ -18,24 +18,45 @@ export default function TestForm() {
     const Register_User = () => {
         setLoading(true);
 
-        service.Register_User(username, password).then((response) => {
-            
-            if (response.status === 200) {
-                setMessage(JSON.stringify(response, null, 4));
-            }
-            else {
-                setMessage(JSON.stringify(response, null, 4));
-            }
+        router.push('/');
 
-        }).catch((error) => {
-            console.log('Une erreur est survenue ( API down ? )');
-            setMessage('Une erreur est survenue ( API down ? )');
-
-        }).finally(() => {
-            setLoading(false);
+        // service.Register_User(username, password).then((response) => {
             
-        });
+        //     if (response.status === 200) {
+        //         setMessage(JSON.stringify(response, null, 4));
+        //     }
+
+        //     else {
+        //         setMessage(JSON.stringify(response, null, 4));
+        //     }
+
+
+        // }).catch((error) => {
+        //     console.log('Une erreur est survenue ( API down ? )');
+        //     setMessage('Une erreur est survenue ( API down ? )');
+
+        // }).finally(() => {
+        //     setLoading(false);
+            
+        // });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     const Get_All_User = () => {
         setLoading(true);

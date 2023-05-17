@@ -8,6 +8,9 @@ import styles from '@/styles/Home.module.css';
 export default function Home() {
   return (
     <>
+
+
+
       <Head>
         <title>Transcendence</title>
         <meta
@@ -21,9 +24,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.png" />
       </Head>
 
+
+
+
+
+
+
       <main className={styles.main} style={{ textAlign: 'center' }}>
         <HomeContainer />
       </main>
+
+
+
+
 
     </>
   );
