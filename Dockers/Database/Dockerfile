@@ -1,7 +1,7 @@
 FROM debian:stable-20230320-slim
 
 RUN mkdir -p /etc/postgresql/13
-RUN chmod 777 /etc/postgresql/13
+RUN chmod 777 -R /etc/postgresql/13
 
 RUN apt-get update
 RUN apt-get install -y \
