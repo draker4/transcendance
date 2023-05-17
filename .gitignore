@@ -1,4 +1,3 @@
-.gitignore
 
 # misc
 .DS_Store
@@ -7,6 +6,6 @@
 .env
 
 # Database
-Database
+Database/*
 
 install_docker.sh
