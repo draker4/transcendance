@@ -12,10 +12,11 @@ start : build
 	@echo "----Starting all Docker----"
 	mkdir -p ./Backend
 	mkdir -p ./Frontend
-	mkdir -p ./Database
-	chmod 777 ./Backend
-	chmod 777 ./Frontend
-	chmod 777 ./Database
+	mkdir -p ./Database/conf/
+	mkdir -p ./Database/data/
+	chmod 777 -R ./Backend
+	chmod 777 -R ./Frontend
+	chmod 700 -R ./Database
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "----All Docker started-----"
 	rm -rf ./Backend/.git

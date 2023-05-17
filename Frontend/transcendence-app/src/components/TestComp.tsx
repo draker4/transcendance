@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 import styles from '@/styles/Test.module.css';
 
@@ -8,7 +7,6 @@ import Client from '@/services/Client.service';
 const service = new Client();
 
 export default function TestForm() {
-    const router = useRouter();
 
     const [message, setMessage] = useState<string>("");
     const [username, setUsername] = useState<string>('');
@@ -18,27 +16,25 @@ export default function TestForm() {
     const Register_User = () => {
         setLoading(true);
 
-        router.push('/');
-
-        // service.Register_User(username, password).then((response) => {
+        service.Register_User(username, password).then((response) => {
             
-        //     if (response.status === 200) {
-        //         setMessage(JSON.stringify(response, null, 4));
-        //     }
+            if (response.status === 200) {
+                setMessage(JSON.stringify(response, null, 4));
+            }
 
-        //     else {
-        //         setMessage(JSON.stringify(response, null, 4));
-        //     }
+            else {
+                setMessage(JSON.stringify(response, null, 4));
+            }
 
 
-        // }).catch((error) => {
-        //     console.log('Une erreur est survenue ( API down ? )');
-        //     setMessage('Une erreur est survenue ( API down ? )');
+        }).catch((error) => {
+            console.log('Une erreur est survenue ( API down ? )');
+            setMessage('Une erreur est survenue ( API down ? )');
 
-        // }).finally(() => {
-        //     setLoading(false);
+        }).finally(() => {
+            setLoading(false);
             
-        // });
+        });
     }
 
 
