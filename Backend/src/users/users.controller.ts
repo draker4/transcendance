@@ -2,7 +2,7 @@ import { Body, ClassSerializerInterceptor, Controller, Get, Post, UseInterceptor
 import { UsersService } from './users.service';
 import { createUserDto } from './dto/CreateUser.dto';
 
-@Controller('api/users')
+@Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
