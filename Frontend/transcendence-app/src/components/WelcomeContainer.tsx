@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import styles from '@/styles/Home.module.css';
 
@@ -8,10 +8,10 @@ import ClientService from '@/services/Client.service'
 
 const service = new ClientService();
 
-export default function HomeContainer() {
+export default function WelcomeContainer() {
 
-    const   LogIn42 = async () => {
-        const   res = await fetch("api/auth/42");
+    const   LogIn42 = () => {
+        window.open(process.env.URL_42, "_self");
     }
 
     return (

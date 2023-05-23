@@ -3,6 +3,7 @@ import * as Joi from "joi";
 export const	ValidationSchema = Joi.object({
 	CLIENT_ID_42: Joi.string().required(),
 	SECRET_42: Joi.string().required(),
+	URL_42: Joi.string().required(),
 	PORT_NESTJS: Joi.number().required(),
 	HOST_NESTJS: Joi.string().required(),
 	DATA_BASE_NAME: Joi.string().required(),

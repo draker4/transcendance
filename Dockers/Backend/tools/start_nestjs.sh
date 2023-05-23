@@ -12,7 +12,7 @@ if [ ! -d "./nest-project/node_modules" ]; then
 
     echo "adding packages"
     npm add @nestjs@typeorm typeorm pg class-validator \
-    class-transformer @nestjs/config joi \
+    class-transformer @nestjs/config joi cookie-parser \
     @nestjs/passport passport passport-42 express-session
 
     echo "NestJS project created"

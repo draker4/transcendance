@@ -4,9 +4,9 @@ import { Strategy, Profile, VerifyCallback } from "passport-42";
 import { AuthService } from "../auth.service";
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, '42') {
 
-	constructor(private authService: AuthService) {
+	constructor() {
 		super({
 			clientID: process.env.CLIENT_ID_42,
 			clientSecret: process.env.SECRET_42,
@@ -23,7 +23,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 		cb: VerifyCallback,
 	): Promise<any> {
 		request.session.accessToken = accessToken;
-		console.log(accessToken, refreshToken);
 		return cb(null, profile);
 	}
 }
