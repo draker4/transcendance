@@ -1,30 +1,48 @@
+import { profile } from "../app/types/profile.type";
 
-class Client {
+export default class Client {
 
     private static instance: Client;
     
-    private token: string | null = null;
-    private code: string | null = null;
-    public isLogged: boolean = false;
+    public  isLogged: boolean = false;
+    public  profile?: profile;
+    private setProfile: ((profile: profile) => void) | null = null;
 
-    constructor(token: string | null = null) {
+    constructor() {
         if (Client.instance) {
             return Client.instance;
         }
         Client.instance = this;
     }
 
+    public initialize = async (setProfile : (profile: profile) => void) => {
+        this.setProfile = setProfile;
+    }
+
+    private isInitialized = () => {
+        if (!this.setProfile) {
+            return false;
+        }
+        return true;
+    }
+
     // log function with 42 api
     public async logIn42(code: string) {
-        const   response = await fetch(`http://backend:4000/api/auth/42/${code}`)
-            .then(res => {
-                if (res) {
-                    const   dataUser = res.json();
-                    this.isLogged = true;
-                    console.log(dataUser);
-                }
-            })
-            .catch(err => console.log(err));
+
+        if (!this.isInitialized()) { 
+            console.log("User not initialized");
+            return ; 
+        }
+
+        const   response = await fetch(`/api/auth/42/${code}`);
+
+        if (!response.ok)
+            return ;
+
+        const   profile: profile = await response.json();
+
+        this.isLogged = true;
+        this.profile = profile;
     }
 
     //Test pour page de test ( envoi un username et un password à /api/registrer et renoie la reponse )
@@ -54,7 +72,5 @@ class Client {
         
         return response.json();
     }
-
 }
 
-export default Client;

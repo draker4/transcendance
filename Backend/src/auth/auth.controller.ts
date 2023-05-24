@@ -1,6 +1,5 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Param, Controller, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { createUserDto } from 'src/users/dto/CreateUser.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +8,7 @@ export class AuthController {
 
 	@Get('42/:code')
 	// @UseGuards(logIn42Guard)
-	async logIn42(@Param('code') code: string): Promise<Partial<createUserDto>> {
+	async logIn42(@Param('code') code: string) {
 
 		const	dataToken = await this.authService.getToken42(code);
 
