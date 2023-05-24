@@ -4,31 +4,34 @@ import Client from '@/services/Client.service';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-const	client = new Client();
+const client = new Client();
 
-export default async function HomePage() {
+export default function HomePage() {
+  const code: string | null = useSearchParams().get('code');
+  const [loading, setLoading] = useState(true); // Add loading state
 
-	const	code: string | null = useSearchParams().get('code');
-	const	[profile, setProfile] = useState(null);
-	
-	useEffect(() => {
-		client.initialize(setProfile);
+  useEffect(() => {
+    const fetchData = async () => {
 
-		const fetchData = async () => {
-			if (code && !client.isLogged) {
-				await client.logIn42(code);
-			}
-		};
+      if (code && !client.logged) {
+        await client.logIn42(code);
+      }
 
-		fetchData();
-	  }, []
-	);
+      setLoading(false); // Set loading to false after login process
+    };
 
-	return (
-		<main>
-			<div>Main</div>
-			{!client.isLogged && <div>salut not log</div>}
-			{client.isLogged && <div>oui log</div>}
-		</main>
-	);
+    fetchData();
+  }, [code]);
+
+//   if (loading) {
+//     return <div>Loading...</div>; // Display loading state while login process is in progress
+//   }
+
+  return (
+    <main>
+      <div>Main</div>
+      {loading && <div>salut not log</div>}
+      {!loading && <div>{ client.profile.login }</div>}
+    </main>
+  );
 }
