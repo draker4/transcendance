@@ -3,13 +3,13 @@
 import Client from '@/services/Client.service';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import styles from "@/styles/Home.module.css"
 
 const client = new Client();
 
 export default function HomePage() {
   const code: string | null = useSearchParams().get('code');
-  const [loading, setLoading] = useState(true); // Add loading state
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
 
@@ -17,21 +17,24 @@ export default function HomePage() {
         await client.logIn42(code);
       }
 
-      setLoading(false); // Set loading to false after login process
+      setLoading(false);
     };
 
     fetchData();
   }, [code]);
 
-//   if (loading) {
-//     return <div>Loading...</div>; // Display loading state while login process is in progress
-//   }
-
   return (
-    <main>
-      <div>Main</div>
-      {loading && <div>salut not log</div>}
-      {!loading && <div>{ client.profile.login }</div>}
+    <main className={styles.main}>
+      {loading && <div>Loading...</div>}
+      {!loading && 
+	  <div>
+		<div>{ client.profile.login }</div>
+		<div>{ client.profile.first_name}</div>
+		<div>{ client.profile.last_name}</div>
+		<div>{ client.profile.email}</div>
+		<div>{ client.profile.phone}</div>
+		<img src={client.profile.image} className={styles.img}></img>
+	  </div>}
     </main>
   );
 }

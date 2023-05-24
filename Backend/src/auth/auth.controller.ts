@@ -16,8 +16,6 @@ export class AuthController {
 			return null;
 
 		const	user42logged = await this.authService.logUser(dataToken);
-
-		console.log(user42logged);
 		return user42logged;
 	}
 }
