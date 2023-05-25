@@ -1,23 +1,53 @@
+import Profile from "@/services/Profile.service"
 
-class Client {
+export default class Client {
 
     private static instance: Client;
     
-    private token: string | null = null;
+    // public  isLogged: boolean = false;
+    public profile = new Profile();
+    public logged = false;
 
-    constructor(token: string | null = null) {
+    // private setProfile: ((profile: profile) => void) | null = null;
+    // private setIsLogged: ((logged: boolean) => void) | null = null;
+
+    constructor() {
         if (Client.instance) {
             return Client.instance;
         }
         Client.instance = this;
     }
 
+    // public initialize = async (setIsLogged : (logged: boolean) => void) => {
+    //     this.setIsLogged = setIsLogged;
+    // }
 
+    // private isInitialized = () => {
+    //     if (!this.setIsLogged) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
+    // log function with 42 api
+    public async logIn42(code: string){//, setLogged : (logged: boolean) => void) {
 
+        const   response = await fetch(`/api/auth/42/${code}`);
 
+        if (!response.ok)
+            return ;
 
-    //Test pour page de test ( envoi un usernam et un password à /api/registrer et renoie la reponse )
+        const   res_json = await response.json();
+        this.profile = { ...res_json };
+        // console.log(this.profile);
+        // console.log(this.profile);
+        // this.isLogged = true;
+        // this.profile = profile;
+        // setLogged(true);
+        this.logged = true;
+    }
+
+    //Test pour page de test ( envoi un username et un password à /api/registrer et renoie la reponse )
     public async Register_User(username: string, password: string): Promise<any> {
 
         const response = await fetch('api/users/add', {
@@ -44,7 +74,5 @@ class Client {
         
         return response.json();
     }
-
 }
 
-export default Client;

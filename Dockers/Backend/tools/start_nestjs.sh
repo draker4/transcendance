@@ -11,7 +11,9 @@ if [ ! -d "./nest-project/node_modules" ]; then
     nest new nest-project --package-manager npm
 
     echo "adding packages"
-    npm add @nestjs@typeorm typeorm pg class-validator class-transformer @nestjs/config
+    npm add @nestjs@typeorm typeorm pg class-validator \
+    class-transformer @nestjs/config joi cookie-parser \
+    @nestjs/passport passport passport-42 express-session
 
     echo "NestJS project created"
 
