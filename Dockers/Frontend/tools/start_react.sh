@@ -8,7 +8,7 @@ cd /app
 
 #If no react projet , create one
 if [ ! -d "/app/transcendence-app" ]; then
-    echo "No react project found, creating one......."
+    echo "No next project found, creating one......."
 
     #React only
     #npx create-react-app app/transcendence-app
@@ -16,7 +16,8 @@ if [ ! -d "/app/transcendence-app" ]; then
     #React + next.js
     export CI=true
     npx create-next-app transcendence-app --ts --src-dir
-    echo "React project created"
+    npm add jose nanoid cookies-next
+    echo "Next project created"
 fi
 
 #Start react project

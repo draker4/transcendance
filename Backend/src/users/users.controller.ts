@@ -6,22 +6,22 @@ import { createUserDto } from './dto/CreateUser.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post('add')
-  @UsePipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-  }))
-  async addUser(
-    @Body() createUserDto: createUserDto
-  ) {
-    const result = await this.usersService.addUser(createUserDto);
-    return result;
-  }
+  // @Post('add')
+  // @UsePipes(new ValidationPipe({
+  //   whitelist: true,
+  //   forbidNonWhitelisted: true,
+  // }))
+  // async addUser(
+  //   @Body() createUserDto: createUserDto
+  // ) {
+  //   const result = await this.usersService.addUser(createUserDto);
+  //   return result;
+  // }
 
-  @Get('getall')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async getAllUsers() {
-    const users = await this.usersService.getAllUsers();
-    return users;
-  }
+  // @Get('getall')
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async getAllUsers() {
+  //   const users = await this.usersService.getAllUsers();
+  //   return users;
+  // }
 }
