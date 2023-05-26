@@ -60,6 +60,7 @@
   Body :
   {
       "game_id": "2zfe4f689ze6f4f6z4f468z5ef1z6e84"
+      "viewer" : "False"
   }
   ```
 
