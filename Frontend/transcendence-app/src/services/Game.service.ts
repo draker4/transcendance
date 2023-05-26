@@ -15,7 +15,53 @@ class Game_Service {
         console.log("Game service test");
     }
 
-    //Fonction Create_Game qui 
+    //Creer une game avec un nom et un mot de passe
+    public async Create_Game(game_password: string, game_name: string): Promise<any> {
+        const response = await fetch('api/game/create', {
+            method: 'POST',
+            body: JSON.stringify({ game_password, game_name }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        return response.json();
+    }     
+    
+    //Recupere la liste de toutes les games en cours
+    public async Get_Games(): Promise<any> {
+
+        const response = await fetch('api/games/getall', {
+            method: 'GET',
+        });
+        
+        return response.json();
+    }
+
+    //Rejoins une partie avec un mot de passe et l'id de la game
+    public async Join(game_password: string, game_id: string): Promise<any> {
+        const response = await fetch('api/game/join', {
+            method: 'POST',
+            body: JSON.stringify({ game_password, game_id}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.json();
+    } 
+
+    //Quite une partie avec l'id de la game
+    public async Quit(game_id: string): Promise<any> {
+        const response = await fetch('api/game/quit', {
+            method: 'POST',
+            body: JSON.stringify({ game_id}),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        return response.json();
+    }   
+
 
     //Create Game , creer la game et redirige sur la page de la game
 
@@ -28,37 +74,6 @@ class Game_Service {
     //Reprendre la partie, repere dans quel partie etait le joueur , et lui renvoi l'id
 
     //Quitter la partie , supprime le joueur de la bbd de la game
-
-
-    
-
-    //Test pour page de test ( envoi un username et un password à /api/registrer et renoie la reponse )
-    // public async Register_User(username: string, password: string): Promise<any> {
-
-    //     const response = await fetch('api/users/add', {
-    //         method: 'POST',
-    //         body: JSON.stringify({ username, password }),
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     });
-        
-    //     if (!response.ok) {
-    //         return Promise.reject(response);
-    //     }
-        
-    //     return response.json();
-    // }
-
-    //Test pour page de test ( envoi un usernam et un password à /api/registrer et renoie la reponse )
-    // public async Get_All_User(): Promise<any> {
-
-    //     const response = await fetch('api/users/getall', {
-    //         method: 'GET',
-    //     });
-        
-    //     return response.json();
-    // }
 }
 
 const GameService = new Game_Service();
