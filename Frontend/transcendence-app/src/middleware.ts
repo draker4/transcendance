@@ -7,11 +7,17 @@ const	client = new Client();
 export async function middleware(req: NextRequest) {
 
 	// console.log("middleware");
-	const token = req.cookies.get('crunchy-token')?.value;
+	const	crunchyToken = req.cookies.get('crunchy-token')?.value;
+	const	token42 = req.cookies.get('_intra_42_session_production')?.value;
+
+	if (client.student42 && !token42) {
+		client.token = '';
+		return NextResponse.redirect(new URL('/', req.url));
+	}
 
 	const verifiedToken = client.token.length > 0
-		&& token
-		&& await verifyAuth(token)
+		&& crunchyToken
+		&& await verifyAuth(crunchyToken)
 		.catch((err) => {
 			console.log(err);
 		})

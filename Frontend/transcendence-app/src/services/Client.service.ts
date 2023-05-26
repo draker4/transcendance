@@ -7,6 +7,7 @@ export default class Client {
     public  profile = new Profile();
     public  logged = false;
     public  token: string = '';
+    public  student42: boolean = false;
 
     constructor() {
         if (Client.instance) {
@@ -17,8 +18,7 @@ export default class Client {
 
     // log function with 42 api
     public async logIn42(code: string) {
-
-        const   response = await fetch(`/api/auth/42/${code}`);
+        const   response = await fetch(`http://backend:4000/api/auth/42/${code}`);
 
         if (!response.ok)
             return ;
@@ -27,6 +27,7 @@ export default class Client {
         this.profile = user;
         this.token = access_token;
         this.logged = true;
+        this.student42 = true;
     }
 
     //Test pour page de test ( envoi un username et un password à /api/registrer et renoie la reponse )

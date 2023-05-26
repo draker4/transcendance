@@ -1,3 +1,4 @@
+"use client"
 import WelcomeContainer from '@/components/WelcomeContainer';
 
 export default function Home() {
