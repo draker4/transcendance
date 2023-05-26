@@ -1,11 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import dataAPI42 from 'src/interfaces/dataAPI42.interface';
+import { User } from 'src/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
-	constructor(private readonly usersService: UsersService) {}
+	constructor(
+		private usersService: UsersService,
+		private jwtService: JwtService,
+	) {}
 
 	async getToken42(code : string): Promise<dataAPI42> {
 		const	response = await fetch("https://api.intra.42.fr/oauth/token", {
@@ -26,7 +31,7 @@ export class AuthService {
 		return await response.json();
 	}
 
-	async logUser(dataToken: dataAPI42): Promise<Partial<createUserDto>> {
+	async logUser(dataToken: dataAPI42): Promise<User> {
 		const	response = await fetch("https://api.intra.42.fr/v2/me", {
 			method: "GET",
 			headers: {"Authorization": "Bearer " + dataToken.access_token}
@@ -37,7 +42,7 @@ export class AuthService {
 		
 		const	content = await response.json();
 
-		const	user: Partial<createUserDto> = {
+		const	user: createUserDto = {
 			login: content?.login,
 			first_name: content?.first_name,
 			last_name: content?.last_name,
@@ -45,7 +50,30 @@ export class AuthService {
 			email: content?.email,
 			image: content?.image?.link,
 		};
+
+		// update or save user in database
+		const	user_old = await this.usersService.getUserByLogin(user?.login);
 		
-		return user;
+		if (!user_old)
+			return await this.usersService.addUser(user);
+		
+		
+		return await this.usersService.updateUser(user_old);
+	}
+
+	async validateUser(login: string): Promise<any> {
+		const	user = await this.usersService.getUserByLogin(login);
+
+		if (user)
+			return user;
+		return null;
+	}
+
+	async login(user: User) {
+		const	payload = { login: user.login, sub: user.id };
+		return {
+			access_token: this.jwtService.sign(payload),
+			user: user,
+		};
 	}
 }

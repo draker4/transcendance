@@ -11,14 +11,25 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async addUser(createUserDto: createUserDto): Promise<{message: string}> {
-    await this.userRepository.save(createUserDto);
-    return { message: 'User added successfully' };
+  async addUser(createUserDto: createUserDto): Promise<User> {
+    return await this.userRepository.save(createUserDto);
   }
 
-  async getAllUsers(): Promise<User[]> {
-    const users = await this.userRepository.find();
-    return users;
+  // async getAllUsers(): Promise<User[]> {
+  //   return await this.userRepository.find();
+  // }
+
+  async getUserByLogin(login: string) {
+    return await this.userRepository.findOne({ where: { login: login } });
   }
+
+  async updateUser(user: User) {
+    await this.userRepository.update(
+      user.id,
+      user
+    );
+    return this.getUserByLogin(user.login);
+  }
+
 }
 
