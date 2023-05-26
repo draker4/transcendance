@@ -72,6 +72,7 @@
       "message": "You are not logged in",
                  "This game does not exist",
                  "You are not in this game",
+                 "You are already in game",
                  "The game is full"
   }
 
