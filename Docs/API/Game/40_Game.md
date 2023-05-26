@@ -3,7 +3,7 @@
 
 - [01 - api/game/create](#api-game-create)
 - [02 - api/game/join](#api-game-join)
-- [03 - api/games/getall](#api-game-getall)
+- [03 - api/game/getall](#api-game-getall)
 - [04 - api/game/quit](#api-game-quit)
 - [05 - api/game/matchmake/start](#api-game-matchmake-start)
 - [06 - api/game/matchmake/stop](#api-game-matchmake-stop)
@@ -83,7 +83,7 @@
   ```
 <br><br>
 
-### `GET api/games/getall` : recupere la liste des games en cours <a id="api-game-getall"></a>
+### `GET api/game/getall` : recupere la liste des games en cours <a id="api-game-getall"></a>
 <br>
 
 > Requête
