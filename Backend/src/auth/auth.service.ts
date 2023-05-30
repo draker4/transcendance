@@ -21,7 +21,7 @@ export class AuthService {
 				"client_id": process.env.CLIENT_ID_42,
 				"client_secret": process.env.SECRET_42,
 				"code": code,
-				"redirect_uri": "http://localhost:3000/home"
+				"redirect_uri": "http://localhost:3000/42"
 			})
 		})
 		

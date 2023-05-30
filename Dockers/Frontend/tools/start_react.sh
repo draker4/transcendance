@@ -16,7 +16,7 @@ if [ ! -d "/app/transcendence-app" ]; then
     #React + next.js
     export CI=true
     npx create-next-app transcendence-app --ts --src-dir
-    npm add jose nanoid cookies-next
+    npm add jose nanoid
     echo "Next project created"
 fi
 
@@ -32,4 +32,4 @@ npm install
 npm run dev
 
 #As prod
-# npm run build && npm run start
+#npm run build && npm run start
