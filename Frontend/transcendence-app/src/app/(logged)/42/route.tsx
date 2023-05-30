@@ -18,6 +18,7 @@ export async function GET(req: NextRequest) {
 				name: "crunchy-token",
 				value: client.token,
 			})
+			// console.log(client.profile.login);
 			return response;
 		}
 		// const	cookie = serialize(

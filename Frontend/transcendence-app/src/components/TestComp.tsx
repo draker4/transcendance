@@ -11,8 +11,8 @@ const service = new Client();
 export default function TestForm() {
 
     const [message, setMessage] = useState<string>("");
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
 
     const Register_User = () => {
@@ -30,8 +30,8 @@ export default function TestForm() {
 
 
         }).catch((error) => {
-            console.log('Une erreur est survenue ( API down ? )');
-            setMessage('Une erreur est survenue ( API down ? )');
+            console.log("Une erreur est survenue ( API down ? )");
+            setMessage("Une erreur est survenue ( API down ? )");
 
         }).finally(() => {
             setLoading(false);
@@ -82,8 +82,8 @@ export default function TestForm() {
         <div className={styles.form_container}>
             <h1 className={styles.form_title}>Créer un compte</h1>
 
-            <label htmlFor="username" className={styles.form_label}>Nom d'utilisateur</label>
-            <input type="text" placeholder="Nom d'utilisateur" className={styles.form_input} value={username} onChange={(e) => {
+            <label htmlFor="username" className={styles.form_label}>Nom d utilisateur</label>
+            <input type="text" placeholder="Nom d utilisateur" className={styles.form_input} value={username} onChange={(e) => {
                 setUsername(e.target.value);
             }} />
 
@@ -94,7 +94,7 @@ export default function TestForm() {
 
             <button type="submit" className={styles.form_button} onClick={Register_User} disabled={loading}>{loading ? 'Inscription en cours...' : 'Créer un compte'}</button>
 
-            <button type="submit" className={styles.form_button} onClick={Get_All_User} disabled={loading}>{loading ? 'Requette en cours...' : 'Affichier les users de la base'}</button>
+            <button type="submit" className={styles.form_button} onClick={Get_All_User} disabled={loading}>{loading ? 'Requette en cours...' : 'Afficher les users de la base'}</button>
             
             { message != "" && <p> {message} </p> }
         </div>

@@ -32,4 +32,4 @@ npm install
 npm run dev
 
 #As prod
-# npm run build && npm run start
+#npm run build && npm run start
