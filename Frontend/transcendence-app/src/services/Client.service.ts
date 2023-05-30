@@ -1,3 +1,4 @@
+import { getAuthId } from "@/lib/auth";
 import Profile from "@/services/Profile.service"
 
 class Client {
@@ -23,39 +24,10 @@ class Client {
         if (!response.ok)
             return ;
 
-        const   {user, access_token} = await response.json();
-        this.profile = user;
+        const   { access_token } = await response.json();
         this.token = access_token;
         this.logged = true;
         this.student42 = true;
-    }
-
-    //Test pour page de test ( envoi un username et un password à /api/registrer et renoie la reponse )
-    public async Register_User(username: string, password: string): Promise<any> {
-
-        const response = await fetch('api/users/add', {
-            method: 'POST',
-            body: JSON.stringify({ username, password }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        if (!response.ok) {
-            return Promise.reject(response);
-        }
-        
-        return response.json();
-    }
-
-    //Test pour page de test ( envoi un usernam et un password à /api/registrer et renoie la reponse )
-    public async Get_All_User(): Promise<any> {
-
-        const response = await fetch('api/users/getall', {
-            method: 'GET',
-        });
-        
-        return response.json();
     }
 }
 
