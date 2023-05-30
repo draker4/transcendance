@@ -1,6 +1,6 @@
 import Profile from "@/services/Profile.service"
 
-export default class Client {
+class Client {
 
     private static instance: Client;
     
@@ -58,4 +58,6 @@ export default class Client {
         return response.json();
     }
 }
+
+export default Client;
 
