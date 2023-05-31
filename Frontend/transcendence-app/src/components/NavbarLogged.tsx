@@ -2,6 +2,7 @@
 
 import Client from "@/services/Client.service";
 import styles from "@/styles/Navbar.module.css"
+import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -15,8 +16,8 @@ export default function NavbarLogged() {
 		e.preventDefault();
 		client.logged = false;
 		client.token = '';
+		deleteCookie("crunchy-token");
 		router.push("/");
-		console.log("here button off");
 	}
 
 	return (

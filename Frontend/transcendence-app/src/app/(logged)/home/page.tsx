@@ -1,20 +1,33 @@
-import Client from '@/services/Client.service';
+import { getProfileByToken } from "@/lib/getProfileInfos";
+import Profile from "@/services/Profile.service";
 import styles from "@/styles/Home.module.css"
+import { cookies } from 'next/dist/client/components/headers';
 
-const	client = new Client();
+export default async function HomePage() {
 
-export default function HomePage() {
+  let profile = new Profile();
+
+  try {
+    const token = cookies().get("crunchy-token")?.value;
+    if (!token)
+      throw new Error("No token value");
+    
+    profile = await getProfileByToken(token);
+  }
+  catch (err) {
+    console.log(err);
+  }
 
   return (
     <main className={styles.main}>
       <div>
-        <div>{ client.profile.id }</div>
-        <div>{ client.profile.login }</div>
-        <div>{ client.profile.first_name}</div>
-        <div>{ client.profile.last_name}</div>
-        <div>{ client.profile.email}</div>
-        <div>{ client.profile.phone}</div>
-        {/* <img src={client.profile.image} className={styles.img}></img> */}
+        <div>{ profile.id }</div>
+        <div>{ profile.login }</div>
+        <div>{ profile.first_name}</div>
+        <div>{ profile.last_name}</div>
+        <div>{ profile.email}</div>
+        <div>{ profile.phone}</div>
+        { <img src={profile.image} className={styles.img}></img> }
       </div>
     </main>
   );

@@ -15,12 +15,12 @@ export class UsersService {
     return await this.userRepository.save(createUserDto);
   }
 
-  // async getAllUsers(): Promise<User[]> {
-  //   return await this.userRepository.find();
-  // }
-
   async getUserByLogin(login: string) {
     return await this.userRepository.findOne({ where: { login: login } });
+  }
+
+  async getUserById(id: number) {
+    return await this.userRepository.findOne({ where: { id: id } });
   }
 
   async updateUser(user: User) {

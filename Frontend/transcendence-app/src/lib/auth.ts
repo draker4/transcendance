@@ -1,11 +1,6 @@
 import { jwtVerify} from "jose";
 import { getJwtSecretKey } from "./getJwtSecretKey";
 
-interface UserJwtPayload {
-	jti: string;
-	iat: number;
-}
-
 export const verifyAuth = async (token: string) => {
 
 	try {
@@ -14,7 +9,25 @@ export const verifyAuth = async (token: string) => {
 			new TextEncoder().encode(getJwtSecretKey()),
 		);
 		
-		return verified.payload as UserJwtPayload;
+		return verified.payload;
+
+	} catch (error) {
+		throw new Error('Your token has expired');
+	}
+}
+
+export const getAuthId = async (token: string | undefined): Promise<number> => {
+
+	if (!token)
+		throw new Error('Token undefined');
+
+	try {
+		const verified = await jwtVerify(
+			token,
+			new TextEncoder().encode(getJwtSecretKey()),
+		);
+		
+		return verified.payload.id as number;
 
 	} catch (error) {
 		throw new Error('Your token has expired');

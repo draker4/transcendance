@@ -16,6 +16,11 @@ export default function NavbarWelcome() {
 		router.push("/signin");
 	}
 
+	const	signUp = (e: React.MouseEvent<HTMLElement>) => {
+		e.preventDefault();
+		router.push("/signup");
+	}
+
 	return (
 		<nav className={styles.main}>
 			<svg fill="currentColor" stroke="currentColor" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" className={styles.menu}>
@@ -23,7 +28,7 @@ export default function NavbarWelcome() {
 			</svg>
 			<div className={styles.buttons}>
 				<button onClick={signIn} className={styles.button}>Sign In</button>
-				<button className={styles.button}>Sign Up</button>
+				<button onClick={signUp} className={styles.button}>Sign Up</button>
 			</div>
 		</nav>
 	);
