@@ -20,7 +20,7 @@ export async function getDoubleLogin(login: string): Promise<string> {
 		throw new Error("Cannot check if login is already used");
 	
 	const	data = await response.json();
-	if (data)
+	if (data.exists)
 		return "Login already used!"
 
 	return "";

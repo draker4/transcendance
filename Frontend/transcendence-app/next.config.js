@@ -13,6 +13,8 @@ const nextConfig = {
   env: {
     URL_42: process.env.URL_42,
     STATE_42: process.env.STATE_42,
+    GMAIL_USER: process.env.GMAIL_USER,
+    GMAIL_PASSWORD: process.env.GMAIL_PASSWORD,
   }
 };
   

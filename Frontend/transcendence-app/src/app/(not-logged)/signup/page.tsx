@@ -4,6 +4,7 @@ import { getDoubleLogin, getDoubleEmail, checkPassword } from "@/lib/auth/checkU
 import styles from "@/styles/SignUp.module.css"
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+// import { emailer } from "@/services/Emailer.service";
 
 export default function SignUpPage() {
 
@@ -33,7 +34,7 @@ export default function SignUpPage() {
 			const	checkEmail = await getDoubleEmail(target.email.value);
 			const	checkLogin = await getDoubleLogin(target.login.value);
 			const	passWordSecured = checkPassword(target.password.value);
-
+			console.log(checkLogin);
 			setEmailUsed(checkEmail);
 			setLoginUsed(checkLogin);
 			setPasswordSecured(passWordSecured);
@@ -41,8 +42,9 @@ export default function SignUpPage() {
 			if (checkEmail || checkLogin.length > 0 || passWordSecured.length > 0)
 				throw new Error("Not valable user");
 			
+			// emailer.verifyUserInscription(target.email.value, target.email.value);
 			// await client.logInEmail(target.email.value, target.login.value, target.password.value);
-			// router.push("/home");
+			router.push("api/auth");
 		}
 		catch (err) {
 			console.log(err);
