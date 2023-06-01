@@ -1,6 +1,7 @@
-import { Param, Controller, Get } from '@nestjs/common';
+import { Param, Controller, Get, Post, Body, ValidationPipe, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
+import { FormDto } from './dto/Form.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,6 +19,16 @@ export class AuthController {
 		const	user42logged = await this.authService.logUser(dataToken);
 		
 		return this.authService.login(user42logged);
+	}
+
+	@Public()
+	@Post('email')
+	@UsePipes(ValidationPipe)
+	async logInEmail(
+		@Body() formDto: FormDto
+	) {
+		// const	user: User = await this.authService.addUser(formDto);
+		// console.log(user);
 	}
 }
 

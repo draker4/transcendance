@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/User.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { createUserDto } from './dto/CreateUser.dto';
 
 @Injectable()
@@ -16,7 +16,11 @@ export class UsersService {
   }
 
   async getUserByLogin(login: string) {
-    return await this.userRepository.findOne({ where: { login: login } });
+    return await this.userRepository.findOne({ where: { login: ILike(login) } });
+  }
+  
+  async getUserByEmail(email: string) {
+    return await this.userRepository.findOne({ where: { email: ILike(email) }});
   }
 
   async getUserById(id: number) {
@@ -30,6 +34,5 @@ export class UsersService {
     );
     return this.getUserByLogin(user.login);
   }
-
 }
 
