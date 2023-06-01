@@ -7,9 +7,11 @@ export class Emailer {
 	constructor() {
 		this.transporter = nodemailer.createTransport({
 			service: "gmail",
+			port: 465,
+			secure: true,
 			auth: {
-				user: process.env.GMAIL_USER,
-				pass: process.env.GMAIL_PASSWORD,
+				user: process.env.SMTP_USER,
+				pass: process.env.SMTP_PASSWORD,
 			},
 		});
 	}
@@ -19,6 +21,7 @@ export class Emailer {
 	}
 
 	public	verifyUserInscription(email: string, login: string) {
+		console.log("je suis la login=", login);
 		this.sendEmail(verifyUserInscription(email, login));
 	}
 }
@@ -27,7 +30,7 @@ export const	emailer = new Emailer();
 
 export const	verifyUserInscription = (email: string, login: string) => {
 	return {
-		from: process.env.GMAIL_USER,
+		from: process.env.SMTP_USER,
 		to: email,
 		subject: `${login}, Validate inscription to Crunchy-Pong`,
 		text: "Welcome to our website!",
