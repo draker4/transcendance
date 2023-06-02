@@ -21,7 +21,7 @@
     box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.3);
     background-color: rgb(206, 125, 221);
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .img {
@@ -49,10 +49,16 @@
     border: none;
     background-color: rgb(154, 245, 165);
     font-size: 1.25rem;
+    margin-top: 5px;
 }
 
 .button:hover {
     background-color: rgb(114, 169, 120);
     color: rgb(154, 245, 165);
     cursor:pointer;
+}
+
+.input {
+    margin-top: 5px;
+    font-size: 0.6rem;
 }
