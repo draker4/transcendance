@@ -1,4 +1,4 @@
-import { verifyAuth } from "@/lib/auth";
+import { verifyAuth } from "@/lib/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {

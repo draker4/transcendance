@@ -1,25 +1,83 @@
 "use client"
 
+import { getDoubleLogin, getDoubleEmail, checkPassword } from "@/lib/auth/checkUserInscription";
 import styles from "@/styles/SignUp.module.css"
+import { useRouter } from "next/navigation";
+import { NextResponse } from "next/server";
+import React, { useState } from "react";
 
 export default function SignUpPage() {
+
+	const	router = useRouter();
+	const	[emailUsed, setEmailUsed] = useState<boolean>(false);
+	const	[loginUsed, setLoginUsed] = useState<string>("");
+	const	[passWordSecured, setPasswordSecured] = useState<string>("");
 
 	const   open42 = () => {
         window.open(process.env.URL_42, "_self");
     }
 
+	const	signin = (e: React.MouseEvent<HTMLElement>) => {
+		e.preventDefault();
+		router.push("/signin");
+	}
+
+	const	submit = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+		const	target = e.target as typeof e.target & {
+			email: { value: string };
+			login: { value: string };
+			password: { value: string };
+		}
+
+		try {
+			const	checkEmail = await getDoubleEmail(target.email.value);
+			const	checkLogin = await getDoubleLogin(target.login.value);
+			const	passWordSecured = checkPassword(target.password.value);
+			console.log(checkLogin);
+			setEmailUsed(checkEmail);
+			setLoginUsed(checkLogin);
+			setPasswordSecured(passWordSecured);
+
+			if (checkEmail || checkLogin.length > 0 || passWordSecured.length > 0)
+				throw new Error("Not valable user");
+			
+			// await client.logInEmail(target.email.value, target.login.value, target.password.value);
+			// const	res = await fetch("http://localhost:3000/api/auth/login", {
+			// 	method: "POST",
+			// 	headers: { "Content-Type": "application/json" },
+			// 	body: JSON.stringify({
+			// 		"email": target.email.value,
+			// 		"login": target.login.value
+			// 	}),
+			// });
+
+			// if (!res)
+			// 	throw new Error("Fetch error");
+			
+			// const	data = await res.json();
+			// console.log(data);
+			return NextResponse.redirect("http://localhost:3000/confirm");
+		}
+		catch (err) {
+			console.log(err);
+		}
+	}
+
 	return (
-		<div className={styles.main}>
+		<div onSubmit={submit} className={styles.main}>
 			<div className={styles.box}>
 				<p className={styles.welcome}>Welcome</p>
 				<form className={styles.form}>
-					<input type="text" placeholder="login" className={styles.input} required/>
-					<input type="password" placeholder="password" className={styles.input} required/>
-					<input type="email" placeholder="email" className={styles.input} required/>
-					<input type="tel" placeholder="phone" className={styles.input}/>
-					<button className={styles.continue}>Continue</button>
+					<input type="text" aria-label="Username" autoComplete="username" placeholder="login" name="login" className={styles.input} required/>
+					{ loginUsed.length > 0 && <div>{ loginUsed }!</div> }
+					<input type="email" autoComplete="username" placeholder="email" name="email" className={styles.input} required/>
+					{ emailUsed && <div>Email already used !</div> }
+					<input type="password" autoComplete="new-password" placeholder="password" name="password" className={styles.input} required/>
+					{ passWordSecured.length > 0 && <div>{ passWordSecured }</div> }
+					<button type="submit" className={styles.continue}>Continue</button>
 				</form>
-				<p className={styles.signUp}>Already have an account? <span>Sign in</span></p>
+				<p className={styles.signUp}>Already have an account? <span onClick={signin}>Sign in</span></p>
 				<p className={styles.or}>Or</p>
 				<div className={styles.buttons}>
 					<button onClick={open42} className={styles.buttonLogin}>Login with 42</button>

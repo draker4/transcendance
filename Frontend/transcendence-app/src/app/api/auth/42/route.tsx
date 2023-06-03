@@ -9,9 +9,14 @@ export async function GET(req: NextRequest) {
 
 	const	code: string | null = req.nextUrl.searchParams.get('code');
 	const	cookie = getCookie("crunchy-token");
+	
 	if (code && !cookie) {
 		
-		await client.logIn42(code);
+		try {
+			await client.logIn42(code);
+		} catch (err) {
+			console.log(err);
+		}
 		
 		if (client.token.length > 0) {
 			const	response = NextResponse.redirect("http://localhost:3000/home");

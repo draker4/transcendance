@@ -21,7 +21,7 @@ export class AuthService {
 				"client_id": process.env.CLIENT_ID_42,
 				"client_secret": process.env.SECRET_42,
 				"code": code,
-				"redirect_uri": "http://localhost:3000/42"
+				"redirect_uri": "http://localhost:3000/api/auth/42"
 			})
 		})
 		
@@ -61,7 +61,7 @@ export class AuthService {
 		return await this.usersService.updateUser(user_old);
 	}
 
-	async validateUser(login: string): Promise<any> {
+	async validateUser(login: string, username: string, password: string): Promise<any> {
 		const	user = await this.usersService.getUserByLogin(login);
 
 		if (user)
@@ -75,4 +75,8 @@ export class AuthService {
 			access_token: this.jwtService.sign(payload)
 		};
 	}
+
+	// async addUser(user: Partial<User>) {
+	// 	const	user = this.usersService.addUser(user);
+	// }
 }

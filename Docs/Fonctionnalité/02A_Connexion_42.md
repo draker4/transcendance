@@ -4,11 +4,6 @@
 
 # Point Ouvert
 
-Analyser service de connexion OAuth de 42 :
-1.	Comment l’appeler ? 
-2.	Fonctionnalité possible ?
-3.	Affichage direct dans notre site ou uniquement via une autre page de connexion ?
-
 `Infos` : [doc de 42](https://api.intra.42.fr/apidoc/guides/getting_started)
 
 # API Liée
