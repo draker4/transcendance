@@ -1,6 +1,8 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/interfaces/dataAPI42.interface';
+import { MailService } from 'src/mail/mail.service';
 import { User } from 'src/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
@@ -10,6 +12,7 @@ export class AuthService {
 	constructor(
 		private usersService: UsersService,
 		private jwtService: JwtService,
+		private mailService: MailService,
 	) {}
 
 	async getToken42(code : string): Promise<dataAPI42> {
@@ -49,6 +52,7 @@ export class AuthService {
 			phone: content?.phone,
 			email: content?.email,
 			image: content?.image?.link,
+			verified: true,
 		};
 
 		// update or save user in database
@@ -76,7 +80,31 @@ export class AuthService {
 		};
 	}
 
-	// async addUser(user: Partial<User>) {
-	// 	const	user = this.usersService.addUser(user);
-	// }
+	private generateSecureCode(length: number): string {
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  		const bytes = randomBytes(length);
+  		return Array.from(bytes, (byte) => chars[byte % chars.length]).join('');
+	}
+
+	async addUser(createUserDto: createUserDto) {
+		createUserDto.expirationCode = Date.now() + 5 * 60 * 1000;
+		createUserDto.verifyCode = this.generateSecureCode(8);
+		createUserDto.verified = false;
+
+		await this.mailService.sendUserConfirmation(createUserDto.email, createUserDto.login, createUserDto.verifyCode);
+
+		return await this.usersService.addUser(createUserDto);
+	}
+
+	async verifyCode(code: string) {
+		return await this.usersService.getUserByCode(code);
+	}
+
+	async sendNewCode(user: User) {
+		user.expirationCode = Date.now() + 5 * 60 * 1000;
+		user.verifyCode = this.generateSecureCode(8);
+		
+		await this.mailService.sendUserConfirmation(user.email, user.login, user.verifyCode);
+		return await this.usersService.updateUser(user);
+	}
 }

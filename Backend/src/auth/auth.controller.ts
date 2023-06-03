@@ -1,7 +1,7 @@
-import { Param, Controller, Get, Post, Body, ValidationPipe, UsePipes } from '@nestjs/common';
+import { Param, Controller, Get, Post, Body, ValidationPipe, UsePipes, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/decorators/public.decorator';
-import { FormDto } from './dto/Form.dto';
+import { createUserDto } from 'src/users/dto/CreateUser.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,13 +22,32 @@ export class AuthController {
 	}
 
 	@Public()
-	@Post('email')
-	@UsePipes(ValidationPipe)
-	async logInEmail(
-		@Body() formDto: FormDto
-	) {
-		// const	user: User = await this.authService.addUser(formDto);
-		// console.log(user);
+	@Post('register')
+	async registerUser(@Body() createUserDto: createUserDto) {
+		await this.authService.addUser(createUserDto);
+	}
+
+	@Public()
+	@Get('verifyCode/:code')
+	async verifyCode(@Param('code') code: string) {
+		const	user = await this.authService.verifyCode(code);
+
+		if (!user)
+			return ({ "message": "This code does not exist. Please try again!" });
+		
+		if (user && user.expirationCode < Date.now()) {
+			const	newUser = await this.authService.sendNewCode(user);
+			if (newUser)
+				return ({ "message": "This code has expired. A new one has been sent to your email address" });
+			throw new NotFoundException();
+		}
+
+		user.verified = true;
+		const	{ access_token } = await this.authService.login(user);
+		return ({
+			"message": "Loading...",
+			"token": access_token,
+		});
 	}
 }
 

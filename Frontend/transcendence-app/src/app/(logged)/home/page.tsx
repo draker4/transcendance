@@ -23,11 +23,11 @@ export default async function HomePage() {
       <div>
         <div>{ profile.id }</div>
         <div>{ profile.login }</div>
-        <div>{ profile.first_name}</div>
-        <div>{ profile.last_name}</div>
+        <div>{ profile?.first_name}</div>
+        <div>{ profile?.last_name}</div>
         <div>{ profile.email}</div>
-        <div>{ profile.phone}</div>
-        { <img src={profile.image} className={styles.img}></img> }
+        <div>{ profile?.phone}</div>
+        { <img src={profile?.image} className={styles.img}></img> }
       </div>
     </main>
   );

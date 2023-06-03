@@ -5,6 +5,7 @@ import { User } from './typeorm/User.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ValidationSchema } from './validation.schema';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { ValidationSchema } from './validation.schema';
       synchronize: true,
     }),
     UsersModule,
-    AuthModule
+    AuthModule,
+    MailModule
   ],
   controllers: [],
   providers: [],

@@ -14,9 +14,6 @@ start : build
 	mkdir -p ./Frontend
 	mkdir -p ./Database/conf/
 	mkdir -p ./Database/data/
-	chmod 777 -R ./Backend
-	chmod 777 -R ./Frontend
-	chmod 700 -R ./Database
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "----All Docker started-----"
 	rm -rf ./Backend/.git

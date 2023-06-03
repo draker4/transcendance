@@ -12,6 +12,10 @@ export async function getDoubleEmail(email: string): Promise<boolean> {
 export async function getDoubleLogin(login: string): Promise<string> {
 	if (/[ ]/.test(login))
 		return "The login must not contain any space";
+	if (/["']/.test(login))
+		return "The password must not contain any quote";
+	if (login.length < 6)
+		return "The login must conatain at least 6 characters";
 
 	const	encodeLogin = encodeURIComponent(login);
 	const	response = await fetch(`http://localhost:4000/api/users/login?login=${encodeLogin}`);
@@ -36,6 +40,6 @@ export function checkPassword(password: string): string {
 		|| !/[0-9]/.test(password)
 		|| !/[!@#$%^&*(),.?:{}|<>]/.test(password)
 	)
-		return "The password must contain at least one capital letter, one digit, one special character, and more than 8 characters";
+		return "The password must contain at least 8 characters, with one capital letter, one digit and one special character";
 	return "";
 }

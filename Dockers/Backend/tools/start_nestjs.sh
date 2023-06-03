@@ -14,7 +14,8 @@ if [ ! -d "./nest-project/node_modules" ]; then
     npm add @nestjs@typeorm typeorm pg class-validator \
     class-transformer @nestjs/config joi \
     @nestjs/passport passport passport-local \
-    @nestjs/jwt passport-jwt
+    @nestjs/jwt passport-jwt \
+    @nestjs-modules/mailer nodemailer
 
     echo "NestJS project created"
 
