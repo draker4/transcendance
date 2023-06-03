@@ -1,44 +1,41 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Game {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  uuid: string;
 
-  // @CreateDateColumn()
-  // createdAd: Date;
+  @Column()
+  Name: string;
 
-  // @UpdateDateColumn()
-  // updatedAt: Date;
+  @Column()
+  Password?: string;
 
-  // @Column()
-  // login: string;
+  @Column()
+  Host: number;
 
-  // @Column()
-  // email: string;
-
-  // @Column({ nullable: true })
-  // first_name: string;
-
-  // @Column({ nullable: true })
-  // last_name: string;
-
-  // @Column({ nullable: true })
-  // phone: string;
-
-  // @Column({ nullable: true })
-  // image: string;
-
-  // @Column({ nullable: true })
-  // password: string;
-
-  // @Column({ nullable: true })
-  // verifyCode: string;
-
-  // @Column({ nullable: true, type: 'bigint' })
-  // expirationCode: number;
+  @Column()
+  Opponent: number;
 
   // @Column()
-  // verified: boolean;
+  // Viewers_List: string;
+
+  @Column()
+  Score_Host: number;
+
+  @Column()
+  Score_Opponent: number;
+
+  @Column()
+  Status: string;
+
+  @Column()
+  CreatedAt: string;
+
+  @Column()
+  Winner: number;
+
+  @Column()
+  Loser: number;
 }

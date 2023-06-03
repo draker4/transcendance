@@ -25,7 +25,8 @@ fi
 cd nest-project
 
 echo "install required dependencies"
-npm install
+npm install uuid
+npm install winston nest-winston
 
 echo "start server"
-npm run start:dev
+npm run start:dev > logs.log

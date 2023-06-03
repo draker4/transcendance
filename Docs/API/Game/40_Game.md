@@ -22,20 +22,32 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in"
+      "message": "Unautorize"
   }
 
-  Code : 200
+  statusCode : 402
+  {
+      "success": "False",
+      "message": "You are already in game"
+  }
+
+  statusCode : 403
+  {
+      "success": "False",
+      "message": "You are already looking for game"
+  }
+
+  statusCode : 200
   {
       "success": "True",
       "message": "Game created"
@@ -54,7 +66,7 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
 
   Body :
@@ -67,17 +79,17 @@
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "This game does not exist",
                  "You are not in this game",
                  "You are already in game",
                  "The game is full"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "Game joined"
@@ -93,21 +105,21 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
       "data": ""
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "Request successfull",
@@ -152,7 +164,7 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
 
   Body :
@@ -164,15 +176,15 @@
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "This game does not exist",
                  "You are not in this game",
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "Game left"
@@ -188,22 +200,22 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are already in game",
                  "You are already looking for game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "You are looking for game"
@@ -219,21 +231,21 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are not looking for game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "You stopped looking for game"
@@ -249,22 +261,22 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are not looking for game",
                  "You are already in game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "No game found"
@@ -274,7 +286,7 @@
       }
   }
 
-  Code : 201
+  statusCode : 201
   {
       "success": "True",
       "message": "Game found"

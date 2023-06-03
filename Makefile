@@ -1,7 +1,7 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : setup start stop re clean build log reback refront redata rebuild
+.phony : setup start stop re clean build log reback refront redata rebuild cleandata
 
 all : setup start
 
@@ -54,5 +54,14 @@ rebuild :
 	@echo "----Rebuilding all Docker----"	
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build --no-cache
 
-re : clean rebuild start
+re : clean rebuild
+	@echo "----Starting all Docker----"
+	mkdir -p ./Backend
+	mkdir -p ./Frontend
+	mkdir -p ./Database/conf/
+	mkdir -p ./Database/data/
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
+	@echo "----All Docker started-----"
+	rm -rf ./Backend/.git
+
 

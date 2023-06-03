@@ -12,4 +12,4 @@ import { Game } from 'src/typeorm/Game.entity';
   providers: [GamesService],
   exports: [GamesService]
 })
-export class GamesModule {}
+export class GamesModule {};
