@@ -7,6 +7,10 @@ import { AuthModule } from './auth/auth.module';
 import { ValidationSchema } from './validation.schema';
 import { MailModule } from './mail/mail.module';
 
+import { GamesModule } from './games/games.module';
+import { GamesController } from './games/games-controller/games-controller.controller';
+import { GamesService } from './games/games-service/games-service.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,9 +28,10 @@ import { MailModule } from './mail/mail.module';
     }),
     UsersModule,
     AuthModule,
-    MailModule
+    MailModule,
+    GamesModule
   ],
-  controllers: [],
-  providers: [],
+  controllers: [GamesController],
+  providers: [GamesService],
 })
 export class AppModule {}

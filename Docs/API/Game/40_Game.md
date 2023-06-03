@@ -1,20 +1,20 @@
 # Liste des *Endpoints*
 <br>
 
-- [01 - api/game/create](#api-game-create)
-- [02 - api/game/join](#api-game-join)
-- [03 - api/game/getall](#api-game-getall)
-- [04 - api/game/quit](#api-game-quit)
-- [05 - api/game/matchmake/start](#api-game-matchmake-start)
-- [06 - api/game/matchmake/stop](#api-game-matchmake-stop)
-- [06 - api/game/matchmake/update](#api-game-matchmake-update)
+- [01 - api/games/create](#api-games-create)
+- [02 - api/games/join](#api-games-join)
+- [03 - api/games/getall](#api-games-getall)
+- [04 - api/games/quit](#api-games-quit)
+- [05 - api/games/matchmake/start](#api-games-matchmake-start)
+- [06 - api/games/matchmake/stop](#api-games-matchmake-stop)
+- [06 - api/games/matchmake/update](#api-games-matchmake-update)
 
 <br>
 
 ## Game Endpoint details
 <br>
 
-### `POST api/game/create` : creer une partie <a id="api-game-create"></a>
+### `POST api/games/create` : creer une partie <a id="api-games-create"></a>
 <br>
 
 > Requête
@@ -46,7 +46,7 @@
   ```
 <br><br>
 
-### `POST api/game/join` : rejoins une partie <a id="api-game-join"></a>
+### `POST api/games/join` : rejoins une partie <a id="api-games-join"></a>
 <br>
 
 > Requête
@@ -85,7 +85,7 @@
   ```
 <br><br>
 
-### `GET api/game/getall` : recupere la liste des games en cours <a id="api-game-getall"></a>
+### `GET api/games/getall` : recupere la liste des games en cours <a id="api-games-getall"></a>
 <br>
 
 > Requête
@@ -144,7 +144,7 @@
   ```
 <br><br>
 
-### `POST api/game/quit` : quit une partie <a id="api-game-quit"></a>
+### `POST api/games/quit` : quit une partie <a id="api-games-quit"></a>
 <br>
 
 > Requête
@@ -180,7 +180,7 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/start` : demare la recherche de partie aleatoire <a id="api-game-matchmake-start"></a>
+### `POST api/games/matchmake/start` : demare la recherche de partie aleatoire <a id="api-games-matchmake-start"></a>
 <br>
 
 > Requête
@@ -211,7 +211,7 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/stop` : stop la recherche de partie aleatoire <a id="api-game-matchmake-stop"></a>
+### `POST api/games/matchmake/stop` : stop la recherche de partie aleatoire <a id="api-games-matchmake-stop"></a>
 <br>
 
 > Requête
@@ -241,7 +241,7 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/update` : stop la recherche de partie aleatoire <a id="api-game-matchmake-update"></a>
+### `POST api/games/matchmake/update` : stop la recherche de partie aleatoire <a id="api-games-matchmake-update"></a>
 <br>
 
 > Requête
@@ -284,114 +284,4 @@
       }
   }
   ```
-<br><br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-
-> Requête
-
-  ```
-  headers :
-  {
-      "Authorization": "Bearer $token"
-  }
-
-  Body :
-  {
-      "username": "string"
-  }
-  ```
-
-> Reponse
-
-  ```
-  Code : 400
-  {
-      "success": "False",
-      "message": "Invalid username or password"
-                 "Username or password is empty"
-                 "Username already exists"
-  }
-
-  Code : 200
-  {
-      "success": "True",
-      "message": "Registration successful"
-  }
-  ```
-<br><br>
-
-<a id="api-game-create"></a>
-
-### `GET /api/games/:id` : récupération des informations d'une partie
-<br>
-
-> Requête
-
-  ```
-  headers :
-  {
-      "Authorization": "Bearer $token"
-  }
-
-  Body :
-  {
-
-  }
-  ```
-
-> Reponse
-
-  ```
-  Code : 404
-  {
-      "success": "False",
-      "message": "Game not found"
-  }
-
-  Code : 400
-  {
-      "success": "False",
-      "message": "You are not logged in"
-  }
-
-  Code : 200
-  {
-      "game": 
-      {
-          "shots": $all_player_shots
-          "ships": $player ships
-          "state": $state
-          "yourturn": $turn
-      }
-  }
-  ```
-États de la partie :
-- `waiting` : en attente de joueurs
-- `playing` : en cours de jeu
-- `finished` : partie terminée
 <br><br>
