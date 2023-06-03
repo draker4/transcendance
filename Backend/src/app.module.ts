@@ -8,8 +8,8 @@ import { ValidationSchema } from './validation.schema';
 import { MailModule } from './mail/mail.module';
 
 import { GamesModule } from './games/games.module';
-import { GamesController } from './games/games-controller/games-controller.controller';
-import { GamesService } from './games/games-service/games-service.service';
+// import { GamesController } from './games/games-controller/games-controller.controller';
+// import { GamesService } from './games/games-service/games-service.service';
 
 @Module({
   imports: [
@@ -31,7 +31,7 @@ import { GamesService } from './games/games-service/games-service.service';
     MailModule,
     GamesModule
   ],
-  controllers: [GamesController],
-  providers: [GamesService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

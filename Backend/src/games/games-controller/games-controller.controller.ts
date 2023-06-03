@@ -24,7 +24,7 @@ export class GamesController {
     }
 
     // 03 - api/games/getall
-    @Post("getall")
+    @Get("getall")
     GetAll(@Request() req) {
       // return this.GamesService.CreateGame(req.user.id);
       return req.user.id;
@@ -37,29 +37,22 @@ export class GamesController {
       return req.user.id;
     }
 
-    // 05 - api/games/getinfo/:id -> A ajouter dans la doc
-    // @Post("")
-    // Quit(@Request() req) {
-    //   // return this.GamesService.CreateGame(req.user.id);
-    //   return req.user.id;
-    // }
-
-    // 06 - api/games/matchmake/start
+    // 05 - api/games/matchmake/start
     @Post("matchmake/start")
     MatchmakeStart(@Request() req) {
       // return this.GamesService.CreateGame(req.user.id);
       return req.user.id;
     }
 
-    // 07 - api/games/matchmake/stop
+    // 06 - api/games/matchmake/stop
     @Post("matchmake/stop")
     MatchmakeStop(@Request() req) {
       // return this.GamesService.CreateGame(req.user.id);
       return req.user.id;
     }
 
-    // 06 - api/games/matchmake/update
-    @Post("matchmake/update")
+    // 07 - api/games/matchmake/update
+    @Get("matchmake/update")
     MatchmakeUpdate(@Request() req) {
       // return this.GamesService.CreateGame(req.user.id);
       return req.user.id;

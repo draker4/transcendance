@@ -4,15 +4,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { GameTable } from '../Table/Game.dto'
-import { Game } from '../Table/Game.entity';
-
+import { Game } from 'src/typeorm/Game.entity';
 
 @Injectable()
 export class GamesService {
 
     constructor(
-        @InjectRepository(GameTable)
-        private readonly GameRepository: Repository<Game>,
+        // @InjectRepository(Game)
+        // private readonly GameRepository: Repository<Game>,
     ) {}
 
     // async addUser(createUserDto: createUserDto): Promise<User> {
