@@ -39,12 +39,7 @@
   {
       "success": "False",
       "message": "You are already in game"
-  }
-
-  statusCode : 200
-  {
-      "success": "False",
-      "message": "You are already looking for game"
+                 "You are already looking for game"
   }
 
   statusCode : 200
