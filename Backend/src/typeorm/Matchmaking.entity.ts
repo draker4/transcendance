@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 export class Matchmaking {
 
   @PrimaryGeneratedColumn()
-  id: number;
+  Player: number;
 
   @CreateDateColumn()
   createdAt: Date;

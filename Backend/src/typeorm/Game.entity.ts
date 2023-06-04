@@ -18,9 +18,9 @@ export class Game {
   @Column()
   Opponent: number;
 
-  // @Column()
-  // Viewers_List: string;
-
+  @Column("integer", { array: true, default: [] })
+  Viewers_List: number[];
+  
   @Column()
   Score_Host: number;
 

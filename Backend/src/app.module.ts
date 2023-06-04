@@ -7,6 +7,7 @@ import { MailModule } from './mail/mail.module';
 
 import { GamesModule } from './games/games.module';
 import { Game } from './typeorm/Game.entity';
+import { Matchmaking } from './typeorm/Matchmaking.entity';
 
 import { UsersModule } from './users/users.module';
 import { User } from './typeorm/User.entity';
@@ -23,7 +24,7 @@ import { User } from './typeorm/User.entity';
       username: process.env.DATA_BASE_USER,
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
-      entities: [User, Game],
+      entities: [User, Game, Matchmaking],
       synchronize: true,
     }),
     UsersModule,

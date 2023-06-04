@@ -23,10 +23,9 @@ export class GameDTO {
   @IsNumber()
   Opponent: number;
 
-  // @IsNotEmpty()
-  // @IsArray()
-  // @IsNumber({}, { each: true })
-  // Viewers_List: number[];
+  @IsArray()
+  @IsNumber({}, { each: true })
+  viewersList: number[];
 
   @IsNotEmpty()
   @IsNumber()
