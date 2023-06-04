@@ -90,6 +90,7 @@
                  "Wrong password",
                  "Game already has an opponent",
                  "Game already has 5 viewers",
+                 "Game started"
                  "An error occured",
                  "Catched an error"
   }
@@ -203,6 +204,51 @@
   }
   ```
 <br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### `POST api/games/matchmake/start` : demare la recherche de partie aleatoire <a id="api-games-matchmake-start"></a>
 <br>
