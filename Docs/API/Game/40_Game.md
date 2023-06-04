@@ -35,13 +35,13 @@
       "message": "Unautorize"
   }
 
-  statusCode : 402
+  statusCode : 200
   {
       "success": "False",
       "message": "You are already in game"
   }
 
-  statusCode : 403
+  statusCode : 200
   {
       "success": "False",
       "message": "You are already looking for game"
@@ -72,6 +72,8 @@
   Body :
   {
       "game_id": "2zfe4f689ze6f4f6z4f468z5ef1z6e84"
+      "game_password": "supermotdepasse"
+      "join_type": "oppenent" | "viewer"
       "viewer" : "False"
   }
   ```
@@ -79,20 +81,22 @@
 > Reponse
 
   ```
-  statusCode : 401
+  statusCode : 200
   {
       "success": "False",
       "message": "Unautorize",
-                 "This game does not exist",
-                 "You are not in this game",
-                 "You are already in game",
-                 "The game is full"
+                 "Game doesn't exist",
+                 "Game already has an opponent",
+                 "Game already has 5 viewers",
+                 "An error occured"
   }
 
   statusCode : 200
   {
       "success": "True",
-      "message": "Game joined"
+      "message": "Game joined as opponent"
+                 "Game joined as viewer"
+                 "You are already in this game"
   }
   ```
 <br><br>
@@ -182,6 +186,7 @@
       "message": "Unautorize",
                  "This game does not exist",
                  "You are not in this game",
+                 "An error occured"
   }
 
   statusCode : 200
