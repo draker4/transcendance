@@ -5,7 +5,6 @@ RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
     npm \
-    lynx \
     && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean \

@@ -14,7 +14,8 @@ if [ ! -d "./nest-project/node_modules" ]; then
     npm add @nestjs@typeorm typeorm pg class-validator \
     class-transformer @nestjs/config joi \
     @nestjs/passport passport passport-local \
-    @nestjs/jwt passport-jwt
+    @nestjs/jwt passport-jwt \
+    @nestjs-modules/mailer nodemailer
 
     echo "NestJS project created"
 
@@ -24,7 +25,8 @@ fi
 cd nest-project
 
 echo "install required dependencies"
-npm install
+npm install uuid
+npm install winston nest-winston
 
 echo "start server"
-npm run start:dev
+npm run start:dev > logs.log
