@@ -20,12 +20,19 @@ volumes:
       o: bind
       type: none
 
-  database_vol:
-    driver: local
-    driver_opts:
-      device: ../Database
-      o: bind
-      type: none
+  database_conf_vol:
+    #driver: local
+    #driver_opts:
+    #  device: ../Database/conf
+    #  o: bind
+    #  type: none
+
+  database_data_vol:
+    #driver: local
+    #driver_opts:
+    #  device: ../Database/data
+    #  o: bind
+    #  type: none
 
 services:
 
@@ -35,7 +42,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - database_vol:/var/lib/postgresql/13/main
+      - database_conf_vol:/etc/postgresql/13/
+      - database_data_vol:/var/lib/postgresql/13/
     env_file:
       - .env
     networks:
