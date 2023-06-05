@@ -2,7 +2,7 @@ import ProfileCard from "@/components/LoupTests/ProfileCard";
 import ProfileUserFrame from "@/components/LoupTests/ProfileUserFrame";
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service"; 
-import styles from "@/styles/LoupTest/ProfileCard.module.css";
+import styles from "@/styles/LoupTest/ProfileCard2.module.css";
 import { cookies } from 'next/dist/client/components/headers';
 
 
@@ -23,8 +23,7 @@ export default async function louptest() {
 
     const content = (
         <main className={styles.main}>
-                {/* <ProfileUserFrame profile={profile}/> */}
-                <ProfileCard profile={profile}/>
+                <ProfileUserFrame profile={profile}/>
         </main>
         )
 
