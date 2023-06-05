@@ -57,8 +57,7 @@ re : clean rebuild
 	@echo "----Starting all Docker----"
 	mkdir -p ./Backend
 	mkdir -p ./Frontend
-	mkdir -p ./Database/conf/
-	mkdir -p ./Database/data/
+	mkdir -p ./Database
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
 	@echo "----All Docker started-----"
 	rm -rf ./Backend/.git
