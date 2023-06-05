@@ -1,0 +1,85 @@
+.main {
+	width: 100%;
+	height: 100vh;
+	text-align: center;
+	margin-top: 50px;
+}
+
+.title {
+	width: 70%;
+	font-size: 23px;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top: 10vh;
+	padding-bottom: 5vh;
+}
+
+.form {
+	padding-top: 5vh;
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.inputs {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	font-size: 40px;
+	height: 10vh;
+	min-height: 60px;
+}
+
+.inputs input {
+	text-align: center;
+	border-width: 1px;
+	border-radius: 4px;
+	outline: none;
+	text-transform: uppercase;
+	box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.2);
+	width: 10%;
+	height: 100%;
+	font-size: 6vw;
+}
+
+.inputs input:focus {
+	box-shadow: 0px 0px 7px rgb(128, 0, 128, 0.7) inset;
+	border-color: purple;
+}
+
+.inputs input::selection {
+	color: #ff6f00;
+}
+
+.msg {
+	padding-top: 20px;
+}
+
+.button {
+	margin-top: 30px;
+	height: 45px;
+	width: 40%;
+	max-width: 200px;
+	font-size: 25px;
+	letter-spacing: 1vw;
+	background-color: #ff6f00;
+	border-radius: 2px;
+	border: none;
+	color: white;
+	text-align: center;
+	text-transform: uppercase;
+	cursor: pointer;
+}
+
+.bottomText {
+	position: absolute;
+	bottom: 10%;
+	left: 0;
+	right: 0;
+}
+
+.clickText {
+	cursor: pointer;
+	margin-top: 10px;
+	color:#ff6f00;
+}

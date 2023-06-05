@@ -1,20 +1,20 @@
 # Liste des *Endpoints*
 <br>
 
-- [01 - api/game/create](#api-game-create)
-- [02 - api/game/join](#api-game-join)
-- [03 - api/game/getall](#api-game-getall)
-- [04 - api/game/quit](#api-game-quit)
-- [05 - api/game/matchmake/start](#api-game-matchmake-start)
-- [06 - api/game/matchmake/stop](#api-game-matchmake-stop)
-- [06 - api/game/matchmake/update](#api-game-matchmake-update)
+- [01 - api/games/create](#api-games-create)
+- [02 - api/games/join](#api-games-join)
+- [03 - api/games/getall](#api-games-getall)
+- [04 - api/games/quit](#api-games-quit)
+- [05 - api/games/matchmake/start](#api-games-matchmake-start)
+- [06 - api/games/matchmake/stop](#api-games-matchmake-stop)
+- [06 - api/games/matchmake/update](#api-games-matchmake-update)
 
 <br>
 
 ## Game Endpoint details
 <br>
 
-### `POST api/game/create` : creer une partie <a id="api-game-create"></a>
+### `POST api/games/create` : creer une partie <a id="api-games-create"></a>
 <br>
 
 > Requête
@@ -22,31 +22,39 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in"
+      "message": "Unautorize"
   }
 
-  Code : 200
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "You are already in game"
+                 "You are already looking for game"
+                 "Catched an error"
+  }
+
+  statusCode : 200
   {
       "success": "True",
       "message": "Game created"
       "data" : {
-            "game_id" : "2zfe4f689ze6f4f6z4f468z5ef1z6e84"
+            "game_id" : "eaa44066-1412-4e23-bd61-3e865c18eb48"
       }
   }
   ```
 <br><br>
 
-### `POST api/game/join` : rejoins une partie <a id="api-game-join"></a>
+### `POST api/games/join` : rejoins une partie <a id="api-games-join"></a>
 <br>
 
 > Requête
@@ -54,38 +62,50 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
 
   Body :
   {
-      "game_id": "2zfe4f689ze6f4f6z4f468z5ef1z6e84"
-      "viewer" : "False"
+      "game_id": "eaa44066-1412-4e23-bd61-3e865c18eb48"
+      "game_password": "supermotdepasse"
+      "join_type": "opponent" | "viewer"
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 400
   {
       "success": "False",
-      "message": "You are not logged in",
-                 "This game does not exist",
-                 "You are not in this game",
-                 "You are already in game",
-                 "The game is full"
+      "message": "Unautorize",
+  }
+  
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "Game doesn't exist",
+                 "Not enough parameters",
+                 "Wrong password",
+                 "Game already has an opponent",
+                 "Game already has 5 viewers",
+                 "Game started"
+                 "An error occured",
+                 "Catched an error"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
-      "message": "Game joined"
+      "message": "Game joined as opponent"
+                 "Game joined as viewer"
+                 "You are already in this game"
   }
   ```
 <br><br>
 
-### `GET api/game/getall` : recupere la liste des games en cours <a id="api-game-getall"></a>
+### `GET api/games/getall` : recupere la liste des games en cours <a id="api-games-getall"></a>
 <br>
 
 > Requête
@@ -93,58 +113,64 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
-      "data": ""
+      "message": "Unautorize",
+  }
+  
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "Catched an error"
   }
 
-  Code : 200
+  statusCode : 200
   {
-      "success": "True",
-      "message": "Request successfull",
-      "data": {
-            2zfe4f689ze6f4f6z4f468z5ef1z6e84 : {
-                "game_name" : "My_Game"
-                "password" : "True"
-                "hostname" : "tquere"
-                "state" : "waiting"
-                "oponnent" : ""
-                "viewer" : "1"
-                "hostname_score" : "42"
-            },
-            f4ze4fze4h84q64ze68f4ezf4ze84fze : {
-                "game_name" : "EasyWin"
-                "password" : "false"
-                "hostname" : "bperiol"
-                "state" : "running"
-                "oponnent" : "loumarti"
-                "viewer" : "0"
-                "hostname_score" : "69"
-            },
-            4f4ezf7zzefefaze8az7e8azea84eaz : {
-                "game_name" : "1vs1"
-                "password" : "True"
-                "hostname" : "bboisson"
-                "state" : "waiting"
-                "oponnent" : ""
-                "viewer" : "5"
-                "hostname_score" : "666"
-            }
-      }
+      "success": true,
+      "message": "Request successfulld",
+      "data": [
+          {
+              "uuid": "eaa44066-1412-4e23-bd61-3e865c18eb48",
+              "Name": "Game_eaa44066-1412-4e23-bd61-3e865c18eb48",
+              "Password": "",
+              "Host": 1,
+              "Opponent": -1,
+              "Viewers_List": [],
+              "Score_Host": 0,
+              "Score_Opponent": 0,
+              "Status": "Waiting",
+              "CreatedAt": "2023-06-04T16:31:43.292Z",
+              "Winner": -1,
+              "Loser": -1
+          },
+          {
+              "uuid": "eaa44066-1412-4e23-bd61-3e865c18eb42",
+              "Name": "Test",
+              "Password": "coucou",
+              "Host": 2,
+              "Opponent": 1,
+              "Viewers_List": [],
+              "Score_Host": 0,
+              "Score_Opponent": 0,
+              "Status": "Waiting",
+              "CreatedAt": "2023-06-04T16:31:43.292Z",
+              "Winner": -1,
+              "Loser": -1
+          }
+      ]
   }
   ```
 <br><br>
 
-### `POST api/game/quit` : quit une partie <a id="api-game-quit"></a>
+### `POST api/games/quit` : quit les partie en cours <a id="api-games-quit"></a>
 <br>
 
 > Requête
@@ -152,27 +178,26 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
-  }
-
-  Body :
-  {
-      "game_id": "2zfe4f689ze6f4f6z4f468z5ef1z6e84"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
-                 "This game does not exist",
-                 "You are not in this game",
+      "message": "Unautorize",
+  }
+  
+  statusCode : 200
+  {
+      "success": "True",
+      "message": "You are not in a game anymore"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "Game left"
@@ -180,7 +205,52 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/start` : demare la recherche de partie aleatoire <a id="api-game-matchmake-start"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### `POST api/games/matchmake/start` : demare la recherche de partie aleatoire <a id="api-games-matchmake-start"></a>
 <br>
 
 > Requête
@@ -188,22 +258,22 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are already in game",
                  "You are already looking for game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "You are looking for game"
@@ -211,7 +281,7 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/stop` : stop la recherche de partie aleatoire <a id="api-game-matchmake-stop"></a>
+### `POST api/games/matchmake/stop` : stop la recherche de partie aleatoire <a id="api-games-matchmake-stop"></a>
 <br>
 
 > Requête
@@ -219,21 +289,21 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are not looking for game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "You stopped looking for game"
@@ -241,7 +311,7 @@
   ```
 <br><br>
 
-### `POST api/game/matchmake/update` : stop la recherche de partie aleatoire <a id="api-game-matchmake-update"></a>
+### `POST api/games/matchmake/update` : stop la recherche de partie aleatoire <a id="api-games-matchmake-update"></a>
 <br>
 
 > Requête
@@ -249,22 +319,22 @@
   ```
   headers :
   {
-      "Crunchy_Token": "$token"
+      "Authorization": Bearer $token
   }
   ```
 
 > Reponse
 
   ```
-  Code : 400
+  statusCode : 401
   {
       "success": "False",
-      "message": "You are not logged in",
+      "message": "Unautorize",
                  "You are not looking for game",
                  "You are already in game"
   }
 
-  Code : 200
+  statusCode : 200
   {
       "success": "True",
       "message": "No game found"
@@ -274,7 +344,7 @@
       }
   }
 
-  Code : 201
+  statusCode : 201
   {
       "success": "True",
       "message": "Game found"
@@ -284,114 +354,4 @@
       }
   }
   ```
-<br><br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br>
-
-> Requête
-
-  ```
-  headers :
-  {
-      "Authorization": "Bearer $token"
-  }
-
-  Body :
-  {
-      "username": "string"
-  }
-  ```
-
-> Reponse
-
-  ```
-  Code : 400
-  {
-      "success": "False",
-      "message": "Invalid username or password"
-                 "Username or password is empty"
-                 "Username already exists"
-  }
-
-  Code : 200
-  {
-      "success": "True",
-      "message": "Registration successful"
-  }
-  ```
-<br><br>
-
-<a id="api-game-create"></a>
-
-### `GET /api/games/:id` : récupération des informations d'une partie
-<br>
-
-> Requête
-
-  ```
-  headers :
-  {
-      "Authorization": "Bearer $token"
-  }
-
-  Body :
-  {
-
-  }
-  ```
-
-> Reponse
-
-  ```
-  Code : 404
-  {
-      "success": "False",
-      "message": "Game not found"
-  }
-
-  Code : 400
-  {
-      "success": "False",
-      "message": "You are not logged in"
-  }
-
-  Code : 200
-  {
-      "game": 
-      {
-          "shots": $all_player_shots
-          "ships": $player ships
-          "state": $state
-          "yourturn": $turn
-      }
-  }
-  ```
-États de la partie :
-- `waiting` : en attente de joueurs
-- `playing` : en cours de jeu
-- `finished` : partie terminée
 <br><br>

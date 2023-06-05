@@ -1,6 +1,7 @@
 "use client"
 
 import { getDoubleLogin, getDoubleEmail, checkPassword } from "@/lib/auth/checkUserInscription";
+import registerUser from "@/lib/auth/registerUser";
 import styles from "@/styles/SignUp.module.css"
 import { useRouter } from "next/navigation";
 import { NextResponse } from "next/server";
@@ -42,22 +43,8 @@ export default function SignUpPage() {
 			if (checkEmail || checkLogin.length > 0 || passWordSecured.length > 0)
 				throw new Error("Not valable user");
 			
-			// await client.logInEmail(target.email.value, target.login.value, target.password.value);
-			// const	res = await fetch("http://localhost:3000/api/auth/login", {
-			// 	method: "POST",
-			// 	headers: { "Content-Type": "application/json" },
-			// 	body: JSON.stringify({
-			// 		"email": target.email.value,
-			// 		"login": target.login.value
-			// 	}),
-			// });
-
-			// if (!res)
-			// 	throw new Error("Fetch error");
-			
-			// const	data = await res.json();
-			// console.log(data);
-			return NextResponse.redirect("http://localhost:3000/confirm");
+			await registerUser(target.email.value, target.login.value, target.password.value);
+			router.push("/signup/confirm");
 		}
 		catch (err) {
 			console.log(err);

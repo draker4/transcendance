@@ -34,7 +34,6 @@ volumes:
       o: bind
       type: none
 
-
 services:
 
   database:

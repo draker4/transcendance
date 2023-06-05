@@ -1,0 +1,14 @@
+export default async function registerUser(email: string, login: string, password: string) {
+	const	response = await fetch("http://localhost:4000/api/auth/register", {
+		method: "POST",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify({
+			email: email,
+			login: login,
+			password: password,
+		}),
+	});
+
+	if (!response.ok)
+		throw new Error('Cannot create user');
+}

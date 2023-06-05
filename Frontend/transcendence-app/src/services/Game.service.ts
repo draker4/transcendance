@@ -17,7 +17,7 @@ class Game_Service {
 
     //Creer une game avec un nom et un mot de passe
     public async Create_Game(game_password: string, game_name: string): Promise<any> {
-        const response = await fetch('api/game/create', {
+        const response = await fetch('api/games/create', {
             method: 'POST',
             body: JSON.stringify({ game_password, game_name }),
             headers: {
@@ -40,7 +40,7 @@ class Game_Service {
 
     //Rejoins une partie avec un mot de passe et l'id de la game
     public async Join(game_password: string, game_id: string): Promise<any> {
-        const response = await fetch('api/game/join', {
+        const response = await fetch('api/games/join', {
             method: 'POST',
             body: JSON.stringify({ game_password, game_id}),
             headers: {
@@ -52,7 +52,7 @@ class Game_Service {
 
     //Quite une partie avec l'id de la game
     public async Quit(game_id: string): Promise<any> {
-        const response = await fetch('api/game/quit', {
+        const response = await fetch('api/games/quit', {
             method: 'POST',
             body: JSON.stringify({ game_id}),
             headers: {
