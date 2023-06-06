@@ -1,5 +1,6 @@
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service";
+import { CryptoService } from "@/services/crypto/Crypto.service";
 import styles from "@/styles/Home.module.css"
 import { cookies } from 'next/dist/client/components/headers';
 import Link from "next/link";
@@ -14,6 +15,7 @@ export default async function HomePage() {
       throw new Error("No token value");
     
     profile = await getProfileByToken(token);
+
   }
   catch (err) {
     console.log(err);

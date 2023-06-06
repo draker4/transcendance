@@ -31,7 +31,7 @@ export class User {
   image: string;
 
   @Column({ nullable: true })
-  password: string;
+  passwordHashed: string;
 
   @Column({ nullable: true })
   verifyCode: string;
@@ -42,3 +42,4 @@ export class User {
   @Column()
   verified: boolean;
 }
+

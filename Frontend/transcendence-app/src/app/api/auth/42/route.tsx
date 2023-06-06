@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
 	const	cookie = getCookie("crunchy-token");
 	
 	if (code && !cookie) {
-		
 		try {
 			await client.logIn42(code);
 		} catch (err) {

@@ -6,11 +6,11 @@ import { ValidationSchema } from './validation.schema';
 import { MailModule } from './mail/mail.module';
 
 import { GamesModule } from './games/games.module';
-import { Game } from './typeorm/Game.entity';
-import { Matchmaking } from './typeorm/Matchmaking.entity';
+import { Game } from './utils/typeorm/Game.entity';
+import { Matchmaking } from './utils/typeorm/Matchmaking.entity';
 
 import { UsersModule } from './users/users.module';
-import { User } from './typeorm/User.entity';
+import { User } from './utils/typeorm/User.entity';
 
 @Module({
   imports: [

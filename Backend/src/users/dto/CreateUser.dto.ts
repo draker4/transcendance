@@ -28,7 +28,7 @@ export class createUserDto {
 
   @IsString()
   @IsOptional()
-  password?: string;
+  passwordHashed?: string;
 
   @IsNumber()
   @IsOptional()

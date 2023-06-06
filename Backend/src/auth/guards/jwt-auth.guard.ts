@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { IS_PUBLIC_KEY } from "src/decorators/public.decorator";
+import { IS_PUBLIC_KEY } from "src/utils/decorators/public.decorator";
 import { AuthGuard } from "@nestjs/passport";
 
 @Injectable()

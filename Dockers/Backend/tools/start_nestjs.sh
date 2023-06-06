@@ -15,7 +15,10 @@ if [ ! -d "./nest-project/node_modules" ]; then
     class-transformer @nestjs/config joi \
     @nestjs/passport passport passport-local \
     @nestjs/jwt passport-jwt \
-    @nestjs-modules/mailer nodemailer
+    @nestjs-modules/mailer nodemailer \
+    bcrypt
+
+    npm add -D @types/bcrypt
 
     echo "NestJS project created"
 

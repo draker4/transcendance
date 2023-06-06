@@ -4,12 +4,13 @@ import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/typeorm/User.entity';
+import { User } from 'src/utils/typeorm/User.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MailModule } from 'src/mail/mail.module';
+import { CryptoService } from 'src/utils/crypto/crypto';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MailModule } from 'src/mail/mail.module';
     AuthService,
     UsersService,
     JwtStrategy,
+    CryptoService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

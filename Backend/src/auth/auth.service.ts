@@ -1,11 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
-import dataAPI42 from 'src/interfaces/dataAPI42.interface';
+import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
 import { MailService } from 'src/mail/mail.service';
-import { User } from 'src/typeorm/User.entity';
+import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
+import { CryptoService } from 'src/utils/crypto/crypto';
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -13,6 +15,7 @@ export class AuthService {
 		private usersService: UsersService,
 		private jwtService: JwtService,
 		private mailService: MailService,
+		private cryptoService: CryptoService,
 	) {}
 
 	async getToken42(code : string): Promise<dataAPI42> {
@@ -45,33 +48,33 @@ export class AuthService {
 		
 		const	content = await response.json();
 
+		const	salt = await bcrypt.genSalt();
+
 		const	user: createUserDto = {
-			login: content?.login,
-			first_name: content?.first_name,
-			last_name: content?.last_name,
-			phone: content?.phone,
-			email: content?.email,
-			image: content?.image?.link,
+			login: await this.cryptoService.encrypt(content?.login),
+			email: await this.cryptoService.encrypt(content?.email),
+			first_name: await this.cryptoService.encrypt(content?.first_name),
+			last_name: await this.cryptoService.encrypt(content?.last_name),
+			phone: await this.cryptoService.encrypt(content?.phone),
+			image: await this.cryptoService.encrypt(content?.image?.link),
 			verified: true,
 		};
 
-		// update or save user in database
-		const	user_old = await this.usersService.getUserByLogin(user?.login);
+		const	user_old = await this.usersService.getUserByLogin(user.login);
 		
 		if (!user_old)
 			return await this.usersService.addUser(user);
 		
-		
 		return await this.usersService.updateUser(user_old);
 	}
 
-	async validateUser(login: string, username: string, password: string): Promise<any> {
-		const	user = await this.usersService.getUserByLogin(login);
+	// async validateUser(login: string, username: string, password: string): Promise<any> {
+	// 	const	user = await this.usersService.getUserByLogin(login);
 
-		if (user)
-			return user;
-		return null;
-	}
+	// 	if (user)
+	// 		return user;
+	// 	return null;
+	// }
 
 	async login(user: User) {
 		const	payload = { login: user.login, sub: user.id };
@@ -91,7 +94,10 @@ export class AuthService {
 		createUserDto.verifyCode = this.generateSecureCode(8);
 		createUserDto.verified = false;
 
-		await this.mailService.sendUserConfirmation(createUserDto.email, createUserDto.login, createUserDto.verifyCode);
+		const	login = await this.cryptoService.decrypt(createUserDto.login);
+		const	email = await this.cryptoService.decrypt(createUserDto.email);
+		
+		await this.mailService.sendUserConfirmation(email, login, createUserDto.verifyCode);
 
 		return await this.usersService.addUser(createUserDto);
 	}
@@ -104,7 +110,10 @@ export class AuthService {
 		user.expirationCode = Date.now() + 5 * 60 * 1000;
 		user.verifyCode = this.generateSecureCode(8);
 		
-		await this.mailService.sendUserConfirmation(user.email, user.login, user.verifyCode);
+		const	login = await this.cryptoService.decrypt(user.login);
+		const	email = await this.cryptoService.decrypt(user.email);
+
+		await this.mailService.sendUserConfirmation(email, login, user.verifyCode);
 		return await this.usersService.updateUser(user);
 	}
 }

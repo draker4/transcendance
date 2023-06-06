@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/typeorm/User.entity';
-import { ILike, Repository } from 'typeorm';
+import { User } from 'src/utils/typeorm/User.entity';
+import { Repository } from 'typeorm';
 import { createUserDto } from './dto/CreateUser.dto';
+import { CryptoService } from 'src/utils/crypto/crypto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private cryptoService: CryptoService,
   ) {}
 
   async addUser(createUserDto: createUserDto): Promise<User> {
@@ -16,11 +18,29 @@ export class UsersService {
   }
 
   async getUserByLogin(login: string) {
-    return await this.userRepository.findOne({ where: { login: ILike(login) } });
+    const loginDecrypted = (await this.cryptoService.decrypt(login)).toLowerCase();
+    const clients = await this.userRepository.find();
+   
+    for (const client of clients) {
+      const loginClient = await this.cryptoService.decrypt(client.login);
+      if (loginClient.toLowerCase() === loginDecrypted)
+        return client;
+    }
+
+    return null;
   }
   
   async getUserByEmail(email: string) {
-    return await this.userRepository.findOne({ where: { email: ILike(email) }});
+    const emailDecrypted = (await this.cryptoService.decrypt(email)).toLowerCase();
+    const clients = await this.userRepository.find();
+
+    for (const client of clients) {
+      const emailClient = await this.cryptoService.decrypt(client.email);
+      if (emailClient.toLowerCase() === emailDecrypted)
+        return client;
+    }
+
+    return null;
   }
 
   async getUserById(id: number) {

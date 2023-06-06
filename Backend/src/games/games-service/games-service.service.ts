@@ -4,10 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { GameDTO } from '../dto/Game.dto'
-import { Game } from 'src/typeorm/Game.entity';
+import { Game } from 'src/utils/typeorm/Game.entity';
 
 import { MatchmakingDTO } from  '../dto/Matchmaking.dto'
-import { Matchmaking } from 'src/typeorm/Matchmaking.entity';
+import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 
 import { v4 as uuidv4 } from 'uuid';
 
