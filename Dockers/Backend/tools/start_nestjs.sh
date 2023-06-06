@@ -32,4 +32,4 @@ cd nest-project
 npm install
 
 echo "start server"
-npm run start:dev > logs.log
+npm run start:dev
