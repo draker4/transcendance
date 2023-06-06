@@ -1,8 +1,8 @@
 export async function getDoubleEmail(email: string): Promise<boolean> {
 	const	encodeEmail = encodeURIComponent(email);
-	const	response = await fetch(`http://localhost:4000/api/users/email?email=${encodeEmail}`);
+	const	response = await fetch(`http://backend:4000/api/users/email?email=${encodeEmail}`);
 
-	if (!response.ok && response.status != 401)
+	if (!response.ok)
 		throw new Error("Cannot check if email is already used");
 	
 	const	data = await response.json();
@@ -10,23 +10,26 @@ export async function getDoubleEmail(email: string): Promise<boolean> {
 }
 
 export async function getDoubleLogin(login: string): Promise<string> {
-	if (/[ ]/.test(login))
-		return "The login must not contain any space";
-	if (/["']/.test(login))
-		return "The password must not contain any quote";
-	if (login.length < 6)
-		return "The login must conatain at least 6 characters";
-
 	const	encodeLogin = encodeURIComponent(login);
-	const	response = await fetch(`http://localhost:4000/api/users/login?login=${encodeLogin}`);
+	const	response = await fetch(`http://backend:4000/api/users/login?login=${encodeLogin}`);
 
-	if (!response.ok && response.status != 401)
+	if (!response.ok)
 		throw new Error("Cannot check if login is already used");
 	
 	const	data = await response.json();
 	if (data.exists)
 		return "Login already used!"
 
+	return "";
+}
+
+export function checkLoginFormat(login: string): string {
+	if (/[ ]/.test(login))
+		return "The login must not contain any space";
+	if (/["']/.test(login))
+		return "The password must not contain any quote";
+	if (login.length < 6)
+		return "The login must conatain at least 6 characters";
 	return "";
 }
 

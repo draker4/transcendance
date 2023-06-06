@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    serverActions: true,
+  },
   reactStrictMode: true,
   distDir: 'build',
   async rewrites() {
@@ -16,6 +19,7 @@ const nextConfig = {
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     JWT_SECRET: process.env.JWT_SECRET,
+    CRYPTO_KEY: process.env.CRYPTO_KEY,
   }
 };
   
