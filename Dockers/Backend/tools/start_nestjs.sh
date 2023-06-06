@@ -17,6 +17,8 @@ if [ ! -d "./nest-project/node_modules" ]; then
     @nestjs/jwt passport-jwt \
     @nestjs-modules/mailer nodemailer \
     bcrypt
+	npm add uuid
+	npm add winston nest-winston
 
     npm add -D @types/bcrypt
 
@@ -27,9 +29,7 @@ fi
 
 cd nest-project
 
-echo "install required dependencies"
-npm install uuid
-npm install winston nest-winston
+npm install
 
 echo "start server"
 npm run start:dev > logs.log

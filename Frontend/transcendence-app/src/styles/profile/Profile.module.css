@@ -36,8 +36,14 @@
 
 
 /* AVATAR MODULE */
-.avatar img {
-	
+.avatar .circle {
+	width: 25vw;
+    height: 25vw;
+    border-radius: 50%;
+    border:5px solid rgb(143, 239, 214);
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.3);
+    background-color: rgb(206, 125, 221);
+    overflow: hidden;
 }
 
 
