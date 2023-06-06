@@ -13,7 +13,7 @@ Ce code est envoyé avec une POST request faite dans le module "auth" dans le ba
 
 Ceci retourne un token d'accès qui permet de faire des requêtes à l'api de 42.
 
-# Liste des EndPoints
+# Requêtes utiles pour la connection avec l'api de 42
 
 - Requête du front au backend qui retourne les informations de l'utilisateur connecté à 42
 GET "http://backend:4000//api/auth/42/:code"
