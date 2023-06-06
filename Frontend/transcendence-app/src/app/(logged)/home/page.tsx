@@ -3,6 +3,7 @@ import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import styles from "@/styles/Home.module.css"
 import { cookies } from 'next/dist/client/components/headers';
+import Link from "next/link";
 
 export default async function HomePage() {
 
@@ -30,6 +31,7 @@ export default async function HomePage() {
         <div>{ profile.email}</div>
         <div>{ profile?.phone}</div>
         { <img src={profile?.image} className={styles.img}></img> }
+		<div><Link href="/profile">go to profile page</Link></div>
       </div>
     </main>
   );

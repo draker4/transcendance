@@ -59,6 +59,9 @@ export default function Game() {
 
             </div>
 
+            {/* Ajout popup recherche de game lors de randomize */}
+
+
 
         </main>
 	);

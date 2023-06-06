@@ -1,0 +1,62 @@
+.main {
+    height: 100vh;
+    background: #7193b5;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+} /* MAIN ISSU DE HOME */
+
+
+
+.profileMainFrame {
+
+	/* avoir un max-width ?*/
+	color:coral;
+	display: block;
+	flex-direction: row;
+	gap: 1rem; /* espacement entre first et second*/
+}
+
+.profileMainFrame .both {
+	min-width: 300px;
+	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
+	border-radius: 15rem;
+}
+
+.profileMainFrame .first {
+	color:rgb(176, 61, 19);
+	background-color: rgb(213, 140, 140);
+	margin-bottom: 5vw;
+}
+
+.profileMainFrame .second {
+	background-color: rgb(171, 228, 178);
+}
+
+
+
+
+
+
+/* RESPONSIVE */
+
+
+/* Breakpoint 1 > smartphone */
+@media(min-width: 38em) {
+	.profileMainFrame {
+		/* flex-direction: column; */
+		display: flex;
+		gap: 0.5rem; /* a voir si besoin en plus des paddings */
+	}
+
+	.profileMainFrame .first {
+		margin-bottom: 0;
+	}
+}
+
+
+/* Breakpoint 2  > smartphone & pads */
+@media(min-width: 992px) {
+
+}

@@ -1,11 +1,16 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './utils/typeorm/User.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ValidationSchema } from './validation.schema';
 import { MailModule } from './mail/mail.module';
+
+import { GamesModule } from './games/games.module';
+import { Game } from './typeorm/Game.entity';
+import { Matchmaking } from './typeorm/Matchmaking.entity';
+
+import { UsersModule } from './users/users.module';
+import { User } from './typeorm/User.entity';
 
 @Module({
   imports: [
@@ -19,12 +24,13 @@ import { MailModule } from './mail/mail.module';
       username: process.env.DATA_BASE_USER,
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
-      entities: [User],
+      entities: [User, Game, Matchmaking],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
-    MailModule
+    MailModule,
+    GamesModule
   ],
   controllers: [],
   providers: [],

@@ -3,6 +3,8 @@
 **[Retour Page Inception](./00_Page_Transcendence.md)**
 
 # Point Ouvert
+- pour le moment je met en place un depart -> page qui donne sur le profil l'overview du profil utilisateur
+  route : localhost:3000/profil  |  fichier frontend (`loumarti`)
 
 # API Liée
 - [API 20 - Info User](../API/20_Info_User.md)

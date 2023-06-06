@@ -27,3 +27,12 @@ Crunchy Team : bboisson tquere bperriol loumarti
 
 - Point sur la `Doc` markdown realisee par `bboisson` avant son depart en vacances.
 - Premieres recherches d'info sur `OAuth 42`
+
+## vendredi 26 mai
+
+- Creation de la `Crunchy Team` sur l'intra !
+- `Authentification OAuth 42` + `JWT` mis en place par `bperriol`
+
+## Mardi 6 juin
+
+- `loumarti` se jette a l'eau : 13_Profil_User --- > 13B_Overview
