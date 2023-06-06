@@ -1,14 +1,19 @@
 import styles from "@/styles/profile/Profile.module.css"
+import Profile from "@/services/Profile.service";
 import ProfileFirstPart from "./ProfileFirstPart"
 import ProfileSecondPart from "./ProfileSecondPart"
 
-export default function ProfileMainFrame() {
+type Props = {
+    profile: Profile;
+}
+
+export default function ProfileMainFrame({profile} : Props) {
 
 
 
   return (
 	<div className={styles.profileMainFrame}>
-		<ProfileFirstPart />
+		<ProfileFirstPart profile={profile}/>
 		<ProfileSecondPart />
 	</div>
   )

@@ -1,7 +1,15 @@
 import styles from "@/styles/profile/Profile.module.css"
+import Profile from "@/services/Profile.service"
+import Avatar from "./Avatar"
 
-export default function ProfileFirstPart() {
+type Props = {
+    profile: Profile;
+}
+
+export default function ProfileFirstPart({profile} : Props) {
   return (
-	<div className={`${styles.both} ${styles.first}`}>Profile First Part</div>
+	<div className={`${styles.both} ${styles.first}`}>
+		<Avatar profile={profile}/>
+	</div>
   )
 }
