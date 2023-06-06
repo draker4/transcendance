@@ -22,5 +22,6 @@ export const getProfileByToken = async (token: string): Promise<Profile> => {
 	data.email = (await Crypto.decrypt(data.email)).toString();
 	data.phone = (await Crypto.decrypt(data.phone)).toString();
 	data.image = (await Crypto.decrypt(data.image)).toString();
+
 	return data;
 }
