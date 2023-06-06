@@ -6,6 +6,7 @@ export default async function registerUser(email: string, login: string, passwor
 			email: email,
 			login: login,
 			password: password,
+			provider: "email",
 		}),
 	});
 

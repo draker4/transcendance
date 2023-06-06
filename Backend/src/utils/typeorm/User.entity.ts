@@ -41,5 +41,8 @@ export class User {
 
   @Column()
   verified: boolean;
+
+  @Column()
+  provider: string;
 }
 

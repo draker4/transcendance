@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MailModule } from 'src/mail/mail.module';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { GoogleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CryptoService } from 'src/utils/crypto/crypto';
     AuthService,
     UsersService,
     JwtStrategy,
+    GoogleStrategy,
     CryptoService,
     {
       provide: APP_GUARD,

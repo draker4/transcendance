@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   experimental: {
     serverActions: true,
@@ -20,6 +21,8 @@ const nextConfig = {
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     JWT_SECRET: process.env.JWT_SECRET,
     CRYPTO_KEY: process.env.CRYPTO_KEY,
+    WEBSITE_KEY: process.env.WEBSITE_KEY,
+    SECRET_KEY: process.env.SECRET_KEY,
   }
 };
   

@@ -1,5 +1,4 @@
 import { getCookie } from "cookies-next";
-import { cookies } from "next/dist/client/components/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

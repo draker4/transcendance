@@ -41,4 +41,8 @@ export class createUserDto {
   @IsBoolean()
   @IsNotEmpty()
   verified: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  provider: string;
 }

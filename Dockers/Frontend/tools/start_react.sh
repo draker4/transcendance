@@ -17,7 +17,7 @@ if [ ! -d "/app/transcendence-app" ]; then
     export CI=true
     npx create-next-app transcendence-app --ts --src-dir
     npm add cookies-next jose nodemailer react-hook-form \
-        crypto-js bcrypt
+        crypto-js bcrypt react-google-recaptcha-v3 next-auth
     npm add -D @types/nodemailer @types/bcrypt
     echo "Next project created"
 fi

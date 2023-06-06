@@ -2,6 +2,7 @@ import React from "react";
 import { Inter } from "next/font/google"
 import "@/styles/globals.css"
 import NavbarWelcome from "@/components/NavbarWelcome";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const	inter = Inter({ subsets: ['latin'] });
 

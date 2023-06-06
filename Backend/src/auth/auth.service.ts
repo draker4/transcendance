@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
@@ -7,7 +7,6 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
-import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class AuthService {
@@ -48,8 +47,6 @@ export class AuthService {
 		
 		const	content = await response.json();
 
-		const	salt = await bcrypt.genSalt();
-
 		const	user: createUserDto = {
 			login: await this.cryptoService.encrypt(content?.login),
 			email: await this.cryptoService.encrypt(content?.email),
@@ -58,6 +55,7 @@ export class AuthService {
 			phone: await this.cryptoService.encrypt(content?.phone),
 			image: await this.cryptoService.encrypt(content?.image?.link),
 			verified: true,
+			provider: "42",
 		};
 
 		const	user_old = await this.usersService.getUserByLogin(user.login);
@@ -68,16 +66,8 @@ export class AuthService {
 		return await this.usersService.updateUser(user_old);
 	}
 
-	// async validateUser(login: string, username: string, password: string): Promise<any> {
-	// 	const	user = await this.usersService.getUserByLogin(login);
-
-	// 	if (user)
-	// 		return user;
-	// 	return null;
-	// }
-
 	async login(user: User) {
-		const	payload = { login: user.login, sub: user.id };
+		const	payload = { sub: user.id };
 		return {
 			access_token: this.jwtService.sign(payload)
 		};
@@ -115,5 +105,31 @@ export class AuthService {
 
 		await this.mailService.sendUserConfirmation(email, login, user.verifyCode);
 		return await this.usersService.updateUser(user);
+	}
+
+	async loginWithGoogle(createUserDto: createUserDto) {
+		if (!createUserDto)
+			throw new UnauthorizedException('Unauthenticated');
+		
+		const encryptedValues = await Promise.all([
+			this.cryptoService.encrypt(createUserDto.email),
+			this.cryptoService.encrypt(createUserDto.login),
+			this.cryptoService.encrypt(createUserDto.first_name),
+			this.cryptoService.encrypt(createUserDto.last_name),
+			this.cryptoService.encrypt(createUserDto.image),
+		]);
+			
+		createUserDto.email = encryptedValues[0];
+		createUserDto.login = encryptedValues[1];
+		createUserDto.first_name = encryptedValues[2];
+		createUserDto.last_name = encryptedValues[3];
+		createUserDto.image = encryptedValues[4];
+		
+		let	user = await this.usersService.getUserByEmail(createUserDto.email);
+
+		if (!user)
+			user = await this.usersService.addUser(createUserDto);
+		
+		return this.login(user);
 	}
 }

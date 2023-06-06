@@ -14,13 +14,12 @@ if [ ! -d "./nest-project/node_modules" ]; then
     npm add @nestjs@typeorm typeorm pg class-validator \
     class-transformer @nestjs/config joi \
     @nestjs/passport passport passport-local \
-    @nestjs/jwt passport-jwt \
+    @nestjs/jwt passport-jwt passport-google-oauth20 \
     @nestjs-modules/mailer nodemailer \
-    bcrypt
-	npm add uuid
-	npm add winston nest-winston
+    bcrypt uuid winston nest-winston
 
-    npm add -D @types/bcrypt
+    npm add -D @types/bcrypt @types/passport-google-oauth20 \
+        @types/passport-jwt @types/passport-jwt @types/passport-local
 
     echo "NestJS project created"
 

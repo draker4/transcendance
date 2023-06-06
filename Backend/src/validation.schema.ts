@@ -15,4 +15,7 @@ export const	ValidationSchema = Joi.object({
 	DATA_BASE_SUP_PW: Joi.string().required(),
 	JWT_SECRET: Joi.string().required(),
 	CRYPTO_KEY: Joi.string().required(),
+	GOOGLE_ID_CLIENT: Joi.string().required(),
+	GOOGLE_SECRET: Joi.string().required(),
+	GOOGLE_CALLBACK: Joi.string().required(),
 });
