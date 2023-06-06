@@ -14,7 +14,7 @@ export default function Avatar({profile} : Props) {
 
   return (
 	<div className={styles.avatar}>
-		
+		<img src={profile.image} alt={avatarAltValue} className={styles.circle} />
 
 	</div>
   )
