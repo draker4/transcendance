@@ -35,12 +35,19 @@
 }
 
 
+/* AVATAR MODULE */
+.avatar img {
+	
+}
+
+
+
+
 
 
 
 
 /* RESPONSIVE */
-
 
 /* Breakpoint 1 > smartphone */
 @media(min-width: 38em) {

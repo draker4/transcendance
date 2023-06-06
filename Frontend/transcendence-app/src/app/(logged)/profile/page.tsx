@@ -25,7 +25,7 @@ export default async function ProfilePage() {
 
   return (
 	<main className={styles.main}>
-		<ProfileMainFrame />
+		<ProfileMainFrame profile={profile}/>
 	</main>
 	
   )
