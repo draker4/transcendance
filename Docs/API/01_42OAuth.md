@@ -25,3 +25,35 @@ Les paramètres possibles sont données dans le lien de la doc en haut de page.
 - requête du backend à l'api de 42 qui retourne les informations du profil de l'utilisateur (retournéees alors au front)
 GET "https://api.intra.42.fr/v2/me"
 Paramètre : token d'accès.
+
+# Liste des *Endpoints*
+<br>
+
+- [01 - api/auth/42/:code](#api-auth-42)
+
+<br>
+
+## Game Endpoint details
+<br>
+
+### `GET api/auth/42/:code` : connection avec api 42 <a id="api-auth-42"></a>
+<br>
+
+> Requête
+
+  ```
+  headers :
+
+  ```
+
+> Reponse
+
+  ```
+
+  statusCode : 200
+  {
+      "acces_token": $token,
+  }
+
+  ```
+<br><br>
