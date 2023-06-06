@@ -33,13 +33,15 @@ export default async function registerForm(
 		const	checkEmail = await getDoubleEmail(emailCrypt);
 		
 		if (checkEmail || checkLogin.length > 0 || passwordSecured.length > 0)
-		return {
-			checkEmail,
-			checkLogin,
-			passwordSecured,
-			register: false,
-		};
+			return {
+				checkEmail,
+				checkLogin,
+				passwordSecured,
+				register: false,
+			};
+
 		await registerUser(emailCrypt, loginCrypt, passwordHashed);
+		
 		return {
 			checkEmail: false,
 			checkLogin: "",
@@ -50,6 +52,7 @@ export default async function registerForm(
 	catch (err) {
 		console.log(err);
 	}
+
 	return {
 		checkEmail: false,
 		checkLogin: "",

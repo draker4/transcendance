@@ -43,7 +43,7 @@ export default function SignUpPage() {
 					setEmailUsed(res.checkEmail);
 					setLoginUsed(res.checkLogin);
 					setPasswordSecured(res.passwordSecured);
-					setRegister(register);
+					setRegister(res.register);
 				}} className={styles.form}>
 					<input type="text" aria-label="Username" autoComplete="username" placeholder="login" name="login" className={styles.input} required/>
 					{ loginUsed.length > 0 && <div>{ loginUsed }!</div> }
