@@ -1,6 +1,6 @@
 import styles from "@/styles/profile/Profile.module.css"
 import Profile from "@/services/Profile.service"
-import Avatar from "./Avatar"
+import AvatarCard from "./avatar/AvatarCard"
 
 type Props = {
     profile: Profile;
@@ -9,7 +9,7 @@ type Props = {
 export default function ProfileFirstPart({profile} : Props) {
   return (
 	<div className={`${styles.both} ${styles.first}`}>
-		<Avatar profile={profile}/>
+		<AvatarCard profile={profile}/>
 	</div>
   )
 }

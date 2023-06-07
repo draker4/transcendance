@@ -1,4 +1,4 @@
-import styles from "@/styles/profile/Profile.module.css"
+import styles from "@/styles/profile/AvatarCard.module.css"
 import Profile from "@/services/Profile.service";
 
 type Props = {
