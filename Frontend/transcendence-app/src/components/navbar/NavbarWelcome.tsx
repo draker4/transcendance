@@ -1,11 +1,8 @@
 "use client"
 
-import Client from "@/services/Client.service";
 import styles from "@/styles/Navbar.module.css"
 import { useRouter } from "next/navigation";
 import React from "react";
-
-const	client = new Client();
 
 export default function NavbarWelcome() {
 
@@ -16,10 +13,15 @@ export default function NavbarWelcome() {
 		router.push("/welcome/login");
 	}
 
+	const	welcome = () => {
+		router.push("/welcome");
+	}
+
 	return (
 		<nav className={styles.main}>
-			<div className={styles.buttons}>
-				<button onClick={logIn} className={styles.button}>Log In</button>
+			<div>
+				<img src="../icon.png" onClick={welcome}/>
+				<button onClick={logIn}>Log In</button>
 			</div>
 		</nav>
 	);
