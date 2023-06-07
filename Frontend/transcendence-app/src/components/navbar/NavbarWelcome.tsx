@@ -20,7 +20,7 @@ export default function NavbarWelcome() {
 	return (
 		<nav className={styles.main}>
 			<div>
-				<img src="../icon.png" onClick={welcome}/>
+				<img src="/images/logo.png" onClick={welcome}/>
 				<button onClick={logIn}>Log In</button>
 			</div>
 		</nav>
