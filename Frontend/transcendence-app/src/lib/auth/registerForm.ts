@@ -11,40 +11,40 @@ export default async function registerForm(
 	formdata: FormData
 ): Promise<{
 	checkEmail: boolean,
-	checkLogin: string,
+	// checkLogin: string,
 	passwordSecured: string,
 	register: boolean,
 }> {
 	const	email = formdata.get('email') as string;
-	const	login = formdata.get('login') as string;
+	// const	login = formdata.get('login') as string;
 	const	password = formdata.get('password') as string;
 	
 	try {
 		const	passwordSecured = checkPassword(password);
 		
 		const	passwordHashed = await hash(password);
-		const	loginCrypt = await Crypto.encrypt(login);
+		// const	loginCrypt = await Crypto.encrypt(login);
 		const	emailCrypt = await Crypto.encrypt(email);
 		
-		let	checkLogin = checkLoginFormat(login);
-		if (checkLogin.length == 0)
-		checkLogin = await getDoubleLogin(loginCrypt);
+		// let	checkLogin = checkLoginFormat(login);
+		// if (checkLogin.length == 0)
+		// checkLogin = await getDoubleLogin(loginCrypt);
 		
 		const	checkEmail = await getDoubleEmail(emailCrypt);
 		
-		if (checkEmail || checkLogin.length > 0 || passwordSecured.length > 0)
+		if (checkEmail || passwordSecured.length > 0)
 			return {
 				checkEmail,
-				checkLogin,
+				// checkLogin,
 				passwordSecured,
 				register: false,
 			};
 
-		await registerUser(emailCrypt, loginCrypt, passwordHashed);
+		await registerUser(emailCrypt, passwordHashed);
 		
 		return {
 			checkEmail: false,
-			checkLogin: "",
+			// checkLogin: "",
 			passwordSecured: "",
 			register: true,
 		}
@@ -55,7 +55,7 @@ export default async function registerForm(
 
 	return {
 		checkEmail: false,
-		checkLogin: "",
+		// checkLogin: "",
 		passwordSecured: "",
 		register: false,
 	}

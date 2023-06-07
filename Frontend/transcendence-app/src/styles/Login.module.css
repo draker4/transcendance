@@ -1,15 +1,25 @@
 .main {
 	/* border-style: dashed; */
+	display: inline-block;
 	width: 100%;
 	height: 100vh;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
+	background-color: rgb(236, 236, 236);
 	text-align: center;
+	position: sticky;
+}
+
+.title {
+	width: 100%;
+	margin-top: 50px;
+	margin-top: 60px;
+	text-align: center;
+	font-size: 2rem;
+	padding: 10px;
+	font-weight: bold;
 }
 
 .box {
+	background-color: white;
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 4px;
@@ -17,14 +27,6 @@
 	width: 70%;
 	max-width: 400px;
 	box-shadow: 3px 6px 10px rgba(0, 0, 0, 0.2);
-}
-
-.welcome {
-	width: 100%;
-	text-align: center;
-	font-size: xx-large;
-	padding: 10px;
-	font-weight: bold;
 }
 
 .form {
@@ -76,7 +78,7 @@
 	margin-top: 20px;
 }
 
-.buttons {
+.logButtons {
 	/* border-style: double; */
 	display: inline-block;
 	margin-top: 10px;
@@ -84,15 +86,13 @@
 	margin-bottom: 10px;
 }
 
-.buttonLogin {
+.logImg {
 	margin-top: 5px;
-	width: 60%;
+	width: 40px;
 	height: 40px;
 	min-height: 30px;
-	background-color: #ffffff;
-	border-color: #ff6f00;
-	border-width: 2px;
-	border-radius: 3px;
+	background-color: #f3f2f2;
+	border-radius: 10px;
 	font-size: 100%;
 	cursor: pointer;
 }
