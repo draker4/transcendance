@@ -31,7 +31,7 @@ export default async function HomePage() {
         <div>{ profile.email}</div>
         <div>{ profile?.phone}</div>
         { <img src={profile?.image} referrerPolicy="no-referrer" className={styles.img}></img> }
-		<div><Link href="/profile">go to profile page</Link></div>
+		<div><Link href="/home/profile">go to profile page</Link></div>
       </div>
     </main>
   );

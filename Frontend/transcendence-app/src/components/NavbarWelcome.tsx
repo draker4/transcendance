@@ -13,12 +13,12 @@ export default function NavbarWelcome() {
 
 	const	signIn = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
-		router.push("/signin");
+		router.push("/welcome/signin");
 	}
 
 	const	signUp = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
-		router.push("/signup");
+		router.push("/welcome/signup");
 	}
 
 	return (

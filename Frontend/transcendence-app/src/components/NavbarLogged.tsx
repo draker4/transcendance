@@ -17,7 +17,7 @@ export default function NavbarLogged() {
 		client.logged = false;
 		client.token = '';
 		deleteCookie("crunchy-token");
-		router.push("/");
+		router.push("/welcome");
 	}
 
 	return (

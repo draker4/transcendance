@@ -12,21 +12,19 @@ export async function middleware(req: NextRequest) {
 	
 	
 	if (req.nextUrl.pathname === '/' && !verifiedToken) {
-		return ;
+		return  NextResponse.redirect(new URL('/welcome', req.url));;
 	}
 
 	if (req.nextUrl.pathname === '/' && verifiedToken) {
 		return NextResponse.redirect(new URL('/home', req.url));
 	}
 
-	if (req.nextUrl.pathname === '/signin' && verifiedToken) {
+	if (req.nextUrl.pathname.startsWith('/welcome') && verifiedToken) {
 		return NextResponse.redirect(new URL('/home', req.url));
 	}
 
-	if ((req.nextUrl.pathname.startsWith('/home')
-		|| req.nextUrl.pathname.startsWith('/game'))
-		&& !verifiedToken) {
-		return NextResponse.redirect(new URL('/signin', req.url));
+	if (req.nextUrl.pathname.startsWith('/home') && !verifiedToken) {
+		return NextResponse.redirect(new URL('/welcome/signin', req.url));
 	}
 }
 
