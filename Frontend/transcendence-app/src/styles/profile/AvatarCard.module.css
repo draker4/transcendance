@@ -1,4 +1,4 @@
-/* AVATAR CARD - SUB COMPONENTS CSS */
+/* AVATAR CARD */
 
 .avatarCard {
 	display: flex;
@@ -10,8 +10,16 @@
 .avatarCard h1 {
 	font-family: var(--title-font);
 	font-weight: 700;
-	font-size: clamp(0.8rem, 0.5rem + 25vw, 1.8rem);
+	font-size: clamp(0.5rem, 0.2rem + 2.3vw, 3rem);
 }
+
+/* .avatarCard h3 {
+	font-family: var(--title-font);
+	font-weight: 700;
+	font-size: clamp(0.2rem, 0.15rem + 5vw, 0.8rem);
+} */
+
+
 /* AVATAR MODULE */
 .avatar .circle {
 	width: clamp(80px, 20px + 20vw, 35vw);
@@ -35,13 +43,29 @@
 }
 
 /* LOGIN MODULE */
-.login {
-	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
-	border-radius: 1rem;
-	width: 100%;
-	background-color: var(--secondary-color);
+.loginCard {
+	display: flex;
+	gap: clamp(0.2rem, 0.5vw, 0.6rem);
+	flex-direction: column;
+}
+
+.loginCard  .login {
+	padding: clamp(0.1rem, 0.05rem + 2.5vw, 0.3rem) clamp(0.25rem, 0.5rem + 5vw, 1rem);
+	border-radius: clamp(0.3rem, 0.15rem + 0.5vw, 1rem);
+	background-color: var(--tertiary-color);
 	text-align: center;
-	
+	color: var(--accent-color);
+	width: 100%;
+}
+
+.loginCard  .editButtonFrame {
+	width: 100%;
+	display:flex;
+	flex-direction: row-reverse;
+
+}
+.loginCard  .editButtonFrame .editButtonBox {
+	padding: 0 2vw 0 0;
 }
 
 

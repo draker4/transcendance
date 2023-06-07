@@ -1,0 +1,15 @@
+/* READY MADE COMPONENTS CSS */
+
+.littleButton {
+	padding: 0 2vw 0 0;
+	cursor: pointer;
+	border : 0.05rem solid var(--secondary-color);
+	padding: 0.15em 0.4em;
+	border-radius: clamp(0.3rem, 0.15rem + 0.5vw, 1rem);
+}
+
+.littleButton h3 {
+	font-family: var(--title-font);
+	font-weight: 700;
+	font-size: clamp(0.2rem, 0.15rem + 5vw, 0.8rem);
+}

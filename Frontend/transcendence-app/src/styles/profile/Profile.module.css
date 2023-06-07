@@ -9,12 +9,12 @@
 
 /* ------------------------------ */
 
-/* PROFILE MAIN FRAME & SUBMDODULES CSS */
+/* PROFILE MAIN FRAME */
 
 .profileMainFrame {
 
 	/* avoir un max-width ?*/
-	color:var(--accent-color);
+	color:var(--secondary-color);
 	display: block;
 	flex-direction: row;
 	gap: 1rem; /* espacement entre first et second*/
