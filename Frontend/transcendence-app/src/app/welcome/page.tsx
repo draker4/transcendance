@@ -1,5 +1,5 @@
 "use client"
-import WelcomeContainer from '@/components/WelcomeContainer';
+import WelcomeContainer from '@/components/not-logged/WelcomeContainer';
 
 export default function Home() {
 

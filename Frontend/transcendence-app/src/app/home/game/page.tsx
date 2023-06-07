@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 
-import Matchmaking_Button from '@/components/game/Matchmaking_Button'
-import Matchmaking_Search from '@/components/game/Matchmaking_Search'
-import Matchmaking_Game_List from '@/components/game/Matchmaking_Game_List'
+import Matchmaking_Button from '@/components/logged-in/game/Matchmaking_Button'
+import Matchmaking_Search from '@/components/logged-in/game/Matchmaking_Search'
+import Matchmaking_Game_List from '@/components/logged-in/game/Matchmaking_Game_List'
 
 import styles from '@/styles/game/game.module.css'
 

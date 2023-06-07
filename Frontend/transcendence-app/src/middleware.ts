@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
 	}
 
 	if (req.nextUrl.pathname.startsWith('/home') && !verifiedToken) {
-		return NextResponse.redirect(new URL('/welcome/signin', req.url));
+		return NextResponse.redirect(new URL('/welcome/login', req.url));
 	}
 }
 
