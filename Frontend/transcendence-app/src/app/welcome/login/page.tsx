@@ -1,6 +1,6 @@
 "use client"
 
-import SignUpComponent from "@/components/signup/SignUpComponent";
+import LogInComponent from "@/components/not-logged/login/LogInComponent";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 export default function SignUpPage() {
@@ -14,7 +14,7 @@ export default function SignUpPage() {
 				appendTo: "head",
 				nonce: undefined,
 			}}>
-			< SignUpComponent />
+			< LogInComponent />
 		</GoogleReCaptchaProvider>
 	);
 }

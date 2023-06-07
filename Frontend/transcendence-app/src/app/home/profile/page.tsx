@@ -1,4 +1,4 @@
-import ProfileMainFrame from "@/components/profile/ProfileMainFrame";
+import ProfileMainFrame from "@/components/logged-in/profile/ProfileMainFrame";
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/Profile.module.css"

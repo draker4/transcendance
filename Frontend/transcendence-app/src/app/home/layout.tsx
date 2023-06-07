@@ -1,4 +1,4 @@
-import NavbarLogged from "@/components/NavbarLogged"
+import NavbarLogged from "@/components/navbar/NavbarLogged"
 import "@/styles/globals.css";
 
 export const metadata = {

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-export default function SignUpComponent() {
+export default function LogInComponent() {
 	
 	const	router = useRouter();
 	const	[emailUsed, setEmailUsed] = useState<boolean>(false);
@@ -16,7 +16,7 @@ export default function SignUpComponent() {
 
 	useEffect(() => {
 		if (register)
-			router.push('signup/confirm');
+			router.push('welcome/signup/confirm');
 	}, [register]);
 
 	const   open42 = () => {
@@ -24,22 +24,12 @@ export default function SignUpComponent() {
     }
 
 	const   openGoogle = async () => {
-		try {
 			window.location.href = "http://localhost:4000/api/auth/google";
-        // const	res = await fetch("http://localhost:4000/api/auth/google", {
-		// 	mode: 'no-cors',
-		// });
-		// console.log(await res.json());
-		}
-		catch(err) {
-			console.log(err);
-		}
-
     }
 
 	const	signin = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
-		router.push("/signin");
+		router.push("/welcome/signin");
 	}
 
 	return (

@@ -13,7 +13,7 @@ export default function SignInPage() {
 
 	const	signup = (e: React.MouseEvent<HTMLElement>) => {
 		e.preventDefault();
-		router.push("/signup");
+		router.push("/welcome/signup");
 	}
 
 	return (

@@ -1,5 +1,5 @@
-import ProfileCard from "@/components/LoupTests/ProfileCard";
-import ProfileUserFrame from "@/components/LoupTests/ProfileUserFrame";
+import ProfileCard from "@/components/logged-in/LoupTests/ProfileCard";
+import ProfileUserFrame from "@/components/logged-in/LoupTests/ProfileUserFrame";
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service"; 
 import styles from "@/styles/LoupTest/ProfileCard2.module.css";
