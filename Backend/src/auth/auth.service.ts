@@ -84,10 +84,9 @@ export class AuthService {
 		createUserDto.verifyCode = this.generateSecureCode(8);
 		createUserDto.verified = false;
 
-		const	login = await this.cryptoService.decrypt(createUserDto.login);
 		const	email = await this.cryptoService.decrypt(createUserDto.email);
 		
-		await this.mailService.sendUserConfirmation(email, login, createUserDto.verifyCode);
+		await this.mailService.sendUserConfirmation(email, createUserDto.verifyCode);
 
 		return await this.usersService.addUser(createUserDto);
 	}
@@ -100,10 +99,9 @@ export class AuthService {
 		user.expirationCode = Date.now() + 5 * 60 * 1000;
 		user.verifyCode = this.generateSecureCode(8);
 		
-		const	login = await this.cryptoService.decrypt(user.login);
 		const	email = await this.cryptoService.decrypt(user.email);
 
-		await this.mailService.sendUserConfirmation(email, login, user.verifyCode);
+		await this.mailService.sendUserConfirmation(email, user.verifyCode);
 		return await this.usersService.updateUser(user);
 	}
 

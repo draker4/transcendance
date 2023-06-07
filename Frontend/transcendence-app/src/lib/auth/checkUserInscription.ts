@@ -1,12 +1,17 @@
-export async function getDoubleEmail(email: string): Promise<boolean> {
+export async function getDoubleEmail(email: string) {
 	const	encodeEmail = encodeURIComponent(email);
+	console.log("befooore", email);
 	const	response = await fetch(`http://backend:4000/api/users/email?email=${encodeEmail}`);
 
 	if (!response.ok)
 		throw new Error("Cannot check if email is already used");
 	
 	const	data = await response.json();
-	return data.exists as boolean;
+
+	return data as {
+		exists: boolean,
+		provider: string,
+	};
 }
 
 export async function getDoubleLogin(login: string): Promise<string> {

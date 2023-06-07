@@ -2,9 +2,9 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-val
 
 export class createUserDto {
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  login: string;
+  login?: string;
 
   @IsNotEmpty()
   @IsString()
