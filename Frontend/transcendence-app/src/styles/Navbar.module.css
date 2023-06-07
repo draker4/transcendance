@@ -3,6 +3,7 @@
 	background-color: rgb(226, 226, 226);
 	display: flex;
 	position: fixed;
+	z-index: 1;
 	align-items: center;
     justify-content: center;
     flex-direction: row;
@@ -32,17 +33,14 @@
 	/* border-style: dotted; */
 	margin-left: auto;
 	border-color: #ff6f00;
-	width: 40%;
-	max-width: 350px;
+	width: 20%;
+	max-width: 200px;
 	height: 80%;
 	display: flex;
 	justify-content: space-around;
 }
 
 .button {
-	/* border-style: double; */
-	margin-left: 5%;
-	margin-right: 5%;
 	flex : 1;
 	font-size: large;
 	background-color: #ff6f00;
