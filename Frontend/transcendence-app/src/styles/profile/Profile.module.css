@@ -1,6 +1,6 @@
 .main {
     height: 100vh;
-    background: #7193b5;
+    background: var(--primary-color);
 	display: flex;
     align-items: center;
     justify-content: center;
@@ -14,7 +14,7 @@
 .profileMainFrame {
 
 	/* avoir un max-width ?*/
-	color:coral;
+	color:var(--accent-color);
 	display: block;
 	flex-direction: row;
 	gap: 1rem; /* espacement entre first et second*/
@@ -29,7 +29,7 @@
 }
 
 .profileMainFrame .first {
-	background-color: rgb(213, 140, 140);
+	border:1px dashed rgb(87, 120, 167);
 	margin-bottom: 5vw;
 	display: flex;
 	justify-content: left;
@@ -37,7 +37,7 @@
 }
 
 .profileMainFrame .second {
-	background-color: rgb(171, 228, 178);
+	border:1px dashed rgb(87, 120, 167);
 }
 
 
@@ -55,6 +55,7 @@
 
 	.profileMainFrame .first {
 		margin-bottom: 0;
+		justify-content: center;
 	}
 }
 

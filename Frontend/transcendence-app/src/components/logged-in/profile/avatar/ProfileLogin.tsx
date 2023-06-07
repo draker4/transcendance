@@ -8,7 +8,7 @@ type Props = {
 export default function ProfileLogin({profile} : Props) {
   return (
 	<div className={styles.login}>
-		{profile.login}
+		<h1>{profile.login}</h1>
 	</div>
   )
 }
