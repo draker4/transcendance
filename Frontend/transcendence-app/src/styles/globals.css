@@ -13,9 +13,10 @@
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
   /* COLOR DEFINES (lightmode version)*/
-  --primary-color: rgb(211, 217, 220);
-  --second-color: rgb(174, 188, 198);
-  --accent-color: rgb(17, 122, 151);
+  --primary-color: #fefefe;
+  --secondary-color: #7e8987;
+  --tertiary-color: #052f5f;
+  --accent-color: #b3fb54;
 
   /* FONT DEFINES*/
   --title-font:"Quicksand", sans-serif;
