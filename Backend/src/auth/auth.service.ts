@@ -46,18 +46,18 @@ export class AuthService {
 			throw new UnauthorizedException();
 		
 		const	content = await response.json();
-		console.log(content.image.versions.small);
+
 		const	user: createUserDto = {
 			email: await this.cryptoService.encrypt(content?.email),
 			first_name: await this.cryptoService.encrypt(content?.first_name),
 			last_name: await this.cryptoService.encrypt(content?.last_name),
 			phone: await this.cryptoService.encrypt(content?.phone),
-			image: await this.cryptoService.encrypt(content?.image?.link),
+			image: await this.cryptoService.encrypt(content?.image?.versions.large),
 			verified: true,
 			provider: "42",
 		};
 
-		const	user_old = await this.usersService.getUserByLogin(user.login);
+		const	user_old = await this.usersService.getUserByEmail(user.email);
 		
 		if (!user_old)
 			return await this.usersService.addUser(user);
