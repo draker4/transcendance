@@ -46,9 +46,8 @@ export class AuthService {
 			throw new UnauthorizedException();
 		
 		const	content = await response.json();
-
+		console.log(content.image.versions.small);
 		const	user: createUserDto = {
-			login: await this.cryptoService.encrypt(content?.login),
 			email: await this.cryptoService.encrypt(content?.email),
 			first_name: await this.cryptoService.encrypt(content?.first_name),
 			last_name: await this.cryptoService.encrypt(content?.last_name),
@@ -67,7 +66,7 @@ export class AuthService {
 	}
 
 	async login(user: User) {
-		const	payload = { sub: user.id };
+		const	payload = { sub: user.id, login: user.login };
 		return {
 			access_token: this.jwtService.sign(payload)
 		};
@@ -111,17 +110,15 @@ export class AuthService {
 		
 		const encryptedValues = await Promise.all([
 			this.cryptoService.encrypt(createUserDto.email),
-			this.cryptoService.encrypt(createUserDto.login),
 			this.cryptoService.encrypt(createUserDto.first_name),
 			this.cryptoService.encrypt(createUserDto.last_name),
 			this.cryptoService.encrypt(createUserDto.image),
 		]);
 			
 		createUserDto.email = encryptedValues[0];
-		createUserDto.login = encryptedValues[1];
-		createUserDto.first_name = encryptedValues[2];
-		createUserDto.last_name = encryptedValues[3];
-		createUserDto.image = encryptedValues[4];
+		createUserDto.first_name = encryptedValues[1];
+		createUserDto.last_name = encryptedValues[2];
+		createUserDto.image = encryptedValues[3];
 		
 		let	user = await this.usersService.getUserByEmail(createUserDto.email);
 
