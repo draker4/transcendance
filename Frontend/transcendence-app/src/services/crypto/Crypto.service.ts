@@ -6,7 +6,7 @@ export class CryptoService {
 	private	key: Buffer | null = null;
 	private init: Promise<void> | null = null;
 
-	async	getKey(): Promise<Buffer | undefined> {
+	private async	getKey(): Promise<Buffer | undefined> {
 		if (this.key)
 			return this.key;
 		

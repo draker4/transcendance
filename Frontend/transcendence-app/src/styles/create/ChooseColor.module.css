@@ -1,13 +1,11 @@
 .main {
-	/* border: 1px solid red; */
 	width: 80%;
 	display: flex;
 	overflow-x: auto;
 	max-width: 600px;
 	margin: auto;
-	padding: 20px;
+	padding: 8px;
 	justify-content: flex-start;
-	scrollbar-color: var(--accent-color);
 	padding-bottom: 10px;
 }
 
@@ -23,26 +21,22 @@
 	background-color: var(--accent-color);
 }
 
-.avatar {
+.cercle {
 	flex: 0 0 auto;
-	width: 80px;
-	height: 80px;
+	width: 30px;
+	height: 30px;
+	border-radius: 20px;
 	margin: 0 10px;
-	background-color: var(--accent-color);
 }
 
-.avatar:first-child {
+.cercle:first-child {
 	margin-left: auto;
 }
 
-.avatar:last-child {
+.cercle:last-child {
 	margin-right: auto;
 }
 
-.avatar.selected {
-	box-shadow: 0 0 20px 1px var(--secondary-color);
-}
-
-.chooseColor {
-	padding-top: 30px;
+.cercle.selected {
+	box-shadow: 0 0 10px 2px var(--accent-color-opacity);
 }

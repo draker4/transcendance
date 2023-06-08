@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
@@ -7,11 +7,14 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { AvatarDto } from 'src/users/dto/Avatar.dto';
+import { AvatarService } from 'src/avatar/avatar.service';
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private usersService: UsersService,
+		private	avatarService: AvatarService,
 		private jwtService: JwtService,
 		private mailService: MailService,
 		private cryptoService: CryptoService,
@@ -58,7 +61,6 @@ export class AuthService {
 		};
 
 		const	user_old = await this.usersService.getUserByEmail(user.email);
-		
 		if (!user_old)
 			return await this.usersService.addUser(user);
 		
@@ -126,5 +128,25 @@ export class AuthService {
 			user = await this.usersService.addUser(createUserDto);
 		
 		return this.login(user);
+	}
+
+	async updateUserLogin(userId: number, login: string) {
+		const user = await this.usersService.getUserById(userId);
+		
+		if (!user)
+			throw new Error('No user found');
+
+		user.login = login;
+
+		return await this.usersService.updateUser(user);
+	}
+
+	async updateAvatar(avatar: AvatarDto) {
+		const	avatarCreated = await this.avatarService.updateAvatar(avatar);
+
+		if (!avatarCreated)
+			throw new Error("Cannot update avatar");
+
+		return avatarCreated;
 	}
 }

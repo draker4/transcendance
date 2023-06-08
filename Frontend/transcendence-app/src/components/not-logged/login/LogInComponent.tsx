@@ -39,7 +39,7 @@ export default function LogInComponent() {
 		const	response = await fetch("http://localhost:3000/api/auth/captcha", {
 			method: "POST",
 			headers: {
-				Accept: "applicattion/json, text/plain, */*",
+				Accept: "application/json, text/plain, */*",
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
@@ -104,7 +104,7 @@ export default function LogInComponent() {
 				passwordSecured: string,
 				register: boolean,
 			} = await registerFormPassword(passwordUser, email);
-			console.log(res);
+
 			setPasswordSecured(res.passwordSecured);
 			
 			if (register)

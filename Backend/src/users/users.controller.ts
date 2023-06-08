@@ -5,7 +5,9 @@ import { Public } from 'src/utils/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+  ) {}
 
   @Get()
   getUserProfile(@Request() req) {

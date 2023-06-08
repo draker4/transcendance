@@ -4,9 +4,12 @@ import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([User])],
+	imports: [
+		TypeOrmModule.forFeature([User]),
+	],
 	controllers: [UsersController],
 	providers: [
 		UsersService,

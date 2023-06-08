@@ -11,6 +11,8 @@ import { Matchmaking } from './utils/typeorm/Matchmaking.entity';
 
 import { UsersModule } from './users/users.module';
 import { User } from './utils/typeorm/User.entity';
+import { Avatar } from './utils/typeorm/Avatar.entity';
+import { AvatarModule } from './avatar/avatar.module';
 
 @Module({
   imports: [
@@ -24,13 +26,14 @@ import { User } from './utils/typeorm/User.entity';
       username: process.env.DATA_BASE_USER,
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
-      entities: [User, Game, Matchmaking],
+      entities: [User, Game, Matchmaking, Avatar],
       synchronize: true,
     }),
     UsersModule,
     AuthModule,
     MailModule,
-    GamesModule
+    GamesModule,
+    AvatarModule
   ],
   controllers: [],
   providers: [],

@@ -12,11 +12,13 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { MailModule } from 'src/mail/mail.module';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { GoogleStrategy } from './strategies/google.strategy';
+import { Avatar } from 'src/utils/typeorm/Avatar.entity';
+import { AvatarService } from 'src/avatar/avatar.service';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Avatar]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
@@ -27,6 +29,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
   providers: [
     AuthService,
     UsersService,
+    AvatarService,
     JwtStrategy,
     GoogleStrategy,
     CryptoService,

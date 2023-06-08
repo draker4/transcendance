@@ -6,4 +6,5 @@ export default class Profile {
 	email: string = '';
 	phone: string = '';
 	image: string = '';
+	provider: string = '';
 }
