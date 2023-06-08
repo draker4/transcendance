@@ -12,11 +12,24 @@
     'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
-  /* COLOR DEFINES (lightmode version)*/
-  --primary-color: #fefefe;
-  --secondary-color: #7e8987;
-  --tertiary-color: #052f5f;
-  --accent-color: #b3fb54;
+  /* COLOR DEFINES  SET1 */
+  
+  --primary-color: rgba(254, 254, 254, 1);
+  	--primary-color-darker1:rgba(241, 245, 249, 1);
+  --secondary-color: rgba(126, 137, 135, 1);
+  --tertiary-color: rgba(5, 47, 95, 1);
+  --accent-color: rgba(179, 251, 84, 1); 
+  	--accent-color-darker1: rgb(147, 181, 102);
+
+  /* COLOR DEFINES SET2 */
+
+	--primary-color: rgba(254, 254, 254, 1);
+		--primary-color-darker1: rgba(241, 245, 249, 1);
+	--secondary-color: rgba(100, 116, 139, 1);
+	--tertiary-color: rgba(15, 23, 42, 1);
+	--accent-color: rgba(34, 211, 238, 1);
+		--accent-color-darker1: rgba(53, 235, 237, 1);
+
 
   /* FONT DEFINES*/
   --title-font:"Quicksand", sans-serif;

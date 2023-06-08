@@ -13,12 +13,6 @@
 	font-size: clamp(0.5rem, 0.2rem + 2.3vw, 3rem);
 }
 
-/* .avatarCard h3 {
-	font-family: var(--title-font);
-	font-weight: 700;
-	font-size: clamp(0.2rem, 0.15rem + 5vw, 0.8rem);
-} */
-
 
 /* AVATAR MODULE */
 .avatar .circle {

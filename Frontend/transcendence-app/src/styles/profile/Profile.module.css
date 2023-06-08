@@ -17,19 +17,32 @@
 	color:var(--secondary-color);
 	display: block;
 	flex-direction: row;
-	gap: 1rem; /* espacement entre first et second*/
-	border:1px dashed rgb(87, 120, 167);
 	padding: 1rem;
+	
+	/* border:1px dashed rgb(87, 120, 167); */
+	background-color: var(--primary-color-darker1);
+	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+	box-shadow: 
+		inset
+		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem) 
+		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+		clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem)
+		rgba(67, 80, 126, 0.22);
 }
 
 .profileMainFrame .both {
+	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
 	min-width: 300px;
 	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
-	border-radius: 1rem;
+	box-shadow: 
+		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem) 
+		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+		clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem)
+		rgba(67, 80, 126, 0.22);
+	background-color: var(--primary-color);
 }
 
 .profileMainFrame .first {
-	border:1px dashed rgb(87, 120, 167);
 	margin-bottom: 5vw;
 	display: flex;
 	justify-content: left;
@@ -37,7 +50,7 @@
 }
 
 .profileMainFrame .second {
-	border:1px dashed rgb(87, 120, 167);
+	
 }
 
 
@@ -50,7 +63,7 @@
 	.profileMainFrame {
 		/* flex-direction: column; */
 		display: flex;
-		gap: 0.5rem; /* a voir si besoin en plus des paddings */
+		gap: 1rem; /* a voir si besoin en plus des paddings */
 	}
 
 	.profileMainFrame .first {
