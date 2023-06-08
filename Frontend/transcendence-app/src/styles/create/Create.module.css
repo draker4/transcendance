@@ -40,3 +40,10 @@
 	position: absolute;
 	margin-left: 5px;
 }
+
+.avatars {
+	/* border: 1px solid green; */
+	margin-top: 20px;
+	width: 100%;
+	align-items: center;
+}

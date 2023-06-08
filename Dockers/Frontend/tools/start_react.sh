@@ -19,7 +19,10 @@ if [ ! -d "/app/transcendence-app" ]; then
     npm add cookies-next jose nodemailer react-hook-form \
         crypto-js bcrypt react-google-recaptcha-v3 next-auth
     npm add -D @types/nodemailer @types/bcrypt
-    npm add @mui/material @emotion/react @emotion/styled
+    npm add @mui/material @emotion/react @emotion/styled \
+        @fortawesome/fontawesome-svg-core \
+        @fortawesome/free-solid-svg-icons \
+        @fortawesome/react-fontawesome
     echo "Next project created"
 fi
 
