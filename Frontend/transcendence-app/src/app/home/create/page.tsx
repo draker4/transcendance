@@ -30,7 +30,9 @@ export default async function CreatePage() {
 				<p>Don't worry, you can change it later.</p>
 				<input type="text" name="login" placeholder="login"/>
 			</form>
-			<ChooseAvatar profile={profile}/>
+			<div className={styles.avatars}>
+				<ChooseAvatar profile={profile}/>
+			</div>
 		</div>
 	);
 }
