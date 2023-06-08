@@ -4,8 +4,7 @@ export default async function registerUser(email: string, password: string) {
 		headers: {"Content-Type": "application/json"},
 		body: JSON.stringify({
 			email: email,
-			// login: login,
-			password: password,
+			passwordHashed: password,
 			provider: "email",
 		}),
 	});

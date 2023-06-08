@@ -12,7 +12,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column()
+  @Column({ nullable: true })
   login: string;
 
   @Column()

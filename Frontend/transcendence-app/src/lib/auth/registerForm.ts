@@ -1,62 +1,67 @@
 "use server"
 
 import { CryptoService } from "@/services/crypto/Crypto.service";
-import { checkLoginFormat, checkPassword, getDoubleEmail, getDoubleLogin } from "./checkUserInscription";
+import { checkPassword, getDoubleEmail } from "./checkUserInscription";
 import registerUser from "./registerUser";
 import hash from "../bcrypt/hash";
 
 const	Crypto = new CryptoService();
 
-export default async function registerForm(
-	formdata: FormData
+export async function registerFormPassword(
+	passwordUser: string,
+	email: string,
 ): Promise<{
-	checkEmail: boolean,
-	// checkLogin: string,
 	passwordSecured: string,
 	register: boolean,
 }> {
-	const	email = formdata.get('email') as string;
-	// const	login = formdata.get('login') as string;
-	const	password = formdata.get('password') as string;
-	
 	try {
-		const	passwordSecured = checkPassword(password);
-		
-		const	passwordHashed = await hash(password);
-		// const	loginCrypt = await Crypto.encrypt(login);
+		const	passwordSecured = checkPassword(passwordUser);
 		const	emailCrypt = await Crypto.encrypt(email);
-		
-		// let	checkLogin = checkLoginFormat(login);
-		// if (checkLogin.length == 0)
-		// checkLogin = await getDoubleLogin(loginCrypt);
-		
-		const	checkEmail = await getDoubleEmail(emailCrypt);
-		
-		if (checkEmail || passwordSecured.length > 0)
+
+		if (passwordSecured.length > 0)
 			return {
-				checkEmail,
-				// checkLogin,
 				passwordSecured,
 				register: false,
-			};
+		};
 
+		const	passwordHashed = await hash(passwordUser);
 		await registerUser(emailCrypt, passwordHashed);
-		
+
 		return {
-			checkEmail: false,
-			// checkLogin: "",
 			passwordSecured: "",
 			register: true,
 		}
 	}
 	catch (err) {
-		console.log(err);
+		return {
+			passwordSecured: "",
+			register: false,
+		}
 	}
+}
 
-	return {
-		checkEmail: false,
-		// checkLogin: "",
-		passwordSecured: "",
-		register: false,
+export async function registerFormEmail(
+	email: string,
+): Promise<{
+	emailExists: boolean,
+	provider: string,
+	notif: boolean,
+}> {
+	try {
+		const	emailCrypt = await Crypto.encrypt(email);
+		const	checkEmail = await getDoubleEmail(emailCrypt);
+
+		return {
+			emailExists: checkEmail.exists,
+			provider: checkEmail.provider,
+			notif: false,
+		};
+	}
+	catch (err) {
+		return {
+			emailExists: false,
+			provider: "",
+			notif: true,
+		};
 	}
 }

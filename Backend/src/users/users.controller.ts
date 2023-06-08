@@ -19,8 +19,14 @@ export class UsersController {
     const user = await this.usersService.getUserByEmail(decodeUrl);
 
     if (user)
-      return { exists: true };
-    return { exists: false };
+      return { 
+        exists: true,
+        provider: user.provider,
+      };
+    return {
+      exists: false,
+      provider: "",
+    };
   }
 
   @Public()

@@ -26,17 +26,14 @@ export async function POST(
 		if (data?.success && data?.score >= 0.5)
 			return NextResponse.json({
 				status: "ok",
-				message: "",
 			});
 	}
 	catch(error) {
 		return NextResponse.json({
 			status: "error",
-			message: "Something went wrong, please try again!",
 		});
 	}
 	return NextResponse.json({
 		status: "error",
-		message: "Something went wrong, please try again!",
 	});
 }

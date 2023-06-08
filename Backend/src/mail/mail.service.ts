@@ -6,7 +6,7 @@ import { User } from 'src/utils/typeorm/User.entity';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
-  async sendUserConfirmation(email: string, login: string, code: string) {
+  async sendUserConfirmation(email: string, code: string) {
     const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
     await this.mailerService.sendMail({
@@ -14,7 +14,6 @@ export class MailService {
       subject: 'Welcome to Crunchy Pong! Confirm your Email',
       template: './confirmation',
       context: {
-        login,
         code: codeFormated,
       },
     });

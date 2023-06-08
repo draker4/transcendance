@@ -38,3 +38,8 @@ body {
   color: var(--tertiary-color);
   font-family: var(--text-font);
 }
+
+::selection {
+  background: var(--secondary-color);
+  color: var(--accent-color);
+}
