@@ -4,7 +4,7 @@ export class createUserDto {
 
   @IsOptional()
   @IsString()
-  login?: string;
+  login?: string = "";
 
   @IsNotEmpty()
   @IsString()

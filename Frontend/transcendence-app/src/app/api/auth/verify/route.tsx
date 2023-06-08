@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
 		try {
 			const	res = await fetch(`http://backend:4000/api/auth/verifyCode/${code}`);
 			const	data = await res.json();
-			console.log(data);
+
 			const	response = NextResponse.json(data);
 			if (data?.message === "Loading...") {
 				response.cookies.set({

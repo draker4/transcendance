@@ -1,0 +1,42 @@
+.main {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.main h3 {
+	margin-top: 80px;
+	font-size: 1.7rem;
+}
+
+.main form {
+	margin-top: 60px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.main form label {
+	color: var(--tertiary-color);
+	font-size: 1.1rem;
+}
+
+.main form p {
+	font-size: 0.7rem;
+}
+
+.main form input {
+	margin-top: 20px;
+	outline: none;
+	border: none;
+	border-bottom: 1px solid var(--secondary-color);
+	color: var(--tertiary-color);
+	letter-spacing: 1px;
+}
+
+.main form input::placeholder {
+	position: absolute;
+	margin-left: 5px;
+}
