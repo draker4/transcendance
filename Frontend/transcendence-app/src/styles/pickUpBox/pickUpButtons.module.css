@@ -36,4 +36,5 @@
 	font-family: var(--title-font);
 	font-weight: 700;
 	font-size: clamp(0.2rem, 0.15rem + 5vw, 0.8rem);
+	user-select: none;
 }

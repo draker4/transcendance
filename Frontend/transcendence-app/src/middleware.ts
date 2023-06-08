@@ -11,12 +11,12 @@ export async function middleware(req: NextRequest) {
 		});
 	console.log(verifiedToken);
 
-	if (verifiedToken
-		&& !verifiedToken.login
-		&& req.nextUrl.pathname.startsWith("/home")
-		&& req.nextUrl.pathname !== '/home/create') {
-		return NextResponse.redirect(new URL('/home/create', req.url));
-	}
+	// if (verifiedToken
+	// 	&& !verifiedToken.login
+	// 	&& req.nextUrl.pathname.startsWith("/home")
+	// 	&& req.nextUrl.pathname !== '/home/create') {
+	// 	return NextResponse.redirect(new URL('/home/create', req.url));
+	// }
 	
 	if (req.nextUrl.pathname === '/' && !verifiedToken) {
 		return  NextResponse.redirect(new URL('/welcome', req.url));;
