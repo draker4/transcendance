@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction } from "react"
-import Profile from "@/services/Profile.service"
+import { Dispatch, SetStateAction } from "react"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFaceSmileWink, faFeather, faStarHalfStroke, faTableTennisPaddleBall, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import styles from "@/styles/profile/InfoCard.module.css"
 
 type Props = {
 	activeButton: number;
@@ -11,6 +14,7 @@ type Props = {
 type ButtonData = {
 	id: number;
 	name: string;
+	icon: IconProp;
 }
 
 
@@ -22,21 +26,22 @@ export default function NavbarProfilInfo({activeButton, setActiveButton} : Props
 	}
 	
 	const buttonData: ButtonData[] = [
-		{ id: 0, name: 'overview' },
-		{ id: 1, name: 'section 1' },
-		{ id: 2, name: 'section 2' },
-		{ id: 3, name: 'section 3' }
+		{ id: 0, name: 'overview',  icon: faStarHalfStroke},
+		{ id: 1, name: 'section 2', icon: faTableTennisPaddleBall },
+		{ id: 2, name: 'section 3', icon: faFaceSmileWink },
+		{ id: 3, name: 'section 4', icon: faFeather }
 	];
 	
 	
 	return (
-		<nav>
+		<div className={styles.navbar}>
 			{ buttonData.map((button) => (
-					<button onClick={ () => handleClick(button.id) }>
-						{button.name}
-					</button>
+					<div  key={button.id} className={styles.button} onClick={ () => handleClick(button.id) }>
+						<FontAwesomeIcon icon={button.icon}/>
+						<div>{button.name}</div>
+					</div>
 				)
 			)}
-		</nav>
+		</div>
 	)
 }

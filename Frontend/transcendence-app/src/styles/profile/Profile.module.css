@@ -14,6 +14,8 @@
 .profileMainFrame {
 
 	/* avoir un max-width ?*/
+	max-width: 85%;
+
 	color:var(--secondary-color);
 	display: block;
 	flex-direction: row;

@@ -1,0 +1,31 @@
+
+
+.navbar {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	overflow-x: auto;
+	white-space: nowrap;
+	padding: 0.5vw 0;
+}
+
+.navbar .button {
+	font-size: clamp(0.5rem, 0.2rem + 1.5vw, 1rem);
+	font-weight: 700;
+	font-family: var(--title-font);
+	user-select: none;
+	
+	cursor: pointer;
+	border:none;
+	outline:none;
+	
+	display: flex;
+	/* padding: 0 1vw; */
+	flex-direction: row;
+}
+
+.navbar .button:hover {
+	color: var(--accent-color);
+}
+
