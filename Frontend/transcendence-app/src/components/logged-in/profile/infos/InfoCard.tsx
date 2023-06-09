@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Profile from "@/services/Profile.service";
 import NavbarProfilInfo from "./NavbarProfilInfo";
+import SectionPongStats from "./s0_pongStats/SectionPongStats";
+import styles from "@/styles/profile/InfoCard.module.css"
 
 
 type Props = {
@@ -20,15 +22,15 @@ export default function InfoCard({profile} : Props) {
 		{(() => {
         switch (activeButton) {
 			case 0:
-				return <div>contenu overview</div>
+				return <SectionPongStats profile={profile}/>
 			case 1:
-				return <div>contenu section2</div>
+				return <div className={styles.sections}>contenu section2 : Contacts</div>
 			case 2:
-				return <div>contenu section3</div>
+				return <div className={styles.sections}>contenu section3 : Channels</div>
 			case 3:
-				return <div>contenu section4</div>
+				return <div className={styles.sections}>contenu section4 : Custom</div>
 			default:
-				return <div>contenu overview</div>
+				return <SectionPongStats profile={profile}/>
         	}
       	})()}
 	</div>

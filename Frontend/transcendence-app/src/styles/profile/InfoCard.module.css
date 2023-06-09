@@ -7,13 +7,14 @@
 	gap: 1rem;
 	overflow-x: auto;
 	white-space: nowrap;
-	padding: 0.5vw 0;
+	padding: 0.5vw 0 1.5vw 0;
 }
 
 .navbar .button {
 	font-size: clamp(0.5rem, 0.2rem + 1.5vw, 1rem);
 	font-weight: 700;
 	font-family: var(--title-font);
+	color: var(--secondary-color-lighter3);
 	user-select: none;
 	
 	cursor: pointer;
@@ -25,7 +26,50 @@
 	flex-direction: row;
 }
 
-.navbar .button:hover {
+.navbar .button.active {
+	color: var(--secondary-color);
+}
+
+.navbar .button:hover,
+.navbar .button.active:hover {
 	color: var(--accent-color);
 }
+
+
+/* ----------------------------------- */
+
+.sections {
+	/* dimensions temporaires */
+	min-height: 500px;
+	min-width: 250px;
+	padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+
+	/* border-top: 0.15rem solid;
+	border-image: 
+		linear-gradient( 
+			to right, 
+			var(--primary-color) 5%, 
+			var(--accent-color) 20%,
+			var(--accent-color) 80%,
+			var(--primary-color) 95%);
+	border-image-slice: 1; */
+
+	/* border: dashed 1px var(--tertiary-color); */
+}
+
+.sections p {
+	margin-bottom: 1rem;
+	padding-left: 0.3rem;
+}
+
+.sections p.tinyTitle {
+	font-family: var(--title-font);
+	font-size: 0.7rem;
+	font-weight: 600;
+	color: var(--accent-color);
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
+
 

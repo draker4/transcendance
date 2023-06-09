@@ -25,10 +25,16 @@
 
 	--primary-color: rgba(254, 254, 254, 1);
 		--primary-color-darker1: rgba(241, 245, 249, 1);
-	--secondary-color: rgba(100, 116, 139, 1);
-	--tertiary-color: rgba(15, 23, 42, 1);
-	--accent-color: rgba(34, 211, 238, 1);
-	--accent-color-opacity: rgba(34, 211, 238, 0.6);
+	
+  --secondary-color: rgba(100, 116, 139, 1);
+    --secondary-color-lighter1: rgb(116, 135, 161);
+    --secondary-color-lighter2: rgb(131, 153, 184);
+    --secondary-color-lighter3: rgb(158, 183, 218);
+	
+  --tertiary-color: rgba(15, 23, 42, 1);
+	
+  --accent-color: rgba(34, 211, 238, 1);
+	  --accent-color-opacity: rgba(34, 211, 238, 0.6);
 		--accent-color-darker1: rgba(53, 235, 237, 1);
 
 
