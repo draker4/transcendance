@@ -1,33 +1,47 @@
-"use client"
+import NavbarHome from "./NavbarHome";
+import { cookies } from "next/dist/client/components/headers";
+import { getAvatarByToken } from "@/lib/avatar/getAvatarByToken";
+import avatarType from "@/types/Avatar.type";
+import { CryptoService } from "@/services/crypto/Crypto.service";
+import { NextRequest } from "next/server";
 
-import styles from "@/styles/navbar/NavbarLogged.module.css"
-import { deleteCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
-import React from "react";
+const	Crypto = new CryptoService();
 
-export default function NavbarLogged() {
+export default async function NavbarLogged(req: NextRequest) {
 
-	const	router = useRouter();
+	console.log(req);
+	let	avatar: avatarType = {
+		image: "",
+		variant: "",
+		borderColor: "",
+		text: "",
+		empty: false,
+	};
 
-	const	signoff = (e: React.MouseEvent<HTMLElement>) => {
-		e.preventDefault();
-		deleteCookie("crunchy-token");
-		router.push("/welcome");
+	let	token: string | undefined = "";
+
+	try {
+		token = cookies().get("crunchy-token")?.value;
+		if (!token)
+			throw new Error("No token value");
+	  
+	  const	data = await getAvatarByToken(token);
+
+	  if (!data.error) {
+		avatar = data;
+		if (avatar.image.length > 0)
+			avatar.image = await Crypto.decrypt(avatar.image);
+	  }
+	  else
+	  	avatar.empty = true;
 	}
-
-	const	welcome = () => {
-		router.push("/home");
+	catch (err) {
+	  console.log(err);
 	}
 
 	return (
-		<nav className={styles.main}>
-			<svg fill="currentColor" stroke="currentColor" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-				<path d="M0.844 6.050c-0.256-0.256-0.381-0.581-0.381-0.975s0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.125 0.975 0.381s0.381 0.581 0.381 0.975-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381zM31.306 14.963c0.256 0.256 0.381 0.581 0.381 0.975s-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381s-0.381-0.581-0.381-0.975 0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.125 0.975 0.381zM31.306 25.819c0.256 0.256 0.381 0.581 0.381 0.975s-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381s-0.381-0.581-0.381-0.975 0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.131 0.975 0.381z"></path>
-			</svg>
-			<div>
-				<img src="/images/logo.png" onClick={welcome}/>
-				<button onClick={signoff}>Sign Off</button>
-			</div>
-		</nav>
+		<div>
+			<NavbarHome avatar={avatar}/>
+		</div>
 	);
 }

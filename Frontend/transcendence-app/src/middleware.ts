@@ -9,14 +9,23 @@ export async function middleware(req: NextRequest) {
 		.catch((err) => {
 			console.log(err);
 		});
-	console.log(verifiedToken);
+	// console.log(verifiedToken);
 
-	// if (verifiedToken
-	// 	&& !verifiedToken.login
-	// 	&& req.nextUrl.pathname.startsWith("/home")
-	// 	&& req.nextUrl.pathname !== '/home/create') {
-	// 	return NextResponse.redirect(new URL('/home/create', req.url));
-	// }
+
+	// if home/create and login, redirect /home
+
+	if (verifiedToken
+		&& verifiedToken.login
+		&& req.nextUrl.pathname === '/home/create') {
+		return NextResponse.redirect(new URL('/home', req.url));
+	}
+
+	if (verifiedToken
+		&& !verifiedToken.login
+		&& req.nextUrl.pathname.startsWith("/home")
+		&& req.nextUrl.pathname !== '/home/create') {
+		return NextResponse.redirect(new URL('/home/create', req.url));
+	}
 	
 	if (req.nextUrl.pathname === '/' && !verifiedToken) {
 		return  NextResponse.redirect(new URL('/welcome', req.url));;

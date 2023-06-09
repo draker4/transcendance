@@ -55,6 +55,8 @@ export default function FormLogin({ texts, avatars, token }: {
 
 				if (!res.ok || data.error)
 					throw new Error();
+					
+				router.push("/home");
 			}
 			catch (error) {
 				console.log(error);
@@ -65,7 +67,6 @@ export default function FormLogin({ texts, avatars, token }: {
 
 		if (access_token.length > 0) {
 			changeCookie();
-			router.push("/home");
 		}
 	}, [access_token])
 	

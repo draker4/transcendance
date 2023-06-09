@@ -73,7 +73,7 @@ export class AuthController {
 		@Body('loginCrypt') login: string,
 		@Body('avatarChosen') avatar: AvatarDto
 	) {
-
+		
 		try {
 			const	user = await this.authService.updateUserLogin(req.user.id, login);
 			avatar.userId = req.user.id;
@@ -86,6 +86,7 @@ export class AuthController {
 				access_token,
 			};
 		} catch (err) {
+			console.log(err.message);
 			return {
 				error: true,
 				message: err.message,

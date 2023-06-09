@@ -19,6 +19,10 @@ export class AvatarService {
 			return avatar;
 		}
 		
-		return this.avatarRepository.create(avatar);
+		return await this.avatarRepository.save(avatarDto);
+	}
+
+	async getAvatarById(userId: number) {
+		return	await this.avatarRepository.findOne({ where: { userId: userId } });
 	}
 }

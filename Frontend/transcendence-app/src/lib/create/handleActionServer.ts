@@ -43,7 +43,7 @@ export async function handleActionServer(
 		});
 		
 		const	data = await register.json();
-		
+
 		if (data.error)
 			throw new Error(data.message);
 
