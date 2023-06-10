@@ -4,6 +4,7 @@ import { useState } from "react";
 import Profile from "@/services/Profile.service";
 import NavbarProfilInfo from "./NavbarProfilInfo";
 import SectionPongStats from "./sections/SectionPongStats";
+import SectionCustom from "./sections/SectionCustom";
 import styles from "@/styles/profile/InfoCard.module.css"
 
 
@@ -28,7 +29,7 @@ export default function InfoCard({profile} : Props) {
 			case 2:
 				return <div className={styles.sections}>contenu section3 : Channels</div>
 			case 3:
-				return <div className={styles.sections}>contenu section4 : Custom</div>
+				return <SectionCustom profile={profile}/>
 			default:
 				return <SectionPongStats profile={profile}/>
         	}

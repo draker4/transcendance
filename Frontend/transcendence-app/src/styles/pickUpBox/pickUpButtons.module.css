@@ -7,8 +7,8 @@
 	import pickups from "@/styles/pickUpBox/pickUpButtons.module.css"
 	[...]
 	<div className={pickups.littleButton}>
-		<h3>Edit<h3/>
-	<div/>
+		<h3>Edit</h3>
+	</div>
 */
 
 .littleButton {

@@ -63,10 +63,15 @@
 	font-size: 0.85rem;
 }
 
+.sections input,
 .sections p.motto {
 	color: var(--secondary-color);
 	font-size: 1rem;
 	padding-left: 0;
+}
+
+.sections p.motto.placeholder {
+	color: var(--secondary-color-lighter3);
 }
 
 .sections p.motto:before {
@@ -90,6 +95,16 @@
 	margin-bottom: 0;
 	padding-left: 0;
 }
+
+.sections input {
+	appearance: none;
+	border:none;
+	font-family: var(--text-font);
+	color: var(--secondary-color);
+	font-size: 1rem;
+	font-weight: 500;
+}
+
 
 /* ----------------------------------- */
 
