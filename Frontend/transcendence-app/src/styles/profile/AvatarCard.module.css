@@ -67,9 +67,10 @@
 /* RESPONSIVE */
 
 /* Breakpoint 1 : width > smartphone */
-@media(min-width: 38em) {
+@media(min-width: 38rem) {
 	.avatarCard {
 		flex-direction: column;
+		justify-content: start;
 	}
 
 }

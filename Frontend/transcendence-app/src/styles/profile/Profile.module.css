@@ -34,7 +34,6 @@
 
 .profileMainFrame .both {
 	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
-	min-width: 300px;
 	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
 	box-shadow: 
 		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem) 
@@ -52,7 +51,7 @@
 }
 
 .profileMainFrame .second {
-	
+	min-width: 300px;
 }
 
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Profile from "@/services/Profile.service";
 import NavbarProfilInfo from "./NavbarProfilInfo";
-import SectionPongStats from "./s0_pongStats/SectionPongStats";
+import SectionPongStats from "./sections/SectionPongStats";
 import styles from "@/styles/profile/InfoCard.module.css"
 
 

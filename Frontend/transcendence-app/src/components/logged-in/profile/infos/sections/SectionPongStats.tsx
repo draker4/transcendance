@@ -1,5 +1,6 @@
 import Profile from "@/services/Profile.service";
-import styles from "@/styles/profile/InfoCard.module.css"
+import styles from "@/styles/profile/InfoCard.module.css";
+import Item from "./Item";
 
 type Props = {
   profile: Profile;
@@ -17,12 +18,15 @@ export default function SectionPongStats({profile} : Props) {
 
   return (
     <div className={styles.sections}>
+
+	  {/* MOTTO */}
       {crunchyMotto !== "" && 
         <div>
           <p className={styles.tinyTitle}>Crunchy motto</p>
-          <p>{crunchyMotto}</p>
+          <p className={styles.motto}> {crunchyMotto} </p>
         </div>
       }
+	  {/* BIO */}
       {crunchyBio !== "" &&
         <div>
           <p className={styles.tinyTitle}>Crunchy story</p>
@@ -30,6 +34,17 @@ export default function SectionPongStats({profile} : Props) {
         </div>
       }
 
+	  <Item title="Level">
+		<p>item's content : customize it with a specific component</p>
+	  </Item>
+
+	  <Item title="Ranking">
+		<p>item's content : customize it with a specific component</p>
+	  </Item>
+
+	  <Item title="Recent games">
+		<p>item's content : customize it with a specific component</p>
+	  </Item>
 
     </div>
   )

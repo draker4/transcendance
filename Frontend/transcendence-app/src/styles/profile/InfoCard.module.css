@@ -60,6 +60,26 @@
 .sections p {
 	margin-bottom: 1rem;
 	padding-left: 0.3rem;
+	font-size: 0.85rem;
+}
+
+.sections p.motto {
+	color: var(--secondary-color);
+	font-size: 1rem;
+	padding-left: 0;
+}
+
+.sections p.motto:before {
+	content: open-quote;
+}
+
+.sections p.motto:after {
+	content: close-quote;
+}
+
+.sections p.motto:after,
+.sections p.motto:before {
+	color: var(--accent-color);
 }
 
 .sections p.tinyTitle {
@@ -71,5 +91,29 @@
 	padding-left: 0;
 }
 
+/* ----------------------------------- */
+
+/* .sections */
+.item {
+	background-color: var(--primary-color-darker1);
+	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+	margin-bottom: 0.5rem;
+}
+
+.item .header {
+	background-color: var(--accent-color);
+	border-radius: 
+		clamp(0.15rem, 0.05rem + 1vw, 1.2rem)
+		clamp(0.15rem, 0.05rem + 1vw, 1.2rem)
+		0
+		0;
+	padding: 0.5rem;
+}
 
 
+.item .header h1 {
+	color: var(--primary-color);
+	font-family: var(--title-font);
+	font-size: 0.7rem;
+
+}
