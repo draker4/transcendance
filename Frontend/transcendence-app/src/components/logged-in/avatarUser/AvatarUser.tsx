@@ -40,6 +40,17 @@ export default function AvatarUser({ avatar }: {
 					{avatar.text}
 				</Avatar>
 			}
+			{
+				type === 3 &&
+				<Avatar
+				variant="circular"
+					sx={{
+						width: "100%",
+						height: "100%",
+						border: `3px solid ${avatar.borderColor}`,
+					}}
+				></Avatar>
+			}
 		</>
 	);
 }
