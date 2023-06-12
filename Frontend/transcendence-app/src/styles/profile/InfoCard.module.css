@@ -105,10 +105,20 @@
 	font-weight: 500;
 }
 
+.sections input:focus {
+	outline: none;
+}
+
+.sections .notif {
+	font-size: 0.8rem;
+	color: var(--notif-color);
+
+}
+
 
 /* ----------------------------------- */
 
-/* .sections */
+/* into .sections */
 .item {
 	background-color: var(--primary-color-darker1);
 	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
@@ -124,7 +134,6 @@
 		0;
 	padding: 0.5rem;
 }
-
 
 .item .header h1 {
 	color: var(--primary-color);

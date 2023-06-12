@@ -7,4 +7,6 @@ export default class Profile {
 	phone: string = '';
 	image: string = '';
 	provider: string = '';
+	motto: string = '';
+	story: string = '';
 }

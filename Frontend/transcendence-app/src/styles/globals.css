@@ -37,6 +37,8 @@
 	  --accent-color-opacity: rgba(34, 211, 238, 0.6);
 		--accent-color-darker1: rgba(53, 235, 237, 1);
 
+  --notif-color: rgba(255, 85, 85, 1);
+
 
   /* FONT DEFINES*/
   --title-font:"Quicksand", sans-serif;

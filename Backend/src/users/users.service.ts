@@ -56,7 +56,7 @@ export class UsersService {
       user.id,
       user
     );
-    return this.getUserByLogin(user.login);
+    return this.getUserById(user.id);
   }
 }
 

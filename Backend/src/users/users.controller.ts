@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Request } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpException, NotFoundException, Post, Query, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -40,5 +40,32 @@ export class UsersController {
     if (user)
       return { exists: true };
     return { exists: false };
+  }
+
+  @Post('edit')
+  async editProfile(@Request() req, @Body('submittedMotto') motto: string) {
+
+	// throw new NotFoundException('User not found');
+	const user = await this.usersService.getUserById(req.user.id);
+
+	if (!user) {
+		throw new NotFoundException('User not found');
+		// return {
+		// 	"exists": false,
+		// };
+	}
+	user.motto = motto;
+	const updatedUser = await this.usersService.updateUser(user);
+
+	if (!updatedUser || updatedUser.motto != motto) {
+		throw new BadRequestException('issue while updating motto');
+		// return {
+		// 	"exists": false,
+		// };
+	}
+
+	return {
+		'message': 'motto updated successfully'
+	}
   }
 }

@@ -44,5 +44,11 @@ export class User {
 
   @Column()
   provider: string;
+
+  @Column({ nullable: true })
+  motto: string;
+
+  @Column({ nullable: true })
+  story: string;
 }
 

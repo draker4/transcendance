@@ -14,6 +14,7 @@ export default async function ProfilePage() {
 		  throw new Error("No token value");
 		
 		profile = await getProfileByToken(token);
+		console.log(profile);
 	  }
 	  catch (err) {
 		console.log(err);

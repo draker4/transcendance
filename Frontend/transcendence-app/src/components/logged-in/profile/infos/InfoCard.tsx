@@ -10,10 +10,11 @@ import styles from "@/styles/profile/InfoCard.module.css"
 
 type Props = {
 		profile: Profile;
+		token: string;
 	}
 
 
-export default function InfoCard({profile} : Props) {
+export default function InfoCard({profile, token} : Props) {
 
 	const [activeButton, setActiveButton] = useState(0);
 
@@ -29,7 +30,7 @@ export default function InfoCard({profile} : Props) {
 			case 2:
 				return <div className={styles.sections}>contenu section3 : Channels</div>
 			case 3:
-				return <SectionCustom profile={profile}/>
+				return <SectionCustom profile={profile} token={token}/>
 			default:
 				return <SectionPongStats profile={profile}/>
         	}

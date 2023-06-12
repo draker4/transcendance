@@ -45,4 +45,12 @@ export class createUserDto {
   @IsString()
   @IsNotEmpty()
   provider: string;
+
+  @IsString()
+  @IsOptional()
+  motto?: string;
+
+  @IsString()
+  @IsOptional()
+  story?: string;
 }
