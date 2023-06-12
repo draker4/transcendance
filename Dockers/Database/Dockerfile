@@ -2,7 +2,7 @@ FROM debian:stable-20230320-slim
 
 RUN apt-get update
 RUN apt-get install -y \
-	postgresql-13 \
+	postgresql-15 \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -12,5 +12,5 @@ RUN chmod +x start_db.sh
 USER postgres
 
 EXPOSE 5432
-
+#CMD ["tail", "-f", "/dev/null"]
 ENTRYPOINT ["./start_db.sh"]
