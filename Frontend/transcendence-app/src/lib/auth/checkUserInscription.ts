@@ -1,6 +1,6 @@
 export async function getDoubleEmail(email: string) {
 	const	encodeEmail = encodeURIComponent(email);
-	console.log("befooore", email);
+
 	const	response = await fetch(`http://backend:4000/api/users/email?email=${encodeEmail}`);
 
 	if (!response.ok)

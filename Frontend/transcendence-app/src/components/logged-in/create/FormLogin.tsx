@@ -56,6 +56,7 @@ export default function FormLogin({ texts, avatars, token }: {
 				if (!res.ok || data.error)
 					throw new Error();
 					
+				console.log("home pushed");
 				router.push("/home");
 			}
 			catch (error) {

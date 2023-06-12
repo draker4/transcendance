@@ -21,8 +21,6 @@ export async function POST(
 
 		const	data = await response.json();
 
-		console.log("captcha score = ", data?.score);
-
 		if (data?.success && data?.score >= 0.5)
 			return NextResponse.json({
 				status: "ok",

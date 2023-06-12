@@ -24,7 +24,7 @@ class Client {
             throw new Error("Connection refused");
 
         const   {access_token} = await response.json();
-        console.log(access_token);
+
         this.token = access_token;
         this.logged = true;
         this.student42 = true;

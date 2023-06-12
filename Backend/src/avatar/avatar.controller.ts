@@ -9,7 +9,7 @@ export class AvatarController {
 	@Get()
 	async getAvatar(@Request() req) {
 		const	avatar = await this.avatarService.getAvatarById(req.user.id);
-		console.log(avatar);
+
 		if (!avatar)
 			return {
 				exists: false,
