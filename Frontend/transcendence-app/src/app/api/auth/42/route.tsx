@@ -27,5 +27,5 @@ export async function GET(req: NextRequest) {
 		}
 	}
 	
-	redirect("/");
+	redirect("/welcome/login/wrong");
 }

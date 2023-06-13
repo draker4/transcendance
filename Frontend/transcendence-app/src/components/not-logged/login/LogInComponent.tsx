@@ -3,12 +3,13 @@ import styles from "@/styles/auth/Login.module.css"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { setCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LogInComponent() {
 	
+	const	test = useParams().notif;
 	const	router = useRouter();
 	const	[email, setEmail] = useState<string>("");
 	const	[password, setPassword] = useState<boolean>(false);
@@ -26,16 +27,23 @@ export default function LogInComponent() {
 			setCookie("crunchy-token", login);
 			router.push("/home");
 		}
+
 		if (register)
-			router.push('welcome/login/confirm');
+			router.push('welcome/confirm');
+
+		if (test === "wrong")
+			setNotif("Something went wrong, please try again!");
+
 	}, [register, login]);
 
 	const   open42 = () => {
+		setTextButton("Loading...");
         window.open(process.env.URL_42, "_self");
     }
 
 	const   openGoogle = async () => {
-			window.location.href = "http://localhost:4000/api/auth/google";
+		setTextButton("Loading...");
+		window.location.href = "http://localhost:4000/api/auth/google";
     }
 
 	const	handleCaptcha = async () => {
@@ -66,6 +74,7 @@ export default function LogInComponent() {
 	const	iconEmail = () => {
 		setEmail("");
 		setNotif("");
+		setPasswordSecured("");
 		setTextButton("Continue");
 		setPassword(false);
 		exists.current = false;
@@ -167,14 +176,16 @@ export default function LogInComponent() {
 							</div>}
 						</div>
 					}
-					{ password &&
-						<div>
-							<input type="password" autoComplete="username" placeholder="password" name="password" className={styles.input} required/>
-							{ passwordSecured.length > 0 && <div className={styles.notif}>{ passwordSecured }</div> }
-						</div>
-					}
+
+					<div className={password ? styles.openPassword : styles.closePassword}>
+						<input type="password" autoComplete="new-password" placeholder="password" name="password"
+							className={styles.input} required={password}/>
+						{ passwordSecured.length > 0 && <div className={styles.notif}>{ passwordSecured }</div> }
+					</div>
+
 					{ notif.length > 0 && <div className={styles.notif}>{ notif }</div>}
-					<button type="submit" className={styles.continue}>{ textButton }</button>
+					
+					<button type="submit" disabled={textButton === "Loading"} className={styles.continue}>{ textButton }</button>
 				</form>
 
 				<div className={styles.or}>
@@ -185,10 +196,10 @@ export default function LogInComponent() {
 
 				<div className={styles.logButtons}>
 					<div className={styles.logImg}  onClick={open42}>
-						<img src="/images/auth/42_Logo.png" width="30px"/>
+						<img alt="42 school logo" src="/images/auth/42_Logo.png" width="30px"/>
 					</div>
 					<div className={styles.logImg}  onClick={openGoogle}>
-						<img src="/images/auth/google.png" width="30px"/>
+						<img alt="google logo" src="/images/auth/google.png" width="30px"/>
 					</div>
 				</div>
 			</div>

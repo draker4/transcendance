@@ -20,8 +20,8 @@ export default function NavbarWelcome() {
 	return (
 		<nav className={styles.main}>
 			<div>
-				<img src="/images/logo.png" onClick={welcome}/>
-				<button onClick={logIn}>Log In</button>
+				<img src="/images/logo.png" alt="Crunhy Pong logo" onClick={welcome}/>
+				<button type="button" onClick={logIn}>Log In</button>
 			</div>
 		</nav>
 	);

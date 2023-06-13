@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpException, NotFoundException, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Post, Query, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -87,14 +87,14 @@ export class UsersController {
 	}
 	user.story = story;
 	console.log("Story recup :", story);
-	const updatedUser = await this.usersService.updateUser(user);
+	await this.usersService.updateUser(user);
 
-	if (!updatedUser || updatedUser.story != story) {
-		throw new BadRequestException('issue while updating story');
+	// if (!updatedUser || updatedUser.story != story) {
+		// throw new BadRequestException('issue while updating story');
 		// return {
 		// 	"exists": false,
 		// };
-	}
+	// }
 
 	return {
 		'message': 'story updated successfully '
