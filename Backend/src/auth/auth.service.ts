@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
@@ -9,6 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -64,7 +65,8 @@ export class AuthService {
 		if (!user_old)
 			return await this.usersService.addUser(user);
 		
-		return await this.usersService.updateUser(user_old);
+		await this.usersService.updateUser(user_old);
+		return (user_old);
 	}
 
 	async login(user: User) {
@@ -103,7 +105,7 @@ export class AuthService {
 		const	email = await this.cryptoService.decrypt(user.email);
 
 		await this.mailService.sendUserConfirmation(email, user.verifyCode);
-		return await this.usersService.updateUser(user);
+		await this.usersService.updateUser(user);
 	}
 
 	async loginWithGoogle(createUserDto: createUserDto) {
@@ -138,7 +140,8 @@ export class AuthService {
 
 		user.login = login;
 
-		return await this.usersService.updateUser(user);
+		await this.usersService.updateUser(user);
+		return user;
 	}
 
 	async updateAvatar(avatar: AvatarDto) {
@@ -148,5 +151,34 @@ export class AuthService {
 			throw new Error("Cannot create or update avatar");
 
 		return avatarUser;
+	}
+
+	async validateUser(email: string, password: string) {
+		const	user = await this.usersService.getUserByEmail(email);
+		let		isMatch = false;
+
+		if (!user)
+			throw new NotFoundException();
+
+		if (!user.verified)
+			throw new ForbiddenException();
+		
+		try {
+			const	passDecrypted = await this.cryptoService.decrypt(password);
+			isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
+		}
+		catch (err) {
+			console.log(err)
+			throw new BadGatewayException();
+		}
+
+		if (!isMatch)
+			throw new UnauthorizedException();
+
+		return user;
+	}
+
+	async updateUser(user: User) {
+		await this.usersService.updateUser(user);
 	}
 }

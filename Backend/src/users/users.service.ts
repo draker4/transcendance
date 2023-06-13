@@ -56,7 +56,6 @@ export class UsersService {
       user.id,
       user
     );
-    return this.getUserById(user.id);
   }
 }
 

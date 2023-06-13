@@ -1,10 +1,11 @@
-import { Param, Controller, Get, Post, Body, NotFoundException, UseGuards, Req, Res, Request } from '@nestjs/common';
+import { Param, Controller, Get, Post, Body, UseGuards, Req, Res, Request, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -27,7 +28,14 @@ export class AuthController {
 	@Public()
 	@Post('register')
 	async registerUser(@Body() createUserDto: createUserDto) {
-		await this.authService.addUser(createUserDto);
+		const	user = await this.authService.addUser(createUserDto);
+
+		if (!user)
+			throw new BadRequestException();
+		
+		return {
+			"message": "ok",
+		}
 	}
 
 	@Public()
@@ -39,13 +47,13 @@ export class AuthController {
 			return ({ "message": "This code does not exist. Please try again!" });
 		
 		if (user && user.expirationCode < Date.now()) {
-			const	newUser = await this.authService.sendNewCode(user);
-			if (newUser)
-				return ({ "message": "This code has expired. A new one has been sent to your email address" });
-			throw new NotFoundException();
+			await this.authService.sendNewCode(user);
+			return ({ "message": "This code has expired. A new one has been sent to your email address" });
 		}
 
 		user.verified = true;
+		await this.authService.updateUser(user);
+
 		const	{access_token} = await this.authService.login(user);
 		return ({
 			"message": "Loading...",
@@ -92,6 +100,14 @@ export class AuthController {
 				message: err.message,
 			}
 		}
+	}
+
+	@Public()
+	@UseGuards(LocalAuthGuard)
+	@Post('login')
+	loginEmail(@Request() req) {
+		console.log(req.user);
+		return this.authService.login(req.user);
 	}
 }
 

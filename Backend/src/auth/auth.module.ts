@@ -14,6 +14,7 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { AvatarService } from 'src/avatar/avatar.service';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AvatarService } from 'src/avatar/avatar.service';
     AvatarService,
     JwtStrategy,
     GoogleStrategy,
+    LocalStrategy,
     CryptoService,
     {
       provide: APP_GUARD,

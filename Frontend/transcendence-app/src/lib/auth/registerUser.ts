@@ -11,4 +11,6 @@ export default async function registerUser(email: string, password: string) {
 
 	if (!response.ok)
 		throw new Error('Cannot create user');
+	
+	return await response.json();
 }

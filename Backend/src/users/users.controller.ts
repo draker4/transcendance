@@ -55,14 +55,20 @@ export class UsersController {
 		// };
 	}
 	user.motto = motto;
-	const updatedUser = await this.usersService.updateUser(user);
+	await this.usersService.updateUser(user);
 
-	if (!updatedUser || updatedUser.motto != motto) {
-		throw new BadRequestException('issue while updating motto');
+  // cets moi qui ai changé ca (baptiste),
+  // la fonction updateUser retourne pas d'erreur
+  // juste elle update, mais je sais pas comment le checker encore
+  // mais ce quon faisait prenait du temps pour rien
+  // (de retourner le user a chaque fois)
+
+	// if (!updatedUser || updatedUser.motto != motto) {
+		// throw new BadRequestException('issue while updating motto');
 		// return {
 		// 	"exists": false,
 		// };
-	}
+	// }
 
 	return {
 		'message': 'motto updated successfully'

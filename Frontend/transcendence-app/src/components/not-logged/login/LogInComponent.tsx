@@ -1,7 +1,10 @@
-import { registerFormEmail, registerFormPassword } from "@/lib/auth/registerForm";
+import { loginPassword, registerFormEmail, registerFormPassword } from "@/lib/auth/registerForm";
 import styles from "@/styles/auth/Login.module.css"
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LogInComponent() {
@@ -12,13 +15,20 @@ export default function LogInComponent() {
 	const	[textButton, setTextButton] = useState<string>("Continue");
 	const	[passwordSecured, setPasswordSecured] = useState<string>("");
 	const	[register, setRegister] = useState<boolean>(false);
+	const	[login, setLogin] = useState<string>("");
 	const	[notif, setNotif] = useState<string>("");
+	const	[changeEmail, setChangeEmail] = useState<boolean>(false);
 	const	{ executeRecaptcha } = useGoogleReCaptcha();
+	let		exists = useRef<boolean>(false);
 
 	useEffect(() => {
+		if (login.length > 0) {
+			setCookie("crunchy-token", login);
+			router.push("/home");
+		}
 		if (register)
 			router.push('welcome/login/confirm');
-	}, [register]);
+	}, [register, login]);
 
 	const   open42 = () => {
         window.open(process.env.URL_42, "_self");
@@ -53,12 +63,19 @@ export default function LogInComponent() {
 			throw new Error();
 	}
 
+	const	iconEmail = () => {
+		setEmail("");
+		setNotif("");
+		setTextButton("Continue");
+		setPassword(false);
+		exists.current = false;
+		return ;
+	}
+
 	const	handleAction = async (data: FormData) => {
 
 		if (textButton !== "Continue") {
-			setEmail("");
-			setNotif("");
-			setTextButton("Continue");
+			iconEmail();
 			return ;
 		}
 
@@ -84,6 +101,14 @@ export default function LogInComponent() {
 				
 				if (!res.emailExists) {
 					setPassword(true);
+					setChangeEmail(true);
+					return;
+				}
+
+				if (res.provider === "email") {
+					exists.current = true;
+					setPassword(true);
+					setChangeEmail(true);
 				}
 	
 				else if (res.provider === "42") {
@@ -99,17 +124,23 @@ export default function LogInComponent() {
 			}
 
 			const	passwordUser = data.get('password') as string;
-
-			const	res: {
+			let		res:  {
 				passwordSecured: string,
 				register: boolean,
-			} = await registerFormPassword(passwordUser, email);
+				login: string,
+			} = { passwordSecured: "", register: false, login: "" };
+
+			if (!exists)
+				res = await registerFormPassword(passwordUser, email);
+			else
+				res = await loginPassword(passwordUser, email);
 
 			setPasswordSecured(res.passwordSecured);
-			
-			if (register)
+
+			if (register || login)
 				setTextButton("Loading...");
 			setRegister(res.register);
+			setLogin(res.login);
 		}
 		catch (error) {
 			setNotif("Something went wrong, please try again!");
@@ -127,7 +158,14 @@ export default function LogInComponent() {
 						<input type="email" autoComplete="username" placeholder="email" name="email" className={styles.input} required/>
 					}
 					{
-						email.length > 0 && <div className={styles.email}>{ email }</div>
+						email.length > 0 &&
+						<div className={styles.email}>
+							{ email }
+							{ changeEmail &&
+							<div onClick={iconEmail}>
+								<FontAwesomeIcon icon={faPenToSquare} />
+							</div>}
+						</div>
 					}
 					{ password &&
 						<div>
@@ -141,7 +179,6 @@ export default function LogInComponent() {
 
 				<div className={styles.or}>
 					<p><span>Or</span></p>
-					<div></div>
 				</div>
 
 				<p className={styles.oneClick}>Connect or register in one click</p>
