@@ -14,7 +14,7 @@ export default function ProfileMainFrame({profile} : Props) {
   return (
 	<div className={styles.profileMainFrame}>
 		<ProfileFirstPart profile={profile}/>
-		<ProfileSecondPart />
+		<ProfileSecondPart profile={profile}/>
 	</div>
   )
 }

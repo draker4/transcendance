@@ -1,15 +1,15 @@
-export default async function submitMotto(submitedMotto:string, token:string) {
+export default async function submitStory(submitedStory:string, token:string) {
 
 	try {
 
-		const response = await fetch("http://localhost:4000/api/users/edit-motto", {
+		const response = await fetch("http://localhost:4000/api/users/edit-story", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				"Authorization": "Bearer " + token,
 			},
 			body: JSON.stringify ({
-				submitedMotto
+				submitedStory
 			})
 		});
 
@@ -19,6 +19,6 @@ export default async function submitMotto(submitedMotto:string, token:string) {
 
 	} catch(e) {
 		console.log(e);
-		return "Something wrong / or not allowed words in motto";
+		return "Something wrong / or not allowed words in story";
 	}
 }
