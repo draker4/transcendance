@@ -8,35 +8,41 @@ import { handleActionServer } from "@/lib/create/handleActionServer";
 import { useRouter } from "next/navigation";
 import avatarType from "@/types/Avatar.type";
 
-export default function FormLogin({ texts, avatars, token }: {
-	texts: string[],
+export default function FormLogin({ avatars, token }: {
 	avatars: string[],
 	token: string,
 }) {
 
 	const	[notif, setNotif] = useState<string>("");
+	const	[text, setText] = useState<string>("");
 	const	[access_token, setToken] = useState<string>("");
 	const	router = useRouter();
 	let		avatarChosen: avatarType = {
 		image: "",
 		variant: "circular",
 		borderColor: "var(--accent-color)",
+		backgroundColor: "var(--accent-color)",
 		text: "",
-		empty: false,
+		empty: true,
 	};
-
-	avatarChosen.image = avatars[0] ? avatars[0] : "";
-	if (avatarChosen.image === "")
-		avatarChosen.text = texts[0];
-	if (avatarChosen.image === "" && avatarChosen.text === "")
-		avatarChosen.empty = true;
 
 	const	selectAvatar = (avatar: avatarType) => {
 		avatarChosen = avatar;
 	}
 
-	const	selectColor = (color: string) => {
+	const	borderColor = (color: string) => {
 		avatarChosen.borderColor = color;
+	}
+
+	const	backgroundColor = (color: string) => {
+		avatarChosen.backgroundColor = color;
+	}
+
+	const	handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const	text = e.target.value;
+
+		avatarChosen.text = text.toUpperCase().slice(0, 2);
+		setText(text.toUpperCase().slice(0, 2));
 	}
 
 	useEffect(() => {
@@ -90,19 +96,37 @@ export default function FormLogin({ texts, avatars, token }: {
 	return (
 		<div className={styles.main}>
 			<h3>You're almost there! 😁</h3>
+
 			<form action={handleActionLogin}>
 				<label>
 					Please choose your login!
 				</label>
 				<p className={styles.little}>Don't worry, you can change it later.</p>
-				<input type="text" name="login" placeholder="login"/>
+				
+				<input
+					type="text"
+					name="login"
+					placeholder="login"
+					maxLength={10}
+					onChange={handleText}
+				/>
+
 				{notif.length > 0 && <div className={styles.notif}>{notif}</div>}
 				<p className={styles.choose}>Make you pretty:</p>
+				
 				<div className={styles.avatars}>
-					<ChooseAvatar selectColor={selectColor} selectAvatar={selectAvatar} texts={texts} avatars={avatars}/>
+					<ChooseAvatar
+						selectBorder={borderColor}
+						selectBackground={backgroundColor}
+						selectAvatar={selectAvatar}
+						text={text}
+						avatars={avatars}
+					/>
 				</div>
+
 				<button>Let's go!</button>
 			</form>
+
 		</div>
 	);
 }

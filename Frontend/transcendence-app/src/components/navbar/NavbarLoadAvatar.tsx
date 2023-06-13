@@ -14,6 +14,7 @@ export default async function NavbarLoadAvatar() {
 		image: "",
 		variant: "",
 		borderColor: "",
+		backgroundColor: "",
 		text: "",
 		empty: true,
 	};
@@ -30,8 +31,6 @@ export default async function NavbarLoadAvatar() {
 		if (avatar.image.length > 0)
 			avatar.image = await Crypto.decrypt(avatar.image);
 	  }
-	  else
-	  	avatar.empty = true;
 	}
 	catch (err) {
 	  console.log(err);

@@ -8,12 +8,12 @@ const	Crypto = new CryptoService();
 
 export default async function NavbarLogged() {
 
-	console.log("here avatar logged");
 	let	token: string | undefined = "";
 	let	avatar: avatarType = {
 		image: "",
 		variant: "",
 		borderColor: "",
+		backgroundColor: "",
 		text: "",
 		empty: true,
 	};
@@ -24,16 +24,12 @@ export default async function NavbarLogged() {
 			throw new Error("No token value");
 		
 		const	data = await getAvatarByToken(token);
-		console.log("cookie=", token);
-		console.log("avatar=", data);
 
-		if (!data.error && data.image) {
+		if (!data.error) {
 			avatar = data;
-		if (avatar.image.length > 0)
-			avatar.image = await Crypto.decrypt(avatar.image);
+			if (avatar.image && avatar.image.length > 0)
+				avatar.image = await Crypto.decrypt(avatar.image);
 		}
-		else
-			avatar.empty = true;
 	}
 	catch (err) {
 	  console.log(err);

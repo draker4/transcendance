@@ -38,11 +38,9 @@ export default async function CreatePage() {
 	if (profile.provider === '42')
 		avatars.unshift(profile.image);
 
-	const	texts: string[] = [profile.email.slice(0, 2).toUpperCase()];
-
 	return (
 		<div>
-			<FormLogin token={token as string} texts={texts} avatars={avatars} />
+			<FormLogin token={token as string} avatars={avatars} />
 		</div>
 	);
 }

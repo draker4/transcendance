@@ -8,6 +8,9 @@ export class AvatarDto {
 	@IsString()
 	image: string;
 
+	@IsString()
+	text: string;
+
 	@IsNotEmpty()
 	@IsString()
 	variant: string;
@@ -16,10 +19,11 @@ export class AvatarDto {
 	@IsString()
 	borderColor: string;
 
-	@IsString()
-	text: string;
-
-	@IsBoolean()
 	@IsNotEmpty()
+	@IsString()
+	backgroundColor: string;
+
+	@IsNotEmpty()
+	@IsBoolean()
 	empty: boolean;
 }

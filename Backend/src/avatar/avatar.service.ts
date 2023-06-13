@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AvatarDto } from 'src/users/dto/Avatar.dto';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
+import { AvatarDto } from './dto/Avatar.dto';
 
 @Injectable()
 export class AvatarService {

@@ -7,8 +7,8 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
-import { AvatarDto } from 'src/users/dto/Avatar.dto';
 import { AvatarService } from 'src/avatar/avatar.service';
+import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 
 @Injectable()
 export class AuthService {

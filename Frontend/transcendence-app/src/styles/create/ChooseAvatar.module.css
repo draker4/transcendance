@@ -28,7 +28,6 @@
 	width: 80px;
 	height: 80px;
 	margin: 0 10px;
-	background-color: var(--accent-color);
 }
 
 .avatar:first-child {
@@ -44,5 +43,5 @@
 }
 
 .chooseColor {
-	padding-top: 30px;
+	padding-top: 10px;
 }
