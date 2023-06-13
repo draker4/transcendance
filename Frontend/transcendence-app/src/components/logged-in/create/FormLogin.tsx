@@ -3,7 +3,7 @@
 import { checkLoginFormat } from "@/lib/create/checkLogin";
 import ChooseAvatar from "./ChooseAvatar";
 import styles from "@/styles/create/Create.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { handleActionServer } from "@/lib/create/handleActionServer";
 import { useRouter } from "next/navigation";
 import avatarType from "@/types/Avatar.type";
@@ -17,31 +17,31 @@ export default function FormLogin({ avatars, token }: {
 	const	[text, setText] = useState<string>("");
 	const	[access_token, setToken] = useState<string>("");
 	const	router = useRouter();
-	let		avatarChosen: avatarType = {
+	const	avatarChosenRef = useRef<avatarType>({
 		image: "",
 		variant: "circular",
 		borderColor: "var(--accent-color)",
 		backgroundColor: "var(--accent-color)",
 		text: "",
 		empty: true,
-	};
+	});
 
 	const	selectAvatar = (avatar: avatarType) => {
-		avatarChosen = avatar;
+		avatarChosenRef.current = avatar;
 	}
 
 	const	borderColor = (color: string) => {
-		avatarChosen.borderColor = color;
+		avatarChosenRef.current.borderColor = color;
 	}
 
 	const	backgroundColor = (color: string) => {
-		avatarChosen.backgroundColor = color;
+		avatarChosenRef.current.backgroundColor = color;
 	}
 
 	const	handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const	text = e.target.value;
 
-		avatarChosen.text = text.toUpperCase().slice(0, 2);
+		avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
 		setText(text.toUpperCase().slice(0, 2));
 	}
 
@@ -87,7 +87,7 @@ export default function FormLogin({ avatars, token }: {
 		const	res: {
 			exists: string,
 			token: string,
-		} = await handleActionServer(loginUser, avatarChosen, token);
+		} = await handleActionServer(loginUser, avatarChosenRef.current, token);
 
 		setNotif(res.exists);
 		setToken(res.token);

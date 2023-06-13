@@ -46,7 +46,7 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 							variant: "circular",
 							borderColor: colorBorder,
 							backgroundColor: backgroundColor,
-							text: "",
+							text: text,
 							empty: true,
 						},
 					)}
@@ -74,7 +74,7 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 										variant: "circular",
 										borderColor: colorBorder,
 										backgroundColor: backgroundColor,
-										text: "",
+										text: text,
 										empty: false,
 									},
 								)}
