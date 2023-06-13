@@ -9,10 +9,11 @@ type Props = {
 
 export default function ProfileSecondPart({profile} : Props) {
 	const token = cookies().get("crunchy-token")?.value;
+	const unwrappedToken: string = typeof token === 'string' ? token : "";
 
   return (
 	<div className={styles.both + ' ' + styles.second}>
-		<InfoCard profile={profile} token={token}/>
+		{unwrappedToken !== "" && <InfoCard profile={profile} token={unwrappedToken}/>}
 	</div>
   )
 }

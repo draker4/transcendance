@@ -1,6 +1,8 @@
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/InfoCard.module.css";
 import Item from "./Item";
+import MottoDisplayOnly from "./motto2/MottoDisplayOnly";
+import StoryDisplayOnly from "./story/StoryDisplayOnly";
 
 type Props = {
   profile: Profile;
@@ -16,36 +18,27 @@ export default function SectionPongStats({profile} : Props) {
   // const crunchyBio: string = "";
 
 
-  return (
-    <div className={styles.sections}>
+return (
+	<div className={styles.sections}>
 
-	  {/* MOTTO */}
-      {crunchyMotto !== "" && 
-        <div>
-          <p className={styles.tinyTitle}>Crunchy motto</p>
-          <p className={styles.motto}> {crunchyMotto} </p>
-        </div>
-      }
-	  {/* BIO */}
-      {crunchyBio !== "" &&
-        <div>
-          <p className={styles.tinyTitle}>Crunchy story</p>
-          <p>{crunchyBio}</p>
-        </div>
-      }
+	{/* MOTTO */}
+	<MottoDisplayOnly profile={profile}/>
 
-	  <Item title="Level">
+	{/* STORY */}
+	<StoryDisplayOnly profile={profile}/>
+
+	<Item title="Level">
 		<p>item's content : customize it with a specific component</p>
-	  </Item>
+	</Item>
 
-	  <Item title="Ranking">
+	<Item title="Ranking">
 		<p>item's content : customize it with a specific component</p>
-	  </Item>
+	</Item>
 
-	  <Item title="Recent games">
+	<Item title="Recent games">
 		<p>item's content : customize it with a specific component</p>
-	  </Item>
+	</Item>
 
-    </div>
-  )
+	</div>
+)
 }

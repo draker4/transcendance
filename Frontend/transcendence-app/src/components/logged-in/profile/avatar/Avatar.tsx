@@ -1,22 +1,20 @@
+'use client'
+
 import styles from "@/styles/profile/AvatarCard.module.css"
-import Profile from "@/services/Profile.service";
+import avatarType from "@/types/Avatar.type";
+import AvatarUser from "../../avatarUser/AvatarUser";
 
 type Props = {
-    profile: Profile;
+    avatar: avatarType;
 }
 
-export default function Avatar({profile} : Props) {
+export default function Avatar({avatar} : Props) {
 
-
-
-	const avatarAltValue: string = `player ${profile.login}'s avatar`;
-
-
-  return (
-	<div className={styles.avatar}>
-		<div className={styles.circle}>
-			<img src={profile.image} alt={avatarAltValue} className={styles.image} />
+	return (
+		<div className={styles.avatar}>
+			<div className={styles.circle}>
+				<AvatarUser avatar={avatar}/>
+			</div>
 		</div>
-	</div>
-  )
+	)
 }

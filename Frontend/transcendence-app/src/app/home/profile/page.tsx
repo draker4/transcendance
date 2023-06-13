@@ -2,11 +2,13 @@ import ProfileMainFrame from "@/components/logged-in/profile/ProfileMainFrame";
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/Profile.module.css"
+import Avatar from "@mui/material/Avatar";
 import { cookies } from 'next/dist/client/components/headers';
 
 export default async function ProfilePage() {
 
 	let profile = new Profile();
+	
 
 	try {
 		const token = cookies().get("crunchy-token")?.value;

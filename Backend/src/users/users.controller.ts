@@ -42,10 +42,9 @@ export class UsersController {
     return { exists: false };
   }
 
-  @Post('edit')
-  async editProfile(@Request() req, @Body('submittedMotto') motto: string) {
+  @Post('edit-motto')
+  async editMotto(@Request() req, @Body('submitedMotto') motto: string) {
 
-	// throw new NotFoundException('User not found');
 	const user = await this.usersService.getUserById(req.user.id);
 
 	if (!user) {
@@ -71,7 +70,36 @@ export class UsersController {
 	// }
 
 	return {
-		'message': 'motto updated successfully'
+		'message': 'motto updated successfully '
 	}
   }
+
+  @Post('edit-story')
+  async editStory(@Request() req, @Body('submitedStory') story: string) {
+
+	const user = await this.usersService.getUserById(req.user.id);
+
+	if (!user) {
+		throw new NotFoundException('User not found');
+		// return {
+		// 	"exists": false,
+		// };
+	}
+	user.story = story;
+	console.log("Story recup :", story);
+	const updatedUser = await this.usersService.updateUser(user);
+
+	if (!updatedUser || updatedUser.story != story) {
+		throw new BadRequestException('issue while updating story');
+		// return {
+		// 	"exists": false,
+		// };
+	}
+
+	return {
+		'message': 'story updated successfully '
+	}
+  }
+
+
 }

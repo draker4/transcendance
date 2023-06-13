@@ -57,6 +57,8 @@
 	/* border: dashed 1px var(--tertiary-color); */
 }
 
+.sections p.story,
+.sections p.story.placeholder,
 .sections p {
 	margin-bottom: 1rem;
 	padding-left: 0.3rem;
@@ -70,6 +72,11 @@
 	padding-left: 0;
 }
 
+.section input::placeholder {
+	color: var(--secondary-color-lighter3);
+}
+
+.sections p.story.placeholder,
 .sections p.motto.placeholder {
 	color: var(--secondary-color-lighter3);
 }
@@ -105,6 +112,22 @@
 	font-weight: 500;
 }
 
+.sections .story textarea {
+	font-size: 0.85rem;
+	font-family: var(--text-font);
+	color: var(--secondary-color);
+
+	outline: none;
+	resize: none;
+	height: auto;
+	width:100%;
+	border: 0;
+	padding: 0;
+	overflow: hidden;
+	
+
+}
+
 .sections input:focus {
 	outline: none;
 }
@@ -112,6 +135,11 @@
 .sections .notif {
 	font-size: 0.8rem;
 	color: var(--notif-color);
+}
+
+.sections .story.display {
+	/* background-color: aqua; */
+	word-wrap: break-word;
 
 }
 
