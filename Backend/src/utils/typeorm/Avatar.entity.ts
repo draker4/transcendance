@@ -15,14 +15,17 @@ export class Avatar {
 	@Column({ nullable: true })
 	image: string;
 
+	@Column({ nullable: true })
+	text: string;
+
 	@Column()
 	variant: string;
 
 	@Column()
 	borderColor: string;
 
-	@Column({ nullable: true })
-	text: string;
+	@Column()
+	backgroundColor: string;
 
 	@Column()
 	empty: boolean;

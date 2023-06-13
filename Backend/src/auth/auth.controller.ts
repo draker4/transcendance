@@ -4,7 +4,7 @@ import { Public } from 'src/utils/decorators/public.decorator';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
-import { AvatarDto } from 'src/users/dto/Avatar.dto';
+import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 
 @Controller('auth')
 export class AuthController {

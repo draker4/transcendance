@@ -6,28 +6,29 @@ import { useState } from "react";
 import ChooseColor from "./ChooseColor";
 import avatarType from "@/types/Avatar.type";
 
-export default function ChooseAvatar({ selectColor, selectAvatar, texts, avatars }: {
-	selectColor: (color: string) => void;
+export default function ChooseAvatar({ selectBorder, selectBackground, selectAvatar, text, avatars }: {
+	selectBorder: (color: string) => void;
+	selectBackground: (color: string) => void;
 	selectAvatar: (avatar: avatarType) => void;
-	texts: string[],
+	text: string,
 	avatars: string[]
 }) {
 	
-	const	[selectedColor, setSelectedColor] = useState('var(--accent-color)');
-	const	[selectedAvatar, setSelectedAvatar] = useState<string>(avatars[0]);
+	const	[colorBorder, setColorBorder] = useState('var(--accent-color)');
+	const	[backgroundColor, setBackgroundColor] = useState('var(--accent-color)');
+	const	[selectedAvatar, setSelectedAvatar] = useState<string>("empty");
 
-	const	handleSelection = (color: string) => {
-		setSelectedColor(color);
-		selectColor(color);
+	const	handleBorder = (color: string) => {
+		setColorBorder(color);
+		selectBorder(color);
 	}
 
-	const	handleSelectAvatar = (key: string, avatar: {
-		image: string,
-		variant: string,
-		borderColor: string,
-		text: string,
-		empty: boolean,
-	}) => {
+	const	handleBackground = (color: string) => {
+		setBackgroundColor(color);
+		selectBackground(color);
+	}
+
+	const	handleSelectAvatar = (key: string, avatar: avatarType) => {
 		setSelectedAvatar(key);
 		selectAvatar(avatar);
 	}
@@ -35,69 +36,6 @@ export default function ChooseAvatar({ selectColor, selectAvatar, texts, avatars
 	return (
 		<div>
 			<div className={styles.main}>
-				{
-					avatars.map(avatar => {
-
-						return (
-							<Avatar
-								className={`${styles.avatar} ${avatar === selectedAvatar ? styles.selected : ""}`}
-								key={avatar}
-								src={avatar}
-								alt={texts[0]}
-								variant="circular"
-								onClick={() => handleSelectAvatar(
-									avatar,
-									{
-										image: avatar,
-										variant: "circular",
-										borderColor: selectedColor,
-										text: "",
-										empty: false,
-									},
-								)}
-								sx={{
-									width: 80,
-									height: 80,
-									border: `4px solid ${selectedColor}`,
-								}}
-							>
-								{texts[0]}
-							</Avatar>
-						);
-					})
-				}
-				{
-					texts.map(text => {
-
-						return (
-							<Avatar
-								className={`${styles.avatar} ${text === selectedAvatar ? styles.selected : ""}`}
-								key={text}
-								variant="circular"
-								imgProps={{
-									referrerPolicy: "no-referrer",
-								}}
-								onClick={() => handleSelectAvatar(
-									text,
-									{
-										image: "",
-										variant: "circular",
-										borderColor: selectedColor,
-										text: text,
-										empty: false,
-									},
-								)}
-								sx={{
-									width: 80,
-									height: 80,
-									border: `4px solid ${selectedColor}`,
-								}}
-							>
-								{text}
-							</Avatar>
-						);
-					})
-				}
 				<Avatar
 					className={`${styles.avatar} ${"empty" === selectedAvatar ? styles.selected : ""}`}
 					variant="circular"
@@ -106,21 +44,82 @@ export default function ChooseAvatar({ selectColor, selectAvatar, texts, avatars
 						{
 							image: "",
 							variant: "circular",
-							borderColor: selectedColor,
-							text: "",
+							borderColor: colorBorder,
+							backgroundColor: backgroundColor,
+							text: text,
 							empty: true,
 						},
 					)}
 					sx={{
 						width: 80,
 						height: 80,
-						border: `4px solid ${selectedColor}`,
+						border: `4px solid ${colorBorder}`,
+						backgroundColor: `${backgroundColor}`,
 					}}
 				/>
+				{
+					avatars.map(avatar => {
+
+						return (
+							<Avatar
+								className={`${styles.avatar} ${avatar === selectedAvatar ? styles.selected : ""}`}
+								key={avatar}
+								src={avatar}
+								alt={text}
+								variant="circular"
+								onClick={() => handleSelectAvatar(
+									avatar,
+									{
+										image: avatar,
+										variant: "circular",
+										borderColor: colorBorder,
+										backgroundColor: backgroundColor,
+										text: text,
+										empty: false,
+									},
+								)}
+								sx={{
+									width: 80,
+									height: 80,
+									border: `4px solid ${colorBorder}`,
+									backgroundColor: `${backgroundColor}`,
+								}}
+							/>
+						);
+					})
+				}
+				<Avatar
+					className={`${styles.avatar} ${text === selectedAvatar ? styles.selected : ""}`}
+					key={text}
+					variant="circular"
+					imgProps={{
+						referrerPolicy: "no-referrer",
+					}}
+					onClick={() => handleSelectAvatar(
+						text,
+						{
+							image: "",
+							variant: "circular",
+							borderColor: colorBorder,
+							backgroundColor: backgroundColor,
+							text: text,
+							empty: false,
+						},
+					)}
+					sx={{
+						width: 80,
+						height: 80,
+						border: `4px solid ${colorBorder}`,
+						backgroundColor: `${backgroundColor}`,
+					}}
+				>
+					{text}
+				</Avatar>
 			</div>
 
 			<div className={styles.chooseColor}>
-				<ChooseColor onSelect={handleSelection}/>
+				<ChooseColor onSelect={handleBorder}/>
+				<ChooseColor onSelect={handleBackground}/>
 			</div>
 
 		</div>

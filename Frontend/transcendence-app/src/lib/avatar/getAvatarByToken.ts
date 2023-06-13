@@ -10,6 +10,5 @@ export const getAvatarByToken = async (token: string) => {
 	}
 
 	const	data = await avatar.json();
-
 	return data;
 }
