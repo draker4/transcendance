@@ -38,7 +38,7 @@ export default function NavbarHome({ avatar }: {
 						title="Logo Crunchy Pong"
 						className={styles.logo}/>
 					<div className={styles.avatar} onClick={signoff}>
-							<AvatarUser avatar={avatar}/>
+							<AvatarUser avatar={avatar} borderSize={"3px"}/>
 					</div>
 				</div>
 				</>

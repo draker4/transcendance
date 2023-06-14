@@ -6,6 +6,7 @@ import { CryptoService } from "@/services/crypto/Crypto.service";
 import avatarType from "@/types/Avatar.type";
 import { getAvatarByToken } from "@/lib/avatar/getAvatarByToken";
 import { cookies } from "next/dist/client/components/headers";
+import { CSSProperties } from "react";
 
 type Props = {
     profile: Profile;
@@ -24,6 +25,7 @@ export default async function AvatarCard({profile} : Props) {
 		borderColor: "",
 		text: "",
 		empty: true,
+		backgroundColor: ""
 	};
 
 	try {
@@ -44,11 +46,22 @@ export default async function AvatarCard({profile} : Props) {
 	console.log(err);
 	}
 
+	const colorAddedStyle:CSSProperties = {
+	 	backgroundColor: avatar.borderColor,
+	};
+
 
 
   return (
 	<div className={`${styles.avatarCard}`}>
-		<Avatar avatar={avatar}/>
+		<div className={styles.rectangle} style={colorAddedStyle}>
+			
+			<div className={styles.top} style={colorAddedStyle}></div>
+			<div className={styles.bot}></div>
+			
+			<Avatar avatar={avatar}/>
+    	</div>
+		
 		<ProfileLogin profile={profile}/>
 	</div>
   )
