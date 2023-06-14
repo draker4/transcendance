@@ -16,9 +16,7 @@ export async function handleActionServer(
 }> {
 
 	try {
-		const	loginCrypt = await Crypto.encrypt(login)
-
-		const	res = await getDoubleLogin(loginCrypt);
+		const	res = await getDoubleLogin(login);
 
 		if (res.length > 0)
 			return {
@@ -37,7 +35,7 @@ export async function handleActionServer(
 				"Authorization": "Bearer " + token,
 			},
 			body: JSON.stringify({
-				loginCrypt,
+				login,
 				avatarChosen,
 			})
 		});

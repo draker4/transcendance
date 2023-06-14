@@ -18,16 +18,7 @@ export class UsersService {
   }
 
   async getUserByLogin(login: string) {
-    const loginDecrypted = (await this.cryptoService.decrypt(login)).toLowerCase();
-    const clients = await this.userRepository.find();
-   
-    for (const client of clients) {
-      const loginClient = await this.cryptoService.decrypt(client.login);
-      if (loginClient.toLowerCase() === loginDecrypted)
-        return client;
-    }
-
-    return null;
+    return await this.userRepository.findOne({ where: { login: login } });
   }
   
   async getUserByEmail(email: string, provider: string) {

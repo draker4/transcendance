@@ -78,7 +78,7 @@ export class AuthController {
 	@Post('firstLogin')
 	async firstLogin(
 		@Request() req,
-		@Body('loginCrypt') login: string,
+		@Body('login') login: string,
 		@Body('avatarChosen') avatar: AvatarDto
 	) {
 		
