@@ -25,4 +25,8 @@ export class AvatarService {
 	async getAvatarById(userId: number) {
 		return	await this.avatarRepository.findOne({ where: { userId: userId } });
 	}
+
+	async getAvatarByLogin(login: string) {
+		return	await this.avatarRepository.findOne({ where: { login: login } });
+	}
 }

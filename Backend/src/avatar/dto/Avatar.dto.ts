@@ -3,7 +3,12 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class AvatarDto {
 	
 	@IsNumber()
+	@IsNotEmpty()
 	userId: number;
+
+	@IsString()
+	@IsNotEmpty()
+	login: string;
 
 	@IsString()
 	image: string;

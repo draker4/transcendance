@@ -24,6 +24,7 @@ export default function FormLogin({ avatars, token }: {
 		backgroundColor: "var(--accent-color)",
 		text: "",
 		empty: true,
+		login: "",
 	});
 
 	const	selectAvatar = (avatar: avatarType) => {
@@ -42,6 +43,7 @@ export default function FormLogin({ avatars, token }: {
 		const	text = e.target.value;
 
 		avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
+		avatarChosenRef.current.login = text;
 		setText(text.toUpperCase().slice(0, 2));
 	}
 

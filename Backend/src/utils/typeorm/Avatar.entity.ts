@@ -6,6 +6,9 @@ export class Avatar {
 	@PrimaryColumn()
 	userId: number;
 
+	@Column()
+	login: string;
+
 	@CreateDateColumn()
  	createdAd: Date;
 

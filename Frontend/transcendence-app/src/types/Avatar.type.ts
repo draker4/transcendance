@@ -1,4 +1,5 @@
 type	avatarType = {
+	login: string,
 	image: string,
 	variant: string,
 	borderColor: string,

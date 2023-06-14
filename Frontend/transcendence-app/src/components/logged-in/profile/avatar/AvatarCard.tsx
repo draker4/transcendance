@@ -4,52 +4,21 @@ import Avatar from "./Avatar"
 import ProfileLogin from "./ProfileLogin"
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import avatarType from "@/types/Avatar.type";
-import { getAvatarByToken } from "@/lib/avatar/getAvatarByToken";
+import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
 import { cookies } from "next/dist/client/components/headers";
 import { CSSProperties } from "react";
 
 type Props = {
     profile: Profile;
 	isOwner: boolean;
+	avatar: avatarType;
 }
 
 const	Crypto = new CryptoService();
 
-export default async function AvatarCard({profile, isOwner} : Props) {
+export default async function AvatarCard({profile, isOwner, avatar} : Props) {
 
 	const avatarAltValue: string = `player ${profile.login}'s avatar`;
-
-	let token: string | undefined = "";
-	let	avatar: avatarType = {
-		image: "",
-		variant: "",
-		borderColor: "",
-		text: "",
-		empty: true,
-		backgroundColor: ""
-	};
-
-	try {
-		token = cookies().get("crunchy-token")?.value;
-		if (!token)
-			throw new Error("No token value");
-	
-			
-	/* ICI A TERMINER */
-	// const	data = isOwner ? await getAvatarByToken(token) : await getAvatarById();
-
-	const	data = await getAvatarByToken(token);
-
-	if (!data.error && data.image) {
-		avatar = data;
-		if (avatar.image.length > 0)
-			avatar.image = await Crypto.decrypt(avatar.image);
-	}
-	else
-		avatar.empty = true;
-	}	catch (err) {
-	console.log(err);
-	}
 
 	const colorAddedStyle:CSSProperties = {
 	 	backgroundColor: avatar.borderColor,
