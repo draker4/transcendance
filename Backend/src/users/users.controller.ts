@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Post, Query, Request } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Post, Query, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -9,9 +9,24 @@ export class UsersController {
     private readonly usersService: UsersService,
   ) {}
 
-  @Get()
+  @Get('me')
   getUserProfile(@Request() req) {
-    return this.usersService.getUserById(req.user.id);
+    const user = this.usersService.getUserById(req.user.id);
+
+    if (!user)
+      throw new NotFoundException();
+    
+    return user;
+  }
+
+  @Get('profile/:login')
+  getUserByLogin(@Param('login') login: string) {
+    const user = this.usersService.getUserByLogin(login);
+
+    if (!user)
+      throw new NotFoundException();
+    
+    return user;
   }
 
   @Public()

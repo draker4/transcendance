@@ -1,4 +1,4 @@
-import { getProfileByToken } from "@/lib/profile/getProfileInfos";
+import { getProfileByLogin, getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/Home.module.css";
 import { cookies } from 'next/dist/client/components/headers';

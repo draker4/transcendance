@@ -23,6 +23,7 @@ if [ ! -d "/app/transcendence-app" ]; then
         @fortawesome/fontawesome-svg-core \
         @fortawesome/free-solid-svg-icons \
         @fortawesome/react-fontawesome
+
     echo "Next project created"
 fi
 
