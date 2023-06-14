@@ -114,7 +114,6 @@ export async function registerFormEmail(
 	email: string,
 ): Promise<{
 	emailExists: boolean,
-	provider: string,
 	notif: boolean,
 }> {
 	try {
@@ -123,14 +122,12 @@ export async function registerFormEmail(
 
 		return {
 			emailExists: checkEmail.exists,
-			provider: checkEmail.provider,
 			notif: false,
 		};
 	}
 	catch (err) {
 		return {
 			emailExists: false,
-			provider: "",
 			notif: true,
 		};
 	}
