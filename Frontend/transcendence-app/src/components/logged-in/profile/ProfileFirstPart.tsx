@@ -4,12 +4,13 @@ import AvatarCard from "./avatar/AvatarCard"
 
 type Props = {
     profile: Profile;
+	isOwner: boolean;
 }
 
-export default function ProfileFirstPart({profile} : Props) {
+export default function ProfileFirstPart({profile, isOwner} : Props) {
   return (
 	<div className={`${styles.both} ${styles.first}`}>
-		<AvatarCard profile={profile}/>
+		<AvatarCard profile={profile} isOwner={isOwner}/>
 	</div>
   )
 }

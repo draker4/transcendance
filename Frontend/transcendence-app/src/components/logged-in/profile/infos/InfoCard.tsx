@@ -11,16 +11,17 @@ import styles from "@/styles/profile/InfoCard.module.css"
 type Props = {
 		profile: Profile;
 		token: string;
+		isOwner: boolean;
 	}
 
 
-export default function InfoCard({profile, token} : Props) {
+export default function InfoCard({profile, token, isOwner} : Props) {
 
 	const [activeButton, setActiveButton] = useState(0);
 
   return (
 	<div>
-		<NavbarProfilInfo activeButton={activeButton} setActiveButton={setActiveButton}/>
+		<NavbarProfilInfo activeButton={activeButton} setActiveButton={setActiveButton} isOwner={isOwner}/>
 		{(() => {
         switch (activeButton) {
 			case 0:

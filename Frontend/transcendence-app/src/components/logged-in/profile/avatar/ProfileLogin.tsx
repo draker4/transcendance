@@ -4,17 +4,17 @@ import EditButton from "./EditButton";
 
 type Props = {
     profile: Profile;
+	isOwner: boolean;
 }
 
-export default function ProfileLogin({profile} : Props) {
-	const isProfilOwner = true;
+export default function ProfileLogin({profile, isOwner} : Props) {
 	
 	return (
 	<div className={styles.loginCard}>
 		<div className={styles.login}>
 			<h1>{profile.login}</h1>
 		</div>
-		{isProfilOwner && <EditButton />}
+		{isOwner && <EditButton />}
 	</div>
   )
 }

@@ -9,6 +9,7 @@ import styles from "@/styles/profile/InfoCard.module.css"
 type Props = {
 	activeButton: number;
 	setActiveButton: Dispatch<SetStateAction<number>>
+	isOwner: boolean;
 }
 
 type ButtonData = {
@@ -19,7 +20,7 @@ type ButtonData = {
 
 
 
-export default function NavbarProfilInfo({activeButton, setActiveButton} : Props) {
+export default function NavbarProfilInfo({activeButton, setActiveButton, isOwner} : Props) {
 
 	const [selectedItem, setSelectedItem] = useState(0);
 
@@ -28,12 +29,19 @@ export default function NavbarProfilInfo({activeButton, setActiveButton} : Props
 		setSelectedItem(buttonId);
 	}
 	
-	const buttonData: ButtonData[] = [
+	const buttonData: ButtonData[] = 
+	isOwner ?
+	[
 		{ id: 0, name: 'PongStats',  icon: faTableTennisPaddleBall},
 		{ id: 1, name: 'Contacts', icon: faFaceSmileWink },
 		{ id: 2, name: 'Channels', icon:  faMessage},
 		{ id: 3, name: 'Custom', icon: faGear }
+	] : [
+		{ id: 0, name: 'PongStats',  icon: faTableTennisPaddleBall},
+		{ id: 1, name: 'Contacts', icon: faFaceSmileWink },
+		{ id: 2, name: 'Channels', icon:  faMessage},
 	];
+
 	
 	
 	return (

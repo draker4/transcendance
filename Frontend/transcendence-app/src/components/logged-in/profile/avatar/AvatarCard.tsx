@@ -10,11 +10,12 @@ import { CSSProperties } from "react";
 
 type Props = {
     profile: Profile;
+	isOwner: boolean;
 }
 
 const	Crypto = new CryptoService();
 
-export default async function AvatarCard({profile} : Props) {
+export default async function AvatarCard({profile, isOwner} : Props) {
 
 	const avatarAltValue: string = `player ${profile.login}'s avatar`;
 
@@ -33,6 +34,10 @@ export default async function AvatarCard({profile} : Props) {
 		if (!token)
 			throw new Error("No token value");
 	
+			
+	/* ICI A TERMINER */
+	// const	data = isOwner ? await getAvatarByToken(token) : await getAvatarById();
+
 	const	data = await getAvatarByToken(token);
 
 	if (!data.error && data.image) {
@@ -62,7 +67,7 @@ export default async function AvatarCard({profile} : Props) {
 			<Avatar avatar={avatar}/>
     	</div>
 		
-		<ProfileLogin profile={profile}/>
+		<ProfileLogin profile={profile} isOwner={isOwner}/>
 	</div>
   )
 }

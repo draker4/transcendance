@@ -5,16 +5,17 @@ import ProfileSecondPart from "./ProfileSecondPart"
 
 type Props = {
     profile: Profile;
+	isOwner: boolean;
 }
 
-export default function ProfileMainFrame({profile} : Props) {
+export default function ProfileMainFrame({profile, isOwner} : Props) {
 
 
 
   return (
 	<div className={styles.profileMainFrame}>
-		<ProfileFirstPart profile={profile}/>
-		<ProfileSecondPart profile={profile}/>
+		<ProfileFirstPart profile={profile} isOwner={isOwner}/>
+		<ProfileSecondPart profile={profile} isOwner={isOwner}/>
 	</div>
   )
 }
