@@ -83,11 +83,6 @@ export default function LogInComponent() {
 
 	const	handleAction = async (data: FormData) => {
 
-		if (textButton !== "Continue") {
-			iconEmail();
-			return ;
-		}
-
 		try {
 
 			await handleCaptcha();
@@ -101,34 +96,18 @@ export default function LogInComponent() {
 
 				const	res: {
 					emailExists: boolean,
-					provider: string,
 					notif: boolean,
 				} = await registerFormEmail(emailUser);
-
+				console.log(res);
 				if (res.notif)
 					throw new Error();
 				
-				if (!res.emailExists) {
-					setPassword(true);
-					setChangeEmail(true);
-					return;
-				}
-
-				if (res.provider === "email") {
-					exists.current = true;
-					setPassword(true);
-					setChangeEmail(true);
-				}
-	
-				else if (res.provider === "42") {
-					setNotif("Please register with your 42 account!");
-					setTextButton("Change email");
-				}
+				setPassword(true);
+				setChangeEmail(true);
 				
-				else if (res.provider === "google") {
-					setNotif("Please register with your google account!");
-					setTextButton("Change email");
-				}
+				if (res.emailExists)
+					exists.current = true;
+				
 				return ;
 			}
 
@@ -185,7 +164,7 @@ export default function LogInComponent() {
 
 					{ notif.length > 0 && <div className={styles.notif}>{ notif }</div>}
 					
-					<button type="submit" disabled={textButton === "Loading"} className={styles.continue}>{ textButton }</button>
+					<button type="submit" disabled={textButton === "Loading..."} className={styles.continue}>{ textButton }</button>
 				</form>
 
 				<div className={styles.or}>

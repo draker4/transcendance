@@ -61,7 +61,7 @@ export class AuthService {
 			provider: "42",
 		};
 
-		const	user_old = await this.usersService.getUserByEmail(user.email);
+		const	user_old = await this.usersService.getUserByEmail(user.email, "42");
 		if (!user_old)
 			return await this.usersService.addUser(user);
 		
@@ -124,7 +124,7 @@ export class AuthService {
 		createUserDto.last_name = encryptedValues[2];
 		createUserDto.image = encryptedValues[3];
 		
-		let	user = await this.usersService.getUserByEmail(createUserDto.email);
+		let	user = await this.usersService.getUserByEmail(createUserDto.email, "google");
 
 		if (!user)
 			user = await this.usersService.addUser(createUserDto);
@@ -154,7 +154,7 @@ export class AuthService {
 	}
 
 	async validateUser(email: string, password: string) {
-		const	user = await this.usersService.getUserByEmail(email);
+		const	user = await this.usersService.getUserByEmail(email, "email");
 		let		isMatch = false;
 
 		if (!user)

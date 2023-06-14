@@ -30,13 +30,13 @@ export class UsersService {
     return null;
   }
   
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string, provider: string) {
     const emailDecrypted = (await this.cryptoService.decrypt(email)).toLowerCase();
     const clients = await this.userRepository.find();
 
     for (const client of clients) {
       const emailClient = await this.cryptoService.decrypt(client.email);
-      if (emailClient.toLowerCase() === emailDecrypted)
+      if (emailClient.toLowerCase() === emailDecrypted && client.provider === provider)
         return client;
     }
 

@@ -18,16 +18,14 @@ export class UsersController {
   @Get('email')
   async checkDoubleEmail(@Query("email") email: string, res: Response) {
     const decodeUrl = decodeURIComponent(email);
-    const user = await this.usersService.getUserByEmail(decodeUrl);
+    const user = await this.usersService.getUserByEmail(decodeUrl, "email");
 
     if (user)
-      return { 
+      return {
         exists: true,
-        provider: user.provider,
       };
     return {
       exists: false,
-      provider: "",
     };
   }
 
