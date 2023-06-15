@@ -66,7 +66,13 @@ export class UsersController {
 		// 	"exists": false,
 		// };
 	}
+
+	/* filtrer le langage ici */
+
 	user.motto = motto;
+
+
+
 	await this.usersService.updateUser(user);
 
   // cets moi qui ai changé ca (baptiste),
@@ -98,7 +104,12 @@ export class UsersController {
 		// 	"exists": false,
 		// };
 	}
+
+	/* filtrer le langage ici */
+
 	user.story = story;
+
+
 	console.log("Story recup :", story);
 	await this.usersService.updateUser(user);
 

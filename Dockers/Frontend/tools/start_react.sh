@@ -22,7 +22,8 @@ if [ ! -d "/app/transcendence-app" ]; then
     npm add @mui/material @emotion/react @emotion/styled \
         @fortawesome/fontawesome-svg-core \
         @fortawesome/free-solid-svg-icons \
-        @fortawesome/react-fontawesome
+        @fortawesome/react-fontawesome \
+		react-color
 
     echo "Next project created"
 fi

@@ -30,7 +30,11 @@ export default async function HomePage() {
         <div>{ profile.email}</div>
         <div>{ profile?.phone}</div>
         { <img src={profile?.image} referrerPolicy="no-referrer" className={styles.img}></img> }
-		<div><Link href="/home/profile">go to profile page</Link></div>
+		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile">-&gt; /home/profile (not found)</Link></div>
+		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile/bapt">-&gt; /home/profile/bapt</Link></div>
+		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile/yops">-&gt; /home/profile/yops</Link></div>
+		<br />
+		<div style={{ fontSize: '1.5rem' }}><Link style={{ textDecoration: 'none' }} href={`/home/profile/${profile.login}`}>-&gt; my profile page</Link></div>
       </div>
     </main>
   );

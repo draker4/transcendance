@@ -34,8 +34,7 @@ export default async function AvatarCard({profile, isOwner, avatar} : Props) {
 			<div className={styles.bot}></div>
 			
 			<Avatar avatar={avatar}/>
-    	</div>
-		
+		</div>
 		<ProfileLogin profile={profile} isOwner={isOwner}/>
 	</div>
   )
