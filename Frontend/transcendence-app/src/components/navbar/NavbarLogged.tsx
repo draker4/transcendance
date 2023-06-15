@@ -6,11 +6,14 @@ import { CryptoService } from "@/services/crypto/Crypto.service";
 
 const	Crypto = new CryptoService();
 
-export default async function NavbarLogged() {
+export default async function NavbarLogged({ chatOpen }: {
+	chatOpen: boolean,
+}) {
 
 	let	token: string | undefined = "";
 	let	avatar: avatarType = {
 		image: "",
+		login: "",
 		variant: "",
 		borderColor: "",
 		backgroundColor: "",
@@ -37,7 +40,7 @@ export default async function NavbarLogged() {
 
 	return (
 		<div>
-			<NavbarHome avatar={avatar}/>
+			<NavbarHome avatar={avatar} chatOpen={chatOpen}/>
 		</div>
 	);
 }

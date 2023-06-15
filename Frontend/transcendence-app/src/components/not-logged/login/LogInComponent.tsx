@@ -42,70 +42,9 @@ export default function LogInComponent() {
     }
 
 	const   openGoogle = async () => {
-
-		async function handleFetchError(url: string, options?: RequestInit): Promise<Response> {
-			return fetch(url, options).catch((error) => {
-			  // Handle the error case without logging to the console
-			  console.error("Error:", error);
-			  throw error; // Optionally rethrow the error to propagate it further
-			});
-		  }
-		  
-		  handleFetchError("http://localhost:4000/api/auth/google")
-			.then((response) => {
-			  if (response.ok) {
-				window.location.href = "http://localhost:4000/api/auth/google";
-			  } else {
-				router.replace("/welcome/login/wrong");
-			  }
-			})
-			.catch((error) => {
-			  // Handle the error case
-			  router.replace("/welcome/login/wrong");
-			});
-
-		// const	sendRequest = async () => {
-		// 	const	request = new XMLHttpRequest();
-		// 	request.open('GET', "http://localhost:4000/api/auth/google", true);
-			
-		// 	request.onload = function() {
-		// 		if (request.status === 200)
-		// 		window.location.href = "http://localhost:4000/api/auth/google";
-		// 		else
-		// 		router.replace("/welcome/login/wrong");
-		// 	};
-			
-		// 	request.onerror = function() {
-		// 		router.replace("/welcome/login/wrong");
-		// 	}
-
-		// 	try {
-		// 		request.send();
-		// 	} catch (err) {
-		// 		console.log(err);
-		// 	}
-		// }
-
-		// console.log("end");
 		
-		// setTextButton("Loading...");
-        // window.open("http://localhost:4000/api/auth/google", "_self");
-
-		// try {
-		// 	const	res = await fetch("http://localhost:3000/api/auth/google");
-
-		// 	if (!res.ok)
-		// 		throw new Error("server error");
-			
-		// 	// const	data = await res.json();
-
-		// 	// if (data.message === 'ok')
-		// 	// 	window.location.href = "http://localhost:4000/api/auth/google";
-		// }
-		// catch (error) {
-		// 	// console.log(error);
-		// }
-
+		setTextButton("Loading...");
+		window.open("http://localhost:4000/api/auth/google", "_self");
     }
 
 	const	handleCaptcha = async () => {

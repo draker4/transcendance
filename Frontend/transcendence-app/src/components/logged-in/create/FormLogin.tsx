@@ -28,6 +28,7 @@ export default function FormLogin({ avatars, token }: {
 	});
 
 	const	selectAvatar = (avatar: avatarType) => {
+		avatar.login = avatarChosenRef.current.login;
 		avatarChosenRef.current = avatar;
 	}
 

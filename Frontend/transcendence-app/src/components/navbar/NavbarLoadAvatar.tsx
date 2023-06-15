@@ -11,6 +11,7 @@ export default async function NavbarLoadAvatar() {
 	console.log("here avatar logged");
 	let	token: string | undefined = "";
 	let	avatar: avatarType = {
+		login: "",
 		image: "",
 		variant: "",
 		borderColor: "",
