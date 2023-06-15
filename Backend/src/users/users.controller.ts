@@ -2,6 +2,8 @@ import { Body, Controller, Get, NotFoundException, Param, Post, Query, Request }
 import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
+import 'src/utils/extensions/stringExtension'
+
 
 @Controller('users')
 export class UsersController {
@@ -67,11 +69,7 @@ export class UsersController {
 		// };
 	}
 
-	/* filtrer le langage ici */
-
-	user.motto = motto;
-
-
+	user.motto = motto.filterBadWords();
 
 	await this.usersService.updateUser(user);
 
@@ -105,10 +103,7 @@ export class UsersController {
 		// };
 	}
 
-	/* filtrer le langage ici */
-
-	user.story = story;
-
+	user.story = story.filterBadWords();
 
 	console.log("Story recup :", story);
 	await this.usersService.updateUser(user);

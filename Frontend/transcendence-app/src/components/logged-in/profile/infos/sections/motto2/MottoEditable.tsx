@@ -3,6 +3,7 @@ import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
 import submitMotto from "@/lib/profile/edit/submitMotto";
+import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
 
 type Props = {
 	profile: Profile;
@@ -26,7 +27,9 @@ export default function mottoEditable({profile, token} : Props) {
 	}
 
 	const handleActionMotto = async (data: FormData) => {
+		console.log("HANDLE ACTION MOTTO START");
 		const submitedMotto = data.get('motto');
+
 
 		if (typeof submitedMotto === 'string') {
 
@@ -45,6 +48,10 @@ export default function mottoEditable({profile, token} : Props) {
 				if (response === "") {
 					const updatedProfile = profile;
 					updatedProfile.motto = submitedMotto;
+					
+					/* LA ca marche PAS DU TOUT */
+					// const filteredProfile = await getProfileByLogin(token, profile.login);
+					// console.log(filteredProfile);
 
 					setProf(updatedProfile);
 					setMotto(submitedMotto);
@@ -79,7 +86,7 @@ export default function mottoEditable({profile, token} : Props) {
 					<p className={styles.motto}>
 					{' '}
 					<input type='text' 
-						   name='motto' 
+						   name='motto'
 						   value={editedMotto} 
 						   placeholder='set here your crunchy motto'
 						   onChange={handleEditedMottoChange}
