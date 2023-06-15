@@ -3,16 +3,20 @@
 import styles from "@/styles/navbar/NavbarLogged.module.css"
 import avatarType from "@/types/Avatar.type";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import AvatarUser from "../logged-in/avatarUser/AvatarUser";
 import { deleteCookie } from "cookies-next";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments } from "@fortawesome/free-solid-svg-icons";
 
-export default function NavbarHome({ avatar }: {
+export default function NavbarHome({ avatar, chatOpen }: {
 	avatar: avatarType,
+	chatOpen: boolean,
 }) {
 	
 	const	router = useRouter();
 	const	segment = useSelectedLayoutSegment();
+	const	[isOpen, setIsOpen] = useState<boolean>(false);
 
 	const	welcome = () => {
 		router.push("/home");
@@ -23,15 +27,29 @@ export default function NavbarHome({ avatar }: {
 		deleteCookie("crunchy-token");
 		router.push("/welcome");
 	}
+
+	const	openChat = () => {
+		const	chat = document.querySelector("#Chat");
+
+		if (chat) {
+			console.log("hereeee");
+			chat.classList.add('chatOpened');
+		}
+		// chatOpen = !chatOpen;
+	}
 	
 	return (
 		<nav className={styles.main}>
 			{
 				segment !== "create" &&
 				<>
-				<svg className={styles.menu} fill="currentColor" stroke="currentColor" width="800px" height="800px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
-					<path d="M0.844 6.050c-0.256-0.256-0.381-0.581-0.381-0.975s0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.125 0.975 0.381s0.381 0.581 0.381 0.975-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381zM31.306 14.963c0.256 0.256 0.381 0.581 0.381 0.975s-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381s-0.381-0.581-0.381-0.975 0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.125 0.975 0.381zM31.306 25.819c0.256 0.256 0.381 0.581 0.381 0.975s-0.125 0.719-0.381 0.975-0.581 0.381-0.975 0.381h-28.512c-0.394 0-0.719-0.125-0.975-0.381s-0.381-0.581-0.381-0.975 0.125-0.719 0.381-0.975 0.581-0.381 0.975-0.381h28.512c0.394 0 0.719 0.131 0.975 0.381z"></path>
-				</svg>
+
+				<FontAwesomeIcon
+					icon={faComments}
+					className={styles.menu}
+					onClick={openChat}
+				/>
+
 				<div className={styles.center}>
 					<img src="/images/logo.png"
 						onClick={welcome}

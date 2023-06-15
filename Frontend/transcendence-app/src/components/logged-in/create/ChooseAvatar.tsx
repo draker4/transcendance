@@ -43,6 +43,7 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 						"empty",
 						{
 							image: "",
+							login: "",
 							variant: "circular",
 							borderColor: colorBorder,
 							backgroundColor: backgroundColor,
@@ -71,6 +72,7 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 									avatar,
 									{
 										image: avatar,
+										login: "",
 										variant: "circular",
 										borderColor: colorBorder,
 										backgroundColor: backgroundColor,
@@ -99,6 +101,7 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 						text,
 						{
 							image: "",
+							login: "",
 							variant: "circular",
 							borderColor: colorBorder,
 							backgroundColor: backgroundColor,
