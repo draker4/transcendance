@@ -1,8 +1,6 @@
 .chatOpened {
 	z-index: 0;
-	/* border: 2px solid green; */
 	background-color: var(--accent-color-lighter1);
-	width: clamp(400px, 35vw, 600px);
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -14,9 +12,6 @@
 	animation-duration: 0.6s;
 	animation-timing-function: slide-in;
     animation-iteration-count: 1;
-	/* transition: width 0.3s ease, transform 0.3s ease;
-	transform: translateX(0); */
-	/* z-index: 0; */
 }
 
 .chatClosed {
@@ -25,7 +20,7 @@
 	background-color: var(--accent-color-lighter1);
 	width: clamp(400px, 35vw, 600px);
 	left: -100%;
-	width: 0;
+	/* width: 0; */
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -39,6 +34,11 @@
     animation-iteration-count: 1;
 }
 
+
+.chatOpened::-webkit-scrollbar, .chatClosed::-webkit-scrollbar {
+    display: none;
+}
+
 .chatFirst {
 	display: none;
 }
@@ -50,14 +50,14 @@
 	}
 	to {
 		left: 0;
-		width: clamp(400px, 35vw, 600px);
+		width: var(--width-style);
 	}
 }
 
 @keyframes close {
 	from {
 		left: 0;
-		width: clamp(400px, 35vw, 600px);
+		width: var(--width-style);
 	}
 	to {
 		left: -100%;
