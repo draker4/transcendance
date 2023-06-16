@@ -7,14 +7,8 @@
 	width: 100%;
 }
 
-.chat {
-	/* border: 2px solid blue;
-	width: auto; */
-	position: inline;
-	height: 100%;
-}
-
 .children {
+	position: inline;
 	height: 100%;
 	width: 100%;
 	overflow-y: auto;

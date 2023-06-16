@@ -19,9 +19,7 @@ export default function RootLayout({
       <body>
         <NavbarLogged />
         <div className={styles.main}>
-          <div className={styles.chat}>
-            <ChatServer />
-          </div>
+          <ChatServer />
           <div className={styles.children}>
             { children }
           </div>

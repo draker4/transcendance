@@ -17,8 +17,10 @@ export default function Chat() {
 
 	useEffect(() => {
 		const handleResize = () => {
+
 			const screenWidth = window.innerWidth;
 			setLittleScreen(screenWidth < 800);
+
 			if (screenWidth < 800)
 				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
 			else
@@ -48,7 +50,7 @@ export default function Chat() {
 		<>
 			{
 				!littleScreen && 
-				<div className={styles.chatTotal}>
+				<div className={styles.chatTotalBig} id="chat">
 					<ChatBubbles
 						littleScreen={littleScreen}
 						setIsClosing={setIsClosing}
@@ -79,7 +81,7 @@ export default function Chat() {
 			}
 			{
 				littleScreen && chatOpened &&
-				<div className={isClosing ? styles.close : styles.chatTotal}>
+				<div className={isClosing ? styles.close : styles.chatTotalLittle} id="chat">
 					<ChatBubbles
 						littleScreen={littleScreen}
 						setIsClosing={setIsClosing}

@@ -50,56 +50,48 @@ export default function ChatBubbles({ littleScreen, isClosing, setIsClosing, set
 				}
 			</div>
 
-			<div className={styles.line}></div>
+			<div className={isClosing ? `${styles.line} ${styles.opacity}` : styles.line}></div>
 
 			<div className={styles.bubbles}>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
-				<Avatar className={styles.bubble} variant="rounded"></Avatar>
+				<div className={styles.bubbles}>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+				</div>
+
+				<div className={isClosing ? `${styles.middleLine} ${styles.opacity}` : styles.middleLine}></div>
+
+				<div className={styles.bubbles}>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}></Avatar>
+					<Avatar className={styles.bubble}>0</Avatar>
+					<Avatar className={styles.bubble}>A</Avatar>
+				</div>
 			</div>
 
-			<div className={styles.middleLine}></div>
-
-			<div className={styles.bubbles}>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}></Avatar>
-				<Avatar className={styles.bubble}>0</Avatar>
-				<Avatar className={styles.bubble}>A</Avatar>
-			</div>
-
-			<div className={styles.bottom}></div>
+			<div className={isClosing ? `${styles.bottom} ${styles.opacity}` : styles.bottom}></div>
 
 		</div>
 	);
