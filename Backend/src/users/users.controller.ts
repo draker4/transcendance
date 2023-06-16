@@ -22,12 +22,15 @@ export class UsersController {
   }
 
   @Get('profile/:login')
-  getUserByLogin(@Param('login') login: string) {
-    const user = this.usersService.getUserByLogin(login);
+  async getUserByLogin(@Param('login') login: string) {
+    
+
+	const user = await this.usersService.getUserByLogin(login);
+
 
     if (!user)
       throw new NotFoundException();
-    
+
     return user;
   }
 
@@ -59,7 +62,7 @@ export class UsersController {
 
   @Post('edit-motto')
   async editMotto(@Request() req, @Body('submitedMotto') motto: string) {
-
+	console.log("POST~edit-motto method called"); //checking
 	const user = await this.usersService.getUserById(req.user.id);
 
 	if (!user) {

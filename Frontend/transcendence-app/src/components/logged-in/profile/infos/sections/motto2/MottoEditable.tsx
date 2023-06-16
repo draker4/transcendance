@@ -4,6 +4,7 @@ import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
 import submitMotto from "@/lib/profile/edit/submitMotto";
 import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
+import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 
 type Props = {
 	profile: Profile;
@@ -27,7 +28,6 @@ export default function mottoEditable({profile, token} : Props) {
 	}
 
 	const handleActionMotto = async (data: FormData) => {
-		console.log("HANDLE ACTION MOTTO START");
 		const submitedMotto = data.get('motto');
 
 
@@ -38,29 +38,29 @@ export default function mottoEditable({profile, token} : Props) {
 				return ;
 			}
 
-
 			const checkedMotto = checkMotto(submitedMotto);
 			setNotif(checkedMotto);
 
-			if (checkedMotto.length == 0) {
+			if (checkedMotto.length === 0) {
 				const response = await submitMotto(submitedMotto, token);
 
 				if (response === "") {
 					const updatedProfile = profile;
-					updatedProfile.motto = submitedMotto;
-					
-					/* LA ca marche PAS DU TOUT */
-					// const filteredProfile = await getProfileByLogin(token, profile.login);
-					// console.log(filteredProfile);
+					updatedProfile.motto = filterBadWords(submitedMotto);
+
 
 					setProf(updatedProfile);
-					setMotto(submitedMotto);
+					setMotto(updatedProfile.motto);
 					setEditMode(false);
 				}
 			}
 		}
 	}
 
+	const handleStupidButton = async () => {
+		const freshProfile = await getProfileByLogin(token, profile.login);
+		console.log("freshProfile motto : ",freshProfile.motto);
+	}
 
   return (
 	<div>
@@ -99,6 +99,16 @@ export default function mottoEditable({profile, token} : Props) {
 				</form>
 			</div>
 		}
+
+		<br/>
+		<br/>
+		<button onClick={handleStupidButton}>stupid</button>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
 	</div>
   )
 }
