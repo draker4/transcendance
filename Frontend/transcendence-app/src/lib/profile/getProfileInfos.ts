@@ -1,3 +1,5 @@
+"use server"
+
 import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 
@@ -26,7 +28,6 @@ export const getProfileByToken = async (token: string): Promise<Profile> => {
 }
 
 export const getProfileByLogin = async (token: string, login: string): Promise<Profile> => {
-	
 	const	profile = await fetch(`http://backend:4000/api/users/profile/${login}`, {
 		method: "GET",
 		headers: {"Authorization": "Bearer " + token},

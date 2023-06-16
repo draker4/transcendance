@@ -16,7 +16,8 @@ if [ ! -d "./nest-project/node_modules" ]; then
     @nestjs/passport passport passport-local \
     @nestjs/jwt passport-jwt passport-google-oauth20 \
     @nestjs-modules/mailer nodemailer \
-    bcrypt uuid winston nest-winston
+    bcrypt uuid winston nest-winston \
+	bad-words
 
     npm add -D @types/bcrypt @types/passport-google-oauth20 \
         @types/passport-jwt @types/passport-jwt @types/passport-local
