@@ -1,5 +1,4 @@
-import ChatBubbles from "@/components/chat/ChatBubbles";
-import ChatMain from "@/components/chat/ChatMain";
+import ChatServer from "@/components/chat/ChatServer";
 import NavbarLogged from "@/components/navbar/NavbarLogged"
 import "@/styles/globals.css";
 import styles from "@/styles/layout/Layout.module.css";
@@ -15,23 +14,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
 
-  const  chatOpen = false;
-
   return (
     <html lang="en">
       <body>
-        <NavbarLogged chatOpen={chatOpen}/>
-        <div className={styles.layout}>
-          <div className={styles.chatBubbles}>
-            <ChatBubbles />
+        <NavbarLogged />
+        <div className={styles.main}>
+          <div className={styles.chat}>
+            <ChatServer />
           </div>
-          <div className={styles.rightScreen}>
-            <div className={chatOpen ? styles.chatOpened : styles.chatClosed}>
-              <ChatMain />
-            </div>
-            <div className={styles.children}>
-              {children}
-            </div>
+          <div className={styles.children}>
+            { children }
           </div>
         </div>
       </body>

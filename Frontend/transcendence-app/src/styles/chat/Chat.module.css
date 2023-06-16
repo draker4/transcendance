@@ -1,0 +1,7 @@
+.chatTotal {
+	/* border: 1px solid red; */
+	width: auto;
+	display: flex;
+	justify-content: flex-start;
+	height: 100%;
+}

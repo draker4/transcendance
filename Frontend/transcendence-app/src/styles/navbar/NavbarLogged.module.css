@@ -1,31 +1,14 @@
 .main {
-	/* border-style: dotted; */
 	background-color: var(--primary-color);
 	position: fixed;
+	top: 0;
 	z-index: 1;
 	width: 100%;
 	height: clamp(40px, 5vh, 80px);
 	display: flex;
 	align-items: center;
 	padding-left: 10px;
-	/* border-bottom: 1px solid var(--tertiary-color); */
-	/* box-shadow: 0px 0px 10px var(--tertiary-color); */
-}
-
-.menu {
-	/* border: 1px solid red; */
-	color: var(--accent-color);
-	width: 30px;
-	height: 30px;
-	cursor: pointer;
-}
-
-.menu:hover {
-	scale: 1.05;
-}
-
-.menu:active {
-	scale: 0.95;
+	user-select: none;
 }
 
 .center {
