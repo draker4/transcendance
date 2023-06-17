@@ -30,7 +30,6 @@ export class UsersService {
       if (emailClient.toLowerCase() === emailDecrypted && client.provider === provider)
         return client;
     }
-
     return null;
   }
 
