@@ -1,18 +1,43 @@
 # Liste des *Endpoints*
 <br>
 
+- [00 - api/games/status](#api-games-matchmake-status)
 - [01 - api/games/create](#api-games-create)
 - [02 - api/games/join](#api-games-join)
 - [03 - api/games/getall](#api-games-getall)
 - [04 - api/games/quit](#api-games-quit)
 - [05 - api/games/matchmake/start](#api-games-matchmake-start)
 - [06 - api/games/matchmake/stop](#api-games-matchmake-stop)
-- [06 - api/games/matchmake/update](#api-games-matchmake-update)
+- [07 - api/games/matchmake/update](#api-games-matchmake-update)
+- [08 - api/games/isingame](#api-games-isingame)
+- [09 - api/games/matchmake/playerwaiting](#api-games-matchmake-playerwaiting)
 
 <br>
 
 ## Game Endpoint details
 <br>
+
+### `GET api/games/status` : test si le service est en ligne <a id="api-games-status"></a>
+<br>
+
+> Requête
+
+  ```
+  headers :
+  {
+      "Authorization": Bearer $token
+  }
+  ```
+
+> Reponse
+
+  ```
+  statusCode : 200
+  {
+      "Working !"
+  }
+  ```
+<br><br>
 
 ### `POST api/games/create` : creer une partie <a id="api-games-create"></a>
 <br>
@@ -23,6 +48,11 @@
   headers :
   {
       "Authorization": Bearer $token
+  }
+  Body :
+  {
+      "game_name" : "1vs1_Octogone"
+      "game_password": "supermotdepasse"
   }
   ```
 
@@ -205,52 +235,7 @@
   ```
 <br><br>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### `POST api/games/matchmake/start` : demare la recherche de partie aleatoire <a id="api-games-matchmake-start"></a>
+### `POST api/games/matchmake/start` : démare la recherche de partie aleatoire <a id="api-games-matchmake-start"></a>
 <br>
 
 > Requête
@@ -269,14 +254,19 @@
   {
       "success": "False",
       "message": "Unautorize",
-                 "You are already in game",
-                 "You are already looking for game"
+  }
+
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "You are already in game",
+                 "You are already in matchmaking"
   }
 
   statusCode : 200
   {
       "success": "True",
-      "message": "You are looking for game"
+      "message": "You are now in matchmaking"
   }
   ```
 <br><br>
@@ -300,7 +290,12 @@
   {
       "success": "False",
       "message": "Unautorize",
-                 "You are not looking for game"
+  }
+
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "You are not looking for game",
   }
 
   statusCode : 200
@@ -330,21 +325,26 @@
   {
       "success": "False",
       "message": "Unautorize",
-                 "You are not looking for game",
+  }
+
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "You are not looking for game",
                  "You are already in game"
   }
 
   statusCode : 200
   {
       "success": "True",
-      "message": "No game found"
+      "message": "Waiting for opponent"
       "data": {
             "game_id" : ""
-            "player_waiting" : "2"
+            "player_waiting" : "1"
       }
   }
 
-  statusCode : 201
+  statusCode : 200
   {
       "success": "True",
       "message": "Game found"
@@ -355,3 +355,78 @@
   }
   ```
 <br><br>
+
+### `GET api/games/isingame` : Si le joueur est dans une game , renvoi son id <a id="api-games-matchmake-isingame"></a>
+<br>
+
+> Requête
+
+  ```
+  headers :
+  {
+      "Authorization": Bearer $token
+  }
+  ```
+
+> Reponse
+
+  ```
+  statusCode : 401
+  {
+      "success": "False",
+      "message": "Unautorize",
+  }
+
+  statusCode : 200
+  {
+      "success": "False",
+      "message": "You are not in game"
+  }
+
+  statusCode : 200
+  {
+      "success": "True",
+      "message": "You are in game"
+      "data"   : {
+            id : $game_id
+      }
+  }
+  ```
+<br><br>
+
+### `GET api/games/matchmake/playerwaiting` : renvoi le nombre de joueur en attente dans le matchmake <a id="api-games-matchmake-playerwaiting"></a>
+<br>
+
+> Requête
+
+  ```
+  headers :
+  {
+      "Authorization": Bearer $token
+  }
+  ```
+
+> Reponse
+
+  ```
+  statusCode : 401
+  {
+      "success": "False",
+      "message": "Unautorize",
+  }
+
+  statusCode : 200
+  {
+      "success": "True",
+      "message": "Request successfulld"
+      "data": {
+            "player_waiting" : "2"
+      }
+  }
+  ```
+<br><br>
+
+
+
+
+

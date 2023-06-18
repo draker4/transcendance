@@ -1,7 +1,7 @@
 "use client"
 
 import React, { use } from "react";
-import One_Game from "@/components/logged-in/game/Matchmaking_Game_Infos"
+import One_Game from "@/components/game/Matchmaking_Game_Infos"
 import styles from "@/styles/game/game_list.module.css"
 
 export default function Matchmaking_Game_List({ json }: { json: string }) {

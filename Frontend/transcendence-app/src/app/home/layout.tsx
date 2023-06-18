@@ -5,7 +5,7 @@ import styles from "@/styles/layout/Layout.module.css";
 
 export const metadata = {
   title: 'Logged',
-  description: 'The client is loggeda in',
+  description: 'The client is logged in',
 }
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning={true} >
         <NavbarLogged />
         <div className={styles.main}>
           <ChatServer />

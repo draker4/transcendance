@@ -47,6 +47,7 @@ It is a long established fact that a reader will be distracted by the readable c
 		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile">-&gt; /home/profile (not found)</Link></div>
 		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile/bapt">-&gt; /home/profile/bapt</Link></div>
 		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/profile/yops">-&gt; /home/profile/yops</Link></div>
+		<div style={{ fontSize: '0.9rem' }}><Link style={{ textDecoration: 'none' }} href="/home/game">-&gt; /home/game</Link></div>
 		<br />
 		<div style={{ fontSize: '1.5rem' }}><Link style={{ textDecoration: 'none' }} href={`/home/profile/${profile.login}`}>-&gt; my profile page</Link></div>
       </div>
