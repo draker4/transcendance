@@ -2,16 +2,16 @@ import { useRouter } from "next/navigation";
 
 class Game_Service {
 
-    // private static instance =  Game_Service;
+    private static instance : Game_Service;
     private token: string;
     private router = useRouter();
   
     constructor(token: any) {
         this.token = token;
-        // if (Game_Service.instance) {
-        //     return Game_Service.instance;
-        // }
-        // Game_Service.instance = this;
+        if (Game_Service.instance) {
+            return Game_Service.instance;
+        }
+        Game_Service.instance = this;
     }
   
     //Fait une requette et renvoie la reponse

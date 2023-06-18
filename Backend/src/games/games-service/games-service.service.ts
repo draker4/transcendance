@@ -45,7 +45,7 @@ export class GamesService {
             }
 
             //Creer une game
-            const game_id = await this.CreateGameInDB(req.user.id);
+            const game_id = await this.CreateGameInDB(req.user.id, req.body.game_name, req.body.game_password);
             const Data = {
                 success: true,
                 message: "Game created",
@@ -174,10 +174,31 @@ export class GamesService {
 
             //Renvoi toutes les games Waiting ou InProgress
             const games = await this.GameRepository.find({ where: { Status : "Waiting" || "InProgress" } });
+            //Clean les infos
+            let games_infos = [];
+            for (let i = 0; i < games.length; i++) 
+            {   
+                let game_info = {
+                    uuid            : games[i].uuid,
+                    Name            : games[i].Name,
+                    Password        : true ? games[i].Password != "" : false,
+                    Host            : games[i].Host,
+                    Opponent        : games[i].Opponent,
+                    Viewers_List    : games[i].Viewers_List.length,
+                    Score_Host      : games[i].Score_Host,
+                    Score_Opponent  : games[i].Score_Opponent,
+                    Status          : games[i].Status,
+                    CreatedAt       : games[i].CreatedAt,
+                    Winner          : games[i].Winner,
+                    Loser           : games[i].Loser,
+                }
+                games_infos.push(game_info);
+            }
+
             const Data = {
                 success: true,
                 message: "Request successfulld",
-                data: games
+                data: games_infos,
             };
             return Data;
    
@@ -490,7 +511,8 @@ export class GamesService {
                 const user2 = all_user[1];
                 await this.MatchMakeRepository.remove(user1);
                 await this.MatchMakeRepository.remove(user2);
-                const game_id = await this.CreateGameInDB(user1.Player_Id);
+                // [!] Recuperer les nom des joueurs ( demander draker si on à une fonction sur la table user pour recuperer le nom du joueur)
+                const game_id = await this.CreateGameInDB(user1.Player_Id, user1 + " vs " + user2, "");
                 await this.AddPlayerToGame(game_id, user2.Player_Id);
                 return game_id;
             }
@@ -540,13 +562,13 @@ export class GamesService {
     }
 
     //Creer une game dans la base de donnée
-    async CreateGameInDB(user_id: number): Promise<any> {
+    async CreateGameInDB(user_id: number, Name : string, password : string = ""): Promise<any> {
 
         const gameDTO = new GameDTO(); 
 
         gameDTO.uuid = uuidv4();
-        gameDTO.Name = "Game_" + gameDTO.uuid;
-        gameDTO.Password = "";
+        gameDTO.Name = Name;
+        gameDTO.Password = password;
         gameDTO.Host = user_id;
         gameDTO.Opponent = -1;
         gameDTO.viewersList = [];
