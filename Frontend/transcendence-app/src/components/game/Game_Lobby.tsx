@@ -1,7 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useEffect, useState , useRef} from 'react'
+import { useEffect, useState } from 'react'
 
 //Import les composants
 import Matchmaking_Button from '@/components/game/Matchmaking_Button'
@@ -27,10 +27,9 @@ export default function Game_Lobby({ profile, token }: Props) {
     // const Loaded = useRef(false);
     const [isLoading, setIsLoading] = useState(true);
     const [inGame, setInGame] = useState(false);
-    const [gameId, setGameId] = useState("undefined");   
+    const [gameId, setGameId] = useState("undefined");
     
     let LastSearch = "";
-    const JsonGame = null;
 
     useEffect(() => {
 
@@ -49,25 +48,30 @@ export default function Game_Lobby({ profile, token }: Props) {
             setIsLoading(false);
         });
 
-        // const interval = setInterval(() => {
-        //     //Get la liste des game en cours
-        //     //Update la recherche
-        //     console.log("Refresh game liste");
-        // }, 5000);
-        // return () => clearInterval(interval);
-
     }, []);
 
-    // Defini une fonction qui sera appelee par le composant Matchmaking_Search et affiche dans la console le terme recherche
+    // Fonction qui update la liste des game en fonction de la recherche
     const Update_Game_List = (searchTerm : string) => {
         LastSearch = searchTerm;
-        console.log("Search term : " + LastSearch);
+
+        //Parcours le JSON et ne garde que les game qui match avec la recherche
+        // if (LastSearch != "") {
+        //     JsonGame.filter((item) => item.Name.toLowerCase().includes(LastSearch.toLowerCase()));
+        //     console.log("Search term : " + LastSearch);
+        //     console.log("Search term : " + LastSearch);
+        // }
     };
 
     //Fonction pour quitter la game en cour
     const Quit_Game = async () => {
         await Game.Quit_Game();
         setInGame(false);
+    };
+
+    //Fonction pour rejoindre une game
+    const Create_Game = async (gameId : string) => {
+        //Creer la popus pour les paramettres
+        await Game.Create_Game("test", "test");
     };
 
     //------------------------------------RENDU------------------------------------//
@@ -97,12 +101,12 @@ export default function Game_Lobby({ profile, token }: Props) {
                 <Matchmaking_Search onChangeFct={Update_Game_List}/>
 
                 {/* Liste des game en lobby */}
-                { JsonGame && <Matchmaking_Game_List json={JsonGame} />}
-                { !JsonGame && <div className={styles.loading}>Loading game....</div>}
+                {<Matchmaking_Game_List token={token} />}
+                {/* { JsonGame == "" && <div className={styles.loading}>Loading game....</div>} */}
 
                 {/* Boutons creer ou randomize*/}
                 <div className={styles.button_box}>
-                    <Matchmaking_Button text="Creer une partie" onClick={() => Game.Create_Game("truc", "test")} img="game/check"/>
+                    <Matchmaking_Button text="Creer une partie" onClick={Create_Game} img="game/check"/>
                     <Matchmaking_Button text="Randomize" onClick={Game.Test} img="game/check"/>
                 </div>
             </main>

@@ -24,7 +24,10 @@ type Props = {
 
 export default function Game({ profile, token , gameID}: Props) {
 
+    //Page de chargement 
     //Verifie que la game existe bien et que l'on est dedans
+
+    //bouton quitter la game 
 
     //------------------------------------RENDU------------------------------------//
 

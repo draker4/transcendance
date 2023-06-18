@@ -72,6 +72,15 @@ class Game_Service {
     public async Quit_Game(): Promise<any> {
         await this.FetchData('games/quit' , 'POST');
     }
+
+    //Recupere la liste des game en cours
+    public async Get_Game_List(): Promise<any> {
+        const response = await this.FetchData('games/getall' , 'GET');
+        const data = await response.json();
+        // if (data.success === false)
+        //     return data;
+        return data.data;
+    }
 }
 
 export default Game_Service;
