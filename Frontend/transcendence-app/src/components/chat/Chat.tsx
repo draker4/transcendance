@@ -13,8 +13,9 @@ export default function Chat() {
 	const	[chatOpened, setChatOpened] = useState<boolean>(false);
 	const	[chatFirst, setChatFirst] = useState<boolean>(true);
 	const	[littleScreen, setLittleScreen] = useState<boolean>(true);
-	const	[isClosing, setIsClosing] = useState<boolean>(false);
 	const	[widthStyle, setWidthStyle] = useState<string>("");
+	const	[positionX, setPositionX] = useState(0);
+	const	[positionY, setPositionY] = useState(0);
 	const	segment = useSelectedLayoutSegment();
 	const	bubbleRef = useRef<HTMLDivElement>(null);
 	const	[dragging, setDragging] = useState(false);
@@ -27,10 +28,20 @@ export default function Chat() {
 			const screenWidth = window.innerWidth;
 			setLittleScreen(screenWidth < 800);
 
-			if (screenWidth < 800)
+			if (screenWidth < 800) {
 				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
-			else
+				if (bubbleRef.current) {
+					bubbleRef.current.style.left = `${positionX}px`;
+					bubbleRef.current.style.top = `${positionY}px`;
+				}
+			}
+			else {
 				setWidthStyle("calc(clamp(400px, 35vw, 600px) - 10px)");
+				if (bubbleRef.current) {
+					bubbleRef.current.style.left = "0px";
+					bubbleRef.current.style.top = "0px";
+				}
+			}
 			};
 	
 		handleResize();
@@ -44,30 +55,48 @@ export default function Chat() {
 
 	useEffect(() => {
 		document.documentElement.style.setProperty('--width-style', widthStyle);
-	}, [widthStyle]);
+		document.documentElement.style.setProperty('--position-x', positionX.toString());
+		document.documentElement.style.setProperty('--position-y', positionY.toString());
+	}, [widthStyle, positionX, positionY]);
 
 	const	openChat = () => {
 		
-		setChatFirst(false);
 		
 		if (!littleScreen) {
+			setChatFirst(false);
 			setChatOpened(!chatOpened);
 		}
-		else if (!moving) {
-			if (chatOpened) {
-				setIsClosing(true);
-				setTimeout(() => {
-					setChatOpened(false);
-				}, 500);
+		else if (!moving && bubbleRef.current) {
+			setChatFirst(false);
+			if (!chatOpened) {
+				bubbleRef.current.style.left = "0px";
+				bubbleRef.current.style.top = "0px";
 			}
 			else {
-				setChatOpened(true);
-				setIsClosing(false);
+				bubbleRef.current.style.left = `${positionX}px`;
+				bubbleRef.current.style.top = `${positionY}px`;
 			}
+			setChatOpened(!chatOpened);
 		}
 	}
 
 	useEffect(() => {
+
+		const	canGoX = (x: number): boolean => {
+			if (bubbleRef.current) {
+				const	left = bubbleRef.current.getBoundingClientRect().left;
+				return left + x >= 0 && x + bubbleRef.current.offsetWidth <= window.innerWidth;
+			}
+			return false;
+		}
+
+		const	canGoY = (y: number): boolean => {
+			if (bubbleRef.current) {
+				return y >= 0 && y + offset.y + bubbleRef.current.offsetHeight <= window.innerHeight;
+			}
+			return false;
+		}
+
 		const handleMouseDown = (event: MouseEvent | TouchEvent) => {
 			if (littleScreen && bubbleRef.current) {
 				
@@ -92,15 +121,33 @@ export default function Chat() {
 		const handleMouseMove = (event: MouseEvent | TouchEvent) => {
 			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof MouseEvent) {
 				setMoving(true);
-				bubbleRef.current.style.left = `${event.pageX - offset.x}px`;
-				bubbleRef.current.style.top = `${event.pageY - offset.y}px`;
+				const positionX = event.pageX - offset.x;
+				const positionY = event.pageY - offset.y;
+
+				if (canGoX(positionX)) {
+					bubbleRef.current.style.left = `${positionX}px`;
+					setPositionX(positionX);
+				}
+				if (canGoY(positionY)) {
+					bubbleRef.current.style.top = `${positionY}px`;
+					setPositionY(positionY);
+				}
 			}
 			
 			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof TouchEvent) {
 				event.preventDefault();
 				setMoving(true);
-				bubbleRef.current.style.left = `${event.touches[0].pageX - offset.x}px`;
-				bubbleRef.current.style.top = `${event.touches[0].pageY - offset.y}px`;
+				const positionX = event.touches[0].pageX - offset.x;
+				const positionY = event.touches[0].pageY - offset.y;
+
+				if (canGoX(positionX)) {
+					bubbleRef.current.style.left = `${positionX}px`;
+					setPositionX(positionX);
+				}
+				if (canGoY(positionY)) {
+					bubbleRef.current.style.top = `${positionY}px`;
+					setPositionY(positionY);
+				}
 			}
 		};
 	
@@ -141,24 +188,24 @@ export default function Chat() {
 				<div
 					className={styles.display}
 					ref={bubbleRef}
-					onMouseDown={handleMouseDown}
-					onTouchStart={handleMouseDown}
-					// onMouseMove={handleMouseMove}
-					// onMouseUp={handleMouseUp}
 				>
-					{ (!chatOpened || isClosing) && 
+					{ !chatOpened && 
 						<FontAwesomeIcon
 							icon={faComments}
 							className={styles.menu}
 							onClick={openChat}
+							onMouseDown={handleMouseDown}
+							onTouchStart={handleMouseDown}
 						/>
 					}
 
-					{ chatOpened && !isClosing &&
+					{ chatOpened &&
 						<FontAwesomeIcon
 							icon={faArrowLeft} 
 							className={styles.menu}
 							onClick={openChat}
+							onMouseDown={handleMouseDown}
+							onTouchStart={handleMouseDown}
 						/>
 					}
 				</div>
@@ -171,19 +218,22 @@ export default function Chat() {
 							chatOpened={chatOpened}
 							chatFirst={chatFirst}
 							widthStyle={widthStyle}
-							isClosing={isClosing}
 						/>
 					</div>
 				}
 				{
-					littleScreen && chatOpened &&
-					<div className={isClosing ? styles.close : styles.chatTotalLittle}>
+					littleScreen &&
+					<div className={
+						chatFirst
+						? styles.littleFirst
+						: chatOpened
+						? styles.chatTotalLittle
+						: styles.close}>
 						<ChatBubbles />
 						<ChatMain
 							chatOpened={chatOpened}
 							chatFirst={chatFirst}
 							widthStyle={widthStyle}
-							isClosing={isClosing}
 						/>
 					</div>
 				}

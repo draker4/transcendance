@@ -25,6 +25,10 @@
 	animation-duration: 1s;
 }
 
+.littleFirst {
+	display: none;
+}
+
 .close {
 	position: absolute;
 	padding: 10px 0;
@@ -98,8 +102,18 @@
 	width: 33px;
 	height: 33px;
 	cursor: pointer;
-	/* animation-name: click;
+	-webkit-tap-highlight-color: transparent;
+	touch-action: manipulation;
+	animation-name: click;
 	animation-duration: 0.6s;
 	animation-timing-function: slide-in;
-    animation-iteration-count: 1; */
+    animation-iteration-count: 1;
+}
+
+.menu:hover {
+	scale: 1.05;
+}
+
+.menu:active {
+	scale: 0.95;
 }
