@@ -13,9 +13,9 @@ type Props = {
 	avatar: avatarType;
 }
 
-export default async function AvatarCard({profile, isOwner, avatar} : Props) {
+export default function AvatarCard({profile, isOwner, avatar} : Props) {
 
-	const [displaySettings, setDisplaySettings] = useState<boolean>(true);
+	const [displaySettings, setDisplaySettings] = useState<boolean>(false);
 
 	const fakeClick = () => {
 		console.log("avatar clicked")
@@ -23,8 +23,10 @@ export default async function AvatarCard({profile, isOwner, avatar} : Props) {
 	}
 
 	const toogleDisplaySettings = () => {
-		if (displaySettings)
-			setDisplaySettings(false);
+		// if (displaySettings)
+			// setDisplaySettings(false);
+			setDisplaySettings(!displaySettings);
+			console.log(displaySettings);
 	}
 
 	const colorAddedStyle:CSSProperties = {
