@@ -15,14 +15,16 @@ export default function RootLayout({
 }) {
 
   return (
-    <>
-      <NavbarLogged />
+    <div className={styles.all}>
+      <div className={styles.navbar}>
+        <NavbarLogged />
+      </div>
       <div className={styles.main}>
         <ChatServer />
         <div className={styles.children}>
           { children }
         </div>
       </div>
-    </>
+    </div>
   )
 }

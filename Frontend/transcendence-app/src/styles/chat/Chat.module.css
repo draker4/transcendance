@@ -7,7 +7,6 @@
 	display: flex;
 	justify-content: flex-start;
 	height: calc(100vh - clamp(40px, 5vh, 80px));
-	/* overflow-y: auto; */
 	animation-name: height;
 	animation-duration: 1s;
 }
@@ -36,41 +35,29 @@
 	height: 100%;
 	animation-name: close;
 	animation-duration: 0.8s;
+	opacity: 0;
 }
 
 .display {
 	padding: 10px 0;
 	position: absolute;
-	/* z-index: 10; */
+	z-index: 2;
 	/* border: 1px solid var(--tertiary-color); */
-	border-radius: clamp(60px, 5vw, 80px);
+	border-radius: 10px;
 	width: clamp(60px, 5vw, 80px);
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.round {
-	z-index: 2;
-	cursor: pointer;
-	border: 1px solid var(--secondary-color-lighter1);
-	border-radius: 50px;
-	background-color: var(--primary-color);
-	width: 50px;
-	height: 50px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	line-height: 40px;
-	animation-name: opacity;
-	animation-duration: 0.5s;
-	animation-timing-function: ease-in;
-    animation-iteration-count: 1;
+	user-select: none;
 }
 
 @keyframes close {
 	from {
 		height: calc(100vh - clamp(40px, 5vh, 80px));
+		opacity: 1;
+	}
+	80% {
+		opacity: 0;
 	}
 	to {
 		height: 0;
@@ -80,9 +67,11 @@
 @keyframes height {
 	from {
 		height: 0;
+		opacity: 0;
 	}
 	to {
 		height: calc(100vh - clamp(40px, 5vh, 80px));
+		opacity: 1;
 	}
 }
 

@@ -1,7 +1,10 @@
 .chatBubbles {
 	/* border: 2px solid red; */
 	flex: 1;
-	/* height: 100%; */
+	position: relative;
+	padding-top: clamp(40px, 5vh, 80px);
+	/* top: clamp(40px, 5vh, 80px); */
+	/* height: calc(100% - clamp(40px, 5vh, 80px)); */
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -54,7 +57,7 @@
 	width: 70%;
 	height: 0;
 	border-top: 1px solid var(--secondary-color);
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 .bubbles {

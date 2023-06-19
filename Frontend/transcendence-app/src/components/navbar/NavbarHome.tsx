@@ -5,8 +5,6 @@ import avatarType from "@/types/Avatar.type";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import AvatarUser from "../logged-in/avatarUser/AvatarUser";
 import { deleteCookie } from "cookies-next";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments } from "@fortawesome/free-solid-svg-icons";
 
 export default function NavbarHome({ avatar }: {
 	avatar: avatarType,
