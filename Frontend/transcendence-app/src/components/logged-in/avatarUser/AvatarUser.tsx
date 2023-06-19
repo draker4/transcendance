@@ -1,9 +1,11 @@
 import avatarType from "@/types/Avatar.type"
 import Avatar from "@mui/material/Avatar"
 
-export default function AvatarUser({ avatar, borderSize }: {
+export default function AvatarUser({ avatar, borderSize, backgroundColor, borderColor }: {
 	avatar: avatarType,
 	borderSize: string,
+	backgroundColor: string,
+	borderColor: string,
 }) {
 	
 	return (
@@ -17,8 +19,8 @@ export default function AvatarUser({ avatar, borderSize }: {
 							height: "100%",
 							borderWidth: borderSize,
 							borderStyle: 'solid',
-							borderColor: `${avatar.borderColor}`,
-							backgroundColor: `${avatar.backgroundColor}`,
+							borderColor: `${borderColor}`,
+							backgroundColor: `${backgroundColor}`,
 						}}
 					>
 					</Avatar>
@@ -31,8 +33,8 @@ export default function AvatarUser({ avatar, borderSize }: {
 							height: "100%",
 							borderWidth: borderSize,
 							borderStyle: 'solid',
-							borderColor: `${avatar.borderColor}`,
-							backgroundColor: `${avatar.backgroundColor}`,
+							borderColor: `${borderColor}`,
+							backgroundColor: `${backgroundColor}`,
 						}}
 					>
 						{avatar.text}
