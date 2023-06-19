@@ -1,12 +1,11 @@
+'use client'
+
 import styles from "@/styles/profile/AvatarCard.module.css"
 import Profile from "@/services/Profile.service"
 import Avatar from "./Avatar"
 import ProfileLogin from "./ProfileLogin"
-import { CryptoService } from "@/services/crypto/Crypto.service";
 import avatarType from "@/types/Avatar.type";
-import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
-import { cookies } from "next/dist/client/components/headers";
-import { CSSProperties } from "react";
+import { CSSProperties, useState } from "react";
 
 type Props = {
     profile: Profile;
@@ -14,28 +13,40 @@ type Props = {
 	avatar: avatarType;
 }
 
-const	Crypto = new CryptoService();
-
 export default async function AvatarCard({profile, isOwner, avatar} : Props) {
 
-	const avatarAltValue: string = `player ${profile.login}'s avatar`;
+	const [displaySettings, setDisplaySettings] = useState<boolean>(true);
+
+	const fakeClick = () => {
+		console.log("avatar clicked")
+		// setDisplaySettings(true);
+	}
+
+	const toogleDisplaySettings = () => {
+		if (displaySettings)
+			setDisplaySettings(false);
+	}
 
 	const colorAddedStyle:CSSProperties = {
 	 	backgroundColor: avatar.borderColor,
 	};
 
 
-
   return (
-	<div className={`${styles.avatarCard}`}>
-		<div className={styles.rectangle} style={colorAddedStyle}>
-			
-			<div className={styles.top} style={colorAddedStyle}></div>
-			<div className={styles.bot}></div>
-			
-			<Avatar avatar={avatar}/>
+	<div className={styles.avatarFrame}>
+		<div className={styles.avatarCard}>
+				<div className={styles.rectangle} style={colorAddedStyle}>
+					
+					<div className={styles.top} style={colorAddedStyle}></div>
+					<div className={styles.bot}></div>
+					
+					<Avatar avatar={avatar} onClick={fakeClick}/>
+				</div>
+				<ProfileLogin profile={profile} isOwner={isOwner}/>
 		</div>
-		<ProfileLogin profile={profile} isOwner={isOwner}/>
+		<p>displaySettings value: {displaySettings ? 'ON' : 'OFF'}</p>
+		{displaySettings && <div className={styles.settingsCard}></div>}
+		<button onClick={toogleDisplaySettings}> Crash Button </button>
 	</div>
   )
 }

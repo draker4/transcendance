@@ -20,8 +20,6 @@ export default function ProfileLogin({profile, isOwner} : Props) {
 			<h1>{profile.login}</h1>
 		</div>
 		{isOwner && <EditButton />}
-		{editMode && <input type="color" id="head" name="head"
-           defaultValue="#e66465" /> }
 	</div>
   )
 }
