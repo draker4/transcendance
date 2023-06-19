@@ -1,10 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
 
 @Entity()
 export class Matchmaking {
 
   @PrimaryGeneratedColumn()
-  Player: number;
+  Waiter_Id: number;
+
+  @Column()
+  Player_Id: number;
 
   @CreateDateColumn()
   createdAt: Date;

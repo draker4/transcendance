@@ -1,14 +1,52 @@
+import { useRouter } from "next/navigation";
 
 class Game_Service {
 
-    private static instance: Game_Service;
-
-    constructor() {
+    private static instance : Game_Service;
+    private token: string;
+    private router = useRouter();
+  
+    constructor(token: any) {
+        this.token = token;
         if (Game_Service.instance) {
             return Game_Service.instance;
         }
         Game_Service.instance = this;
     }
+  
+    //Fait une requette et renvoie la reponse
+    public async FetchData(url : string , methode : string, body : any = null){
+        const response = await fetch('http://localhost:4000/api/' + url , {
+            method: methode,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + this.token
+            },
+            body : body
+        });
+
+        if (!response.ok)
+            throw new Error("connexion refused");  
+            
+        return response;
+    }
+
+    //Recupere l'etat du joueur ( in game or not )
+    public async IsInGame(): Promise<any> {
+
+        const response = await this.FetchData('games/isingame' , 'GET');
+        if (response.status === 200) {
+
+            const data = await response.json();
+            if (data.success === true) {
+                return data.data.id
+            };
+            if (data.success === false) {
+                return false;
+            }
+        }
+        return false;
+    }   
 
     //Fonction de test qui console log un message
     public Test(): void {
@@ -17,64 +55,32 @@ class Game_Service {
 
     //Creer une game avec un nom et un mot de passe
     public async Create_Game(game_password: string, game_name: string): Promise<any> {
-        const response = await fetch('api/games/create', {
-            method: 'POST',
-            body: JSON.stringify({ game_password, game_name }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        
-        return response.json();
-    }     
+        const body = JSON.stringify({ game_password, game_name })
+        const response = await this.FetchData('games/create' , 'POST', body);
+        const data = await response.json();
+        const url = 'home/game/' + data.data.id;
+        this.router.push(url);
+    }   
     
-    //Recupere la liste de toutes les games en cours
-    public async Get_Games(): Promise<any> {
-
-        const response = await fetch('api/games/getall', {
-            method: 'GET',
-        });
-        
-        return response.json();
+    //Reprendre la partie en cours
+    public async Resume_Game(gameID : string): Promise<any> {
+        const url = 'home/game/' + gameID;
+        this.router.push(url);
     }
 
-    //Rejoins une partie avec un mot de passe et l'id de la game
-    public async Join(game_password: string, game_id: string): Promise<any> {
-        const response = await fetch('api/games/join', {
-            method: 'POST',
-            body: JSON.stringify({ game_password, game_id}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return response.json();
-    } 
+    //Quit la partie en cours
+    public async Quit_Game(): Promise<any> {
+        await this.FetchData('games/quit' , 'POST');
+    }
 
-    //Quite une partie avec l'id de la game
-    public async Quit(game_id: string): Promise<any> {
-        const response = await fetch('api/games/quit', {
-            method: 'POST',
-            body: JSON.stringify({ game_id}),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        return response.json();
-    }   
-
-
-    //Create Game , creer la game et redirige sur la page de la game
-
-    //Liste game , get une liste des game en attente
-
-    //Chercher game, get la liste avec Listegame , puis filtre dessus
-
-    //Randomize, ajoute le client à la liste du matchmake , creer une socket pour attendre la reposne du server si qqn est la aussi
-
-    //Reprendre la partie, repere dans quel partie etait le joueur , et lui renvoi l'id
-
-    //Quitter la partie , supprime le joueur de la bbd de la game
+    //Recupere la liste des game en cours
+    public async Get_Game_List(): Promise<any> {
+        const response = await this.FetchData('games/getall' , 'GET');
+        const data = await response.json();
+        // if (data.success === false)
+        //     return data;
+        return data.data;
+    }
 }
 
-const GameService = new Game_Service();
-export default GameService;
+export default Game_Service;

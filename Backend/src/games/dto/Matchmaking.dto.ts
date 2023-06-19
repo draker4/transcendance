@@ -4,7 +4,11 @@ export class MatchmakingDTO {
 
   @IsNotEmpty()
   @IsNumber()
-  Player: number;
+  Waiter_Id: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  Player_Id: number;
 
   @IsNotEmpty()
   CreatedAt: Date;

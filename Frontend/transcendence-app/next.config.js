@@ -10,9 +10,9 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://backend:4000/api/:path*',
+        destination: 'http://backend:4000/api/:path*', 
       },
-    ]
+    ];
   },
   env: {
     URL_42: process.env.URL_42,

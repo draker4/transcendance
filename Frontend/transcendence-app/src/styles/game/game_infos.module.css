@@ -2,6 +2,34 @@
 
 
 .game_infos{
-    background-color: brown;
-    color: aliceblue;
+    background-color: rgba(255, 255, 255, 0.733);
+    height: 50px;
+    border-radius: 2px;
+    border : 1px solid black;
+    color: black;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    transition: border 0.3s ease, background-color 0.3s ease, height 0.3s ease;
 }
+
+.game_infos:hover{
+    border: orange 2px solid;
+    background-color: orange;
+    height: 70px;
+}
+
+.infos_list{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.info{
+    width: 20%;
+    padding-left: 5px;
+}
+
