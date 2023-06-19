@@ -11,9 +11,6 @@ export async function middleware(req: NextRequest) {
 		});
 	// console.log(verifiedToken);
 
-
-	// if home/create and login, redirect /home
-
 	if (verifiedToken
 		&& verifiedToken.login
 		&& req.nextUrl.pathname === '/home/create') {
