@@ -15,16 +15,14 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="en">
-      <body suppressHydrationWarning={true} >
-        <NavbarLogged />
-        <div className={styles.main}>
-          <ChatServer />
-          <div className={styles.children}>
-            { children }
-          </div>
+    <>
+      <NavbarLogged />
+      <div className={styles.main}>
+        <ChatServer />
+        <div className={styles.children}>
+          { children }
         </div>
-      </body>
-    </html>
+      </div>
+    </>
   )
 }

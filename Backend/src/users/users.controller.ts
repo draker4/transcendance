@@ -118,9 +118,9 @@ export class UsersController {
 		// };
 	// }
 
-	return {
-		'message': 'story updated successfully '
-	}
+    return {
+      'message': 'story updated successfully '
+    }
   }
 
 
