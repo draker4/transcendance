@@ -3,6 +3,7 @@ import submitStory from "@/lib/profile/edit/submitStory";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
+import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 
 type Props = {
 	profile: Profile;
@@ -22,13 +23,17 @@ export default function StoryEditable({profile, token} : Props) {
 
 	const handleEditedStoryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
 		setEditedStory(event.target.value);
-		event.target.style.height = 'auto';
-		event.target.style.height = event.target.scrollHeight + 'px';
+		// event.target.style.height = 'auto';
+		// event.target.style.height = event.target.scrollHeight + 'px';
 	}
 
 
 	const handleActionStory = async (data: FormData) => {
 		const submitedStory = data.get('story');
+
+		console.log("Submited Story :", submitedStory);
+		if (submitedStory)
+			console.log("SubmitedStory.length() :", submitedStory.length);
 
 		if (typeof submitedStory === 'string') {
 
@@ -45,10 +50,10 @@ export default function StoryEditable({profile, token} : Props) {
 
 				if (response === "") {
 					const updatedProfile = profile;
-					updatedProfile.story = submitedStory;
+					updatedProfile.story = filterBadWords(submitedStory);
 
 					setProf(updatedProfile);
-					setStory(submitedStory);
+					setStory(updatedProfile.story);
 					setEditMode(false);
 				}
 			}
@@ -99,3 +104,7 @@ export default function StoryEditable({profile, token} : Props) {
 	</div>
   )
 }
+function filterBadwords(submitedStory: string): string {
+	throw new Error("Function not implemented.");
+}
+

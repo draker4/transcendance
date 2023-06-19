@@ -36,3 +36,13 @@ Crunchy Team : bboisson tquere bperriol loumarti
 ## Mardi 6 juin
 
 - `loumarti` se jette a l'eau : 13_Profil_User --- > 13B_Overview
+
+## lundi 12 juin
+
+- Bapt m'accompagne dans le front-end pour enregister motto + story
+- travail avec bad-words pour filtrer insultes (le module est present pour le moment en double dans le back + end)
+
+## lundi 19 juin
+
+- correction de crash avec bad-words (necessite un caractere alphanum minimum)
+- 1ers essais avec React-color installe dans le front pour editer l'avatar dans la partie profile
