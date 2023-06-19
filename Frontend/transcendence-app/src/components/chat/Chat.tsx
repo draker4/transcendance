@@ -18,8 +18,8 @@ export default function Chat() {
 	const	segment = useSelectedLayoutSegment();
 	const	bubbleRef = useRef<HTMLDivElement>(null);
 	const	[dragging, setDragging] = useState(false);
+	const	[moving, setMoving] = useState(false);
 	const	[offset, setOffset] = useState({ x: 0, y: 0 });
-	let		topInit = 0;
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -31,10 +31,7 @@ export default function Chat() {
 				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
 			else
 				setWidthStyle("calc(clamp(400px, 35vw, 600px) - 10px)");
-			
-			if (bubbleRef.current)
-				topInit = bubbleRef.current.getBoundingClientRect().top;
-		};
+			};
 	
 		handleResize();
 	
@@ -50,41 +47,60 @@ export default function Chat() {
 	}, [widthStyle]);
 
 	const	openChat = () => {
+		
 		setChatFirst(false);
-		if (littleScreen && chatOpened) {
-			setIsClosing(true);
-			setTimeout(() => {
-				setChatOpened(false);
-			}, 500);
-		}
-		else {
+		
+		if (!littleScreen) {
 			setChatOpened(!chatOpened);
-			setIsClosing(false);
+		}
+		else if (!moving) {
+			if (chatOpened) {
+				setIsClosing(true);
+				setTimeout(() => {
+					setChatOpened(false);
+				}, 500);
+			}
+			else {
+				setChatOpened(true);
+				setIsClosing(false);
+			}
 		}
 	}
 
 	useEffect(() => {
-		const handleMouseDown = (event: MouseEvent) => {
-			if (bubbleRef.current) {
+		const handleMouseDown = (event: MouseEvent | TouchEvent) => {
+			if (littleScreen && bubbleRef.current) {
 				
 				const	parent = bubbleRef.current.parentElement;
 
-				if (parent) {
+				if (parent && event instanceof MouseEvent) {
 					const rect = bubbleRef.current.getBoundingClientRect();
 					const offsetX = event.pageX - rect.left;
 					const offsetY = event.pageY - rect.top + parent.getBoundingClientRect().top;
 					setOffset({ x: offsetX, y: offsetY });
 				}
+
+				if (parent && event instanceof TouchEvent) {
+					const rect = bubbleRef.current.getBoundingClientRect();
+					const offsetX = event.touches[0].pageX - rect.left;
+					const offsetY = event.touches[0].pageY - rect.top + parent.getBoundingClientRect().top;
+					setOffset({ x: offsetX, y: offsetY });
+				}
 			}
 		};
 	
-		const handleMouseMove = (event: MouseEvent) => {
-			// console.log(event.pageY);
-			if (dragging && bubbleRef.current) {
+		const handleMouseMove = (event: MouseEvent | TouchEvent) => {
+			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof MouseEvent) {
+				setMoving(true);
 				bubbleRef.current.style.left = `${event.pageX - offset.x}px`;
-				bubbleRef.current.style.top = `${event.pageY - offset.y - topInit}px`;
-				// console.log(event.clientX, offset.y, topInit);
-				// console.log(bubbleRef.current.style.top);
+				bubbleRef.current.style.top = `${event.pageY - offset.y}px`;
+			}
+			
+			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof TouchEvent) {
+				event.preventDefault();
+				setMoving(true);
+				bubbleRef.current.style.left = `${event.touches[0].pageX - offset.x}px`;
+				bubbleRef.current.style.top = `${event.touches[0].pageY - offset.y}px`;
 			}
 		};
 	
@@ -96,15 +112,25 @@ export default function Chat() {
 		window.addEventListener('mousemove', handleMouseMove);
 		window.addEventListener('mouseup', handleMouseUp);
 	
+		window.addEventListener('touchstart', handleMouseDown, { passive: false });
+		window.addEventListener('touchmove', handleMouseMove, { passive: false });
+		window.addEventListener('touchend', handleMouseUp);
+	
 		return () => {
 		  window.removeEventListener('mousedown', handleMouseDown);
 		  window.removeEventListener('mousemove', handleMouseMove);
 		  window.removeEventListener('mouseup', handleMouseUp);
+
+		  window.removeEventListener('touchstart', handleMouseDown);
+		  window.removeEventListener('touchmove', handleMouseMove);
+		  window.removeEventListener('touchend', handleMouseUp);
 		};
 	}, [dragging, offset]);
 
 	const	handleMouseDown = () => {
-		setDragging(true);
+		if (littleScreen)
+			setDragging(true);
+		setMoving(false);
 	}
 
 	return (
@@ -116,6 +142,7 @@ export default function Chat() {
 					className={styles.display}
 					ref={bubbleRef}
 					onMouseDown={handleMouseDown}
+					onTouchStart={handleMouseDown}
 					// onMouseMove={handleMouseMove}
 					// onMouseUp={handleMouseUp}
 				>
