@@ -2,6 +2,7 @@ import React from "react";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import Theme from "@/components/theme/Theme";
+// import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className} suppressHydrationWarning={true}>
         {children}
         <Theme />
+        {/* <ScrollBtn /> */}
       </body>
     </html>
   );
