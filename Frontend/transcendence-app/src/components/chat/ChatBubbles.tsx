@@ -18,6 +18,9 @@ export default function ChatBubbles() {
 					<Avatar className={styles.bubble} variant="rounded"></Avatar>
 					<Avatar className={styles.bubble} variant="rounded"></Avatar>
 					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
+					<Avatar className={styles.bubble} variant="rounded"></Avatar>
 				</div>
 
 				<div className={styles.middleLine}></div>

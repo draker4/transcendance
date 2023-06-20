@@ -26,9 +26,9 @@ export default function Chat() {
 		const handleResize = () => {
 
 			const screenWidth = window.innerWidth;
-			setLittleScreen(screenWidth < 800);
+			setLittleScreen(screenWidth < 1600);
 
-			if (screenWidth < 800) {
+			if (screenWidth < 1600) {
 				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
 				if (bubbleRef.current) {
 					bubbleRef.current.style.left = `${positionX}px`;
@@ -36,7 +36,7 @@ export default function Chat() {
 				}
 			}
 			else {
-				setWidthStyle("calc(clamp(400px, 35vw, 600px) - 10px)");
+				setWidthStyle("calc(clamp(600px, 35vw, 1000px) - 10px)");
 				if (bubbleRef.current) {
 					bubbleRef.current.style.left = "0px";
 					bubbleRef.current.style.top = "0px";
@@ -97,48 +97,25 @@ export default function Chat() {
 			return false;
 		}
 
-		const handleMouseDown = (event: MouseEvent | TouchEvent) => {
+		const handleMouseDown = (event: any) => {
 			if (littleScreen && bubbleRef.current) {
 				
 				const	parent = bubbleRef.current.parentElement;
 
-				if (parent && event instanceof MouseEvent) {
+				if (parent) {
 					const rect = bubbleRef.current.getBoundingClientRect();
-					const offsetX = event.pageX - rect.left;
-					const offsetY = event.pageY - rect.top + parent.getBoundingClientRect().top;
-					setOffset({ x: offsetX, y: offsetY });
-				}
-
-				if (parent && event instanceof TouchEvent) {
-					const rect = bubbleRef.current.getBoundingClientRect();
-					const offsetX = event.touches[0].pageX - rect.left;
-					const offsetY = event.touches[0].pageY - rect.top + parent.getBoundingClientRect().top;
+					const offsetX = event.touches ? event.touches[0].pageX - rect.left : event.pageX - rect.left;
+					const offsetY = event.touches ? event.touches[0].pageY - rect.top + parent.getBoundingClientRect().top : event.pageY - rect.top + parent.getBoundingClientRect().top;
 					setOffset({ x: offsetX, y: offsetY });
 				}
 			}
 		};
 	
-		const handleMouseMove = (event: MouseEvent | TouchEvent) => {
-			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof MouseEvent) {
+		const handleMouseMove = (event: any) => {
+			if (littleScreen && !chatOpened && dragging && bubbleRef.current) {
 				setMoving(true);
-				const positionX = event.pageX - offset.x;
-				const positionY = event.pageY - offset.y;
-
-				if (canGoX(positionX)) {
-					bubbleRef.current.style.left = `${positionX}px`;
-					setPositionX(positionX);
-				}
-				if (canGoY(positionY)) {
-					bubbleRef.current.style.top = `${positionY}px`;
-					setPositionY(positionY);
-				}
-			}
-			
-			if (littleScreen && !chatOpened && dragging && bubbleRef.current && event instanceof TouchEvent) {
-				event.preventDefault();
-				setMoving(true);
-				const positionX = event.touches[0].pageX - offset.x;
-				const positionY = event.touches[0].pageY - offset.y;
+				const positionX = event.touches ? event.touches[0].pageX - offset.x : event.pageX - offset.x;
+				const positionY = event.touches ? event.touches[0].pageY - offset.y : event.pageY - offset.y;
 
 				if (canGoX(positionX)) {
 					bubbleRef.current.style.left = `${positionX}px`;
