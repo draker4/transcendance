@@ -7,6 +7,7 @@ import ProfileLogin from "./ProfileLogin"
 import avatarType from "@/types/Avatar.type";
 import { CSSProperties, useState } from "react";
 import SettingsCard from "./SettingsCard"
+import { Color, ColorChangeHandler, ColorResult } from "react-color"
 
 type Props = {
     profile: Profile;
@@ -17,14 +18,29 @@ type Props = {
 export default function AvatarCard({profile, isOwner, avatar} : Props) {
 
 	const [displaySettings, setDisplaySettings] = useState<boolean>(false);
+	const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
+
 
 	const toogleDisplaySettings = () => {
-			setDisplaySettings(!displaySettings);
+			
+		if (displaySettings === true)
+			cancelColorChanges();
+		setDisplaySettings(!displaySettings);
+
 	}
 
 	const colorAddedStyle:CSSProperties = {
-	 	backgroundColor: avatar.borderColor,
+	 	backgroundColor: topColor.toString(),
 	};
+
+
+	const previewChangeColor: ColorChangeHandler = (color:ColorResult) => {
+		setTopColor(color.hex);
+	}
+
+	const cancelColorChanges = () => {
+		setTopColor(avatar.borderColor);
+	}
 
 
   return (
@@ -35,11 +51,14 @@ export default function AvatarCard({profile, isOwner, avatar} : Props) {
 					<div className={styles.top} style={colorAddedStyle}></div>
 					<div className={styles.bot}></div>
 					
-					<Avatar avatar={avatar} onClick={toogleDisplaySettings} displaySettings={displaySettings}/>
+					<Avatar avatar={avatar}
+							onClick={toogleDisplaySettings}
+							displaySettings={displaySettings}
+							previewBorder={topColor.toString()} />
 				</div>
 				<ProfileLogin profile={profile} isOwner={isOwner}/>
 		</div>
-		{displaySettings && <SettingsCard />}
+		{displaySettings && <SettingsCard previewChangeColor={previewChangeColor}/>}
 	</div>
   )
 }
