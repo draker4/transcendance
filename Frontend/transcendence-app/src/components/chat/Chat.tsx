@@ -26,9 +26,9 @@ export default function Chat() {
 		const handleResize = () => {
 
 			const screenWidth = window.innerWidth;
-			setLittleScreen(screenWidth < 800);
+			setLittleScreen(screenWidth < 1600);
 
-			if (screenWidth < 800) {
+			if (screenWidth < 1600) {
 				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
 				if (bubbleRef.current) {
 					bubbleRef.current.style.left = `${positionX}px`;
@@ -36,7 +36,7 @@ export default function Chat() {
 				}
 			}
 			else {
-				setWidthStyle("calc(clamp(400px, 35vw, 600px) - 10px)");
+				setWidthStyle("calc(clamp(600px, 35vw, 1000px) - 10px)");
 				if (bubbleRef.current) {
 					bubbleRef.current.style.left = "0px";
 					bubbleRef.current.style.top = "0px";
