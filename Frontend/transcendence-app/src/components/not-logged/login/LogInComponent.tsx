@@ -139,7 +139,7 @@ export default function LogInComponent() {
 	return (
 		<div className={styles.main}>
 			<p className={styles.title}>Connection / Inscription</p>
-			<p>Enter your email to log in or register your account</p>
+			<p className={styles.subtitle}>Enter your email to log in or register your account</p>
 			<div className={styles.box}>
 
 				<form action={handleAction} className={styles.form}>

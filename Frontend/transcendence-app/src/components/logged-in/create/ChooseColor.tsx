@@ -5,7 +5,7 @@ export default function ChooseColor({ onSelect }: {
 		onSelect: (color: string) => void,
 	}) {
 
-	const	[colorClass, setColorClass] = useState<string>('var(--accent-color)');
+	const	[colorClass, setColorClass] = useState<string>('var(--accent)');
 
 	const	handleSelect = (color: string) => {
 		setColorClass(color);
@@ -14,9 +14,9 @@ export default function ChooseColor({ onSelect }: {
 
 	return (
 		<div className={styles.main}>
-			<div className={`${styles.cercle} ${colorClass === "var(--accent-color)" ? styles.selected : ""}`} 
-				style={{backgroundColor: "var(--accent-color)",}}
-				onClick={() => handleSelect("var(--accent-color)")}
+			<div className={`${styles.cercle} ${colorClass === "var(--accent)" ? styles.selected : ""}`} 
+				style={{backgroundColor: "var(--accent)",}}
+				onClick={() => handleSelect("var(--accent)")}
 			></div>
 			<div className={`${styles.cercle} ${colorClass === "#cdb4db" ? styles.selected : ""}`}
 				style={{backgroundColor: "#cdb4db",}}

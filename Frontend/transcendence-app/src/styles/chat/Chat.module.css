@@ -1,14 +1,14 @@
 .chatTotalBig {
-  position: inline;
-  /* border: 1px solid black; */
-  padding: 10px 0;
-  padding-right: 10px;
-  width: auto;
-  display: flex;
-  justify-content: flex-start;
-  height: calc(100vh - clamp(40px, 5vh, 80px));
-  animation-name: height;
-  animation-duration: 1s;
+	/* position: inline; */
+	/* border: 1px solid black; */
+	padding: 10px 0;
+	padding-right: 10px;
+	width: auto;
+	display: flex;
+	justify-content: flex-start;
+	height: calc(100vh - clamp(40px, 5vh, 80px));
+	animation-name: height;
+	animation-duration: 1s;
 }
 
 .chatTotalLittle {

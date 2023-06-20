@@ -1,10 +1,7 @@
 import React from "react";
-import { Inter } from "next/font/google";
-import "@/styles/globals.css";
 import Theme from "@/components/theme/Theme";
-// import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
-
-const inter = Inter({ subsets: ["latin"] });
+// import ScrollBtn from "@/components/scrollBtn/ScrollBtn";;
+import "@/styles/globals.css";
 
 export const metadata = {
   title: "Transcendence",
@@ -19,7 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>
+      {/* <body className={inter.className} suppressHydrationWarning={true}> */}
+      <body>
         {children}
         <Theme />
         {/* <ScrollBtn /> */}

@@ -2,6 +2,7 @@ import React from "react";
 import { Inter } from "next/font/google"
 import "@/styles/globals.css"
 import NavbarWelcome from "@/components/navbar/NavbarWelcome";
+import styles from "@/styles/layout/LayoutWelcome.module.css";
 
 const	inter = Inter({ subsets: ['latin'] });
 
@@ -16,9 +17,13 @@ export default function RootLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<>
-			<NavbarWelcome />
-			{children}
-		</>
+		<div className={styles.all}>
+			<div className={styles.navbar}>
+				<NavbarWelcome />
+			</div>
+			<div className={styles.children}>
+				{ children }
+			</div>
+		</div>
 	);
 }

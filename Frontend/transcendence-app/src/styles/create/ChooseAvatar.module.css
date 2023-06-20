@@ -1,18 +1,17 @@
 .main {
-  /* border: 1px solid red; */
-  width: 80%;
-  display: flex;
-  overflow-x: auto;
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-  justify-content: flex-start;
-  scrollbar-color: var(--accent);
-  padding-bottom: 10px;
+	width: clamp(200px, 80vw, 2000px);
+	display: flex;
+	overflow-x: auto;
+	margin: auto;
+	padding: 20px;
+	justify-content: flex-start;
+	scrollbar-color: var(--accent);
+	padding-bottom: clamp(10px, 3vh, 60px);
+	padding-top: clamp(0px, 2vh, 40px);
 }
 
 .main::-webkit-scrollbar {
-  height: 2px;
+    height: 20px;
 }
 
 .main::-webkit-scrollbar-track {
@@ -24,10 +23,10 @@
 }
 
 .avatar {
-  flex: 0 0 auto;
-  width: 80px;
-  height: 80px;
-  margin: 0 10px;
+	flex: 0 0 auto;
+	width: clamp(60px, 8vh, 150px);
+	height: auto;
+	margin: 0 10px;
 }
 
 .avatar:first-child {
@@ -43,5 +42,6 @@
 }
 
 .chooseColor {
-  padding-top: 10px;
+	/* border: 1px solid green; */
+	padding-top: clamp(10px, 1vh, 30px);
 }
