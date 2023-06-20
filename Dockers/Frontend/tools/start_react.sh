@@ -25,7 +25,8 @@ if [ ! -d "/app/transcendence-app" ]; then
         @fortawesome/react-fontawesome \
 		react-color \
         @types/react-color \
-		bad-words
+		bad-words \
+        react-icons/md
 
     echo "Next project created"
 fi

@@ -41,15 +41,15 @@
 
   /* COLOR DEFINES SET2 - DARK*/
 
-  --primary-color-dark: rgb(25, 25, 25);
-  --primary-color-darker1-dark: rgb(23, 23, 24);
+  --primary-color-dark: rgba(254, 254, 254, 1);
+  --primary-color-darker1-dark: rgba(241, 245, 249, 1);
 
-  --secondary-color-dark: rgb(152, 165, 180);
-  --secondary-color-lighter1-dark: rgb(138, 144, 155);
-  --secondary-color-lighter2-dark: rgb(98, 103, 111);
-  --secondary-color-lighter3-dark: rgb(58, 62, 66);
+  --secondary-color-dark: rgba(100, 116, 139, 1);
+  --secondary-color-lighter1-dark: rgb(116, 135, 161);
+  --secondary-color-lighter2-dark: rgb(131, 153, 184);
+  --secondary-color-lighter3-dark: rgb(158, 183, 218);
 
-  --tertiary-color-dark: rgb(200, 203, 210);
+  --tertiary-color-dark: rgba(15, 23, 42, 1);
 
   --accent-color-dark: rgba(34, 211, 238, 1);
   --accent-color-lighter1-dark: rgb(159, 225, 236);

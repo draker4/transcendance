@@ -1,0 +1,29 @@
+.slider {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 6px;
+  margin: 15px auto;
+}
+
+.sliderThumb {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  background: #ffffff;
+  border: 3px solid var(--primary);
+  position: absolute;
+  border-radius: 100%;
+}
+
+.sliderTrack {
+  height: 24px;
+  background-color: var(bg-1);
+  border-radius: 6px;
+}

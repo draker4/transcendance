@@ -1,24 +1,27 @@
 import React from "react";
-import { Inter } from "next/font/google"
-import "@/styles/globals.css"
+import { Inter } from "next/font/google";
+import "@/styles/globals.css";
+import Theme from "@/components/theme/Theme";
 
-const	inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: "Transcendence",
-	description: "Transcendence is a multiplayer game where you can play with your friends and chat with them."
-}
+  title: "Transcendence",
+  description:
+    "Transcendence is a multiplayer game where you can play with your friends and chat with them.",
+};
 
 export default function RootLayout({
-	children,
+  children,
 }: {
-	children: React.ReactNode
+  children: React.ReactNode;
 }) {
-	return (
-		<html lang="en">
-			<body className={inter.className} suppressHydrationWarning={true}>
-				{children}
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en">
+      <body className={inter.className} suppressHydrationWarning={true}>
+        {children}
+        <Theme />
+      </body>
+    </html>
+  );
 }

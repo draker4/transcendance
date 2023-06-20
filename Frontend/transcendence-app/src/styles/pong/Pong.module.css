@@ -1,0 +1,20 @@
+.pong {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 90%;
+  height: 90%;
+  max-width: 1000px;
+}
+
+.canvasContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvas {
+  width: 100%;
+}
