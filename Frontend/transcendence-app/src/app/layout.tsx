@@ -1,6 +1,7 @@
 import React from "react";
 import Theme from "@/components/theme/Theme";
-import "@/styles/globals.css"
+// import ScrollBtn from "@/components/scrollBtn/ScrollBtn";;
+import "@/styles/globals.css";
 
 export const metadata = {
   title: "Transcendence",
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         {children}
         <Theme />
+        {/* <ScrollBtn /> */}
       </body>
     </html>
   );
