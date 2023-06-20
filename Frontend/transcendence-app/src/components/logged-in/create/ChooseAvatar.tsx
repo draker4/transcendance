@@ -14,8 +14,8 @@ export default function ChooseAvatar({ selectBorder, selectBackground, selectAva
 	avatars: string[]
 }) {
 	
-	const	[colorBorder, setColorBorder] = useState('var(--accent-color)');
-	const	[backgroundColor, setBackgroundColor] = useState('var(--accent-color)');
+	const	[colorBorder, setColorBorder] = useState('var(--accent)');
+	const	[backgroundColor, setBackgroundColor] = useState('var(--accent)');
 	const	[selectedAvatar, setSelectedAvatar] = useState<string>("empty");
 
 	const	handleBorder = (color: string) => {

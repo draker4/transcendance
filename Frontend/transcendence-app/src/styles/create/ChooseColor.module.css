@@ -10,15 +10,15 @@
 }
 
 .main::-webkit-scrollbar {
-    height: 2px;
+  height: 2px;
 }
 
 .main::-webkit-scrollbar-track {
-	display: none;
+  display: none;
 }
 
 .main::-webkit-scrollbar-thumb {
-	background-color: var(--accent-color);
+  background-color: var(--accent);
 }
 
 .cercle {
@@ -30,13 +30,13 @@
 }
 
 .cercle:first-child {
-	margin-left: auto;
+  margin-left: auto;
 }
 
 .cercle:last-child {
-	margin-right: auto;
+  margin-right: auto;
 }
 
 .cercle.selected {
-	box-shadow: 0 0 10px 2px var(--accent-color-opacity);
+  box-shadow: 0 0 10px 2px var(--accent-opacity);
 }

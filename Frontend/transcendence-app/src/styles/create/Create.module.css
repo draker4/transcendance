@@ -49,7 +49,7 @@
 	margin-top: 20px;
 	outline: none;
 	border: none;
-	border-bottom: 1px solid var(--secondary-color);
+	border-bottom: 1px solid var(--secondary);
 	color: var(--tertiary-color);
 	letter-spacing: 1px;
 	/* border: 1px solid red; */
@@ -87,7 +87,7 @@
 .main button {
 	outline: none;
 	border: none;
-	background-color: var(--accent-color);
+	background-color: var(--accent);
 	padding: 5px;
 	border-radius: 2px;
 	letter-spacing: 1px;
@@ -96,9 +96,9 @@
 }
 
 .main button:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .main button:active {
-	scale: 0.95;
+  scale: 0.95;
 }

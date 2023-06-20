@@ -20,8 +20,8 @@ export default function FormLogin({ avatars, token }: {
 	const	avatarChosenRef = useRef<avatarType>({
 		image: "",
 		variant: "circular",
-		borderColor: "var(--accent-color)",
-		backgroundColor: "var(--accent-color)",
+		borderColor: "var(--accent)",
+		backgroundColor: "var(--accent)",
 		text: "",
 		empty: true,
 		login: "",

@@ -7,24 +7,64 @@ import ProfileLogin from "./ProfileLogin"
 import avatarType from "@/types/Avatar.type";
 import { CSSProperties, useState } from "react";
 import SettingsCard from "./SettingsCard"
+import { Color, ColorChangeHandler, ColorResult } from "react-color"
+import submitAvatarColors from "@/lib/avatar/submitAvatarColors"
 
 type Props = {
-    profile: Profile;
+	profile: Profile;
 	isOwner: boolean;
 	avatar: avatarType;
+	token:string;
 }
 
-export default function AvatarCard({profile, isOwner, avatar} : Props) {
+export default function AvatarCard({profile, isOwner, avatar, token} : Props) {
 
 	const [displaySettings, setDisplaySettings] = useState<boolean>(false);
+	const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
+	const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
+	const [selectedArea, setSelectedArea] = useState<'border'|'background'>('border');
+
+	const handleArea = (event: React.MouseEvent<HTMLElement>, newArea: 'border' | 'background' | null) => {
+		if (newArea)
+			setSelectedArea(newArea);
+	}
 
 	const toogleDisplaySettings = () => {
-			setDisplaySettings(!displaySettings);
+		if (displaySettings === true)
+			cancelColorChange();
+		setDisplaySettings(!displaySettings);
+	}
+
+	const saveColorChanges = async () => {
+		// [!] ici envoyer les updates color au back
+		// verif si il y a eut un changement avant ?
+
+		const response = await submitAvatarColors(topColor.toString(), botColor.toString(), token)
+
+		avatar.borderColor = topColor.toString();
+		avatar.backgroundColor = botColor.toString();
+		setDisplaySettings(false);
 	}
 
 	const colorAddedStyle:CSSProperties = {
-	 	backgroundColor: avatar.borderColor,
+	 	backgroundColor: topColor.toString(),
 	};
+
+
+	const previewChangeTopColor: ColorChangeHandler = (color:ColorResult) => {
+		setTopColor(color.hex);
+	}
+
+
+	const previewChangeBotColor: ColorChangeHandler = (color:ColorResult) => {
+		setBotColor(color.hex);
+	}
+
+	
+	const cancelColorChange = () => {
+		setTopColor(avatar.borderColor);
+		setBotColor(avatar.backgroundColor);
+	}
 
 
   return (
@@ -35,11 +75,22 @@ export default function AvatarCard({profile, isOwner, avatar} : Props) {
 					<div className={styles.top} style={colorAddedStyle}></div>
 					<div className={styles.bot}></div>
 					
-					<Avatar avatar={avatar} onClick={toogleDisplaySettings} displaySettings={displaySettings}/>
+					<Avatar avatar={avatar}
+							onClick={toogleDisplaySettings}
+							displaySettings={displaySettings}
+							previewBorder={topColor.toString()}
+							previewBackground={botColor.toString()} />
 				</div>
 				<ProfileLogin profile={profile} isOwner={isOwner}/>
 		</div>
-		{displaySettings && <SettingsCard />}
+		{displaySettings && <SettingsCard 
+				previewChangeTopColor={previewChangeTopColor}
+				previewChangeBotColor={previewChangeBotColor}
+				handleArea={handleArea} 
+				selectedArea={selectedArea}
+				toogleDisplaySettings={toogleDisplaySettings}
+				saveColorChanges={saveColorChanges}
+				/>}
 	</div>
   )
 }

@@ -8,9 +8,11 @@ type Props = {
     avatar: avatarType;
 	onClick: () => void;
 	displaySettings: boolean;
+	previewBorder: string;
+	previewBackground:string;
 }
 
-export default function Avatar({avatar, onClick, displaySettings } : Props) {
+export default function Avatar({avatar, onClick, displaySettings, previewBorder, previewBackground } : Props) {
 
 	return (
 		<div className={styles.avatar}>
@@ -21,10 +23,10 @@ export default function Avatar({avatar, onClick, displaySettings } : Props) {
 					backgroundColor={avatar.backgroundColor} 
 					borderColor={avatar.borderColor} />}
 				{displaySettings && <AvatarUser 
-						avatar={avatar}
-						borderSize="clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem)" 
-						backgroundColor="#6F3EBA" 
-						borderColor="#2A7E97"/>}
+					avatar={avatar}
+					borderSize="clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem)" 
+					backgroundColor={previewBackground} 
+					borderColor={previewBorder}/>}
 			</div>
 		</div>
 	)

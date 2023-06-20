@@ -5,7 +5,7 @@
 	margin: auto;
 	padding: 20px;
 	justify-content: flex-start;
-	scrollbar-color: var(--accent-color);
+	scrollbar-color: var(--accent);
 	padding-bottom: clamp(10px, 3vh, 60px);
 	padding-top: clamp(0px, 2vh, 40px);
 }
@@ -15,11 +15,11 @@
 }
 
 .main::-webkit-scrollbar-track {
-	display: none;
+  display: none;
 }
 
 .main::-webkit-scrollbar-thumb {
-	background-color: var(--accent-color);
+  background-color: var(--accent);
 }
 
 .avatar {
@@ -30,15 +30,15 @@
 }
 
 .avatar:first-child {
-	margin-left: auto;
+  margin-left: auto;
 }
 
 .avatar:last-child {
-	margin-right: auto;
+  margin-right: auto;
 }
 
 .avatar.selected {
-	box-shadow: 0 0 20px 1px var(--secondary-color);
+  box-shadow: 0 0 20px 1px var(--secondary);
 }
 
 .chooseColor {

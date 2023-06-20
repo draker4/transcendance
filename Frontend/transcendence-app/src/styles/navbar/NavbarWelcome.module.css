@@ -1,6 +1,6 @@
 .main {
 	/* border-style: dotted; */
-	background-color: var(--primary-color);
+	background-color: var(--primary);
 	position: fixed;
 	top: 0;
 	z-index: 1;
@@ -33,11 +33,11 @@
 }
 
 .main img:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .main img:active {
-	scale: 0.95;
+  scale: 0.95;
 }
 
 .main button {
@@ -46,10 +46,10 @@
 	font-weight: bold;
 	text-transform: uppercase;
 	letter-spacing: 1px;
-	background-color: var(--accent-color);
+	background-color: var(--accent);
 	border-radius: 2px;
 	border: none;
-	color: var(--tertiary-color);
+	color: var(--tertiary);
 	text-align: center;
 	text-decoration: none;
 	cursor: pointer;
@@ -65,9 +65,9 @@
 }
 
 .main button:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .main button:active {
-	scale: 0.95;
+  scale: 0.95;
 }
