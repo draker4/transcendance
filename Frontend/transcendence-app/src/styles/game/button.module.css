@@ -1,33 +1,33 @@
 .home_button {
-    display: flex;
-    align-items: center;
-    width: 200px;
-    flex-direction: column;
-    border-radius: 5px;
-    background: #ffffff;
-    transition: 0.1s ease-in-out;
-    padding: 10px;
-    margin: 10px;
-    border: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  width: 200px;
+  flex-direction: column;
+  border-radius: 5px;
+  background: var(--primary);
+  transition: 0.1s ease-in-out;
+  padding: 10px;
+  margin: 10px;
+  border: 3px solid transparent;
 }
 
 .home_button img {
-    height: 50px;
-    width: auto;
-    margin-bottom: 20px;
+  height: 50px;
+  width: auto;
+  margin-bottom: 20px;
 }
 
 .home_button p {
-    font-size: 14px;
-    font-weight: 600;
-    color: #000000;
-    margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tertiary);
+  margin: 0;
 }
 
 .home_button:hover {
-    box-shadow: 0px 0px 10px 0px #00000040;
-    transform: scale(1.1);
-    cursor: pointer;
-    z-index: 1;
-    border: 3px solid orangered;
+  box-shadow: 0px 0px 10px 0px var(--tertiary);
+  transform: scale(1.1);
+  cursor: pointer;
+  z-index: 1;
+  border: 3px solid orangered;
 }

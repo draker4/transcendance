@@ -17,15 +17,16 @@
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: var(--primary);
-  background-color: var(--bg-2);
-  border: 3px solid var(--bg-3);
+  color: var(--accent);
+  background-color: var(--primary-darker);
+  border: 3px solid var(--accent);
   transition: all 0.3s ease-in;
+  margin-top: 20px;
 }
 
 .save:hover {
   color: var(--black-2);
-  border: 3px solid var(--black-2);
+  border: 3px solid var(--accent-lighter1);
 }
 
 .save:checked {

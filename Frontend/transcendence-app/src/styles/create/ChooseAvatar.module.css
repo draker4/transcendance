@@ -1,47 +1,47 @@
 .main {
-	/* border: 1px solid red; */
-	width: 80%;
-	display: flex;
-	overflow-x: auto;
-	max-width: 600px;
-	margin: auto;
-	padding: 20px;
-	justify-content: flex-start;
-	scrollbar-color: var(--accent-color);
-	padding-bottom: 10px;
+  /* border: 1px solid red; */
+  width: 80%;
+  display: flex;
+  overflow-x: auto;
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  justify-content: flex-start;
+  scrollbar-color: var(--accent);
+  padding-bottom: 10px;
 }
 
 .main::-webkit-scrollbar {
-    height: 2px;
+  height: 2px;
 }
 
 .main::-webkit-scrollbar-track {
-	display: none;
+  display: none;
 }
 
 .main::-webkit-scrollbar-thumb {
-	background-color: var(--accent-color);
+  background-color: var(--accent);
 }
 
 .avatar {
-	flex: 0 0 auto;
-	width: 80px;
-	height: 80px;
-	margin: 0 10px;
+  flex: 0 0 auto;
+  width: 80px;
+  height: 80px;
+  margin: 0 10px;
 }
 
 .avatar:first-child {
-	margin-left: auto;
+  margin-left: auto;
 }
 
 .avatar:last-child {
-	margin-right: auto;
+  margin-right: auto;
 }
 
 .avatar.selected {
-	box-shadow: 0 0 20px 1px var(--secondary-color);
+  box-shadow: 0 0 20px 1px var(--secondary);
 }
 
 .chooseColor {
-	padding-top: 10px;
+  padding-top: 10px;
 }

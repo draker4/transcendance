@@ -14,12 +14,13 @@
   align-items: center;
   width: 35px;
   height: 35px;
-  border-radius: 50%;
-  border: 3px solid var(--accent-color);
-  background-color: var(--primary-color-darker1);
+  border-radius: 100%;
+  color: var(--secondary);
+  border: 3px solid var(--accent);
+  background-color: var(--primary-darker1);
   font-size: 22px;
 }
 
 .theme button:hover {
-  border: 3px solid var(--accent-color-darker1);
+  border: 3px solid var(--accent-darker1);
 }

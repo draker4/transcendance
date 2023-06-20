@@ -12,6 +12,7 @@ export default function Pong({ pong }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    canvasRef.current!.focus();
     const game = initGame(canvasRef.current!, pong);
 
     console.log(game);

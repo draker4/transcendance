@@ -4,13 +4,13 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  reactStrictMode: true,
-  distDir: 'build',
+  // reactStrictMode: true,
+  distDir: "build",
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://backend:4000/api/:path*', 
+        source: "/api/:path*",
+        destination: "http://backend:4000/api/:path*",
       },
     ];
   },
@@ -23,8 +23,7 @@ const nextConfig = {
     CRYPTO_KEY: process.env.CRYPTO_KEY,
     WEBSITE_KEY: process.env.WEBSITE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
-  }
+  },
 };
-  
+
 module.exports = nextConfig;
-  

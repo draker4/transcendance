@@ -1,77 +1,77 @@
 .main {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	/* border: 2px solid red; */
-	height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  /* border: 2px solid red; */
+  height: 100%;
 }
 
 .main h3 {
-	margin-top: 60px;
-	font-size: 1.7rem;
+  margin-top: 60px;
+  font-size: 1.7rem;
 }
 
 .main form {
-	margin-top: 30px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .main form label {
-	color: var(--tertiary-color);
-	font-size: 1.1rem;
+  color: var(--tertiary);
+  font-size: 1.1rem;
 }
 
 .little {
-	font-size: 0.7rem;
+  font-size: 0.7rem;
 }
 
 .main form input {
-	margin-top: 20px;
-	outline: none;
-	border: none;
-	border-bottom: 1px solid var(--secondary-color);
-	color: var(--tertiary-color);
-	letter-spacing: 1px;
+  margin-top: 20px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid var(--secondary);
+  color: var(--tertiary);
+  letter-spacing: 1px;
 }
 
 .main form input::placeholder {
-	position: absolute;
-	margin-left: 5px;
+  position: absolute;
+  margin-left: 5px;
 }
 
 .notif {
-	font-size: 0.8rem;
-	color: red;
-	padding-top: 5px;
+  font-size: 0.8rem;
+  color: red;
+  padding-top: 5px;
 }
 
 .choose {
-	padding-top: 30px;
+  padding-top: 30px;
 }
 
 .avatars {
-	width: 100%;
-	align-items: center;
+  width: 100%;
+  align-items: center;
 }
 
 .main button {
-	outline: none;
-	border: none;
-	background-color: var(--accent-color);
-	margin-top: 20px;
-	padding: 5px;
-	border-radius: 2px;
-	letter-spacing: 1px;
+  outline: none;
+  border: none;
+  background-color: var(--accent);
+  margin-top: 20px;
+  padding: 5px;
+  border-radius: 2px;
+  letter-spacing: 1px;
 }
 
 .main button:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .main button:active {
-	scale: 0.95;
+  scale: 0.95;
 }
