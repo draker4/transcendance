@@ -13,7 +13,7 @@ export default async function submitMotto(submitedMotto:string, token:string) {
 			})
 		});
 
-		const data = await response.json();
+		const data = await response.json(); // checking
 
 		return "";
 

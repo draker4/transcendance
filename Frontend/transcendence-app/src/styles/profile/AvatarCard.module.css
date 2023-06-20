@@ -7,9 +7,11 @@
 .settingsCard {
 	width: 100%;
 	display: flex;
-	align-items: center;
+	align-items: left;
 	justify-content: center;
 	flex-direction: column;
+	padding-left: 12vw;
+	padding-bottom: 8vw;
 
 	/* [!] a rendre responsive */
 	padding-top: 20px;
@@ -143,6 +145,20 @@
 
 	.avatarCard .rectangle {
 		width: 300px;
+	}
+
+	.settingsCard {
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		padding-left: 0;
+		padding-bottom: 0;
+	
+		/* [!] a rendre responsive */
+		padding-top: 20px;
+		gap: 1rem;
 	}
 
 }
