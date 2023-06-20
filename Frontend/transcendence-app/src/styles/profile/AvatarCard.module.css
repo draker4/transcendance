@@ -1,6 +1,6 @@
 /* AVATAR FRAME */
 .avatarFrame {
-	border: dashed 1px var(--notif-color);
+	border: dashed 1px var(--notif-color); /* checking */
 }
 
 /* SETTINGS CARD */

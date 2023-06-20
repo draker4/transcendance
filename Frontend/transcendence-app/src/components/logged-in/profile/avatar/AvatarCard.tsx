@@ -19,14 +19,32 @@ export default function AvatarCard({profile, isOwner, avatar} : Props) {
 
 	const [displaySettings, setDisplaySettings] = useState<boolean>(false);
 	const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
+	const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
 
+	const [selectedArea, setSelectedArea] = useState<'border'|'background'>('border');
+
+	const handleArea = (event: React.MouseEvent<HTMLElement>, newArea: 'border' | 'background' | null) => {
+		if (newArea)
+			setSelectedArea(newArea);
+	}
 
 	const toogleDisplaySettings = () => {
 			
 		if (displaySettings === true)
-			cancelColorChanges();
+			cancelColorChange();
 		setDisplaySettings(!displaySettings);
 
+	}
+
+	const saveColorChanges = () => {
+		// [!] ici envoyer les updates color au back
+		// verif si il y a eut un changement avant ?
+
+
+
+		avatar.borderColor = topColor.toString();
+		avatar.backgroundColor = botColor.toString();
+		setDisplaySettings(false);
 	}
 
 	const colorAddedStyle:CSSProperties = {
@@ -34,12 +52,17 @@ export default function AvatarCard({profile, isOwner, avatar} : Props) {
 	};
 
 
-	const previewChangeColor: ColorChangeHandler = (color:ColorResult) => {
+	const previewChangeTopColor: ColorChangeHandler = (color:ColorResult) => {
 		setTopColor(color.hex);
 	}
 
-	const cancelColorChanges = () => {
+	const previewChangeBotColor: ColorChangeHandler = (color:ColorResult) => {
+		setBotColor(color.hex);
+	}
+
+	const cancelColorChange = () => {
 		setTopColor(avatar.borderColor);
+		setBotColor(avatar.backgroundColor);
 	}
 
 
@@ -54,11 +77,19 @@ export default function AvatarCard({profile, isOwner, avatar} : Props) {
 					<Avatar avatar={avatar}
 							onClick={toogleDisplaySettings}
 							displaySettings={displaySettings}
-							previewBorder={topColor.toString()} />
+							previewBorder={topColor.toString()}
+							previewBackground={botColor.toString()} />
 				</div>
 				<ProfileLogin profile={profile} isOwner={isOwner}/>
 		</div>
-		{displaySettings && <SettingsCard previewChangeColor={previewChangeColor}/>}
+		{displaySettings && <SettingsCard 
+				previewChangeTopColor={previewChangeTopColor}
+				previewChangeBotColor={previewChangeBotColor}
+				handleArea={handleArea} 
+				selectedArea={selectedArea}
+				toogleDisplaySettings={toogleDisplaySettings}
+				saveColorChanges={saveColorChanges}
+				/>}
 	</div>
   )
 }
