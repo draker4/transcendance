@@ -29,7 +29,7 @@ export default function Chat() {
 			setLittleScreen(screenWidth < 1600);
 
 			if (screenWidth < 1600) {
-				setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
+				setWidthStyle("calc(100vw - clamp(60px, 6vw, 120px) - 10px)");
 				if (bubbleRef.current) {
 					bubbleRef.current.style.left = `${positionX}px`;
 					bubbleRef.current.style.top = `${positionY}px`;
@@ -159,63 +159,63 @@ export default function Chat() {
 
 	return (
 		<>
-		{
-			segment !== 'create' &&
-			<>
-				<div
-					className={styles.display}
-					ref={bubbleRef}
-				>
-					{ !chatOpened && 
-						<FontAwesomeIcon
-							icon={faComments}
-							className={styles.menu}
-							onClick={openChat}
-							onMouseDown={handleMouseDown}
-							onTouchStart={handleMouseDown}
-						/>
-					}
+			{
+				segment !== 'create' &&
+				<>
+					<div
+						className={styles.display}
+						ref={bubbleRef}
+					>
+						{ !chatOpened && 
+							<FontAwesomeIcon
+								icon={faComments}
+								className={styles.menu}
+								onClick={openChat}
+								onMouseDown={handleMouseDown}
+								onTouchStart={handleMouseDown}
+							/>
+						}
 
-					{ chatOpened &&
-						<FontAwesomeIcon
-							icon={faArrowLeft} 
-							className={styles.menu}
-							onClick={openChat}
-							onMouseDown={handleMouseDown}
-							onTouchStart={handleMouseDown}
-						/>
-					}
-				</div>
+						{ chatOpened &&
+							<FontAwesomeIcon
+								icon={faArrowLeft} 
+								className={styles.menu}
+								onClick={openChat}
+								onMouseDown={handleMouseDown}
+								onTouchStart={handleMouseDown}
+							/>
+						}
+					</div>
 
-				{
-					!littleScreen && 
-					<div className={styles.chatTotalBig}>
-						<ChatBubbles />
-						<ChatMain
-							chatOpened={chatOpened}
-							chatFirst={chatFirst}
-							widthStyle={widthStyle}
-						/>
-					</div>
-				}
-				{
-					littleScreen &&
-					<div className={
-						chatFirst
-						? styles.littleFirst
-						: chatOpened
-						? styles.chatTotalLittle
-						: styles.close}>
-						<ChatBubbles />
-						<ChatMain
-							chatOpened={chatOpened}
-							chatFirst={chatFirst}
-							widthStyle={widthStyle}
-						/>
-					</div>
-				}
-			</>
-		}
+					{
+						!littleScreen && 
+						<div className={styles.chatTotalBig}>
+							<ChatBubbles />
+							<ChatMain
+								chatOpened={chatOpened}
+								chatFirst={chatFirst}
+								widthStyle={widthStyle}
+							/>
+						</div>
+					}
+					{
+						littleScreen &&
+						<div className={
+							chatFirst
+							? styles.littleFirst
+							: chatOpened
+							? styles.chatTotalLittle
+							: styles.close}>
+							<ChatBubbles />
+							<ChatMain
+								chatOpened={chatOpened}
+								chatFirst={chatFirst}
+								widthStyle={widthStyle}
+							/>
+						</div>
+					}
+				</>
+			}
 		</>
 	);
 }

@@ -43,12 +43,12 @@
 }
 
 .display {
+  /* border: 1px solid red; */
   padding: 10px 0;
   position: absolute;
   z-index: 2;
-  /* border: 1px solid var(--tertiary); */
   border-radius: 10px;
-  width: clamp(60px, 5vw, 80px);
+  width: clamp(60px, 6vw, 120px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -98,9 +98,10 @@
 }
 
 .menu {
+  /* border: 1px solid red; */
   color: var(--accent);
-  width: 33px;
-  height: 33px;
+  width: clamp(30px, 4vw, 60px);
+  height: clamp(30px, 4vw, 60px);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
