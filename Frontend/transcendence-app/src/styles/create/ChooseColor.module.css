@@ -1,12 +1,12 @@
 .main {
-	width: 80%;
+	/* border: 1px solid red; */
+	width: clamp(200px, 80vw, 2000px);
 	display: flex;
 	overflow-x: auto;
-	max-width: 600px;
 	margin: auto;
-	padding: 8px;
+	padding-top: clamp(8px, 1vh, 20px);
 	justify-content: flex-start;
-	padding-bottom: 10px;
+	padding-bottom: clamp(10px, 1vh, 20px);
 }
 
 .main::-webkit-scrollbar {
@@ -23,9 +23,9 @@
 
 .cercle {
 	flex: 0 0 auto;
-	width: 20px;
-	height: 20px;
-	border-radius: 20px;
+	width: clamp(20px, 3vh, 60px);
+	height: clamp(20px, 3vh, 60px);
+	border-radius: clamp(20px, 3vh, 60px);
 	margin: 0 10px;
 }
 

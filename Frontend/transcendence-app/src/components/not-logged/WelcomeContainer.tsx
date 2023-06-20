@@ -7,7 +7,7 @@ import styles from '@/styles/Welcome.module.css';
 export default function WelcomeContainer() {
 
     return (
-        <div className={styles.main} style={{ textAlign: 'center' }}>
+        <div className={styles.main}>
             <p>Crunchy Pong !</p>
         </div>
     );

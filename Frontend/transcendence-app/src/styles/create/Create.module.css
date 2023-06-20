@@ -1,71 +1,98 @@
 .main {
+	/* border: 1px solid red; */
 	display: flex;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 	flex-direction: column;
 	/* border: 2px solid red; */
 	height: 100%;
+	width: 100%;
+	padding-top: clamp(0px, 8vh, 100px);
 }
 
 .main h3 {
-	margin-top: 60px;
-	font-size: 1.7rem;
+	/* border: 1px solid red; */
+	padding-top: 60px;
+	font-size: clamp(1.7rem, 3vh, 3rem);
+	padding-bottom: clamp(0px, 3vh, 60px);
 }
 
 .main form {
-	margin-top: 30px;
+	/* border: 1px solid red; */
+	width: 90%;
+	flex: 1;
+	padding-top: clamp(30px, 6vh, 100px);
+	padding-bottom: clamp(0px, 2vh, 50px);
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
 }
 
 .main form label {
+	/* border: 1px solid red; */
 	color: var(--tertiary-color);
-	font-size: 1.1rem;
+	font-size: clamp(1.1rem, 1.6vh, 2rem);
+	padding-bottom: 20px;
+	padding-bottom: 1vh;
+	padding-bottom: clamp(0px, 1vh, 20px);
 }
 
 .little {
-	font-size: 0.7rem;
+	/* border: 1px solid red; */
+	font-size: clamp(0.7rem, 0.8vh, 1rem);
+	padding-bottom: clamp(0px, 2vh, 30px);
 }
 
 .main form input {
+	position: relative;
 	margin-top: 20px;
 	outline: none;
 	border: none;
 	border-bottom: 1px solid var(--secondary-color);
 	color: var(--tertiary-color);
 	letter-spacing: 1px;
+	/* border: 1px solid red; */
+	width: clamp(150px, 50%, 800px);
+	height: clamp(30px, 2vh, 50px);
+	font-size: clamp(1rem, 2vh, 2rem);
 }
 
 .main form input::placeholder {
+	/* border: 1px solid red; */
 	position: absolute;
-	margin-left: 5px;
+	/* margin-left: 50px; */
 }
 
 .notif {
-	font-size: 0.8rem;
-	color: red;
-	padding-top: 5px;
+	font-size: clamp(0.8rem, 1.2vh, 1.5rem);
+	color: var(--notif);
+	padding-top: clamp(5px, 1.2vh, 30px);
 }
 
 .choose {
-	padding-top: 30px;
+	/* border: 1px solid red; */
+	padding-top: clamp(30px, 10vh, 250px);
+	font-size: clamp(1rem, 1.6vh, 2rem);
+	padding-bottom: clamp(0px, 4vh, 50px);
 }
 
 .avatars {
+	/* border: 1px solid red; */
 	width: 100%;
 	align-items: center;
+	padding-bottom: clamp(20px, 8vh, 200px);
 }
 
 .main button {
 	outline: none;
 	border: none;
 	background-color: var(--accent-color);
-	margin-top: 20px;
 	padding: 5px;
 	border-radius: 2px;
 	letter-spacing: 1px;
+	width: clamp(80px, 12vw, 300px);
+	font-size: clamp(1rem, 2vw, 2rem);
 }
 
 .main button:hover {
