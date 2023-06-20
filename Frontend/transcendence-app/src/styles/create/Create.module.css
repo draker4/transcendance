@@ -7,12 +7,11 @@
 	/* border: 2px solid red; */
 	height: 100%;
 	width: 100%;
-	padding-top: clamp(0px, 8vh, 100px);
 }
 
 .main h3 {
 	/* border: 1px solid red; */
-	padding-top: 60px;
+	padding-top: clamp(0px, 6vh, 100px);
 	font-size: clamp(1.7rem, 3vh, 3rem);
 	padding-bottom: clamp(0px, 3vh, 60px);
 }
@@ -21,7 +20,7 @@
 	/* border: 1px solid red; */
 	width: 90%;
 	flex: 1;
-	padding-top: clamp(30px, 6vh, 100px);
+	padding-top: clamp(10px, 4vh, 100px);
 	padding-bottom: clamp(0px, 2vh, 50px);
 	display: flex;
 	flex-direction: column;
@@ -46,7 +45,7 @@
 
 .main form input {
 	position: relative;
-	margin-top: 20px;
+	margin-top: clamp(10px, 2vh, 20px);
 	outline: none;
 	border: none;
 	border-bottom: 1px solid var(--secondary);
@@ -72,16 +71,16 @@
 
 .choose {
 	/* border: 1px solid red; */
-	padding-top: clamp(30px, 10vh, 250px);
+	padding-top: clamp(10px, 8vh, 250px);
 	font-size: clamp(1rem, 1.6vh, 2rem);
-	padding-bottom: clamp(0px, 4vh, 50px);
+	padding-bottom: clamp(0px, 2vh, 50px);
 }
 
 .avatars {
 	/* border: 1px solid red; */
 	width: 100%;
 	align-items: center;
-	padding-bottom: clamp(20px, 8vh, 200px);
+	padding-bottom: clamp(10px, 6vh, 200px);
 }
 
 .main button {
@@ -102,4 +101,14 @@
 
 .main button:active {
   scale: 0.95;
+}
+
+@media screen and (max-height: 1000px) {
+	.choose {
+		padding-top: clamp(0px, 3vh, 100px);
+	}
+
+	.avatars {
+		padding-bottom: clamp(0px, 3vh, 100px);
+	}
 }

@@ -118,3 +118,10 @@
 .menu:active {
   scale: 0.95;
 }
+
+@media screen and (max-height: 1000px) {
+	.menu {
+    width: clamp(30px, 3vw, 60px);
+    height: clamp(30px, 3vw, 60px);
+  }
+}

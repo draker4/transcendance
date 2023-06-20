@@ -8,7 +8,7 @@
 	height: 100%;
 	background-color: var(--primary);
 	text-align: center;
-	padding-top: clamp(60px, 8vh, 150px);
+	padding-top: clamp(35px, 7vh, 150px);
 }
 
 .title {
@@ -33,12 +33,11 @@
 	border-style: none;
 	border-radius: 2px;
 	width: clamp(250px, 70%, 1500px);
-	min-height: clamp(300px, 40vh, 700px);
-	padding-top: clamp(10px, 4vh, 80px);
+	min-height: clamp(300px, 60vh, 1000px);
+	padding-top: clamp(10px, 3vh, 80px);
 }
 
 .form {
-	/* margin-top: 20px; */
 	/* border: 1px solid red; */
 	width: 100%;
 	min-height: 40%;
@@ -117,8 +116,8 @@
 
 .or {
 	/* border: 1px solid red; */
-	padding-top: clamp(30px, 2vh, 50px);
-	padding-bottom: clamp(0px, 2vh, 20px);
+	padding-top: clamp(10px, 2vh, 50px);
+	padding-bottom: clamp(0px, 1.5vh, 20px);
 	padding-left: clamp(10px, 3vw, 50px);
 	padding-right: clamp(10px, 3vw, 50px);
 }
@@ -133,14 +132,14 @@
 }
 
 .or span {
-	background-color: var(--primary);
+	background-color: rgb(243, 243, 243);
 	padding: 0 clamp(10px, 2vw, 30px);
 	font-size: clamp(1rem, 1.5vh, 2rem);
 }
 
 .oneClick {
 	/* border: 1px solid red; */
-	padding-top: 30px;
+	padding-top: clamp(0px, 2vh, 30px);
 	font-size: clamp(0.9rem, 1.5vh, 1.4rem);
 	padding-bottom: clamp(0px, 2vh, 30px);
 }
@@ -148,18 +147,17 @@
 .logButtons {
 	/* border-style: double; */
 	display: flex;
-	padding-top: 10px;
+	padding-top: clamp(0px, 1vh, 20px);
 	width: 100%;
-	margin-bottom: 10px;
 	justify-content: center;
 	align-items: center;
-	padding-bottom: clamp(10px, 1vh, 20px);
+	padding-bottom: clamp(0px, 1vh, 20px);
 }
 
 .logImg {
 	/* border: 1px solid red; */
 	margin: 5px clamp(20px, 6vw, 80px);
-	width: clamp(40px, 5vw, 80px);
+	width: clamp(40px, 4vw, 80px);
 	display: flex;
 	aspect-ratio: 1;
 	background: var(--primary);
