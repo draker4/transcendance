@@ -19,7 +19,9 @@ export default function NavbarWelcome() {
           />
         </Link>
         <Link href="/welcome/login">
-          <button type="button">Log In</button>
+          <button type="button" className={styles.logIn}>
+            Log In
+          </button>
         </Link>
       </div>
     </nav>

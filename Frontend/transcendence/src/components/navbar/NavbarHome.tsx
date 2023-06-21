@@ -12,10 +12,6 @@ export default function NavbarHome({ avatar }: { avatar: avatarType }) {
   const router = useRouter();
   const segment = useSelectedLayoutSegment();
 
-  const welcome = () => {
-    router.push("/home");
-  };
-
   const signoff = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     deleteCookie("crunchy-token");

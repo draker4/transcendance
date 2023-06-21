@@ -1,5 +1,4 @@
 .main {
-  /* border: 1px solid red; */
   background-color: var(--primary);
   position: fixed;
   top: 0;
@@ -13,7 +12,6 @@
 }
 
 .center {
-  /* border: 1px solid red; */
   width: 80%;
   height: 90%;
   margin-left: auto;
@@ -22,14 +20,11 @@
   position: relative;
   display: flex;
   align-items: center;
-  /* justify-content: center; */
 }
 
 .logo {
-  /* border: 1px solid red; */
-  /* width: clamp(30px, 3vh, 50px); */
-  /* width: 100px; */
-  /* aspect-ratio: 1 / 1; */
+  width: clamp(30px, 3vh, 50px);
+  height: clamp(30px, 3vh, 50px);
   margin-right: auto;
   cursor: pointer;
 }
@@ -53,7 +48,6 @@
 }
 
 .title {
-  /* border: 2px solid red; */
   font-family: var(--title-font);
   color: var(--tertiary);
   margin-left: auto;
