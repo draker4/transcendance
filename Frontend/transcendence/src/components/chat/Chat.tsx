@@ -27,7 +27,7 @@ export default function Chat() {
       setLittleScreen(screenWidth < 1600);
 
       if (screenWidth < 1600) {
-        setWidthStyle("calc(100vw - clamp(60px, 5vw, 80px) - 10px)");
+        setWidthStyle("calc(100vw - clamp(60px, 6vw, 120px) - 10px)");
         if (bubbleRef.current) {
           bubbleRef.current.style.left = `${positionX}px`;
           bubbleRef.current.style.top = `${positionY}px`;
@@ -48,7 +48,7 @@ export default function Chat() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [positionX, positionY]);
+  }, []);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--width-style", widthStyle);
@@ -162,7 +162,7 @@ export default function Chat() {
       window.removeEventListener("touchmove", handleMouseMove);
       window.removeEventListener("touchend", handleMouseUp);
     };
-  }, [dragging, offset, littleScreen, chatOpened]);
+  }, [dragging, offset]);
 
   const handleMouseDown = () => {
     if (littleScreen) setDragging(true);

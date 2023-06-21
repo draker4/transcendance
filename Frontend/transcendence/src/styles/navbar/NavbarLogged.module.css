@@ -27,9 +27,9 @@
 
 .logo {
 	/* border: 1px solid red; */
-	/* width: clamp(30px, 3vh, 50px); */
+	width: clamp(30px, 3vh, 50px);
 	/* width: 100px; */
-	aspect-ratio: 1 / 1;
+	/* aspect-ratio: 1 / 1; */
 	margin-right: auto;
 	cursor: pointer;
 }

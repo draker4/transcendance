@@ -11,7 +11,7 @@
 }
 
 .main::-webkit-scrollbar {
-    height: 20px;
+    height: 2px;
 }
 
 .main::-webkit-scrollbar-track {
@@ -38,7 +38,7 @@
 }
 
 .avatar.selected {
-  box-shadow: 0 0 20px 1px var(--secondary);
+  box-shadow: 0 0 10px 1px var(--secondary);
 }
 
 .chooseColor {
