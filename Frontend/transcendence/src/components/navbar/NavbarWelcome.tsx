@@ -18,7 +18,7 @@ export default function NavbarWelcome() {
             className={styles.logo}
           />
         </Link>
-        <Link href="/welcome/login" prefetch>
+        <Link href="/welcome/login">
           <button type="button" title="Log Button" className={styles.logIn}>
             Log In
           </button>

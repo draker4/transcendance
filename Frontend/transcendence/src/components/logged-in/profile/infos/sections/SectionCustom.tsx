@@ -1,6 +1,6 @@
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/InfoCard.module.css";
-import MottoEditable from "./motto/MottoEditable";
+import MottoEditable from "./motto3/MottoEditable";
 import StoryEditable from "./story/StoryEditable";
 
 type Props = {

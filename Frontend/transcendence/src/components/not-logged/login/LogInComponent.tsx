@@ -3,6 +3,7 @@ import styles from "@/styles/auth/Login.module.css"
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { setCookie } from "cookies-next";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -176,10 +177,10 @@ export default function LogInComponent() {
 
 				<div className={styles.logButtons}>
 					<div className={styles.logImg}  onClick={open42}>
-						<img alt="42 school logo" src="/images/auth/42_Logo.png" width="30px"/>
+						<Image alt="42 school logo" src="/images/auth/42_Logo.png" width={30} height={30}/>
 					</div>
 					<div className={styles.logImg}  onClick={openGoogle}>
-						<img alt="google logo" src="/images/auth/google.png" width="30px"/>
+						<Image alt="google logo" src="/images/auth/google.png" width={30} height={30}/>
 					</div>
 				</div>
 			</div>
