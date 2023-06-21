@@ -1,6 +1,6 @@
 /* AVATAR FRAME */
 .avatarFrame {
-	border: dashed 1px var(--notif-color); /* checking */
+	border: dashed 1px var(--notif); /* checking */
 }
 
 /* SETTINGS CARD */
@@ -55,7 +55,7 @@
 .avatarCard .rectangle .bot {
 	width: 100%;
 	height: 38%;
-	background-color: var(--primary-color);
+	background-color: var(--primary);
 }
 
 /* AVATAR MODULE */
@@ -72,13 +72,13 @@
 	width: clamp(80px, 20px + 20vw, 200px);
     height: clamp(80px, 20px + 20vw, 200px);
     border-radius: 50%;
-    border:clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem) solid var(--primary-color);
+    border:clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem) solid var(--primary);
     /* box-shadow:
 		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem) 
 		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
 		clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem)
 		rgba(67, 80, 126221, 0.22); */
-    background-color: var(--notif-color);
+    background-color: var(--notif);
     overflow: hidden;
 	cursor: pointer;
 }
@@ -102,9 +102,9 @@
 .loginCard  .login {
 	padding: clamp(0.1rem, 0.05rem + 2.5vw, 0.3rem) clamp(0.25rem, 0.5rem + 5vw, 1rem);
 	border-radius: clamp(0.3rem, 0.15rem + 0.5vw, 1rem);
-	background-color: var(--tertiary-color);
+	background-color: var(--accent);
 	text-align: center;
-	color: var(--accent-color);
+	color: var(--primary);
 	width: 100%;
 }
 

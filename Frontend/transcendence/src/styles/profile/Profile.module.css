@@ -1,6 +1,6 @@
 .main {
     height: 100vh;
-    background: var(--primary-color);
+    background: var(--primary);
 	display: flex;
     align-items: center;
     justify-content: center;
@@ -16,13 +16,13 @@
 	/* avoir un max-width ?*/
 	max-width: 85%;
 
-	color:var(--secondary-color);
+	color:var(--secondary);
 	display: block;
 	flex-direction: row;
 	padding: 1rem;
 	
 	/* border:1px dashed rgb(87, 120, 167); */
-	background-color: var(--primary-color-darker1);
+	background-color: var(--primary-darker1);
 	border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
 	box-shadow: 
 		inset
@@ -40,7 +40,7 @@
 		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
 		clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem)
 		rgba(67, 80, 126, 0.22);
-	background-color: var(--primary-color);
+	background-color: var(--primary);
 }
 
 .profileMainFrame .first {
