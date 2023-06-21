@@ -1,6 +1,5 @@
 import ChatServer from "@/components/chat/ChatServer";
 import NavbarLogged from "@/components/navbar/NavbarLogged"
-import "@/styles/globals.css";
 import styles from "@/styles/layout/Layout.module.css";
 
 export const metadata = {
