@@ -1,6 +1,6 @@
 "use client";
 
-import LogInComponent from "@/components/not-logged/login/LogInComponent";
+import LogInComponent from "@/components/notLogged/login/LogInComponent";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 export default function SignUpPage() {

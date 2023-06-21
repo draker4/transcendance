@@ -1,9 +1,9 @@
-import ConfirmCode from "@/components/not-logged/auth/ConfirmCode";
+import ConfirmCode from "@/components/notLogged/auth/ConfirmCode";
 
 export default function ConfirmPage() {
-	return (
-		<div>
-			<ConfirmCode />
-		</div>
-	);
+  return (
+    <div>
+      <ConfirmCode />
+    </div>
+  );
 }

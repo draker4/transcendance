@@ -1,11 +1,9 @@
-"use client"
-import WelcomeContainer from '@/components/not-logged/WelcomeContainer';
+import WelcomeContainer from "@/components/notLogged/Welcome";
 
 export default function Home() {
-
-	return (
-		<main>
-			<WelcomeContainer />
-		</main>
-	);
+  return (
+    <main>
+      <WelcomeContainer />
+    </main>
+  );
 }

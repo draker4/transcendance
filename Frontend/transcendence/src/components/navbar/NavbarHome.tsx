@@ -3,7 +3,7 @@
 import styles from "@/styles/navbar/NavbarLogged.module.css";
 import avatarType from "@/types/Avatar.type";
 import { useRouter, useSelectedLayoutSegment } from "next/navigation";
-import AvatarUser from "../logged-in/avatarUser/AvatarUser";
+import AvatarUser from "../loggedIn/avatarUser/AvatarUser";
 import { deleteCookie } from "cookies-next";
 import Link from "next/link";
 import Image from "next/image";
