@@ -1,5 +1,4 @@
 import React from "react";
-import Theme from "@/components/theme/Theme";
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -15,10 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        {children}
-        <Theme />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

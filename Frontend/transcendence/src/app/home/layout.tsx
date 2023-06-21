@@ -1,29 +1,23 @@
 import ChatServer from "@/components/chat/ChatServer";
-import NavbarLogged from "@/components/navbar/NavbarLogged"
-import styles from "@/styles/layout/Layout.module.css";
+import NavbarLogged from "@/components/navbar/NavbarLogged";
 
 export const metadata = {
-  title: 'Logged',
-  description: 'The client is logged in',
-}
+  title: "Logged",
+  description: "The client is logged in",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
-
   return (
-    <div className={styles.all}>
-      <div className={styles.navbar}>
-        <NavbarLogged />
-      </div>
-      <div className={styles.main}>
+    <div>
+      <NavbarLogged />
+      <div>
         <ChatServer />
-        <div className={styles.children}>
-          { children }
-        </div>
+        {children}
       </div>
     </div>
-  )
+  );
 }

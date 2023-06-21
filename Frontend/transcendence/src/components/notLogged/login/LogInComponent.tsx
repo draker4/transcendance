@@ -3,7 +3,7 @@ import {
   registerFormEmail,
   registerFormPassword,
 } from "@/lib/auth/registerForm";
-import styles from "@/styles/auth/Login.module.css";
+import styles from "@/styles/notLogged/login/Login.module.css";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { setCookie } from "cookies-next";
