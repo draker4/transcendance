@@ -127,7 +127,7 @@ export default function FormLogin({ avatars, token }: {
                     />
                 </div>
 
-                <button type="button" title="Create avatar">Let&apos;s go!</button>
+                <button title="Create avatar">Let&apos;s go!</button>
             </form>
         </div>
     );
