@@ -35,8 +35,8 @@ cd transcendence
 
 echo "install required depedencies"
 npm install
-echo "update required depedencies"
-npm update
+#echo "update required depedencies"
+#npm update
 
 #As dev
 echo "starting dev server"

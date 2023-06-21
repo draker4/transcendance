@@ -116,6 +116,34 @@
   padding: 0 2vw 0 0;
 }
 
+.littleButton {
+  padding: 0 2vw 0 0;
+  cursor: pointer;
+  border: 0.05rem solid var(--secondary);
+  padding: 0.15em 0.4em;
+  border-radius: clamp(0.3rem, 0.15rem + 0.5vw, 1rem);
+  color: var(--secondary);
+}
+
+.littleButton:hover {
+  background-color: var(--secondary);
+  color: var(--primary);
+  scale: 0.9;
+}
+
+.littleButton:active {
+  background-color: var(--secondary);
+  color: var(--primary);
+  scale: 1.1;
+}
+
+.littleButton h3 {
+  font-family: var(--title-font);
+  font-weight: 700;
+  font-size: clamp(0.2rem, 0.15rem + 5vw, 0.8rem);
+  user-select: none;
+}
+
 /* RESPONSIVE */
 
 /* Breakpoint 1 : width > smartphone */

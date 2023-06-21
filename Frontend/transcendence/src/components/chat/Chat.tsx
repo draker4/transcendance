@@ -162,7 +162,7 @@ export default function Chat() {
       window.removeEventListener("touchmove", handleMouseMove);
       window.removeEventListener("touchend", handleMouseUp);
     };
-  }, [dragging, offset, littleScreen, chatOpened]);
+  }, [dragging, offset, chatOpened, littleScreen]);
 
   const handleMouseDown = () => {
     if (littleScreen) setDragging(true);
