@@ -1,4 +1,4 @@
-FROM debian:stable-20230320-slim
+FROM debian:latest
 
 RUN apt-get update
 RUN apt-get install -y \

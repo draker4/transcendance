@@ -1,9 +1,8 @@
 # Base image
-FROM debian:stable-20230320-slim
+FROM debian:latest
 
 RUN apt-get update && apt-get install -y \
-	curl \
-	npm \
+	curl npm procps \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -15,5 +14,5 @@ EXPOSE 4000
 
 # Entrypoint
 COPY ./tools/start_nestjs.sh /
-RUN chmod +x start_nestjs.sh
+# RUN chmod +x start_nestjs.sh
 ENTRYPOINT ["./start_nestjs.sh"]

@@ -1,42 +1,33 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : setup start stop re clean build log reback refront redata rebuild cleandata
+.phony : start stop re clean log reback refront redata rebuild cleandata
 
-all : setup start
+all : start
 
-setup :
-	@echo "----Setup Docker-----------"
-
-start : build
+start :
 	@echo "----Starting all Docker----"
-	mkdir -p ./Backend
-	mkdir -p ./Frontend
-	#mkdir -p ./Database/conf
-	#mkdir -p ./Database/data
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
 	@echo "----All Docker started-----"
-	rm -rf ./Backend/.git
+
 
 stop :
 	@echo "----Stopping all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) stop
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 	@echo "----All Docker stopped-----"
 
-build :
-	@echo "----Building all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build
-	@echo "----All Docker built-------"
-
 clean : stop
 	@echo "----Cleaning all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down --rmi all --remove-orphans
+	docker rm $$(docker ps -qa)
+	docker rmi -f $$(docker images -qa)
 	@echo "----All Docker cleaned-----"
 
-log :
-	@echo "----Status Docker----------"
-	docker ps
+fclean : clean
+	@echo "----Full Cleaning all Docker----"
+	Docker system prune -a
+	docker volume rm $(docker volume ls -q)
+	docker network rm $$(docker network ls -q)
+	@echo "----All Docker full cleaned-----"
 
 refront :
 	@echo "----Restarting Frontend----"
@@ -52,16 +43,8 @@ redata :
 
 rebuild :
 	@echo "----Rebuilding all Docker----"	
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) build --no-cache
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build --no-cache
 
 re : clean rebuild
-	@echo "----Starting all Docker----"
-	mkdir -p ./Backend
-	mkdir -p ./Frontend
-	#mkdir -p ./Database/data
-	#mkdir -p ./Database/conf
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d
-	@echo "----All Docker started-----"
-	rm -rf ./Backend/.git
 
 

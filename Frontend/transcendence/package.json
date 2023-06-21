@@ -21,7 +21,7 @@
     "@types/react-dom": "18.2.4",
     "bad-words": "^3.0.4",
     "bcrypt": "^5.1.0",
-    "cookies-next": "^2.1.1",
+    "cookies-next": "^2.1.2",
     "eslint": "8.40.0",
     "eslint-config-next": "13.4.1",
     "jose": "^4.14.4",
@@ -32,7 +32,7 @@
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
     "react-google-recaptcha-v3": "^1.10.1",
-    "react-hook-form": "^7.44.3",
+    "react-hook-form": "^7.45.0",
     "react-icons": "^4.9.0",
     "react-slider": "^2.0.5",
     "typescript": "^5.1.3"
