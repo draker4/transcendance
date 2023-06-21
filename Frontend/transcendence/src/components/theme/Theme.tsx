@@ -63,7 +63,7 @@ const Theme = () => {
 
   return (
     <div className={styles.theme}>
-      <button className={styles.themeBtn} onClick={handleMode}>
+      <button title="theme button" type="button" className={styles.themeBtn} onClick={handleMode}>
         {theme === "light" ? <MdWbSunny /> : <MdNightsStay />}
       </button>
     </div>

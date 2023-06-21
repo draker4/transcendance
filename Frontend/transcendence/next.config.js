@@ -25,7 +25,7 @@ const nextConfig = {
     SECRET_KEY: process.env.SECRET_KEY,
   },
   images: {
-    domains: ["cdn.intra.42.fr"],
+    domains: ["cdn.intra.42.fr", "lh3.googleusercontent.com"],
   },
 };
 

@@ -23,7 +23,7 @@ export default async function CreatePage() {
 	let	avatars: string[] = [];
 	
 	try {
-		const	directoryPath = "/app/transcendence-app/public/images/avatars";
+		const	directoryPath = "/app/transcendence/public/images/avatars";
 		avatars = fs.readdirSync(directoryPath);
 
 		avatars = avatars.map((avatar) => {

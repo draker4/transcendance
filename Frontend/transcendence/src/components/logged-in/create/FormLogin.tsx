@@ -101,6 +101,7 @@ export default function FormLogin({ avatars, token }: {
 			<h3>You're almost there! 😁</h3>
 
 			<form action={handleActionLogin}>
+			<form>
 				<label>
 					Please choose your login!
 				</label>
@@ -127,9 +128,8 @@ export default function FormLogin({ avatars, token }: {
 					/>
 				</div>
 
-				<button>Let's go!</button>
+				<button type="button" title="Create avatar">Let's go!</button>
 			</form>
-
 		</div>
 	);
 }

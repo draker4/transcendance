@@ -1,28 +1,29 @@
-"use client"
+"use client";
 
-import styles from "@/styles/navbar/NavbarWelcome.module.css"
-import { useRouter } from "next/navigation";
-import React from "react";
+import styles from "@/styles/navbar/NavbarWelcome.module.css";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function NavbarWelcome() {
-
-	const	router = useRouter();
-
-	const	logIn = (e: React.MouseEvent<HTMLElement>) => {
-		e.preventDefault();
-		router.push("/welcome/login");
-	}
-
-	const	welcome = () => {
-		router.push("/welcome");
-	}
-
-	return (
-		<nav className={styles.main}>
-			<div>
-				<img src="/images/logo.png" alt="Crunhy Pong logo" onClick={welcome}/>
-				<button type="button" onClick={logIn}>Log In</button>
-			</div>
-		</nav>
-	);
+  return (
+    <nav className={styles.main}>
+      <div>
+        <Link href="/welcome">
+          <Image
+            src="/images/logo.png"
+            alt="Logo Crunchy Pong"
+            width={50}
+            height={50}
+            title="Logo Crunchy Pong"
+            className={styles.logo}
+          />
+        </Link>
+        <Link href="/welcome/login">
+          <button type="button" className={styles.logIn}>
+            Log In
+          </button>
+        </Link>
+      </div>
+    </nav>
+  );
 }
