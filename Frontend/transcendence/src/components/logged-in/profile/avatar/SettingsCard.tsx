@@ -57,7 +57,7 @@ export default function SettingsCard({previewChangeTopColor, previewChangeBotCol
 			</Stack>
 		</Stack>
 
-			<CirclePicker onChange={selectedArea === 'border' ? previewChangeTopColor : previewChangeBotColor} />
+		<CirclePicker onChange={selectedArea === 'border' ? previewChangeTopColor : previewChangeBotColor} />
 		
 		
     </div>

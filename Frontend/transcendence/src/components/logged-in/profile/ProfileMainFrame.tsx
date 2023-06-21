@@ -12,8 +12,6 @@ type Props = {
 
 export default function ProfileMainFrame({profile, isOwner, avatar} : Props) {
 
-
-
   return (
 	<div className={styles.profileMainFrame}>
 		<ProfileFirstPart profile={profile} isOwner={isOwner} avatar={avatar}/>
