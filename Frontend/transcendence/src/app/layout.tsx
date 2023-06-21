@@ -1,6 +1,5 @@
 import React from "react";
 import Theme from "@/components/theme/Theme";
-// import ScrollBtn from "@/components/scrollBtn/ScrollBtn";;
 import "@/styles/globals.css";
 
 export const metadata = {
@@ -16,11 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* <body className={inter.className} suppressHydrationWarning={true}> */}
       <body>
         {children}
         <Theme />
-        {/* <ScrollBtn /> */}
       </body>
     </html>
   );

@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 
 # Install npm packages
 RUN npm install -g npm@latest
-RUN npm install -g create-react-app
+RUN npm install -g next@latest
 
 # Entrypoint
 COPY ./tools/start_react.sh /

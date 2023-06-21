@@ -4,7 +4,7 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  // reactStrictMode: true,
+  reactStrictMode: false,
   distDir: "build",
   async rewrites() {
     return [
@@ -23,6 +23,9 @@ const nextConfig = {
     CRYPTO_KEY: process.env.CRYPTO_KEY,
     WEBSITE_KEY: process.env.WEBSITE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
+  },
+  images: {
+    domains: ["cdn.intra.42.fr"],
   },
 };
 
