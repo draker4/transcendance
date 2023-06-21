@@ -20,9 +20,6 @@ export default async function HomePage() {
   return (
     <main className={styles.main}>
       <div>
-        <div>
-          <Link href={`/home/profile/${profile.login}`}>{profile.login}</Link>
-        </div>
         {profile.image && (
           <Image
             alt="profile image"

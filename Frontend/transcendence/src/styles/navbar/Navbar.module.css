@@ -29,8 +29,8 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: space-between;
-  width: 90px;
+  justify-content: space-evenly;
+  width: 120px;
 }
 
 .logo {
@@ -57,6 +57,7 @@
   background-color: var(--secondary);
   border: 3px solid var(--accent);
   transition: all 0.3s ease-in;
+  margin-left: 20px;
 }
 
 .logIn:hover {
@@ -74,15 +75,17 @@
 
 .avatar {
   display: flex;
+  flex-flow: column nowrap;
   width: clamp(40px, 3vh, 50px);
   height: clamp(40px, 3vh, 50px);
   color: var(--primary);
+  margin-left: 20px;
 }
 
-.avatar:hover {
+/* .avatar:hover {
   scale: 1.05;
 }
 
 .avatar:active {
   scale: 0.95;
-}
+} */
