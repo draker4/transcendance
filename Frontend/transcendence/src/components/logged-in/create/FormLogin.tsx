@@ -77,7 +77,7 @@ export default function FormLogin({ avatars, token }: {
 		if (access_token.length > 0) {
 			changeCookie();
 		}
-	}, [access_token])
+	}, [access_token, router])
 	
 	const	handleActionLogin = async (data: FormData) => {
 		const	loginUser = data.get('login') as string;
@@ -98,14 +98,13 @@ export default function FormLogin({ avatars, token }: {
 
 	return (
 		<div className={styles.main}>
-			<h3>You're almost there! 😁</h3>
+			<h3>You are almost there! 😁</h3>
 
 			<form action={handleActionLogin}>
-			<form>
 				<label>
 					Please choose your login!
 				</label>
-				<p className={styles.little}>Don't worry, you can change it later.</p>
+				<p className={styles.little}>Don&apos;t worry, you can change it later.</p>
 				
 				<input
 					type="text"
@@ -128,7 +127,7 @@ export default function FormLogin({ avatars, token }: {
 					/>
 				</div>
 
-				<button type="button" title="Create avatar">Let's go!</button>
+				<button type="button" title="Create avatar">Let&apos;s go!</button>
 			</form>
 		</div>
 	);
