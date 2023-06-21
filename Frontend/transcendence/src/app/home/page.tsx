@@ -21,12 +21,7 @@ export default async function HomePage() {
     <main className={styles.main}>
       <div>
         <div>
-          <Link
-            style={{ textDecoration: "none" }}
-            href={`/home/profile/${profile.login}`}
-          >
-            {profile.login}
-          </Link>
+          <Link href={`/home/profile/${profile.login}`}>{profile.login}</Link>
         </div>
         {profile.image && (
           <Image
