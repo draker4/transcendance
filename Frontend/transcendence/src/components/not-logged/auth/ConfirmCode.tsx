@@ -89,7 +89,7 @@ export default function ConfirmEmailCode() {
 			</form>
 
 			<div className={styles.bottomText}>
-				<p>Didn't receive any code?</p>
+				<p>Didn&apos;t receive any code?</p>
 				<p className={styles.clickText}>Send code again</p>
 				<p className={styles.clickText}>Cancel registration</p>
 			</div>

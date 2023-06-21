@@ -11,7 +11,7 @@ type Props = {
 	token: string;
   }
 
-export default function mottoEditable({profile, token} : Props) {
+export default function MottoEditable({profile, token} : Props) {
 
 	const [editMode, setEditMode] = useState<boolean>(false);
 	const [motto, setMotto] = useState<string>(profile.motto === null ? "" : profile.motto);

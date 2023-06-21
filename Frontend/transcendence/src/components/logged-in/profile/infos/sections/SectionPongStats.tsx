@@ -1,7 +1,7 @@
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/profile/InfoCard.module.css";
 import Item from "./Item";
-import MottoDisplayOnly from "./motto2/MottoDisplayOnly";
+import MottoDisplayOnly from "./motto/MottoDisplayOnly";
 import StoryDisplayOnly from "./story/StoryDisplayOnly";
 
 type Props = {
@@ -28,15 +28,15 @@ return (
 	<StoryDisplayOnly profile={profile}/>
 
 	<Item title="Level">
-		<p>item's content : customize it with a specific component</p>
+		<p>item&apos;s content : customize it with a specific component</p>
 	</Item>
 
 	<Item title="Ranking">
-		<p>item's content : customize it with a specific component</p>
+		<p>item&apos;s content : customize it with a specific component</p>
 	</Item>
 
 	<Item title="Recent games">
-		<p>item's content : customize it with a specific component</p>
+		<p>item&apos;s content : customize it with a specific component</p>
 	</Item>
 
 	</div>

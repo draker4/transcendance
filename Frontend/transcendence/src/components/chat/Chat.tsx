@@ -48,7 +48,7 @@ export default function Chat() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [positionX, positionY]);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--width-style", widthStyle);
@@ -162,7 +162,7 @@ export default function Chat() {
       window.removeEventListener("touchmove", handleMouseMove);
       window.removeEventListener("touchend", handleMouseUp);
     };
-  }, [dragging, offset]);
+  }, [dragging, offset, chatOpened, littleScreen]);
 
   const handleMouseDown = () => {
     if (littleScreen) setDragging(true);
