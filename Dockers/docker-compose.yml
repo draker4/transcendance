@@ -42,8 +42,8 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - database_conf_vol:/etc/postgresql/13/
-      - database_data_vol:/var/lib/postgresql/13/
+      - database_conf_vol:/etc/postgresql/15/
+      - database_data_vol:/var/lib/postgresql/15/
     env_file:
       - .env
     networks:
