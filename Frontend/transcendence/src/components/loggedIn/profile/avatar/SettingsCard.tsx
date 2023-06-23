@@ -1,11 +1,11 @@
 import styles from "@/styles/loggedIn/profile/AvatarCard.module.css";
-import { CirclePicker, ColorChangeHandler } from "react-color";
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CircleIcon from "@mui/icons-material/Circle";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ColorSelector from "./ColorSelector";
 
 const ToggleButtonS = styled(ToggleButton)({
   "&.Mui-selected, &.Mui-selected:hover": {
@@ -15,8 +15,8 @@ const ToggleButtonS = styled(ToggleButton)({
 });
 
 type Props = {
-  previewChangeTopColor: ColorChangeHandler;
-  previewChangeBotColor: ColorChangeHandler;
+  previewChangeTopColor: (color: string) => void;
+  previewChangeBotColor: (color: string) => void;
   handleArea: (
     event: React.MouseEvent<HTMLElement>,
     newArea: "border" | "background" | null
@@ -71,8 +71,8 @@ export default function SettingsCard({
         </Stack>
       </Stack>
 
-      <CirclePicker
-        onChange={
+      <ColorSelector
+        handleColorSelection={
           selectedArea === "border"
             ? previewChangeTopColor
             : previewChangeBotColor

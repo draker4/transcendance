@@ -1,7 +1,7 @@
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/InfoCard.module.css";
 import Item from "./Item";
-import MottoDisplayOnly from "./motto/MottoDisplayOnly";
+import MottoDisplayOnly from "./tagline/MottoDisplayOnly";
 import StoryDisplayOnly from "./story/StoryDisplayOnly";
 
 type Props = {
