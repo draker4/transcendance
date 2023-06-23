@@ -1,5 +1,6 @@
 import { promisify } from "util";
-import { createCipheriv, createDecipheriv, randomBytes, scrypt } from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import scrypt from "scryptsy";
 
 export class CryptoService {
 
@@ -19,9 +20,10 @@ export class CryptoService {
 	}
 
 	private async initialize(): Promise<void> {
-		"use server"
+		// "use server"
 		if (process.env.CRYPTO_KEY)
-			this.key = (await promisify(scrypt)(process.env.CRYPTO_KEY, 'salt', 32)) as Buffer;
+			this.key = scrypt(process.env.CRYPTO_KEY, 'salt', 16384, 8, 1, 32) as Buffer;
+			// this.key = (await promisify(scrypt)(process.env.CRYPTO_KEY, 'salt', 32)) as Buffer;
 	}
 
 	public async encrypt(data: string | null): Promise<string> {

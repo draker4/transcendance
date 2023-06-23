@@ -1,5 +1,3 @@
-"use server"
-
 import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 

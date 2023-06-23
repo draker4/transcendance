@@ -23,7 +23,7 @@ export default function NavbarWelcome() {
       </Link>
       <div className={styles.right}>
         <Theme />
-        <Link href="/welcome/login" prefetch>
+        <Link href="/welcome/login">
           <button type="button" title="Log Button" className={styles.logIn}>
             Log In
           </button>
