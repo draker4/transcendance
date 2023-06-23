@@ -40,12 +40,12 @@ export default function Matchmaking_Game_Infos({ game } : {game : any }) {
     }
 
     return (
-        <div className={styles.game_infos} onClick={join_game}>
+        <div className={styles.game_infos}>
             <div className={styles.name_box}>
                 <p>{game.Name}</p>
             </div>
             <div className={styles.avatar_host}>
-                <p>{game.Host}</p>
+                {/* <p>{game.Host}</p> */}
                 <Image src={`/images/game/check.png`} alt="one_game" width="50" height="50"/>
             </div>
             <div className={styles.vs}>
@@ -53,24 +53,24 @@ export default function Matchmaking_Game_Infos({ game } : {game : any }) {
             </div>
             <div className={styles.avatar_opponent}>
                 <Image src={`/images/game/check.png`} alt="one_game" width="50" height="50"/>
-                <p>{game.Opponent}</p>
-            </div>
-            <div className={styles.mdp_input}>
-                {game.Password  && <div className={styles.mdpoff}> <input className={styles.mdp_input} type="text" placeholder=" Mot de passe"/></div>}
-                {!game.Password && <div className={styles.mdpon}>  </div>}
+                {/* <p>{game.Opponent}</p> */}
             </div>
             <div className={styles.status}>
                 {game.Status == "Waiting" && <p>Waiting</p>}
                 {game.Status == "In progress" && <p>In progress</p>}
             </div>
             <div className={styles.score}>
-                <p>Score</p>
+                <p>{game.Score_Host} / {game.Score_Opponent}</p>
+            </div>
+            <div className={styles.mdp_input}>
+                {game.Password  && <input type="text" placeholder=" Mot de passe"/>}
+                {!game.Password && <div></div>}
             </div>
             <div className={styles.button_join_box}>
-                <button className={styles.button_join} onClick={join_game} > Rejoindre </button>
+                <button className={styles.button} onClick={join_game} > Rejoindre </button>
             </div>
             <div className={styles.button_watch_box}>
-                <button className={styles.button_watch} onClick={watch_game} > Regarder </button>
+                <button className={styles.button} onClick={watch_game} > Regarder </button>
             </div>
         </div>
     );
