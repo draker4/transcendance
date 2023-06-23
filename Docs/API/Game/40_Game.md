@@ -10,7 +10,7 @@
 - [06 - api/games/matchmake/stop](#api-games-matchmake-stop)
 - [07 - api/games/matchmake/update](#api-games-matchmake-update)
 - [08 - api/games/isingame](#api-games-isingame)
-- [09 - api/games/matchmake/playerwaiting](#api-games-matchmake-playerwaiting)
+- [09 - api/games/matchmake/statslobby](#api-games-matchmake-statslobby)
 
 <br>
 
@@ -394,7 +394,7 @@
   ```
 <br><br>
 
-### `GET api/games/matchmake/playerwaiting` : renvoi le nombre de joueur en attente dans le matchmake <a id="api-games-matchmake-playerwaiting"></a>
+### `GET api/games/matchmake/statslobby` : renvoi le nombre de joueur en attente dans le matchmake <a id="api-games-matchmake-statslobby"></a>
 <br>
 
 > Requête
@@ -421,6 +421,8 @@
       "message": "Request successfulld"
       "data": {
             "player_waiting" : "2"
+            "games" : "7"
+            "players" : "3"
       }
   }
   ```

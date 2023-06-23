@@ -9,6 +9,8 @@ import { Game } from 'src/utils/typeorm/Game.entity';
 import { MatchmakingDTO } from  '../dto/Matchmaking.dto'
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 
+import { User } from 'src/utils/typeorm/User.entity';
+
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -20,6 +22,9 @@ export class GamesService {
 
         @InjectRepository(Matchmaking)
         private readonly MatchMakeRepository: Repository<Matchmaking>,
+
+        @InjectRepository(User)
+        private readonly UserRepository: Repository<User>,
     ) {}
 
 
@@ -178,12 +183,14 @@ export class GamesService {
             let games_infos = [];
             for (let i = 0; i < games.length; i++) 
             {   
+                const Host_Login = await this.GetPlayerName(games[i].Host);
+                const Opponent_Login = await this.GetPlayerName(games[i].Opponent);
                 let game_info = {
                     uuid            : games[i].uuid,
                     Name            : games[i].Name,
                     Password        : true ? games[i].Password != "" : false,
-                    Host            : games[i].Host,               // [!] Recuperer le nom du player
-                    Opponent        : games[i].Opponent,           // [!] Recuperer le nom du player
+                    Host            : Host_Login,
+                    Opponent        : Opponent_Login,
                     Viewers_List    : games[i].Viewers_List.length,
                     Score_Host      : games[i].Score_Host,
                     Score_Opponent  : games[i].Score_Opponent,
@@ -428,13 +435,15 @@ export class GamesService {
     }
 
     //Renvoi le nombre de joueur en attentes
-    async GetWaiters(req: any): Promise<any> {
+    async GetStatsLobby(req: any): Promise<any> {
         try {
             const Data = {
                 success: true,
                 message: "Request successfulld",
                 data: {
-                    player_waiting : await this.GetNumberOfPlayerInMatchmaking()
+                    nbWaiting : await this.GetNumberOfPlayerInMatchmaking(),
+                    nbPlayer : await this.GetNumberOfPlayerConnected(),
+                    nbGames : await this.GetNumberOfGames(),
                 }
             };
             return Data;
@@ -451,15 +460,6 @@ export class GamesService {
 
 
     //===========================================================Fonction annexe===========================================================
-
-    //Renvoi le nombre de joueur en attentes
-    async GetNumberOfPlayerInMatchmaking(): Promise<any> {
-        const all_user = await this.MatchMakeRepository.find();
-        if (all_user != null) {
-            return all_user.length;
-        }
-        return 0;
-    }
 
     //Return True si le joueur est dans la liste de matchmaking
     async CheckIfPlayerIsInMatchmaking(user_id: number): Promise<any> {
@@ -511,10 +511,9 @@ export class GamesService {
                 const user2 = all_user[1];
                 await this.MatchMakeRepository.remove(user1);
                 await this.MatchMakeRepository.remove(user2);
-
-                // [!] Recuperer les nom des joueurs ( demander draker si on à une fonction sur la table user pour recuperer le nom du joueur)
-
-                const game_id = await this.CreateGameInDB(user1.Player_Id, user1 + " vs " + user2.Player_Id, "");
+                const name_1 = await this.GetPlayerName(user1.Player_Id);
+                const name_2 = await this.GetPlayerName(user2.Player_Id);
+                const game_id = await this.CreateGameInDB(user1.Player_Id, name_1 + " vs " + name_2, "");
                 await this.AddPlayerToGame(game_id, user2.Player_Id);
                 return game_id;
             }
@@ -805,6 +804,38 @@ export class GamesService {
         return false;
     }
 
+    //Renvoi le nombre de joueur en attentes
+    async GetNumberOfPlayerInMatchmaking(): Promise<any> {
+        const all_user = await this.MatchMakeRepository.find();
+        if (all_user != null) {
+            return all_user.length;
+        }
+        return 0;
+    }
+
+    //Renvoi le nombre de personne connecté
+    async GetNumberOfPlayerConnected(): Promise<any> {
+        //Genere un nombre random entre 0 et 35
+        const nb = Math.floor(Math.random() * 36);
+        return nb;
+    }
+
+    //Cherche le nombre de game en cours ) partir de la liste getall
+    async GetNumberOfGames(): Promise<any> {
+        const nb_game = (await this.GameRepository.find({ where: { Status : "Waiting" || "InProgress" } })).length;
+        return nb_game;
+    }
+
+    async GetPlayerName(player_id: number): Promise<string> {
+        if (player_id != null) {
+            const player = await this.UserRepository.findOne({ where: { id : player_id } });
+            if (player != null) {
+                return player.login;
+            }
+        }
+        //player id to string
+        return "Player_" + player_id;
+    }
 
     // async Test(req: any): Promise<any> {
 

@@ -25,9 +25,8 @@
 }
 
 .home_button:hover {
-    box-shadow: 0px 0px 10px 0px #00000040;
     transform: scale(1.1);
     cursor: pointer;
     z-index: 1;
-    border: 3px solid orangered;
+    border: 3px solid var(--accent);
 }

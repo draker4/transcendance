@@ -6,7 +6,8 @@
 	width: auto;
 	display: flex;
 	justify-content: flex-start;
-	height: calc(100vh - clamp(40px, 5vh, 80px));
+	/* height: calc(100vh - clamp(40px, 5vh, 80px));  */  
+  height: 100%;
 	animation-name: height;
 	animation-duration: 1s;
 }
