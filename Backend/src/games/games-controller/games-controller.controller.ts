@@ -11,7 +11,6 @@ import { Public } from 'src/utils/decorators/public.decorator';
 
 @Controller('games')
 export class GamesController {
-  constructor(private readonly GamesService: GamesService) {}
 
 	constructor(private readonly GamesService: GamesService) {}
 
