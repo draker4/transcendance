@@ -118,6 +118,12 @@ class Game_Service {
         }
         return false;
     }
+
+    public async Get_Stats(): Promise<any> {
+        const response = await this.FetchData('games/lobby' , 'GET');
+        const data = await response.json();
+        return data.data;
+    }
 }
 
 export default Game_Service;

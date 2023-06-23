@@ -4,8 +4,8 @@ import Image from 'next/image';
 export default function SearchBox({ funct } : { funct: any}) {
     return (
         <div className={styles.search_box}>
-            <div>
-                <Image src={`/images/game/spin.gif`} alt={"sping_loading"} width="50" height="50"/>
+            <div >
+                <Image src={`/images/game/balls.gif`} alt={"sping_loading"} width="50" height="50"/>
             </div>
 
             <h2>Recherche d'un adversaire</h2>

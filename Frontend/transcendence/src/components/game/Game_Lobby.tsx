@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import Matchmaking_Button from '@/components/game/Matchmaking_Button'
 import Matchmaking_Game_List from '@/components/game/Matchmaking_Game_List'
 import Search_Box from '@/components/game/Popup_Search'
+import Infos_Var from '@/components/game/Infos_Var'
 
 //Import le profil
 import Profile from "@/services/Profile.service";
@@ -24,18 +25,20 @@ export default function Game_Lobby({ profile, token }: Props) {
     
     const Game = new GameService(token);
     
-    //Pour le chargement ingame not in game
     const [isLoading, setIsLoading] = useState(true);
+    const [nbWaiting, setnbWaiting] = useState(0);
+    const [nbPlayer, setnbPlayer] = useState(0);
+    const [nbGames, setnbGames] = useState(0);
     const [inGame, setInGame] = useState(false);
     const [inMatchMaking, setinMatchMake] = useState(false);
     const [gameId, setGameId] = useState("undefined");
-
-    //Pour la creation de la game
     const [gameName, setGameName] = useState("");
     const [gamePassword, setGamePassword] = useState("");
     const [createError, setCreateError] = useState("");
 
     useEffect(() => {
+
+        Get_Stats();
 
         Game.IsInGame().then((cur_game_id) => {
             
@@ -89,6 +92,15 @@ export default function Game_Lobby({ profile, token }: Props) {
         setGamePassword(event.target.value);
     };
 
+    //Update le nombre de game en lobby, nombre de joueur connecte, et joueur en recherche
+    const Get_Stats = async () => {
+        const res = await Game.Get_Stats();
+        setnbWaiting(res.nbWaiting);
+        setnbPlayer(res.nbPlayer);
+        setnbGames(res.nbGames);
+        setTimeout(() => { Get_Stats(); }, 2000);
+    }; 
+
     //------------------------------------RENDU------------------------------------//
 
     //Si la page n'est pas chargé
@@ -107,7 +119,7 @@ export default function Game_Lobby({ profile, token }: Props) {
                 <h1>Vous êtes en game</h1>
                 <div className={styles.resume_box}>
                     {/* Boutons reprendre ou quitter*/}
-                    { inGame && <Matchmaking_Button text="Reprendre la partie" onClick={() => Game.Resume_Game(gameId)} img="game/check"/>}
+                    { inGame && <Matchmaking_Button text="Reprendre la partie" onClick={() => Game.Resume_Game(gameId)} img="game/joystick"/>}
                     { inGame && <Matchmaking_Button text="Quitter la partie" onClick={Quit_Game} img="game/check"/>}
                 </div>
             </main>
@@ -124,13 +136,22 @@ export default function Game_Lobby({ profile, token }: Props) {
 
                 {/* Boutons creer ou randomize*/}
                 <div className={styles.button_box}>
-                    <div className={styles.game_param}>
-                        <div> <input  className={styles.game_input} type="text" onChange={handle_Game_Name} placeholder="Nom de la partie" /></div>
-                        <div> <input  className={styles.game_input} type="text" onChange={handle_Game_Password} placeholder="Mot de passe" />    </div>
-                        <div> <p className={styles.error}>{createError}</p>    </div>
+                    <div className={styles.create}>
+                        <div className={styles.game_param}>
+                            <div> <input    className={styles.game_input} type="text" onChange={handle_Game_Name} placeholder="   Nom de la partie" /></div>
+                            <div> <p        className={styles.error}>{createError}</p></div>
+                            <div> <input    className={styles.game_input} type="text" onChange={handle_Game_Password} placeholder="   Mot de passe" /></div>
+                        </div>
+                        <Matchmaking_Button text="Créer une partie" onClick={Create_Game} img="game/joystick"/>
                     </div>
-                    <Matchmaking_Button text="Créer une partie" onClick={Create_Game} img="game/check"/>
-                    <Matchmaking_Button text="Randomize" onClick={Start_Matchmake} img="game/check"/>
+                    <div className={styles.infos}>
+                        <div> <Infos_Var text="Joueurs en recherche : " num={nbWaiting} img="game/die"/></div>
+                        <div> <Infos_Var text="Games en cours : " num={nbGames} img="game/joystick"/></div>
+                        <div> <Infos_Var text="Joueurs connectés : " num={nbPlayer} img="game/ping"/></div>
+                    </div>
+                    <div className={styles.randomize}>
+                        <Matchmaking_Button text="Opposant aléatoire" onClick={Start_Matchmake} img="game/die"/>
+                    </div>
                 </div>    
 
                 {/* Popup matchmake */}

@@ -70,11 +70,29 @@ export default function Matchmaking_Game_List({ token }: Props) {
 	return (
 
 		<div className={styles.game_list} >
-				<Matchmaking_Search onChangeFct={Update_Search}/>
+			<Matchmaking_Search onChangeFct={Update_Search}/>
+			<div className={styles.game_list}>
 				{filteredGames.length === 0 && <p className={styles.loading}>Recherche en cours...</p>}
 				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-				<One_Game game={game} key={index}/>
-			))}
+					<One_Game game={game} key={index}/>
+				))}
+				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
+					<One_Game game={game} key={index}/>	
+				))}
+				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
+					<One_Game game={game} key={index}/>	
+				))}
+				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
+					<One_Game game={game} key={index}/>
+				))}
+				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
+					<One_Game game={game} key={index}/>	
+				))}
+				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
+					<One_Game game={game} key={index}/>	
+				))}	
+				
+			</div>
 		</div>
 	);
 }

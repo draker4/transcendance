@@ -5,6 +5,8 @@ import styles from "@/styles/game/game_infos.module.css"
 
 import { useRouter } from "next/navigation";
 
+import Image from "next/image";
+
 export default function Matchmaking_Game_Infos({ game } : {game : any }) {
 
     const router = useRouter();
@@ -19,21 +21,57 @@ export default function Matchmaking_Game_Infos({ game } : {game : any }) {
         //Fais une demande au back
         //Si back ok -> join la game
 
-        const url = 'home/game/' + game.uuid;
+        const url = 'game/' + game.uuid;
         router.push(url);
     }
 
+    const watch_game = () => {
+
+        //Check si la game à un mdp , si oui demande le mdp
+
+        //Demande comment l'user veut rejoindre la game
+
+        //Sinon join la game
+        //Fais une demande au back
+        //Si back ok -> join la game
+
+        const url = 'game/' + game.uuid;
+        router.push(url);
+    }
 
     return (
         <div className={styles.game_infos} onClick={join_game}>
-            <ul className={styles.infos_list}>
-                <li className={styles.info}>Name: {game.Name}</li>
-                <li className={styles.info}>Hôte: {game.Host}</li>
-                <li className={styles.info}>Adversaire: {game.Opponent}</li>
-                <li className={styles.info}>Nombre de spectateurs: {game.Viewers_List}</li>
-                <li className={styles.info}>Statut: {game.Status}</li>
-                <li className={styles.info}>Creer à : {game.CreatedAt}</li>
-            </ul>
+            <div className={styles.name_box}>
+                <p>{game.Name}</p>
+            </div>
+            <div className={styles.avatar_host}>
+                <p>{game.Host}</p>
+                <Image src={`/images/game/check.png`} alt="one_game" width="50" height="50"/>
+            </div>
+            <div className={styles.vs}>
+                <Image src={`/images/game/vs.png`} alt="one_game" width="50" height="50"/>
+            </div>
+            <div className={styles.avatar_opponent}>
+                <Image src={`/images/game/check.png`} alt="one_game" width="50" height="50"/>
+                <p>{game.Opponent}</p>
+            </div>
+            <div className={styles.mdp_input}>
+                {game.Password  && <div className={styles.mdpoff}> <input className={styles.mdp_input} type="text" placeholder=" Mot de passe"/></div>}
+                {!game.Password && <div className={styles.mdpon}>  </div>}
+            </div>
+            <div className={styles.status}>
+                {game.Status == "Waiting" && <p>Waiting</p>}
+                {game.Status == "In progress" && <p>In progress</p>}
+            </div>
+            <div className={styles.score}>
+                <p>Score</p>
+            </div>
+            <div className={styles.button_join_box}>
+                <button className={styles.button_join} onClick={join_game} > Rejoindre </button>
+            </div>
+            <div className={styles.button_watch_box}>
+                <button className={styles.button_watch} onClick={watch_game} > Regarder </button>
+            </div>
         </div>
     );
 }

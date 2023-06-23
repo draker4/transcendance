@@ -1,19 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 .First_Frame {
+    max-height: 100%;
     height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font: var(--text-font);
 }
 
 .main_resume{
-    min-height: 100%;
-    background: #000000;
+    max-height: 100%;
+    background: var(--primary);
     font-family: 'Inter', sans-serif;
     padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content:center;
     text-align: center;
-    color: white;
+    color: var(--accent);
 }
 
 .resume_box{
@@ -30,42 +36,12 @@
     justify-content: center;
     flex-direction: column;
     min-height: 100%;
-    background: #000000;
+    background: var(--primary);
     font-family: 'Inter', sans-serif;
-    padding: 30px;
+    padding: 30px 30px 10px 0px;
     justify-content:space-between;
 }
 
-.game_param{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: left;
-    flex-grow: 0;
-}
-
-.error{
-    color: red;
-    font-size: 14px;
-    margin-bottom: 10px;
-    flex-grow: 0;
-}
-
-.game_input{
-    width: 100%;
-    height: 40px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-size: 16px;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-    margin-bottom: 10px;
-    flex-grow: 0;
-}
-
-<<<<<<< HEAD
-=======
 .loading_page {
     min-height: 100%;
     display: flex;
@@ -74,14 +50,15 @@
     align-items: center;
     flex-grow: 1;
     text-align: center;
-  }
+    background: var(--primary);
+    color: black;
+}
   
-  .loading_page h1 {
+.loading_page h1 {
     align-self: center;
-  }
+}
   
 
->>>>>>> master
 .loading {
     height: 100%;
     flex-grow: 1;
@@ -94,13 +71,66 @@
 }
 
 .button_box{
+    background-color: var(--primary);
+    width: 100%;
     position: relative;
     bottom: 2px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     flex-grow: 0;
+    padding-top: 5px;
+}
+
+.create {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.game_param{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: left;
+    flex-grow: 0;
+    width: 50%;
+    padding: 20px;
+}
+
+.error{
+    color: red;
+    font-size: 14px;
+    height: 20px;
+    flex-grow: 1;
+}
+
+.game_input{
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    flex-grow: 0;
+}
+
+.infos {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.randomize {
+    width: 40%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 @keyframes glow {
