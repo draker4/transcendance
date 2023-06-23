@@ -1,0 +1,12 @@
+
+# misc
+.DS_Store
+
+# env
+.env
+Dockers/.env
+
+# Database
+Database
+
+install_docker.sh

@@ -1,0 +1,14 @@
+
+.game_list {
+    display: flex;
+    flex-direction: column;
+    justify-content : flex-start;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.loading{
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}

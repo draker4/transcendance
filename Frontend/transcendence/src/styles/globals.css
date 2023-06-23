@@ -1,0 +1,123 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+/* typo pour titres */
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
+/* typo pour texte courant */
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
+:root {
+  --max-width: 1100px;
+  --border-radius: 12px;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+
+  /* COLOR DEFINES  SET1 */
+
+  /* --primary: rgba(254, 254, 254, 1);
+  --primary-darker1: rgba(241, 245, 249, 1);
+  --secondary: rgba(126, 137, 135, 1);
+  --tertiary: rgba(5, 47, 95, 1);
+  --accent-opacity: rgba(179, 251, 84, 0.6);
+  --accent-darker1: rgb(147, 181, 102); */
+
+  /* COLOR DEFINES SET2 - LIGHT*/
+
+  --primary-light: rgba(254, 254, 254, 1);
+  --primary-darker1-light: rgba(241, 245, 249, 1);
+
+  --secondary-light: rgba(100, 116, 139, 1);
+  --secondary-lighter1-light: rgb(145, 153, 163);
+  --secondary-lighter2-light: rgb(179, 185, 194);
+  --secondary-lighter3-light: rgb(220, 226, 233);
+
+  --tertiary-light: rgba(15, 23, 42, 1);
+
+  --accent-light: rgba(34, 211, 238, 1);
+  --accent-lighter1-light: rgb(159, 225, 236);
+  --accent-opacity-light: rgba(34, 211, 238, 0.6);
+  --accent-darker1-light: rgba(53, 235, 237, 1);
+
+  --notif-light: rgba(255, 85, 85, 1);
+
+  /* COLOR DEFINES SET2 - DARK*/
+
+  --primary-dark: rgb(25, 25, 25);
+  --primary-darker1-dark: rgb(23, 23, 24);
+
+  --secondary-dark: rgb(152, 165, 180);
+  --secondary-lighter1-dark: rgb(138, 144, 155);
+  --secondary-lighter2-dark: rgb(98, 103, 111);
+  --secondary-lighter3-dark: rgb(58, 62, 66);
+
+  --tertiary-dark: rgb(200, 203, 210);
+
+  --accent-dark: rgba(34, 211, 238, 1);
+  --accent-lighter1-dark: rgb(159, 225, 236);
+  --accent-opacity-dark: rgba(34, 211, 238, 0.6);
+  --accent-darker1-dark: rgba(53, 235, 237, 1);
+
+  --notif-dark: rgba(255, 85, 85, 1);
+
+  /* FONT DEFINES*/
+  --title-font: "Quicksand", sans-serif;
+  --text-font: "Roboto", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+[color-scheme="dark"] {
+  --primary: var(--primary-dark);
+  --primary-darker1: var(--primary-darker1-dark);
+
+  --secondary: var(--secondary-dark);
+  --secondary-lighter1: var(--secondary-lighter1-dark);
+  --secondary-lighter2: var(--secondary-lighter2-dark);
+  --secondary-lighter3: var(--secondary-lighter3-dark);
+
+  --tertiary: var(--tertiary-dark);
+
+  --accent: var(--accent-dark);
+  --accent-lighter1: var(--accent-lighter1-dark);
+  --accent-opacity: var(--accent-opacity-dark);
+  --accent-darker1: var(--accent-darker1-dark);
+
+  --notif: var(--notif-dark);
+}
+
+[color-scheme="light"] {
+  --primary: var(--primary-light);
+  --primary-darker1: var(--primary-darker1-light);
+
+  --secondary: var(--secondary-light);
+  --secondary-lighter1: var(--secondary-lighter1-light);
+  --secondary-lighter2: var(--secondary-lighter2-light);
+  --secondary-lighter3: var(--secondary-lighter3-light);
+
+  --tertiary: var(--tertiary-light);
+
+  --accent: var(--accent-light);
+  --accent-lighter1: var(--accent-lighter1-light);
+  --accent-opacity: var(--accent-opacity-light);
+  --accent-darker1: var(--accent-darker1-light);
+
+  --notif: var(--notif-light);
+}
+
+html,
+body {
+  max-width: 100vw;
+  height: 100vh;
+  /* overscroll-behavior: none; */
+  background: var(--primary);
+  color: var(--tertiary);
+  font-family: var(--text-font);
+}
+
+::selection {
+  background: var(--primary);
+  color: var(--accent);
+}

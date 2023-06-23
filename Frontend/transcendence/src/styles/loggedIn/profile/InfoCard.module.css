@@ -1,0 +1,162 @@
+.navbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 0.5vw 0 1.5vw 0;
+}
+
+.navbar .button {
+  font-size: clamp(0.5rem, 0.2rem + 1.5vw, 1rem);
+  font-weight: 700;
+  font-family: var(--title-font);
+  color: var(--secondary-lighter3);
+  user-select: none;
+
+  cursor: pointer;
+  border: none;
+  outline: none;
+
+  display: flex;
+  /* padding: 0 1vw; */
+  flex-direction: row;
+}
+
+.navbar .button.active {
+  color: var(--secondary);
+}
+
+.navbar .button:hover,
+.navbar .button.active:hover {
+  color: var(--accent);
+}
+
+/* ----------------------------------- */
+
+.sections {
+  /* dimensions temporaires */
+  min-height: 500px;
+  min-width: 250px;
+  padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+
+  /* border-top: 0.15rem solid;
+	border-image: 
+		linear-gradient( 
+			to right, 
+			var(--primary) 5%, 
+			var(--accent) 20%,
+			var(--accent) 80%,
+			var(--primary) 95%);
+	border-image-slice: 1; */
+
+  /* border: dashed 1px var(--tertiary); */
+}
+
+.sections p.story,
+.sections p.story.placeholder,
+.sections p {
+  margin-bottom: 1rem;
+  padding-left: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.sections input,
+.sections p.motto {
+  color: var(--secondary);
+  font-size: 1rem;
+  padding-left: 0;
+}
+
+.section input::placeholder {
+  color: var(--secondary-lighter3);
+}
+
+.sections p.story.placeholder,
+.sections p.motto.placeholder {
+  color: var(--secondary-lighter3);
+}
+
+.sections p.motto:before {
+  content: open-quote;
+}
+
+.sections p.motto:after {
+  content: close-quote;
+}
+
+.sections p.motto:after,
+.sections p.motto:before {
+  color: var(--accent);
+}
+
+.sections p.tinyTitle {
+  font-family: var(--title-font);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.sections input {
+  appearance: none;
+  border: none;
+  font-family: var(--text-font);
+  color: var(--secondary);
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: var(--primary);
+}
+
+.sections .story textarea {
+  font-size: 0.85rem;
+  font-family: var(--text-font);
+  color: var(--secondary);
+  background-color: var(--primary);
+
+  outline: none;
+  resize: none;
+  /* height: auto; */
+  width: 100%;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.sections input:focus {
+  outline: none;
+}
+
+.sections .notif {
+  font-size: 0.8rem;
+  color: var(--notif);
+}
+
+.sections .story.display {
+  /* background-color: aquam; */
+  word-wrap: break-word;
+}
+
+/* ----------------------------------- */
+
+/* into .sections */
+.item {
+  background-color: var(--primary-darker1);
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+  margin-bottom: 0.5rem;
+}
+
+.item .header {
+  background-color: var(--accent);
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem)
+    clamp(0.15rem, 0.05rem + 1vw, 1.2rem) 0 0;
+  padding: 0.5rem;
+}
+
+.item .header h1 {
+  color: var(--primary);
+  font-family: var(--title-font);
+  font-size: 0.7rem;
+}
