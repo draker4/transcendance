@@ -77,8 +77,9 @@ export default function FormLogin({
     }
   }, [access_token, router]);
 
-  const handleActionLogin = async (data: FormData) => {
-    const loginUser = data.get("login") as string;
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const loginUser = e.target.login.value;
     const loginChecked = checkLoginFormat(loginUser);
     setNotif(loginChecked);
 
@@ -88,7 +89,7 @@ export default function FormLogin({
       exists: string;
       token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
-
+    
     setNotif(res.exists);
     setToken(res.token);
   };
@@ -97,7 +98,7 @@ export default function FormLogin({
     <div className={styles.main}>
       <h3>You are almost there! 😁</h3>
 
-      <form action={handleActionLogin}>
+      <form onSubmit={handleSubmit}>
         <label>Please choose your login!</label>
         <p className={styles.little}>
           Don&apos;t worry, you can change it later.

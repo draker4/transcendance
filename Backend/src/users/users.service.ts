@@ -20,14 +20,19 @@ export class UsersService {
   async getUserByLogin(login: string) {
     return await this.userRepository.findOne({ where: { login: login } });
   }
-  
+
   async getUserByEmail(email: string, provider: string) {
-    const emailDecrypted = (await this.cryptoService.decrypt(email)).toLowerCase();
+    const emailDecrypted = (
+      await this.cryptoService.decrypt(email)
+    ).toLowerCase();
     const clients = await this.userRepository.find();
 
     for (const client of clients) {
       const emailClient = await this.cryptoService.decrypt(client.email);
-      if (emailClient.toLowerCase() === emailDecrypted && client.provider === provider)
+      if (
+        emailClient.toLowerCase() === emailDecrypted &&
+        client.provider === provider
+      )
         return client;
     }
     return null;
@@ -42,10 +47,6 @@ export class UsersService {
   }
 
   async updateUser(user: User) {
-    await this.userRepository.update(
-      user.id,
-      user
-    );
+    await this.userRepository.update(user.id, user);
   }
 }
-

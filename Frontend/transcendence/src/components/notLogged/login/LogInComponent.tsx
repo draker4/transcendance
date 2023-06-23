@@ -11,6 +11,11 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+
+type FormInputs = {
+  [key: string]: string;
+};
 
 export default function LogInComponent() {
   const test = useParams().notif;
@@ -24,6 +29,7 @@ export default function LogInComponent() {
   const [notif, setNotif] = useState<string>("");
   const [changeEmail, setChangeEmail] = useState<boolean>(false);
   const { executeRecaptcha } = useGoogleReCaptcha();
+  const { handleSubmit, setValue } = useForm<FormInputs>();
   let exists = useRef<boolean>(false);
 
   useEffect(() => {
@@ -32,7 +38,7 @@ export default function LogInComponent() {
       router.push("/home");
     }
 
-    if (register) router.push("welcome/confirm");
+    if (register) router.push("/welcome/confirm");
 
     if (test === "wrong") setNotif("Something went wrong, please try again!");
   }, [register, login, router, test]);
@@ -80,22 +86,23 @@ export default function LogInComponent() {
     return;
   };
 
-  const handleAction = async (data: FormData) => {
+  const submit = async (data: FormInputs) => {
+
     try {
       await handleCaptcha();
 
       // handle input
-      const emailUser = data.get("email") as string;
+      const emailUser = data.email;
 
-      //if email, first step of authentification
-      if (emailUser) {
+      //if email only, first step of authentification
+      if (email.length === 0) {
         setEmail(emailUser);
 
         const res: {
           emailExists: boolean;
           notif: boolean;
         } = await registerFormEmail(emailUser);
-        console.log(res);
+
         if (res.notif) throw new Error();
 
         setPassword(true);
@@ -106,14 +113,15 @@ export default function LogInComponent() {
         return;
       }
 
-      const passwordUser = data.get("password") as string;
+      // const passwordUser = data.get("password") as string;
+      const passwordUser = data.password;
       let res: {
         passwordSecured: string;
         register: boolean;
         login: string;
       } = { passwordSecured: "", register: false, login: "" };
 
-      if (!exists) res = await registerFormPassword(passwordUser, email);
+      if (!exists.current) res = await registerFormPassword(passwordUser, email);
       else res = await loginPassword(passwordUser, email);
 
       setPasswordSecured(res.passwordSecured);
@@ -121,6 +129,7 @@ export default function LogInComponent() {
       if (register || login) setTextButton("Loading...");
       setRegister(res.register);
       setLogin(res.login);
+
     } catch (error) {
       setNotif("Something went wrong, please try again!");
     }
@@ -133,7 +142,7 @@ export default function LogInComponent() {
         Enter your email to log in or register your account
       </p>
       <div className={styles.box}>
-        <form action={handleAction} className={styles.form}>
+        <form onSubmit={handleSubmit(submit)} className={styles.form}>
           {email.length === 0 && (
             <input
               type="email"
@@ -142,6 +151,7 @@ export default function LogInComponent() {
               name="email"
               className={styles.input}
               required
+              onChange={(event) => setValue("email", (event.target as HTMLInputElement).value)}
             />
           )}
           {email.length > 0 && (
@@ -165,6 +175,7 @@ export default function LogInComponent() {
               name="password"
               className={styles.input}
               required={password}
+              onChange={(event) => setValue("password", (event.target as HTMLInputElement).value)}
             />
             {passwordSecured.length > 0 && (
               <div className={styles.notif}>{passwordSecured}</div>

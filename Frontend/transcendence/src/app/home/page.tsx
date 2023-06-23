@@ -20,6 +20,10 @@ export default async function HomePage() {
   return (
     <main className={styles.main}>
       <div>
+        <div>{profile.email}</div>
+        <div>{profile.first_name}</div>
+        <div>{profile.last_name}</div>
+        <div>{profile.phone}</div>
         {profile.image && (
           <Image
             alt="profile image"

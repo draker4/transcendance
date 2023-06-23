@@ -1,4 +1,4 @@
-"use server"
+"use client"
 
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import { getDoubleLogin } from "./checkLogin";
@@ -27,8 +27,9 @@ export async function handleActionServer(
 		if (avatarChosen.image !== "") {
 			avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
 		}
+		console.log("here");
 		
-		const	register = await fetch("http://backend:4000/api/auth/firstLogin", {
+		const	register = await fetch("http://localhost:4000/api/auth/firstLogin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

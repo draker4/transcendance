@@ -1,9 +1,17 @@
-import { Controller, Post, Get, HttpStatus, Query, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  HttpStatus,
+  Query,
+  Request,
+} from '@nestjs/common';
 import { GamesService } from '../games-service/games-service.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 
 @Controller('games')
 export class GamesController {
+  constructor(private readonly GamesService: GamesService) {}
 
 	constructor(private readonly GamesService: GamesService) {}
 

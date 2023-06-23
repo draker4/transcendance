@@ -1,5 +1,3 @@
-"use server"
-
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import { checkPassword, getDoubleEmail } from "./checkUserInscription";
 import registerUser from "./registerUser";
@@ -30,7 +28,7 @@ export async function loginPassword(
 	
 		const	passwordCrypt = await Crypto.encrypt(passwordUser);
 		const	res = await logUserEmail(emailCrypt, passwordCrypt);
-
+		console.log(res);
 		if (res === "wrong password") {
 			return {
 				passwordSecured: "Wrong password, please try again!",
@@ -38,13 +36,20 @@ export async function loginPassword(
 				login: "",
 			}
 		}
-		if (res === "user not verified" || res === "no user") {
+		if (res === "no user") {
 			const	passwordHashed = await hash(passwordUser);
 			const	res = await registerUser(emailCrypt, passwordHashed);
 
 			if (res.message !== "ok")
 				throw new Error('Cannot create user');
 			
+			return {
+				passwordSecured: "",
+				register: true,
+				login: "",
+			}
+		}
+		if (res === "user not verified") {
 			return {
 				passwordSecured: "",
 				register: true,
