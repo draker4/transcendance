@@ -62,6 +62,7 @@ export class AuthService {
       phone: await this.cryptoService.encrypt(content?.phone),
       image: await this.cryptoService.encrypt(content?.image?.versions.large),
       verified: true,
+      logged: true,
       provider: '42',
     };
 
@@ -176,10 +177,16 @@ export class AuthService {
 
     if (!user.verified) throw new ForbiddenException();
 
+    user.logged = true;
+    await this.usersService.updateUser(user);
     return user;
   }
 
   async updateUser(user: User) {
     await this.usersService.updateUser(user);
+  }
+
+  async getUserById(id: number) {
+    return await this.usersService.getUserById(id);
   }
 }

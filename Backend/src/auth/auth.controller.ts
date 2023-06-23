@@ -26,7 +26,7 @@ export class AuthController {
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
     const dataToken = await this.authService.getToken42(code);
-    console.log('here', dataToken);
+
     if (!dataToken) return null;
 
     const user42logged = await this.authService.logUser(dataToken);
@@ -63,6 +63,7 @@ export class AuthController {
     }
 
     user.verified = true;
+    user.logged = true;
     await this.authService.updateUser(user);
 
     const { access_token } = await this.authService.login(user);
@@ -93,6 +94,8 @@ export class AuthController {
     @Body('avatarChosen') avatar: AvatarDto,
   ) {
     try {
+      if (login.length < 4) throw new Error('Login too short');
+
       const user = await this.authService.updateUserLogin(req.user.id, login);
       avatar.userId = req.user.id;
       await this.authService.updateAvatar(avatar);
@@ -104,7 +107,6 @@ export class AuthController {
         access_token,
       };
     } catch (err) {
-      console.log(err.message);
       return {
         error: true,
         message: err.message,
