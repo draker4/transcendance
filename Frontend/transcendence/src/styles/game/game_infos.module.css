@@ -1,10 +1,9 @@
 
 .game_infos{
-    background-color: var(--secondary);
+    /* background-color: var(--secondary); */
     color: black;
-    cursor: pointer;
     border-radius: 2px;
-    border : 1px solid black;
+    /* border : 1px solid black; */
     margin-bottom: 10px;
     margin-top: 10px;
     display: flex;
@@ -12,22 +11,27 @@
     justify-content: left;
     align-items: center;
     transition: border 0.3s ease, background-color 0.3s ease, height 0.3s ease;
+    padding: 10px;
+    color: aliceblue;
+    font-size: 20px;
 }
 
 .game_infos:hover{
-    border: var(--accent) 2px solid;
-    background-color: var(--accent-lighter1);
+    background-color: rgba(255, 255, 255, 0.384);
 }
 
 .name_box {
     height: 100%;
-    width: 10%;
-    color: white;
+    width: 15%;
+    color: var(--accent);
     font-size: 1.5em;
-    padding: 5px;
     font-weight: bold;
-    /* Pas de retour à la ligne */
     white-space: nowrap;
+    font: var(--title-font);
+    font-size: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .avatar_host {
@@ -36,16 +40,14 @@
     flex-direction: row;
     justify-content: right;
     align-items: center;
-    color: white;
 }
 
 .avatar_opponent {
-    width: 10%;
+    width: 15%;
     display: flex;
     flex-direction: row;
     justify-content: left;
     align-items: center;
-    color: white;
 }
 
 .avatar_host p {
@@ -68,7 +70,6 @@
     margin-right: 10px;
 }
 
-
 .vs {
     width: 50px;
     margin-left: 10px;
@@ -76,38 +77,95 @@
 }
 
 .mdp_input {
-    background-color: green;
-    width: 100px;
+    width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.mdpoff {
-    background-color: red;
-}
-
-.mdpon {
-    background-color: green;
+.mdp_input input {
+    width: 90%;
+    height: 30%;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    font-size: 1.5em;
+    font-weight: bold;
+    white-space: nowrap;
+    font: var(--title-font);
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
 }
 
 .status {
-    background-color: red;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
 } 
 
 .score {
-    background-color: green;
+    width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .button_join_box {
-    background-color: red;
+    width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.button_join{
-    background-color: green;
+.button {
+    width: 100%;
+    height: 80%;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    font-size: 1.5em;
+    font-weight: bold;
+    white-space: nowrap;
+    font: var(--title-font);
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    color: var(--primary-darker1);
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: var(--accent);
+    color: var(--primary);
 }
 
 .button_watch_box{
-    background-color: red;
+    width: 10%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.button_watch{
-    background-color: green;
-}

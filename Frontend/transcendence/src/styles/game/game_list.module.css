@@ -8,6 +8,20 @@
     width: 100%;
     flex-grow: 1;
     padding-bottom: 10px;
+    /* border: solid orange 1px; */
+    border-bottom: solid var(--secondary) 2px;
+    border-top: solid var(--secondary) 2px;
+}
+
+.game_list_main {
+    height: 100px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content : flex-start;
+    width: 100%;
+    flex-grow: 1;
+    padding-bottom: 10px;
 }
 
 .game_list::-webkit-scrollbar {

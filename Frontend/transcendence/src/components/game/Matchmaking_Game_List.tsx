@@ -69,7 +69,7 @@ export default function Matchmaking_Game_List({ token }: Props) {
 
 	return (
 
-		<div className={styles.game_list} >
+		<div className={styles.game_list_main} >
 			<Matchmaking_Search onChangeFct={Update_Search}/>
 			<div className={styles.game_list}>
 				{filteredGames.length === 0 && <p className={styles.loading}>Recherche en cours...</p>}
