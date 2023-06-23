@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function ProfileLogin({ profile, isOwner }: Props) {
-  const [editMode, setEditMode] = useState<boolean>(true);
+  // [!] clean le Edit button et simplifier les props si au final il est retire
 
   return (
     <div className={styles.loginCard}>
