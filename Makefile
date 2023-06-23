@@ -3,7 +3,7 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : start stop re clean log reback refront redata rebuild cleandata
+.phony : start down re clean log reback refront redata rebuild cleandata
 
 # *********************************** RULES ********************************** #
 
@@ -15,19 +15,18 @@ start :
 	@echo "----All Docker started-----"
 
 
-stop :
+down :
 	@echo "----Stopping all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 	@echo "----All Docker stopped-----"
 
-clean : stop
+clean : down
 	@echo "----Cleaning all Docker----"
 	@containers=$$(docker ps -qa); \
 	if [ -n "$$containers" ]; then \
-		docker stop $$containers; \
 		docker rm $$containers; \
 	else \
-		echo "No containers to stop and remove."; \
+		echo "No containers to remove."; \
 	fi
 	@images=$$(docker images -qa); \
 	if [ -n "$$images" ]; then \

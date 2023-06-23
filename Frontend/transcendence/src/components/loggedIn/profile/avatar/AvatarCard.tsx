@@ -56,12 +56,12 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     backgroundColor: topColor.toString(),
   };
 
-  const previewChangeTopColor: ColorChangeHandler = (color: ColorResult) => {
-    setTopColor(color.hex);
+  const previewChangeTopColor = (color: string) => {
+    setTopColor(color);
   };
 
-  const previewChangeBotColor: ColorChangeHandler = (color: ColorResult) => {
-    setBotColor(color.hex);
+  const previewChangeBotColor = (color: string) => {
+    setBotColor(color);
   };
 
   const cancelColorChange = () => {
