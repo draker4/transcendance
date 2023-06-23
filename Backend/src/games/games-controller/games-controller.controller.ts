@@ -12,6 +12,8 @@ import { Public } from 'src/utils/decorators/public.decorator';
 @Controller('games')
 export class GamesController {
 
+	constructor(private readonly GamesService: GamesService) {}
+	
 	// 00 - api/games/status Pour test d'api
 	@Public()
 	@Get("status")
