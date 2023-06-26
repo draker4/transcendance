@@ -1,4 +1,10 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsHexColor,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
 export class AvatarDto {
   @IsNumber()
@@ -20,11 +26,13 @@ export class AvatarDto {
   variant: string;
 
   @IsNotEmpty()
-  @IsString()
+  //   @IsString()
+  @IsHexColor()
   borderColor: string;
 
   @IsNotEmpty()
-  @IsString()
+  //   @IsString()
+  @IsHexColor()
   backgroundColor: string;
 
   @IsNotEmpty()

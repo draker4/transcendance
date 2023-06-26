@@ -151,12 +151,8 @@ export class AuthService {
     return user;
   }
 
-  async updateAvatar(avatar: AvatarDto) {
-    const avatarUser = await this.avatarService.updateAvatar(avatar);
-
-    if (!avatarUser) throw new Error('Cannot create or update avatar');
-
-    return avatarUser;
+  async createAvatar(avatar: AvatarDto) {
+    return await this.avatarService.createAvatar(avatar);
   }
 
   async validateUser(email: string, password: string) {

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Param,
   Controller,
@@ -98,7 +99,12 @@ export class AuthController {
 
       const user = await this.authService.updateUserLogin(req.user.id, login);
       avatar.userId = req.user.id;
-      await this.authService.updateAvatar(avatar);
+      const avatarCreated = await this.authService.createAvatar(avatar);
+      if (!avatarCreated)
+        return {
+          error: true,
+          message: "can't create avatar",
+        };
 
       const { access_token } = await this.authService.login(user);
 

@@ -47,7 +47,7 @@ export default function NavbarHome({ profile, setIsDropdownOpen }: Props) {
   return (
     <div className={styles.dropdown}>
       <ul className={styles.list}>
-        <Link href={`/home/profile/${profile.login}`}>
+        <Link href={`/home/profile/${encodeURIComponent(profile.login)}`}>
           <li onClick={closeDropdown} className={styles.profile}>
             {profile.login}
           </li>

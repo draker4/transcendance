@@ -1,15 +1,15 @@
 import ProfileMainFrame from "@/components/loggedIn/profile/ProfileMainFrame";
 import { verifyAuth } from "@/lib/auth/auth";
-import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
-import {
-  getProfileByLogin,
-  getProfileByToken,
-} from "@/lib/profile/getProfileInfos";
+import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
+import Avatar_Service from "@/services/Avatar.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/Profile.module.css";
 import avatarType from "@/types/Avatar.type";
 import { cookies } from "next/dist/client/components/headers";
+
+// [!] cette foncion devra etre supprimee a terme
+import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
 
 type Params = {
   params: {
@@ -38,14 +38,16 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
 
     profile = await getProfileByLogin(token, login);
 
-    avatar = await getAvatarByLogin(token, login);
+    const Avatar = new Avatar_Service(token);
+
+    avatar = await Avatar.getAvatarBylogin(login);
 
     if (avatar.image.length > 0)
       avatar.image = await Crypto.decrypt(avatar.image);
 
     const payload = await verifyAuth(token);
 
-    if (payload.login === login) isProfilOwner = true;
+    if (payload.login === decodeURIComponent(login)) isProfilOwner = true;
   } catch (err) {
     console.log(err);
   }

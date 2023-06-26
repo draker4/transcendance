@@ -22,8 +22,8 @@ export default function FormLogin({
   const avatarChosenRef = useRef<avatarType>({
     image: "",
     variant: "circular",
-    borderColor: "var(--accent)",
-    backgroundColor: "var(--accent)",
+    borderColor: "#22d3ee",
+    backgroundColor: "#22d3ee",
     text: "",
     empty: true,
     login: "",
@@ -89,7 +89,7 @@ export default function FormLogin({
       exists: string;
       token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
-    
+
     setNotif(res.exists);
     setToken(res.token);
   };

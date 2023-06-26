@@ -29,8 +29,10 @@ export default function StoryEditable({ profile, token }: Props) {
     // event.target.style.height = event.target.scrollHeight + 'px';
   };
 
-  const handleActionStory = async (data: FormData) => {
-    const submitedStory = data.get("story");
+  const handleSubmitStory = async (e: any) => {
+    e.preventDefault();
+
+    const submitedStory = e.target.story.value;
 
     console.log("Submited Story :", submitedStory);
     if (submitedStory)
@@ -86,7 +88,7 @@ export default function StoryEditable({ profile, token }: Props) {
 
       {editMode && (
         <div>
-          <form action={handleActionStory}>
+          <form onSubmit={handleSubmitStory}>
             <p className={styles.story}>
               <textarea
                 name="story"
