@@ -1,4 +1,4 @@
-import { IsHexColor, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsHexColor, IsNotEmpty } from 'class-validator';
 
 export class UpdateAvatarDto {
   @IsNotEmpty()

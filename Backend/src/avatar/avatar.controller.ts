@@ -6,6 +6,7 @@ import {
   Param,
   Put,
   Request,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
@@ -36,7 +37,12 @@ export class AvatarController {
   }
 
   @Put()
-  async updateAvatar(@Request() req, @Body() updateAvatarDto: UpdateAvatarDto) {
+  async updateAvatar(
+    @Request() req,
+    @Body(new ValidationPipe()) updateAvatarDto: UpdateAvatarDto,
+  ) {
+    console.log('PUT avatar received');
+    console.log('updateAvatarDto :', updateAvatarDto);
     return this.avatarService.editColors(req, updateAvatarDto);
   }
 }
