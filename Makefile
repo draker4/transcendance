@@ -5,7 +5,24 @@ DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
 .phony : start down re clean log reback refront redata rebuild cleandata
 
+# *********************************** IP ADDRESS ********************************** #
+
+HOST_IP := $(shell bash ./tools/get_host_ip.sh)
+export HOST_IP
+
 # *********************************** RULES ********************************** #
+
+ipAddress:
+			@echo "Host IP: $(HOST_IP)"
+
+write-env:
+	@if [ -f ./Dockers/.env ] && grep -q "HOST_IP=" ./Dockers/.env; then \
+		sed -i 's/HOST_IP=.*/HOST_IP=$(HOST_IP)/' ./Dockers/.env; \
+		echo "Updated IP address in ./Dockers/.env file"; \
+	else \
+		echo "HOST_IP=$(HOST_IP)" >> ./Dockers/.env; \
+		echo "Created IP address in ./Dockers/.env file"; \
+	fi
 
 all : start
 
@@ -70,5 +87,3 @@ rebuild :
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build --no-cache
 
 re : clean rebuild
-
-
