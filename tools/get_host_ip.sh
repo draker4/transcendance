@@ -10,7 +10,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
 # ubuntu specific command
 else
-	IP=$(ip addr show wlan0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+	INTERFACE=$(ip route | awk '/default/ { print $5; exit }')
+	IP=$(ip addr show "$INTERFACE" | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')fi
 fi
 
 echo "$IP"
