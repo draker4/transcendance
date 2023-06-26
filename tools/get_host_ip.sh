@@ -11,7 +11,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 # ubuntu specific command
 else
 	INTERFACE=$(ip route | awk '/default/ { print $5; exit }')
-	IP=$(ip addr show "$INTERFACE" | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')fi
+	IP=$(ip addr show "$INTERFACE" | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')
 fi
 
 echo "$IP"
