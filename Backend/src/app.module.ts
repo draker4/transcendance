@@ -33,7 +33,7 @@ import { AvatarModule } from './avatar/avatar.module';
     AuthModule,
     MailModule,
     GamesModule,
-    AvatarModule
+    AvatarModule,
   ],
   controllers: [],
   providers: [],
