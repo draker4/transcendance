@@ -1,15 +1,20 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
 import { createUserDto } from './dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { ChannelDto } from './dto/Channel.dto';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Channel)
+    private readonly channelRepository: Repository<Channel>,
     private cryptoService: CryptoService,
   ) {}
 
@@ -39,7 +44,7 @@ export class UsersService {
   }
 
   async getUserById(id: number) {
-    return await this.userRepository.findOne({ where: { id: id } });
+    return await this.userRepository.findOne({ where: { id: id }, relations: ["channels"] });
   }
 
   async getUserByCode(code: string) {
@@ -48,5 +53,10 @@ export class UsersService {
 
   async updateUser(user: User) {
     await this.userRepository.update(user.id, user);
+  }
+
+
+  async getChannelByName(name: string) {
+    return await this.channelRepository.findOne({ where: { name: name }, relations: ["users"] });
   }
 }

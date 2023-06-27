@@ -4,7 +4,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { Channel } from './Channel.entity';
 
 @Entity()
 export class User {
@@ -58,4 +61,8 @@ export class User {
 
   @Column()
   logged: boolean;
+
+  @ManyToMany(() => Channel, (channel) => channel.users)
+  @JoinTable()
+  channels: Channel[];
 }

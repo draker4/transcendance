@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
@@ -12,6 +13,7 @@ import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Controller('users')
 export class UsersController {
@@ -121,5 +123,43 @@ export class UsersController {
     return {
       message: 'story updated successfully ',
     };
+  }
+
+
+  @Public()
+  @Get('join')
+  async joinChannel() {
+    const user1 = await this.usersService.getUserById(1);
+    const user2 = await this.usersService.getUserById(2);
+
+    const channel = await this.usersService.getChannelByName("test");
+
+    if (!user1.channels)
+      user1.channels = [];
+
+    if (!user2.channels)
+      user2.channels = [];
+
+    user1.channels.push(channel);
+    user2.channels.push(channel);
+
+    await this.usersService.addUser(user1);
+    await this.usersService.addUser(user2);
+  }
+
+  // @Public()
+  // @Get('channels/:id')
+  // async getChannels(@Param('id') id: number) {
+  //   const user = await this.usersService.getUserById(id);
+
+  //   console.log(user.channels);
+  // }
+
+  @Public()
+  @Get('channels/:name')
+  async getChannels(@Param('name') name: string) {
+    const channel = await this.usersService.getChannelByName(name);
+
+    console.log(channel.users);
   }
 }

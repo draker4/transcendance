@@ -7,8 +7,10 @@ import styles from "@/styles/chat/Chat.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faComments } from "@fortawesome/free-solid-svg-icons";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { io } from "socket.io-client";
 
-export default function Chat() {
+export default function Chat({ id }: { id: string }) {
+
   const [chatOpened, setChatOpened] = useState<boolean>(false);
   const [chatFirst, setChatFirst] = useState<boolean>(true);
   const [littleScreen, setLittleScreen] = useState<boolean>(true);
@@ -20,6 +22,22 @@ export default function Chat() {
   const [dragging, setDragging] = useState(false);
   const [moving, setMoving] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+
+  const socket = io(`http://${process.env.HOST_IP}:4000`, {
+    query: {
+      "id": id,
+    }
+  })
+
+  useEffect(() => {
+    socket.on('connect', () => {
+			console.log("Connected!");
+		});
+
+    return () => {
+      socket.off('connect');
+    }
+  }, [socket]);
 
   useEffect(() => {
     const handleResize = () => {
