@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as Joi from "joi";
 
 export const	ValidationSchema = Joi.object({
@@ -18,4 +19,5 @@ export const	ValidationSchema = Joi.object({
 	GOOGLE_ID_CLIENT: Joi.string().required(),
 	GOOGLE_SECRET: Joi.string().required(),
 	GOOGLE_CALLBACK: Joi.string().required(),
+	HOST_IP: Joi.string().required(),
 });

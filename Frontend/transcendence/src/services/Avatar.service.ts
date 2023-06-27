@@ -44,7 +44,7 @@ export default class Avatar_Service {
   ) {
     console.log("into FetchData");
 
-    const response = await fetch("http://localhost:4000/api/avatar/" + url, {
+    const response = await fetch(`http://${process.env.HOST_IP}:4000/api/avatar/${url}`, {
       method: method,
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default class Avatar_Service {
     if (!response.ok)
       // [?] throw exception? -> attention de comment je gere ca
       throw new Error(
-        "fetched failed at http://localhost:4000/api/avatar/" + url
+        `fetched failed at http://${process.env.HOST_IP}:4000/api/avatar/${url}`
       );
 
     return response;

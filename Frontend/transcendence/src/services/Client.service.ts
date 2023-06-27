@@ -24,7 +24,6 @@ class Client {
             throw new Error("Connection refused");
 
         const   {access_token} = await response.json();
-
         this.token = access_token;
         this.logged = true;
         this.student42 = true;
@@ -33,7 +32,7 @@ class Client {
     // log function with email and password
     public async logInEmail(email: string, login: string, password: string) {
         
-        const   response = await fetch(`http://localhost:4000/api/auth/email`, {
+        const   response = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/email`, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({

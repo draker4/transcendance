@@ -4,7 +4,7 @@ export default async function submitAvatarColors(
   token: string
 ) {
   try {
-    const response = await fetch("http://localhost:4000/api/avatar", {
+    const response = await fetch(`http://${process.env.HOST_IP}:4000/api/avatar`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

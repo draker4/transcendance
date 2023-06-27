@@ -29,7 +29,7 @@ export async function handleActionServer(
 		}
 		console.log("here");
 		
-		const	register = await fetch("http://localhost:4000/api/auth/firstLogin", {
+		const	register = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/firstLogin`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

@@ -20,6 +20,7 @@ const nextConfig = {
     CRYPTO_KEY: process.env.CRYPTO_KEY,
     WEBSITE_KEY: process.env.WEBSITE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
+    HOST_IP: process.env.HOST_IP,
   },
   images: {
     domains: ["cdn.intra.42.fr", "lh3.googleusercontent.com"],
