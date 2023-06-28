@@ -5,7 +5,6 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
 import { createUserDto } from './dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
-import { ChannelDto } from './dto/Channel.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class UsersService {
     private cryptoService: CryptoService,
   ) {}
 
-  async addUser(createUserDto: createUserDto): Promise<User> {
+  async saveUser(createUserDto: createUserDto): Promise<User> {
     return await this.userRepository.save(createUserDto);
   }
 

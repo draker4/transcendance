@@ -129,22 +129,22 @@ export class UsersController {
   @Public()
   @Get('join')
   async joinChannel() {
-    const user1 = await this.usersService.getUserById(1);
-    const user2 = await this.usersService.getUserById(2);
+    const user1 = await this.usersService.getUserById(3);
+    // const user2 = await this.usersService.getUserById(2);
 
     const channel = await this.usersService.getChannelByName("test");
 
     if (!user1.channels)
       user1.channels = [];
 
-    if (!user2.channels)
-      user2.channels = [];
+    // if (!user2.channels)
+    //   user2.channels = [];
 
     user1.channels.push(channel);
-    user2.channels.push(channel);
+    // user2.channels.push(channel);
 
-    await this.usersService.addUser(user1);
-    await this.usersService.addUser(user2);
+    await this.usersService.saveUser(user1);
+    // await this.usersService.saveUser(user2);
   }
 
   // @Public()

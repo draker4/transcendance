@@ -67,7 +67,7 @@ export class AuthService {
     };
 
     const user_old = await this.usersService.getUserByEmail(user.email, '42');
-    if (!user_old) return await this.usersService.addUser(user);
+    if (!user_old) return await this.usersService.saveUser(user);
 
     await this.usersService.updateUser(user_old);
     return user_old;
@@ -98,7 +98,7 @@ export class AuthService {
       createUserDto.verifyCode,
     );
 
-    return await this.usersService.addUser(createUserDto);
+    return await this.usersService.saveUser(createUserDto);
   }
 
   async verifyCode(code: string) {
@@ -135,7 +135,8 @@ export class AuthService {
       'google',
     );
 
-    if (!user) user = await this.usersService.addUser(createUserDto);
+    if (!user) user = await this.usersService.saveUser(createUserDto);
+    else await this.usersService.updateUser(user);
 
     return this.login(user);
   }
