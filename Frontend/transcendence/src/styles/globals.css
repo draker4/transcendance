@@ -110,11 +110,17 @@
 html,
 body {
   max-width: 100vw;
-  height: 100vh;
+  max-height: 100vh;
   /* overscroll-behavior: none; */
   background: var(--primary);
   color: var(--tertiary);
   font-family: var(--text-font);
+  /* display: flex;
+  align-items: stretch;
+  flex-direction: column; */
+  /* border: 2px solid green; */
+  width: 100%;
+  height: 100%;
 }
 
 ::selection {

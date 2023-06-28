@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatBubbles from "./ChatBubbles";
 import ChatMain from "./ChatMain";
 import styles from "@/styles/chat/Chat.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faComments } from "@fortawesome/free-solid-svg-icons";
 import { useSelectedLayoutSegment } from "next/navigation";
-import SocketService from "@/services/socket/Socket.service";
 
-export default function Chat({ id }: { id: string }) {
+export default function Chat() {
 
   const [chatOpened, setChatOpened] = useState<boolean>(false);
   const [chatFirst, setChatFirst] = useState<boolean>(true);
@@ -22,18 +21,6 @@ export default function Chat({ id }: { id: string }) {
   const [dragging, setDragging] = useState(false);
   const [moving, setMoving] = useState(false);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-
-  const socketService = useMemo(() => new SocketService(id), [id]);
-
-  useEffect(() => {
-    socketService.socket?.on('connect', () => {
-			console.log("Connected!");
-		});
-
-    return () => {
-      socketService.socket?.off('connect');
-    }
-  }, [socketService]);
 
   useEffect(() => {
     const handleResize = () => {

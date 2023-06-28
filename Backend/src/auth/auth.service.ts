@@ -147,8 +147,7 @@ export class AuthService {
     if (!user) throw new Error('No user found');
 
     user.login = login;
-
-    await this.usersService.updateUser(user);
+    await this.usersService.saveUser(user);
     return user;
   }
 

@@ -13,7 +13,7 @@ import { UsersModule } from './users/users.module';
 import { User } from './utils/typeorm/User.entity';
 import { Avatar } from './utils/typeorm/Avatar.entity';
 import { AvatarModule } from './avatar/avatar.module';
-import { GatewayModule } from './gateway/gateway.module';
+import { ChatModule } from './chat/chat.module';
 import { Channel } from './utils/typeorm/Channel.entity';
 import { ChannelModule } from './channels/channel.module';
 
@@ -37,7 +37,7 @@ import { ChannelModule } from './channels/channel.module';
     MailModule,
     GamesModule,
     AvatarModule,
-    GatewayModule,
+    ChatModule,
     ChannelModule,
   ],
   controllers: [],

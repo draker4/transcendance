@@ -2,8 +2,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Channel } from "diagnostics_channel";
-import { ChannelDto } from "src/users/dto/Channel.dto";
 import { Repository } from "typeorm";
+import { ChannelDto } from "./dto/Channel.dto";
 
 @Injectable()
 export class ChannelService {
