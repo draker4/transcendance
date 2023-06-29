@@ -1,39 +1,40 @@
-import { ChatSocketContext } from "@/context/ChatSocketContext";
+// import { ChatSocketContext } from "@/context/ChatSocketContext";
 import styles from "@/styles/chat/ChatMain.module.css";
-import { useContext, useEffect, useState } from "react";
+import ChatHome from "./chatParts/ChatHome";
+// import { useContext, useEffect, useState } from "react";
 
-type MessagePayload = {
-	id: string,
-	login: string,
-	text: string,
-}
+// type MessagePayload = {
+// 	id: string,
+// 	login: string,
+// 	text: string,
+// }
 
 export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 	chatOpened: boolean,
 	chatFirst: boolean,
 	widthStyle: string,
 }) {
-	const	socket = useContext(ChatSocketContext);
-	const	[value, setValue] = useState<string>('');
-	const	[messages, setMessages] = useState<MessagePayload []>([]);
+	// const	socket = useContext(ChatSocketContext);
+	// const	[value, setValue] = useState<string>('');
+	// const	[messages, setMessages] = useState<MessagePayload []>([]);
 
-	useEffect(() => {
-		socket?.on("onMessage", (message: MessagePayload) => {
-			setMessages((prev) => [...prev, message]);
-		})
-		return () => {
-			socket?.off("onMessage");
-		}
-	}, [socket]);
+	// useEffect(() => {
+	// 	socket?.on("onMessage", (message: MessagePayload) => {
+	// 		setMessages((prev) => [...prev, message]);
+	// 	})
+	// 	return () => {
+	// 		socket?.off("onMessage");
+	// 	}
+	// }, [socket]);
 
-	const handleSubmit = async (e: any) => {
-		e.preventDefault();
-		const msg = e.target.msg.value;
-		socket?.emit("newMessage", {
-			text: msg,
-		});
-		setValue("");
-	};
+	// const handleSubmit = async (e: any) => {
+	// 	e.preventDefault();
+	// 	const msg = e.target.msg.value;
+	// 	socket?.emit("newMessage", {
+	// 		text: msg,
+	// 	});
+	// 	setValue("");
+	// };
 
 	return (
 		<div
@@ -44,8 +45,14 @@ export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 			}
 			style={chatOpened ? { width: widthStyle } : { width: 0 }}
 		>
+			<ChatHome />
 
-			<div>
+
+
+
+
+
+			{/* <div>
 				{
 					messages.length === 0
 					? <div>No messages</div>
@@ -69,7 +76,7 @@ export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 				/>
 
 				<button type="submit">Submit</button>
-			</form>
+			</form> */}
 		</div>
 	);
 }

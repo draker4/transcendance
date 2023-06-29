@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
+  AfterLoad,
 } from 'typeorm';
 import { Channel } from './Channel.entity';
 
@@ -65,4 +66,19 @@ export class User {
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable()
   channels: Channel[];
+
+  @ManyToMany(() => User, (user) => user.pongies)
+  @JoinTable()
+  pongies: User[];
+
+  @AfterLoad()
+  async nullChecks() {
+    if (!this.channels) {
+      this.channels = [];
+    }
+
+    if (!this.pongies) {
+      this.pongies = [];
+    }
+  }
 }

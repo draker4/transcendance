@@ -54,7 +54,6 @@ export class UsersService {
     await this.userRepository.update(user.id, user);
   }
 
-
   async getChannelByName(name: string) {
     return await this.channelRepository.findOne({ where: { name: name }, relations: ["users"] });
   }

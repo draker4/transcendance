@@ -5,6 +5,7 @@ import { Server, Socket } from "socket.io";
 import { WsJwtGuard } from "./guard/wsJwt.guard";
 import { verify } from "jsonwebtoken";
 import { Message } from "./dto/message.dto";
+import { ChatService } from "./chat.service";
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -15,6 +16,8 @@ import { Message } from "./dto/message.dto";
 	path: "/chat/socket.io"
 })
 export class ChatGateway implements OnModuleInit {
+
+	constructor(private readonly chatService: ChatService) {}
 
 	// Container of connected users : Map<userId, socket.id>
 	private connectedUsers: Map<string, string> = new Map<string, string>();
@@ -58,5 +61,10 @@ export class ChatGateway implements OnModuleInit {
 			"login": req.user.login,
 			"text": message.text,
 		});
+	}
+
+	@SubscribeMessage('getChannels')
+	async getChannels(@Request() req) {
+		return await this.chatService.getChannels(req.user.id);
 	}
 }

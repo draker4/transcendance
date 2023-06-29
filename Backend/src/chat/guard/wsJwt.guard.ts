@@ -12,7 +12,7 @@ export class WsJwtGuard implements CanActivate {
         const bearerToken = context.args[0].handshake.headers.authorization.split(' ')[1];
         try {
             const payload = verify(bearerToken, process.env.JWT_SECRET) as any;
-            client.user = { sub: payload.sub, login: payload.login };
+            client.user = { id: payload.sub, login: payload.login };
             return true;
         } catch (err) {
             throw new WsException(err.message);

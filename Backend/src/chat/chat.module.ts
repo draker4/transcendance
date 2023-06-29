@@ -7,6 +7,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "src/utils/typeorm/User.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
 import { CryptoService } from "src/utils/crypto/crypto";
+import { ChatService } from "./chat.service";
 
 @Module({
 	imports: [
@@ -17,6 +18,7 @@ import { CryptoService } from "src/utils/crypto/crypto";
 		WsJwtGuard,
 		UsersService,
 		CryptoService,
+		ChatService,
 	],
 })
 export class ChatModule {}

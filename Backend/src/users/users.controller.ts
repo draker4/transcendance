@@ -129,16 +129,10 @@ export class UsersController {
   @Public()
   @Get('join')
   async joinChannel() {
-    const user1 = await this.usersService.getUserById(3);
+    const user1 = await this.usersService.getUserById(1);
     // const user2 = await this.usersService.getUserById(2);
 
     const channel = await this.usersService.getChannelByName("test");
-
-    if (!user1.channels)
-      user1.channels = [];
-
-    // if (!user2.channels)
-    //   user2.channels = [];
 
     user1.channels.push(channel);
     // user2.channels.push(channel);
@@ -155,11 +149,30 @@ export class UsersController {
   //   console.log(user.channels);
   // }
 
-  @Public()
-  @Get('channels/:name')
-  async getChannels(@Param('name') name: string) {
-    const channel = await this.usersService.getChannelByName(name);
+  // @Public()
+  // @Get('channels/:name')
+  // async getChannels(@Param('name') name: string) {
+  //   const channel = await this.usersService.getChannelByName(name);
 
-    console.log(channel.users);
-  }
+  //   console.log(channel.users);
+  // }
+
+  // @Public()
+  // @Get('test')
+  // async addPongie() {
+  //     const user1 = await this.usersService.getUserById(1);
+  //     const user2 = await this.usersService.getUserById(2);
+
+  //     if (!user1.pongies)
+  //       user1.pongies = [];
+  
+  //     if (!user2.pongies)
+  //       user2.pongies = [];
+  
+  //     user1.pongies.push(user2);
+  //     user2.pongies.push(user1);
+  
+  //     await this.usersService.saveUser(user1);
+  //     await this.usersService.saveUser(user2);
+  // }
 }
