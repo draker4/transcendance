@@ -43,7 +43,18 @@ export class UsersService {
   }
 
   async getUserById(id: number) {
-    return await this.userRepository.findOne({ where: { id: id }, relations: ["channels"] });
+    return await this.userRepository.findOne({ where: { id: id } });
+  }
+
+  async getUserChannels(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ["channels", "channels.avatar"],
+    });
+  }
+
+  async getUserAvatar(id: number) {
+    return await this.userRepository.findOne({ where: { id: id }, relations: ["avatar"] });
   }
 
   async getUserByCode(code: string) {

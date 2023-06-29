@@ -17,21 +17,20 @@ export class AvatarService {
     return await this.avatarRepository.save(avatarDto);
   }
 
-  async getAvatarById(userId: number): Promise<Avatar> {
-    return await this.avatarRepository.findOne({ where: { userId: userId } });
-  }
+  // async getAvatarById(userId: number): Promise<Avatar> {
+  //   return await this.avatarRepository.findOne({ where: { userId: userId } });
+  // }
 
-  async getAvatarByLogin(login: string): Promise<Avatar> {
-    return await this.avatarRepository.findOne({ where: { login: login } });
+  async getAvatarByName(name: string, isChannel: boolean): Promise<Avatar> {
+    return await this.avatarRepository.findOne({ where: { name: name, isChannel: isChannel} });
   }
 
   async editColors(req: any, updateAvatarDto: UpdateAvatarDto) {
-    const avatar: Avatar = await this.getAvatarById(req.user.id);
+    const avatar: Avatar = await this.getAvatarByName(req.user.login, updateAvatarDto.isChannel);
 
     // si on trouve pas d'avatar, on lui fourni un avatar par defaut
     if (!avatar) {
       const defaultAvatar = this.createDefaultAvatar(
-        req.user.id,
         req.user.login,
       );
 
@@ -51,7 +50,7 @@ export class AvatarService {
     avatar.borderColor = updateAvatarDto.borderColor;
     avatar.backgroundColor = updateAvatarDto.backgroundColor;
 
-    await this.avatarRepository.update(avatar.userId, avatar);
+    await this.avatarRepository.update(avatar.id, avatar);
 
     const Data = {
       success: true,
@@ -70,16 +69,16 @@ export class AvatarService {
   //     return avatar ? true : false;
   //   }
 
-  private async createDefaultAvatar(id: number, login: string) {
+  private async createDefaultAvatar(name: string) {
     const avatar: AvatarDto = {
-      userId: id,
-      login: login,
+      name: name,
       image: '',
       text: '',
       variant: 'circular',
       borderColor: '#22d3ee',
       backgroundColor: '#22d3ee',
       empty: true,
+      isChannel: false,
     };
 
     return await this.avatarRepository.save(avatar);

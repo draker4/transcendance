@@ -18,11 +18,17 @@ export class ChatService {
   ) {}
 
   async getChannels(id: string) {
-	const	user = await this.usersService.getUserById(parseInt(id));
+	const	user = await this.usersService.getUserChannels(parseInt(id));
 
 	if (!user)
-		throw new WsException('no user');
-	
-	return user.channels;
+		return {
+      "success": "false",
+      "channels": [],
+    }
+  
+	return {
+      "success": "true",
+      "channels": user.channels,
+    };
   }
 }

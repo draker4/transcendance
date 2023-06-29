@@ -16,6 +16,7 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as bcrypt from 'bcrypt';
+import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 
 @Injectable()
 export class AuthService {
@@ -141,12 +142,13 @@ export class AuthService {
     return this.login(user);
   }
 
-  async updateUserLogin(userId: number, login: string) {
-    const user = await this.usersService.getUserById(userId);
+  async updateUserLogin(userId: number, login: string, avatar: Avatar) {
+    const user = await this.usersService.getUserAvatar(userId);
 
     if (!user) throw new Error('No user found');
 
     user.login = login;
+    user.avatar = avatar;
     await this.usersService.saveUser(user);
     return user;
   }

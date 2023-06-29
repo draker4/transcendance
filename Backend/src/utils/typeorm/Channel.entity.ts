@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User.entity";
+import { Avatar } from "./Avatar.entity";
 
 @Entity()
 export class Channel {
@@ -19,4 +20,8 @@ export class Channel {
 
 	@ManyToMany(() => User, (user) => user.channels)
 	users: User[];
+	
+	@OneToOne(() => Avatar)
+	@JoinColumn()
+	avatar: Avatar;
 }

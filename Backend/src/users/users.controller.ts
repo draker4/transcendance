@@ -125,7 +125,6 @@ export class UsersController {
     };
   }
 
-
   @Public()
   @Get('join')
   async joinChannel() {

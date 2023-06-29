@@ -7,8 +7,11 @@ import {
   ManyToMany,
   JoinTable,
   AfterLoad,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { Channel } from './Channel.entity';
+import { Avatar } from './Avatar.entity';
 
 @Entity()
 export class User {
@@ -70,6 +73,10 @@ export class User {
   @ManyToMany(() => User, (user) => user.pongies)
   @JoinTable()
   pongies: User[];
+
+  @OneToOne(() => Avatar)
+  @JoinColumn()
+  avatar: Avatar;
 
   @AfterLoad()
   async nullChecks() {

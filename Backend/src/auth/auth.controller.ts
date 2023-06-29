@@ -97,9 +97,8 @@ export class AuthController {
     try {
       if (login.length < 4) throw new Error('Login too short');
 
-      const user = await this.authService.updateUserLogin(req.user.id, login);
-      avatar.userId = req.user.id;
       const avatarCreated = await this.authService.createAvatar(avatar);
+      const user = await this.authService.updateUserLogin(req.user.id, login, avatarCreated);
       if (!avatarCreated)
         return {
           error: true,

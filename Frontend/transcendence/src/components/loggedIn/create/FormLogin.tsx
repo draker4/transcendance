@@ -26,11 +26,12 @@ export default function FormLogin({
     backgroundColor: "#22d3ee",
     text: "",
     empty: true,
-    login: "",
+    name: "",
+    isChannel: false,
   });
 
   const selectAvatar = (avatar: avatarType) => {
-    avatar.login = avatarChosenRef.current.login;
+    avatar.name = avatarChosenRef.current.name;
     avatarChosenRef.current = avatar;
   };
 
@@ -46,7 +47,7 @@ export default function FormLogin({
     const text = e.target.value;
 
     avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
-    avatarChosenRef.current.login = text;
+    avatarChosenRef.current.name = text;
     setText(text.toUpperCase().slice(0, 2));
   };
 

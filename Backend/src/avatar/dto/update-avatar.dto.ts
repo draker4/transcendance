@@ -1,4 +1,4 @@
-import { IsHexColor, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsHexColor, IsNotEmpty } from 'class-validator';
 
 export class UpdateAvatarDto {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class UpdateAvatarDto {
   @IsNotEmpty()
   @IsHexColor()
   backgroundColor: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isChannel: boolean;
 }

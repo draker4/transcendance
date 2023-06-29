@@ -1,35 +1,43 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
   Get,
   NotFoundException,
   Param,
+  ParseBoolPipe,
   Put,
   Request,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
 import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('avatar')
 export class AvatarController {
-  constructor(private readonly avatarService: AvatarService) {}
+  constructor(
+    private readonly avatarService: AvatarService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Get()
   async getAvatar(@Request() req) {
-    const avatar = await this.avatarService.getAvatarById(req.user.id);
+    const user = await this.userService.getUserAvatar(req.user.id);
 
-    if (!avatar)
+    if (!user)
       return {
         exists: false,
       };
 
-    return avatar;
+    return user.avatar;
   }
 
-  @Get(':login')
-  async getAvatarByLogin(@Param('login') login: string) {
-    const avatar = await this.avatarService.getAvatarByLogin(login);
+  @Get(':name/:isChannel')
+  async getAvatarByName(
+    @Param('name') name: string,
+    @Param('isChannel', ParseBoolPipe) isChannel: boolean,
+  ) {
+    const avatar = await this.avatarService.getAvatarByName(name, Boolean(isChannel));
 
     if (!avatar) throw new NotFoundException('avatar not found');
 
@@ -39,7 +47,7 @@ export class AvatarController {
   @Put()
   async updateAvatar(
     @Request() req,
-    @Body(new ValidationPipe()) updateAvatarDto: UpdateAvatarDto,
+    @Body() updateAvatarDto: UpdateAvatarDto,
   ) {
     // [!] TODO : custom validationPipe OU enumeDecorator contenant le tableau des couleurs authorisee
     // [!] ne pas oublier que les couleurs peuvent avoir des min et/ou majuscules

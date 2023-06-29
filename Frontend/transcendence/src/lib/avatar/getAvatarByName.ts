@@ -1,6 +1,6 @@
-export const getAvatarByLogin = async (token: string, login: string) => {
+export const getAvatarByName = async (token: string, name: string, isChannel: boolean) => {
 	
-	const	avatar = await fetch(`http://backend:4000/api/avatar/${login}`, {
+	const	avatar = await fetch(`http://backend:4000/api/avatar/${name}/${isChannel}`, {
 		method: "GET",
 		headers: {"Authorization": "Bearer " + token},
 	});
