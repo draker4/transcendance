@@ -53,12 +53,10 @@ export class ChatGateway implements OnModuleInit {
 
 	@SubscribeMessage('newMessage')
 	create(@MessageBody() message: Message, @Request() req) {
-		console.log("here", message);
 		this.server.emit("onMessage", {
 			"id": req.user.sub,
 			"login": req.user.login,
 			"text": message.text,
 		});
 	}
-
 }
