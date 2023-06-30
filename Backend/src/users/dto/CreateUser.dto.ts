@@ -1,10 +1,15 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class createUserDto {
-
   @IsOptional()
   @IsString()
-  login?: string = "";
+  login?: string = '';
 
   @IsNotEmpty()
   @IsString()
@@ -53,8 +58,4 @@ export class createUserDto {
   @IsString()
   @IsOptional()
   story?: string;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  logged: boolean;
 }

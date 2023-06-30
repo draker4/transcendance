@@ -1,0 +1,9 @@
+.list {
+	display: flex;
+	align-items: center;
+}
+
+.avatar {
+	height: 40px;
+	width: 40px;
+}

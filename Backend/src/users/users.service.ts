@@ -53,6 +53,13 @@ export class UsersService {
     });
   }
 
+  async getUserPongies(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ["pongies", "pongies.avatar"],
+    });
+  }
+
   async getUserAvatar(id: number) {
     return await this.userRepository.findOne({ where: { id: id }, relations: ["avatar"] });
   }

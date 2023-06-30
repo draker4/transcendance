@@ -16,7 +16,7 @@ export default function AvatarUser({
     <>
       {avatar.empty ? (
         <Avatar
-          variant="circular"
+          variant={avatar.variant as "circular" | "rounded"}
           sx={{
             width: "100%",
             height: "100%",
@@ -29,7 +29,7 @@ export default function AvatarUser({
       ) : (
         <Avatar
           src={avatar.image}
-          variant="circular"
+          variant={avatar.variant as "circular" | "rounded"}
           sx={{
             width: "100%",
             height: "100%",

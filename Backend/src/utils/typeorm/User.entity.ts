@@ -63,9 +63,6 @@ export class User {
   @Column({ nullable: true })
   story: string;
 
-  @Column()
-  logged: boolean;
-
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable()
   channels: Channel[];

@@ -22,7 +22,7 @@ export class ChannelService {
 			name: channel,
 			image: '',
 			text: '',
-			variant: 'circular',
+			variant: 'rounded',
 			borderColor: '#22d3ee',
 			backgroundColor: '#22d3ee',
 			empty: true,

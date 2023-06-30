@@ -63,14 +63,13 @@ export class AuthService {
       phone: await this.cryptoService.encrypt(content?.phone),
       image: await this.cryptoService.encrypt(content?.image?.versions.large),
       verified: true,
-      logged: true,
       provider: '42',
     };
 
     const user_old = await this.usersService.getUserByEmail(user.email, '42');
     if (!user_old) return await this.usersService.saveUser(user);
 
-    await this.usersService.updateUser(user_old);
+    await this.usersService.saveUser(user_old);
     return user_old;
   }
 
@@ -102,6 +101,10 @@ export class AuthService {
     return await this.usersService.saveUser(createUserDto);
   }
 
+  async saveUser(createUserDto: createUserDto) {
+    return await this.usersService.saveUser(createUserDto);
+  }
+
   async verifyCode(code: string) {
     return await this.usersService.getUserByCode(code);
   }
@@ -113,7 +116,7 @@ export class AuthService {
     const email = await this.cryptoService.decrypt(user.email);
 
     await this.mailService.sendUserConfirmation(email, user.verifyCode);
-    await this.usersService.updateUser(user);
+    return await this.usersService.saveUser(user);
   }
 
   async loginWithGoogle(createUserDto: createUserDto) {
@@ -137,7 +140,7 @@ export class AuthService {
     );
 
     if (!user) user = await this.usersService.saveUser(createUserDto);
-    else await this.usersService.updateUser(user);
+    else await this.usersService.saveUser(user);
 
     return this.login(user);
   }
@@ -175,8 +178,7 @@ export class AuthService {
 
     if (!user.verified) throw new ForbiddenException();
 
-    user.logged = true;
-    await this.usersService.updateUser(user);
+    await this.usersService.saveUser(user);
     return user;
   }
 

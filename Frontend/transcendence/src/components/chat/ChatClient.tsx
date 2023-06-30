@@ -4,16 +4,21 @@ import { Socket, io } from "socket.io-client";
 import Chat from "./Chat";
 import { ChatSocketProvider } from "@/context/ChatSocketContext";
 import { useEffect } from "react";
+import { useSelectedLayoutSegment } from "next/navigation";
 
 export default async function ChatClient({ token }:
 	{ token: string | undefined }) {
 
-	const	socket: Socket = io(`http://${process.env.HOST_IP}:4000/chat`, {
-			extraHeaders: {
-				Authorization: "Bearer " + token,
-			},
-			path: "/chat/socket.io"
-	});
+	const	segment = useSelectedLayoutSegment();
+	let		socket: Socket | null = null;
+
+	if (segment !== "create")
+		socket = io(`http://${process.env.HOST_IP}:4000/chat`, {
+				extraHeaders: {
+					Authorization: "Bearer " + token,
+				},
+				path: "/chat/socket.io"
+		});
 
 	useEffect(() => {
 		return () => {
@@ -23,8 +28,13 @@ export default async function ChatClient({ token }:
 	}, [socket]);
 	
 	return (
-		<ChatSocketProvider value={socket}>
-			<Chat/>
-		</ChatSocketProvider>
+		<>
+			{
+				segment !== "create" &&
+				<ChatSocketProvider value={socket}>
+					<Chat/>
+				</ChatSocketProvider>
+			}
+		</>
 	);
 }
