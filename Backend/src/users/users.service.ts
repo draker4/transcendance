@@ -68,4 +68,5 @@ export class UsersService {
   async getChannelByName(name: string) {
     return await this.channelRepository.findOne({ where: { name: name }, relations: ["users"] });
   }
+
 }
