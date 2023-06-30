@@ -39,7 +39,7 @@ export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 
 
 	// ici ameliorer pour
-	const displayPongiesPM: boolean = false;
+	const displayPongiesPM: boolean = true;
 
 	return (
 		<div

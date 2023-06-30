@@ -2,6 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelService } from 'src/channels/channel.service';
+import { CreatePrivateMsgChannelDto } from 'src/channels/dto/CreatePrivateMsgChannel.dto';
 import { UsersService } from 'src/users/users.service';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
@@ -37,17 +38,28 @@ export class ChatService {
     console.log('UserID : ', userId);
     console.log('pongieID : ', pongieId);
 
+    let channel:CreatePrivateMsgChannelDto;
+
+    try {
+
+    
     // verification si la channel n'existe pas deja (dans les tables)
     // creation de la channel apres verif
-    this.channelService.createPrivateMsgChannel(userId, pongieId);
+    channel = await this.channelService.joinOrCreatePrivateMsgChannel(userId, pongieId);
+    
+    // join la room => nom de room : ( idlower + ' ' + idhigher )
+    
 
-    // join la room => nom de room : ( idUser1<|>idUser2 )
-    // Avec userid1 < userid2
-    // [!] Avec ce systeme les login + channels name ne peuvent pas avoir de PIPE
+  } catch (e) {
+    return {
+      success: 'false',
+      message: 'creatPrivateMessageChannel failed : ' + e.message,
+    };
+  }
 
     return {
       success: 'true',
-      channel: 'channel to deal with',
+      channel: channel,
     };
   }
 

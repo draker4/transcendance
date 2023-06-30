@@ -70,6 +70,11 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getChannels(req.user.id);
   }
 
+  @SubscribeMessage('getPongies')
+  async getPongies(@Request() req) {
+	  return await this.chatService.getPongies(req.user.id);
+  }
+
   // [!] add dto pour le data
   @SubscribeMessage('joinPrivateMsgChannel')
   async joinOrCreatePrivateMsgChannel(
@@ -82,8 +87,4 @@ export class ChatGateway implements OnModuleInit {
     );
   }
 
-	@SubscribeMessage('getPongies')
-	async getPongies(@Request() req) {
-		return await this.chatService.getPongies(req.user.id);
-	}
 }
