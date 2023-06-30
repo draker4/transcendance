@@ -102,6 +102,10 @@ export class AuthService {
     return await this.usersService.saveUser(createUserDto);
   }
 
+  async saveUser(createUserDto: createUserDto) {
+    return await this.usersService.saveUser(createUserDto);
+  }
+
   async verifyCode(code: string) {
     return await this.usersService.getUserByCode(code);
   }
@@ -113,7 +117,7 @@ export class AuthService {
     const email = await this.cryptoService.decrypt(user.email);
 
     await this.mailService.sendUserConfirmation(email, user.verifyCode);
-    await this.usersService.updateUser(user);
+    return await this.usersService.saveUser(user);
   }
 
   async loginWithGoogle(createUserDto: createUserDto) {

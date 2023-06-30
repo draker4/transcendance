@@ -113,7 +113,6 @@ export default function LogInComponent() {
         return;
       }
 
-      // const passwordUser = data.get("password") as string;
       const passwordUser = data.password;
       let res: {
         passwordSecured: string;
