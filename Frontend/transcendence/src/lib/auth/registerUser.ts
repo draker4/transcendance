@@ -7,7 +7,6 @@ export default async function registerUser(email: string, password: string) {
 			passwordHashed: password,
 			provider: "email",
 			verified: false,
-			logged: false,
 		}),
 	});
 

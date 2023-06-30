@@ -58,8 +58,4 @@ export class createUserDto {
   @IsString()
   @IsOptional()
   story?: string;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  logged: boolean;
 }

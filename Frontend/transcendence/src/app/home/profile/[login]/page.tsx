@@ -8,9 +8,6 @@ import styles from "@/styles/loggedIn/profile/Profile.module.css";
 import avatarType from "@/types/Avatar.type";
 import { cookies } from "next/dist/client/components/headers";
 
-// [!] cette foncion devra etre supprimee a terme
-import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
-
 type Params = {
   params: {
     login: string;

@@ -63,14 +63,13 @@ export class AuthService {
       phone: await this.cryptoService.encrypt(content?.phone),
       image: await this.cryptoService.encrypt(content?.image?.versions.large),
       verified: true,
-      logged: true,
       provider: '42',
     };
 
     const user_old = await this.usersService.getUserByEmail(user.email, '42');
     if (!user_old) return await this.usersService.saveUser(user);
 
-    await this.usersService.updateUser(user_old);
+    await this.usersService.saveUser(user_old);
     return user_old;
   }
 
@@ -141,7 +140,7 @@ export class AuthService {
     );
 
     if (!user) user = await this.usersService.saveUser(createUserDto);
-    else await this.usersService.updateUser(user);
+    else await this.usersService.saveUser(user);
 
     return this.login(user);
   }
@@ -179,8 +178,7 @@ export class AuthService {
 
     if (!user.verified) throw new ForbiddenException();
 
-    user.logged = true;
-    await this.usersService.updateUser(user);
+    await this.usersService.saveUser(user);
     return user;
   }
 

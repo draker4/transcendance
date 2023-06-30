@@ -71,7 +71,6 @@ export class AuthController {
     }
     
     user.verified = true;
-    user.logged = true;
 
     const userUpdated = await this.authService.saveUser(user);
     if (!userUpdated)
