@@ -49,7 +49,8 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     avatarService.test();
     await avatarService.submitAvatarColors(
       topColor.toString(),
-      botColor.toString()
+      botColor.toString(),
+      false,
     );
 
     // const response = await submitAvatarColors(

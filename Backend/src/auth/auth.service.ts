@@ -16,6 +16,7 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as bcrypt from 'bcrypt';
+import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 
 @Injectable()
 export class AuthService {
@@ -67,7 +68,7 @@ export class AuthService {
     };
 
     const user_old = await this.usersService.getUserByEmail(user.email, '42');
-    if (!user_old) return await this.usersService.addUser(user);
+    if (!user_old) return await this.usersService.saveUser(user);
 
     await this.usersService.updateUser(user_old);
     return user_old;
@@ -98,7 +99,7 @@ export class AuthService {
       createUserDto.verifyCode,
     );
 
-    return await this.usersService.addUser(createUserDto);
+    return await this.usersService.saveUser(createUserDto);
   }
 
   async verifyCode(code: string) {
@@ -135,19 +136,20 @@ export class AuthService {
       'google',
     );
 
-    if (!user) user = await this.usersService.addUser(createUserDto);
+    if (!user) user = await this.usersService.saveUser(createUserDto);
+    else await this.usersService.updateUser(user);
 
     return this.login(user);
   }
 
-  async updateUserLogin(userId: number, login: string) {
-    const user = await this.usersService.getUserById(userId);
+  async updateUserLogin(userId: number, login: string, avatar: Avatar) {
+    const user = await this.usersService.getUserAvatar(userId);
 
     if (!user) throw new Error('No user found');
 
     user.login = login;
-
-    await this.usersService.updateUser(user);
+    user.avatar = avatar;
+    await this.usersService.saveUser(user);
     return user;
   }
 

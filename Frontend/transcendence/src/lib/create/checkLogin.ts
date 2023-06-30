@@ -1,7 +1,7 @@
 
 export async function getDoubleLogin(login: string): Promise<string> {
 	const	encodeLogin = encodeURIComponent(login);
-	const	response = await fetch(`http://localhost:4000/api/users/login?login=${encodeLogin}`);
+	const	response = await fetch(`http://${process.env.HOST_IP}:4000/api/users/login?login=${encodeLogin}`);
 
 	if (!response.ok)
 		throw new Error("Cannot check if login is already used");

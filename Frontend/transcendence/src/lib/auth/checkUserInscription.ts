@@ -1,7 +1,7 @@
 export async function getDoubleEmail(email: string) {
 	const	encodeEmail = encodeURIComponent(email);
 
-	const	response = await fetch(`http://localhost:4000/api/users/email?email=${encodeEmail}`);
+	const	response = await fetch(`http://${process.env.HOST_IP}:4000/api/users/email?email=${encodeEmail}`);
 
 	if (!response.ok)
 		throw new Error("Cannot check if email is already used");

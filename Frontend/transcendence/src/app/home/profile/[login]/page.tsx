@@ -23,13 +23,14 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
   let profile = new Profile();
   let isProfilOwner: boolean = false;
   let avatar: avatarType = {
-    login: "",
+    name: "",
     image: "",
     variant: "",
     borderColor: "",
     backgroundColor: "",
     text: "",
     empty: true,
+    isChannel: false,
   };
 
   try {
@@ -40,7 +41,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
 
     const Avatar = new Avatar_Service(token);
 
-    avatar = await Avatar.getAvatarBylogin(login);
+    avatar = await Avatar.getAvatarByName(login);
 
     if (avatar.image.length > 0)
       avatar.image = await Crypto.decrypt(avatar.image);

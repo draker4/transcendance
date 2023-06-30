@@ -8,4 +8,8 @@ export class UpdateAvatarDto {
   @IsNotEmpty()
   @IsHexColor()
   backgroundColor: string;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  isChannel: boolean;
 }

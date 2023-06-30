@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 		}
 		
 		if (client.token.length > 0) {
-			const	response = NextResponse.redirect("http://localhost:3000/home");
+			const	response = NextResponse.redirect(`http://${process.env.HOST_IP}:3000/home`);
 			response.cookies.set({
 				name: "crunchy-token",
 				value: client.token,

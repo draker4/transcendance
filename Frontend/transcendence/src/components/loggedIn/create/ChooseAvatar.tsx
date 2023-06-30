@@ -49,12 +49,13 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar("empty", {
               image: "",
-              login: "",
+              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
               text: text,
               empty: true,
+              isChannel: false,
             })
           }
           sx={{
@@ -77,12 +78,13 @@ export default function ChooseAvatar({
               onClick={() =>
                 handleSelectAvatar(avatar, {
                   image: avatar,
-                  login: "",
+                  name: "",
                   variant: "circular",
                   borderColor: colorBorder,
                   backgroundColor: backgroundColor,
                   text: text,
                   empty: false,
+                  isChannel: false,
                 })
               }
               sx={{
@@ -106,12 +108,13 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar(text, {
               image: "",
-              login: "",
+              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
               text: text,
               empty: false,
+              isChannel: false,
             })
           }
           sx={{

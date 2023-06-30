@@ -1,15 +1,16 @@
 .chatTotalBig {
-	/* position: inline; */
-	/* border: 1px solid black; */
-	padding: 10px 0;
-	padding-right: 10px;
-	width: auto;
-	display: flex;
-	justify-content: flex-start;
-	/* height: calc(100vh - clamp(40px, 5vh, 80px));  */  
+  /* position: inline; */
+  /* border: 1px solid black; */
+  padding: 10px 0;
+  padding-right: 10px;
+  width: auto;
+  display: flex;
+  justify-content: flex-start;
+  /* height: calc(100vh - clamp(40px, 5vh, 80px));  */
   height: 100%;
-	animation-name: height;
-	animation-duration: 1s;
+  animation-name: height;
+  animation-duration: 1s;
+  z-index: 10;
 }
 
 .chatTotalLittle {
@@ -24,6 +25,7 @@
   /* overflow-y: auto; */
   animation-name: height;
   animation-duration: 1s;
+  z-index: 10;
 }
 
 .littleFirst {
@@ -47,7 +49,7 @@
   /* border: 1px solid red; */
   padding: 10px 0;
   position: absolute;
-  z-index: 2;
+  z-index: 20;
   border-radius: 10px;
   width: clamp(60px, 6vw, 120px);
   display: flex;
@@ -121,7 +123,7 @@
 }
 
 @media screen and (max-height: 1000px) {
-	.menu {
+  .menu {
     width: clamp(30px, 3vw, 60px);
     height: clamp(30px, 3vw, 60px);
   }

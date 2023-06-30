@@ -9,6 +9,7 @@ import { faArrowLeft, faComments } from "@fortawesome/free-solid-svg-icons";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 export default function Chat() {
+
   const [chatOpened, setChatOpened] = useState<boolean>(false);
   const [chatFirst, setChatFirst] = useState<boolean>(true);
   const [littleScreen, setLittleScreen] = useState<boolean>(true);

@@ -2,7 +2,7 @@ export default async function submitMotto(submitedMotto:string, token:string) {
 
 	try {
 
-		const response = await fetch("http://localhost:4000/api/users/edit-motto", {
+		const response = await fetch(`http://${process.env.HOST_IP}:4000/api/users/edit-motto`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",

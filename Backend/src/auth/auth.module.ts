@@ -15,11 +15,12 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([User, Avatar]),
+    TypeOrmModule.forFeature([User, Avatar, Channel]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1h' },
@@ -38,7 +39,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
-    }
-  ]
+    },
+  ],
 })
 export class AuthModule {}

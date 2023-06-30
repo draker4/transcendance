@@ -1,19 +1,16 @@
+/* eslint-disable prettier/prettier */
 import {
   IsBoolean,
   IsHexColor,
   IsNotEmpty,
-  IsNumber,
   IsString,
 } from 'class-validator';
 
 export class AvatarDto {
-  @IsNumber()
-  @IsNotEmpty()
-  userId: number;
 
   @IsString()
   @IsNotEmpty()
-  login: string;
+  name: string;
 
   @IsString()
   image: string;
@@ -26,16 +23,18 @@ export class AvatarDto {
   variant: string;
 
   @IsNotEmpty()
-  //   @IsString()
   @IsHexColor()
   borderColor: string;
 
   @IsNotEmpty()
-  //   @IsString()
   @IsHexColor()
   backgroundColor: string;
 
   @IsNotEmpty()
   @IsBoolean()
   empty: boolean;
+
+	@IsBoolean()
+	@IsNotEmpty()
+	isChannel: boolean;
 }

@@ -4,7 +4,14 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+  AfterLoad,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
+import { Channel } from './Channel.entity';
+import { Avatar } from './Avatar.entity';
 
 @Entity()
 export class User {
@@ -58,4 +65,27 @@ export class User {
 
   @Column()
   logged: boolean;
+
+  @ManyToMany(() => Channel, (channel) => channel.users)
+  @JoinTable()
+  channels: Channel[];
+
+  @ManyToMany(() => User, (user) => user.pongies)
+  @JoinTable()
+  pongies: User[];
+
+  @OneToOne(() => Avatar)
+  @JoinColumn()
+  avatar: Avatar;
+
+  @AfterLoad()
+  async nullChecks() {
+    if (!this.channels) {
+      this.channels = [];
+    }
+
+    if (!this.pongies) {
+      this.pongies = [];
+    }
+  }
 }

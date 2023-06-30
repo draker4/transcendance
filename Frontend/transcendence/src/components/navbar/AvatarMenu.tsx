@@ -14,14 +14,10 @@ export default function NavbarHome({ profile, setIsDropdownOpen }: Props) {
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const signoff = useCallback(
-    async (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      deleteCookie("crunchy-token");
-      router.push("/welcome");
-    },
-    [router]
-  );
+  const  signoff = () => {
+    deleteCookie("crunchy-token");
+    router.push("/welcome");
+  }
 
   const closeDropdown = useCallback(() => {
     setIsDropdownOpen(false);
