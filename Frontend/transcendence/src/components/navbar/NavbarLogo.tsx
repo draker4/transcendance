@@ -7,21 +7,6 @@ type Props = {
 };
 
 export default function NavbarLogo({ link }: Props) {
-  if (link == "no") {
-    return (
-      <div className={styles.left}>
-        <Image
-          src="/images/logo.png"
-          alt="Logo Crunchy Pong"
-          width={50}
-          height={50}
-          title="Logo Crunchy Pong"
-          className={styles.logo}
-        />
-        <h2 className={styles.title}>Crunchy Pong</h2>
-      </div>
-    );
-  }
   return (
     <Link href={link}>
       <div className={styles.left}>

@@ -1,8 +1,8 @@
 import React from "react";
 import "@/styles/globals.css";
 import NavbarServ from "@/components/navbar/NavbarServ";
-import ChatServer from "@/components/chat/ChatServer";
 import Footer from "@/components/footer/Footer";
+import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 
 export const metadata = {
   title: "Transcendence",
@@ -21,6 +21,7 @@ export default function RootLayout({
         <NavbarServ />
         {children}
         <Footer />
+        <ScrollBtn />
       </body>
     </html>
   );

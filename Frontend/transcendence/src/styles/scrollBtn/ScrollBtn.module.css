@@ -1,19 +1,19 @@
 .scroll {
   position: fixed;
-  z-index: 1000;
-  bottom: 20px;
-  right: 20px;
-  display: grid;
-  width: 35px;
-  height: 35px;
+  bottom: 2%;
+  right: 5%;
+  display: flex;
+  width: clamp(40px, 3vh, 50px);
+  height: clamp(40px, 3vh, 50px);
+  z-index: 1;
 }
 
 .scrollBtn {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 35px;
-  height: 35px;
+  width: clamp(40px, 3vh, 50px);
+  height: clamp(40px, 3vh, 50px);
   border-radius: 100%;
   color: var(--secondary);
   border: 3px solid var(--accent);
@@ -21,6 +21,7 @@
   font-size: 22px;
 }
 
-.scrollBtn:hover {
+.scrollBtn button:hover {
   border: 3px solid var(--accent-darker1);
+  cursor: pointer;
 }

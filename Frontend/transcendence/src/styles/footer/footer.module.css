@@ -1,0 +1,15 @@
+.footer {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto;
+  padding-top: 10px;
+  /* border-top: 1.5px solid var(--secondary); */
+  width: 90%;
+}
+
+.copyright {
+  font-size: 0.8rem;
+  color: var(--secondary-lighter2);
+}
