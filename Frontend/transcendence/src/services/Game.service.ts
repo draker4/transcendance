@@ -17,7 +17,7 @@ class Game_Service {
   
     //Fait une requette et renvoie la reponse
     public async FetchData(url : string , methode : string, body : any = null){
-        const response = await fetch('http://localhost:4000/api/' + url , {
+        const response = await fetch(`http://${process.env.HOST_IP}:4000/api/${url}`, {
             method: methode,
             headers: {
                 'Content-Type': 'application/json',

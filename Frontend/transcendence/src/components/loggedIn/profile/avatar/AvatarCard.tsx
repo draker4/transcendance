@@ -8,6 +8,9 @@ import avatarType from "@/types/Avatar.type";
 import { CSSProperties, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color, ColorChangeHandler, ColorResult } from "react-color";
+import Avatar_Service from "@/services/Avatar.service";
+
+// [!] a supprimer a terme
 import submitAvatarColors from "@/lib/avatar/submitAvatarColors";
 
 type Props = {
@@ -25,6 +28,8 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     "border"
   );
 
+  const avatarService = new Avatar_Service(token);
+
   const handleArea = (
     event: React.MouseEvent<HTMLElement>,
     newArea: "border" | "background" | null
@@ -38,14 +43,21 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   };
 
   const saveColorChanges = async () => {
-    // [!] ici envoyer les updates color au back
-    // verif si il y a eut un changement avant ?
+    // [?] verif si il y a eut un changement avant ?
 
-    const response = await submitAvatarColors(
+    // [!] ici envoyer les updates color au back
+    avatarService.test();
+    await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
-      token
+      false,
     );
+
+    // const response = await submitAvatarColors(
+    //   topColor.toString(),
+    //   botColor.toString(),
+    //   token
+    // );
 
     avatar.borderColor = topColor.toString();
     avatar.backgroundColor = botColor.toString();

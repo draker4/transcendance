@@ -1,19 +1,23 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
 import { createUserDto } from './dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Channel)
+    private readonly channelRepository: Repository<Channel>,
     private cryptoService: CryptoService,
   ) {}
 
-  async addUser(createUserDto: createUserDto): Promise<User> {
+  async saveUser(createUserDto: createUserDto): Promise<User> {
     return await this.userRepository.save(createUserDto);
   }
 
@@ -42,11 +46,26 @@ export class UsersService {
     return await this.userRepository.findOne({ where: { id: id } });
   }
 
+  async getUserChannels(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ["channels", "channels.avatar"],
+    });
+  }
+
+  async getUserAvatar(id: number) {
+    return await this.userRepository.findOne({ where: { id: id }, relations: ["avatar"] });
+  }
+
   async getUserByCode(code: string) {
     return await this.userRepository.findOne({ where: { verifyCode: code } });
   }
 
   async updateUser(user: User) {
     await this.userRepository.update(user.id, user);
+  }
+
+  async getChannelByName(name: string) {
+    return await this.channelRepository.findOne({ where: { name: name }, relations: ["users"] });
   }
 }

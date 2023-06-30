@@ -19,8 +19,8 @@ export default function ChooseAvatar({
   text: string;
   avatars: string[];
 }) {
-  const [colorBorder, setColorBorder] = useState("var(--accent)");
-  const [backgroundColor, setBackgroundColor] = useState("var(--accent)");
+  const [colorBorder, setColorBorder] = useState("#22d3ee");
+  const [backgroundColor, setBackgroundColor] = useState("#22d3ee");
   const [selectedAvatar, setSelectedAvatar] = useState<string>("empty");
 
   const handleBorder = (color: string) => {
@@ -49,12 +49,13 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar("empty", {
               image: "",
-              login: "",
+              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
               text: text,
               empty: true,
+              isChannel: false,
             })
           }
           sx={{
@@ -77,12 +78,13 @@ export default function ChooseAvatar({
               onClick={() =>
                 handleSelectAvatar(avatar, {
                   image: avatar,
-                  login: "",
+                  name: "",
                   variant: "circular",
                   borderColor: colorBorder,
                   backgroundColor: backgroundColor,
                   text: text,
                   empty: false,
+                  isChannel: false,
                 })
               }
               sx={{
@@ -106,12 +108,13 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar(text, {
               image: "",
-              login: "",
+              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
               text: text,
               empty: false,
+              isChannel: false,
             })
           }
           sx={{

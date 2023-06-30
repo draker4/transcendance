@@ -1,32 +1,60 @@
-import { Controller, Get, NotFoundException, Param, Request } from '@nestjs/common';
+/* eslint-disable prettier/prettier */
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  ParseBoolPipe,
+  Put,
+  Request,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AvatarService } from './avatar.service';
+import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('avatar')
 export class AvatarController {
-	
-	constructor(private readonly avatarService: AvatarService) {}
+  constructor(
+    private readonly avatarService: AvatarService,
+    private readonly userService: UsersService,
+  ) {}
 
-	@Get()
-	async getAvatar(@Request() req) {
-		const	avatar = await this.avatarService.getAvatarById(req.user.id);
+  @Get()
+  async getAvatar(@Request() req) {
+    const user = await this.userService.getUserAvatar(req.user.id);
 
-		if (!avatar)
-			return {
-				exists: false,
-			}
-		
-		return avatar;
-	}
+    if (!user)
+      return {
+        exists: false,
+      };
 
+    return user.avatar;
+  }
 
-	@Get(':login')
-	async getAvatarByLogin(@Param('login') login:string) {
-		const	avatar = await this.avatarService.getAvatarByLogin(login);
+  @Get(':name/:isChannel')
+  async getAvatarByName(
+    @Param('name') name: string,
+    @Param('isChannel', ParseBoolPipe) isChannel: boolean,
+  ) {
+    const avatar = await this.avatarService.getAvatarByName(
+      name,
+      Boolean(isChannel),
+    );
 
-		if (!avatar)
-			throw new NotFoundException('avatar not found');
-		
-		return avatar;
-	}
+    if (!avatar) throw new NotFoundException('avatar not found');
 
+    return avatar;
+  }
+
+  @Put()
+  async updateAvatar(@Request() req, @Body() updateAvatarDto: UpdateAvatarDto) {
+    // [!] TODO : custom validationPipe OU enumeDecorator contenant le tableau des couleurs authorisee
+    // [!] ne pas oublier que les couleurs peuvent avoir des min et/ou majuscules
+    console.log('PUT avatar received');
+    console.log('updateAvatarDto :', updateAvatarDto);
+
+    return this.avatarService.editColors(req, updateAvatarDto);
+  }
 }

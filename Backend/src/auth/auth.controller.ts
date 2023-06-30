@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Param,
   Controller,
@@ -26,7 +27,7 @@ export class AuthController {
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
     const dataToken = await this.authService.getToken42(code);
-    console.log('here', dataToken);
+
     if (!dataToken) return null;
 
     const user42logged = await this.authService.logUser(dataToken);
@@ -38,7 +39,7 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body() createUserDto: createUserDto) {
     const user = await this.authService.addUser(createUserDto);
-
+    console.log(user);
     if (!user) throw new BadRequestException();
 
     return {
@@ -55,15 +56,28 @@ export class AuthController {
       return { message: 'This code does not exist. Please try again!' };
 
     if (user && user.expirationCode < Date.now()) {
-      await this.authService.sendNewCode(user);
+      const userUpdated = await this.authService.sendNewCode(user);
+
+      if (!userUpdated)
+        return {
+          message:
+          'Something went wrong, please try again !',
+        };
+
       return {
         message:
-          'This code has expired. A new one has been sent to your email address',
+        'This code has expired. A new one has been sent to your email address',
       };
     }
-
+    
     user.verified = true;
-    await this.authService.updateUser(user);
+
+    const userUpdated = await this.authService.saveUser(user);
+    if (!userUpdated)
+      return {
+        message:
+        'Something went wrong, please try again !',
+      };
 
     const { access_token } = await this.authService.login(user);
     return {
@@ -83,7 +97,7 @@ export class AuthController {
   async googleOauthCallback(@Req() req, @Res() res: Response) {
     const { access_token } = await this.authService.loginWithGoogle(req.user);
     res.cookie('crunchy-token', access_token);
-    return res.redirect('http://localhost:3000/home');
+    return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
 
   @Post('firstLogin')
@@ -93,9 +107,15 @@ export class AuthController {
     @Body('avatarChosen') avatar: AvatarDto,
   ) {
     try {
-      const user = await this.authService.updateUserLogin(req.user.id, login);
-      avatar.userId = req.user.id;
-      await this.authService.updateAvatar(avatar);
+      if (login.length < 4) throw new Error('Login too short');
+
+      const avatarCreated = await this.authService.createAvatar(avatar);
+      const user = await this.authService.updateUserLogin(req.user.id, login, avatarCreated);
+      if (!avatarCreated)
+        return {
+          error: true,
+          message: "can't create avatar",
+        };
 
       const { access_token } = await this.authService.login(user);
 
@@ -104,7 +124,6 @@ export class AuthController {
         access_token,
       };
     } catch (err) {
-      console.log(err.message);
       return {
         error: true,
         message: err.message,

@@ -1,13 +1,14 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+/* eslint-disable prettier/prettier */
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Avatar {
 	
-	@PrimaryColumn()
-	userId: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
 	@Column()
-	login: string;
+	name: string;
 
 	@CreateDateColumn()
  	createdAd: Date;
@@ -32,4 +33,7 @@ export class Avatar {
 
 	@Column()
 	empty: boolean;
+
+	@Column()
+	isChannel: boolean;
 }

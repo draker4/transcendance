@@ -3,22 +3,34 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : start down re clean log reback refront redata rebuild cleandata
+.phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
+
+# *********************************** IP ADDRESS ********************************** #
+
+HOST_IP := $(shell bash ./tools/get_host_ip.sh)
+export HOST_IP
 
 # *********************************** RULES ********************************** #
 
 all : start
+
+ip	: write-env-ip start ipAddress write-env-localhost
 
 start :
 	@echo "----Starting all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
 	@echo "----All Docker started-----"
 
-
 down :
 	@echo "----Stopping all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 	@echo "----All Docker stopped-----"
+
+rmvolume :
+	@echo "----Deleting all Volumes----"
+	docker volume rm $$(docker volume ls -q)
+	@echo "----All Volumes deleted-----"
+
 
 clean : down
 	@echo "----Cleaning all Docker----"
@@ -65,10 +77,30 @@ redata :
 	@echo "----Restarting Database----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart database
 
-rebuild :
+rebuild : write-env
 	@echo "----Rebuilding all Docker----"	
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build --no-cache
+	ipAddress
 
 re : clean rebuild
 
+ipAddress:
+	@echo "Host IP: $(HOST_IP)"
 
+write-env-ip:
+	@if [ -f ./Dockers/.env ] && grep -q "HOST_IP=" ./Dockers/.env; then \
+		sed -i 's/HOST_IP=.*/HOST_IP=$(HOST_IP)/' ./Dockers/.env; \
+		echo "Updated IP address in ./Dockers/.env file"; \
+	else \
+		echo "HOST_IP=$(HOST_IP)" >> ./Dockers/.env; \
+		echo "Created IP address in ./Dockers/.env file"; \
+	fi
+
+write-env-localhost:
+	@if [ -f ./Dockers/.env ] && grep -q "HOST_IP=" ./Dockers/.env; then \
+		sed -i 's/HOST_IP=.*/HOST_IP=localhost/' ./Dockers/.env; \
+		echo "Updated IP address in ./Dockers/.env file"; \
+	else \
+		echo "HOST_IP=localhost" >> ./Dockers/.env; \
+		echo "Created IP address in ./Dockers/.env file"; \
+	fi

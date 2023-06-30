@@ -21,18 +21,8 @@ volumes:
       type: none
 
   database_conf_vol:
-    #driver: local
-    #driver_opts:
-    #  device: ../Database/conf
-    #  o: bind
-    #  type: none
 
   database_data_vol:
-    #driver: local
-    #driver_opts:
-    #  device: ../Database/data
-    #  o: bind
-    #  type: none
 
 services:
 

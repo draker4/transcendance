@@ -68,7 +68,7 @@ export default function ConfirmEmailCode() {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/auth/verify?code=${code}`
+        `http://${process.env.HOST_IP}:3000/api/auth/verify?code=${code}`
       );
       const msg = await response.json();
 

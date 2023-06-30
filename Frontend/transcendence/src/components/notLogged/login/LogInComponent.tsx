@@ -50,7 +50,7 @@ export default function LogInComponent() {
 
   const openGoogle = async () => {
     setTextButton("Loading...");
-    window.open("http://localhost:4000/api/auth/google", "_self");
+    window.open(`http://${process.env.HOST_IP}:4000/api/auth/google`, "_self");
   };
 
   const handleCaptcha = async () => {
@@ -60,7 +60,7 @@ export default function LogInComponent() {
 
     const token = await executeRecaptcha("enquiryFormSubmit");
 
-    const response = await fetch("http://localhost:3000/api/auth/captcha", {
+    const response = await fetch(`http://${process.env.HOST_IP}:3000/api/auth/captcha`, {
       method: "POST",
       headers: {
         Accept: "application/json, text/plain, */*",
@@ -89,7 +89,7 @@ export default function LogInComponent() {
   const submit = async (data: FormInputs) => {
 
     try {
-      await handleCaptcha();
+      // await handleCaptcha();
 
       // handle input
       const emailUser = data.email;
@@ -113,7 +113,6 @@ export default function LogInComponent() {
         return;
       }
 
-      // const passwordUser = data.get("password") as string;
       const passwordUser = data.password;
       let res: {
         passwordSecured: string;
@@ -146,7 +145,7 @@ export default function LogInComponent() {
           {email.length === 0 && (
             <input
               type="email"
-              autoComplete="username"
+              autoComplete="email"
               placeholder="email"
               name="email"
               className={styles.input}
@@ -170,7 +169,7 @@ export default function LogInComponent() {
           >
             <input
               type="password"
-              autoComplete="new-password"
+              autoComplete="password"
               placeholder="password"
               name="password"
               className={styles.input}

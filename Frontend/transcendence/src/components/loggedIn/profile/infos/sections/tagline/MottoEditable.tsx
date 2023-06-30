@@ -28,8 +28,9 @@ export default function MottoEditable({ profile, token }: Props) {
     setEditedMotto(event.target.value);
   };
 
-  const handleActionMotto = async (data: FormData) => {
-    const submitedMotto = data.get("motto");
+  const handleSubmitMotto = async (e: any) => {
+    e.preventDefault();
+    const submitedMotto = e.target.motto.value;
 
     if (typeof submitedMotto === "string") {
       if (submitedMotto === motto) {
@@ -83,7 +84,7 @@ export default function MottoEditable({ profile, token }: Props) {
 
       {editMode && (
         <div>
-          <form action={handleActionMotto}>
+          <form onSubmit={handleSubmitMotto}>
             <p className={styles.motto}>
               {" "}
               <input

@@ -16,6 +16,7 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as bcrypt from 'bcrypt';
+import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 
 @Injectable()
 export class AuthService {
@@ -66,9 +67,9 @@ export class AuthService {
     };
 
     const user_old = await this.usersService.getUserByEmail(user.email, '42');
-    if (!user_old) return await this.usersService.addUser(user);
+    if (!user_old) return await this.usersService.saveUser(user);
 
-    await this.usersService.updateUser(user_old);
+    await this.usersService.saveUser(user_old);
     return user_old;
   }
 
@@ -97,7 +98,11 @@ export class AuthService {
       createUserDto.verifyCode,
     );
 
-    return await this.usersService.addUser(createUserDto);
+    return await this.usersService.saveUser(createUserDto);
+  }
+
+  async saveUser(createUserDto: createUserDto) {
+    return await this.usersService.saveUser(createUserDto);
   }
 
   async verifyCode(code: string) {
@@ -111,7 +116,7 @@ export class AuthService {
     const email = await this.cryptoService.decrypt(user.email);
 
     await this.mailService.sendUserConfirmation(email, user.verifyCode);
-    await this.usersService.updateUser(user);
+    return await this.usersService.saveUser(user);
   }
 
   async loginWithGoogle(createUserDto: createUserDto) {
@@ -134,28 +139,25 @@ export class AuthService {
       'google',
     );
 
-    if (!user) user = await this.usersService.addUser(createUserDto);
+    if (!user) user = await this.usersService.saveUser(createUserDto);
+    else await this.usersService.saveUser(user);
 
     return this.login(user);
   }
 
-  async updateUserLogin(userId: number, login: string) {
-    const user = await this.usersService.getUserById(userId);
+  async updateUserLogin(userId: number, login: string, avatar: Avatar) {
+    const user = await this.usersService.getUserAvatar(userId);
 
     if (!user) throw new Error('No user found');
 
     user.login = login;
-
-    await this.usersService.updateUser(user);
+    user.avatar = avatar;
+    await this.usersService.saveUser(user);
     return user;
   }
 
-  async updateAvatar(avatar: AvatarDto) {
-    const avatarUser = await this.avatarService.updateAvatar(avatar);
-
-    if (!avatarUser) throw new Error('Cannot create or update avatar');
-
-    return avatarUser;
+  async createAvatar(avatar: AvatarDto) {
+    return await this.avatarService.createAvatar(avatar);
   }
 
   async validateUser(email: string, password: string) {
@@ -176,10 +178,15 @@ export class AuthService {
 
     if (!user.verified) throw new ForbiddenException();
 
+    await this.usersService.saveUser(user);
     return user;
   }
 
   async updateUser(user: User) {
     await this.usersService.updateUser(user);
+  }
+
+  async getUserById(id: number) {
+    return await this.usersService.getUserById(id);
   }
 }

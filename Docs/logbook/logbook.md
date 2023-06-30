@@ -1,4 +1,5 @@
 # CRUNCHY PONG
+
 ```
 Journal de bord - ft_transcendence
 Crunchy Team : bboisson tquere bperriol loumarti
@@ -8,9 +9,8 @@ Crunchy Team : bboisson tquere bperriol loumarti
 
 - Creation officielle de la `Crunchy team`
 - Prise de connaissance du sujet, organisation en deux premiers objectifs
-  -  **Maquette** -> *bboisson & loumarti*
-  - **Docker-compose** -> *bperriol & tquere*
-
+  - **Maquette** -> _bboisson & loumarti_
+  - **Docker-compose** -> _bperriol & tquere_
 
 > La `maquette` est realisée sur papier au depart, l'objectif est d'avoir
 > un rendu visuel a lier aux informations codes (breakpoint, couleurs, endpoint ...)
@@ -46,3 +46,19 @@ Crunchy Team : bboisson tquere bperriol loumarti
 
 - correction de crash avec bad-words (necessite un caractere alphanum minimum)
 - 1ers essais avec React-color installe dans le front pour editer l'avatar dans la partie profile
+
+## mardi 27 juin
+
+- Decouverte des `websocket`, implantation du `module gateway` dans le backend.
+
+  > Le Gateway ecoute des `events` (ex this.server.on('connection'))
+  > <br />
+  > Il possede une liste des `connectedUsers = new Map<userId, socket.id>()` > <br />
+  > Cote front on cree un socket avec `io`, on peut passer des objet via `query`, les event a ecouter sont place dans un useEffect()
+
+- Lien avec la Database, creation d'une table Channel
+  > La table channel a une `relationship many-to-many` avec la table users (voir dans utils/typeorm/ les entity.ts)
+  > <br />
+  > Une table de jonction est cree automatiquement ` @JoinTable()`
+  > <br />
+  > Cette relationship oblige a utiliser `save` au lieu de `update` pour mettre a jour un user (mais pas dans tou les cas, ca doit plus etre lorsque on touche au tableau de channel du user)

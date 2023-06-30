@@ -22,15 +22,16 @@ export default function FormLogin({
   const avatarChosenRef = useRef<avatarType>({
     image: "",
     variant: "circular",
-    borderColor: "var(--accent)",
-    backgroundColor: "var(--accent)",
+    borderColor: "#22d3ee",
+    backgroundColor: "#22d3ee",
     text: "",
     empty: true,
-    login: "",
+    name: "",
+    isChannel: false,
   });
 
   const selectAvatar = (avatar: avatarType) => {
-    avatar.login = avatarChosenRef.current.login;
+    avatar.name = avatarChosenRef.current.name;
     avatarChosenRef.current = avatar;
   };
 
@@ -46,14 +47,14 @@ export default function FormLogin({
     const text = e.target.value;
 
     avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
-    avatarChosenRef.current.login = text;
+    avatarChosenRef.current.name = text;
     setText(text.toUpperCase().slice(0, 2));
   };
 
   useEffect(() => {
     const changeCookie = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/login", {
+        const res = await fetch(`http://${process.env.HOST_IP}:3000/api/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -89,7 +90,7 @@ export default function FormLogin({
       exists: string;
       token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
-    
+
     setNotif(res.exists);
     setToken(res.token);
   };
