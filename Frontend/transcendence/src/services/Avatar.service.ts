@@ -15,14 +15,17 @@ export default class Avatar_Service {
   public async fetchData(url: string, method: string, body: any = null) {
     // console.log("into FetchData");
 
-    const response = await fetch(`http://backend:4000/api/avatar/${url}/false`, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.token,
-      },
-      body: body,
-    });
+    const response = await fetch(
+      `http://backend:4000/api/avatar/${url}/false`,
+      {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+        body: body,
+      }
+    );
 
     // console.log("response :", response);
 
@@ -44,14 +47,17 @@ export default class Avatar_Service {
   ) {
     // console.log("into FetchData");
 
-    const response = await fetch(`http://${process.env.HOST_IP}:4000/api/avatar/${url}`, {
-      method: method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.token,
-      },
-      body: body,
-    });
+    const response = await fetch(
+      `http://${process.env.HOST_IP}:4000/api/avatar/${url}`,
+      {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+        body: body,
+      }
+    );
 
     console.log("response :", response);
 
@@ -82,7 +88,7 @@ export default class Avatar_Service {
   public async submitAvatarColors(
     borderColor: string,
     backgroundColor: string,
-    isChannel: boolean,
+    isChannel: boolean
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
 
