@@ -1,6 +1,7 @@
 // import { ChatSocketContext } from "@/context/ChatSocketContext";
 import styles from "@/styles/chat/ChatMain.module.css";
 import ChatHome from "./chatParts/ChatHome";
+import ChatPrivateMsg from "./chatParts/ChatPrivateMsg";
 // import { useContext, useEffect, useState } from "react";
 
 // type MessagePayload = {
@@ -36,6 +37,10 @@ export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 	// 	setValue("");
 	// };
 
+
+	// ici ameliorer pour
+	const displayPongiesPM: boolean = true;
+
 	return (
 		<div
 			className={chatFirst ?
@@ -45,7 +50,9 @@ export default function ChatMain({ chatOpened, chatFirst, widthStyle }: {
 			}
 			style={chatOpened ? { width: widthStyle } : { width: 0 }}
 		>
-			<ChatHome />
+			{!displayPongiesPM && <ChatHome />}
+			{displayPongiesPM && <ChatPrivateMsg />}
+
 
 
 

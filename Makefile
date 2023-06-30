@@ -3,7 +3,7 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
 
-.phony : start down re clean log reback refront redata rebuild cleandata
+.phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
 
 # *********************************** IP ADDRESS ********************************** #
 
@@ -25,6 +25,12 @@ down :
 	@echo "----Stopping all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 	@echo "----All Docker stopped-----"
+
+rmvolume :
+	@echo "----Deleting all Volumes----"
+	docker volume rm $$(docker volume ls -q)
+	@echo "----All Volumes deleted-----"
+
 
 clean : down
 	@echo "----Cleaning all Docker----"

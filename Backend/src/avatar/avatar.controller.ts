@@ -38,7 +38,10 @@ export class AvatarController {
     @Param('name') name: string,
     @Param('isChannel', ParseBoolPipe) isChannel: boolean,
   ) {
-    const avatar = await this.avatarService.getAvatarByName(name, Boolean(isChannel));
+    const avatar = await this.avatarService.getAvatarByName(
+      name,
+      Boolean(isChannel),
+    );
 
     if (!avatar) throw new NotFoundException('avatar not found');
 
@@ -46,22 +49,12 @@ export class AvatarController {
   }
 
   @Put()
-  async updateAvatar(
-    @Request() req,
-<<<<<<< HEAD
-    @Body(new ValidationPipe()) updateAvatarDto: UpdateAvatarDto,
-  ) {
-    console.log('PUT avatar received');
-    console.log('updateAvatarDto :', updateAvatarDto);
-=======
-    @Body() updateAvatarDto: UpdateAvatarDto,
-  ) {
+  async updateAvatar(@Request() req, @Body() updateAvatarDto: UpdateAvatarDto) {
     // [!] TODO : custom validationPipe OU enumeDecorator contenant le tableau des couleurs authorisee
     // [!] ne pas oublier que les couleurs peuvent avoir des min et/ou majuscules
     console.log('PUT avatar received');
     console.log('updateAvatarDto :', updateAvatarDto);
 
->>>>>>> 9cdd41d8a0fa75fbeb942fbb0ad4d9e5ca27e422
     return this.avatarService.editColors(req, updateAvatarDto);
   }
 }
