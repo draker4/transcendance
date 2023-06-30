@@ -1,10 +1,10 @@
-/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 import { WinstonModule } from 'nest-winston';
 import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { 
@@ -41,7 +41,6 @@ async function bootstrap() {
       ],
     }),
   });
-
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({origin: '*'});

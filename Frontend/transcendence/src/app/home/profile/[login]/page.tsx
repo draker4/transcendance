@@ -5,11 +5,7 @@ import Avatar_Service from "@/services/Avatar.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/Profile.module.css";
-import avatarType from "@/types/Avatar.type";
 import { cookies } from "next/dist/client/components/headers";
-
-// [!] cette foncion devra etre supprimee a terme
-import { getAvatarByLogin } from "@/lib/avatar/getAvatarByLogin";
 
 type Params = {
   params: {

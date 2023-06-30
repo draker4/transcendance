@@ -1,5 +1,4 @@
 import React from "react";
-import NavbarWelcome from "@/components/navbar/NavbarWelcome";
 
 export const metadata = {
   title: "Transcendence",
@@ -12,10 +11,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div>
-      <NavbarWelcome />
-      {children}
-    </div>
-  );
+  return <main>{children}</main>;
 }

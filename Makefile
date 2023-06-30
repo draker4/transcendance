@@ -29,13 +29,13 @@ down :
 clean : down
 	@echo "----Cleaning all Docker----"
 	@containers=$$(docker ps -qa); \
-	if [ -n "$$containers" ]; then \
+	if [ "$$containers" ]; then \
 		docker rm $$containers; \
 	else \
 		echo "No containers to remove."; \
 	fi
 	@images=$$(docker images -qa); \
-	if [ -n "$$images" ]; then \
+	if [ "$$images" ]; then \
 		docker rmi -f $$images; \
 	else \
 		echo "No images to remove."; \
@@ -71,10 +71,10 @@ redata :
 	@echo "----Restarting Database----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart database
 
-rebuild : write-env
+rebuild :
 	@echo "----Rebuilding all Docker----"	
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build --no-cache
-	ipAddress
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
+
 
 re : clean rebuild
 

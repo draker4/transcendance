@@ -1,23 +1,23 @@
-import NavbarHome from "./NavbarHome";
 import { cookies } from "next/dist/client/components/headers";
 import { getAvatarByToken } from "@/lib/avatar/getAvatarByToken";
-import avatarType from "@/types/Avatar.type";
 import { CryptoService } from "@/services/crypto/Crypto.service";
-import Profile from "@/services/Profile.service";
 import { getProfileByToken } from "@/lib/profile/getProfileInfos";
+import Profile from "@/services/Profile.service";
+import NavbarFront from "./NavbarFront";
 
 const Crypto = new CryptoService();
 
-export default async function NavbarLogged() {
+export default async function NavbarServ() {
   let token: string | undefined = "";
   let avatar: avatarType = {
     image: "",
-    login: "",
+    name: "",
     variant: "",
     borderColor: "",
     backgroundColor: "",
     text: "",
     empty: true,
+    isChannel: false,
   };
 
   let profile = new Profile();
@@ -41,7 +41,7 @@ export default async function NavbarLogged() {
 
   return (
     <div>
-      <NavbarHome avatar={avatar} profile={profile} />
+      <NavbarFront avatar={avatar} profile={profile} />
     </div>
   );
 }
