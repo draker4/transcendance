@@ -50,4 +50,19 @@ export class ChatService {
       channel: 'channel to deal with',
     };
   }
+
+  async getPongies(id: string) {
+	const	user = await this.usersService.getUserPongies(parseInt(id));
+
+	if (!user)
+		return {
+      "success": "false",
+      "pongies": [],
+    }
+  
+	return {
+      "success": "true",
+      "pongies": user.pongies,
+    };
+  }
 }

@@ -29,7 +29,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       last_name: name.familyName,
       image: photos[0].value,
       verified: true,
-      logged: true,
     };
 
     done(null, user);

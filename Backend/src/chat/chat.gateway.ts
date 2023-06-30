@@ -81,4 +81,9 @@ export class ChatGateway implements OnModuleInit {
       data.pongieId,
     );
   }
+
+	@SubscribeMessage('getPongies')
+	async getPongies(@Request() req) {
+		return await this.chatService.getPongies(req.user.id);
+	}
 }
