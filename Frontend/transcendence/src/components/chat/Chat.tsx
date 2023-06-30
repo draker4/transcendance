@@ -6,7 +6,6 @@ import ChatMain from "./ChatMain";
 import styles from "@/styles/chat/Chat.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faComments } from "@fortawesome/free-solid-svg-icons";
-import { useSelectedLayoutSegment } from "next/navigation";
 
 export default function Chat() {
 
@@ -16,7 +15,6 @@ export default function Chat() {
   const [widthStyle, setWidthStyle] = useState<string>("");
   const [positionX, setPositionX] = useState(0);
   const [positionY, setPositionY] = useState(0);
-  const segment = useSelectedLayoutSegment();
   const bubbleRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
   const [moving, setMoving] = useState(false);
@@ -172,59 +170,55 @@ export default function Chat() {
 
   return (
     <>
-      {segment !== "create" && (
-        <>
-          <div className={styles.display} ref={bubbleRef}>
-            {!chatOpened && (
-              <FontAwesomeIcon
-                icon={faComments}
-                className={styles.menu}
-                onClick={openChat}
-                onMouseDown={handleMouseDown}
-                onTouchStart={handleMouseDown}
-              />
-            )}
+      <div className={styles.display} ref={bubbleRef}>
+        {!chatOpened && (
+          <FontAwesomeIcon
+            icon={faComments}
+            className={styles.menu}
+            onClick={openChat}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleMouseDown}
+          />
+        )}
 
-            {chatOpened && (
-              <FontAwesomeIcon
-                icon={faArrowLeft}
-                className={styles.menu}
-                onClick={openChat}
-                onMouseDown={handleMouseDown}
-                onTouchStart={handleMouseDown}
-              />
-            )}
-          </div>
+        {chatOpened && (
+          <FontAwesomeIcon
+            icon={faArrowLeft}
+            className={styles.menu}
+            onClick={openChat}
+            onMouseDown={handleMouseDown}
+            onTouchStart={handleMouseDown}
+          />
+        )}
+      </div>
 
-          {!littleScreen && (
-            <div className={styles.chatTotalBig}>
-              <ChatBubbles />
-              <ChatMain
-                chatOpened={chatOpened}
-                chatFirst={chatFirst}
-                widthStyle={widthStyle}
-              />
-            </div>
-          )}
-          {littleScreen && (
-            <div
-              className={
-                chatFirst
-                  ? styles.littleFirst
-                  : chatOpened
-                  ? styles.chatTotalLittle
-                  : styles.close
-              }
-            >
-              <ChatBubbles />
-              <ChatMain
-                chatOpened={chatOpened}
-                chatFirst={chatFirst}
-                widthStyle={widthStyle}
-              />
-            </div>
-          )}
-        </>
+      {!littleScreen && (
+        <div className={styles.chatTotalBig}>
+          <ChatBubbles />
+          <ChatMain
+            chatOpened={chatOpened}
+            chatFirst={chatFirst}
+            widthStyle={widthStyle}
+          />
+        </div>
+      )}
+      {littleScreen && (
+        <div
+          className={
+            chatFirst
+              ? styles.littleFirst
+              : chatOpened
+              ? styles.chatTotalLittle
+              : styles.close
+          }
+        >
+          <ChatBubbles />
+          <ChatMain
+            chatOpened={chatOpened}
+            chatFirst={chatFirst}
+            widthStyle={widthStyle}
+          />
+        </div>
       )}
     </>
   );

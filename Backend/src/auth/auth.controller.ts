@@ -39,7 +39,7 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body() createUserDto: createUserDto) {
     const user = await this.authService.addUser(createUserDto);
-
+    console.log(user);
     if (!user) throw new BadRequestException();
 
     return {
@@ -56,16 +56,29 @@ export class AuthController {
       return { message: 'This code does not exist. Please try again!' };
 
     if (user && user.expirationCode < Date.now()) {
-      await this.authService.sendNewCode(user);
+      const userUpdated = await this.authService.sendNewCode(user);
+
+      if (!userUpdated)
+        return {
+          message:
+          'Something went wrong, please try again !',
+        };
+
       return {
         message:
-          'This code has expired. A new one has been sent to your email address',
+        'This code has expired. A new one has been sent to your email address',
       };
     }
-
+    
     user.verified = true;
     user.logged = true;
-    await this.authService.updateUser(user);
+
+    const userUpdated = await this.authService.saveUser(user);
+    if (!userUpdated)
+      return {
+        message:
+        'Something went wrong, please try again !',
+      };
 
     const { access_token } = await this.authService.login(user);
     return {
