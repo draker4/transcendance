@@ -76,22 +76,6 @@ export default function Matchmaking_Game_List({ token }: Props) {
 				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
 					<One_Game game={game} key={index}/>
 				))}
-				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-					<One_Game game={game} key={index}/>	
-				))}
-				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-					<One_Game game={game} key={index}/>	
-				))}
-				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-					<One_Game game={game} key={index}/>
-				))}
-				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-					<One_Game game={game} key={index}/>	
-				))}
-				{filteredGames.length > 0 && filteredGames.map((game: any, index: number) => (
-					<One_Game game={game} key={index}/>	
-				))}	
-				
 			</div>
 		</div>
 	);
