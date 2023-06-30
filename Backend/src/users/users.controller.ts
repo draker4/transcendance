@@ -13,7 +13,6 @@ import { UsersService } from './users.service';
 import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
-import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @Controller('users')
 export class UsersController {
