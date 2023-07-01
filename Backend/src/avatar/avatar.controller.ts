@@ -40,7 +40,7 @@ export class AvatarController {
   ) {
     const avatar = await this.avatarService.getAvatarByName(
       name,
-      Boolean(isChannel),
+      isChannel,
     );
 
     if (!avatar) throw new NotFoundException('avatar not found');

@@ -10,6 +10,7 @@ import {
   Res,
   Request,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -27,10 +28,12 @@ export class AuthController {
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
     const dataToken = await this.authService.getToken42(code);
-
-    if (!dataToken) return null;
+    if (!dataToken)
+      throw new UnauthorizedException();
 
     const user42logged = await this.authService.logUser(dataToken);
+    if (!user42logged)
+      throw new UnauthorizedException();
 
     return this.authService.login(user42logged);
   }
@@ -38,52 +41,53 @@ export class AuthController {
   @Public()
   @Post('register')
   async registerUser(@Body() createUserDto: createUserDto) {
-    const user = await this.authService.addUser(createUserDto);
-    console.log(user);
-    if (!user) throw new BadRequestException();
+    try {
+      const user = await this.authService.addUser(createUserDto);
+      if (!user)
+        throw new BadRequestException();
 
-    return {
-      message: 'ok',
-    };
+      return {
+        message: 'ok',
+      };
+    }
+    catch (error) {
+      throw new BadRequestException();
+    }
   }
 
   @Public()
   @Get('verifyCode/:code')
   async verifyCode(@Param('code') code: string) {
-    const user = await this.authService.verifyCode(code);
+    try {
+      const user = await this.authService.verifyCode(code);
 
-    if (!user)
-      return { message: 'This code does not exist. Please try again!' };
+      if (!user)
+        return { message: 'This code does not exist. Please try again!' };
 
-    if (user && user.expirationCode < Date.now()) {
-      const userUpdated = await this.authService.sendNewCode(user);
-
-      if (!userUpdated)
+      if (user && user.expirationCode < Date.now()) {
+        await this.authService.sendNewCode(user);
         return {
           message:
-          'Something went wrong, please try again !',
+          'This code has expired. A new one has been sent to your email address',
         };
+      }
+      
+      await this.authService.updateUser(user.id, {
+        verified: true,
+      });
 
+      const { access_token } = await this.authService.login(user);
       return {
-        message:
-        'This code has expired. A new one has been sent to your email address',
+        message: 'Loading...',
+        token: access_token,
       };
     }
-    
-    user.verified = true;
-
-    const userUpdated = await this.authService.saveUser(user);
-    if (!userUpdated)
+    catch(error) {
       return {
         message:
         'Something went wrong, please try again !',
       };
-
-    const { access_token } = await this.authService.login(user);
-    return {
-      message: 'Loading...',
-      token: access_token,
-    };
+    }
   }
 
   @Public()
@@ -107,15 +111,12 @@ export class AuthController {
     @Body('avatarChosen') avatar: AvatarDto,
   ) {
     try {
-      if (login.length < 4) throw new Error('Login too short');
+      if (login.length < 4)
+        throw new Error('Login too short');
 
       const avatarCreated = await this.authService.createAvatar(avatar);
-      const user = await this.authService.updateUserLogin(req.user.id, login, avatarCreated);
-      if (!avatarCreated)
-        return {
-          error: true,
-          message: "can't create avatar",
-        };
+
+      const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
 
       const { access_token } = await this.authService.login(user);
 
