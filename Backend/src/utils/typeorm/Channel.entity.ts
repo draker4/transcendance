@@ -18,6 +18,9 @@ export class Channel {
 	@Column()
 	name: string;
 
+	@Column({default : "default", nullable: false})
+	type: "default" | "privateMsg";
+
 	@ManyToMany(() => User, (user) => user.channels)
 	users: User[];
 	

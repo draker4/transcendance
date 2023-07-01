@@ -16,17 +16,11 @@ const Theme = () => {
       setTheme(newTheme);
       document.documentElement.setAttribute("color-scheme", newTheme);
       localStorage.setItem("theme", newTheme);
-      console.log(
-        "dark: " + document.documentElement.getAttribute("color-scheme")
-      );
     } else {
       const newTheme = theme === "dark" ? "light" : "dark";
       setTheme(newTheme);
       document.documentElement.setAttribute("color-scheme", newTheme);
       localStorage.setItem("theme", newTheme);
-      console.log(
-        "light: " + document.documentElement.getAttribute("color-scheme")
-      );
     }
     const themeButton = document.querySelector(
       ".theme-btn"
@@ -63,7 +57,12 @@ const Theme = () => {
 
   return (
     <div className={styles.theme}>
-      <button title="theme button" type="button" className={styles.themeBtn} onClick={handleMode}>
+      <button
+        title="theme button"
+        type="button"
+        className={styles.themeBtn}
+        onClick={handleMode}
+      >
         {theme === "light" ? <MdWbSunny /> : <MdNightsStay />}
       </button>
     </div>

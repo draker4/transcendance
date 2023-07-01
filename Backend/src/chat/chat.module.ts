@@ -8,10 +8,12 @@ import { User } from "src/utils/typeorm/User.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
 import { CryptoService } from "src/utils/crypto/crypto";
 import { ChatService } from "./chat.service";
+import { ChannelService } from "src/channels/channel.service";
+import { Avatar } from "src/utils/typeorm/Avatar.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, Channel]),
+		TypeOrmModule.forFeature([User, Channel, Avatar]),
 	],
 	providers: [
 		ChatGateway,
@@ -19,6 +21,7 @@ import { ChatService } from "./chat.service";
 		UsersService,
 		CryptoService,
 		ChatService,
+		ChannelService,
 	],
 })
 export class ChatModule {}

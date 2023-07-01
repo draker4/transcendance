@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
-import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
 import { UsersService } from 'src/users/users.service';
 
 @Controller('avatar')
@@ -49,12 +49,12 @@ export class AvatarController {
   }
 
   @Put()
-  async updateAvatar(@Request() req, @Body() updateAvatarDto: UpdateAvatarDto) {
+  async updateAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
     // [!] TODO : custom validationPipe OU enumeDecorator contenant le tableau des couleurs authorisee
     // [!] ne pas oublier que les couleurs peuvent avoir des min et/ou majuscules
     console.log('PUT avatar received');
-    console.log('updateAvatarDto :', updateAvatarDto);
+    console.log('updateAvatarDto :', updateUserAvatarDto);
 
-    return this.avatarService.editColors(req, updateAvatarDto);
+    return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
   }
 }

@@ -1,9 +1,28 @@
-.dropdown {
+.menu {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  margin-left: 20px;
+}
+
+.avatar {
+  display: flex;
+  border-radius: 100%;
+  width: clamp(40px, 3vh, 50px);
+  height: clamp(40px, 3vh, 50px);
+  color: var(--primary);
+  margin: 0;
+  padding: 0;
+}
+
+.avatar:hover {
+  scale: 1.1;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: absolute;
+  top: clamp(50px, 3vh, 60px);
+  right: 5%;
   margin-top: 16px;
   z-index: 1;
 }
@@ -15,44 +34,32 @@
   justify-content: center;
   text-align: center;
   padding: 0;
-  background-color: var(--secondary);
   border: 4px solid var(--secondary-lighter1);
+  font-family: var(--title-font);
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .profile {
   text-transform: uppercase;
 }
 
-.list a {
-  font-family: var(--title-font);
-  color: var(--tertiary);
-  font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
-  width: 100px;
-  height: 30px;
-  padding: 5px;
-  background-color: var(--secondary);
-}
-
-.list a:hover {
-  color: var(--accent-lighter1);
-  background-color: var(--secondary-lighter1);
-}
-
+.list a,
 .logOut {
-  font-family: var(--title-font);
-  color: var(--tertiary);
-  font-size: 16px;
-  font-weight: 500;
   text-decoration: none;
+}
+
+.list li {
+  color: var(--tertiary);
+
   width: 100px;
   height: 30px;
   padding: 5px;
-  background-color: var(--secondary);
+  background-color: var(--primary-darker1);
 }
 
-.logOut:hover {
+.list li:hover {
   color: var(--accent-lighter1);
   background-color: var(--secondary-lighter1);
+  cursor: pointer;
 }

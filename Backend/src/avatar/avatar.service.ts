@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
 import { AvatarDto } from './dto/Avatar.dto';
-import { UpdateAvatarDto } from './dto/update-avatar.dto';
+import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
 
 @Injectable()
 export class AvatarService {
@@ -25,8 +25,8 @@ export class AvatarService {
     return await this.avatarRepository.findOne({ where: { name: name, isChannel: isChannel} });
   }
 
-  async editColors(req: any, updateAvatarDto: UpdateAvatarDto) {
-    const avatar: Avatar = await this.getAvatarByName(req.user.login, updateAvatarDto.isChannel);
+  async editUserAvatarColors(req: any, updateAvatarDto: UpdateUserAvatarDto) {
+    const avatar: Avatar = await this.getAvatarByName(req.user.login, false);
 
     // si on trouve pas d'avatar, on lui fourni un avatar par defaut
     if (!avatar) {
