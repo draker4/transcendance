@@ -18,6 +18,6 @@ export enum PongColors {
 	yellow = '#ffc107',
 	mustardYellow = '#ff9800',
 	tangerine = '#ff5722',
-	brown = '#795548',
+	nightblue = '#023047',
 	gray = '#607d8b',
   }

@@ -1,7 +1,7 @@
 import styles from "@/styles/chat/privateMsg/ChatPrivateMsg.module.css";
 
-export default function Header() {
+export default function Conversation() {
   return (
-	<div className={styles.header} ></div>
+	<div className={styles.conversation}></div>
   )
 }

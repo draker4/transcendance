@@ -28,7 +28,7 @@ export default function ColorSelector({ handleColorSelection }: Props) {
     PongColors.yellow,
     PongColors.mustardYellow,
     PongColors.tangerine,
-    PongColors.brown,
+    PongColors.nightblue,
     PongColors.gray,
   ];
 

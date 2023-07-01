@@ -3,6 +3,8 @@ import avatarType from "@/types/Avatar.type";
 import { useContext, useEffect } from "react";
 import styles from "@/styles/chat/privateMsg/ChatPrivateMsg.module.css";
 import Header from "./Header";
+import Conversation from "./Conversation";
+import Prompt from "./Prompt";
 
 type ChannelType = {
   id: number;
@@ -12,6 +14,13 @@ type ChannelType = {
 
 export default function ChatPrivateMsg() {
   const socket = useContext(ChatSocketContext);
+
+// [?] UUH ?
+  //   const token = socket?.io.opts.extraHeaders?.Authorization.split(" ")[1];
+
+//   console.log(token);
+
+  
 
   // [!] a chopper par les props ensuite
   const friendId: number = 2;
@@ -31,10 +40,11 @@ export default function ChatPrivateMsg() {
 
   //   }, [socket])
 
-  return <div className={styles.privateMsgFrame}>
-	<Header />
-		{/* <Header />
-		<Conversation />
-		<Prompt /> */}
-	</div>;
+  return (
+    <div className={styles.privateMsgFrame}>
+      <Header />
+      <Conversation />
+      <Prompt />
+    </div>
+  );
 }
