@@ -49,7 +49,7 @@ export class AvatarController {
   }
 
   @Put()
-  async updateAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
+  async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
     // [!] TODO : custom validationPipe OU enumeDecorator contenant le tableau des couleurs authorisee
     // [!] ne pas oublier que les couleurs peuvent avoir des min et/ou majuscules
     console.log('PUT avatar received');

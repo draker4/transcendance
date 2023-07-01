@@ -25,7 +25,7 @@ export class AvatarService {
     return await this.avatarRepository.findOne({ where: { name: name, isChannel: isChannel} });
   }
 
-  async editUserAvatarColors(req: any, updateAvatarDto: UpdateUserAvatarDto) {
+  async editUserAvatarColors(req: any, updateUserAvatarDto: UpdateUserAvatarDto) {
     const avatar: Avatar = await this.getAvatarByName(req.user.login, false);
 
     // si on trouve pas d'avatar, on lui fourni un avatar par defaut
@@ -47,8 +47,8 @@ export class AvatarService {
       return Data;
     }
 
-    avatar.borderColor = updateAvatarDto.borderColor;
-    avatar.backgroundColor = updateAvatarDto.backgroundColor;
+    avatar.borderColor = updateUserAvatarDto.borderColor;
+    avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
 
     await this.avatarRepository.update(avatar.id, avatar);
 
