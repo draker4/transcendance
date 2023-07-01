@@ -10,7 +10,6 @@ import {
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { Response } from 'express';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
 
@@ -39,7 +38,7 @@ export class UsersController {
 
   @Public()
   @Get('email')
-  async checkDoubleEmail(@Query('email') email: string, res: Response) {
+  async checkDoubleEmail(@Query('email') email: string) {
     const decodeUrl = decodeURIComponent(email);
     const user = await this.usersService.getUserByEmail(decodeUrl, 'email');
 
@@ -54,7 +53,7 @@ export class UsersController {
 
   @Public()
   @Get('login')
-  async checkDoubleLogin(@Query('login') login: string, res: Response) {
+  async checkDoubleLogin(@Query('login') login: string) {
     const decodeUrl = decodeURIComponent(login);
     const user = await this.usersService.getUserByLogin(decodeUrl);
 
@@ -67,16 +66,14 @@ export class UsersController {
     console.log('POST~edit-motto method called'); //checking
     const user = await this.usersService.getUserById(req.user.id);
 
-    if (!user) {
+    if (!user)
       throw new NotFoundException('User not found');
-      // return {
-      // 	"exists": false,
-      // };
-    }
-
-    user.motto = motto.filterBadWords();
-
-    await this.usersService.updateUser(user);
+    
+    // user.motto = motto.filterBadWords();
+    // console.log(user);
+    await this.usersService.updateUser(user.id, {
+      motto: motto.filterBadWords(),
+    });
 
     // cets moi qui ai changé ca (baptiste),
     // la fonction updateUser retourne pas d'erreur
@@ -102,16 +99,15 @@ export class UsersController {
 
     if (!user) {
       throw new NotFoundException('User not found');
-      // return {
-      // 	"exists": false,
-      // };
     }
 
-    user.story = story.filterBadWords();
+    // user.story = story.filterBadWords();
 
-    console.log('Story recup :', story);
-    await this.usersService.updateUser(user);
-
+    // console.log('Story recup :', story);
+    // await this.usersService.updateUser(user.id, user);
+    await this.usersService.updateUser(user.id, {
+      story: story.filterBadWords(),
+    });
     // if (!updatedUser || updatedUser.story != story) {
     // throw new BadRequestException('issue while updating story');
     // return {
@@ -128,24 +124,32 @@ export class UsersController {
   @Get('join')
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
+    const user2 = await this.usersService.getUserChannels(2);
 
     const channel = await this.usersService.getChannelByName("test");
 
-    user1.channels.push(channel);
+    // user1.channels.push(channel);
+    // user2.channels.push(channel);
 
-    await this.usersService.saveUser(user1);
+    await this.usersService.updateUserChannels(user1, channel);
+    await this.usersService.updateUserChannels(user2, channel);
+    // await this.usersService.saveUserEntity(user1);
   }
 
   @Public()
   @Get('addPongie')
   async addPongie() {
     const user1 = await this.usersService.getUserPongies(1);
-    const user2 = await this.usersService.getUserPongies(34);
+    const user2 = await this.usersService.getUserPongies(2);
 
-    user1.pongies.push(user2);
-    user2.pongies.push(user1);
+    // user1.pongies.push(user2);
+    // user2.pongies.push(user1);
 
-    await this.usersService.saveUser(user1);
-    await this.usersService.saveUser(user2);
+    // await Promise.all([
+    //   this.usersService.saveUserEntity(user1),
+    //   this.usersService.saveUserEntity(user2),
+    // ]);
+    await this.usersService.updateUserPongies(user1, user2);
+    await this.usersService.updateUserPongies(user2, user1);
   }
 }
