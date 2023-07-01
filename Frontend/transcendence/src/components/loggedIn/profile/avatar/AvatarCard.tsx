@@ -46,7 +46,6 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     // [?] verif si il y a eut un changement avant ?
 
     // [!] ici envoyer les updates color au back
-    avatarService.test();
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),

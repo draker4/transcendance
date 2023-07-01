@@ -17,20 +17,20 @@ export default function ChatPrivateMsg() {
 //   console.log(socket?.io.opts.extraHeaders);
 
   // creation ou recuperation si existe deja de la channel type private message
-  useEffect(() => {
+//   useEffect(() => {
 
-    console.log("<into> useEffect of <ChatPrivateMsg/>"); //checking
+//     console.log("<into> useEffect of <ChatPrivateMsg/>"); //checking
     
-    socket?.emit('joinPrivateMsgChannel', { pongieId: friendId }, (payload: {
-        success: boolean,
-        channel: ChannelType,
-    }) => {
-        console.log(payload)
-    });
+//     socket?.emit('joinPrivateMsgChannel', { pongieId: friendId }, (payload: {
+//         success: boolean,
+//         channel: ChannelType,
+//     }) => {
+//         console.log(payload)
+//     });
 
 
 
-  }, [socket])
+//   }, [socket])
 
   return <div>ChatPrivateMsg</div>;
 }
