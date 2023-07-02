@@ -11,19 +11,12 @@
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
-  /* COLOR DEFINES  SET1 */
-
-  /* --primary: rgba(254, 254, 254, 1);
-  --primary-darker1: rgba(241, 245, 249, 1);
-  --secondary: rgba(126, 137, 135, 1);
-  --tertiary: rgba(5, 47, 95, 1);
-  --accent-opacity: rgba(179, 251, 84, 0.6);
-  --accent-darker1: rgb(147, 181, 102); */
-
-  /* COLOR DEFINES SET2 - LIGHT*/
+  /* COLOR DEFINES - LIGHT*/
 
   --primary-light: rgba(254, 254, 254, 1);
   --primary-darker1-light: rgba(241, 245, 249, 1);
+  --primary-darker2-light: rgb(227, 234, 241);
+  --primary-darker3-light: rgb(209, 218, 226);
 
   --secondary-light: rgba(100, 116, 139, 1);
   --secondary-lighter1-light: rgb(145, 153, 163);
@@ -39,10 +32,12 @@
 
   --notif-light: rgba(255, 85, 85, 1);
 
-  /* COLOR DEFINES SET2 - DARK*/
+  /* COLOR DEFINES - DARK*/
 
   --primary-dark: rgb(42, 41, 41);
   --primary-darker1-dark: rgb(56, 55, 55);
+  --primary-darker2-dark: rgb(49, 48, 48);
+  --primary-darker3-dark: rgb(36, 34, 34);
 
   --secondary-dark: rgb(152, 165, 180);
   --secondary-lighter1-dark: rgb(138, 144, 155);
@@ -72,6 +67,7 @@
 [color-scheme="dark"] {
   --primary: var(--primary-dark);
   --primary-darker1: var(--primary-darker1-dark);
+  --primary-darker2: var(--primary-darker2-dark);
 
   --secondary: var(--secondary-dark);
   --secondary-lighter1: var(--secondary-lighter1-dark);
@@ -91,6 +87,8 @@
 [color-scheme="light"] {
   --primary: var(--primary-light);
   --primary-darker1: var(--primary-darker1-light);
+  --primary-darker2: var(--primary-darker2-light);
+  --primary-darker3: var(--primary-darker3-light);
 
   --secondary: var(--secondary-light);
   --secondary-lighter1: var(--secondary-lighter1-light);
@@ -109,18 +107,23 @@
 
 html,
 body {
-  max-width: 100vw;
-  max-height: 100vh;
-  /* overscroll-behavior: none; */
   background: var(--primary);
   color: var(--tertiary);
   font-family: var(--text-font);
-  /* display: flex;
-  align-items: stretch;
-  flex-direction: column; */
-  /* border: 2px solid green; */
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--title-font);
 }
 
 ::selection {

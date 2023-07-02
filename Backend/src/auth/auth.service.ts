@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   BadGatewayException,
   ForbiddenException,
@@ -47,30 +48,40 @@ export class AuthService {
   }
 
   async logUser(dataToken: dataAPI42): Promise<User> {
-    const response = await fetch('https://api.intra.42.fr/v2/me', {
-      method: 'GET',
-      headers: { Authorization: 'Bearer ' + dataToken.access_token },
-    });
+    try {
+      const response = await fetch('https://api.intra.42.fr/v2/me', {
+        method: 'GET',
+        headers: { Authorization: 'Bearer ' + dataToken.access_token },
+      });
 
-    if (!response.ok) throw new UnauthorizedException();
+      if (!response.ok) throw new Error("Api 42 fetch error");
 
-    const content = await response.json();
+      const content = await response.json();
 
-    const user: createUserDto = {
-      email: await this.cryptoService.encrypt(content?.email),
-      first_name: await this.cryptoService.encrypt(content?.first_name),
-      last_name: await this.cryptoService.encrypt(content?.last_name),
-      phone: await this.cryptoService.encrypt(content?.phone),
-      image: await this.cryptoService.encrypt(content?.image?.versions.large),
-      verified: true,
-      provider: '42',
-    };
+      const user: createUserDto = {
+        email: await this.cryptoService.encrypt(content?.email),
+        first_name: await this.cryptoService.encrypt(content?.first_name),
+        last_name: await this.cryptoService.encrypt(content?.last_name),
+        phone: await this.cryptoService.encrypt(content?.phone),
+        image: await this.cryptoService.encrypt(content?.image?.versions.large),
+        verified: true,
+        provider: '42',
+      };
 
-    const user_old = await this.usersService.getUserByEmail(user.email, '42');
-    if (!user_old) return await this.usersService.saveUser(user);
+      const user_old = await this.usersService.getUserByEmail(user.email, '42');
+      if (!user_old) return await this.usersService.addUser(user);
 
-    await this.usersService.saveUser(user_old);
-    return user_old;
+      await this.usersService.updateUser(user_old.id, {
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        image: user.image,
+      });
+      return user_old;
+    }
+    catch (error) {
+      throw new UnauthorizedException();
+    }
   }
 
   async login(user: User) {
@@ -98,11 +109,7 @@ export class AuthService {
       createUserDto.verifyCode,
     );
 
-    return await this.usersService.saveUser(createUserDto);
-  }
-
-  async saveUser(createUserDto: createUserDto) {
-    return await this.usersService.saveUser(createUserDto);
+    return await this.usersService.addUser(createUserDto);
   }
 
   async verifyCode(code: string) {
@@ -110,49 +117,64 @@ export class AuthService {
   }
 
   async sendNewCode(user: User) {
-    user.expirationCode = Date.now() + 5 * 60 * 1000;
-    user.verifyCode = this.generateSecureCode(8);
+    const verifyCode = this.generateSecureCode(8);
 
     const email = await this.cryptoService.decrypt(user.email);
 
-    await this.mailService.sendUserConfirmation(email, user.verifyCode);
-    return await this.usersService.saveUser(user);
+    await this.mailService.sendUserConfirmation(email, verifyCode);
+    await this.usersService.updateUser(user.id, {
+      expirationCode: Date.now() + 5 * 60 * 1000,
+      verifyCode,
+    });
   }
 
   async loginWithGoogle(createUserDto: createUserDto) {
-    if (!createUserDto) throw new UnauthorizedException('Unauthenticated');
+    try {
+      if (!createUserDto)
+        throw new Error('Unauthenticated');
 
-    const encryptedValues = await Promise.all([
-      this.cryptoService.encrypt(createUserDto.email),
-      this.cryptoService.encrypt(createUserDto.first_name),
-      this.cryptoService.encrypt(createUserDto.last_name),
-      this.cryptoService.encrypt(createUserDto.image),
-    ]);
+      const encryptedValues = await Promise.all([
+        this.cryptoService.encrypt(createUserDto.email),
+        this.cryptoService.encrypt(createUserDto.first_name),
+        this.cryptoService.encrypt(createUserDto.last_name),
+        this.cryptoService.encrypt(createUserDto.image),
+      ]);
 
-    createUserDto.email = encryptedValues[0];
-    createUserDto.first_name = encryptedValues[1];
-    createUserDto.last_name = encryptedValues[2];
-    createUserDto.image = encryptedValues[3];
+      createUserDto.email = encryptedValues[0];
+      createUserDto.first_name = encryptedValues[1];
+      createUserDto.last_name = encryptedValues[2];
+      createUserDto.image = encryptedValues[3];
 
-    let user = await this.usersService.getUserByEmail(
-      createUserDto.email,
-      'google',
-    );
+      let user = await this.usersService.getUserByEmail(
+        createUserDto.email,
+        'google',
+      );
 
-    if (!user) user = await this.usersService.saveUser(createUserDto);
-    else await this.usersService.saveUser(user);
+      if (!user) user = await this.usersService.addUser(createUserDto);
+      else await this.usersService.updateUser(user.id, createUserDto);
 
-    return this.login(user);
+      return this.login(user);
+    }
+    catch(error) {
+      throw new UnauthorizedException('Unauthenticated');
+    }
   }
 
-  async updateUserLogin(userId: number, login: string, avatar: Avatar) {
-    const user = await this.usersService.getUserAvatar(userId);
+  async updateUser(id: number, properties: Partial<User>) {
+    await this.usersService.updateUser(id, properties);
+  }
 
-    if (!user) throw new Error('No user found');
+  async updateAvatarLogin(userId: number, login: string, avatar: Avatar) {
+    const user = await this.usersService.getUserById(userId);
+    if (!user)
+      throw new Error('No user found');
 
     user.login = login;
-    user.avatar = avatar;
-    await this.usersService.saveUser(user);
+    await this.usersService.updateUser(user.id, {
+      login: login,
+    });
+    await this.usersService.updateUserAvatar(user, avatar);
+    
     return user;
   }
 
@@ -161,29 +183,27 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string) {
-    const user = await this.usersService.getUserByEmail(email, 'email');
-    let isMatch = false;
-
-    if (!user) throw new NotFoundException();
-
     try {
+      const user = await this.usersService.getUserByEmail(email, 'email');
+      let isMatch = false;
+
+      if (!user)
+        throw new NotFoundException();
+
       const passDecrypted = await this.cryptoService.decrypt(password);
       isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
-    } catch (err) {
-      console.log(err);
+
+      if (!isMatch)
+        throw new UnauthorizedException();
+
+      if (!user.verified)
+        throw new ForbiddenException();
+
+      return await this.usersService.saveUserEntity(user);
+    }
+    catch(error) {
       throw new BadGatewayException();
     }
-
-    if (!isMatch) throw new UnauthorizedException();
-
-    if (!user.verified) throw new ForbiddenException();
-
-    await this.usersService.saveUser(user);
-    return user;
-  }
-
-  async updateUser(user: User) {
-    await this.usersService.updateUser(user);
   }
 
   async getUserById(id: number) {

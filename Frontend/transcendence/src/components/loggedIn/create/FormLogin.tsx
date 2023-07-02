@@ -54,13 +54,16 @@ export default function FormLogin({
   useEffect(() => {
     const changeCookie = async () => {
       try {
-        const res = await fetch(`http://${process.env.HOST_IP}:3000/api/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            access_token,
-          }),
-        });
+        const res = await fetch(
+          `http://${process.env.HOST_IP}:3000/api/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              access_token,
+            }),
+          }
+        );
 
         const data = await res.json();
 

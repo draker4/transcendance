@@ -1,3 +1,4 @@
+import { PongColors } from "@/lib/enums/PongColors.enum";
 import styles from "@/styles/loggedIn/profile/ColorSelector.module.css";
 
 type Props = {
@@ -7,28 +8,28 @@ type Props = {
 export default function ColorSelector({ handleColorSelection }: Props) {
   // [!] voir comment partager cette donnee pour tous, si necessaire [?]
   const colorLine1: string[] = [
-    "#f44336",
-    "#e91e63",
-    "#9c27b0",
-    "#673ab7",
-    "#3f51b5",
-    "#2196f3",
+    PongColors.paprika,
+    PongColors.fuschia,
+    PongColors.mauve,
+    PongColors.violet,
+    PongColors.navyBlue,
+    PongColors.blue,
   ];
   const colorLine2: string[] = [
-    "#03a9f4",
-    "#00bcd4",
-    "#009688",
-    "#4caf50",
-    "#8bc34a",
-    "#cddc39",
+    PongColors.skyBlue,
+    PongColors.turquoise,
+    PongColors.emerald,
+    PongColors.grassGreen,
+    PongColors.appleGreen,
+    PongColors.limeGreen,
   ];
   const colorLine3: string[] = [
-    "#ffeb3b",
-    "#ffc107",
-    "#ff9800",
-    "#ff5722",
-    "#795548",
-    "#607d8b",
+    PongColors.canaryYellow,
+    PongColors.yellow,
+    PongColors.mustardYellow,
+    PongColors.tangerine,
+    PongColors.nightblue,
+    PongColors.gray,
   ];
 
   const renderColorButtons = (colors: string[]) => {

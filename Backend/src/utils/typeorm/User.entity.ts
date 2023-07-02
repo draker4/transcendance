@@ -63,7 +63,9 @@ export class User {
   @Column({ nullable: true })
   story: string;
 
-  @ManyToMany(() => Channel, (channel) => channel.users)
+  @ManyToMany(() => Channel, (channel) => channel.users, {
+    cascade: true,
+  })
   @JoinTable()
   channels: Channel[];
 

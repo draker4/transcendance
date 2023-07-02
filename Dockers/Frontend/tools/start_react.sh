@@ -6,15 +6,15 @@ mkdir -p /app
 cd /app
 
 #If no react projet , create one
-if [ ! -d "/app/transcendence" ]; then
-    echo "No next project found, creating one......."
+# if [ ! -d "/app/transcendence" ]; then
+#     echo "No next project found, creating one......."
     
-    #React + next.js
-    export CI=true
-    npx create-next-app transcendence --ts --src-dir
+#     #React + next.js
+#     export CI=true
+#     npx create-next-app transcendence --ts --src-dir
 
-    echo "Next project created"
-fi
+#     echo "Next project created"
+# fi
 
 #Start react project
 echo "Starting react project"
