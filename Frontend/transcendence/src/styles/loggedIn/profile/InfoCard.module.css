@@ -122,6 +122,8 @@
   width: 100%;
   border: 0;
   overflow: hidden;
+  margin-bottom: 1rem;
+
 }
 
 .sections input:focus {
@@ -142,6 +144,14 @@
   background-color: var(--secondary);
   border: 0.20rem solid var(--accent);
   margin-bottom: 1rem;
+  transition: all 0.3s ease-in;
+}
+
+.sections .button_type1:hover {
+  cursor: pointer;
+  background-color: var(--primary);
+  border: 0.20rem solid var(--accent-darker1);
+  color: var(--accent-darker1);
 }
 
 /* [!] emplace par text area en readonly */
