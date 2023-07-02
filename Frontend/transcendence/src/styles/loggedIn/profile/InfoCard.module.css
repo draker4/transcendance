@@ -121,7 +121,6 @@
   /* height: auto; */
   width: 100%;
   border: 0;
-  padding: 0;
   overflow: hidden;
 }
 
@@ -134,10 +133,27 @@
   color: var(--notif);
 }
 
-.sections .story.display {
-  /* background-color: aquam; */
+.sections .button_type1 {
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 0.20rem solid var(--accent);
+  margin-bottom: 1rem;
+}
+
+/* [!] emplace par text area en readonly */
+/* .sections .story.display {
   word-wrap: break-word;
 }
+
+.sections .story.display p {
+  background-color: var(--notif);
+  font-size: 0.85rem;
+
+} */
 
 /* ----------------------------------- */
 
