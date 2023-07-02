@@ -6,15 +6,15 @@ import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import { cookies } from 'next/dist/client/components/headers';
 
 //Import le composant pour le lobby
-import styles from '@/styles/game/game.module.css'
-import Game from '@/components/game/Game'
+import styles from '@/styles/lobby/Lobby.module.css'
+import Lobby from '@/components/lobby/Lobby'
 
-export default async function GamePage({ params, searchParams } : any ) {
+export default async function Lobby_Frame() {
     
     let profile = new Profile();
     let token : string | undefined;
-    let gameID = params.id;
 
+    //Recupere le token et le profil de l'utilisateur
     try {
         token = cookies().get("crunchy-token")?.value;
         if (!token)
@@ -28,7 +28,10 @@ export default async function GamePage({ params, searchParams } : any ) {
 
     return (
         <main className={styles.First_Frame}>
-            <Game profile={profile} token={token} gameID={gameID}/>
+            <Lobby profile={profile} token={token}/>
         </main>
     );
 }
+
+
+
