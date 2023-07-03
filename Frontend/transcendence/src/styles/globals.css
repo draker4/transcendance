@@ -15,6 +15,8 @@
 
   --primary-light: rgba(254, 254, 254, 1);
   --primary-darker1-light: rgba(241, 245, 249, 1);
+  --primary-darker2-light: rgb(227, 234, 241);
+  --primary-darker3-light: rgb(209, 218, 226);
 
   --secondary-light: rgba(100, 116, 139, 1);
   --secondary-lighter1-light: rgb(145, 153, 163);
@@ -34,6 +36,8 @@
 
   --primary-dark: rgb(42, 41, 41);
   --primary-darker1-dark: rgb(56, 55, 55);
+  --primary-darker2-dark: rgb(49, 48, 48);
+  --primary-darker3-dark: rgb(36, 34, 34);
 
   --secondary-dark: rgb(152, 165, 180);
   --secondary-lighter1-dark: rgb(138, 144, 155);
@@ -63,6 +67,7 @@
 [color-scheme="dark"] {
   --primary: var(--primary-dark);
   --primary-darker1: var(--primary-darker1-dark);
+  --primary-darker2: var(--primary-darker2-dark);
 
   --secondary: var(--secondary-dark);
   --secondary-lighter1: var(--secondary-lighter1-dark);
@@ -82,6 +87,8 @@
 [color-scheme="light"] {
   --primary: var(--primary-light);
   --primary-darker1: var(--primary-darker1-light);
+  --primary-darker2: var(--primary-darker2-light);
+  --primary-darker3: var(--primary-darker3-light);
 
   --secondary: var(--secondary-light);
   --secondary-lighter1: var(--secondary-lighter1-light);

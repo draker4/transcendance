@@ -48,9 +48,23 @@ export class GamesService {
                 };
                 return Data;
             }
-
+ 
             //Creer une game
-            const game_id = await this.CreateGameInDB(req.user.id, req.body.game_name, req.body.game_password);
+            const game_id = await this.CreateGameInDB(
+                req.user.id, 
+                req.body.name, 
+                req.body.push,
+                req.body.score,
+                req.body.round,
+                req.body.difficulty,
+                req.body.side,
+                req.body.background,
+                req.body.ball,
+                req.body.paddle,
+                req.body.type,
+                req.body.mode,
+            );
+
             const Data = {
                 success: true,
                 message: "Game created",
@@ -89,15 +103,6 @@ export class GamesService {
                 const Data = {
                     success: false,
                     message: "Game doesn't exist",
-                };
-                return Data;
-            }
-
-            //Check si on a le bon password
-            if (!await this.CheckIfPasswordIsCorrect(req.body.game_id, req.body.password)) {
-                const Data = {
-                    success: false,
-                    message: "Wrong password",
                 };
                 return Data;
             }
@@ -155,8 +160,6 @@ export class GamesService {
                 };
                 return Data;
             }
-
-
    
         } catch (error) {
             const Data = {
@@ -186,9 +189,9 @@ export class GamesService {
                 const Host_Login = await this.GetPlayerName(games[i].Host);
                 const Opponent_Login = await this.GetPlayerName(games[i].Opponent);
                 let game_info = {
+
                     uuid            : games[i].uuid,
                     Name            : games[i].Name,
-                    Password        : true ? games[i].Password != "" : false,
                     Host            : Host_Login,
                     Opponent        : Opponent_Login,
                     Viewers_List    : games[i].Viewers_List.length,
@@ -198,6 +201,17 @@ export class GamesService {
                     CreatedAt       : games[i].CreatedAt,
                     Winner          : games[i].Winner,
                     Loser           : games[i].Loser,
+                    Score           : games[i].Score,
+                    Push            : games[i].Push,
+                    Round           : games[i].Round,
+                    Difficulty      : games[i].Difficulty,
+                    Side            : games[i].Side,
+                    Background      : games[i].Background,
+                    Ball            : games[i].Ball,
+                    Paddle          : games[i].Paddle,
+                    Type            : games[i].Type,
+                    Mode            : games[i].Mode,
+                    
                 }
                 games_infos.push(game_info);
             }
@@ -209,6 +223,83 @@ export class GamesService {
             };
             return Data;
    
+        } catch (error) {
+            const Data = {
+                success: false,
+                message: "Catched an error",
+                error: error
+            };
+            return Data;
+        }
+    }
+
+    async GetOne(req: any): Promise<any> {
+        try {
+
+            //Si il manque des datas
+            if (req.body.game_id == null) {
+                const Data = {
+                    success: false,
+                    message: "Not enough parameters",
+                };
+                return Data
+            }
+
+            //Si la partie existe pas
+            if (!await this.CheckIfGameExist(req.body.game_id)) {
+                const Data = {
+                    success: false,
+                    message: "Game doesn't exist",
+                };
+                return Data;
+            }
+
+            //Si le joueur est pas dans cette partie
+            if (!await this.CheckIfPlayerIsAlreadyInThisGame(req.body.game_id, req.user.id)) {
+                const Data = {
+                    success: false,
+                    message: "You are not in this game",
+                };
+                return Data;
+            }
+
+            //Renvoi la game
+            const game = await this.GameRepository.findOne({ where: { uuid : req.body.game_id } });
+            const Host_Login = await this.GetPlayerName(game.Host);
+            const Opponent_Login = await this.GetPlayerName(game.Opponent);
+            let game_info = {
+
+                uuid            : game.uuid,
+                Name            : game.Name,
+                Host            : Host_Login,
+                Opponent        : Opponent_Login,
+                Viewers_List    : game.Viewers_List.length,
+                Score_Host      : game.Score_Host,
+                Score_Opponent  : game.Score_Opponent,
+                Status          : game.Status,
+                CreatedAt       : game.CreatedAt,
+                Winner          : game.Winner,
+                Loser           : game.Loser,
+                Score           : game.Score,
+                Push            : game.Push,
+                Round           : game.Round,
+                Difficulty      : game.Difficulty,
+                Side            : game.Side,
+                Background      : game.Background,
+                Ball            : game.Ball,
+                Paddle          : game.Paddle,
+                Type            : game.Type,
+                Mode            : game.Mode,
+
+            }
+
+            const Data = {
+                success: true,
+                message: "Request successfulld",
+                data: game_info,
+            };
+            return Data;
+
         } catch (error) {
             const Data = {
                 success: false,
@@ -434,29 +525,29 @@ export class GamesService {
         }
     }
 
-    //Renvoi le nombre de joueur en attentes
-    async GetStatsLobby(req: any): Promise<any> {
-        try {
-            const Data = {
-                success: true,
-                message: "Request successfulld",
-                data: {
-                    nbWaiting : await this.GetNumberOfPlayerInMatchmaking(),
-                    nbPlayer : await this.GetNumberOfPlayerConnected(),
-                    nbGames : await this.GetNumberOfGames(),
-                }
-            };
-            return Data;
+    // //Renvoi le nombre de joueur en attentes
+    // async GetStatsLobby(req: any): Promise<any> {
+    //     try {
+    //         const Data = {
+    //             success: true,
+    //             message: "Request successfulld",
+    //             data: {
+    //                 nbWaiting : await this.GetNumberOfPlayerInMatchmaking(),
+    //                 nbPlayer : await this.GetNumberOfPlayerConnected(),
+    //                 nbGames : await this.GetNumberOfGames(),
+    //             }
+    //         };
+    //         return Data;
 
-        } catch (error) {
-            const Data = {
-                success: false,
-                message: "Catched an error",
-                error: error
-            };
-            return Data;
-        }
-    }
+    //     } catch (error) {
+    //         const Data = {
+    //             success: false,
+    //             message: "Catched an error",
+    //             error: error
+    //         };
+    //         return Data;
+    //     }
+    // }
 
 
     //===========================================================Fonction annexe===========================================================
@@ -513,7 +604,7 @@ export class GamesService {
                 await this.MatchMakeRepository.remove(user2);
                 const name_1 = await this.GetPlayerName(user1.Player_Id);
                 const name_2 = await this.GetPlayerName(user2.Player_Id);
-                const game_id = await this.CreateGameInDB(user1.Player_Id, name_1 + " vs " + name_2, "");
+                const game_id = await this.CreateGameInDB(user1.Player_Id, name_1 + " vs " + name_2, false, 0, 0, 0, "left", "", "", "", "", "");
                 await this.AddPlayerToGame(game_id, user2.Player_Id);
                 return game_id;
             }
@@ -563,13 +654,27 @@ export class GamesService {
     }
 
     //Creer une game dans la base de donnée
-    async CreateGameInDB(user_id: number, Name : string, password : string = ""): Promise<any> {
+    async CreateGameInDB(
+
+            user_id: number, 
+            name: string,
+            push: boolean,
+            score: number,
+            round: number,
+            difficulty: number,
+            side: string,
+            background: string,
+            ball: string,
+            paddle: string,
+            type: string,
+            mode: string,
+
+        ): Promise<any> {
 
         const gameDTO = new GameDTO(); 
 
         gameDTO.uuid = uuidv4();
-        gameDTO.Name = Name;
-        gameDTO.Password = password;
+        gameDTO.Name = name;
         gameDTO.Host = user_id;
         gameDTO.Opponent = -1;
         gameDTO.viewersList = [];
@@ -579,6 +684,16 @@ export class GamesService {
         gameDTO.CreatedAt = new Date().toISOString();
         gameDTO.Winner = -1;
         gameDTO.Loser = -1;
+        gameDTO.Score = score;
+        gameDTO.Push = push;
+        gameDTO.Round = round;
+        gameDTO.Difficulty = difficulty;
+        gameDTO.Side = side;
+        gameDTO.Background = background;
+        gameDTO.Ball = ball;
+        gameDTO.Paddle = paddle;
+        gameDTO.Type = type;
+        gameDTO.Mode = mode;
 
         await this.GameRepository.save(gameDTO);
 
@@ -762,27 +877,6 @@ export class GamesService {
                 return true;
             }
         }
-        return false;
-    }
-
-    //Verifie si on a le bon mdp pour rejoindre la game ( si pas de mots de pass tout est accepté)
-    async CheckIfPasswordIsCorrect(game_id: string, password: string): Promise<any> {
-
-        if (game_id == null || game_id.length != 36) {
-            return false;
-        }
-
-        const game = await this.GameRepository.findOne({ where: { uuid : game_id } });
-        if (game.Password == "") {
-            return true;
-        }
-
-        if (game != null) {
-            if (game.Password == password) {
-                return true;
-            }
-        }
-
         return false;
     }
 

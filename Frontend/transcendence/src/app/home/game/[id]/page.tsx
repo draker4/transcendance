@@ -28,7 +28,7 @@ export default async function GamePage({ params, searchParams } : any ) {
 
     return (
         <main className={styles.First_Frame}>
-                <Game profile={profile} token={token} gameID={gameID}/>
+            <Game profile={profile} token={token} gameID={gameID}/>
         </main>
     );
 }

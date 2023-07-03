@@ -13,7 +13,7 @@ export default class Avatar_Service {
 
   // Fonction generique pour toutes les requettes http
   public async fetchData(url: string, method: string, body: any = null) {
-    // console.log("into FetchData");
+    // console.log("into FetchData"); // checking
 
     const response = await fetch(
       `http://backend:4000/api/avatar/${url}/false`,
@@ -27,7 +27,7 @@ export default class Avatar_Service {
       }
     );
 
-    // console.log("response :", response);
+    // console.log("response :", response); // checking
 
     if (!response.ok)
       // [?] throw exception? -> attention de comment je gere ca
@@ -45,7 +45,6 @@ export default class Avatar_Service {
     method: string,
     body: any = null
   ) {
-    // console.log("into FetchData");
 
     const response = await fetch(
       `http://${process.env.HOST_IP}:4000/api/avatar/${url}`,
@@ -59,7 +58,7 @@ export default class Avatar_Service {
       }
     );
 
-    console.log("response :", response);
+    // console.log("response :", response); // checking
 
     if (!response.ok)
       // [?] throw exception? -> attention de comment je gere ca

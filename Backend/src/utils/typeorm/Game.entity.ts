@@ -9,9 +9,6 @@ export class Game {
   Name: string;
 
   @Column()
-  Password?: string;
-
-  @Column()
   Host: number;
 
   @Column()
@@ -37,4 +34,35 @@ export class Game {
 
   @Column()
   Loser: number;
+
+  @Column()
+  Score: number;
+
+  @Column()
+  Push: boolean;
+
+  @Column()
+  Round: number;
+
+  @Column()
+  Difficulty: number;
+
+  @Column()
+  Side: string;
+
+  @Column()
+  Background: string;
+
+  @Column()
+  Ball: string;
+
+  @Column()
+  Paddle: string;
+
+  @Column()
+  Type: string;
+
+  @Column()
+  Mode: string;
+
 }

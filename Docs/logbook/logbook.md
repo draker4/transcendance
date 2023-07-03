@@ -62,3 +62,11 @@ Crunchy Team : bboisson tquere bperriol loumarti
   > Une table de jonction est cree automatiquement ` @JoinTable()`
   > <br />
   > Cette relationship oblige a utiliser `save` au lieu de `update` pour mettre a jour un user (mais pas dans tou les cas, ca doit plus etre lorsque on touche au tableau de channel du user)
+
+## jeudi 29 juin
+
+  - Subteam `loumarti` + `bperriol` : travail en duo (pilote par bperriol) sur le chat puis repartition du travail pour la 1ere semaine de piscine de juillet
+
+  > `bperriol` &nbsp; &nbsp; &nbsp; : &nbsp; &nbsp; &nbsp; `<ChatHome />`
+  <br>
+  > `loumarti` &nbsp; &nbsp; &nbsp; : &nbsp; &nbsp; &nbsp; `<ChatPrivateMsg />`

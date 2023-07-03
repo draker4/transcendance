@@ -1,18 +1,32 @@
 import { useRouter } from "next/navigation";
 
-class Game_Service {
+type Game_Settings = {
+    name       : string;
+    push       : boolean;
+    score      : 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    round      : 1 | 3 | 5 | 7 | 9;
+    difficulty : 1 | 2 | 3 | 4 | 5;
+    side       : "left" | "right";
+    background : string;
+    ball       : string;
+    paddle     : string;
+    type       : string;
+    mode       : string;
+};
 
-    private static instance : Game_Service;
+class Lobby_Service {
+
+    private static instance : Lobby_Service;
     private token: string;
     private router = useRouter();
     private searching : boolean = false;
   
     constructor(token: any) {
         this.token = token;
-        if (Game_Service.instance) {
-            return Game_Service.instance;
+        if (Lobby_Service.instance) {
+            return Lobby_Service.instance;
         }
-        Game_Service.instance = this;
+        Lobby_Service.instance = this;
     }
   
     //Fait une requette et renvoie la reponse
@@ -49,16 +63,14 @@ class Game_Service {
         return false;
     }   
 
-    //Fonction de test qui console log un message
-    public Test(): void {
-        console.log("Game service test");
-    }
-
     //Creer une game avec un nom et un mot de passe
-    public async Create_Game(game_password: string, game_name: string): Promise<any> {
-        const body = JSON.stringify({ game_password, game_name })
+    public async Create_Game(Settings: Game_Settings): Promise<any> {
+        const body = JSON.stringify(Settings)
         const response = await this.FetchData('games/create' , 'POST', body);
         const data = await response.json();
+        if (data.success === false) {
+            return false;
+        }
         const url = 'game/' + data.data.id;
         this.router.push(url);
     }   
@@ -86,7 +98,6 @@ class Game_Service {
         const response = await this.FetchData('games/matchmake/start ' , 'POST');
         const data = await response.json();
         this.searching = data.success;
-        console.log("Searching on start : " + this.searching);
         this.Update_Matchmaking();
         return data.success;
     }
@@ -96,7 +107,6 @@ class Game_Service {
         const response = await this.FetchData('games/matchmake/stop ' , 'POST');
         const data = await response.json();
         this.searching = false;
-        console.log("Searching on stop : " + this.searching);
         return data.success;
     }
 
@@ -119,11 +129,26 @@ class Game_Service {
         return false;
     }
 
+    //Recupere les stats du lobby ( nombre de joueur en attente , nombre de game en cours , etc...)
     public async Get_Stats(): Promise<any> {
         const response = await this.FetchData('games/lobby' , 'GET');
         const data = await response.json();
         return data.data;
     }
+
+    //Charge une page
+    public async Load_Page(url : string): Promise<any> {
+        this.router.push(url);
+    }
+
+    //Recupere les infos de la game
+    public async Get_Game_Info(gameID : String | undefined): Promise<any> {
+        const body = JSON.stringify( {game_id : gameID});
+        console.log(body);
+        const response = await this.FetchData('games/getone', 'POST', body);
+        const data = await response.json();
+        return data.data;
+    }
 }
 
-export default Game_Service;
+export default Lobby_Service;

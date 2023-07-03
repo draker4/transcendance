@@ -35,7 +35,7 @@ export default async function HomePage() {
           />
         )}
         <div>
-          <Link href="/home/game">Game</Link>
+          <Link href="/home/lobby">lobby</Link>
         </div>
         <div>
           <Link href="/home/pong">Pong</Link>
