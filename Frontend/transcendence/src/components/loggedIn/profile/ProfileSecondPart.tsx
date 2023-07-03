@@ -1,6 +1,5 @@
 import styles from "@/styles/loggedIn/profile/Profile.module.css";
 import InfoCard from "./infos/InfoCard";
-import Profile from "@/services/Profile.service";
 import { cookies } from "next/dist/client/components/headers";
 
 type Props = {

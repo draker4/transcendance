@@ -1,4 +1,4 @@
-type avatarType = {
+type Avatar = {
   name: string;
   image: string;
   variant: string;

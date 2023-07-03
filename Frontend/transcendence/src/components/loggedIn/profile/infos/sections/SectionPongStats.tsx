@@ -1,4 +1,3 @@
-import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/InfoCard.module.css";
 import Item from "./Item";
 import MottoDisplayOnly from "./tagline/MottoDisplayOnly";

@@ -3,15 +3,12 @@ import { CryptoService } from "./crypto/Crypto.service";
 const	Crypto = new CryptoService();
 
 export default class Profile_Service {
-  private static instance: Profile_Service;
-  private token: string;
+	private token: string;
 
-  // Instance singleton
-  constructor(token: string) {
-    this.token = token;
-    if (Profile_Service.instance) return Profile_Service.instance;
-    Profile_Service.instance = this;
-  }
+	// Instance singleton
+	constructor(token: string) {
+		this.token = token;
+	}
 
 	public async getProfileByToken(): Promise<Profile> {
 	

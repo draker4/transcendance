@@ -1,13 +1,11 @@
 import styles from "@/styles/loggedIn/profile/Profile.module.css";
-import Profile from "@/services/Profile.service";
 import ProfileFirstPart from "./ProfileFirstPart";
 import ProfileSecondPart from "./ProfileSecondPart";
-import avatarType from "@/types/Avatar.type";
 
 type Props = {
   profile: Profile;
   isOwner: boolean;
-  avatar: avatarType;
+  avatar: Avatar;
 };
 
 export default function ProfileMainFrame({ profile, isOwner, avatar }: Props) {

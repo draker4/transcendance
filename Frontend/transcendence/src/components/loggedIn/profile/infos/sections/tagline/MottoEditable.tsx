@@ -1,10 +1,9 @@
-import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
 import submitMotto from "@/lib/profile/edit/submitMotto";
-import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
+import Profile_Service from "@/services/Profile.service";
 
 type Props = {
   profile: Profile;
@@ -57,7 +56,8 @@ export default function MottoEditable({ profile, token }: Props) {
   };
 
   const handleStupidButton = async () => {
-    const freshProfile = await getProfileByLogin(token, profile.login);
+    const profileData = new Profile_Service(token);
+    const freshProfile = await profileData.getProfileByLogin(profile.login);
     console.log("freshProfile motto : ", freshProfile.motto);
   };
 
