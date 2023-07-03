@@ -1,19 +1,20 @@
 "use client";
 import styles from "@/styles/pong/Pong.module.css";
 import { useRef, useEffect } from "react";
-import { pongKeyDown, pongKeyUp } from "@/lib/pong/eventHandlers";
-import { initGame, gameLoop } from "@/lib/pong/handleGame";
+import { pongKeyDown, pongKeyUp } from "@/lib/Game/eventHandlers";
+import { initGame, gameLoop } from "@/lib/Game/handleGame";
 
 type Props = {
-  pong: Pong;
+  gameInfos: GameInfos;
+  AI: boolean;
 };
 
-export default function Pong({ pong }: Props) {
+export default function Pong({ gameInfos, AI }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     canvasRef.current!.focus();
-    const game = initGame(canvasRef.current!, pong);
+    const game = initGame(canvasRef.current!, gameInfos, AI);
 
     console.log(game);
 
@@ -33,7 +34,7 @@ export default function Pong({ pong }: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [pong]);
+  }, [gameInfos, AI]);
 
   return (
     <div className={styles.pong}>

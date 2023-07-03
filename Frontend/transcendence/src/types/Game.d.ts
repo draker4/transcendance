@@ -56,11 +56,26 @@ type Game = {
   push: boolean;
 };
 
-type Pong = {
-  AI: boolean;
-  push: boolean;
-  score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  round: 1 | 3 | 5 | 7 | 9;
-  difficulty: 1 | 2 | 3 | 4 | 5;
-  side: "left" | "right";
+type GameInfos = {
+  uuid: string;
+  Name: string;
+  Host: number;
+  Opponent: number;
+  Viewers_List: number;
+  Score_Host: number;
+  Score_Opponent: number;
+  Status: string;
+  CreatedAt: string;
+  Winner: number;
+  Loser: number;
+  Push: boolean;
+  Score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  Round: 1 | 3 | 5 | 7 | 9;
+  Difficulty: 1 | 2 | 3 | 4 | 5;
+  Side: "left" | "right";
+  Background: string;
+  Ball: string;
+  Paddle: string;
+  Type: string;
+  Mode: string;
 };

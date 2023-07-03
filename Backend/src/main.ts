@@ -5,9 +5,8 @@ import { WinstonModule } from 'nest-winston';
 import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
 
-
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { 
+  const app = await NestFactory.create(AppModule, {
     cors: true,
     logger: WinstonModule.createLogger({
       transports: [
@@ -20,7 +19,7 @@ async function bootstrap() {
             format.printf((info) => {
               return `${info.timestamp} ${info.level}: ${info.message}`;
             }),
-            ),
+          ),
         }),
         // logging all level
         new transports.File({
@@ -29,21 +28,21 @@ async function bootstrap() {
         }),
         // we also want to see logs in our console
         new transports.Console({
-        format: format.combine(
-          format.cli(),
-          format.splat(),
-          format.timestamp(),
-          format.printf((info) => {
-            return `${info.timestamp} ${info.level}: ${info.message}`;
-          }),
+          format: format.combine(
+            format.cli(),
+            format.splat(),
+            format.timestamp(),
+            format.printf((info) => {
+              return `${info.timestamp} ${info.level}: ${info.message}`;
+            }),
           ),
-      }),
+        }),
       ],
     }),
   });
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({origin: '*'});
+  app.enableCors({ origin: '*' });
   await app.listen(parseInt(process.env.PORT_NESTJS));
 }
 bootstrap();

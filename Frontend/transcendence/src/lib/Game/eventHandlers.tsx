@@ -1,5 +1,5 @@
-import { Direction } from "@/lib/pong/pongUtils";
-import { resetGame } from "@/lib/pong/handleGame";
+import { Direction } from "@/lib/Game/pongUtils";
+import { resetGame } from "@/lib/Game/handleGame";
 
 export const pongKeyDown = (event: KeyboardEvent, game: Game) => {
   if (game.running) {
