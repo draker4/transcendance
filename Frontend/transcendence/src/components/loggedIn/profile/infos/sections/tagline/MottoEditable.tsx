@@ -55,64 +55,45 @@ export default function MottoEditable({ profile, token }: Props) {
     }
   };
 
-  const handleStupidButton = async () => {
-    const profileData = new Profile_Service(token);
-    const freshProfile = await profileData.getProfileByLogin(profile.login);
-    console.log("freshProfile motto : ", freshProfile.motto);
-  };
-
-  return (
-    <div>
-      <p className={styles.tinyTitle}>Crunchy motto</p>
-
-      {!editMode && motto !== "" && (
-        <div onClick={handleClickEdit}>
-          <p className={styles.motto}> {motto} </p>
-          <button onClick={handleClickEdit}>Edit</button>
-        </div>
-      )}
-
-      {!editMode && motto === "" && (
-        <div onClick={handleClickEdit}>
-          <p className={styles.motto + " " + styles.placeholder}>
+  if (!editMode && motto === "") {
+    return (
+      <div onClick={handleClickEdit}>
+        <p className={styles.motto + " " + styles.placeholder}>
+          {" "}
+          set here your crunchy motto{" "}
+        </p>
+        {/* <button onClick={handleClickEdit}>Edit</button> */}
+      </div>
+    );
+  } else if (!editMode && motto !== "") {
+    return (
+      <div onClick={handleClickEdit}>
+        <p className={styles.motto}> {motto} </p>
+        {/* <button onClick={handleClickEdit}>Edit</button> */}
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <form onSubmit={handleSubmitMotto}>
+          <p className={styles.motto}>
             {" "}
-            set here your crunchy motto{" "}
+            <input
+              type="text"
+              name="motto"
+              value={editedMotto}
+              placeholder="set here your crunchy motto"
+              onChange={handleEditedMottoChange}
+              autoFocus
+              id="mottoInput"
+            />
           </p>
-          <button onClick={handleClickEdit}>Edit</button>
-        </div>
-      )}
+          <div className={styles.notif}>{notif}</div>
 
-      {editMode && (
-        <div>
-          <form onSubmit={handleSubmitMotto}>
-            <p className={styles.motto}>
-              {" "}
-              <input
-                type="text"
-                name="motto"
-                value={editedMotto}
-                placeholder="set here your crunchy motto"
-                onChange={handleEditedMottoChange}
-                autoFocus
-                id="mottoInput"
-              />
-            </p>
-            <div className={styles.notif}>{notif}</div>
+          <button className={styles.button_type1} type="submit">confirm changes</button>
+        </form>
+      </>
+    );
+  }
 
-            <button type="submit">confirm changes</button>
-          </form>
-        </div>
-      )}
-
-      <br />
-      <br />
-      <button onClick={handleStupidButton}>stupid</button>
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-      <br />
-    </div>
-  );
 }

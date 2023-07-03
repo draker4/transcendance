@@ -33,10 +33,6 @@ export default function StoryEditable({ profile, token }: Props) {
 
     const submitedStory = e.target.story.value;
 
-    console.log("Submited Story :", submitedStory);
-    if (submitedStory)
-      console.log("SubmitedStory.length() :", submitedStory.length);
-
     if (typeof submitedStory === "string") {
       if (submitedStory === story) {
         setEditMode(false);
@@ -70,8 +66,8 @@ export default function StoryEditable({ profile, token }: Props) {
           className={styles.story + " " + styles.display}
           onClick={handleClickEdit}
         >
-          <p className={styles.story}> {story} </p>
-          <button onClick={handleClickEdit}>Edit</button>
+          <textarea value={story} rows={6} readOnly />
+          {/* <button onClick={handleClickEdit}>Edit</button> */}
         </div>
       )}
 
@@ -81,14 +77,14 @@ export default function StoryEditable({ profile, token }: Props) {
             {" "}
             set here your crunchy story{" "}
           </p>
-          <button onClick={handleClickEdit}>Edit</button>
+          {/* <button onClick={handleClickEdit}>Edit</button> */}
         </div>
       )}
 
       {editMode && (
         <div>
           <form onSubmit={handleSubmitStory}>
-            <p className={styles.story}>
+            <div className={styles.story}>
               <textarea
                 name="story"
                 value={editedStory}
@@ -100,10 +96,11 @@ export default function StoryEditable({ profile, token }: Props) {
                 spellCheck="false"
                 id="storyInput"
               />
-            </p>
+            </div>
             <div className={styles.notif}>{notif}</div>
-
-            <button type="submit">confirm changes</button>
+            <button className={styles.button_type1} type="submit">
+              confirm changes
+            </button>
           </form>
         </div>
       )}

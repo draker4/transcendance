@@ -1,3 +1,5 @@
+"use client";
+
 import { ChatSocketContext } from "@/context/ChatSocketContext";
 import avatarType from "@/types/Avatar.type";
 import { useContext, useEffect } from "react";
@@ -5,6 +7,7 @@ import styles from "@/styles/chat/privateMsg/ChatPrivateMsg.module.css";
 import Header from "./Header";
 import Conversation from "./Conversation";
 import Prompt from "./Prompt";
+import { getProfileWithAvatar } from "@/lib/profile/getProfileInfos";
 
 type ChannelType = {
   id: number;
@@ -17,14 +20,32 @@ export default function ChatPrivateMsg() {
 
 // [?] UUH ?
   //   const token = socket?.io.opts.extraHeaders?.Authorization.split(" ")[1];
+  //   console.log(socket?.io.opts.extraHeaders);
 
 //   console.log(token);
 
   
 
   // [!] a chopper par les props ensuite
+  const selfId:number = 1;
   const friendId: number = 2;
-  //   console.log(socket?.io.opts.extraHeaders);
+
+  try {
+    const token = socket?.io.opts.extraHeaders?.Authorization.split(" ")[1];
+    if (!token) throw new Error("No token value");
+
+    // [!] NOPE, pas de await cote client
+    //const friendProfile = await getProfileWithAvatar(token, friendId);
+
+    // const Avatar = new Avatar_Service(token);
+
+    // avatar = await Avatar.getAvatarByName(login);
+
+
+  } catch (err) {
+    console.log(err);
+  }
+
 
   // creation ou recuperation si existe deja de la channel type private message
   //   useEffect(() => {

@@ -1,3 +1,6 @@
+// [!] ficher bientot a supprimer, remplacer par le profile_service
+
+
 import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 
@@ -42,6 +45,22 @@ export const getProfileByLogin = async (token: string, login: string): Promise<P
 	data.email = (await Crypto.decrypt(data.email)).toString();
 	data.phone = (await Crypto.decrypt(data.phone)).toString();
 	data.image = (await Crypto.decrypt(data.image)).toString();
+
+	return data;
+}
+
+export const getProfileWithAvatar = async (token:string, id: number)
+:Promise<Profile & { avatar: avatarType; }> => {
+	const profile = await fetch(`http://backend:4000/api/users/avatar/${id}`, {
+		method: "GET",
+		headers: {"Authorization": "Bearer " + token},
+	});
+
+	if (!profile.ok) {
+		throw new Error("Profil with avatar cannot be found");
+	}
+
+	const data: Profile & { avatar: avatarType } = await profile.json();
 
 	return data;
 }
