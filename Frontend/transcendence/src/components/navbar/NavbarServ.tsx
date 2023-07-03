@@ -7,7 +7,7 @@ import { headers } from "next/headers";
 
 export default async function NavbarServ() {
 
-  const url = headers().get('referer') || "";
+  let token: string | undefined;
   let avatar: Avatar = {
     image: "",
     name: "",
@@ -18,7 +18,6 @@ export default async function NavbarServ() {
     empty: true,
     isChannel: false,
   };
-
   let profile: Profile = {
     id: -1,
     login: "",
@@ -33,8 +32,9 @@ export default async function NavbarServ() {
   };
 
   try {
-      const token = cookies().get("crunchy-token")?.value;
-      if (!token) throw new Error("No token value");
+      token = cookies().get("crunchy-token")?.value;
+      if (!token)
+        throw new Error("No token value");
 
       const profileData = new Profile_Service(token);
       profile = await profileData.getProfileByToken();
@@ -48,7 +48,7 @@ export default async function NavbarServ() {
 
   return (
     <div>
-      <NavbarFront avatar={avatar} profile={profile} />
+      <NavbarFront avatar={avatar} profile={profile} token={token}/>
     </div>
   );
 }

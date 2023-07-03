@@ -1,7 +1,6 @@
-type	channelType = {
+type	Channel = {
 	id: number,
 	name: string,
 	avatar: avatarType,
+	updatedAt: Date,
 };
-
-export default channelType;
