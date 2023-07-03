@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import styles from "@/styles/lobby/HomeProfile.module.css";
-import Profile from "@/services/Profile.service";
 
 type Props = {
   profile: Profile;
