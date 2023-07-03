@@ -1,3 +1,6 @@
+// [!] ficher bientot a supprimer, remplacer par le profile_service
+
+
 import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 

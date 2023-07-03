@@ -52,4 +52,20 @@ export default class Profile_Service {
 
 		return data;
 	}
+
+	public async getProfileWithAvatar(token:string, id: number)
+		:Promise<Profile & { avatar: Avatar; }> {
+	const profile = await fetch(`http://backend:4000/api/users/avatar/${id}`, {
+		method: "GET",
+		headers: {"Authorization": "Bearer " + token},
+	});
+
+	if (!profile.ok) {
+		throw new Error("Profil with avatar cannot be found");
+	}
+
+	const data: Profile & { avatar: Avatar } = await profile.json();
+
+	return data;
+}
 }
