@@ -7,7 +7,7 @@ import NavbarLogInBtn from "./NavbarLogInBtn";
 import AvatarMenu from "./AvatarMenu";
 
 type Props = {
-  avatar: avatarType;
+  avatar: Avatar;
   profile: Profile;
 };
 

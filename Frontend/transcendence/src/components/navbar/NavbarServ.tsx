@@ -1,20 +1,20 @@
 import { cookies } from "next/dist/client/components/headers";
-import { CryptoService } from "@/services/crypto/Crypto.service";
 import Avatar_Service from "@/services/Avatar.service";
 
 import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
-
-const Crypto = new CryptoService();
+import { headers } from "next/headers";
 
 export default async function NavbarServ() {
-  let avatar: avatarType = {
+
+  const url = headers().get('referer') || "";
+  let avatar: Avatar = {
     image: "",
-    name: "default",
+    name: "",
     variant: "circular",
-    borderColor: "#22d3e",
+    borderColor: "#22d3ee",
     backgroundColor: "#22d3ee",
-    text: "dafault",
+    text: "",
     empty: true,
     isChannel: false,
   };
@@ -33,18 +33,15 @@ export default async function NavbarServ() {
   };
 
   try {
-    const token = cookies().get("crunchy-token")?.value;
-    if (!token) throw new Error("No token value");
+      const token = cookies().get("crunchy-token")?.value;
+      if (!token) throw new Error("No token value");
 
-    const profileData = new Profile_Service(token);
-    profile = await profileData.getProfileByToken();
+      const profileData = new Profile_Service(token);
+      profile = await profileData.getProfileByToken();
 
-    const Avatar = new Avatar_Service(token);
+      const Avatar = new Avatar_Service(token);
+      avatar = await Avatar.getAvatarByName(profile.login);
 
-    avatar = await Avatar.getAvatarByName(profile.login);
-
-    if (avatar.image.length > 0)
-      avatar.image = await Crypto.decrypt(avatar.image);
   } catch (err) {
     // console.log(err);
   }

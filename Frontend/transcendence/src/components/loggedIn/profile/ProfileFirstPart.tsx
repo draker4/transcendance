@@ -1,13 +1,11 @@
 import styles from "@/styles/loggedIn/profile/Profile.module.css";
-import Profile from "@/services/Profile.service";
 import AvatarCard from "./avatar/AvatarCard";
-import avatarType from "@/types/Avatar.type";
 import { cookies } from "next/dist/client/components/headers";
 
 type Props = {
   profile: Profile;
   isOwner: boolean;
-  avatar: avatarType;
+  avatar: Avatar;
 };
 
 export default function ProfileFirstPart({ profile, isOwner, avatar }: Props) {

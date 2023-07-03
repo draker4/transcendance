@@ -1,17 +1,27 @@
 //Server side rendering
 
 //Merdouille pour les cookies
-import Profile from "@/services/Profile.service"; 
-import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import { cookies } from 'next/dist/client/components/headers';
 
 //Import le composant pour le lobby
 import styles from '@/styles/game/game.module.css'
+import Profile_Service from "@/services/Profile.service";
 // import Game_Lobby from '@/components/game/Game_Lobby'
 
 export default async function GameLobby() {
     
-    let profile = new Profile();
+    let profile: Profile = {
+        id: -1,
+        login: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        image: "",
+        provider: "",
+        motto: "",
+        story: "",
+      };
     let token : string | undefined;
 
     try {
@@ -19,7 +29,8 @@ export default async function GameLobby() {
         if (!token)
             throw new Error("No token value");
 
-        profile = await getProfileByToken(token);
+        const profileData = new Profile_Service(token);
+        profile = await profileData.getProfileByToken();
     }
     catch (err) {
         console.log(err);
