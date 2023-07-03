@@ -27,6 +27,7 @@
 }
 
 .right {
+  /* border: 2px solid red; */
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -39,11 +40,11 @@
   height: clamp(40px, 3vh, 50px);
 }
 
-.logo:hover {
-  scale: 1.05;
+.left:hover {
+  scale: 1.02;
 }
 
-.logo:active {
+.left:active {
   scale: 0.95;
 }
 

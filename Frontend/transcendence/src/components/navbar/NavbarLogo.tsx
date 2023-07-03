@@ -11,7 +11,7 @@ export default function NavbarLogo({ link }: Props) {
     <Link href={link}>
       <div className={styles.left}>
         <Image
-          src="/images/logo.png"
+          src="/images/icon.png"
           alt="Logo Crunchy Pong"
           width={50}
           height={50}
