@@ -4,7 +4,6 @@ import styles from "@/styles/navbar/Navbar.module.css";
 import Theme from "../theme/Theme";
 import NavbarLogo from "./NavbarLogo";
 import NavbarLogInBtn from "./NavbarLogInBtn";
-import Profile from "@/services/Profile.service";
 import AvatarMenu from "./AvatarMenu";
 
 type Props = {
