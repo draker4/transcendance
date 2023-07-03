@@ -1,8 +1,6 @@
 import { cookies } from "next/dist/client/components/headers";
 import { CryptoService } from "@/services/crypto/Crypto.service";
-import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import Avatar_Service from "@/services/Avatar.service";
-import { verifyAuth } from "@/lib/auth/auth";
 
 import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
@@ -10,7 +8,6 @@ import Profile_Service from "@/services/Profile.service";
 const Crypto = new CryptoService();
 
 export default async function NavbarServ() {
-  let token: string | undefined = "";
   let avatar: avatarType = {
     image: "",
     name: "default",
@@ -48,9 +45,8 @@ export default async function NavbarServ() {
 
     if (avatar.image.length > 0)
       avatar.image = await Crypto.decrypt(avatar.image);
-    // const payload = await verifyAuth(token);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 
   return (
