@@ -27,12 +27,11 @@
 }
 
 .right {
-  /* border: 2px solid red; */
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-evenly;
-  width: 120px;
+  width: 140px;
 }
 
 .logo {
@@ -49,6 +48,12 @@
 }
 
 .logIn {
+  text-decoration: none;
+  margin: 0;
+  padding: 0;
+}
+
+.logInBtn {
   appearance: none;
   width: 80px;
   height: 30px;
@@ -59,12 +64,12 @@
   background-color: var(--secondary);
   border: 3px solid var(--accent);
   transition: all 0.3s ease-in;
-  margin-left: 20px;
 }
 
-.logIn:hover {
+.logInBtn:hover {
   color: var(--accent-lighter1);
   border: 3px solid var(--accent-lighter1);
+  cursor: pointer;
 }
 
 .title {

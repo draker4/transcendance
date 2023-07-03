@@ -5,7 +5,6 @@ import styles from "@/styles/navbar/AvatarMenu.module.css";
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import Link from "next/link";
-import Profile from "@/services/Profile.service";
 import AvatarUser from "../loggedIn/avatarUser/AvatarUser";
 
 type Props = {
