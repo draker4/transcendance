@@ -39,6 +39,12 @@ export class GamesController {
 		return this.GamesService.GetAll(req);
 	}
 
+	// 04 - api/games/getone
+	@Post("getone")
+	GetOne(@Request() req) {
+		return this.GamesService.GetOne(req);
+	}
+
 	// 04 - api/games/quit
 	@Post("quit")
 	Quit(@Request() req) {
@@ -70,9 +76,9 @@ export class GamesController {
 	}
 
 	// 09 - api/games/statslobby
-	@Get("lobby")
-	Lobby(@Request() req) {
-		return this.GamesService.GetStatsLobby(req);
-	}
+	// @Get("lobby")
+	// Lobby(@Request() req) {
+	// 	return this.GamesService.GetStatsLobby(req);
+	// }
 
 }

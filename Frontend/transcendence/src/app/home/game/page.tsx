@@ -7,7 +7,7 @@ import { cookies } from 'next/dist/client/components/headers';
 
 //Import le composant pour le lobby
 import styles from '@/styles/game/game.module.css'
-import Game_Lobby from '@/components/game/Game_Lobby'
+// import Game_Lobby from '@/components/game/Game_Lobby'
 
 export default async function GameLobby() {
     
@@ -27,7 +27,7 @@ export default async function GameLobby() {
 
     return (
         <main className={styles.First_Frame}>
-            <Game_Lobby profile={profile} token={token}/>
+            {/* <Game_Lobby profile={profile} token={token}/> */}
         </main>
     );
 }

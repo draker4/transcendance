@@ -1,25 +1,17 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, IsArray, IsBoolean } from "class-validator";
 import { v4 as uuidv4 } from 'uuid';
 
 export class GameDTO {
 
-  @IsNotEmpty()
   @IsString()
   uuid: string;
 
-  @IsNotEmpty()
   @IsString()
   Name: string;
 
-  @IsOptional()
-  @IsString()
-  Password?: string;
-
-  @IsNotEmpty()
   @IsNumber()
   Host: number;
 
-  @IsNotEmpty()
   @IsNumber()
   Opponent: number;
 
@@ -27,26 +19,52 @@ export class GameDTO {
   @IsNumber({}, { each: true })
   viewersList: number[];
 
-  @IsNotEmpty()
   @IsNumber()
   Score_Host: number;
 
-  @IsNotEmpty()
   @IsNumber()
   Score_Opponent: number;
 
-  @IsNotEmpty()
   @IsString()
   Status: string;
 
-  @IsNotEmpty()
   @IsString()
   CreatedAt: string;
 
   @IsNumber()
   Winner: number;
-
+  
   @IsNumber()
   Loser: number;
+  
+  @IsBoolean()
+  Push: boolean;
+
+  @IsNumber()
+  Score: number;
+
+  @IsNumber()
+  Round: number;
+
+  @IsNumber()
+  Difficulty: number;
+
+  @IsString()
+  Side: string;
+
+  @IsString()
+  Background: string;
+
+  @IsString()
+  Ball: string;
+
+  @IsString()
+  Paddle: string;
+
+  @IsString()
+  Type: string;
+
+  @IsString()
+  Mode: string;
 }
 
