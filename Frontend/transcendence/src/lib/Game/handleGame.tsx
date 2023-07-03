@@ -1,9 +1,13 @@
-import { initBall } from "@/lib/pong/handleBall";
-import { initPlayer } from "@/lib/pong/handlePlayer";
-import drawPong from "@/lib/pong/drawPong";
-import updatePong from "@/lib/pong/updatePong";
+import { initBall } from "@/lib/Game/handleBall";
+import { initPlayer } from "@/lib/Game/handlePlayer";
+import drawPong from "@/lib/Game/drawPong";
+import updatePong from "@/lib/Game/updatePong";
 
-export function initGame(canvasRef: HTMLCanvasElement, pong: Pong): Game {
+export function initGame(
+  canvasRef: HTMLCanvasElement,
+  gameInfos: GameInfos,
+  AI: boolean
+): Game {
   var game: Game = {
     canvas: canvasRef,
     context: canvasRef.getContext("2d")!,
@@ -18,29 +22,29 @@ export function initGame(canvasRef: HTMLCanvasElement, pong: Pong): Game {
     timerFont: "100px Arial",
     result: "",
     round: 1,
-    roundPoint: pong.score,
-    roundMax: pong.round,
-    difficulty: pong.difficulty,
+    roundPoint: gameInfos.Score,
+    roundMax: gameInfos.Round,
+    difficulty: gameInfos.Difficulty,
     startTimer: 6,
     over: false,
     running: false,
-    playerSide: pong.side,
-    AI: pong.AI,
-    push: pong.push,
+    playerSide: gameInfos.Side,
+    AI: AI,
+    push: gameInfos.Push,
   } as Game;
   game.playerLeft = initPlayer(
     game.width,
     game.height,
     "left",
-    pong.difficulty - 1
+    gameInfos.Difficulty - 1
   );
   game.playerRight = initPlayer(
     game.width,
     game.height,
     "right",
-    pong.difficulty - 1
+    gameInfos.Difficulty - 1
   );
-  game.ball = initBall(game.width, game.height, pong.difficulty - 1);
+  game.ball = initBall(game.width, game.height, gameInfos.Difficulty - 1);
   game.timer = new Date().getTime();
   if (Math.random() < 0.5) {
     game.playerServe = "left";

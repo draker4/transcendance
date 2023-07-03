@@ -1,0 +1,28 @@
+.homeProfil {
+  width: 90%;
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  justify-content: space-evenly;
+  font-weight: 500;
+  font-size: 20px;
+  text-align: center;
+  margin-inline: 5%;
+  background-color: var(--secondary-lighter2);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.profileInfo {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.profilePicture {
+  display: flex;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}

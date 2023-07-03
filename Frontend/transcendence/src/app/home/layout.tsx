@@ -1,5 +1,5 @@
 import ChatServer from "@/components/chat/ChatServer";
-import styles from "@/styles/page/HomeLayout.module.css";
+import styles from "@/styles/home/HomeLayout.module.css";
 
 export const metadata = {
   title: "Logged",

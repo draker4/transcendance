@@ -2,13 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { History } from 'src/utils/typeorm/history.entity';
+import { History } from 'src/utils/typeorm/History.entity';
 import { HistoryDto } from '../../dto/history.dto';
 
-import { UserHistory } from 'src/utils/typeorm/userHistory.entity';
+import { UserHistory } from 'src/utils/typeorm/UserHistory.entity';
 import { UserHistoryDto } from '../../dto/userHistory.dto';
 
-import { User } from 'src/utils/typeorm/user.entity';
+import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 
 @Injectable()
