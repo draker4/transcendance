@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Profile from "@/services/Profile.service";
 import NavbarProfilInfo from "./NavbarProfilInfo";
 import SectionPongStats from "./sections/SectionPongStats";
 import SectionCustom from "./sections/SectionCustom";

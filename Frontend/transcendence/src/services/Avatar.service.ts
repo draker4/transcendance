@@ -1,14 +1,13 @@
-import avatarType from "@/types/Avatar.type";
+import { CryptoService } from "./crypto/Crypto.service";
+
+const Crypto = new CryptoService();
 
 export default class Avatar_Service {
-  private static instance: Avatar_Service;
   private token: string;
 
   // Instance singleton
   constructor(token: string) {
     this.token = token;
-    if (Avatar_Service.instance) return Avatar_Service.instance;
-    Avatar_Service.instance = this;
   }
 
   // Fonction generique pour toutes les requettes http
@@ -73,10 +72,12 @@ export default class Avatar_Service {
     console.log("Avatar service is working");
   }
 
-  public async getAvatarByName(login: string): Promise<avatarType> {
+  public async getAvatarByName(login: string): Promise<Avatar> {
     const response: Response = await this.fetchData(login, "GET");
-    const data: Promise<avatarType> = await response.json();
+    const data: Avatar = await response.json();
 
+    if (data?.image.length > 0)
+      data.image = await Crypto.decrypt(data.image);
     return data;
   }
 

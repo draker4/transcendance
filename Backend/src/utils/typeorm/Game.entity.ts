@@ -2,8 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Game {
-
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
   @Column()
@@ -15,9 +14,9 @@ export class Game {
   @Column()
   Opponent: number;
 
-  @Column("integer", { array: true, default: [] })
+  @Column('integer', { array: true, default: [] })
   Viewers_List: number[];
-  
+
   @Column()
   Score_Host: number;
 

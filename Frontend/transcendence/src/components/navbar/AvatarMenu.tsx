@@ -5,11 +5,10 @@ import styles from "@/styles/navbar/AvatarMenu.module.css";
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "cookies-next";
 import Link from "next/link";
-import Profile from "@/services/Profile.service";
 import AvatarUser from "../loggedIn/avatarUser/AvatarUser";
 
 type Props = {
-  avatar: avatarType;
+  avatar: Avatar;
   profile: Profile;
 };
 
@@ -17,6 +16,8 @@ export default function NavbarHome({ avatar, profile }: Props) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  console.log(profile, avatar);
 
   const signoff = () => {
     deleteCookie("crunchy-token");

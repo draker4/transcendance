@@ -1,7 +1,6 @@
 "use client";
 
 import styles from "@/styles/loggedIn/profile/AvatarCard.module.css";
-import Profile from "@/services/Profile.service";
 import EditButton from "./EditButton";
 import { useState } from "react";
 

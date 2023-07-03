@@ -8,9 +8,6 @@ import Flip_Card    from '@/components/lobby/Flip_Card'
 import Game_Card    from '@/components/lobby/Game_Card'
 import Game_List    from '@/components/lobby/Game_List'
 
-//Import le profil
-import Profile from "@/services/Profile.service";
-
 type Props = {
     profile: Profile;
     token: string | undefined;

@@ -16,6 +16,9 @@ import { AvatarModule } from './avatar/avatar.module';
 import { ChatModule } from './chat/chat.module';
 import { Channel } from './utils/typeorm/Channel.entity';
 import { ChannelModule } from './channels/channel.module';
+import { HistoryModule } from './history/history.module';
+import { History } from './utils/typeorm/History.entity';
+import { UserHistory } from './utils/typeorm/UserHistory.entity';
 
 @Module({
   imports: [
@@ -29,7 +32,15 @@ import { ChannelModule } from './channels/channel.module';
       username: process.env.DATA_BASE_USER,
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
-      entities: [User, Game, Matchmaking, Avatar, Channel],
+      entities: [
+        User,
+        Game,
+        Matchmaking,
+        Avatar,
+        Channel,
+        History,
+        UserHistory,
+      ],
       synchronize: true,
     }),
     UsersModule,
@@ -39,6 +50,7 @@ import { ChannelModule } from './channels/channel.module';
     AvatarModule,
     ChatModule,
     ChannelModule,
+    HistoryModule,
   ],
   controllers: [],
   providers: [],

@@ -1,9 +1,9 @@
-import Profile from "@/services/Profile.service";
 import styles from "@/styles/loggedIn/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
 import submitMotto from "@/lib/profile/edit/submitMotto";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
+import Profile_Service from "@/services/Profile.service";
 
 type Props = {
   profile: Profile;

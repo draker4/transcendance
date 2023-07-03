@@ -1,4 +1,4 @@
-import { turnDelayIsOver } from "@/lib/pong/pongUtils";
+import { turnDelayIsOver } from "@/lib/Game/pongUtils";
 
 function drawEndMenu(game: Game) {
   // Draw the menu background

@@ -1,10 +1,8 @@
 "use client";
 
 import styles from "@/styles/loggedIn/profile/AvatarCard.module.css";
-import Profile from "@/services/Profile.service";
 import Avatar from "./Avatar";
 import ProfileLogin from "./ProfileLogin";
-import avatarType from "@/types/Avatar.type";
 import { CSSProperties, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color, ColorChangeHandler, ColorResult } from "react-color";
@@ -16,7 +14,7 @@ import submitAvatarColors from "@/lib/avatar/submitAvatarColors";
 type Props = {
   profile: Profile;
   isOwner: boolean;
-  avatar: avatarType;
+  avatar: Avatar;
   token: string;
 };
 
