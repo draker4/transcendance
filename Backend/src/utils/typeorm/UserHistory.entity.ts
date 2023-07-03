@@ -10,9 +10,9 @@ export class UserHistory {
 
   @Column({
     nullable: false,
-    name: 'player_id',
+    name: 'user_id',
   })
-  playerId: number;
+  userId: number;
 
   @Column({
     nullable: false,

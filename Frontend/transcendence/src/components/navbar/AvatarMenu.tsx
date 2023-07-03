@@ -39,7 +39,7 @@ export default function NavbarHome({ avatar, profile }: Props) {
   }, []);
 
   return (
-    <div className={styles.menu} onClick={() => setMenuOpen(true)}>
+    <div className={styles.menu} onClick={() => setMenuOpen(!menuOpen)}>
       <div className={styles.avatar}>
         <AvatarUser
           avatar={avatar}

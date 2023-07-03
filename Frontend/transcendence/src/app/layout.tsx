@@ -7,7 +7,7 @@ import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 export const metadata = {
   title: "Transcendence",
   description:
-    "Transcendence is a multiplayer game where you can play with your friends and chat with them.",
+    "Transcendence is a multiplayer pong where you can play with your friends and chat with them.",
 };
 
 export default function RootLayout({

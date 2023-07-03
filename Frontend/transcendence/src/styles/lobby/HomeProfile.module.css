@@ -1,7 +1,7 @@
 .homeProfil {
   width: 90%;
   display: flex;
-  flex-flow: row;
+  flex-flow: row wrap-reverse;
   align-items: center;
   justify-content: space-evenly;
   font-weight: 500;

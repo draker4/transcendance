@@ -64,7 +64,6 @@ export default function Game({ profile, token, gameID }: Props) {
   //Si la page n'est pas chargé
   if (!isLoading && gameInfos) {
     return (
-      // @Boisson , tu peux mettre le composant pour la game ici , voici toutes les données auquels tu as acces ici
       <div className={styles.Game}>
         <Pong gameInfos={gameInfos} AI={true} />
         <Button_Img text="quit" onClick={Quit} img="lobby/check" />

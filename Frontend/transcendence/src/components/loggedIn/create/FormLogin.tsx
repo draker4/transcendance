@@ -6,7 +6,6 @@ import styles from "@/styles/loggedIn/create/Create.module.css";
 import { useEffect, useRef, useState } from "react";
 import { handleActionServer } from "@/lib/create/handleActionServer";
 import { useRouter } from "next/navigation";
-import avatarType from "@/types/Avatar.type";
 
 export default function FormLogin({
   avatars,
@@ -19,7 +18,7 @@ export default function FormLogin({
   const [text, setText] = useState<string>("");
   const [access_token, setToken] = useState<string>("");
   const router = useRouter();
-  const avatarChosenRef = useRef<avatarType>({
+  const avatarChosenRef = useRef<Avatar>({
     image: "",
     variant: "circular",
     borderColor: "#22d3ee",
@@ -30,7 +29,7 @@ export default function FormLogin({
     isChannel: false,
   });
 
-  const selectAvatar = (avatar: avatarType) => {
+  const selectAvatar = (avatar: Avatar) => {
     avatar.name = avatarChosenRef.current.name;
     avatarChosenRef.current = avatar;
   };

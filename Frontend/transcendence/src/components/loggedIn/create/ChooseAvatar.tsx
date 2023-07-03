@@ -4,7 +4,6 @@ import Avatar from "@mui/material/Avatar";
 import styles from "@/styles/loggedIn/create/ChooseAvatar.module.css";
 import { useState } from "react";
 import ChooseColor from "./ChooseColor";
-import avatarType from "@/types/Avatar.type";
 
 export default function ChooseAvatar({
   selectBorder,
@@ -15,7 +14,7 @@ export default function ChooseAvatar({
 }: {
   selectBorder: (color: string) => void;
   selectBackground: (color: string) => void;
-  selectAvatar: (avatar: avatarType) => void;
+  selectAvatar: (avatar: Avatar) => void;
   text: string;
   avatars: string[];
 }) {
@@ -33,7 +32,7 @@ export default function ChooseAvatar({
     selectBackground(color);
   };
 
-  const handleSelectAvatar = (key: string, avatar: avatarType) => {
+  const handleSelectAvatar = (key: string, avatar: Avatar) => {
     setSelectedAvatar(key);
     selectAvatar(avatar);
   };

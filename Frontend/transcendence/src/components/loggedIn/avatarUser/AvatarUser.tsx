@@ -1,4 +1,3 @@
-import avatarType from "@/types/Avatar.type";
 import Avatar from "@mui/material/Avatar";
 
 export default function AvatarUser({
@@ -7,7 +6,7 @@ export default function AvatarUser({
   backgroundColor,
   borderColor,
 }: {
-  avatar: avatarType;
+  avatar: Avatar;
   borderSize: string;
   backgroundColor: string;
   borderColor: string;

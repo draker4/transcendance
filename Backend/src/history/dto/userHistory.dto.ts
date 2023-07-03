@@ -7,7 +7,7 @@ export class UserHistoryDto {
 
   @IsNotEmpty()
   @IsNumber()
-  playerId: number;
+  userId: number;
 
   @IsNotEmpty()
   @IsNumber()

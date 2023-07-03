@@ -6,10 +6,12 @@ import { History } from 'src/utils/typeorm/History.entity';
 import { HistoryDto } from '../../dto/history.dto';
 
 import { UserHistory } from 'src/utils/typeorm/UserHistory.entity';
-import { UserHistoryDto } from '../../dto/userHistory.dto';
+import { UserHistoryDto } from '../../dto/UserHistory.dto';
 
 import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
+
+import { FullUserHistoryDto } from 'src/history/dto/FullUserHistory.dto';
 
 @Injectable()
 export class HistoryService {
@@ -43,15 +45,51 @@ export class HistoryService {
     }
   }
 
-  async GetHistoryDetailsById(historyId: number) {}
+  async getUserHistory(userId: number): Promise<any> {
+    try {
+      const userHistory: UserHistory[] = await this.userHistoryRepository.find({
+        where: { userId: userId },
+      });
+      const History: History[] = await this.historyRepository.find();
 
-  async GetHistorySettingsById(historyId: number) {}
+      //combine userHistory and History into FullUserHistory
+      const fullUserHistory: FullUserHistoryDto[] = [];
+      userHistory.forEach((userHistory) => {
+        History.forEach((history) => {
+          if (userHistory.historyId === history.historyId) {
+            const temp: FullUserHistoryDto = {
+              userHistoryId: userHistory.userHistoryId,
+              userId: userHistory.userId,
+              historyId: userHistory.historyId,
+              success: userHistory.success,
+              level: history.level,
+              title: history.title,
+              description: history.description,
+              push: history.push,
+              score: history.score,
+              round: history.round,
+              difficulty: history.difficulty,
+              background: history.background,
+              ball: history.ball,
+            };
+            fullUserHistory.push(temp);
+          }
+        });
+      });
 
-  async PostInitialHistory(historyDto: HistoryDto) {}
-
-  async GetUserHistoryStatus(userId: number) {}
-
-  async UpdateUserHistoryStatus(userHistoryId: number) {}
-
-  async PostInitialUserHistoryStatus(userHistoryDto: UserHistoryDto) {}
+      const Data = {
+        success: true,
+        message: 'Request successfull',
+        data: fullUserHistory,
+      };
+      return Data;
+    } catch (error) {
+      const Data = {
+        success: false,
+        message: 'Catched an error',
+        error: error,
+      };
+      return Data;
+    }
+  }
 }
