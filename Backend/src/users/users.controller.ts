@@ -36,6 +36,18 @@ export class UsersController {
     return user;
   }
 
+  @Get('avatar/:id')
+  async getUserWithAvatar(@Param('id') id: string) {
+    id = decodeURIComponent(id);
+    const user = await this.usersService.getUserAvatar(parseInt(id));
+
+    console.log("=== userWithAvatar ===\n", user);
+
+    if (!user) throw new NotFoundException();
+
+    return user;
+  }
+
   @Public()
   @Get('email')
   async checkDoubleEmail(@Query('email') email: string) {

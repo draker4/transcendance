@@ -45,3 +45,19 @@ export const getProfileByLogin = async (token: string, login: string): Promise<P
 
 	return data;
 }
+
+export const getProfileWithAvatar = async (token:string, id: number)
+:Promise<Profile & { avatar: avatarType; }> => {
+	const profile = await fetch(`http://backend:4000/api/users/avatar/${id}`, {
+		method: "GET",
+		headers: {"Authorization": "Bearer " + token},
+	});
+
+	if (!profile.ok) {
+		throw new Error("Profil with avatar cannot be found");
+	}
+
+	const data: Profile & { avatar: avatarType } = await profile.json();
+
+	return data;
+}
