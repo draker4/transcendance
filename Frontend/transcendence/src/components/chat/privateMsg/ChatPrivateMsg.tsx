@@ -41,7 +41,6 @@ export default function ChatPrivateMsg() {
 
     // avatar = await Avatar.getAvatarByName(login);
 
-
   } catch (err) {
     console.log(err);
   }

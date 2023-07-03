@@ -5,7 +5,6 @@ const Crypto = new CryptoService();
 export default class Avatar_Service {
   private token: string;
 
-  // Instance singleton
   constructor(token: string) {
     this.token = token;
   }

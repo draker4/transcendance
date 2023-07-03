@@ -6,7 +6,6 @@ import { History } from 'src/utils/typeorm/History.entity';
 import { HistoryDto } from '../../dto/history.dto';
 
 import { UserHistory } from 'src/utils/typeorm/UserHistory.entity';
-import { UserHistoryDto } from '../../dto/UserHistory.dto';
 
 import { User } from 'src/utils/typeorm/User.entity';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';

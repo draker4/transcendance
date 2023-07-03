@@ -5,7 +5,6 @@ const	Crypto = new CryptoService();
 export default class Profile_Service {
 	private token: string;
 
-	// Instance singleton
 	constructor(token: string) {
 		this.token = token;
 	}
@@ -32,7 +31,7 @@ export default class Profile_Service {
 		return data;
 	}
 
-	public async getProfileByLogin (login: string): Promise<Profile> {
+	public async getProfileByLogin(login: string): Promise<Profile> {
 		const	profile = await fetch(`http://backend:4000/api/users/profile/${login}`, {
 			method: "GET",
 			headers: {"Authorization": "Bearer " + this.token},

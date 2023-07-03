@@ -3,7 +3,7 @@ import { HistoryService } from 'src/history/service/history/history.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { Get, Put, Post, Param, ParseIntPipe, Body } from '@nestjs/common';
 import { HistoryDto } from 'src/history/dto/history.dto';
-import { UserHistoryDto } from 'src/history/dto/UserHistory.dto';
+import { UserHistoryDto } from 'src/history/dto/userHistory.dto';
 
 @Controller('history')
 export class HistoryController {
