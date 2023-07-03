@@ -19,20 +19,17 @@ export class HistoryService {
     @InjectRepository(History)
     private readonly historyRepository: Repository<History>,
 
-    @InjectRepository(UserHistory)
-    private readonly userHistoryRepository: Repository<UserHistory>,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async GetAllHistory() {
+  async getHistory(): Promise<any> {
     try {
-      const history: History[] = await this.historyRepository.find();
+      const History: History[] = await this.historyRepository.find();
       const Data = {
         success: true,
         message: 'Request successfull',
-        data: history,
+        data: History,
       };
       return Data;
     } catch (error) {
@@ -45,42 +42,16 @@ export class HistoryService {
     }
   }
 
-  async getUserHistory(userId: number): Promise<any> {
+  async getUserHistoryLevel(userId: number): Promise<any> {
     try {
-      const userHistory: UserHistory[] = await this.userHistoryRepository.find({
-        where: { userId: userId },
+      const User: User[] = await this.userRepository.find({
+        where: { id: userId },
       });
-      const History: History[] = await this.historyRepository.find();
-
-      //combine userHistory and History into FullUserHistory
-      const fullUserHistory: FullUserHistoryDto[] = [];
-      userHistory.forEach((userHistory) => {
-        History.forEach((history) => {
-          if (userHistory.historyId === history.historyId) {
-            const temp: FullUserHistoryDto = {
-              userHistoryId: userHistory.userHistoryId,
-              userId: userHistory.userId,
-              historyId: userHistory.historyId,
-              success: userHistory.success,
-              level: history.level,
-              title: history.title,
-              description: history.description,
-              push: history.push,
-              score: history.score,
-              round: history.round,
-              difficulty: history.difficulty,
-              background: history.background,
-              ball: history.ball,
-            };
-            fullUserHistory.push(temp);
-          }
-        });
-      });
-
+      const UserHistoryLevel: number = User[0].historyLevel;
       const Data = {
         success: true,
         message: 'Request successfull',
-        data: fullUserHistory,
+        data: UserHistoryLevel,
       };
       return Data;
     } catch (error) {

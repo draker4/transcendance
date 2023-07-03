@@ -19,7 +19,7 @@ export class HistoryController {
   // 01 - api/history/user/:id - Get userHistory by userId
   @Get(':userId')
   GetUserHistory(@Param('userId', ParseIntPipe) userId: number) {
-    return this.historyService.getUserHistory(userId);
+    //return this.historyService.getUserHistory(userId);
   }
 
   // 02 - api/history/user/:id - Update PlayerHistory by userHistoryId
@@ -27,12 +27,12 @@ export class HistoryController {
   UpdateUserHistory(
     @Param('userHistoryId', ParseIntPipe) userHistoryId: number,
   ) {
-    return this.historyService.UpdateUserHistory(userHistoryId);
+    //return this.historyService.UpdateUserHistory(userHistoryId);
   }
 
   // 03 - api/history/user/init - Post Initial PlayerHistory
   @Post('user/init')
   PostInitialUserHistory(@Body() userHistoryDto: UserHistoryDto) {
-    return this.historyService.PostInitialUserHistory(userHistoryDto);
+    //return this.historyService.PostInitialUserHistory(userHistoryDto);
   }
 }

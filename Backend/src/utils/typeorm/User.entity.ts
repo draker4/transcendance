@@ -63,6 +63,9 @@ export class User {
   @Column({ nullable: true })
   story: string;
 
+  @Column({ nullable: true, default: 0 })
+  historyLevel: number;
+
   @ManyToMany(() => Channel, (channel) => channel.users, {
     cascade: true,
   })
