@@ -50,6 +50,7 @@ export class AvatarService {
     avatar.borderColor = updateUserAvatarDto.borderColor;
     avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
 
+    // [!] rajouter try catch --> passer un try catch  + geneaal dans le controller
     await this.avatarRepository.update(avatar.id, avatar);
 
     const Data = {

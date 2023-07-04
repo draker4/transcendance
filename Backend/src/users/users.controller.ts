@@ -6,12 +6,14 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
+import { EditUserDto } from './dto/EditUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -73,6 +75,31 @@ export class UsersController {
     return { exists: false };
   }
 
+
+  @Put()
+  async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
+    console.log("User @Put called, properties = \n", properties);
+
+    const updatedProperties = [];
+    let message = "";
+
+    for (const key in properties) {
+      if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
+        updatedProperties.push(key);
+      }
+    }
+
+    if (updatedProperties.length > 0) {
+      message = `Properties : ${updatedProperties.join(', ')} : successfully updated`
+    }
+
+    return {
+      message: message,
+    }
+  }
+
+  // [!] utiliser un PUT + foutre en trycatch
+  // faire ca de maniere générique
   @Post('edit-motto')
   async editMotto(@Request() req, @Body('submitedMotto') motto: string) {
     console.log('POST~edit-motto method called'); //checking
