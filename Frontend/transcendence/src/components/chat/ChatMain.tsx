@@ -1,7 +1,7 @@
 // import { ChatSocketContext } from "@/context/ChatSocketContext";
 import styles from "@/styles/chat/ChatMain.module.css";
 import ChatHome from "./chatParts/ChatHome";
-import ChatPrivateMsg from "./privateMsg/ChatPrivateMsg";
+import ChatPrivateMsg from "../chatPage/privateMsg/ChatPrivateMsg";
 // import { useContext, useEffect, useState } from "react";
 
 // type MessagePayload = {

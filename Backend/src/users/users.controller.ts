@@ -164,7 +164,7 @@ export class UsersController {
   @Get('join')
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
-    const user2 = await this.usersService.getUserChannels(2);
+    const user2 = await this.usersService.getUserChannels(34);
 
     const channel = await this.usersService.getChannelByName("test");
 
@@ -180,7 +180,7 @@ export class UsersController {
   @Get('addPongie')
   async addPongie() {
     const user1 = await this.usersService.getUserPongies(1);
-    const user2 = await this.usersService.getUserPongies(2);
+    const user2 = await this.usersService.getUserPongies(34);
 
     // user1.pongies.push(user2);
     // user2.pongies.push(user1);

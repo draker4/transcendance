@@ -1,0 +1,86 @@
+
+/* FRAME - PARENT COMPONENT */
+.privateMsgFrame {
+	width:100%;
+	height:100%;
+	display: flex;
+	flex-direction: column;
+	/* border: dashed 2px var(--notif); */ /*checking */
+}
+
+/* HEADER */
+.privateMsgFrame .header {
+	min-height: 40px;
+	max-height: 60px;
+	background-color: var(--primary-darker2);
+	display: flex;
+	justify-content: center;
+	padding: 10px 35px;
+  	align-items: center;
+	/* background-color: var(--notif); */
+}
+
+.privateMsgFrame .header .icon {
+	justify-content: flex-start;
+	font-size: 1.5rem;
+}
+
+.privateMsgFrame .header .card {
+	margin: 0 auto;
+	height: 100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	gap: 2vw;
+	color: var(--accent);
+	font-size: 1.2rem;
+	font-weight: 700;
+	text-decoration: none;
+	
+	/* border: 2px dashed var(--notif); */
+}
+.privateMsgFrame .header .card {
+	cursor: pointer;
+}
+
+.privateMsgFrame .header .card .avatar {
+	aspect-ratio: 1;
+	height: 100%;
+}
+/* MESSAGE BOARD */
+
+.privateMsgFrame .msgBoard {
+	flex: 1;
+	background-color: var(--primary-darker1);
+}
+
+/* PROMPT */
+.privateMsgFrame .prompt {
+	min-height: 80px;
+	padding: 10px 15px;
+	background-color: var(--primary-darker2);
+}
+.privateMsgFrame .prompt .promptCard {
+	
+	width:100%;
+	border: 2px dashed var(--notif);
+}
+
+.privateMsgFrame .prompt .promptCard textarea {
+	border: none;
+	resize: none;
+	background: none;
+	width:100%;
+	font-family: var(--text);
+	color: var(--tertiary);
+	background-color: blueviolet;
+}
+
+.privateMsgFrame .prompt .promptCard .paperPlane {
+	color:var(--accent);
+	font-size: 1.3rem;
+	background: none;
+	border: none;
+	margin-left: 15px;
+	justify-content: flex-end;
+}

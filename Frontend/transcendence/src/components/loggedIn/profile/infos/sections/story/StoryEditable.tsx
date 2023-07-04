@@ -107,6 +107,8 @@ export default function StoryEditable({ profile, token }: Props) {
     </div>
   );
 }
+
+// [?][!] c'est moi qui ait fait ça par erreur ? un quickfix failed ?
 function filterBadwords(submitedStory: string): string {
   throw new Error("Function not implemented.");
 }
