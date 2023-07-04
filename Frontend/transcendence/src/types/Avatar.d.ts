@@ -7,4 +7,5 @@ type Avatar = {
   text: string;
   empty: boolean;
   isChannel: boolean;
+  decrypt: boolean;
 };

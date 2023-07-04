@@ -17,8 +17,6 @@ export default function NavbarHome({ avatar, profile }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  console.log(profile, avatar);
-
   const signoff = () => {
     deleteCookie("crunchy-token");
     router.push("/welcome");

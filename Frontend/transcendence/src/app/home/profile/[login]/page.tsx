@@ -26,6 +26,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     text: "",
     empty: true,
     isChannel: false,
+    decrypt: false,
   };
   let profile: Profile = {
     id: -1,

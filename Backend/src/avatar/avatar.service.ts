@@ -79,6 +79,7 @@ export class AvatarService {
       backgroundColor: '#22d3ee',
       empty: true,
       isChannel: false,
+      decrypt: false,
     };
 
     return await this.avatarRepository.save(avatar);

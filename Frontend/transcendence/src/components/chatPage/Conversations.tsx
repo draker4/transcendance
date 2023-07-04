@@ -1,22 +1,28 @@
-"use client"
-import ChatService from "@/services/chat/Chat.service";
 import { useEffect, useState } from "react";
 import AvatarUser from "../loggedIn/avatarUser/AvatarUser";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { Socket } from "socket.io-client";
 
-export default function Chat({ token }: {
-	token: string;
+export default function Chat({ socket, maxWidth, openDisplay }: {
+	socket: Socket;
+	maxWidth: string;
+	openDisplay: (display: Channel | Pongie) => void;
 }) {
-	const	chatService = new ChatService(token);
-	const [channels, setChannels] = useState<Channel[]>([]);
-	const [pongies, setPongies] = useState<Pongie[]>([]);
+	const	[channels, setChannels] = useState<Channel[]>([]);
+	const	[pongies, setPongies] = useState<Pongie[]>([]);
+
 	const channelsList = channels.map((channel) => {
+
+		const	handleClick = () => {
+			openDisplay(channel);
+		}
+
 		return (
 			<React.Fragment key={channel.id}>
-				<div className={styles.list}>
+				<div className={styles.list} onClick={handleClick}>
               		<div className={styles.avatar}>
 						<AvatarUser
 							avatar={channel.avatar}
@@ -32,11 +38,20 @@ export default function Chat({ token }: {
 			</React.Fragment>
 		);
 	});
+
 	const pongiesList = pongies.map((pongie) => {
+
+		const	handleClick = () => {
+			openDisplay(pongie);
+		}
+
 		return (
 			<React.Fragment key={pongie.id}>
-				<div className={styles.list}>
-              		<div className={styles.avatar}>
+				<div
+					className={styles.list}
+					onClick={handleClick}
+				>
+					<div className={styles.avatar}>
 						<AvatarUser
 							avatar={pongie.avatar}
 							borderSize="2px"
@@ -53,23 +68,25 @@ export default function Chat({ token }: {
 	});
   
 	useEffect(() => {
-	  chatService.socket?.emit(
+	  socket?.emit(
 		"getChannels",
 		(payload: { success: boolean; channels: Channel[] }) => {
-		  setChannels(payload.channels);
-		  console.log(payload);
+			if (payload.success)
+				setChannels(payload.channels);
 		}
 	  );
-	  chatService.socket?.emit(
+	  socket?.emit(
 		"getPongies",
-		(payload: { success: boolean; pongies: Pongie[] }) => {
-		  setPongies(payload.pongies);
+		async (payload: { success: boolean; pongies: Pongie[] }) => {
+			if (payload.success)
+				setPongies(payload.pongies);
 		}
 	  );
-	}, [chatService.socket]);
+	}, [socket]);
 
 	return (
-		<div className={styles.main}>
+		<div className={styles.main} style={{maxWidth: maxWidth}}>
+			<h3>Recherche</h3>
 			<div className={styles.title}>
 				<h3>Discussions</h3>
 				<FontAwesomeIcon

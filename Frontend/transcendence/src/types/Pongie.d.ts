@@ -1,6 +1,6 @@
 type	Pongie = {
 	id: number,
 	login: string,
-	avatar: avatarType,
+	avatar: Avatar,
 	updatedAt: Date,
 };

@@ -1,10 +1,10 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import styles from "@/styles/chatPage/ChatPage.module.css";
-import Conversations from "@/components/chatPage/Conversations";
+import ChatClient from "@/components/chatPage/ChatClient";
 
 export default async function ChatPage() {
-	let token: string | undefined;
+	let		token: string | undefined;
 
 	try {
 		token = cookies().get("crunchy-token")?.value;
@@ -23,8 +23,6 @@ export default async function ChatPage() {
 	}
 
 	return (
-		<div>
-			<Conversations token={token}/>
-		</div>
+		<ChatClient token={token}/>
 	)
 }

@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelService } from 'src/channels/channel.service';
 import { CreatePrivateMsgChannelDto } from 'src/channels/dto/CreatePrivateMsgChannel.dto';
 import { UsersService } from 'src/users/users.service';
+import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
@@ -17,6 +18,7 @@ export class ChatService {
     private readonly channelRepository: Repository<Channel>,
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async getChannels(id: string) {
@@ -71,10 +73,18 @@ export class ChatService {
       "success": "false",
       "pongies": [],
     }
+
+  const pongies = await Promise.all(user.pongies.map(async (pongie) => {
+    if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+      pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+      pongie.avatar.decrypt = false;
+    }
+    return pongie;
+  }));
   
 	return {
       "success": "true",
-      "pongies": user.pongies,
+      "pongies": pongies,
     };
   }
 }

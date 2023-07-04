@@ -3,7 +3,6 @@ import Avatar_Service from "@/services/Avatar.service";
 
 import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
-import { headers } from "next/headers";
 
 export default async function NavbarServ() {
 
@@ -17,6 +16,7 @@ export default async function NavbarServ() {
     text: "",
     empty: true,
     isChannel: false,
+    decrypt: false,
   };
   let profile: Profile = {
     id: -1,

@@ -75,8 +75,11 @@ export default class Avatar_Service {
     const response: Response = await this.fetchData(login, "GET");
     const data: Avatar = await response.json();
 
-    if (data?.image.length > 0)
+    if (data?.decrypt && data?.image.length > 0) {
       data.image = await Crypto.decrypt(data.image);
+      data.decrypt = false;
+    }
+    
     return data;
   }
 
