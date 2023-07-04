@@ -69,18 +69,11 @@ export default function Chat({ socket, maxWidth, openDisplay }: {
 	});
   
 	useEffect(() => {
-	  socket?.emit(
-		"getChannels",
-		(payload: { success: boolean; channels: Channel[] }) => {
-			if (payload.success)
-				setChannels(payload.channels);
-		}
-	  );
-	  socket?.emit(
-		"getPongies",
-		async (payload: { success: boolean; pongies: Pongie[] }) => {
-			if (payload.success)
-				setPongies(payload.pongies);
+		socket?.emit("getChannels", (channels: Channel[]) => {
+			setChannels(channels);
+		});
+		socket?.emit("getPongies", (pongies: Pongie[]) => {
+			setPongies(pongies);
 		}
 	  );
 	}, [socket]);
