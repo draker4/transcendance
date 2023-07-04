@@ -47,6 +47,7 @@ export default function ChatClient({ token }: {
 		});
 	}, [chatService.socket]);
 
+
 	if (!chatService.socket || error) {
 		return (
 			<div className={stylesError.error}>

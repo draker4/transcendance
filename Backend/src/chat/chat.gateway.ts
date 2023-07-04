@@ -15,7 +15,10 @@ import { ChatService } from './chat.service';
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
   cors: {
-    origin: [`http://${process.env.HOST_IP}:3000`],
+    origin: [
+      `http://${process.env.HOST_IP}:3000`,
+      "http://localhost:3000",
+    ],
   },
   namespace: '/chat',
   path: '/chat/socket.io',

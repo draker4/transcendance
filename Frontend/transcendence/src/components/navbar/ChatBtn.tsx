@@ -16,7 +16,7 @@ export default async function ChatBtn({ token } : {
 			chatService.socket?.off("exception");
 			chatService.socket?.disconnect();
 		};
-	  }, [chatService.socket]);
+	}, [chatService.socket]);
 
 	return (
 		<FontAwesomeIcon
