@@ -27,6 +27,7 @@ export default function FormLogin({
     empty: true,
     name: "",
     isChannel: false,
+    decrypt: false,
   });
 
   const selectAvatar = (avatar: Avatar) => {

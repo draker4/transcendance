@@ -28,6 +28,7 @@ export class ChannelService {
 			backgroundColor: '#22d3ee',
 			empty: true,
 			isChannel: true,
+			decrypt: false,
 		  });
 		const chan: ChannelDto = {
 		  name: channel,

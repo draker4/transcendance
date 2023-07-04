@@ -2,13 +2,12 @@
 
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import { getDoubleLogin } from "./checkLogin";
-import avatarType from "@/types/Avatar.type";
 
 const Crypto = new CryptoService();
 
 export async function handleActionServer(
   login: string,
-  avatarChosen: avatarType,
+  avatarChosen: Avatar,
   token: string
 ): Promise<{
   exists: string;
@@ -23,10 +22,9 @@ export async function handleActionServer(
         token: "",
       };
 
-    if (avatarChosen.image !== "") {
+    if (avatarChosen.decrypt && avatarChosen.image !== "") {
       avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
     }
-    console.log("here");
 
     const register = await fetch(
       `http://${process.env.HOST_IP}:4000/api/auth/firstLogin`,

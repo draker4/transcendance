@@ -33,6 +33,8 @@ export default function ChooseAvatar({
   };
 
   const handleSelectAvatar = (key: string, avatar: Avatar) => {
+    if (avatar.image?.length > 0 && !avatar.image.includes("/images/avatars/avatar"))
+      avatar.decrypt = true;
     setSelectedAvatar(key);
     selectAvatar(avatar);
   };
@@ -55,6 +57,7 @@ export default function ChooseAvatar({
               text: text,
               empty: true,
               isChannel: false,
+              decrypt: false,
             })
           }
           sx={{
@@ -84,6 +87,7 @@ export default function ChooseAvatar({
                   text: text,
                   empty: false,
                   isChannel: false,
+                  decrypt: false,
                 })
               }
               sx={{
@@ -114,6 +118,7 @@ export default function ChooseAvatar({
               text: text,
               empty: false,
               isChannel: false,
+              decrypt: false,
             })
           }
           sx={{
