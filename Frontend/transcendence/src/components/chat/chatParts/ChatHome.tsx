@@ -1,25 +1,23 @@
 import AvatarUser from "@/components/loggedIn/avatarUser/AvatarUser";
 import { ChatSocketContext } from "@/context/ChatSocketContext";
-import channelType from "@/types/Channel";
-import pongieType from "@/types/Pongie";
 import { useContext, useEffect, useState } from "react";
 import styles from "@/styles/chat/ChatHome.module.css";
 
 export default function ChatHome() {
   const socket = useContext(ChatSocketContext);
-  const [channels, setChannels] = useState<channelType[]>([]);
-  const [pongies, setPongies] = useState<pongieType[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
+  const [pongies, setPongies] = useState<Pongie[]>([]);
 
   useEffect(() => {
     socket?.emit(
       "getChannels",
-      (payload: { success: boolean; channels: channelType[] }) => {
+      (payload: { success: boolean; channels: Channel[] }) => {
         setChannels(payload.channels);
       }
     );
     socket?.emit(
       "getPongies",
-      (payload: { success: boolean; pongies: pongieType[] }) => {
+      (payload: { success: boolean; pongies: Pongie[] }) => {
         setPongies(payload.pongies);
       }
     );

@@ -1,7 +1,6 @@
 // [!] ficher bientot a supprimer, remplacer par le profile_service
 
 
-import Profile from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 
 const	Crypto = new CryptoService();
@@ -50,7 +49,7 @@ export const getProfileByLogin = async (token: string, login: string): Promise<P
 }
 
 export const getProfileWithAvatar = async (token:string, id: number)
-:Promise<Profile & { avatar: avatarType; }> => {
+:Promise<Profile & { avatar: Avatar; }> => {
 	const profile = await fetch(`http://backend:4000/api/users/avatar/${id}`, {
 		method: "GET",
 		headers: {"Authorization": "Bearer " + token},
@@ -60,7 +59,7 @@ export const getProfileWithAvatar = async (token:string, id: number)
 		throw new Error("Profil with avatar cannot be found");
 	}
 
-	const data: Profile & { avatar: avatarType } = await profile.json();
+	const data: Profile & { avatar: Avatar } = await profile.json();
 
 	return data;
 }

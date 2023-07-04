@@ -50,7 +50,6 @@ export default class ChatService {
 	}
 
 	public disconnect(reconnect: boolean) {
-		console.log("enddd", this.socket?.id);
 		if (this.socket) {
 			this.socket.off("connect_error");
 			this.socket.off("error");

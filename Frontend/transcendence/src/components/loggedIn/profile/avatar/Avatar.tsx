@@ -1,11 +1,10 @@
 "use client";
 
 import styles from "@/styles/loggedIn/profile/AvatarCard.module.css";
-import avatarType from "@/types/Avatar.type";
 import AvatarUser from "../../avatarUser/AvatarUser";
 
 type Props = {
-  avatar: avatarType;
+  avatar: Avatar;
   onClick: () => void;
   displaySettings: boolean;
   previewBorder: string;
