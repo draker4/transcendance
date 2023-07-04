@@ -31,7 +31,7 @@ export class ChatGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket: Socket) => {
-      const token = socket.handshake.headers.authorization.split(' ')[1];
+      const token = socket.handshake.headers.authorization?.split(' ')[1];
 
       try {
         const payload = verify(token, process.env.JWT_SECRET) as any;
@@ -70,9 +70,19 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getChannels(req.user.id);
   }
 
+  @SubscribeMessage('getAllChannels')
+  async getAllChannels() {
+    return await this.chatService.getAllChannels();
+  }
+
   @SubscribeMessage('getPongies')
   async getPongies(@Request() req) {
 	  return await this.chatService.getPongies(req.user.id);
+  }
+
+  @SubscribeMessage('getAllPongies')
+  async getAllPongies(@Request() req) {
+	  return await this.chatService.getAllPongies(req.user.id);
   }
 
   // [!] add dto pour le data

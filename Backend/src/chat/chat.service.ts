@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WsException } from '@nestjs/websockets';
 import { ChannelService } from 'src/channels/channel.service';
 import { CreatePrivateMsgChannelDto } from 'src/channels/dto/CreatePrivateMsgChannel.dto';
 import { UsersService } from 'src/users/users.service';
@@ -22,18 +23,77 @@ export class ChatService {
   ) {}
 
   async getChannels(id: string) {
-    const user = await this.usersService.getUserChannels(parseInt(id));
+    try {
+      const user = await this.usersService.getUserChannels(parseInt(id));
 
-    if (!user)
+      if (!user)
+        throw new WsException('no user found');
+
       return {
-        success: 'false',
-        channels: [],
+        success: true,
+        channels: user.channels,
       };
+    }
+    catch (error) {
+      console.log(error);
+      throw new WsException(error.message);
+    }
+  }
 
-    return {
-      success: 'true',
-      channels: user.channels,
-    };
+  async getAllChannels() {
+    try {
+      const channels = await this.channelRepository.find({
+        relations: ["avatar"],
+      });
+      throw new WsException("test");
+      const all = channels.map((channel) => {
+        return {
+          id: channel.id,
+          name: channel.name,
+          avatar: channel.avatar,
+        }
+      })
+
+      return {
+        success: true,
+        channels: all,
+      };
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
+  async getAllPongies(id: string) {
+    try {
+      const pongies = await this.userRepository.find({
+        relations: ["avatar"],
+      });
+
+      const all = await Promise.all(pongies.map(async (pongie) => {
+        if (pongie.id === parseInt(id))
+          return ;
+
+        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+          pongie.avatar.decrypt = false;
+        }
+
+        return {
+          id: pongie.id,
+          login: pongie.login,
+          avatar: pongie.avatar,
+        }
+      }));
+
+      return {
+        success: true,
+        pongies: all,
+      };
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   async joinOrCreatePrivateMsgChannel(userId: string, pongieId: string) {
@@ -66,25 +126,28 @@ export class ChatService {
   }
 
   async getPongies(id: string) {
-	const	user = await this.usersService.getUserPongies(parseInt(id));
+    try {
+      const	user = await this.usersService.getUserPongies(parseInt(id));
 
-	if (!user)
-		return {
-      "success": "false",
-      "pongies": [],
-    }
+      if (!user)
+        throw new WsException("no user found");
 
-  const pongies = await Promise.all(user.pongies.map(async (pongie) => {
-    if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
-      pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
-      pongie.avatar.decrypt = false;
-    }
-    return pongie;
-  }));
+      const pongies = await Promise.all(user.pongies.map(async (pongie) => {
+        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+          pongie.avatar.decrypt = false;
+        }
+        return pongie;
+      }));
   
-	return {
-      "success": "true",
-      "pongies": pongies,
-    };
+      return {
+          success: true,
+          pongies: pongies,
+        };
+    }
+    catch (error) {
+      console.log(error);
+      throw new WsException(error.message);
+    }
   }
 }

@@ -16,6 +16,7 @@ type Props = {
 
 export default async function NavbarFront({ avatar, profile, token }: Props) {
   const segment = useSelectedLayoutSegment();
+
   if (segment == "welcome") {
     return (
       <header>
@@ -29,6 +30,19 @@ export default async function NavbarFront({ avatar, profile, token }: Props) {
       </header>
     );
   }
+
+  if (!profile.login)
+    return (
+      <header>
+        <nav className={styles.nav}>
+          <NavbarLogo link="/home" />
+          <div>
+            <Theme />
+          </div>
+        </nav>
+      </header>
+    );
+
   return (
     <header>
       <nav className={styles.nav}>
