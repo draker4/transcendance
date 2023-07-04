@@ -54,10 +54,15 @@ export default class Profile_Service {
     return data;
   }
 
-  public async editUser(properties: Record<string, string>) {
-    console.log(properties);
 
-	const response = await this.fetchDataClientSide("", "PUT", properties.JSON);
+  public async editUser(properties: Record<string, string>) {
+    console.log("FRONT - properties = ", properties);
+
+    const body = JSON.stringify(properties)
+    console.log("FRONT - JSON.stringify(properties) = ", body);
+
+
+	const response = await this.fetchDataClientSide("", "PUT", body);
 
 	
 

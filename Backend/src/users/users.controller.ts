@@ -76,6 +76,7 @@ export class UsersController {
   }
 
 
+  // [!] utiliser trycatch pour manip la database
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
     console.log("User @Put called, properties = \n", properties);
