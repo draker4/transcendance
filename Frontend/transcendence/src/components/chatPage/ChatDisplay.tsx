@@ -6,7 +6,12 @@ import { ReactNode } from "react";
 import { Socket } from "socket.io-client";
 import ChatPrivateMsg from "./privateMsg/ChatPrivateMsg";
 
-export default function ChatClient({ socket, display, littleScreen, closeDisplay }: {
+export default function ChatClient({
+	socket,
+	display,
+	littleScreen,
+	closeDisplay,
+}: {
 	socket: Socket;
 	display: Channel | Pongie | undefined;
 	littleScreen: boolean;

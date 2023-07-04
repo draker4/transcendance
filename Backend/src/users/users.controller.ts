@@ -164,32 +164,36 @@ export class UsersController {
   @Get('join')
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
-    const user2 = await this.usersService.getUserChannels(34);
+    const user2 = await this.usersService.getUserChannels(2);
+    const user3 = await this.usersService.getUserChannels(3);
 
-    const channel = await this.usersService.getChannelByName("test");
+    const channel1 = await this.usersService.getChannelByName("test1");
+    const channel2 = await this.usersService.getChannelByName("test2");
+    const channel3 = await this.usersService.getChannelByName("test3");
 
-    // user1.channels.push(channel);
-    // user2.channels.push(channel);
-
-    await this.usersService.updateUserChannels(user1, channel);
-    await this.usersService.updateUserChannels(user2, channel);
-    // await this.usersService.saveUserEntity(user1);
+    // await this.usersService.updateUserChannels(user1, channel1);
+    // await this.usersService.updateUserChannels(user1, channel2);
+    // await this.usersService.updateUserChannels(user1, channel3);
+    // await this.usersService.updateUserChannels(user2, channel1);
+    // await this.usersService.updateUserChannels(user2, channel2);
+    // await this.usersService.updateUserChannels(user2, channel3);
+    await this.usersService.updateUserChannels(user3, channel1);
+    await this.usersService.updateUserChannels(user3, channel2);
+    await this.usersService.updateUserChannels(user3, channel3);
   }
 
   @Public()
   @Get('addPongie')
   async addPongie() {
     const user1 = await this.usersService.getUserPongies(1);
-    const user2 = await this.usersService.getUserPongies(34);
+    const user2 = await this.usersService.getUserPongies(2);
+    const user3 = await this.usersService.getUserPongies(3);
 
-    // user1.pongies.push(user2);
-    // user2.pongies.push(user1);
-
-    // await Promise.all([
-    //   this.usersService.saveUserEntity(user1),
-    //   this.usersService.saveUserEntity(user2),
-    // ]);
     await this.usersService.updateUserPongies(user1, user2);
+    await this.usersService.updateUserPongies(user1, user3);
     await this.usersService.updateUserPongies(user2, user1);
+    await this.usersService.updateUserPongies(user2, user3);
+    await this.usersService.updateUserPongies(user3, user1);
+    await this.usersService.updateUserPongies(user3, user2);
   }
 }

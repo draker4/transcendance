@@ -7,14 +7,16 @@ import { useEffect } from "react";
 export default async function ChatBtn({ token } : {
 	token: string | undefined;
 }) {
-	const	chatService = new ChatService(token as string);
-	
+	const chatService = new ChatService(token as string);
+
 	useEffect(() => {
 		return () => {
-			if (chatService.socket)
-				chatService.socket.disconnect();
-		}
-	}, [chatService.socket]);
+			chatService.socket?.off("connect_error");
+			chatService.socket?.off("error");
+			chatService.socket?.off("exception");
+			chatService.socket?.disconnect();
+		};
+	  }, [chatService.socket]);
 
 	return (
 		<FontAwesomeIcon

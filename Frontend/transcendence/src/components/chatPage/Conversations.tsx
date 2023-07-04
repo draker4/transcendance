@@ -5,6 +5,7 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { Socket } from "socket.io-client";
+import SearchBar from "./SearchBar";
 
 export default function Chat({ socket, maxWidth, openDisplay }: {
 	socket: Socket;
@@ -86,7 +87,7 @@ export default function Chat({ socket, maxWidth, openDisplay }: {
 
 	return (
 		<div className={styles.main} style={{maxWidth: maxWidth}}>
-			<h3>Recherche</h3>
+			<SearchBar socket={socket} />
 			<div className={styles.title}>
 				<h3>Discussions</h3>
 				<FontAwesomeIcon

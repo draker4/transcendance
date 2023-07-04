@@ -14,6 +14,7 @@ export default function ChatClient({ token }: {
 	const	[littleScreen, setLittleScreen] = useState<boolean>(true);
 	const	[open, setOpen] = useState<boolean>(false);
 	const	[display, setDisplay] = useState<Channel | Pongie>();
+	const	[error, setError] = useState<boolean>(false);
 	const	chatService = new ChatService(token);
 
 	const	openDisplay = (display: Channel | Pongie) => {
@@ -23,6 +24,10 @@ export default function ChatClient({ token }: {
 
 	const	closeDisplay = () => {
 		setOpen(false);
+	}
+
+	const	handleError = () => {
+		setError(true);
 	}
 
 	useEffect(() => {
@@ -38,9 +43,15 @@ export default function ChatClient({ token }: {
 		return () => {
 		  window.removeEventListener("resize", handleResize);
 		};
-	  }, []);
+	}, []);
 
-	if (!chatService.socket) {
+	useEffect(() => {
+		chatService.socket?.on('exception', () => {
+			setError(true);
+		});
+	}, [chatService]);
+
+	if (!chatService.socket || error) {
 		return (
 			<div className={stylesError.error}>
 				<h2>Oops... Something went wrong!</h2>
