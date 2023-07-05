@@ -3,14 +3,15 @@ import AvatarUser from "../loggedIn/avatarUser/AvatarUser";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faFaceLaughBeam, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { Socket } from "socket.io-client";
 import SearchBar from "./SearchBar";
 
 export default function Chat({ socket, maxWidth, openDisplay }: {
 	socket: Socket;
 	maxWidth: string;
-	openDisplay: (display: Channel | Pongie) => void;
+	openDisplay: (display: Display) => void;
 }) {
 	const	[channels, setChannels] = useState<Channel[]>([]);
 	const	[pongies, setPongies] = useState<Pongie[]>([]);
@@ -69,31 +70,49 @@ export default function Chat({ socket, maxWidth, openDisplay }: {
 	});
   
 	useEffect(() => {
-	  socket?.emit(
-		"getChannels",
-		(payload: { success: boolean; channels: Channel[] }) => {
-			if (payload.success)
-				setChannels(payload.channels);
-		}
-	  );
-	  socket?.emit(
-		"getPongies",
-		async (payload: { success: boolean; pongies: Pongie[] }) => {
-			if (payload.success)
-				setPongies(payload.pongies);
+		socket?.emit("getChannels", (channels: Channel[]) => {
+			setChannels(channels);
+		});
+		socket?.emit("getPongies", (pongies: Pongie[]) => {
+			setPongies(pongies);
 		}
 	  );
 	}, [socket]);
+
+	const	handleClickPongie = () => {
+		openDisplay({ button: "pongies" });
+	}
+
+	const	handleClickChannel = () => {
+		openDisplay({ button: "channels" });
+	}
+
+	const	handleClickNew = () => {
+		openDisplay({ button: "new" });
+	}
 
 	return (
 		<div className={styles.main} style={{maxWidth: maxWidth}}>
 			<SearchBar socket={socket} />
 			<div className={styles.title}>
 				<h3>Discussions</h3>
-				<FontAwesomeIcon
-					icon={faPenToSquare}
-					className={styles.menu}
-				/>
+				<div className={styles.icons}>
+					<FontAwesomeIcon
+						icon={faFaceLaughBeam}
+						className={styles.menu}
+						onClick={handleClickPongie}
+					/>
+					<FontAwesomeIcon
+						icon={faPeopleGroup}
+						className={styles.menu}
+						onClick={handleClickChannel}
+					/>
+					<FontAwesomeIcon
+						icon={faPenToSquare}
+						className={styles.menu}
+						onClick={handleClickNew}
+					/>
+				</div>
 			</div>
 			{channelsList}
 			{pongiesList}

@@ -9,3 +9,21 @@
 .noPadding {
 	padding: 0;
 }
+
+.icon, .iconArrow {
+	/* border: 1px solid red; */
+	width: 30px;
+	height: 30px;
+}
+
+.iconArrow {
+	cursor: pointer;
+}
+
+.iconArrow:hover {
+	scale: 1.05;
+}
+
+.iconArrow:active {
+	scale: 0.95;
+}

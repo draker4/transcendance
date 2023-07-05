@@ -6,7 +6,7 @@ import { ChatSocketProvider } from "@/context/ChatSocketContext";
 import { useEffect } from "react";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-export default async function ChatClient({ token }:
+export default function ChatClient({ token }:
 	{ token: string | undefined }) {
 
 	const	segment = useSelectedLayoutSegment();

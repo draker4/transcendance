@@ -13,11 +13,11 @@ export default function ChatClient({ token }: {
 }) {
 	const	[littleScreen, setLittleScreen] = useState<boolean>(true);
 	const	[open, setOpen] = useState<boolean>(false);
-	const	[display, setDisplay] = useState<Channel | Pongie>();
+	const	[display, setDisplay] = useState<Display>();
 	const	[error, setError] = useState<boolean>(false);
 	const	chatService = new ChatService(token);
 
-	const	openDisplay = (display: Channel | Pongie) => {
+	const	openDisplay = (display: Display) => {
 		setOpen(true);
 		setDisplay(display);
 	}
@@ -90,7 +90,7 @@ export default function ChatClient({ token }: {
 		<div className={styles.main}>
 			<Conversations
 				socket={chatService.socket}
-				maxWidth="300px"
+				maxWidth="400px"
 				openDisplay={openDisplay}
 			/>
 			<ChatDisplay

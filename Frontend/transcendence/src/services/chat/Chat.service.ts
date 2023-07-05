@@ -37,7 +37,7 @@ export default class ChatService {
 	
 		// Catching error or exception will force disconnect then reconnect
 		this.socket.on("connect_error", (error: any) => {
-		  console.log("Socket connection error:", error);
+		//   console.log("Socket connection error:", error);
 		  this.disconnect(true);
 		});
 	

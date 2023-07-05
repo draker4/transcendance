@@ -29,10 +29,7 @@ export class ChatService {
       if (!user)
         throw new WsException('no user found');
 
-      return {
-        success: true,
-        channels: user.channels,
-      };
+      return user.channels;
     }
     catch (error) {
       console.log(error);
@@ -45,7 +42,7 @@ export class ChatService {
       const channels = await this.channelRepository.find({
         relations: ["avatar"],
       });
-      throw new WsException("test");
+
       const all = channels.map((channel) => {
         return {
           id: channel.id,
@@ -54,10 +51,7 @@ export class ChatService {
         }
       })
 
-      return {
-        success: true,
-        channels: all,
-      };
+      return all;
     }
     catch (error) {
       throw new WsException(error.message);
@@ -86,10 +80,7 @@ export class ChatService {
         }
       }));
 
-      return {
-        success: true,
-        pongies: all,
-      };
+      return all;
     }
     catch (error) {
       throw new WsException(error.message);
@@ -140,10 +131,7 @@ export class ChatService {
         return pongie;
       }));
   
-      return {
-          success: true,
-          pongies: pongies,
-        };
+      return pongies;
     }
     catch (error) {
       console.log(error);
