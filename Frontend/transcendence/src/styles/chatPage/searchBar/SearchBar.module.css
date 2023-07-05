@@ -77,3 +77,7 @@
 .name {
 	margin-left: 10px;
 }
+
+.error {
+	color: var(--notif);
+}

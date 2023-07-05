@@ -17,10 +17,41 @@ export default function SearchBar({ socket, search, openDisplay }: {
 	const	[channels, setChannels] = useState<Channel []>([]);
 	const	[pongies, setPongies] = useState<Pongie []>([]);
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
+	const	[error, setError] = useState<ListError | null>(null);
 
-	
+	const	verifyPongie = (text: string): ListError => {
+		if (text.includes(" "))
+			return {
+				id: -1,
+				error: true,
+				msg: "No space in the login please",
+			};
+		
+		return {
+			id: -1,
+			error: false,
+			msg: "",
+		};
+	}
+
+	const	verifyChannel = (text: string) => {
+		if (text.includes("'") || text.includes('"'))
+			return {
+				id: -1,
+				error: true,
+				msg: "No quotes in the name please",
+			};
+		
+		return {
+			id: -1,
+			error: false,
+			msg: "",
+		};
+	}
+
 	const	handleBlur = () => {
 		setList([]);
+		setError(null);
 	}
 
 	if (search === "all") {
@@ -41,6 +72,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 			
 			if (!text) {
 				setList([]);
+				setError(null);
 				return ;
 			}
 	
@@ -57,6 +89,16 @@ export default function SearchBar({ socket, search, openDisplay }: {
 			list = list.concat(
 				pongies.filter(pongie => pongie?.login.toLowerCase().includes(textlowerCase))
 			);
+
+			if (list.length === 0) {
+				const	err: ListError = verifyChannel(text);
+
+				if (err.error) {
+					setList([]);
+					setError(err);
+					return ;
+				}
+			}
 	
 			if (!hasChannel) {
 				const	addChannel: CreateOne = {
@@ -82,6 +124,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 
 		return <Search
 					list={list}
+					error={error}
 					getData={getData}
 					createList={createList}
 					handleBlur={handleBlur}
@@ -102,6 +145,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 		const	createList = (text: string) => {			
 			if (!text) {
 				setList([]);
+				setError(null);
 				return ;
 			}
 	
@@ -114,6 +158,14 @@ export default function SearchBar({ socket, search, openDisplay }: {
 			);
 
 			if (list.length === 0) {
+				const	err: ListError = verifyPongie(text);
+
+				if (err.error) {
+					setList([]);
+					setError(err);
+					return ;
+				}
+
 				const	addPongie: CreateOne = {
 					id: -1,
 					avatar: {
@@ -137,6 +189,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 
 		return <Search
 					list={list}
+					error={error}
 					getData={getData}
 					createList={createList}
 					handleBlur={handleBlur}
@@ -157,6 +210,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 		const	createList = (text: string) => {			
 			if (!text) {
 				setList([]);
+				setError(null);
 				return ;
 			}
 	
@@ -169,6 +223,14 @@ export default function SearchBar({ socket, search, openDisplay }: {
 			);
 
 			if (list.length === 0) {
+				const	err: ListError = verifyChannel(text);
+
+				if (err.error) {
+					setList([]);
+					setError(err);
+					return ;
+				}
+
 				const	addChannel: CreateOne = {
 					id: -1,
 					avatar: {
@@ -191,6 +253,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 		}
 
 		return <Search
+					error={error}
 					list={list}
 					getData={getData}
 					createList={createList}

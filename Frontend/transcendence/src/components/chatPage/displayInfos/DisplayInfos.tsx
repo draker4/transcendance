@@ -11,11 +11,11 @@ export default function DisplayInfos({
 	display,
 	openDisplay,
 }: {
-	icon: ReactNode,
-	socket: Socket,
+	icon: ReactNode;
+	socket: Socket;
 	display: {
-		"button": string,
-	}
+		button: string,
+	};
 	openDisplay: (display: Display) => void;
 }) {
 

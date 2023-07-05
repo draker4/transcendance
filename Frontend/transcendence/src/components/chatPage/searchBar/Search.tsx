@@ -5,8 +5,9 @@ import { ChangeEvent } from "react";
 import React from "react";
 import AvatarUser from "../../loggedIn/avatarUser/AvatarUser";
 
-export default function Search({ list, getData, createList, handleBlur, openDisplay }: {
+export default function Search({ list, error, getData, createList, handleBlur, openDisplay }: {
 	list: (Channel | Pongie | CreateOne) [];
+	error: ListError | null;
 	getData: (event: React.MouseEvent<HTMLInputElement>) => void;
 	createList: (text: string) => void;
 	handleBlur: () => void;
@@ -22,9 +23,13 @@ export default function Search({ list, getData, createList, handleBlur, openDisp
 		else
 			key = key.concat(" pongie");
 
+		const	handleClick = () => {
+			openDisplay(item);
+		}
+
 		return (
 			<React.Fragment key={key}>
-				<li onMouseDown={() => openDisplay(item)}>
+				<li onMouseDown={handleClick}>
 					<div className={styles.avatar}>
 						<AvatarUser
 							avatar={item.avatar}
@@ -69,6 +74,12 @@ export default function Search({ list, getData, createList, handleBlur, openDisp
 					className={styles.icon}
 				/>
 			</div>
+			{
+				error &&
+				<div className={styles.dropdown + " " + styles.error}>
+					{error.msg}
+				</div>
+			}
 			{
 				list.length !== 0 &&
 				<div className={styles.dropdown}>
