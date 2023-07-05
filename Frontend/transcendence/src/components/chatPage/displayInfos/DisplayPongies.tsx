@@ -24,6 +24,7 @@ export default function DisplayInfos({
 			<React.Fragment key={pongie.id}>
 				<div
 					className={styles.list}
+					onClick={() => openDisplay(pongie)}
 				>
 					<div className={styles.avatar}>
 						<AvatarUser

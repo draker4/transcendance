@@ -143,4 +143,59 @@ export default function SearchBar({ socket, search, openDisplay }: {
 					openDisplay={openDisplay}
 				/>
 	}
+
+	if (search === "myChannels") {
+
+		const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
+			socket.emit('getChannels', (channels: Channel[]) => {
+					setChannels(channels);
+			});
+	
+			createList(event.currentTarget.value);
+		}
+	
+		const	createList = (text: string) => {			
+			if (!text) {
+				setList([]);
+				return ;
+			}
+	
+			const	textlowerCase: string = text.toLocaleLowerCase();
+			
+			let		list: (Channel | Pongie | CreateOne)[] = [];
+	
+			list = list.concat(
+				channels.filter(channel => channel?.name.toLowerCase().includes(textlowerCase))
+			);
+
+			if (list.length === 0) {
+				const	addChannel: CreateOne = {
+					id: -1,
+					avatar: {
+						name: text,
+						image: "",
+						variant: "rounded",
+						borderColor: "#22d3ee",
+						backgroundColor: "#22d3ee",
+						text: text,
+						empty: true,
+						isChannel: true,
+						decrypt: false,
+					},
+					name: "Add channel " + text,
+				}
+				list = list.concat(addChannel);
+			}
+	
+			setList(list);
+		}
+
+		return <Search
+					list={list}
+					getData={getData}
+					createList={createList}
+					handleBlur={handleBlur}
+					openDisplay={openDisplay}
+				/>
+	}
 }

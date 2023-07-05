@@ -30,6 +30,7 @@ export default function DisplayInfos({
 		return <DisplayChannels
 					icon={icon}
 					socket={socket}
+					openDisplay={openDisplay}
 				/>
 
 	return (
