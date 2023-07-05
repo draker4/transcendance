@@ -1,4 +1,4 @@
-import styles from "@/styles/Lobby/selector/Selector.module.css";
+import styles from "@/styles/lobby/selector/Selector.module.css";
 
 type Props = {
   id: string;
