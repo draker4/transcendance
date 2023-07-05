@@ -2,7 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/chatPage/displayInfos/DisplayInfos.module.css";
 import React from "react";
-import AvatarUser from "@/components/loggedIn/avatarUser/AvatarUser";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import SearchBar from "../searchBar/SearchBar";

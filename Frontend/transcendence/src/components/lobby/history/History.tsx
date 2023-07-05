@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import styles from "@/styles/lobby/history/History.module.css";
+import ContentLoading from "../ContentLoading";
+
 type Props = {
   Lobby: any;
   isLoading: boolean;
@@ -45,9 +47,7 @@ export default function History({ Lobby, isLoading }: Props) {
 
   if (isLoading) {
     return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
-      </div>
+      <ContentLoading />
     );
   }
 

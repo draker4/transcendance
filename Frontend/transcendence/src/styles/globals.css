@@ -24,6 +24,7 @@
   --secondary-lighter3-light: rgb(220, 226, 233);
 
   --tertiary-light: rgba(15, 23, 42, 1);
+  --tertiary-lighter1-light: rgb(72, 83, 107);
 
   --accent-light: rgba(34, 211, 238, 1);
   --accent-lighter1-light: rgb(159, 225, 236);
@@ -45,6 +46,7 @@
   --secondary-lighter3-dark: rgb(58, 62, 66);
 
   --tertiary-dark: rgb(200, 203, 210);
+  --tertiary-lighter1-dark: rgb(127, 130, 138);
 
   --accent-dark: rgba(34, 211, 238, 1);
   --accent-lighter1-dark: rgb(159, 225, 236);
@@ -76,6 +78,7 @@
   --secondary-lighter3: var(--secondary-lighter3-dark);
 
   --tertiary: var(--tertiary-dark);
+  --tertiary-lighter1: var(--tertiary-lighter1-dark);
 
   --accent: var(--accent-dark);
   --accent-lighter1: var(--accent-lighter1-dark);
@@ -97,6 +100,7 @@
   --secondary-lighter3: var(--secondary-lighter3-light);
 
   --tertiary: var(--tertiary-light);
+  --tertiary-lighter1: var(--tertiary-lighter1-light);
 
   --accent: var(--accent-light);
   --accent-lighter1: var(--accent-lighter1-light);

@@ -2,24 +2,23 @@ import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/chatPage/displayInfos/DisplayInfos.module.css";
 import React from "react";
-import AvatarUser from "@/components/loggedIn/avatarUser/AvatarUser";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 import SearchBar from "../searchBar/SearchBar";
 
 export default function DisplayInfos({
-	icon,
-	socket,
-	openDisplay,
+  icon,
+  socket,
+  openDisplay,
 }: {
-	icon: ReactNode;
-	socket: Socket;
-	openDisplay: (display: Display) => void;
+  icon: ReactNode;
+  socket: Socket;
+  openDisplay: (display: Display) => void;
 }) {
-	const	[pongies, setPongies] = useState<Pongie []>([]);
+  const [pongies, setPongies] = useState<Pongie[]>([]);
 
-	const pongiesList = pongies.map((pongie) => {
-
+  const pongiesList = pongies.map((pongie) => {
 		return (
 			<React.Fragment key={pongie.id}>
 				<div
@@ -69,5 +68,5 @@ export default function DisplayInfos({
 				{pongiesList}
 			</div>
 		</>
-	)
+	);
 }

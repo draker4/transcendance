@@ -6,6 +6,7 @@ import Image from "next/image";
 import DefineType from "@/components/lobby/league/DefineType";
 import Leaderboard from "@/components/lobby/league/Leaderboard";
 import StreamGame from "@/components/lobby/league/StreamGame";
+import ContentLoading from "../ContentLoading";
 
 type Props = {
   Lobby: any;
@@ -33,11 +34,7 @@ export default function League({ Lobby, isLoading }: Props) {
 
   // -------------------------------------  RENDU  ------------------------------------ //
   if (isLoading) {
-    return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
-      </div>
-    );
+    return <ContentLoading />;
   }
 
   if (inMatchMaking) {
