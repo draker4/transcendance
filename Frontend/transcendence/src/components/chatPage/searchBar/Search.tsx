@@ -1,7 +1,7 @@
 import styles from "@/styles/chatPage/searchBar/SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import React from "react";
 import AvatarUser from "../../avatarUser/AvatarUser";
 
@@ -20,6 +20,7 @@ export default function Search({
   handleBlur: () => void;
   handleClick: (display: Display) => void;
 }) {
+
   const renderList = list.map((item) => {
     let key: string = item.id.toString();
 
@@ -30,7 +31,7 @@ export default function Search({
 
     return (
       <React.Fragment key={key}>
-        <li onMouseDown={handleClick}>
+        <li onMouseDown={() => handleClick(item)}>
           <div className={styles.avatar}>
             <AvatarUser
               avatar={item.avatar}

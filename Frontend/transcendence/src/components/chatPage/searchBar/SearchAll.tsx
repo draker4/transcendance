@@ -19,7 +19,7 @@ export default function SearchBar({ socket, verifyChannel, openDisplay }: {
 	}
 
 	const	handleClick = (item: Display) => {
-			openDisplay(item);
+		openDisplay(item);
 	}
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
