@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFaceLaughBeam, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { Socket } from "socket.io-client";
-import SearchBar from "./SearchBar";
+import SearchBar from "./searchBar/SearchBar";
 
-export default function Chat({ socket, maxWidth, openDisplay }: {
+export default function Conversations({ socket, maxWidth, openDisplay }: {
 	socket: Socket;
 	maxWidth: string;
 	openDisplay: (display: Display) => void;
@@ -93,7 +93,13 @@ export default function Chat({ socket, maxWidth, openDisplay }: {
 
 	return (
 		<div className={styles.main} style={{maxWidth: maxWidth}}>
-			<SearchBar socket={socket} />
+
+			<SearchBar
+				socket={socket}
+				search="all"
+				openDisplay={openDisplay}
+			/>
+
 			<div className={styles.title}>
 				<h3>Discussions</h3>
 				<div className={styles.icons}>

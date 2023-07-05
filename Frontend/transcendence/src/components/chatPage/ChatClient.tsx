@@ -81,6 +81,7 @@ export default function ChatClient({ token }: {
 					display={display}
 					littleScreen={littleScreen}
 					closeDisplay={closeDisplay}
+					openDisplay={openDisplay}
 				/>
 			</div>
 		);
@@ -98,6 +99,7 @@ export default function ChatClient({ token }: {
 				display={display}
 				littleScreen={littleScreen}
 				closeDisplay={closeDisplay}
+				openDisplay={openDisplay}
 			/>
 		</div>
 	)
