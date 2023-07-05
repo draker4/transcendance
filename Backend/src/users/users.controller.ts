@@ -197,13 +197,13 @@ export class UsersController {
   async addPongie() {
     const user1 = await this.usersService.getUserPongies(1);
     const user2 = await this.usersService.getUserPongies(2);
-    // const user3 = await this.usersService.getUserPongies(3);
+    const user3 = await this.usersService.getUserPongies(3);
 
     await this.usersService.updateUserPongies(user1, user2);
-    // await this.usersService.updateUserPongies(user1, user3);
+    await this.usersService.updateUserPongies(user1, user3);
     await this.usersService.updateUserPongies(user2, user1);
-    // await this.usersService.updateUserPongies(user2, user3);
-    // await this.usersService.updateUserPongies(user3, user1);
-    // await this.usersService.updateUserPongies(user3, user2);
+    await this.usersService.updateUserPongies(user2, user3);
+    await this.usersService.updateUserPongies(user3, user1);
+    await this.usersService.updateUserPongies(user3, user2);
   }
 }

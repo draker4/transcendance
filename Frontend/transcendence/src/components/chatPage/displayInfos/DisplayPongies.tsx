@@ -17,6 +17,23 @@ export default function DisplayInfos({
   openDisplay: (display: Display) => void;
 }) {
   const [pongies, setPongies] = useState<Pongie[]>([]);
+  const	[confirm, setConfirm] = useState<Pongie | null>(null);
+
+  const	deleteItem = (pongie: Pongie, event: React.MouseEvent) => {
+	event.stopPropagation();
+	const updatedPongies = pongies.filter((item) => item !== pongie);
+	setPongies(updatedPongies);
+  }
+
+  const	cancel = (event: React.MouseEvent) => {
+	event.stopPropagation();
+	setConfirm(null);
+  }
+
+  const	confirmDelete = (pongie: Pongie, event: React.MouseEvent) => {
+	event.stopPropagation();
+	setConfirm(pongie);
+  }
 
   const pongiesList = pongies.map((pongie) => {
 		return (
@@ -25,20 +42,35 @@ export default function DisplayInfos({
 					className={styles.list}
 					onClick={() => openDisplay(pongie)}
 				>
-					<div className={styles.avatar}>
-						<AvatarUser
-							avatar={pongie.avatar}
-							borderSize="2px"
-							borderColor={pongie.avatar.borderColor}
-							backgroundColor={pongie.avatar.backgroundColor}
-						/>
+					<div className={styles.flex}>
+						<div className={styles.avatar}>
+							<AvatarUser
+								avatar={pongie.avatar}
+								borderSize="2px"
+								borderColor={pongie.avatar.borderColor}
+								backgroundColor={pongie.avatar.backgroundColor}
+							/>
+						</div>
+						<div className={styles.name}>
+							{pongie.login}
+						</div>
+						<div className={styles.delete}>
+							<FontAwesomeIcon
+								icon={faTrashCan}
+								onClick={(event) => confirmDelete(pongie, event)}
+							/>
+						</div>
 					</div>
-					<div className={styles.name}>
-						{pongie.login}
-					</div>
-					<div className={styles.delete}>
-						<FontAwesomeIcon icon={faTrashCan} />
-					</div>
+
+					{
+						confirm === pongie && 
+						<div className={styles.confirm}>
+							<p>Are you sure?</p>
+							<button onClick={(event) => deleteItem(pongie, event)}>Yes</button>
+							<button onClick={(event) => cancel(event)}>No</button>
+						</div>
+  					}
+
 				</div>
 			</React.Fragment>
 		);

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("user_pongie_relation")
