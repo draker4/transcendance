@@ -3,10 +3,11 @@ import { useState } from "react";
 import React from "react";
 import Search from "./Search";
 
-export default function SearchBar({ socket, verifyChannel, openDisplay }: {
+export default function SearchBar({ socket, verifyChannel, openDisplay, placeHolder }: {
 	socket: Socket;
 	verifyChannel: (text: string) => ListError;
 	openDisplay: (display: Display) => void;
+	placeHolder: string;
 }) {
 	const	[channels, setChannels] = useState<Channel []>([]);
 	const	[pongies, setPongies] = useState<Pongie []>([]);
@@ -96,5 +97,6 @@ export default function SearchBar({ socket, verifyChannel, openDisplay }: {
 				createList={createList}
 				handleBlur={handleBlur}
 				handleClick={handleClick}
+				placeHolder={placeHolder}
 			/>
 }

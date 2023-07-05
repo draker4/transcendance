@@ -12,6 +12,7 @@ export default function Search({
   createList,
   handleBlur,
   handleClick,
+  placeHolder,
 }: {
   list: (Channel | Pongie | CreateOne)[];
   error: ListError | null;
@@ -19,6 +20,7 @@ export default function Search({
   createList: (text: string) => void;
   handleBlur: () => void;
   handleClick: (display: Display) => void;
+  placeHolder: string;
 }) {
 
   const renderList = list.map((item) => {
@@ -56,7 +58,7 @@ export default function Search({
       <div className={styles.searchBar}>
         <input
           type="text"
-          placeholder="Search"
+          placeholder={placeHolder}
           onClick={getData}
           onChange={handleSearch}
         />

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/chatPage/displayInfos/DisplayInfos.module.css";
 import React from "react";
@@ -18,12 +18,26 @@ export default function DisplayInfos({
 	};
 	openDisplay: (display: Display) => void;
 }) {
+	const	[confirm, setConfirm] = useState<Pongie | Channel | null>(null);
+	
+	const	cancel = (event: React.MouseEvent) => {
+		event.stopPropagation();
+		setConfirm(null);
+	  }
+	
+	  const	confirmDelete = (data: Pongie | Channel, event: React.MouseEvent) => {
+		event.stopPropagation();
+		setConfirm(data);
+	  }
 
 	if (display.button === "pongies")
 		return <DisplayPongies
 					icon={icon}
 					socket={socket}
 					openDisplay={openDisplay}
+					confirm={confirm}
+					cancel={cancel}
+					confirmDelete={confirmDelete}
 				/>
 
 	if (display.button === "channels")
@@ -31,6 +45,9 @@ export default function DisplayInfos({
 					icon={icon}
 					socket={socket}
 					openDisplay={openDisplay}
+					confirm={confirm}
+					cancel={cancel}
+					confirmDelete={confirmDelete}
 				/>
 
 	return (

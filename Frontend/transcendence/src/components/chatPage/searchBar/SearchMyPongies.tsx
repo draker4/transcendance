@@ -3,10 +3,11 @@ import { useState } from "react";
 import React from "react";
 import Search from "./Search";
 
-export default function SearchMyPongies({ socket, verifyPongie, openDisplay }: {
+export default function SearchMyPongies({ socket, verifyPongie, openDisplay, placeHolder }: {
 	socket: Socket;
 	verifyPongie: (text: string) => ListError;
 	openDisplay: (display: Display) => void;
+	placeHolder: string;
 }) {
 	const	[pongies, setPongies] = useState<Pongie []>([]);
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
@@ -83,5 +84,6 @@ export default function SearchMyPongies({ socket, verifyPongie, openDisplay }: {
 				createList={createList}
 				handleBlur={handleBlur}
 				handleClick={handleClick}
+				placeHolder={placeHolder}
 			/>
 }

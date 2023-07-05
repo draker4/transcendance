@@ -4,10 +4,11 @@ import SearchAll from "./SearchAll";
 import SearchMyPongies from "./SearchMyPongies";
 import SearchMyChannels from "./SearchMyChannels";
 
-export default function SearchBar({ socket, search, openDisplay }: {
+export default function SearchBar({ socket, search, openDisplay, placeHolder }: {
 	socket: Socket;
 	search: "all" | "myPongies" | "myChannels";
 	openDisplay: (display: Display) => void;
+	placeHolder: string;
 }) {
 
 	const	verifyPongie = (text: string): ListError => {
@@ -45,6 +46,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 					socket={socket}
 					openDisplay={openDisplay}
 					verifyChannel={verifyChannel}
+					placeHolder={placeHolder}
 				/>
 
 	if (search === "myPongies")
@@ -52,6 +54,7 @@ export default function SearchBar({ socket, search, openDisplay }: {
 					socket={socket}
 					openDisplay={openDisplay}
 					verifyPongie={verifyPongie}
+					placeHolder={placeHolder}
 				/>
 
 	if (search === "myChannels")
@@ -59,5 +62,6 @@ export default function SearchBar({ socket, search, openDisplay }: {
 					socket={socket}
 					openDisplay={openDisplay}
 					verifyChannel={verifyChannel}
+					placeHolder={placeHolder}
 				/>
 }
