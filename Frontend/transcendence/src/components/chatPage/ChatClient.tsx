@@ -41,6 +41,7 @@ export default function ChatClient({ token }: {
 		};
 	}, []);
 
+	// WsException Managing
 	useEffect(() => {
 		chatService.socket?.on('exception', () => {
 			setError(true);

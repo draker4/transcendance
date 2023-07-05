@@ -8,6 +8,7 @@ export default class ChatService {
 	public	reconnect: boolean = false;
 	public	token: string | undefined;
 
+	// Singleton
     constructor(token: string) {
         if (ChatService.instance 
 			&& !ChatService.instance.reconnect
@@ -19,6 +20,7 @@ export default class ChatService {
         ChatService.instance = this;
     }
 
+	// Create socket + listen errors & exceptions
 	private initializeSocket(token: string) {
 
 		if (this.socket)
@@ -33,6 +35,7 @@ export default class ChatService {
 		  path: "/chat/socket.io",
 		});
 	
+		// Catching error or exception will force disconnect then reconnect
 		this.socket.on("connect_error", (error: any) => {
 		  console.log("Socket connection error:", error);
 		  this.disconnect(true);
@@ -49,6 +52,7 @@ export default class ChatService {
 		});
 	}
 
+	// Disconnect socket + stop listen errors & exceptions
 	public disconnect(reconnect: boolean) {
 		if (this.socket) {
 			this.socket.off("connect_error");
