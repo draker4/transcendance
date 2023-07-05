@@ -14,7 +14,7 @@ type Props = {
   token: string | undefined;
 };
 
-export default async function NavbarFront({ avatar, profile, token }: Props) {
+export default function NavbarFront({ avatar, profile, token }: Props) {
   const segment = useSelectedLayoutSegment();
 
   if (segment == "welcome") {

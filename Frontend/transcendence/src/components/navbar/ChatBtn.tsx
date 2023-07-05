@@ -4,7 +4,7 @@ import styles from "@/styles/navbar/Navbar.module.css";
 import ChatService from "@/services/chat/Chat.service";
 import { useEffect } from "react";
 
-export default async function ChatBtn({ token } : {
+export default function ChatBtn({ token } : {
 	token: string | undefined;
 }) {
 	const chatService = new ChatService(token as string);
