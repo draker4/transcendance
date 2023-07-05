@@ -78,6 +78,13 @@
 	margin-left: 10px;
 }
 
-.error {
+.error, .notif {
 	color: var(--notif);
+}
+
+.notif {
+	/* border: 1px solid red; */
+	text-align: center;
+	padding: 5px;
+	font-size: 1.1rem;
 }

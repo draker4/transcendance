@@ -1,19 +1,18 @@
 import styles from "@/styles/chatPage/searchBar/SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import React from "react";
 import AvatarUser from "../../loggedIn/avatarUser/AvatarUser";
 
-export default function Search({ list, error, getData, createList, handleBlur, openDisplay }: {
+export default function Search({ list, error, getData, createList, handleBlur, handleClick }: {
 	list: (Channel | Pongie | CreateOne) [];
 	error: ListError | null;
 	getData: (event: React.MouseEvent<HTMLInputElement>) => void;
 	createList: (text: string) => void;
 	handleBlur: () => void;
-	openDisplay: (display: Display) => void;
+	handleClick: (display: Display) => void;
 }) {
-
 	const	renderList = list.map((item) => {
 
 		let	key: string = item.id.toString();
@@ -23,13 +22,9 @@ export default function Search({ list, error, getData, createList, handleBlur, o
 		else
 			key = key.concat(" pongie");
 
-		const	handleClick = () => {
-			openDisplay(item);
-		}
-
 		return (
 			<React.Fragment key={key}>
-				<li onMouseDown={handleClick}>
+				<li onMouseDown={() => handleClick(item)}>
 					<div className={styles.avatar}>
 						<AvatarUser
 							avatar={item.avatar}
@@ -74,12 +69,14 @@ export default function Search({ list, error, getData, createList, handleBlur, o
 					className={styles.icon}
 				/>
 			</div>
+
 			{
 				error &&
 				<div className={styles.dropdown + " " + styles.error}>
 					{error.msg}
 				</div>
 			}
+
 			{
 				list.length !== 0 &&
 				<div className={styles.dropdown}>
@@ -88,6 +85,7 @@ export default function Search({ list, error, getData, createList, handleBlur, o
 					</ul>
 				</div>
 			}
+
 		</div>
 	)
 }
