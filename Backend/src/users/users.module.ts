@@ -16,6 +16,5 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 		UsersService,
 		CryptoService,
 	],
-	exports: [UsersService]
 })
 export class UsersModule {}

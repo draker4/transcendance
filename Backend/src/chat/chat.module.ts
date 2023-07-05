@@ -10,10 +10,12 @@ import { CryptoService } from "src/utils/crypto/crypto";
 import { ChatService } from "./chat.service";
 import { ChannelService } from "src/channels/channel.service";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
+import { UserPongieRelation } from "src/utils/typeorm/UserPongieRelation";
+import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, Channel, Avatar]),
+		TypeOrmModule.forFeature([User, Channel, Avatar, UserPongieRelation, UserChannelRelation]),
 	],
 	providers: [
 		ChatGateway,

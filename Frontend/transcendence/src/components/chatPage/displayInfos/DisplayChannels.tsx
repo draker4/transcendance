@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/chatPage/displayInfos/DisplayInfos.module.css";
 import React from "react";
@@ -18,7 +18,7 @@ export default function DisplayInfos({
 }) {
 	const	[channels, setChannels] = useState<Channel []>([]);
 
-	const pongiesList = channels.map((channel) => {
+	const channelsList = channels.map((channel) => {
 
 		return (
 			<React.Fragment key={channel.id}>
@@ -45,15 +45,17 @@ export default function DisplayInfos({
 		);
 	});
 
-	socket.emit("getChannels", (channels: Channel []) => {
-		setChannels(channels);
-	});
+	useEffect(() => {
+		socket.emit("getChannels", (channels: Channel []) => {
+			setChannels(channels);
+		});
+	}, [socket]);
 
 	return (
 		<>
 			<div className={styles.header}>
 				{icon}
-				<h3>My Pongies!</h3>
+				<h3>My Channels!</h3>
 				<div></div>
 			</div>
 			<div className={styles.main}>
@@ -64,7 +66,7 @@ export default function DisplayInfos({
 						openDisplay={openDisplay}
 					/>
 				</div>
-				{pongiesList}
+				{channelsList}
 			</div>
 		</>
 	)

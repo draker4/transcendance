@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/chatPage/displayInfos/DisplayInfos.module.css";
 import React from "react";
@@ -44,10 +44,12 @@ export default function DisplayInfos({
 			</React.Fragment>
 		);
 	});
-
-	socket.emit("getPongies", (pongies: Pongie []) => {
-		setPongies(pongies);
-	});
+	
+	useEffect(() => {
+		socket.emit("getPongies", (pongies: Pongie []) => {
+			setPongies(pongies);
+		});
+	}, [socket]);
 
 	return (
 		<>
