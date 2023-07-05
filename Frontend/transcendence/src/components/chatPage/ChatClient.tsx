@@ -26,10 +26,6 @@ export default function ChatClient({ token }: {
 		setOpen(false);
 	}
 
-	const	handleError = () => {
-		setError(true);
-	}
-
 	useEffect(() => {
 		const handleResize = () => {
 		  const screenWidth = window.innerWidth;
@@ -49,7 +45,8 @@ export default function ChatClient({ token }: {
 		chatService.socket?.on('exception', () => {
 			setError(true);
 		});
-	}, [chatService]);
+	}, [chatService.socket]);
+
 
 	if (!chatService.socket || error) {
 		return (

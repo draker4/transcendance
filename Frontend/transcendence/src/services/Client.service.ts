@@ -1,10 +1,19 @@
-import Profile from "@/services/Profile.service"
-
 class Client {
 
     private static instance: Client;
     
-    public  profile = new Profile();
+    public  profile: Profile = {
+        id: -1,
+        login: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        phone: "",
+        image: "",
+        provider: "",
+        motto: "",
+        story: "",
+      };
     public  logged = false;
     public  token: string = '';
     public  student42: boolean = false;

@@ -26,7 +26,7 @@ export default class ChatService {
 		
 		this.token = token;
 
-		this.socket = io(`http://${process.env.HOST_IP}:4000/chat`, {
+		this.socket = io(`ws://${process.env.HOST_IP}:4000/chat`, {
 		  extraHeaders: {
 			Authorization: "Bearer " + token,
 		  },
@@ -50,7 +50,6 @@ export default class ChatService {
 	}
 
 	public disconnect(reconnect: boolean) {
-		console.log("enddd", this.socket?.id);
 		if (this.socket) {
 			this.socket.off("connect_error");
 			this.socket.off("error");
