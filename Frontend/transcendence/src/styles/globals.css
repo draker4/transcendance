@@ -68,6 +68,7 @@
   --primary: var(--primary-dark);
   --primary-darker1: var(--primary-darker1-dark);
   --primary-darker2: var(--primary-darker2-dark);
+  --primary-darker3: var(--primary-darker3-dark);
 
   --secondary: var(--secondary-dark);
   --secondary-lighter1: var(--secondary-lighter1-dark);
