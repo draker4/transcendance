@@ -1,4 +1,4 @@
-import AvatarUser from "@/components/loggedIn/avatarUser/AvatarUser";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { ChatSocketContext } from "@/context/ChatSocketContext";
 import { useContext, useEffect, useState } from "react";
 import styles from "@/styles/chat/ChatHome.module.css";

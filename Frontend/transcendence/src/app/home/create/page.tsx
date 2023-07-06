@@ -1,6 +1,6 @@
 import { cookies } from "next/dist/client/components/headers";
 import fs from "fs";
-import FormLogin from "@/components/loggedIn/create/FormLogin";
+import FormLogin from "@/components/createLogin/FormLogin";
 import Profile_Service from "@/services/Profile.service";
 
 export default async function CreatePage() {
