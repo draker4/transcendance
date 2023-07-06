@@ -5,6 +5,7 @@
   align-items: center;
   width: 100%;
 }
+
 .name {
   display: flex;
   flex-flow: column nowrap;

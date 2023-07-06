@@ -45,21 +45,27 @@ export default function Lobby({ profile, token }: Props) {
     <div className={styles.lobby}>
       <nav className={styles.menu}>
         <button
-          className={`${menu === "League" ? styles.selected : ""}`}
+          className={`${
+            menu === "League" ? styles.activeBtn : styles.inactiveBtn
+          }`}
           onClick={() => setMenu("League")}
         >
           <MdLeaderboard size={40} />
           <h2>League</h2>
         </button>
         <button
-          className={`${menu === "Party" ? styles.selected : ""}`}
+          className={`${
+            menu === "Party" ? styles.activeBtn : styles.inactiveBtn
+          }`}
           onClick={() => setMenu("Party")}
         >
           <MdGames size={40} />
           <h2>Party</h2>
         </button>
         <button
-          className={`${menu === "History" ? styles.selected : ""}`}
+          className={`${
+            menu === "History" ? styles.activeBtn : styles.inactiveBtn
+          }`}
           onClick={() => setMenu("History")}
         >
           <MdHistory size={40} />

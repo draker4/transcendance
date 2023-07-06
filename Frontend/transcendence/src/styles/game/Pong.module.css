@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: var(--primary);
+  background-color: var(--secondary);
   width: 90%;
   height: 90%;
   max-width: 1000px;

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import styles from "@/styles/lobby/League/League.module.css";
 import Image from "next/image";
+import DefineType from "./DefineType";
 
 type Props = {
   Lobby: any;
@@ -10,8 +11,8 @@ type Props = {
 };
 
 export default function League({ Lobby, isLoading }: Props) {
-  // -------------------------------------Matchmake-------------------------------------//
-
+  const [type, setType] = useState<string>("classic");
+  // -----------------------------------  MATCHMACK  ---------------------------------- //
   //True si en matchmake
   const [inMatchMaking, setinMatchMake] = useState(false);
 
@@ -28,6 +29,7 @@ export default function League({ Lobby, isLoading }: Props) {
     setinMatchMake(false);
   };
 
+  // -------------------------------------  RENDU  ------------------------------------ //
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -40,21 +42,22 @@ export default function League({ Lobby, isLoading }: Props) {
     return (
       <div className={styles.league}>
         <Image
-          src={`/images/game/balls.gif`}
+          src={`/images/lobby/balls.gif`}
           alt="Searching giff"
           width="120"
           height="120"
         />
-        <button className={styles.button_back_card} onClick={Stop_Matchmake}>
-          <p>Stop searching</p>
+        <button className={styles.searchBtn} onClick={Stop_Matchmake}>
+          <p>Stop Search</p>
         </button>
       </div>
     );
   }
   return (
     <div className={styles.league}>
-      <button className={styles.button_back_card} onClick={Start_Matchmake}>
-        <p>Start searching</p>
+      <DefineType type={type} setType={setType} />
+      <button className={styles.searchBtn} onClick={Start_Matchmake}>
+        <p>Start Search</p>
       </button>
     </div>
   );

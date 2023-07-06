@@ -57,7 +57,6 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //
-
   return (
     <div className={styles.createParty}>
       <div className={styles.name}>
