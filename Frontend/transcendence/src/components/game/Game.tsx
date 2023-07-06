@@ -32,7 +32,7 @@ export default function Game({ profile, token, gameID }: Props) {
     Lobby.Get_Game_Info(gameID)
       .then((gameInfos) => {
         if (gameInfos.success == false) {
-          Lobby.Load_Page("/home/lobby");
+          Lobby.Load_Page("/home");
         } else {
           setGameInfo(gameInfos);
         }
@@ -47,7 +47,7 @@ export default function Game({ profile, token, gameID }: Props) {
 
   const Quit = () => {
     Lobby.Quit_Game();
-    Lobby.Load_Page("/home/lobby");
+    Lobby.Load_Page("/home");
   };
 
   //------------------------------------RENDU------------------------------------//

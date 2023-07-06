@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/pong/Pong.module.css";
+import styles from "@/styles/Game/Pong.module.css";
 import { useRef, useEffect } from "react";
 import { pongKeyDown, pongKeyUp } from "@/lib/Game/eventHandlers";
 import { initGame, gameLoop } from "@/lib/Game/handleGame";

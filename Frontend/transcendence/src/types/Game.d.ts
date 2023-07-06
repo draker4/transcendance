@@ -79,3 +79,17 @@ type GameInfos = {
   Type: string;
   Mode: string;
 };
+
+type Game_Settings = {
+  name: string;
+  push: boolean;
+  score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  round: 1 | 3 | 5 | 7 | 9;
+  // difficulty: 1 | 2 | 3 | 4 | 5;
+  side: "left" | "right";
+  background: string;
+  ball: string;
+  // paddle: string;
+  type: string;
+  // mode: string;
+};

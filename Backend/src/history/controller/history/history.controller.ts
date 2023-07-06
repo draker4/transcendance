@@ -3,7 +3,8 @@ import { HistoryService } from 'src/history/service/history/history.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { Get, Put, Post, Param, ParseIntPipe, Body } from '@nestjs/common';
 import { HistoryDto } from 'src/history/dto/history.dto';
-import { UserHistoryDto } from 'src/history/dto/UserHistory.dto';
+import { UpdateHistoryLevelDto } from 'src/history/dto/updateHistoryLevel.dto';
+import { ValidationPipe, UsePipes } from '@nestjs/common';
 
 @Controller('history')
 export class HistoryController {
@@ -16,23 +17,35 @@ export class HistoryController {
     return 'Working !';
   }
 
-  // 01 - api/history/user/:id - Get userHistory by userId
-  @Get(':userId')
+  // 01 - api/history - Get all history
+  @Get()
+  GetHistory() {
+    return this.historyService.getHistory();
+  }
+
+  // 02 - api/history/user/:id - Get userHistory level by userId
+  @Get('level/:userId')
   GetUserHistory(@Param('userId', ParseIntPipe) userId: number) {
-    //return this.historyService.getUserHistory(userId);
+    return this.historyService.getUserHistoryLevel(userId);
   }
 
-  // 02 - api/history/user/:id - Update PlayerHistory by userHistoryId
-  @Put(':userHistoryId')
+  // 03 - api/history/user/:id - Update PlayerHistory level by userId
+  @Put('level/:userId')
+  @UsePipes(ValidationPipe)
   UpdateUserHistory(
-    @Param('userHistoryId', ParseIntPipe) userHistoryId: number,
+    @Param('userHistoryId', ParseIntPipe) userId: number,
+    @Body() updateHistoryLevelDto: UpdateHistoryLevelDto,
   ) {
-    //return this.historyService.UpdateUserHistory(userHistoryId);
+    return this.historyService.UpdateUserHistoryLevel(
+      userId,
+      updateHistoryLevelDto,
+    );
   }
 
-  // 03 - api/history/user/init - Post Initial PlayerHistory
-  @Post('user/init')
-  PostInitialUserHistory(@Body() userHistoryDto: UserHistoryDto) {
-    //return this.historyService.PostInitialUserHistory(userHistoryDto);
+  // 11 - api/history/init - Init history
+  @Post('init')
+  @UsePipes(ValidationPipe)
+  InitHistory(@Body() historyDto: HistoryDto[]) {
+    return this.historyService.initHistory(historyDto);
   }
 }

@@ -1,59 +1,59 @@
-.First_Frame {
-  width: 100%;
-}
-
-.loading_page {
-  min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 1;
-  text-align: center;
-  background: var(--primary);
-  color: var(--tertiary);
-}
-
-.loading_page h1 {
-  align-self: center;
-}
-
-.main {
-  height: 100%;
-  width: 100%;
-}
-
-.haut {
-  height: calc(100vh - 70px);
-  width: 100%;
-  display: flex;
-  align-items: stretch;
-  padding: 30px;
-}
-
-.bas {
-  height: 100vh;
+.home {
   width: 90%;
-  margin-inline: 5%;
-}
-
-.gauche {
-  height: 100%;
-  width: 35%;
-  float: left;
-}
-
-.droite {
-  height: 100%;
-  width: 65%;
-  float: right;
-
+  margin: 0 auto;
   display: flex;
+  flex-flow: column nowrap;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  justify-content: space-between;
+}
 
-  font-family: "Inter", sans-serif;
-  padding: 10px;
+.lobby {
+  width: 100%;
+  min-height: 50%;
+  margin-block: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.menu {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.menu > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 33%;
+  height: 50px;
+  font-family: var(--title-font);
+  font-size: 13px;
+  border: 3px solid var(--secondary-lighter2);
+  border-radius: 10px;
+}
+
+.menu > button:hover {
+  border: 3px solid var(--accent-darker1);
+  cursor: pointer;
+}
+
+.selected {
+  border: 3px solid var(--accent);
+  background-color: var(--primary-darker1);
+  color: var(--accent);
+}
+
+.content {
+  width: 100%;
+  min-height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background-color: var(--secondary-lighter2-light);
 }

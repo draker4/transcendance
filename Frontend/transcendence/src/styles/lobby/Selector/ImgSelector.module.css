@@ -1,0 +1,35 @@
+.imgList {
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.imgList button {
+  border-radius: 4px;
+  font-size: 14px;
+  padding: 10px;
+  margin: 10px;
+  margin-bottom: 0px;
+}
+
+.activeButton {
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 3px solid var(--accent);
+  transition: all 0.3s ease-in;
+}
+
+.inactiveButton {
+  color: var(--secondary-lighter3);
+  background-color: var(--primary-darker);
+  border: 3px solid var(--secondary-lighter3);
+  transition: all 0.3s ease-out;
+}
+
+.inactiveButton:hover {
+  color: var(--accent-lighter1);
+  border: 3px solid var(--accent-lighter1);
+}
