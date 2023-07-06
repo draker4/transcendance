@@ -35,9 +35,9 @@ export default async function Lobby_Frame() {
   }
 
   return (
-    <main className={styles.First_Frame}>
+    <div className={styles.home}>
       <HomeProfile profile={profile} />
       <Lobby profile={profile} token={token} />
-    </main>
+    </div>
   );
 }

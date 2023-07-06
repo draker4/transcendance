@@ -1,11 +1,11 @@
-import { updatePlayer, moveAI } from "@/lib/Game/handlePlayer";
-import { resetBall, updateBall, handleServe } from "@/lib/Game/handleBall";
+import { updatePlayer, moveAI } from "@/lib/game/handlePlayer";
+import { resetBall, updateBall, handleServe } from "@/lib/game/handleBall";
 import {
   generateRoundColor,
   turnDelayIsOver,
   DirX,
   DirY,
-} from "@/lib/Game/pongUtils";
+} from "@/lib/game/pongUtils";
 
 function resetTurn(winner: "left" | "right", game: Game) {
   resetBall(game.ball, game);

@@ -1,7 +1,7 @@
-import { initBall } from "@/lib/Game/handleBall";
-import { initPlayer } from "@/lib/Game/handlePlayer";
-import drawPong from "@/lib/Game/drawPong";
-import updatePong from "@/lib/Game/updatePong";
+import { initBall } from "@/lib/game/handleBall";
+import { initPlayer } from "@/lib/game/handlePlayer";
+import drawPong from "@/lib/game/drawPong";
+import updatePong from "@/lib/game/updatePong";
 
 export function initGame(
   canvasRef: HTMLCanvasElement,

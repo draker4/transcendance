@@ -1,92 +1,84 @@
 "use client";
 
 //Import les composants react
-import { useEffect, useState } from 'react'
-
-//Import les composants
-import Flip_Card    from '@/components/lobby/Flip_Card'
-import Game_Card    from '@/components/lobby/Game_Card'
-import Game_List    from '@/components/lobby/Game_List'
+import { useState } from "react";
+import { MdHistory, MdGames, MdLeaderboard } from "react-icons/md";
 
 type Props = {
-    profile: Profile;
-    token: string | undefined;
-}
+  profile: Profile;
+  token: string | undefined;
+};
 
 //Import le service pour les games
-import LobbyService from '@/services/Lobby.service'
-import styles from '@/styles/lobby/Lobby.module.css'
+import LobbyService from "@/services/Lobby.service";
+import styles from "@/styles/lobby/Lobby.module.css";
+import League from "./league/League";
+import Party from "./party/Party";
+import History from "./history/History";
 
 export default function Lobby({ profile, token }: Props) {
-    
-    const Lobby = new LobbyService(token);
-    
-    const [isLoading, setIsLoading]         = useState(true);
-    const [gameInfos, setGameInfo]          = useState("undefined");
+  const Lobby = new LobbyService(token);
 
-    //------------------------------------Chargement------------------------------------//
+  const [isLoading, setIsLoading] = useState(true);
+  const [menu, setMenu] = useState("League");
 
-    //Regarde si le joueur est en game, si oui , le remet dans la game
-    useEffect(() => {
+  // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
-        //Si deja en game -> resume game
-        Lobby.IsInGame().then((cur_game_id) => {
-            
-            if (cur_game_id != false) {
-                Lobby.Resume_Game(cur_game_id)
-            }
-            setIsLoading(false);
-        })
+  //Regarde si le joueur est en game, si oui , le remet dans la game
+  Lobby.IsInGame()
+    .then((cur_game_id) => {
+      if (cur_game_id != false) {
+        Lobby.Resume_Game(cur_game_id);
+      }
+      setIsLoading(false);
+    })
 
-        .catch(error => {
-            console.error(error);
-            setIsLoading(false);
-        });
+    .catch((error) => {
+      console.error(error);
+      setIsLoading(false);
+    });
 
-    }, []);
+  // -------------------------------------  RENDU  ------------------------------------ //
 
-    //------------------------------------RENDU------------------------------------//
-
-    //Si la page n'est pas chargé
-    if (isLoading) {
-        return (
-            <main className={styles.loading_page}>
-                <h1>Chargement...</h1>
-            </main>
-        )
-    }
-
-    //Si le joueur n'est pas en game
-    if (!isLoading){
-        return (
-
-            <main className={styles.main}>
-
-                {/*Premiere page bouton en haut  */}
-                <div className={styles.haut}>
-                    <Flip_Card Lobby={Lobby} text="Create game and play with your friend"       title="Create a game"   img="lobby/joystick"       type="create"/>
-                    <Flip_Card Lobby={Lobby} text="Training in solo against an AI"              title="Training"        img="lobby/training"     type="training"/>
-                    <Flip_Card Lobby={Lobby} text="Random opponent , fight for the ladder"      title="Ranked"          img="lobby/rank"         type="rank"/>
-                </div>
-
-                {/*Premiere page bouton en haut  */}
-                <div className={styles.bas}>
-
-                    {/* div gauche */}
-                    <div className={styles.gauche}>
-                        <Game_Card token={token} game_id={gameInfos}/>
-                    </div>
-
-                    {/* div droite */}
-                    <div className={styles.droite}>
-
-                        {/* Liste des game en lobby */}
-                        <Game_List token={token} />
-
-                    </div> 
-                </div>
-
-            </main>
-        );
-    }
+  //Si le joueur n'est pas en game
+  return (
+    <div className={styles.lobby}>
+      <nav className={styles.menu}>
+        <button
+          className={`${
+            menu === "League" ? styles.activeBtn : styles.inactiveBtn
+          }`}
+          onClick={() => setMenu("League")}
+        >
+          <MdLeaderboard size={40} />
+          <h2>League</h2>
+        </button>
+        <button
+          className={`${
+            menu === "Party" ? styles.activeBtn : styles.inactiveBtn
+          }`}
+          onClick={() => setMenu("Party")}
+        >
+          <MdGames size={40} />
+          <h2>Party</h2>
+        </button>
+        <button
+          className={`${
+            menu === "History" ? styles.activeBtn : styles.inactiveBtn
+          }`}
+          onClick={() => setMenu("History")}
+        >
+          <MdHistory size={40} />
+          <h2>Training</h2>
+        </button>
+      </nav>
+      <div className={styles.content}>
+        {menu == "League" && <League Lobby={Lobby} isLoading={isLoading} />}
+        {menu == "Party" && (
+          <Party Lobby={Lobby} isLoading={isLoading} token={token} />
+        )}
+        {menu == "History" && <History Lobby={Lobby} isLoading={isLoading} />}
+      </div>
+    </div>
+  );
 }

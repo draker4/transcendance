@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useMemo } from "react";
 import One_Game from "@/components/lobby/noupdated/Matchmaking_Game_Infos";
+import styles from "@/styles/lobby/party/PartyList.module.css";
+
 import Matchmaking_Search from "@/components/lobby/noupdated/Matchmaking_Search";
 
-import Lobby_Service from "@/services/Lobby.service";
+import LobbyService from "@/services/Lobby.service";
 
-import styles from "@/styles/game/old/game_infos.module.css";
+import { useEffect, useState } from "react";
 
 type Props = {
   token: String | undefined;
@@ -16,7 +17,6 @@ type Props = {
 interface Game {
   uuid: string;
   Name: string;
-  Password: boolean;
   Host: number;
   Opponent: number;
   Viewers_List: number;
@@ -28,9 +28,9 @@ interface Game {
   Loser: number;
 }
 
-export default function Matchmaking_Game_List({ token }: Props) {
+export default function PartyList({ token }: Props) {
   //Import le service pour les games
-  const Lobby = new Lobby_Service(token);
+  const Lobby = useMemo(() => new LobbyService(token), [token]);
   const [jsonGame, setJsonGame] = useState([] as Game[]);
   const [filteredGames, setFilteredGames] = useState([] as Game[]);
   const [LastSearch, setLastSearch] = useState("");
@@ -43,7 +43,7 @@ export default function Matchmaking_Game_List({ token }: Props) {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [Lobby]);
 
   //Filter les games en fonction de la recherche
   useEffect(() => {

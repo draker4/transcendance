@@ -1,5 +1,5 @@
 import ReactSlider from "react-slider";
-import styles from "@/styles/pong/Slider.module.css";
+import styles from "@/styles/Lobby/selector/Slider.module.css";
 
 type Props = {
   min: number;
