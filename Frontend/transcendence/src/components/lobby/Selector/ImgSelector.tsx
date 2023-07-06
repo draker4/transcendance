@@ -1,4 +1,4 @@
-import styles from "@/styles/lobby/Selector/ImgSelector.module.css";
+import styles from "@/styles/lobby/selector/ImgSelector.module.css";
 import Image from "next/image";
 
 type Props = {

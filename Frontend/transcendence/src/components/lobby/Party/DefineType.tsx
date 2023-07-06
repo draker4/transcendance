@@ -1,11 +1,11 @@
 "use client";
 
-import styles from "@/styles/lobby/Party/DefineType.module.css";
+import styles from "@/styles/lobby/party/DefineType.module.css";
 import { MdStar, Md3GMobiledata, Md5G, MdSettings } from "react-icons/md";
 import { useEffect } from "react";
 
-import SideSelector from "@/components/lobby/Selector/SideSelector";
-import Custom from "./Custom";
+import SideSelector from "@/components/lobby/selector/SideSelector";
+import Custom from "@/components/lobby/party/Custom";
 
 type Props = {
   push: boolean;

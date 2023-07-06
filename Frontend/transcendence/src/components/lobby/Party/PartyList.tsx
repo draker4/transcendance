@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import One_Game from "@/components/lobby/noupdated/Matchmaking_Game_Infos";
-import styles from "@/styles/lobby/Party/PartyList.module.css";
+import styles from "@/styles/lobby/party/PartyList.module.css";
 
 import Matchmaking_Search from "@/components/lobby/noupdated/Matchmaking_Search";
 

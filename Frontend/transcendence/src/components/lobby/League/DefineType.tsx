@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/League/DefineType.module.css";
+import styles from "@/styles/lobby/league/DefineType.module.css";
 import { MdStar, Md3GMobiledata, Md5G } from "react-icons/md";
 import { useEffect } from "react";
 

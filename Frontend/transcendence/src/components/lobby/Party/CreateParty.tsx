@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "@/styles/lobby/Party/CreateParty.module.css";
+import styles from "@/styles/lobby/party/CreateParty.module.css";
 
 import Lobby_Service from "@/services/Lobby.service";
-import DefineType from "@/components/lobby/Party/DefineType";
-import DefineField from "@/components/lobby/Party/DefineField";
-import DefineInvite from "@/components/lobby/Party/DefineInvite";
+import DefineType from "@/components/lobby/party/DefineType";
+import DefineField from "@/components/lobby/party/DefineField";
+import DefineInvite from "@/components/lobby/party/DefineInvite";
 
 type Props = {
   Lobby: Lobby_Service;

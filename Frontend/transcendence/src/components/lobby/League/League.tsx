@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "@/styles/lobby/League/League.module.css";
+import styles from "@/styles/lobby/league/League.module.css";
 import Image from "next/image";
-import DefineType from "./DefineType";
-import Leaderboard from "./Leaderboard";
-import StreamGame from "./StreamGame";
+import DefineType from "@/components/lobby/league/DefineType";
+import Leaderboard from "@/components/lobby/league/Leaderboard";
+import StreamGame from "@/components/lobby/league/StreamGame";
 
 type Props = {
   Lobby: any;

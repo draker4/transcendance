@@ -12,9 +12,9 @@ type Props = {
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
 import styles from "@/styles/lobby/Lobby.module.css";
-import League from "./League/League";
-import Party from "./Party/Party";
-import History from "./History/History";
+import League from "./league/League";
+import Party from "./party/Party";
+import History from "./history/History";
 
 export default function Lobby({ profile, token }: Props) {
   const Lobby = new LobbyService(token);

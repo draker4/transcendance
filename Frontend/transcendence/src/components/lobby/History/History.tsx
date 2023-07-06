@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import styles from "@/styles/lobby/History/History.module.css";
+import styles from "@/styles/lobby/history/History.module.css";
 type Props = {
   Lobby: any;
   isLoading: boolean;

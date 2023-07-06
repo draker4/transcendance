@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import styles from "@/styles/lobby/Party/Party.module.css";
+import styles from "@/styles/lobby/party/Party.module.css";
 import Lobby_Service from "@/services/Lobby.service";
-import CreateParty from "@/components/lobby/Party/CreateParty";
-import Game_List from "./PartyList";
+import CreateParty from "@/components/lobby/party/CreateParty";
+import Game_List from "@/components/lobby/party/PartyList";
 
 type Props = {
   Lobby: Lobby_Service;

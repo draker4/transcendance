@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import styles from "@/styles/lobby/Party/DefineField.module.css";
-import ImgSelector from "@/components/lobby/Selector/ImgSelector";
+import styles from "@/styles/lobby/party/DefineField.module.css";
+import ImgSelector from "@/components/lobby/selector/ImgSelector";
 
 type Props = {
   background: string;
