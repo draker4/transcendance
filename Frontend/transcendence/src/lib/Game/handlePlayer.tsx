@@ -1,4 +1,4 @@
-import { Direction, DirY, DirX } from "@/lib/Game/pongUtils";
+import { Direction, DirY, DirX } from "@/lib/game/pongUtils";
 
 export function initPlayer(
   gameWidth: number,

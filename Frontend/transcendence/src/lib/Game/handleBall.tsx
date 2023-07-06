@@ -1,4 +1,4 @@
-import { DirX, DirY } from "@/lib/Game/pongUtils";
+import { DirX, DirY } from "@/lib/game/pongUtils";
 
 export function initBall(
   gameWidth: number,
