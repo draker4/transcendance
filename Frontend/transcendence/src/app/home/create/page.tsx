@@ -1,18 +1,29 @@
-import { getProfileByToken } from "@/lib/profile/getProfileInfos";
-import Profile from "@/services/Profile.service";
 import { cookies } from "next/dist/client/components/headers";
 import fs from "fs";
 import FormLogin from "@/components/loggedIn/create/FormLogin";
+import Profile_Service from "@/services/Profile.service";
 
 export default async function CreatePage() {
-  let profile = new Profile();
+  let profile: Profile = {
+    id: -1,
+    login: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    image: "",
+    provider: "",
+    motto: "",
+    story: "",
+  };
   let token: string | undefined = "";
 
   try {
     token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
 
-    profile = await getProfileByToken(token);
+    const profileData = new Profile_Service(token);
+    profile = await profileData.getProfileByToken();
   } catch (err) {
     console.log(err);
   }

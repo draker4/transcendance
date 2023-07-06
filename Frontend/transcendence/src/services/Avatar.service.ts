@@ -5,13 +5,12 @@ const Crypto = new CryptoService();
 export default class Avatar_Service {
   private token: string;
 
-  // Instance singleton
   constructor(token: string) {
     this.token = token;
   }
 
   // Fonction generique pour toutes les requettes http
-  public async fetchData(url: string, method: string, body: any = null) {
+  private async fetchData(url: string, method: string, body: any = null) {
     // console.log("into FetchData"); // checking
 
     const response = await fetch(
@@ -39,7 +38,7 @@ export default class Avatar_Service {
 
   // [?][!] c'est merdique non ? ^_^
   // [!] url different si on est cote client
-  public async fetchDataClientSide(
+  private async fetchDataClientSide(
     url: string,
     method: string,
     body: any = null
@@ -76,8 +75,11 @@ export default class Avatar_Service {
     const response: Response = await this.fetchData(login, "GET");
     const data: Avatar = await response.json();
 
-    if (data?.image.length > 0)
+    if (data?.decrypt && data?.image.length > 0) {
       data.image = await Crypto.decrypt(data.image);
+      data.decrypt = false;
+    }
+    
     return data;
   }
 

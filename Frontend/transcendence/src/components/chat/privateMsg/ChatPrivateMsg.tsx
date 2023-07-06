@@ -1,7 +1,6 @@
 "use client";
 
 import { ChatSocketContext } from "@/context/ChatSocketContext";
-import avatarType from "@/types/Avatar.type";
 import { useContext, useEffect } from "react";
 import styles from "@/styles/chat/privateMsg/ChatPrivateMsg.module.css";
 import Header from "./Header";
@@ -12,7 +11,7 @@ import { getProfileWithAvatar } from "@/lib/profile/getProfileInfos";
 type ChannelType = {
   id: number;
   name: string;
-  avatar: avatarType;
+  avatar: Avatar;
 };
 
 export default function ChatPrivateMsg() {
@@ -40,7 +39,6 @@ export default function ChatPrivateMsg() {
     // const Avatar = new Avatar_Service(token);
 
     // avatar = await Avatar.getAvatarByName(login);
-
 
   } catch (err) {
     console.log(err);

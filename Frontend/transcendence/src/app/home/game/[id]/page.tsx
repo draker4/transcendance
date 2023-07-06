@@ -1,16 +1,27 @@
 //Server side rendering
 
 //Merdouille pour les cookies
-import Profile from "@/services/Profile.service";
-import { getProfileByToken } from "@/lib/profile/getProfileInfos";
 import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
 import styles from "@/styles/game/game.module.css";
 import Game from "@/components/game/Game";
+import Profile_Service from "@/services/Profile.service";
 
 export default async function GamePage({ params, searchParams }: any) {
-  let profile = new Profile();
+  // [!] Bperriol i changed this profile
+  let profile: Profile = {
+    id: -1,
+    login: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    image: "",
+    provider: "",
+    motto: "",
+    story: "",
+  };
   let token: string | undefined;
   let gameID = params.id;
 
@@ -18,7 +29,8 @@ export default async function GamePage({ params, searchParams }: any) {
     token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
 
-    profile = await getProfileByToken(token);
+    const profileData = new Profile_Service(token);
+        profile = await profileData.getProfileByToken();
   } catch (err) {
     console.log(err);
   }

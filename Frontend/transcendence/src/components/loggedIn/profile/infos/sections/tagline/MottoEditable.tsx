@@ -11,6 +11,9 @@ type Props = {
 };
 
 export default function MottoEditable({ profile, token }: Props) {
+
+  const profileService = new Profile_Service(token);
+
   const [editMode, setEditMode] = useState<boolean>(false);
   const [motto, setMotto] = useState<string>(
     profile.motto === null ? "" : profile.motto
@@ -41,7 +44,8 @@ export default function MottoEditable({ profile, token }: Props) {
       setNotif(checkedMotto);
 
       if (checkedMotto.length === 0) {
-        const response = await submitMotto(submitedMotto, token);
+        const response = await profileService.editUser({"motto": submitedMotto});
+        // const response = await submitMotto(submitedMotto, token);
 
         if (response === "") {
           const updatedProfile = profile;

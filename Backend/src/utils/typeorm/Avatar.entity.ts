@@ -36,4 +36,7 @@ export class Avatar {
 
 	@Column()
 	isChannel: boolean;
+
+	@Column()
+	decrypt: boolean;
 }

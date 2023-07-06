@@ -1,7 +1,6 @@
-type	pongieType = {
+type	Pongie = {
 	id: number,
 	login: string,
-	avatar: avatarType,
+	avatar: Avatar,
+	updatedAt: Date,
 };
-
-export default channelType;

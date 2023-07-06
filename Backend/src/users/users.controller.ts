@@ -6,12 +6,14 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Query,
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
+import { EditUserDto } from './dto/EditUser.dto';
 
 @Controller('users')
 export class UsersController {
@@ -73,6 +75,32 @@ export class UsersController {
     return { exists: false };
   }
 
+
+  // [!] utiliser trycatch pour manip la database
+  @Put()
+  async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
+    console.log("User @Put called, properties = \n", properties);
+
+    const updatedProperties = [];
+    let message = "";
+
+    for (const key in properties) {
+      if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
+        updatedProperties.push(key);
+      }
+    }
+
+    if (updatedProperties.length > 0) {
+      message = `Properties : ${updatedProperties.join(', ')} : successfully updated`
+    }
+
+    return {
+      message: message,
+    }
+  }
+
+  // [!] utiliser un PUT + foutre en trycatch
+  // faire ca de maniere générique
   @Post('edit-motto')
   async editMotto(@Request() req, @Body('submitedMotto') motto: string) {
     console.log('POST~edit-motto method called'); //checking
@@ -137,15 +165,21 @@ export class UsersController {
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
     const user2 = await this.usersService.getUserChannels(2);
+    const user3 = await this.usersService.getUserChannels(3);
 
-    const channel = await this.usersService.getChannelByName("test");
+    const channel1 = await this.usersService.getChannelByName("test1");
+    const channel2 = await this.usersService.getChannelByName("test2");
+    const channel3 = await this.usersService.getChannelByName("test3");
 
-    // user1.channels.push(channel);
-    // user2.channels.push(channel);
-
-    await this.usersService.updateUserChannels(user1, channel);
-    await this.usersService.updateUserChannels(user2, channel);
-    // await this.usersService.saveUserEntity(user1);
+    // await this.usersService.updateUserChannels(user1, channel1);
+    // await this.usersService.updateUserChannels(user1, channel2);
+    // await this.usersService.updateUserChannels(user1, channel3);
+    // await this.usersService.updateUserChannels(user2, channel1);
+    // await this.usersService.updateUserChannels(user2, channel2);
+    // await this.usersService.updateUserChannels(user2, channel3);
+    await this.usersService.updateUserChannels(user3, channel1);
+    await this.usersService.updateUserChannels(user3, channel2);
+    await this.usersService.updateUserChannels(user3, channel3);
   }
 
   @Public()
@@ -153,15 +187,13 @@ export class UsersController {
   async addPongie() {
     const user1 = await this.usersService.getUserPongies(1);
     const user2 = await this.usersService.getUserPongies(2);
+    const user3 = await this.usersService.getUserPongies(3);
 
-    // user1.pongies.push(user2);
-    // user2.pongies.push(user1);
-
-    // await Promise.all([
-    //   this.usersService.saveUserEntity(user1),
-    //   this.usersService.saveUserEntity(user2),
-    // ]);
     await this.usersService.updateUserPongies(user1, user2);
+    await this.usersService.updateUserPongies(user1, user3);
     await this.usersService.updateUserPongies(user2, user1);
+    await this.usersService.updateUserPongies(user2, user3);
+    await this.usersService.updateUserPongies(user3, user1);
+    await this.usersService.updateUserPongies(user3, user2);
   }
 }

@@ -8,7 +8,6 @@ import {
   ParseBoolPipe,
   Put,
   Request,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
 import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';

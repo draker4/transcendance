@@ -37,4 +37,9 @@ export class AvatarDto {
 	@IsBoolean()
 	@IsNotEmpty()
 	isChannel: boolean;
+
+	@IsBoolean()
+	@IsNotEmpty()
+	decrypt: boolean;
+
 }

@@ -9,7 +9,8 @@ export async function middleware(req: NextRequest) {
     (await verifyAuth(crunchyToken).catch((err) => {
       console.log(err);
     }));
-  // console.log(verifiedToken);
+  // const url = req.nextUrl;
+  // console.log(verifiedToken, url);
 
   if (
     verifiedToken &&
@@ -46,5 +47,15 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/:path*"],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - icon, images
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|icon|images|_next/static|_next/image|favicon.ico).*)',
+  ],
 };

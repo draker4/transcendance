@@ -5,14 +5,18 @@ import Theme from "../theme/Theme";
 import NavbarLogo from "./NavbarLogo";
 import NavbarLogInBtn from "./NavbarLogInBtn";
 import AvatarMenu from "./AvatarMenu";
+import Link from "next/link";
+import ChatBtn from "./ChatBtn";
 
 type Props = {
   avatar: Avatar;
   profile: Profile;
+  token: string | undefined;
 };
 
-export default async function NavbarFront({ avatar, profile }: Props) {
+export default function NavbarFront({ avatar, profile, token }: Props) {
   const segment = useSelectedLayoutSegment();
+
   if (segment == "welcome") {
     return (
       <header>
@@ -26,12 +30,28 @@ export default async function NavbarFront({ avatar, profile }: Props) {
       </header>
     );
   }
+
+  if (!profile.login)
+    return (
+      <header>
+        <nav className={styles.nav}>
+          <NavbarLogo link="/home" />
+          <div>
+            <Theme />
+          </div>
+        </nav>
+      </header>
+    );
+
   return (
     <header>
       <nav className={styles.nav}>
         <NavbarLogo link="/home" />
         <div className={styles.right}>
           <Theme />
+          <Link href={"/home/chat"} className={styles.chatBtn}>
+            <ChatBtn token={token}/>
+          </Link>
           <AvatarMenu avatar={avatar} profile={profile} />
         </div>
       </nav>

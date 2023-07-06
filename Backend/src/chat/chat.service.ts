@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WsException } from '@nestjs/websockets';
 import { ChannelService } from 'src/channels/channel.service';
 import { CreatePrivateMsgChannelDto } from 'src/channels/dto/CreatePrivateMsgChannel.dto';
 import { UsersService } from 'src/users/users.service';
+import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
@@ -17,21 +19,72 @@ export class ChatService {
     private readonly channelRepository: Repository<Channel>,
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async getChannels(id: string) {
-    const user = await this.usersService.getUserChannels(parseInt(id));
+    try {
+      const user = await this.usersService.getUserChannels(parseInt(id));
 
-    if (!user)
-      return {
-        success: 'false',
-        channels: [],
-      };
+      if (!user)
+        throw new WsException('no user found');
 
-    return {
-      success: 'true',
-      channels: user.channels,
-    };
+      return user.channels;
+    }
+    catch (error) {
+      console.log(error);
+      throw new WsException(error.message);
+    }
+  }
+
+  async getAllChannels() {
+    try {
+      const channels = await this.channelRepository.find({
+        relations: ["avatar"],
+      });
+
+      const all = channels.map((channel) => {
+        return {
+          id: channel.id,
+          name: channel.name,
+          avatar: channel.avatar,
+        }
+      })
+
+      return all;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
+  async getAllPongies(id: string) {
+    try {
+      const pongies = await this.userRepository.find({
+        relations: ["avatar"],
+      });
+
+      const all = await Promise.all(pongies.map(async (pongie) => {
+        if (pongie.id === parseInt(id))
+          return ;
+
+        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+          pongie.avatar.decrypt = false;
+        }
+
+        return {
+          id: pongie.id,
+          login: pongie.login,
+          avatar: pongie.avatar,
+        }
+      }));
+
+      return all;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   async joinOrCreatePrivateMsgChannel(userId: string, pongieId: string) {
@@ -64,17 +117,25 @@ export class ChatService {
   }
 
   async getPongies(id: string) {
-	const	user = await this.usersService.getUserPongies(parseInt(id));
+    try {
+      const	user = await this.usersService.getUserPongies(parseInt(id));
 
-	if (!user)
-		return {
-      "success": "false",
-      "pongies": [],
-    }
+      if (!user)
+        throw new WsException("no user found");
+
+      const pongies = await Promise.all(user.pongies.map(async (pongie) => {
+        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+          pongie.avatar.decrypt = false;
+        }
+        return pongie;
+      }));
   
-	return {
-      "success": "true",
-      "pongies": user.pongies,
-    };
+      return pongies;
+    }
+    catch (error) {
+      console.log(error);
+      throw new WsException(error.message);
+    }
   }
 }

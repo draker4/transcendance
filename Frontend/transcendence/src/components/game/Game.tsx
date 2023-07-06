@@ -5,7 +5,6 @@ import { useEffect, useState, useMemo } from "react";
 
 //Import les services
 import LobbyService from "@/services/Lobby.service";
-import Profile from "@/services/Profile.service";
 
 //Import les composants
 import Button_Img from "../lobby/Button_Img";
