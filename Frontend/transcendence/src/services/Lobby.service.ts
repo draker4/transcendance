@@ -53,16 +53,17 @@ class Lobby_Service {
     const body = JSON.stringify(Settings);
     const response = await this.FetchData("games/create", "POST", body);
     const data = await response.json();
+    console.log(data);
     if (data.success === false) {
       return false;
     }
-    const url = "game/" + data.data.id;
+    const url = "home/game/" + data.data.id;
     this.router.push(url);
   }
 
   //Reprendre la partie en cours
   public async Resume_Game(gameID: string): Promise<any> {
-    const url = "game/" + gameID;
+    const url = "home/game/" + gameID;
     this.router.push(url);
   }
 

@@ -57,9 +57,9 @@ export class GamesService {
         req.body.side,
         req.body.background,
         req.body.ball,
-        req.body.paddle,
+        // req.body.paddle,
         req.body.type,
-        req.body.mode,
+        // req.body.mode,
       );
 
       const Data = {
@@ -194,11 +194,11 @@ export class GamesService {
         where: { Status: 'Waiting' || 'InProgress' },
       });
       //Clean les infos
-      let games_infos = [];
+      const games_infos = [];
       for (let i = 0; i < games.length; i++) {
         const Host_Login = await this.GetPlayerName(games[i].Host);
         const Opponent_Login = await this.GetPlayerName(games[i].Opponent);
-        let game_info = {
+        const game_info = {
           uuid: games[i].uuid,
           Name: games[i].Name,
           Host: Host_Login,
@@ -217,9 +217,9 @@ export class GamesService {
           Side: games[i].Side,
           Background: games[i].Background,
           Ball: games[i].Ball,
-          Paddle: games[i].Paddle,
+          // Paddle: games[i].Paddle,
           Type: games[i].Type,
-          Mode: games[i].Mode,
+          // Mode: games[i].Mode,
         };
         games_infos.push(game_info);
       }
@@ -280,7 +280,7 @@ export class GamesService {
       });
       const Host_Login = await this.GetPlayerName(game.Host);
       const Opponent_Login = await this.GetPlayerName(game.Opponent);
-      let game_info = {
+      const game_info = {
         uuid: game.uuid,
         Name: game.Name,
         Host: Host_Login,
@@ -299,9 +299,9 @@ export class GamesService {
         Side: game.Side,
         Background: game.Background,
         Ball: game.Ball,
-        Paddle: game.Paddle,
+        // Paddle: game.Paddle,
         Type: game.Type,
-        Mode: game.Mode,
+        // Mode: game.Mode,
       };
 
       const Data = {
@@ -616,8 +616,8 @@ export class GamesService {
           '',
           '',
           '',
-          '',
-          '',
+          // '',
+          // '',
         );
         await this.AddPlayerToGame(game_id, user2.Player_Id);
         return game_id;
@@ -688,9 +688,9 @@ export class GamesService {
     side: string,
     background: string,
     ball: string,
-    paddle: string,
+    // paddle: string,
     type: string,
-    mode: string,
+    // mode: string,
   ): Promise<any> {
     const gameDTO = new GameDTO();
 
@@ -712,9 +712,9 @@ export class GamesService {
     gameDTO.Side = side;
     gameDTO.Background = background;
     gameDTO.Ball = ball;
-    gameDTO.Paddle = paddle;
+    // gameDTO.Paddle = paddle;
     gameDTO.Type = type;
-    gameDTO.Mode = mode;
+    // gameDTO.Mode = mode;
 
     await this.GameRepository.save(gameDTO);
 

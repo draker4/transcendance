@@ -6,16 +6,16 @@ import styles from "@/styles/lobby/Party/CreateParty.module.css";
 import Lobby_Service from "@/services/Lobby.service";
 import DefineType from "@/components/lobby/Party/DefineType";
 import DefineField from "@/components/lobby/Party/DefineField";
+import DefineInvite from "@/components/lobby/Party/DefineInvite";
 
 type Props = {
   Lobby: Lobby_Service;
+  setCreateParty: Function;
 };
 
-export default function CreateParty({ Lobby }: Props) {
+export default function CreateParty({ Lobby, setCreateParty }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
-
   //Pong Settings
-
   const [name, setName] = useState<string>("");
   const [push, setPush] = useState<boolean>(false);
   const [score, setScore] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
@@ -33,6 +33,7 @@ export default function CreateParty({ Lobby }: Props) {
       push: push,
       score: score,
       round: round,
+      difficulty: 2,
       side: side,
       background: background,
       ball: ball,
@@ -41,6 +42,18 @@ export default function CreateParty({ Lobby }: Props) {
 
     //Creer la game
     const res = await Lobby.Create_Game(settings);
+  };
+
+  const resetCreate = () => {
+    setName("");
+    setPush(false);
+    setScore(3);
+    setRound(1);
+    setSide("left");
+    setBackground("background/0");
+    setBall("ball/0");
+    setType("classic");
+    setCreateParty(false);
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //
@@ -85,12 +98,18 @@ export default function CreateParty({ Lobby }: Props) {
           />
         </div>
       </div>
-      <button className={styles.save} type="button" onClick={Create_Game}>
-        Create Game
-      </button>
-      <button className={styles.save} type="button" onClick={Create_Game}>
-        Cancel
-      </button>
+      <div className={styles.invite}>
+        <label className={styles.section}>Invite</label>
+        <DefineInvite />
+      </div>
+      <div className={styles.confirm}>
+        <button className={styles.save} type="button" onClick={Create_Game}>
+          Create Game
+        </button>
+        <button className={styles.cancel} type="button" onClick={resetCreate}>
+          Cancel
+        </button>
+      </div>
     </div>
   );
 }

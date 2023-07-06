@@ -1,1 +1,14 @@
+.fieldSelector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
 
+.section {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary);
+  margin-bottom: 5px;
+}

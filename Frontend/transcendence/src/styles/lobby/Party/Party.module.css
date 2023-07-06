@@ -6,3 +6,26 @@
   width: 100%;
   height: 100%;
 }
+
+.createBtn {
+  appearance: none;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  transition: all 0.3s ease-in;
+  margin-block: 20px;
+  margin-inline: 10px;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 3px solid var(--accent);
+}
+
+.createBtn:checked {
+  transition: all 0.3s ease-out;
+}
+
+.createBtn:hover {
+  color: var(--accent);
+  border: 3px solid var(--accent-lighter1);
+}

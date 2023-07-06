@@ -1,3 +1,10 @@
+.createParty {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
 .name {
   display: flex;
   flex-flow: column nowrap;
@@ -36,8 +43,7 @@
   font-size: 14px;
   font-weight: bold;
   transition: all 0.3s ease-in;
-  margin-block: 20px;
-  margin-inline: 10px;
+  margin: 2px;
 }
 
 .save:checked,
@@ -57,21 +63,31 @@
 }
 
 .cancel {
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--secondary-lighter3);
+  background-color: var(--primary-darker);
+  border: 3px solid var(--secondary-lighter3);
 }
 
 .cancel:hover {
-  color: var(--accent);
+  color: var(--accent-lighter1);
   border: 3px solid var(--accent-lighter1);
+}
+
+.confirm {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px;
 }
 
 .define {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: start;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .settings {
@@ -79,7 +95,7 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  margin: 20px;
+  width: 45%;
 }
 
 .field {
@@ -87,5 +103,5 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  margin: 20px;
+  width: 45%;
 }

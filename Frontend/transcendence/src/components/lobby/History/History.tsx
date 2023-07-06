@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import styles from "@/styles/lobby/Flip_Card.module.css";
-
+import styles from "@/styles/lobby/History/History.module.css";
 type Props = {
   Lobby: any;
   isLoading: boolean;
@@ -21,7 +20,7 @@ type Game_Settings = {
   mode: string;
 };
 
-export default function Flip_Card({ Lobby, isLoading }: Props) {
+export default function History({ Lobby, isLoading }: Props) {
   // -------------------------------------Matchmake-------------------------------------//
 
   //True si en matchmake

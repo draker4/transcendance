@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import styles from "@/styles/lobby/Party/Party.module.css";
+import styles from "@/styles/lobby/Party/DefineField.module.css";
 import ImgSelector from "@/components/lobby/Selector/ImgSelector";
 
 type Props = {
@@ -28,17 +28,17 @@ export default function DefineField({
   return (
     <div className={styles.fieldSelector}>
       {/* Background */}
-      <label>Background</label>
+      <label className={styles.section}>Background</label>
       <ImgSelector
         value={background}
         setValue={setBackground}
         imgs={["background/0", "background/1", "background/2", "background/3"]}
-        width={100}
-        height={100}
+        width={90}
+        height={50}
       />
 
       {/* Ball */}
-      <label>Ball</label>
+      <label className={styles.section}>Ball</label>
       <ImgSelector
         value={ball}
         setValue={setBall}

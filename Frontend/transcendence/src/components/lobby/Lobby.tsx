@@ -11,7 +11,7 @@ type Props = {
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
-import styles from "@/styles/lobby/LobbyBis.module.css";
+import styles from "@/styles/lobby/Lobby.module.css";
 import League from "./League/League";
 import Party from "./Party/Party";
 import History from "./History/History";
@@ -68,7 +68,9 @@ export default function Lobby({ profile, token }: Props) {
       </nav>
       <div className={styles.content}>
         {menu == "League" && <League Lobby={Lobby} isLoading={isLoading} />}
-        {menu == "Party" && <Party Lobby={Lobby} isLoading={isLoading} />}
+        {menu == "Party" && (
+          <Party Lobby={Lobby} isLoading={isLoading} token={token} />
+        )}
         {menu == "History" && <History Lobby={Lobby} isLoading={isLoading} />}
       </div>
     </div>

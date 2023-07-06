@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import styles from "@/styles/lobby/Flip_Card.module.css";
+import styles from "@/styles/lobby/League/League.module.css";
 import Image from "next/image";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   isLoading: boolean;
 };
 
-export default function Flip_Card({ Lobby, isLoading }: Props) {
+export default function League({ Lobby, isLoading }: Props) {
   // -------------------------------------Matchmake-------------------------------------//
 
   //True si en matchmake

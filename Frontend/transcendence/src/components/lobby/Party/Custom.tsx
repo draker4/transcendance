@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import styles from "@/styles/lobby/Flip_Card.module.css";
+import styles from "@/styles/lobby/Party/Custom.module.css";
 
 import Selector from "@/components/lobby/Selector/Selector";
 import Slider from "@/components/lobby/Selector/Slider";
@@ -30,15 +30,15 @@ export default function Custom({
   return (
     <div className={styles.customs}>
       {/* Push */}
-      <label>Push</label>
+      <label className={styles.section}>Push</label>
       <Selector id="push" value={push} setValue={setPush} />
 
       {/* Score */}
-      <label>Score</label>
+      <label className={styles.section}>Score</label>
       <Slider min={3} max={9} step={1} value={score} setValue={setScore} />
 
       {/* Round */}
-      <label>Round</label>
+      <label className={styles.section}>Round</label>
       <Slider min={1} max={9} step={2} value={round} setValue={setRound} />
     </div>
   );
