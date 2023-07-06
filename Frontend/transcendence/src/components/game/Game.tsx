@@ -7,7 +7,7 @@ import { useEffect, useState, useMemo } from "react";
 import LobbyService from "@/services/Lobby.service";
 
 //Import les composants
-import Button_Img from "../lobby/Button_Img";
+import ButtonImg from "./ButtonImg";
 import styles from "@/styles/game/game.module.css";
 import Pong from "./Pong";
 
@@ -65,7 +65,7 @@ export default function Game({ profile, token, gameID }: Props) {
     return (
       <div className={styles.Game}>
         <Pong gameInfos={gameInfos} AI={true} />
-        <Button_Img text="quit" onClick={Quit} img="lobby/check" />
+        <ButtonImg text="quit" onClick={Quit} img="lobby/check" />
       </div>
     );
   }

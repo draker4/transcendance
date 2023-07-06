@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import styles from "@/styles/lobby/League/League.module.css";
 import Image from "next/image";
 import DefineType from "./DefineType";
+import Leaderboard from "./Leaderboard";
+import StreamGame from "./StreamGame";
 
 type Props = {
   Lobby: any;
@@ -59,6 +61,8 @@ export default function League({ Lobby, isLoading }: Props) {
       <button className={styles.searchBtn} onClick={Start_Matchmake}>
         <p>Start Search</p>
       </button>
+      <Leaderboard />
+      <StreamGame />
     </div>
   );
 }
