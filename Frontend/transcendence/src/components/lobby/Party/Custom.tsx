@@ -1,6 +1,4 @@
 "use client";
-
-import React, { useEffect } from "react";
 import styles from "@/styles/lobby/party/Custom.module.css";
 
 import Selector from "@/components/lobby/selector/Selector";

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import One_Game from "@/components/lobby/noupdated/Matchmaking_Game_Infos";
-import Matchmaking_Search from "@/components/lobby/noupdated/Matchmaking_Search";
+import One_Game from "@/components/lobby2/noupdated/Matchmaking_Game_Infos";
+import Matchmaking_Search from "@/components/lobby2/noupdated/Matchmaking_Search";
 
 import Lobby_Service from "@/services/Lobby.service";
 
