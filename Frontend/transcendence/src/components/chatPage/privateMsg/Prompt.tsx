@@ -5,9 +5,11 @@ import { useEffect, useRef, useState } from "react";
 
 type Props = {
   pongie: Pongie;
+  me: Pongie;
+  addMsg: (msg: PrivateMsgType) => void;
 };
 
-export default function Prompt({ pongie }: Props) {
+export default function Prompt({ pongie, me, addMsg }: Props ) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [text, setText] = useState<string>("");
@@ -29,7 +31,15 @@ export default function Prompt({ pongie }: Props) {
   const handleSendMsg = (e: React.FormEvent | null) => {
     e?.preventDefault();
 
-    console.log("Message to send :", text);
+    // console.log("Message to send :", text);
+    const newMsg:PrivateMsgType = {
+      content: text,
+      sender: me,
+      date: new Date(),
+    }
+
+    addMsg(newMsg);
+
     setText("");
     setIsEmpty(true);
   };

@@ -1,7 +1,7 @@
 import styles from "@/styles/chatPage/searchBar/SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import React from "react";
 import AvatarUser from "../../avatarUser/AvatarUser";
 

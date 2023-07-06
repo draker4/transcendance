@@ -28,6 +28,16 @@ export class UsersController {
     return user;
   }
 
+  // GET user + his dependency avatar
+  @Get('myAvatar')
+  getUserProfileWithAvatar(@Request() req) {
+    const user = this.usersService.getUserAvatar(req.user.id);
+
+    if (!user) throw new NotFoundException();
+
+    return user;
+  }
+
   @Get('profile/:login')
   async getUserByLogin(@Param('login') login: string) {
     login = decodeURIComponent(login);

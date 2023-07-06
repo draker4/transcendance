@@ -16,7 +16,7 @@ export default function Header({ icon, pongie }: Props) {
         <div className={styles.avatar}>
           <AvatarUser
             avatar={pongie.avatar}
-            borderSize="2px"
+            borderSize="3px"
             borderColor={pongie.avatar.borderColor}
             backgroundColor={pongie.avatar.backgroundColor}
           />
