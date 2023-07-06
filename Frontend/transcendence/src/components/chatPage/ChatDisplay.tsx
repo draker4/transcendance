@@ -13,12 +13,14 @@ export default function ChatClient({
 	littleScreen,
 	closeDisplay,
 	myself,
+	openDisplay,
 }: {
 	socket: Socket;
 	display: Display;
 	littleScreen: boolean;
 	closeDisplay: () => void;
 	myself: Profile & { avatar: Avatar };
+	openDisplay: (display: Display) => void;
 }) {
 
 	const	renderIcon = (): ReactNode => {
@@ -71,6 +73,7 @@ export default function ChatClient({
 					icon={renderIcon()}
 					socket={socket}
 					display={display}
+					openDisplay={openDisplay}
 				/>
 			</div>
 		)

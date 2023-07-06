@@ -1,8 +1,8 @@
 "use client";
-import styles from "@/styles/pong/Pong.module.css";
+import styles from "@/styles/game/Pong.module.css";
 import { useRef, useEffect } from "react";
-import { pongKeyDown, pongKeyUp } from "@/lib/Game/eventHandlers";
-import { initGame, gameLoop } from "@/lib/Game/handleGame";
+import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
+import { initGame, gameLoop } from "@/lib/game/handleGame";
 
 type Props = {
   gameInfos: GameInfos;

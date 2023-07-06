@@ -1,3 +1,3 @@
-type Display = undefined | Pongie | Channel | {
-	"button" : string;
+type Display = undefined | Pongie | Channel | createOne | {
+	button : string;
 }

@@ -56,13 +56,12 @@ export class Game {
   @Column()
   Ball: string;
 
-  @Column()
-  Paddle: string;
+  // @Column()
+  // Paddle: string;
 
   @Column()
   Type: string;
 
-  @Column()
-  Mode: string;
-
+  // @Column()
+  // Mode: string;
 }
