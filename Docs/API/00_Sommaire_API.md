@@ -28,7 +28,6 @@
 - [31 - List User Channel](./31_List_User_Channel.md)
 
 ## Game 
-- [40 - Game](./Game/40_Game.md)
+- [40 - Lobby](./Game/Lobby.md)
+- [40 - Matchmaking](./Game/MatchMaking.md)
 
-## Jeu
-- [40 - ]()

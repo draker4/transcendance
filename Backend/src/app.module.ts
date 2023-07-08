@@ -5,8 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { ValidationSchema } from './validation.schema';
 import { MailModule } from './mail/mail.module';
 
-import { GamesModule } from './games/games.module';
+import { LobbyModule } from './lobby/lobby.module';
 import { Game } from './utils/typeorm/Game.entity';
+
+import { MatchmakingModule } from './matchmaking/matchmaking.module';
 import { Matchmaking } from './utils/typeorm/Matchmaking.entity';
 
 import { UsersModule } from './users/users.module';
@@ -37,7 +39,8 @@ import { History } from './utils/typeorm/History.entity';
     UsersModule,
     AuthModule,
     MailModule,
-    GamesModule,
+    LobbyModule,
+    MatchmakingModule,
     AvatarModule,
     ChatModule,
     ChannelModule,

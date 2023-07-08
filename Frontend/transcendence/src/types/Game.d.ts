@@ -71,7 +71,6 @@ type GameInfos = {
   Push: boolean;
   Score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   Round: 1 | 3 | 5 | 7 | 9;
-  Difficulty: 1 | 2 | 3 | 4 | 5;
   Side: "left" | "right";
   Background: string;
   Ball: string;
@@ -85,11 +84,9 @@ type Game_Settings = {
   push: boolean;
   score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   round: 1 | 3 | 5 | 7 | 9;
-  difficulty: 1 | 2 | 3 | 4 | 5;
   side: "left" | "right";
   background: string;
   ball: string;
-  // paddle: string;
   type: string;
-  // mode: string;
+  mode: string;
 };

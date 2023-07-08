@@ -11,4 +11,7 @@ export class Matchmaking {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column()
+  Mode: string;
 }

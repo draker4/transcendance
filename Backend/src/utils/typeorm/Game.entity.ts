@@ -45,9 +45,6 @@ export class Game {
   Round: number;
 
   @Column()
-  Difficulty: number;
-
-  @Column()
   Side: string;
 
   @Column()
@@ -55,13 +52,10 @@ export class Game {
 
   @Column()
   Ball: string;
-
-  // @Column()
-  // Paddle: string;
-
+  
   @Column()
   Type: string;
 
-  // @Column()
-  // Mode: string;
+  @Column()
+  Mode: string;
 }
