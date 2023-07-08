@@ -8,6 +8,8 @@ import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
+import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
+import { UserPongieRelation } from 'src/utils/typeorm/UserPongieRelation';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -17,6 +19,10 @@ export class ChatService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(UserPongieRelation)
+    private readonly userPongieRelation: Repository<UserPongieRelation>,
+    @InjectRepository(UserChannelRelation)
+    private readonly userChannelRelation: Repository<UserChannelRelation>,
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
     private readonly cryptoService: CryptoService,
@@ -25,6 +31,8 @@ export class ChatService {
   async getChannels(id: string) {
     try {
       const user = await this.usersService.getUserChannels(parseInt(id));
+
+      console.log("channels");
 
       if (!user)
         throw new WsException('no user found');
@@ -124,6 +132,8 @@ export class ChatService {
   async getPongies(id: string) {
     try {
       const	user = await this.usersService.getUserPongies(parseInt(id));
+
+      console.log("pongies");
 
       if (!user)
         throw new WsException("no user found");

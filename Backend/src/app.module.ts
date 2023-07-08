@@ -18,6 +18,8 @@ import { Channel } from './utils/typeorm/Channel.entity';
 import { ChannelModule } from './channels/channel.module';
 import { HistoryModule } from './history/history.module';
 import { History } from './utils/typeorm/History.entity';
+import { UserChannelRelation } from './utils/typeorm/UserChannelRelation';
+import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
 
 @Module({
   imports: [
@@ -31,7 +33,16 @@ import { History } from './utils/typeorm/History.entity';
       username: process.env.DATA_BASE_USER,
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
-      entities: [User, Game, Matchmaking, Avatar, Channel, History],
+      entities: [
+        User,
+        Game,
+        Matchmaking,
+        Avatar,
+        Channel,
+        History,
+        UserChannelRelation,
+        UserPongieRelation,
+      ],
       synchronize: true,
     }),
     UsersModule,

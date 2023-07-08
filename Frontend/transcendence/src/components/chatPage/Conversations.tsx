@@ -90,7 +90,12 @@ export default function Conversations({
 
   return (
     <div className={styles.main} style={{ maxWidth: maxWidth }}>
-      <SearchBar socket={socket} search="all" openDisplay={openDisplay} />
+      <SearchBar
+        socket={socket}
+        search="all"
+        openDisplay={openDisplay}
+        placeHolder="Find new channels and pongies"
+      />
 
       <div className={styles.title}>
         <h3>Discussions</h3>

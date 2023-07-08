@@ -175,21 +175,21 @@ export class UsersController {
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
     const user2 = await this.usersService.getUserChannels(2);
-    const user3 = await this.usersService.getUserChannels(3);
+    // const user3 = await this.usersService.getUserChannels(3);
 
     const channel1 = await this.usersService.getChannelByName("test1");
     const channel2 = await this.usersService.getChannelByName("test2");
     const channel3 = await this.usersService.getChannelByName("test3");
 
-    // await this.usersService.updateUserChannels(user1, channel1);
-    // await this.usersService.updateUserChannels(user1, channel2);
-    // await this.usersService.updateUserChannels(user1, channel3);
-    // await this.usersService.updateUserChannels(user2, channel1);
-    // await this.usersService.updateUserChannels(user2, channel2);
-    // await this.usersService.updateUserChannels(user2, channel3);
-    await this.usersService.updateUserChannels(user3, channel1);
-    await this.usersService.updateUserChannels(user3, channel2);
-    await this.usersService.updateUserChannels(user3, channel3);
+    await this.usersService.updateUserChannels(user1, channel1);
+    await this.usersService.updateUserChannels(user1, channel2);
+    await this.usersService.updateUserChannels(user1, channel3);
+    await this.usersService.updateUserChannels(user2, channel1);
+    await this.usersService.updateUserChannels(user2, channel2);
+    await this.usersService.updateUserChannels(user2, channel3);
+    // await this.usersService.updateUserChannels(user3, channel1);
+    // await this.usersService.updateUserChannels(user3, channel2);
+    // await this.usersService.updateUserChannels(user3, channel3);
   }
 
   @Public()

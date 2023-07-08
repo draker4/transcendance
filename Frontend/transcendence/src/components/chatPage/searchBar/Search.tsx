@@ -1,7 +1,7 @@
 import styles from "@/styles/chatPage/searchBar/SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 import React from "react";
 import AvatarUser from "../../avatarUser/AvatarUser";
 
@@ -11,28 +11,29 @@ export default function Search({
   getData,
   createList,
   handleBlur,
-  openDisplay,
+  handleClick,
+  placeHolder,
 }: {
   list: (Channel | Pongie | CreateOne)[];
   error: ListError | null;
   getData: (event: React.MouseEvent<HTMLInputElement>) => void;
   createList: (text: string) => void;
   handleBlur: () => void;
-  openDisplay: (display: Display) => void;
+  handleClick: (display: Display) => void;
+  placeHolder: string;
 }) {
+
   const renderList = list.map((item) => {
     let key: string = item.id.toString();
 
-    if ("name" in item) key = key.concat(" channel");
-    else key = key.concat(" pongie");
-
-    const handleClick = () => {
-      openDisplay(item);
-    };
+    if ("name" in item)
+      key = key.concat(" channel");
+    else
+      key = key.concat(" pongie");
 
     return (
       <React.Fragment key={key}>
-        <li onMouseDown={handleClick}>
+        <li onMouseDown={() => handleClick(item)}>
           <div className={styles.avatar}>
             <AvatarUser
               avatar={item.avatar}
@@ -57,7 +58,7 @@ export default function Search({
       <div className={styles.searchBar}>
         <input
           type="text"
-          placeholder="Search"
+          placeholder={placeHolder}
           onClick={getData}
           onChange={handleSearch}
         />
