@@ -69,6 +69,11 @@ class Matchmaking_Service {
 		}
 		return false;
 	}
+
+	//Charge une page
+	public async Load_Page(url: string): Promise<any> {
+		this.router.push(url);
+	}
 }
 
 export default Matchmaking_Service;

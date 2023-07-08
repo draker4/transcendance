@@ -76,7 +76,7 @@ export default function Lobby({ profile, token }: Props) {
 			<div className={styles.content}>
 				{menu == "League"  && <League Matchmaking={Matchmaking} isLoading={isLoading} />}
 				{menu == "Party"   && <Party Lobby={Lobby} isLoading={isLoading} token={token} />}
-				{menu == "History" && <History Lobby={Lobby} isLoading={isLoading} />}
+				{menu == "History" && <History Matchmaking={Matchmaking} isLoading={isLoading} />}
 			</div>
 		</div>
 	);

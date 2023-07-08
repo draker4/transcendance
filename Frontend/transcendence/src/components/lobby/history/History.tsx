@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import styles from "@/styles/lobby/history/History.module.css";
 type Props = {
-  Lobby: any;
+  Matchmaking: any;
   isLoading: boolean;
 };
 
@@ -20,16 +20,12 @@ type Game_Settings = {
   mode: string;
 };
 
-export default function History({ Lobby, isLoading }: Props) {
+export default function History({ Matchmaking, isLoading }: Props) {
   // -------------------------------------Matchmake-------------------------------------//
-
-  //True si en matchmake
-  const [inMatchMaking, setinMatchMake] = useState(false);
-
+  
   //Fonction pour commencer la recherche une game
   const Stop_Matchmake = async () => {
-    await Lobby.Stop_Matchmaking();
-    setinMatchMake(false);
+    await Matchmaking.Stop_Matchmaking();
   };
 
   // -------------------------------------Traning-------------------------------------//
@@ -40,7 +36,7 @@ export default function History({ Lobby, isLoading }: Props) {
     Stop_Matchmake();
 
     //Rejoins la page de solo training
-    Lobby.Load_Page("/home/game");
+    Matchmaking.Load_Page("/home/game");
   };
 
   if (isLoading) {
