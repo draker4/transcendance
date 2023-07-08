@@ -1,5 +1,6 @@
 import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
+import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 
 type GroupedPrivateMsgType = {
   sender: Pongie;
@@ -12,9 +13,12 @@ type Props = {
 };
 
 export default function MessageItem({ groupedMessages }: Props) {
+  
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
     <p key={index}>{msg.content}</p>
   ));
+
+  const formatedDate = makeHumanDateFormat(groupedMessages.date);
 
   return (
     <div className={styles.msgItem}>
@@ -41,7 +45,7 @@ export default function MessageItem({ groupedMessages }: Props) {
             {groupedMessages.sender.login}
           </div>
           <div className={styles.date}>
-            {`at ${groupedMessages.date.getSeconds()}`}
+            {formatedDate}
           </div>
         </div>
         {/* Content */}

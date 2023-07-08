@@ -110,11 +110,16 @@ export class ChatService {
     };
   }
 
+  console.log("joinOrCreatePrivateMsgChannel() is ok, channel is : ", channel);
     return {
       success: 'true',
       channel: channel,
     };
   }
+
+
+
+
 
   async getPongies(id: string) {
     try {
@@ -137,5 +142,22 @@ export class ChatService {
       console.log(error);
       throw new WsException(error.message);
     }
+  }
+
+  /* ------------PRIVATE MSG------------------- */
+
+  checkPrivateMsgId(id:number, channelName:string):boolean {
+    if (channelName.split(" ").length > 2)
+      return false;
+
+      
+    const [id1, id2] = channelName.split(" ", 2);
+    console.log("id : ", id);
+      console.log("id1 : ", id1);
+      console.log("id2 : ", id2);
+      console.log("(id === id1 || id === id2) : ", (id === parseInt(id1) || id === parseInt(id2)));
+
+
+    return (id === parseInt(id1) || id === parseInt(id2));
   }
 }

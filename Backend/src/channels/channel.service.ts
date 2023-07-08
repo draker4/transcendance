@@ -58,6 +58,7 @@ export class ChannelService {
 				throw new Error("can't create the channel " + name);
 		}
 
+		// console.log("La channel existe ou a été créé : ", channel); // checking
 
 		return channel;
 	  }

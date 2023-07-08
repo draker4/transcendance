@@ -11,6 +11,8 @@ import { WsJwtGuard } from './guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
 import { Message } from './dto/message.dto';
 import { ChatService } from './chat.service';
+import { newMsgDto } from './dto/newMsg.dto';
+import { sendMsgDto } from './dto/sendMsg.dto';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -51,7 +53,14 @@ export class ChatGateway implements OnModuleInit {
           console.log(`User with ID ${payload.sub} disconnected`);
           console.log(this.connectedUsers);
         });
-        console.log(this.connectedUsers);
+
+        // ici gestion des room a join en fonction des channels de l'user ?
+        const testJoinRoom = socket.join("1 34"); // [!] en vrac pour test
+        console.log("testJoinRoom = ", testJoinRoom);
+
+
+        console.log("connected users = ", this.connectedUsers);
+
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -59,6 +68,49 @@ export class ChatGateway implements OnModuleInit {
     });
   }
 
+
+  @SubscribeMessage('newPrivateMsg')
+  yoping(@MessageBody() message: newMsgDto, @Request() req) {
+    console.log("req.user.login = ", req.user.login); // checking
+    console.log("privateMessage : objet = ", message); // checking
+
+    if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
+      // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
+
+
+      // passer une une date en objet direct pose problème
+      // conversion par ISOString
+      const now = new Date();
+      const nowtoISOString = now.toISOString();
+   
+      // [!] test de comparaison deDate à jeter
+      // const now3 = new Date(nowtoISOString);
+      // console.log("nowtoISOString :", nowtoISOString);
+
+      // console.log("now :", now);
+      // console.log("pour now il est : "  + now.getHours() + ":" + now.getMinutes());
+  
+      // console.log("now3 :", now3);
+      // console.log("pour now3 il est : "  + now3.getHours() + ":" + now3.getMinutes());
+
+
+      const sendMsg:sendMsgDto = {
+        content: message.content,
+        date: nowtoISOString,
+        senderId: req.user.id,
+      }
+
+      console.log("going to send " + sendMsg.content + " to " + message.channel);
+      this.server.to(message.channel).emit('sendMsg', sendMsg);
+    } else {
+      // [?] Besoin de mieux sécuriser ou gérer ce cas ?
+      console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
+    }
+
+  }
+
+  // [!] je laisse ça telquel pour le moment, je remplace avec dessus
+  // [!] le fichier Message des dto sera a supprimer aussi
   @SubscribeMessage('newMessage')
   create(@MessageBody() message: Message, @Request() req) {
     this.server.emit('onMessage', {
@@ -90,14 +142,20 @@ export class ChatGateway implements OnModuleInit {
 
   // [!] add dto pour le data
   @SubscribeMessage('joinPrivateMsgChannel')
-  async joinOrCreatePrivateMsgChannel(
-    @MessageBody() data: { pongieId: string },
+  async joinOrCreatePrivateMsgChannel( @MessageBody() data: { pongieId: string },
     @Request() req,
   ) {
+
     return await this.chatService.joinOrCreatePrivateMsgChannel(
       req.user.id,
       data.pongieId,
     );
   }
+
+
+
+
+/* ------------------------------ tools -------------------------------------- */
+
 
 }
