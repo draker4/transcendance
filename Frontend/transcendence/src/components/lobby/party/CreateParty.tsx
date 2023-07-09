@@ -40,6 +40,7 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
 			ball: ball,
 			type: type,
 			mode: mode,
+			difficulty : 3,
 		};
 
 		//Creer la game

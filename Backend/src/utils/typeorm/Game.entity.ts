@@ -39,6 +39,9 @@ export class Game {
   Score: number;
 
   @Column()
+  Difficulty: number;
+
+  @Column()
   Push: boolean;
 
   @Column()

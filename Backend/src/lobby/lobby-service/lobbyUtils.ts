@@ -95,6 +95,7 @@ export class LobbyUtils {
 		name: string,
 		push: boolean,
 		score: number,
+		difficulty : number,
 		round: number,
 		side: string,
 		background: string,
@@ -117,6 +118,7 @@ export class LobbyUtils {
 		gameDTO.Winner = -1;
 		gameDTO.Loser = -1;
 		gameDTO.Score = score;
+		gameDTO.Difficulty = difficulty;
 		gameDTO.Push = push;
 		gameDTO.Round = round;
 		gameDTO.Side = side;

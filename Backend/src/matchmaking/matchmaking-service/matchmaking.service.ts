@@ -190,6 +190,7 @@ export class MatchmakingService {
 					false,
 					0,
 					0,
+					3,
 					'left',
 					'',
 					'',
@@ -318,6 +319,7 @@ export class MatchmakingService {
 		name: string,
 		push: boolean,
 		score: number,
+		difficulty : number,
 		round: number,
 		side: string,
 		background: string,
@@ -336,6 +338,7 @@ export class MatchmakingService {
 		gameDTO.Score_Host = 0;
 		gameDTO.Score_Opponent = 0;
 		gameDTO.Status = 'Waiting';
+		gameDTO.Difficulty = difficulty;
 		gameDTO.CreatedAt = new Date().toISOString();
 		gameDTO.Winner = -1;
 		gameDTO.Loser = -1;
