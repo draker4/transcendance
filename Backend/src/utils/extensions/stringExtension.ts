@@ -1,11 +1,11 @@
-import { filterBadWords } from "../badwords/filterBadWords";
+import { filterBadWords } from '../badwords/filterBadWords';
 
 declare global {
-	interface String {
-	  filterBadWords(): string;
-	}
+  interface String {
+    filterBadWords(): string;
+  }
 }
 
 String.prototype.filterBadWords = function () {
-	return filterBadWords(this);
+  return filterBadWords(this);
 };

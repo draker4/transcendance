@@ -1,17 +1,14 @@
+// | bad-words package | to custom see https://www.npmjs.com/package/bad-words
 
-// | bad-words package | to custom see https://www.npmjs.com/package/bad-words 
+export function filterBadWords(text: string): string {
+  if (text === null || text.trim() === '') return '';
+  else if (!/\w/.test(text)) return text;
+  else {
+    var Filter = require('bad-words');
+    var filter = new Filter();
 
-export function filterBadWords(text: string):string {
-	if (text === null || text.trim() === "")
-		return "";
-	else if ( !/\w/.test(text))
-		return text;
-	else {
-		var Filter = require('bad-words');
-		var filter = new Filter();
-
-		return filter.clean(text);
-	}
+    return filter.clean(text);
+  }
 }
 
 /*
