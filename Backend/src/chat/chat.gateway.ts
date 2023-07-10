@@ -100,4 +100,20 @@ export class ChatGateway implements OnModuleInit {
     );
   }
 
+  @SubscribeMessage('addPongie')
+  async addPongie(
+    @MessageBody() pongieId: number,
+    @Request() req
+  ) {
+    return await this.chatService.addPongie(req.user.id, pongieId);
+  }
+
+  @SubscribeMessage('deletePongie')
+  async deletePongie(
+    @MessageBody() pongieId: number,
+    @Request() req
+  ) {
+    return await this.chatService.deletePongie(req.user.id, pongieId);
+  }
+
 }

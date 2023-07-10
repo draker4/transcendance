@@ -32,8 +32,6 @@ export class ChatService {
     try {
       const user = await this.usersService.getUserChannels(parseInt(id));
 
-      console.log("channels");
-
       if (!user)
         throw new WsException('no user found');
 
@@ -126,25 +124,116 @@ export class ChatService {
 
   async getPongies(id: string) {
     try {
-      const	user = await this.usersService.getUserPongies(parseInt(id));
 
-      console.log("pongies");
+      const relations = await this.userPongieRelation.find({
+        where: { userId: parseInt(id), deleted: false },
+        relations: ["pongie", "pongie.avatar"],
+      });
 
-      if (!user)
-        throw new WsException("no user found");
+      if (!relations)
+        throw new WsException("no relations found");
 
-      const pongies = await Promise.all(user.pongies.map(async (pongie) => {
-        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
-          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
-          pongie.avatar.decrypt = false;
+      const pongies = await Promise.all(relations.map(async (relation) => {
+        if (relation.pongie.avatar?.decrypt && relation.pongie.avatar?.image?.length > 0) {
+          relation.pongie.avatar.image = await this.cryptoService.decrypt(relation.pongie.avatar.image);
+          relation.pongie.avatar.decrypt = false;
         }
-        return pongie;
+        return relation.pongie;
       }));
   
       return pongies;
     }
     catch (error) {
       console.log(error);
+      throw new WsException(error.message);
+    }
+  }
+
+  async deletePongie(userId: number, pongieId: number) {
+    try {
+
+      const relation1 = await this.userPongieRelation.findOne({
+        where: {userId: userId, pongieId: pongieId}
+      });
+
+      const relation2 = await this.userPongieRelation.findOne({
+        where: {userId: pongieId, pongieId: userId}
+      });
+
+      relation1.deleted = true;
+      relation2.deleted = true;
+
+      await this.userPongieRelation.save(relation1);
+      await this.userPongieRelation.save(relation2);
+
+    }
+    catch (error) {
+      console.log(error);
+      throw new WsException("cannot delete pongie");
+    }
+  }
+
+  async addChannel(userId: number, channelId: number) {
+    try {
+      const relation = await this.userChannelRelation.findOne({
+        where: { userId: userId, channelId: channelId},
+        relations: ["user", "channel"],
+      });
+
+      if (!relation) {
+        const user = await this.usersService.getUserPongies(userId);
+        const channel = await this.channelService.getChannelById(channelId);
+       
+        await this.usersService.updateUserChannels(user, channel);
+      }
+      // else {
+      //   await this.userPongieRelation.save(relation);
+      // }
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
+  async addPongie(userId: number, pongieId: number) {
+    try {
+      const relation = await this.userPongieRelation.findOne({
+        where: { userId: userId, pongieId: pongieId},
+        relations: ["user", "pongie"],
+      });
+
+      if (!relation) {
+        const user = await this.usersService.getUserPongies(userId);
+        const pongie = await this.usersService.getUserPongies(pongieId);
+        
+        await this.usersService.updateUserPongies(user, pongie);
+      }
+      else {
+        relation.invited = true;
+        relation.deleted = false;
+
+        await this.userPongieRelation.save(relation);
+      }
+
+      const relation2 = await this.userPongieRelation.findOne({
+        where: { userId: pongieId, pongieId: userId },
+        relations: ["user", "pongie"],
+      });
+
+      if (!relation2) {
+        const user = await this.usersService.getUserPongies(userId);
+        const pongie = await this.usersService.getUserPongies(pongieId);
+
+        await this.usersService.updateUserPongies(user, pongie);
+      }
+      else {
+        relation2.invited = true;
+        relation2.deleted = false;
+
+        await this.userPongieRelation.save(relation2);
+      }
+    }
+    catch (error) {
       throw new WsException(error.message);
     }
   }

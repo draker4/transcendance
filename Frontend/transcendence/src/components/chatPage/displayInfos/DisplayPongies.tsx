@@ -26,6 +26,10 @@ export default function DisplayInfos({
 
   const	deleteItem = (pongie: Pongie, event: React.MouseEvent) => {
 	event.stopPropagation();
+
+	// socket.emit("addPongie", 1);
+	socket.emit("deletePongie", pongie.id);
+
 	const updatedPongies = pongies.filter((item) => item !== pongie);
 	setPongies(updatedPongies);
   }

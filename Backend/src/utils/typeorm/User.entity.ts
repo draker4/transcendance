@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Entity,
   Column,
@@ -9,9 +10,12 @@ import {
   AfterLoad,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Channel } from './Channel.entity';
 import { Avatar } from './Avatar.entity';
+import { UserPongieRelation } from './UserPongieRelation';
+import { UserChannelRelation } from './UserChannelRelation';
 
 @Entity()
 export class User {
@@ -80,6 +84,9 @@ export class User {
   })
   channels: Channel[];
 
+  @OneToMany(() => UserChannelRelation, userChannelRelation => userChannelRelation.channel)
+  userChannelRelations: UserChannelRelation[];
+
   @ManyToMany(() => User, (user) => user.pongies)
   @JoinTable({
     name: "user_pongie_relation",
@@ -88,11 +95,17 @@ export class User {
       referencedColumnName: "id",
     },
     inverseJoinColumn: {
-      name: "friendId",
+      name: "pongieId",
       referencedColumnName: "id",
     },
   })
   pongies: User[];
+  
+  @OneToMany(() => UserPongieRelation, userPongieRelation => userPongieRelation.pongie)
+  userPongieRelations: UserPongieRelation[];
+  
+  @OneToMany(() => UserPongieRelation, pongieUserRelation => pongieUserRelation.pongie)
+  pongieUserRelations: UserPongieRelation[];
 
   @OneToOne(() => Avatar)
   @JoinColumn()
@@ -106,6 +119,10 @@ export class User {
 
     if (!this.pongies) {
       this.pongies = [];
+    }
+
+    if (!this.userPongieRelations) {
+      this.userPongieRelations = [];
     }
   }
 }
