@@ -94,33 +94,25 @@ export class ChatService {
   }
 
   async joinOrCreatePrivateMsgChannel(userId: string, pongieId: string) {
-    console.log('UserID : ', userId);
-    console.log('pongieID : ', pongieId);
-
     let channel:CreatePrivateMsgChannelDto;
 
     try {
-
-    
     // verification si la channel n'existe pas deja (dans les tables)
     // creation de la channel apres verif
     channel = await this.channelService.joinOrCreatePrivateMsgChannel(userId, pongieId);
     
-    // join la room => nom de room : ( idlower + ' ' + idhigher )
-    
-
   } catch (e) {
     return {
       success: 'false',
       message: 'creatPrivateMessageChannel failed : ' + e.message,
     };
   }
-
     return {
       success: 'true',
       channel: channel,
     };
   }
+
 
   async getPongies(id: string) {
     try {
@@ -236,5 +228,15 @@ export class ChatService {
     catch (error) {
       throw new WsException(error.message);
     }
+  }
+  /* ------------PRIVATE MSG------------------- */
+
+  checkPrivateMsgId(id:number, channelName:string):boolean {
+    if (channelName.split(" ").length > 2)
+      return false;
+
+    const [id1, id2] = channelName.split(" ", 2);
+    
+    return (id === parseInt(id1) || id === parseInt(id2));
   }
 }

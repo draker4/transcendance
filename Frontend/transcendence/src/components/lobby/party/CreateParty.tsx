@@ -24,6 +24,7 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
   const [background, setBackground] = useState<string>("background/0");
   const [ball, setBall] = useState<string>("ball/0");
   const [type, setType] = useState<string>("classic");
+  const [mode, setMode] = useState<string>("perso");
 
   //Fonction pour rejoindre une game
   const Create_Game = async () => {
@@ -33,11 +34,12 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
       push: push,
       score: score,
       round: round,
-      difficulty: 2,
       side: side,
       background: background,
       ball: ball,
       type: type,
+      mode: mode,
+      difficulty: 3,
     };
 
     //Creer la game
@@ -54,6 +56,7 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
     setBall("ball/0");
     setType("classic");
     setCreateParty(false);
+    setMode("perso");
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //

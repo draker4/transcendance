@@ -1,12 +1,9 @@
 import {
-  IsNotEmpty,
   IsNumber,
-  IsOptional,
   IsString,
   IsArray,
   IsBoolean,
 } from 'class-validator';
-import { v4 as uuidv4 } from 'uuid';
 
 export class GameDTO {
   @IsString()
@@ -50,10 +47,10 @@ export class GameDTO {
   Score: number;
 
   @IsNumber()
-  Round: number;
+  Difficulty: number;
 
   @IsNumber()
-  Difficulty: number;
+  Round: number;
 
   @IsString()
   Side: string;
@@ -64,12 +61,9 @@ export class GameDTO {
   @IsString()
   Ball: string;
 
-  // @IsString()
-  // Paddle: string;
-
   @IsString()
   Type: string;
 
-  // @IsString()
-  // Mode: string;
+  @IsString()
+  Mode: string;
 }

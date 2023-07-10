@@ -90,9 +90,9 @@ export default class Avatar_Service {
   public async submitAvatarColors(
     borderColor: string,
     backgroundColor: string,
-    isChannel: boolean
+    // isChannel: boolean [!][?] nécessaire ?
   ) {
-    const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
+    const body = JSON.stringify({ borderColor, backgroundColor });
 
     // console.log("body = ", body);
 

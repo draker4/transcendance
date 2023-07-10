@@ -92,7 +92,7 @@ export default function ChatClient({
 			console.log(display);
 		return (
 			<div className={styles.main + ' ' + styles.noPadding}>
-				<ChatPrivateMsg icon={renderIcon()} pongie={display} myself={myself}/>
+				<ChatPrivateMsg icon={renderIcon()} pongie={display} myself={myself} socket={socket}/>
 			</div>
 		)
 	

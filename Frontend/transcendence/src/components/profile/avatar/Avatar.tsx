@@ -5,6 +5,7 @@ import AvatarUser from "../../avatarUser/AvatarUser";
 
 type Props = {
   avatar: Avatar;
+  isOwner: boolean;
   onClick: () => void;
   displaySettings: boolean;
   previewBorder: string;
@@ -13,6 +14,7 @@ type Props = {
 
 export default function Avatar({
   avatar,
+  isOwner,
   onClick,
   displaySettings,
   previewBorder,
@@ -20,7 +22,7 @@ export default function Avatar({
 }: Props) {
   return (
     <div className={styles.avatar}>
-      <div className={styles.circle} onClick={onClick}>
+      <div className={`${styles.circle} ${!isOwner ? styles.disabled : ''}`} onClick={onClick}>
         {!displaySettings && (
           <AvatarUser
             avatar={avatar}

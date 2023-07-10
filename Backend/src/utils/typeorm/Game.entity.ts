@@ -39,13 +39,13 @@ export class Game {
   Score: number;
 
   @Column()
+  Difficulty: number;
+
+  @Column()
   Push: boolean;
 
   @Column()
   Round: number;
-
-  @Column()
-  Difficulty: number;
 
   @Column()
   Side: string;
@@ -55,13 +55,10 @@ export class Game {
 
   @Column()
   Ball: string;
-
-  // @Column()
-  // Paddle: string;
-
+  
   @Column()
   Type: string;
 
-  // @Column()
-  // Mode: string;
+  @Column()
+  Mode: string;
 }

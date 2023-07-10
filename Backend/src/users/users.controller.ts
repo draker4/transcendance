@@ -89,7 +89,7 @@ export class UsersController {
   // [!] utiliser trycatch pour manip la database
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-    console.log("User @Put called, properties = \n", properties);
+    // console.log("User @Put called, properties = \n", properties);
 
     const updatedProperties = [];
     let message = "";
@@ -99,8 +99,13 @@ export class UsersController {
         updatedProperties.push(key);
       }
     }
+    // console.log("Array of updatedProperties = ", updatedProperties); // checking
+    // console.log("updatedProperties.length  = ", updatedProperties.length ); // checking
 
+    
     if (updatedProperties.length > 0) {
+      this.usersService.updateUser(req.user.id, properties);
+
       message = `Properties : ${updatedProperties.join(', ')} : successfully updated`
     }
 
