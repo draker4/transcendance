@@ -2,244 +2,118 @@
 
 import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
 import Header from "./Header";
-import MessageBoard  from "./MessageBoard";
+import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
-import { ReactNode, useState } from "react";
-
+import { ReactNode, useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
+import Channel_Service from "@/services/Channel.service";
+import generateMessageExample from "@/lib/chat/temporaire/messageExample"; // [!] temporaire
 
 type Props = {
   icon: ReactNode;
   pongie: Pongie;
   myself: Profile & { avatar: Avatar };
-}
+  socket: Socket;
+};
 
-// [!] type temporaire à améliorer
-// [?] Avoir 2 types Msg normal et Msg privé ou grouper en un seul ?
-type PrivateMsgType = {
+type SendMsg = {
   content: string;
-  sender: Pongie; // le user emetteur
-  date: Date;// date d'emmission ?
-  // destination : channel ou pongie ou channel type privateMsg comme backend ?
+  date: Date;
+  senderId: string;
+};
 
-}
+export default function ChatPrivateMsg({
+  icon,
+  pongie,
+  myself,
+  socket,
+}: Props) {
+  const channelService = new Channel_Service();
+  const channelName: string = channelService.formatPrivateMsgChannelName(
+    myself.id,
+    pongie.id
+  );
 
-export default function ChatPrivateMsg( { icon, pongie, myself }: Props) {
-  
-  const me:Pongie = {
+  // [!] le join de channel devra se faire automatiquement directement dans le chatService
+  // au moment de l'initialisation ==> join toute les channel trouvées pour l'user
+  socket.emit(
+    "joinPrivateMsgChannel",
+    { pongieId: pongie.id },
+    (response: any) => {
+      console.log("REPONSE DE JOINPRIVCHANNEL : ", response);
+      if (response.success === "true") {
+        // socket.join(channelName); NOPE
+      }
+    }
+  );
+
+  const me: Pongie = {
     id: myself.id,
     login: myself.login,
     avatar: myself.avatar,
     updatedAt: new Date(), // [?][!] moyen de faire mieux ? une utilité ici ?
-  }
+  };
+
+  useEffect(() => {
+    // Fonction utilisée pour l'abonnement à l'event 'sendMsg'
+    // [!] Mauvaise pratique, le register doit etre fait dans un composant parent qui reste monté
+    const handleReceivedPrivateMsg = (sendMsg: SendMsg) => {
+      const receivedDate = new Date(sendMsg.date);
+      const msg: PrivateMsgType = {
+        content: sendMsg.content,
+        sender: sendMsg.senderId === pongie.id.toString() ? pongie : me,
+        date: receivedDate,
+      };
+      setMessages((previous) => [...previous, msg]);
+    };
+
+    // abonement à l'event
+    console.log("registering to event 'sendMsg'");
+    socket.on("sendMsg", handleReceivedPrivateMsg);
+
+    // En cas de démontage du composant ou de changement de la dépendence socket
+    return () => {
+      console.log("unregistering to event 'sendMsg'");
+      socket.off("sendMsg", handleReceivedPrivateMsg);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 
   // [!] temporaire
-  const messagesExample:PrivateMsgType[] = [
-    {
-      content: "Bonjour cher ami",
-      sender: pongie,
-      date: new Date(),
-    },
+  const messagesExample: PrivateMsgType[] = generateMessageExample(me, pongie);
 
-    {
-      content: "Yop ! on se fait une game ?",
-      sender: me,
-      date: new Date(),
-    },
-    
-    {
-      content: "J'ai trop envie de cruncher !",
-      sender: me,
-      date: new Date(),
-    },
-
-    {
-      content: "Allez, let's Pong !",
-      sender: pongie,
-      date: new Date(),
-    },
-
-    {
-      content: "When I find myself in times of trouble"
-      + "Pikachu comes to me"
-      + "Speaking words of wisdom, let it be"
-      + "And in my hour of darkness"
-      + "Charizard is standing right in front of me"
-      + "Whispering words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-
-    {
-      content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Whisper words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "And when the night is cloudy"
-      + "Jigglypuff starts to sing"
-      + "Soothing melodies, let it be"
-      + "Oh, when the broken-hearted people"
-      + "Find solace in the sea"
-      + "Vaporeon shows us all, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Find solace in the sea, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "And when the morning sunlight"
-      + "Reflects off Butterfree's wings"
-      + "We know that love will guide the way, let it be"
-      + "For though they may be parted"
-      + "Espeon and Umbreon still shine their light"
-      + "Leading us to peace, let it be",
-      sender: me,
-      date: new Date(),
-    },
-
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Shining light of peace, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Whisper words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-
-    {
-      content: "Bonjour cher ami",
-      sender: pongie,
-      date: new Date(),
-    },
-
-    {
-      content: "Yop ! on se fait une game ?",
-      sender: me,
-      date: new Date(),
-    },
-    
-    {
-      content: "J'ai trop envie de cruncher !",
-      sender: me,
-      date: new Date(),
-    },
-
-    {
-      content: "Allez, let's Pong !",
-      sender: pongie,
-      date: new Date(),
-    },
-
-    {
-      content: "When I find myself in times of trouble"
-      + "Pikachu comes to me"
-      + "Speaking words of wisdom, let it be"
-      + "And in my hour of darkness"
-      + "Charizard is standing right in front of me"
-      + "Whispering words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-
-    {
-      content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Whisper words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "And when the night is cloudy"
-      + "Jigglypuff starts to sing"
-      + "Soothing melodies, let it be"
-      + "Oh, when the broken-hearted people"
-      + "Find solace in the sea"
-      + "Vaporeon shows us all, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Find solace in the sea, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "And when the morning sunlight"
-      + "Reflects off Butterfree's wings"
-      + "We know that love will guide the way, let it be"
-      + "For though they may be parted"
-      + "Espeon and Umbreon still shine their light"
-      + "Leading us to peace, let it be",
-      sender: me,
-      date: new Date(),
-    },
-
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Shining light of peace, let it be",
-      sender: me,
-      date: new Date(),
-    },
-      
-      {
-        content:
-      + "Let it be, let it be"
-      + "Let it be, let it be"
-      + "Whisper words of wisdom, let it be",
-      sender: me,
-      date: new Date(),
-    },
-  ];
-
+  // [+] charger les anciens messages --> faire une demande au back-->database lorsque ce sera pret
   const [messages, setMessages] = useState<PrivateMsgType[]>(messagesExample);
 
-
   const addMsg = (msg: PrivateMsgType) => {
-    setMessages((previous) => [...previous, msg]);
-  }
-
-
-
+    socket.emit("newPrivateMsg", {
+      content: msg.content,
+      channel: channelName,
+    });
+  };
 
   return (
     <div className={styles.privateMsgFrame}>
-      <Header icon={icon} pongie={pongie}/>
-      <MessageBoard messages={messages}/>
-      <Prompt pongie={pongie} me={me} addMsg={addMsg}/>
+      <Header icon={icon} pongie={pongie} />
+      <MessageBoard messages={messages} />
+      <Prompt pongie={pongie} me={me} addMsg={addMsg} />
     </div>
   );
 }
+
+/*
+  [!][N] Note, objet message privé :
+  Les messages privés envoyés au backend contiennent :
+  - content (string < 350 char)
+  - channel (string -> nom de la channel privée cible)
+
+  Le nom d'une channel privé est formaté : "idUser1" + " " + "idUser2"
+
+  Pour sécuriser :
+  L'identité de l'emmetteur est récupéré dans le token avec @Request
+  La date d'envoi est générée par le backend
+
+  Websocket with React : https://socket.io/fr/how-to/use-with-react
+
+*/

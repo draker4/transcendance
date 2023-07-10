@@ -55,12 +55,24 @@ export default class Profile_Service {
   }
 
   public async editUser(properties: Record<string, string>) {
-    console.log("FRONT - properties = ", properties);
 
-    const body = JSON.stringify(properties);
-    console.log("FRONT - JSON.stringify(properties) = ", body);
+    const body = JSON.stringify({properties : properties});
 
+    // [+][!] gestion reponse ?
     const response = await this.fetchDataClientSide("", "PUT", body);
+
+    if (response.ok) {
+      const data = await response.json();
+      const message = data.message;
+
+      console.log("response of editUser : ", message);
+      
+      // [+] finir cette gestion
+      return "";
+    } else {
+      // [+] ici throw error ou success false ... a finir
+    }
+    
 
     return "";
   }
