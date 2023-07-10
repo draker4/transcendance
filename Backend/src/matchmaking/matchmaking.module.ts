@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GamesService } from './games-service/games-service.service';
-import { GamesController } from './games-controller/games-controller.controller';
+import { MatchmakingService } from './matchmaking-service/matchmaking.service';
+import { MatchmakingController } from './matchmaking-controller/matchmaking.controller';
+
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
@@ -14,8 +15,8 @@ import { User } from 'src/utils/typeorm/User.entity';
     TypeOrmModule.forFeature([Matchmaking]),
     TypeOrmModule.forFeature([User]),
   ],
-  controllers: [GamesController],
-  providers: [GamesService],
-  exports: [GamesService],
+  controllers: [MatchmakingController],
+  providers: [MatchmakingService],
+  exports: [MatchmakingService],
 })
-export class GamesModule {}
+export class MatchmakingModule {}

@@ -11,6 +11,7 @@ import League from "@/components/lobby/league/League";
 import Party from "@/components/lobby/party/Party";
 import History from "@/components/lobby/history/History";
 import NavLobby from "./NavLobby";
+import MatchmakingService from "@/services/Matchmaking.service";
 
 type Props = {
   profile: Profile;
@@ -19,6 +20,7 @@ type Props = {
 
 export default function Lobby({ profile, token }: Props) {
   const Lobby = new LobbyService(token);
+  const Matchmaking = new MatchmakingService(token);
 
   const [isLoading, setIsLoading] = useState(true);
   const [menu, setMenu] = useState("League");
@@ -39,14 +41,14 @@ export default function Lobby({ profile, token }: Props) {
       setIsLoading(false);
     });
 
-  // -------------------------------------  RENDU  ------------------------------------ //
-
   //Si le joueur n'est pas en game
   return (
     <div className={styles.lobby}>
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
-        {menu == "League" && <League Lobby={Lobby} isLoading={isLoading} />}
+        {menu == "League" && (
+          <League Matchmaking={Matchmaking} isLoading={isLoading} />
+        )}
         {menu == "Party" && (
           <Party Lobby={Lobby} isLoading={isLoading} token={token} />
         )}

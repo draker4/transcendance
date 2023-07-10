@@ -11,7 +11,10 @@ export class MatchmakingDTO {
   Player_Id: number;
 
   @IsNotEmpty()
-  CreatedAt: Date;
+  @IsNumber()
+  Mode: string;
 
+  @IsNotEmpty()
+  CreatedAt: Date;
 }
 

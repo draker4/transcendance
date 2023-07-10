@@ -6,35 +6,41 @@ import Image from "next/image";
 import DefineType from "@/components/lobby/league/DefineType";
 import Leaderboard from "@/components/lobby/league/Leaderboard";
 import StreamGame from "@/components/lobby/league/StreamGame";
-import ContentLoading from "../ContentLoading";
 
 type Props = {
-  Lobby: any;
+  Matchmaking: any;
   isLoading: boolean;
 };
 
-export default function League({ Lobby, isLoading }: Props) {
+export default function League({ Matchmaking, isLoading }: Props) {
+  //Selection du mode de jeu
   const [type, setType] = useState<string>("classic");
-  // -----------------------------------  MATCHMACK  ---------------------------------- //
+
+  // -----------------------------------  MATCHMAKE  ---------------------------------- //
+
   //True si en matchmake
   const [inMatchMaking, setinMatchMake] = useState(false);
 
   //Fonction pour rejoindre une game
   const Start_Matchmake = async () => {
     //Lance la recherche de game
-    const res = await Lobby.Start_Matchmaking();
+    const res = await Matchmaking.Start_Matchmaking(); //Ajout mode de jeux type lors du start
     setinMatchMake(res);
   };
 
   //Fonction pour commencer la recherche une game
   const Stop_Matchmake = async () => {
-    await Lobby.Stop_Matchmaking();
+    await Matchmaking.Stop_Matchmaking();
     setinMatchMake(false);
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //
   if (isLoading) {
-    return <ContentLoading />;
+    return (
+      <div className={styles.loading}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   if (inMatchMaking) {
@@ -52,6 +58,7 @@ export default function League({ Lobby, isLoading }: Props) {
       </div>
     );
   }
+
   return (
     <div className={styles.league}>
       <DefineType type={type} setType={setType} />

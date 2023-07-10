@@ -4,8 +4,7 @@ import { useState } from "react";
 import styles from "@/styles/lobby/party/Party.module.css";
 import Lobby_Service from "@/services/Lobby.service";
 import CreateParty from "@/components/lobby/party/CreateParty";
-import PartyList from "@/components/lobby/party/PartyList";
-import ContentLoading from "../ContentLoading";
+import Game_List from "@/components/lobby/party/PartyList";
 
 type Props = {
   Lobby: Lobby_Service;
@@ -18,7 +17,11 @@ export default function Party({ Lobby, isLoading, token }: Props) {
   const [createParty, setCreateParty] = useState<boolean>(false);
   // -------------------------------------  RENDU  ------------------------------------ //
   if (isLoading) {
-    return <ContentLoading />;
+    return (
+      <div className={styles.loading}>
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   return (
@@ -29,10 +32,11 @@ export default function Party({ Lobby, isLoading, token }: Props) {
       >
         Create New Party
       </button>
+
       {createParty && (
         <CreateParty Lobby={Lobby} setCreateParty={setCreateParty} />
       )}
-      {!createParty && <PartyList token={token} />}
+      {!createParty && <Game_List token={token} />}
     </div>
   );
 }
