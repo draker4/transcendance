@@ -1,6 +1,5 @@
 import ProfileMainFrame from "@/components/profile/ProfileMainFrame";
 import { verifyAuth } from "@/lib/auth/auth";
-import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
 import Avatar_Service from "@/services/Avatar.service";
 import Profile_Service from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
@@ -28,7 +27,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     isChannel: false,
     decrypt: false,
   };
-  let profile: Profile = {
+  let myProfile: Profile = {
     id: -1,
     login: "",
     first_name: "",
@@ -41,19 +40,40 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     story: "",
   };
 
+  let targetProfile: Profile = {
+    id: -1,
+    login: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    image: "",
+    provider: "",
+    motto: "",
+    story: "",
+  };
   try {
     const token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
 
     const profileData = new Profile_Service(token);
-    profile = await profileData.getProfileByToken();
+    myProfile = await profileData.getProfileByToken();
+
+    if (myProfile.login === login) {
+      targetProfile = myProfile;
+    } else {
+      targetProfile = await profileData.getProfileByLogin(login);
+    }
 
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarByName(login);
-
+  
     const payload = await verifyAuth(token);
-
+  
     if (payload.login === decodeURIComponent(login)) isProfilOwner = true;
+
+    
+
   } catch (err) {
     console.log(err);
   }
@@ -61,7 +81,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
   return (
     <main className={styles.main}>
       <ProfileMainFrame
-        profile={profile}
+        profile={targetProfile}
         avatar={avatar}
         isOwner={isProfilOwner}
       />

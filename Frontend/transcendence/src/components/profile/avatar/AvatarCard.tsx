@@ -36,18 +36,24 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   };
 
   const toogleDisplaySettings = () => {
+    if (!isOwner)
+      return ;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
   };
 
   const saveColorChanges = async () => {
+
+    if (!isOwner)
+      return ;
     // [?] verif si il y a eut un changement avant ?
 
     // [!] ici envoyer les updates color au back
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
-      false
+      // [+][!] voir une fois les avatar channel mis en place si le boolean isChannel
+      // est necessaire
     );
 
     // const response = await submitAvatarColors(
@@ -87,6 +93,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
 
           <Avatar
             avatar={avatar}
+            isOwner={isOwner}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}

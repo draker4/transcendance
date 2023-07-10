@@ -8,7 +8,8 @@ type Props = {
   pongie: Pongie;
 };
 
-export default function Header({ icon, pongie }: Props) {
+export default function 
+Header({ icon, pongie }: Props) {
   return (
     <div className={styles.header}>
       <div className={styles.icon}>{icon}</div>

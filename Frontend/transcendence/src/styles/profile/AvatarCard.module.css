@@ -78,7 +78,14 @@
 		rgba(67, 80, 126221, 0.22); */
   background-color: var(--notif);
   overflow: hidden;
+}
+
+.avatar .circle:hover {
   cursor: pointer;
+}
+
+.avatar .circle:hover.disabled {
+  cursor: auto;
 }
 
 .avatar .circle .image {
@@ -88,6 +95,7 @@
   object-position: center;
 }
 
+
 /* LOGIN MODULE */
 .loginCard {
   display: flex;
@@ -95,6 +103,7 @@
   flex-direction: column;
   position: absolute;
   right: 30%;
+  user-select: none;
 }
 
 .loginCard .login {
