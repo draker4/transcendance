@@ -46,7 +46,6 @@ export class ChannelService {
 			throw new Error("a given id is null or an empty string");
 
 		const name = this.formatPrivateMsgChannelName(userID, pongieId)
-		console.log("formated name :[", name, ']'); // checking
 		
 		// verif si la channel existe, on la cree sinon :
 		let channel = await this.getChannelbyName(name);
@@ -87,7 +86,5 @@ export class ChannelService {
 			type: "privateMsg",
 		}
 		await this.channelRepository.save(channel);
-
-
 	}
 }

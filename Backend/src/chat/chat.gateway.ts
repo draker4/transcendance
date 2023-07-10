@@ -54,9 +54,8 @@ export class ChatGateway implements OnModuleInit {
           console.log(this.connectedUsers);
         });
 
-        // ici gestion des room a join en fonction des channels de l'user ?
-        const testJoinRoom = socket.join("1 34"); // [!] en vrac pour test
-        console.log("testJoinRoom = ", testJoinRoom);
+        // [+] ici gestion des room a join en fonction des channels de l'user ?
+       socket.join("1 2"); // [!] en vrac&brut pour test
 
 
         console.log("connected users = ", this.connectedUsers);
@@ -71,9 +70,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('newPrivateMsg')
   yoping(@MessageBody() message: newMsgDto, @Request() req) {
-    console.log("req.user.login = ", req.user.login); // checking
-    console.log("privateMessage : objet = ", message); // checking
-
     if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
       // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
 
@@ -83,27 +79,17 @@ export class ChatGateway implements OnModuleInit {
       const now = new Date();
       const nowtoISOString = now.toISOString();
    
-      // [!] test de comparaison deDate à jeter
-      // const now3 = new Date(nowtoISOString);
-      // console.log("nowtoISOString :", nowtoISOString);
-
-      // console.log("now :", now);
-      // console.log("pour now il est : "  + now.getHours() + ":" + now.getMinutes());
-  
-      // console.log("now3 :", now3);
-      // console.log("pour now3 il est : "  + now3.getHours() + ":" + now3.getMinutes());
-
-
       const sendMsg:sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
         senderId: req.user.id,
       }
 
-      console.log("going to send " + sendMsg.content + " to " + message.channel);
+      console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?
       this.server.to(message.channel).emit('sendMsg', sendMsg);
     } else {
       // [?] Besoin de mieux sécuriser ou gérer ce cas ?
+      // [!] Avec une throw WsException ?
       console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
     }
 
@@ -140,7 +126,7 @@ export class ChatGateway implements OnModuleInit {
 	  return await this.chatService.getAllPongies(req.user.id);
   }
 
-  // [!] add dto pour le data
+  // [!][+] add dto pour le data
   @SubscribeMessage('joinPrivateMsgChannel')
   async joinOrCreatePrivateMsgChannel( @MessageBody() data: { pongieId: string },
     @Request() req,

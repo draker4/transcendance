@@ -17,10 +17,10 @@ type Props = {
 };
 
 type SendMsg = {
-  content: string,
-  date: Date,
-  senderId: string,
-}
+  content: string;
+  date: Date;
+  senderId: string;
+};
 
 export default function ChatPrivateMsg({
   icon,
@@ -28,22 +28,26 @@ export default function ChatPrivateMsg({
   myself,
   socket,
 }: Props) {
-  
   const channelService = new Channel_Service();
-  const channelName:string = channelService.formatPrivateMsgChannelName(myself.id, pongie.id);
+  const channelName: string = channelService.formatPrivateMsgChannelName(
+    myself.id,
+    pongie.id
+  );
 
-  // [!] le join de channel devra se faire automatiquement directement dans le chatService 
+  // [!] le join de channel devra se faire automatiquement directement dans le chatService
   // au moment de l'initialisation ==> join toute les channel trouvées pour l'user
-  socket.emit('joinPrivateMsgChannel', { "pongieId": pongie.id }, (response:any) => {
-
-    console.log("REPONSE DE JOINPRIVCHANNEL : ", response);
-    if (response.success === "true") {
+  socket.emit(
+    "joinPrivateMsgChannel",
+    { pongieId: pongie.id },
+    (response: any) => {
+      console.log("REPONSE DE JOINPRIVCHANNEL : ", response);
+      if (response.success === "true") {
         // socket.join(channelName); NOPE
+      }
     }
+  );
 
-  });
-
-const me: Pongie = {
+  const me: Pongie = {
     id: myself.id,
     login: myself.login,
     avatar: myself.avatar,
@@ -51,28 +55,30 @@ const me: Pongie = {
   };
 
   useEffect(() => {
-		socket.on('sendMsg', (sendMsg:SendMsg) => {
-
-
-
-      console.log("sendMsg event proc -- message = ", sendMsg.content);
-      console.log("sendMsg.date : ", sendMsg.date);
-
+    // Fonction utilisée pour l'abonnement à l'event 'sendMsg'
+    // [!] Mauvaise pratique, le register doit etre fait dans un composant parent qui reste monté
+    const handleReceivedPrivateMsg = (sendMsg: SendMsg) => {
       const receivedDate = new Date(sendMsg.date);
-      console.log("receivedDate : ", receivedDate);
-      console.log("pour receivedDate il est : "  + receivedDate.getHours() + ":" + receivedDate.getMinutes());
-
       const msg: PrivateMsgType = {
         content: sendMsg.content,
         sender: sendMsg.senderId === pongie.id.toString() ? pongie : me,
         date: receivedDate,
-      }
-			setMessages((previous) => [...previous, msg]);
-		});
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [socket]);
+      };
+      setMessages((previous) => [...previous, msg]);
+    };
 
-  
+    // abonement à l'event
+    console.log("registering to event 'sendMsg'");
+    socket.on("sendMsg", handleReceivedPrivateMsg);
+
+    // En cas de démontage du composant ou de changement de la dépendence socket
+    return () => {
+      console.log("unregistering to event 'sendMsg'");
+      socket.off("sendMsg", handleReceivedPrivateMsg);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket]);
 
   // [!] temporaire
   const messagesExample: PrivateMsgType[] = generateMessageExample(me, pongie);
@@ -81,15 +87,9 @@ const me: Pongie = {
   const [messages, setMessages] = useState<PrivateMsgType[]>(messagesExample);
 
   const addMsg = (msg: PrivateMsgType) => {
-    // [!] en attendant de passer par le chatSocket
-    // setMessages((previous) => [...previous, msg]);
-
-    // [+] emit nouveau message
     socket.emit("newPrivateMsg", {
       content: msg.content,
       channel: channelName,
-      // date: msg.date.toISOString(),
-      // [!] la date sera gérée en string coté backend
     });
   };
 
@@ -101,3 +101,19 @@ const me: Pongie = {
     </div>
   );
 }
+
+/*
+  [!][N] Note, objet message privé :
+  Les messages privés envoyés au backend contiennent :
+  - content (string < 350 char)
+  - channel (string -> nom de la channel privée cible)
+
+  Le nom d'une channel privé est formaté : "idUser1" + " " + "idUser2"
+
+  Pour sécuriser :
+  L'identité de l'emmetteur est récupéré dans le token avec @Request
+  La date d'envoi est générée par le backend
+
+  Websocket with React : https://socket.io/fr/how-to/use-with-react
+
+*/
