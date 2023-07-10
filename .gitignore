@@ -1,6 +1,7 @@
 
 # misc
 .DS_Store
+**/*.icloud
 
 # env
 .env
@@ -10,3 +11,5 @@ Dockers/.env
 Database
 
 install_docker.sh
+
+
