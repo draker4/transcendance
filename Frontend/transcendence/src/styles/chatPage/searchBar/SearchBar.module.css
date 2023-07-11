@@ -58,15 +58,39 @@
 }
 
 .dropdown li {
+	/* border: 1px solid red; */
 	display: flex;
 	align-items: center;
 	padding: 2px;
-	cursor: pointer;
+	/* cursor: pointer; */
 	border-radius: 5px;
+	justify-content: space-between;
 }
 
 .dropdown li:hover {
 	background-color: var(--primary-darker2);
+}
+
+.flex {
+	display: flex;
+	align-items: center;
+	/* border: 2px solid green; */
+	justify-content: space-between;
+}
+
+.icons {
+	border: 1px solid var(--tertiary);
+	border-radius: 10px;
+	height: 25px;
+	width: 25px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: auto 15px;
+}
+
+.icons:hover {
+	color: var(--accent);
 }
 
 .avatar {
@@ -75,7 +99,7 @@
 }
 
 .name {
-	margin-left: 10px;
+	margin-left: 20px;
 }
 
 .error, .notif {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import React from "react";
 import Search from "./Search";
 
-export default function SearchBar({ socket, verifyChannel, openDisplay, placeHolder }: {
+export default function SearchAll({ socket, verifyChannel, openDisplay, placeHolder }: {
 	socket: Socket;
 	verifyChannel: (text: string) => ListError;
 	openDisplay: (display: Display) => void;
@@ -15,6 +15,7 @@ export default function SearchBar({ socket, verifyChannel, openDisplay, placeHol
 	const	[error, setError] = useState<ListError | null>(null);
 
 	const	handleBlur = () => {
+		console.log("blurrr");
 		setList([]);
 		setError(null);
 	}

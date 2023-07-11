@@ -6,20 +6,6 @@ import * as nodemailer from 'nodemailer';
 
 @Injectable()
 export class MailService {
-  // constructor(private mailerService: MailerService) {}
-
-  // async sendUserConfirmation(email: string, code: string) {
-  //   const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
-
-  //   await this.mailerService.sendMail({
-  //     to: email,
-  //     subject: 'Welcome to Crunchy Pong! Confirm your Email',
-  //     template: './confirmation',
-  //     context: {
-  //       code: codeFormated,
-  //     },
-  //   });
-  // }
 
   private transporter: nodemailer.Transporter;
 
@@ -40,6 +26,7 @@ export class MailService {
   async sendUserConfirmation(email: string, code: string) {
     const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
+    console.log("code email: ", code); // [!]
     return this.transporter.sendMail({
       to: email,
       subject: 'Welcome to Crunchy Pong! Confirm your Email',
