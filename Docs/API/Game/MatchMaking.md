@@ -23,6 +23,13 @@
   }
   ```
 
+  body :
+  ```
+  {
+      "game_type" : "classic"
+  }
+  ```
+
 > Reponse
 
   ```

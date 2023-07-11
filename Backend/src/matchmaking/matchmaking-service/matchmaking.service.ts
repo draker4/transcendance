@@ -30,6 +30,15 @@ export class MatchmakingService {
 
 		try {
 
+			//Si il manque des datas
+			if (req.body.type == null) {
+				const Data = {
+					success: false,
+					message: 'Not enough parameters',
+				};
+				return Data;
+			}
+			
 			//Check si le joueur est deja dans une game
 			if (await this.CheckIfAlreadyInGame(req.user.id)) {
 				const Data = {
@@ -49,7 +58,7 @@ export class MatchmakingService {
 			}
 
 			//Ajoute le joueur dans la liste de matchmaking
-			if (await this.AddPlayerToMatchmaking(req.user.id)) {
+			if (await this.AddPlayerToMatchmaking(req.user.id, req.body.type)) {
 				const Data = {
 					success: true,
 					message: 'You are now in matchmaking ',
@@ -141,7 +150,7 @@ export class MatchmakingService {
 			}
 
 			//Check si deux joueur sont dans la liste de matchmake,  si c'est le cas , fais une game avec les deux et les retire, return le numero de la game creer
-			const game_id = await this.CheckIfTwoPlayerAreInMatchmaking();
+			const game_id = await this.CheckIfTwoPlayerAreInMatchmaking(req.user.id);
 			if (game_id != false) {
 				const Data = {
 					success: true,
@@ -174,8 +183,13 @@ export class MatchmakingService {
 	//===========================================================Fonction annexe===========================================================
 
 	//Check si deux joueur sont dans la liste de matchmake,  si c'est le cas , fais une game avec les deux et les retire, return le numero de la game creer
-	async CheckIfTwoPlayerAreInMatchmaking(): Promise<any> {
-		const all_user = await this.MatchMakeRepository.find();
+	async CheckIfTwoPlayerAreInMatchmaking(user_id: number): Promise<any> {
+
+		//Recupere le mode de jeu du joueur qui update
+		const user = await this.MatchMakeRepository.findOne({where: { Player_Id : user_id }});
+		const mode = user.Mode;
+
+		const all_user = await this.MatchMakeRepository.find({where: { Mode : mode }});
 		if (all_user != null) {
 			if (all_user.length >= 2) {
 				const user1 = all_user[0];
@@ -188,14 +202,14 @@ export class MatchmakingService {
 					user1.Player_Id,
 					name_1 + ' vs ' + name_2,
 					false,
-					0,
+					0,		//[!] à choisir ce qui est par default en ranked
 					0,
 					3,
 					'left',
-					'',
-					'',
-					'',
-					'',
+					'default',
+					'default',
+					'ranked',
+					mode,
 				);
 				await this.AddPlayerToGame(game_id, user2.Player_Id);
 				return game_id;
@@ -269,7 +283,7 @@ export class MatchmakingService {
 	}
 
 	//Ajoute un joueur dans la liste de matchmaking
-	async AddPlayerToMatchmaking(user_id: number): Promise<any> {
+	async AddPlayerToMatchmaking(user_id: number, type : string): Promise<any> {
 
 		//Check si le joueur est deja dans la liste de matchmaking
 		if (await this.CheckIfPlayerIsInMatchmaking(user_id)) {
@@ -280,6 +294,7 @@ export class MatchmakingService {
 			const user = new MatchmakingDTO();
 			user.Player_Id = user_id;
 			user.CreatedAt = new Date();
+			user.Mode = type;
 			await this.MatchMakeRepository.save(user);
 			return true;
 		}

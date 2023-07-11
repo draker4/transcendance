@@ -25,7 +25,7 @@ export default function League({ Matchmaking, isLoading }: Props) {
 	//Fonction pour rejoindre une game
 	const Start_Matchmake = async () => {
 		//Lance la recherche de game
-		const res = await Matchmaking.Start_Matchmaking(); //Ajout mode de jeux type lors du start
+		const res = await Matchmaking.Start_Matchmaking(type); 
 		setinMatchMake(res);
 	};
 

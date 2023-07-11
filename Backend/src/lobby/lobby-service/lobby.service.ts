@@ -65,7 +65,7 @@ export class LobbyService extends LobbyUtils {
 		
 		try {
 			//Si il manque des datas
-			if (req.body.join_as == null || req.body.game_id == null) {
+			if (req.body.game_id == null) {
 				const Data = {
 					success: false,
 					message: 'Not enough parameters',
