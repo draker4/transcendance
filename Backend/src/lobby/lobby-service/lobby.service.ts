@@ -336,4 +336,28 @@ export class LobbyService extends LobbyUtils {
 			return Data;
 		}
 	}
+
+	//Renvoi les données necessaire dans l'onglet league
+	async GetLeague(req: any): Promise<any> {
+		try {
+
+			const Data = {
+				success: true,
+				message: 'Request successfulld',
+				data: {
+					Top10: await this.GetTop10(),
+					AllRanked: await this.GetAllRanked(),
+				},
+			};
+			return Data;
+
+		} catch (error) {
+			const Data = {
+				success: false,
+				message: 'Catched an error',
+				error: error,
+			};
+			return Data;
+		}
+	}
 }

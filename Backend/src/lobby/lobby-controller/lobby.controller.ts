@@ -49,4 +49,9 @@ export class LobbyController {
 		return this.LobbyService.IsInGame(req);
 	}
 
+	// 06 - api/lobby/GetLeague
+	@Get('getleague')
+	GetLeague(@Request() req) {
+		return this.LobbyService.GetLeague(req);
+	}
 }

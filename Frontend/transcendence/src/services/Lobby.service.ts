@@ -53,7 +53,6 @@ class Lobby_Service {
 		const body = JSON.stringify(Settings);
 		const response = await this.FetchData("lobby/create", "POST", body);
 		const data = await response.json();
-		console.log(data);
 		if (data.success === false) {
 			return false;
 		}
@@ -87,11 +86,18 @@ class Lobby_Service {
 	//Recupere les infos de la game
 	public async Get_Game_Info(gameID: String | undefined): Promise<any> {
 		const body = JSON.stringify({ game_id: gameID });
-		console.log(body);
 		const response = await this.FetchData("lobby/getone", "POST", body);
 		const data = await response.json();
 		return data.data;
 	}
+
+	//Get league data
+	public async Get_League(): Promise<any> {
+		const response = await this.FetchData("lobby/getleague", "GET");
+		const data = await response.json();
+		return data.data;
+	}
+
 }
 
 export default Lobby_Service;

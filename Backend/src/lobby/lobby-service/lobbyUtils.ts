@@ -10,6 +10,12 @@ import { User } from 'src/utils/typeorm/User.entity';
 
 import { v4 as uuidv4 } from 'uuid';
 
+interface Player {
+	login: string;
+	score: number;
+	rank: number;
+}
+
 export class LobbyUtils {
 
 	constructor(
@@ -290,6 +296,99 @@ export class LobbyUtils {
 				return player.login;
 			}
 		}
-		return 'Player_' + player_id;
+		return "Unknown";
 	}
+
+	//Renvoi la liste des 10 meilleurs joueurs
+	async GetTop10(): Promise<any> {
+
+		//Pour toutes les game fini
+		const all_game = await this.GameRepository.find({
+			where: { Status: 'Finished', Type: 'Ranked' },
+		});
+
+		//Pour chaque game
+		const all_player : Player[] = [];
+		for (let i = 0; i < all_game.length; i++) {
+			
+			//Recupere les logins
+			const Host_Login = await this.GetPlayerName(all_game[i].Host);
+			const Opponent_Login = await this.GetPlayerName(all_game[i].Opponent);
+
+			//Si le host n'est pas dans le dict
+			if (Host_Login != "Unknown")
+			{
+				if (all_player[Host_Login] == null) {
+					all_player[Host_Login] = {
+						login: Host_Login,
+						score: all_game[i].Score_Host,
+						rank: 0,
+					};
+				}
+	
+				else {
+					all_player[Host_Login].score += all_game[i].Score_Host;
+				}
+			}
+
+			if (Opponent_Login != "Unknown")
+			{
+				//Si l'opponent n'est pas dans le dict
+				if (all_player[Opponent_Login] == null) {
+					all_player[Opponent_Login] = {
+						login: Opponent_Login,
+						score: all_game[i].Score_Opponent,
+						rank: 0,
+					};
+				}
+				else {
+					all_player[Opponent_Login].score += all_game[i].Score_Opponent;
+				}
+			}
+			
+			//Trie le dict par score et update le rank
+			const sorted = Object.values(all_player).sort((a, b) => b.score - a.score);
+			for (let i = 0; i < sorted.length; i++) {
+			  sorted[i].rank = i + 1;
+			}
+
+			return sorted;
+		}
+		
+		return [];
+	}
+
+	//Renvoi la liste de toutes les parties en cours en ranked
+	async GetAllRanked(): Promise<any> {
+
+		const all_game = await this.GameRepository.find({
+			where: { Status: 'InProgress', Type: 'Ranked' },
+		});
+
+		const all_game_info = [];
+
+		for (let i = 0; i < all_game.length; i++) {
+			
+			const Host_Login = await this.GetPlayerName(all_game[i].Host);
+			const Opponent_Login = await this.GetPlayerName(all_game[i].Opponent);
+
+			const game_info = {
+				uuid: all_game[i].uuid,
+				Name: all_game[i].Name,
+				Host: Host_Login,
+				Opponent: Opponent_Login,
+				Viewers_List: all_game[i].Viewers_List.length,
+				Score_Host: all_game[i].Score_Host,
+				Score_Opponent: all_game[i].Score_Opponent,
+				CreatedAt: all_game[i].CreatedAt,
+				Mode: all_game[i].Mode,
+			};
+
+			all_game_info.push(game_info);
+		}
+
+		return all_game_info;
+
+	}
+
 }

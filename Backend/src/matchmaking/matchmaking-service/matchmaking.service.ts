@@ -208,7 +208,7 @@ export class MatchmakingService {
 					'left',
 					'default',
 					'default',
-					'ranked',
+					'Ranked',
 					mode,
 				);
 				await this.AddPlayerToGame(game_id, user2.Player_Id);
