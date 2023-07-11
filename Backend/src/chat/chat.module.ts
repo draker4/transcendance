@@ -12,10 +12,12 @@ import { ChannelService } from "src/channels/channel.service";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { UserPongieRelation } from "src/utils/typeorm/UserPongieRelation";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
+import { MessagesService } from "src/messages/messages.service";
+import { Message } from "./dto/message.dto";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, Channel, Avatar, UserPongieRelation, UserChannelRelation]),
+		TypeOrmModule.forFeature([User, Channel, Avatar, UserPongieRelation, UserChannelRelation, Message]),
 	],
 	providers: [
 		ChatGateway,
@@ -24,6 +26,7 @@ import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 		CryptoService,
 		ChatService,
 		ChannelService,
+		MessagesService,
 	],
 })
 export class ChatModule {}

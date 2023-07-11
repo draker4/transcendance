@@ -17,12 +17,16 @@ export class ChatService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+
     @InjectRepository(UserPongieRelation)
     private readonly userPongieRelation: Repository<UserPongieRelation>,
+
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
+	
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
     private readonly cryptoService: CryptoService,

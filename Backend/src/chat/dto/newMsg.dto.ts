@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
 export class newMsgDto {
 
@@ -15,6 +15,10 @@ export class newMsgDto {
   @IsNotEmpty()
   @IsString()
   channel: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  channelId: number;
 }
 
 /*

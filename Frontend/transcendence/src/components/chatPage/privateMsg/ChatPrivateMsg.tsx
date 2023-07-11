@@ -93,7 +93,8 @@ export default function ChatPrivateMsg({
   const addMsg = (msg: PrivateMsgType) => {
     socket.emit("newPrivateMsg", {
       content: msg.content,
-      channel: channelName,
+      channel: channelName, // [+] il faudra envoyer plutot le channel id ici
+	  channelId: 1, // [!] bricolqge en brut
     });
   };
 
