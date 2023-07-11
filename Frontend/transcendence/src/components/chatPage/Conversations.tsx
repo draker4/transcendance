@@ -92,9 +92,7 @@ export default function Conversations({
     <div className={styles.main} style={{ maxWidth: maxWidth }}>
       <SearchBar
         socket={socket}
-        search="all"
         openDisplay={openDisplay}
-        placeHolder="Find new channels and pongies"
       />
 
       <div className={styles.title}>

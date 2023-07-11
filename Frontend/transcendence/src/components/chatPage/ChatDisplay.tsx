@@ -74,6 +74,7 @@ export default function ChatClient({
 					socket={socket}
 					display={display}
 					openDisplay={openDisplay}
+					littleScreen={littleScreen}
 				/>
 			</div>
 		)

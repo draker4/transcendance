@@ -6,6 +6,7 @@ import { ChannelDto } from "./dto/Channel.dto";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
 import { CreatePrivateMsgChannelDto } from "./dto/CreatePrivateMsgChannel.dto";
+import { User } from "src/utils/typeorm/User.entity";
 
 @Injectable()
 export class ChannelService {
@@ -18,9 +19,24 @@ export class ChannelService {
 	
 	) {}
 
-	async addChannel(channel: string) {
+	async getChannelByName(name: string) {
+		return await this.channelRepository.findOne({
+			where: { name: name },
+		});
+	}
+
+	async addChannel(
+		channelName: string,
+		type: 'public' | 'protected' | 'private' | 'privateMsg',
+	) {
+
+		const	channel = this.getChannelByName(channelName);
+
+		if (channel)
+			return null;
+
 		const	avatar = await this.avatarRepository.save({
-			name: channel,
+			name: channelName,
 			image: '',
 			text: '',
 			variant: 'rounded',
@@ -30,11 +46,13 @@ export class ChannelService {
 			isChannel: true,
 			decrypt: false,
 		  });
-		const chan: ChannelDto = {
-		  name: channel,
+		
+		const newChannel: ChannelDto = {
+		  name: channelName,
 		  avatar: avatar,
+		  type: type,
 		}
-		this.channelRepository.save(chan);
+		return await this.channelRepository.save(newChannel);
 	}
 
 
@@ -84,6 +102,13 @@ export class ChannelService {
 		return await this.channelRepository.findOne({ where: { id : id } });
 	}
 
+	public async getChannelUsers(id: number):Promise<Channel> {
+		return await this.channelRepository.findOne({
+			where: { id : id },
+			relations: ["users"],
+		});
+	}
+
 	private async createPrivateMsgChannel(name: string) {
 		const channel :CreatePrivateMsgChannelDto = {
 			name: name,
@@ -91,4 +116,12 @@ export class ChannelService {
 		}
 		await this.channelRepository.save(channel);
 	}
+
+	public async updateChannelUsers(channel: Channel, user: User) {
+		await this.channelRepository
+		  .createQueryBuilder()
+		  .relation(Channel, "users")
+		  .of(channel.id)
+		  .add(user);
+	  }
 }

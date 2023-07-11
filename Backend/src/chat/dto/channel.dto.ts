@@ -1,8 +1,12 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsNumber, IsObject, IsString } from "class-validator";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 
-export class ChannelDto {
+export class channelDto {
+
+	@IsNumber()
+	@IsNotEmpty()
+	id: number;
 
 	@IsString()
 	@IsNotEmpty()
@@ -15,5 +19,9 @@ export class ChannelDto {
 	@IsString()
 	@IsNotEmpty()
 	type: 'public' | 'protected' | 'private' | 'privateMsg';
+
+	@IsNotEmpty()
+	@IsBoolean()
+	joined: boolean;
 
 }

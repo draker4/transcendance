@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { OnModuleInit, Request, UseGuards } from '@nestjs/common';
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -57,7 +58,6 @@ export class ChatGateway implements OnModuleInit {
         // [+] ici gestion des room a join en fonction des channels de l'user ?
        socket.join("1 2"); // [!] en vrac&brut pour test
 
-
         console.log("connected users = ", this.connectedUsers);
 
       } catch (error) {
@@ -112,8 +112,8 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('getAllChannels')
-  async getAllChannels() {
-    return await this.chatService.getAllChannels();
+  async getAllChannels(@Request() req) {
+    return await this.chatService.getAllChannels(req.user.id);
   }
 
   @SubscribeMessage('getPongies')
@@ -152,6 +152,32 @@ export class ChatGateway implements OnModuleInit {
     @Request() req
   ) {
     return await this.chatService.deletePongie(req.user.id, pongieId);
+  }
+
+  @SubscribeMessage('join')
+  async join(
+    @MessageBody() body: {
+      channelId: string;
+      channelName: string;
+    },
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (body.channelId.includes(".channel"))
+      return await this.chatService.joinChannel(
+        req.user.id,
+        body.channelId.slice(0, body.channelId.length - 8),
+        body.channelName,
+        socket,
+        this.server,
+      );
+    else
+      return await this.chatService.joinPongie(
+        req.user.id,
+        body.channelId.slice(0, body.channelId.length - 8),
+        socket,
+        this.server,
+      );
   }
 
 }

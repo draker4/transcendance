@@ -1,27 +1,25 @@
 import styles from "@/styles/chatPage/searchBar/SearchBar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBan, faDoorOpen, faLock, faMagnifyingGlass, faPlus, faSmile, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import React from "react";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { faComment } from "@fortawesome/free-regular-svg-icons";
+import { Socket } from "socket.io-client";
 
 export default function Search({
   list,
   error,
   getData,
   createList,
-  handleBlur,
-  handleClick,
-  placeHolder,
+  openDisplay,
+  socket,
 }: {
   list: (Channel | Pongie | CreateOne)[];
   error: ListError | null;
   getData: (event: React.MouseEvent<HTMLInputElement>) => void;
   createList: (text: string) => void;
-  handleBlur: () => void;
-  handleClick: (display: Display) => void;
-  placeHolder: string;
+	openDisplay: (display: Display) => void;
+  socket: Socket;
 }) {
 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -53,15 +51,35 @@ export default function Search({
     let key: string = item.id.toString();
 
     if ("name" in item)
-      key = key.concat(" channel");
+      key = key.concat(".channel");
     else
-      key = key.concat(" pongie");
+      key = key.concat(".pongie");
+
+    const handleClick = () => {
+
+      if ("joined" in item || "login" in item)
+        socket.emit("join", {
+          channelId: key,
+          channelName: 'name' in item ? item.name : item.login,
+        });
+
+      openDisplay(item);
+      setDropdownVisible(false);
+    }
+
+    const color = 'isFriend' in item
+                  ? item.isFriend
+                  ? "var(--accent)"
+                  : "var(--primary-darker3)"
+                  : 'joined' in item
+                  ? item.joined
+                  ? "var(--accent)"
+                  : "var(--primary-darker3)"
+                  : "var(--primary-darker3)"
 
     return (
       <React.Fragment key={key}>
-        <li onMouseDown={(e) => {
-          e.stopPropagation();
-        }} >
+        <li onClick={handleClick}>
           <div className={styles.flex}>
             <div className={styles.avatar}>
               <AvatarUser
@@ -71,22 +89,44 @@ export default function Search({
                 borderColor={item.avatar.borderColor}
               />
             </div>
+            {
+              'type' in item && item.type === "public" &&
+              <div className={styles.icons}>
+                  <FontAwesomeIcon
+                    icon={faDoorOpen}
+                    color={color}
+                  />
+              </div>
+            }
+            {
+              'type' in item && item.type === "protected" &&
+              <div className={styles.icons}>
+                  <FontAwesomeIcon
+                    icon={faLock}
+                    color={color}
+                  />
+              </div>
+            }
+            {
+              'type' in item && item.type === "private" &&
+              <div className={styles.icons}>
+                  <FontAwesomeIcon
+                    icon={faBan}
+                    color={color}
+                  />
+              </div>
+            }
+            {
+              'isFriend' in item &&
+              <div className={styles.icons}>
+                  <FontAwesomeIcon
+                    icon={faSmile}
+                    color={color}
+                  />
+              </div>
+            }
             {"name" in item && <div className={styles.name}>{item.name}</div>}
             {"login" in item && <div className={styles.name}>{item.login}</div>}
-          </div>
-          <div className={styles.flex}>
-            <div className={styles.icons}>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  // onClick={(event) => confirmDelete(pongie, event)}
-                />
-            </div>
-            <div className={styles.icons}>
-                <FontAwesomeIcon
-                  icon={faComment}
-                  // onClick={(event) => confirmDelete(pongie, event)}
-                />
-            </div>
           </div>
         </li>
       </React.Fragment>
@@ -103,7 +143,7 @@ export default function Search({
       <div className={styles.searchBar} ref={inputRef}>
         <input
           type="text"
-          placeholder={placeHolder}
+          placeholder="Channels, pongies..."
           onClick={getData}
           onChange={handleSearch}
           onFocus={() => setDropdownVisible(true)}

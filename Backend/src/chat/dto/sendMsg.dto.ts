@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsDateString, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
 export class sendMsgDto {
   @IsNotEmpty()
@@ -12,8 +12,8 @@ export class sendMsgDto {
   date: string;
 
   @IsNotEmpty()
-  @IsString()
-  senderId: string;
+  @IsNumber()
+  senderId: number;
 }
 
 /*

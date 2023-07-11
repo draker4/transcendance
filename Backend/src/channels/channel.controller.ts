@@ -10,7 +10,7 @@ export class ChannelController {
 
 	@Public()
 	@Get(':channel')
-	test(@Param('channel') channel: string) {
-		this.channelService.addChannel(channel);
+	test(@Param('channel') channelName: string) {
+		this.channelService.addChannel(channelName, "public");
 	}
 }

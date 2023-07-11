@@ -12,5 +12,5 @@ export class CreatePrivateMsgChannelDto {
 
   @IsString()
   @IsNotEmpty()
-  type: 'default' | 'privateMsg';
+  type: 'public' | 'protected' | 'private' | 'privateMsg';
 }

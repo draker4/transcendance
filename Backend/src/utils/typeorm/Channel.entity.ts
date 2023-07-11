@@ -39,6 +39,6 @@ export class Channel {
 	@JoinColumn()
 	avatar: Avatar;
 
-	@Column({ default: 'default', nullable: false })
-	type: 'default' | 'privateMsg';
+	@Column({ default: 'public', nullable: false })
+	type: 'public' | 'protected' | 'private' | 'privateMsg';
 }
