@@ -14,6 +14,7 @@ import { Message } from './dto/message.dto';
 import { ChatService } from './chat.service';
 import { newMsgDto } from './dto/newMsg.dto';
 import { sendMsgDto } from './dto/sendMsg.dto';
+import { MessagesService } from 'src/messages/messages.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -27,7 +28,10 @@ import { sendMsgDto } from './dto/sendMsg.dto';
   path: '/chat/socket.io',
 })
 export class ChatGateway implements OnModuleInit {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+	private readonly chatService: ChatService,
+	private readonly messageService: MessagesService,
+	) {}
 
   // Container of connected users : Map<userId, socket.id>
   private connectedUsers: Map<string, string> = new Map<string, string>();
@@ -68,6 +72,9 @@ export class ChatGateway implements OnModuleInit {
   }
 
 
+  // [?] gestion de tous les message ou differencier les prives des autres ?
+  // [?] ce qui change le plus c'est pour determiner le nom de la channel
+  // [!] implementer un try catch ?
   @SubscribeMessage('newPrivateMsg')
   yoping(@MessageBody() message: newMsgDto, @Request() req) {
     if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
@@ -83,10 +90,16 @@ export class ChatGateway implements OnModuleInit {
         content: message.content,
         date: nowtoISOString,
         senderId: req.user.id,
+		channelName: message.channel,
+		channelId: message.channelId,
       }
 
       console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?
-      this.server.to(message.channel).emit('sendMsg', sendMsg);
+     
+	  // [!][+] ici ajouter le message dans la database via messageService
+	  this.messageService.addMessage(sendMsg);
+	 
+	  this.server.to(message.channel).emit('sendMsg', sendMsg);
     } else {
       // [?] Besoin de mieux sécuriser ou gérer ce cas ?
       // [!] Avec une throw WsException ?

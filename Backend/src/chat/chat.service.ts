@@ -22,12 +22,16 @@ export class ChatService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+
     @InjectRepository(UserPongieRelation)
     private readonly userPongieRelation: Repository<UserPongieRelation>,
+
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
+	
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
     private readonly cryptoService: CryptoService,
@@ -305,7 +309,7 @@ export class ChatService {
         
         const date = new Date();
 
-        const msg: sendMsgDto = {
+        const msg = {
           content: `${user.login} just arrived`,
           date: date.toISOString(),
           senderId: userId,

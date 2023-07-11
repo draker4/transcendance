@@ -23,6 +23,8 @@ import { History } from './utils/typeorm/History.entity';
 import { UserChannelRelation } from './utils/typeorm/UserChannelRelation';
 import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
 
+import { Message } from './utils/typeorm/Message.entity';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -41,6 +43,7 @@ import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
         Matchmaking,
         Avatar,
         Channel,
+        Message,
         History,
         UserChannelRelation,
         UserPongieRelation,

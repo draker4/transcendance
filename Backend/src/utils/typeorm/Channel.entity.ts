@@ -13,6 +13,7 @@ import {
 import { User } from './User.entity';
 import { Avatar } from './Avatar.entity';
 import { UserChannelRelation } from './UserChannelRelation';
+import { Message } from './Message.entity';
 
 @Entity()
 export class Channel {
@@ -41,4 +42,8 @@ export class Channel {
 
 	@Column({ default: 'public', nullable: false })
 	type: 'public' | 'protected' | 'private' | 'privateMsg';
+
+	// Relation one<Channel> [to] Many<Message>
+	@OneToMany(() => Message, (message) => message.channel)
+	messages: Message[];
 }

@@ -94,12 +94,12 @@ export class ChannelService {
 		return lower + ' ' + higher;
 	}
 
-	private async getChannelbyName(name:string):Promise<Channel> {
+	public async getChannelbyName(name:string):Promise<Channel> {
 		return await this.channelRepository.findOne({ where: { name : name } });
 	}
 
 	public async getChannelById(id: number):Promise<Channel> {
-		return await this.channelRepository.findOne({ where: { id : id } });
+		return await this.channelRepository.findOne({ where: { id : id }});
 	}
 
 	public async getChannelUsers(id: number):Promise<Channel> {
@@ -108,6 +108,10 @@ export class ChannelService {
 			relations: ["users"],
 		});
 	}
+	
+	// public async getChannelById(id: number):Promise<Channel> {
+	// 	return await this.channelRepository.findOne({ where: { id : id }, relations:["messages"] });
+	// }
 
 	private async createPrivateMsgChannel(name: string) {
 		const channel :CreatePrivateMsgChannelDto = {

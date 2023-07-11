@@ -74,6 +74,7 @@ export default function Conversations({
     socket?.emit("getPongies", (pongies: Pongie[]) => {
       setPongies(pongies);
     });
+	// [+] ajoutter une ecoute de notif ? qui proc un getChannel pour rerender
   }, [socket]);
 
   const handleClickPongie = () => {
