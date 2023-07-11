@@ -68,13 +68,23 @@ export default function Conversations({
   });
 
   useEffect(() => {
-    socket?.emit("getChannels", (channels: Channel[]) => {
-      setChannels(channels);
-    });
-    socket?.emit("getPongies", (pongies: Pongie[]) => {
-      setPongies(pongies);
-    });
-	// [+] ajoutter une ecoute de notif ? qui proc un getChannel pour rerender
+
+    const getData = () => {
+      socket?.emit("getChannels", (channels: Channel[]) => {
+        setChannels(channels);
+      });
+      socket?.emit("getPongies", (pongies: Pongie[]) => {
+        setPongies(pongies);
+      });
+    }
+
+    socket.on("notif", () => getData());
+
+    getData();
+    
+    return () => {
+      socket.off("notif");
+    }
   }, [socket]);
 
   const handleClickPongie = () => {
@@ -116,8 +126,10 @@ export default function Conversations({
           />
         </div>
       </div>
-      {channelsList}
-      {pongiesList}
+      <div className={styles.scroll}>
+        {channelsList}
+        {pongiesList}
+      </div>
     </div>
   );
 }

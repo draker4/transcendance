@@ -10,7 +10,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from './guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
-import { Message } from './dto/message.dto';
 import { ChatService } from './chat.service';
 import { newMsgDto } from './dto/newMsg.dto';
 import { sendMsgDto } from './dto/sendMsg.dto';
@@ -105,18 +104,6 @@ export class ChatGateway implements OnModuleInit {
       // [!] Avec une throw WsException ?
       console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
     }
-
-  }
-
-  // [!] je laisse ça telquel pour le moment, je remplace avec dessus
-  // [!] le fichier Message des dto sera a supprimer aussi
-  @SubscribeMessage('newMessage')
-  create(@MessageBody() message: Message, @Request() req) {
-    this.server.emit('onMessage', {
-      id: req.user.sub,
-      login: req.user.login,
-      text: message.text,
-    });
   }
 
   @SubscribeMessage('getChannels')
@@ -169,28 +156,38 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(
-    @MessageBody() body: {
-      channelId: string;
-      channelName: string;
-    },
+    @MessageBody() channelId: string,
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
-    if (body.channelId.includes(".channel"))
+    if (channelId.includes(".channel"))
       return await this.chatService.joinChannel(
         req.user.id,
-        body.channelId.slice(0, body.channelId.length - 8),
-        body.channelName,
+        channelId.slice(0, channelId.length - 8),
         socket,
         this.server,
       );
     else
       return await this.chatService.joinPongie(
         req.user.id,
-        body.channelId.slice(0, body.channelId.length - 8),
+        channelId.slice(0, channelId.length - 8),
         socket,
         this.server,
       );
+  }
+
+  @SubscribeMessage("create")
+  async createChannel(
+    @MessageBody() channelName: string,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    return await this.chatService.create(
+      req.user.id,
+      channelName,
+      socket,
+      this.server,
+    );
   }
 
 }

@@ -61,8 +61,6 @@ export default function ChatClient({
 	if (!display)
 		return (
 			<div className={styles.main}>
-				{renderIcon()}
-				Display
 			</div>
 		)
 	

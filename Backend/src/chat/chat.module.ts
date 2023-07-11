@@ -13,7 +13,7 @@ import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { UserPongieRelation } from "src/utils/typeorm/UserPongieRelation";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { MessagesService } from "src/messages/messages.service";
-import { Message } from "./dto/message.dto";
+import { Message } from "src/utils/typeorm/Message.entity";
 
 @Module({
 	imports: [

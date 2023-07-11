@@ -30,11 +30,11 @@ export class ChannelService {
 		type: 'public' | 'protected' | 'private' | 'privateMsg',
 	) {
 
-		const	channel = this.getChannelByName(channelName);
+		const	channel = await this.getChannelByName(channelName);
 
 		if (channel)
 			return null;
-
+		
 		const	avatar = await this.avatarRepository.save({
 			name: channelName,
 			image: '',

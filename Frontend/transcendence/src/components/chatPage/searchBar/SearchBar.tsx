@@ -26,12 +26,8 @@ export default function SearchBar({ socket, openDisplay }: {
 		};
 	}
 
-	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
+	const	getData = (event: React.MouseEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
 		socket.emit('getAllChannels', (channels: Channel[]) => {
-			channels = channels.filter(channel => {
-				return channel.type !== "private"
-				|| (channel.type === "private" && channel.joined)
-			});
 			setChannels(channels);
 		});
 		socket.emit('getAllPongies', (pongies: Pongie[]) => {
@@ -42,11 +38,11 @@ export default function SearchBar({ socket, openDisplay }: {
 	}
 
 	const	createList = (text: string) => {
-		let		hasChannel: boolean = false;
+		let	hasChannel: boolean = false;
+		setError(null);
 		
 		if (!text) {
 			setList([]);
-			setError(null);
 			return ;
 		}
 
@@ -89,7 +85,6 @@ export default function SearchBar({ socket, openDisplay }: {
 					decrypt: false,
 				},
 				name: "Create channel " + text,
-				type: "channel",
 			}
 			list = list.concat(addChannel);
 		}
@@ -104,5 +99,7 @@ export default function SearchBar({ socket, openDisplay }: {
 				createList={createList}
 				openDisplay={openDisplay}
 				socket={socket}
+				setList={setList}
+				setError={setError}
 			/>
 }

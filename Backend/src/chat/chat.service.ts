@@ -61,29 +61,40 @@ export class ChatService {
   async getAllChannels(id: number): Promise<channelDto[]>{
     try {
 
+      // get all channels
       const channels = await this.channelRepository.find({
         relations: ["avatar"],
         where: { type: Not("privateMsg") },
       });
 
+      // get channels already joined
       const channelsJoined = await this.getChannels(id);
 
-      const all = await Promise.all(channels.map(async (channel) => {
+      const all = channels.map(channel => {
         let joined = false;
+        let see = true;
 
-        if (channelsJoined.find((channelJoined) => {
-          channelJoined.id === channel.id
-        }))
+        if (channel.type === "private")
+          see = false;
+
+        const channelJoined = channelsJoined.find((channelJoined) => {
+          channelJoined.id === channel.id;
+        });
+        
+        if (channelJoined) {
           joined = true;
+          see = true;
+        }
 
-        return {
-          id: channel.id,
-          name: channel.name,
-          avatar: channel.avatar,
-          type: channel.type,
-          joined: joined,
-        };
-      }));
+        if (see)
+          return {
+            id: channel.id,
+            name: channel.name,
+            avatar: channel.avatar,
+            type: channel.type,
+            joined: joined,
+          };
+      });
 
       return all;
     }
@@ -279,7 +290,6 @@ export class ChatService {
   async joinChannel(
     userId: number,
     channelId: string,
-    channelName: string,
     socket: Socket,
     server: Server,
   ) {
@@ -336,5 +346,34 @@ export class ChatService {
 
   async joinPongie(userId: number, pongieId: string, socket: Socket, server: Server) {
 
+  }
+
+  async create(userId: number, channelName: string, socket: Socket, server: Server) {
+    
+    try {
+      const newChannel = await this.channelService.addChannel(channelName, "public");
+      
+      // check if name already used
+      if (!newChannel)
+        return {
+          success: false,
+          channel: null,
+        }
+      
+      const user = await this.usersService.getUserChannels(userId);
+
+      await this.usersService.updateUserChannels(user, newChannel);
+      socket.join("channel:" + newChannel.id);
+
+      server.to(socket.id).emit("notif");
+
+      return {
+        success: true,
+        channel: newChannel,
+      }
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 }
