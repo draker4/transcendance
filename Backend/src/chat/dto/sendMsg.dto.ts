@@ -14,6 +14,10 @@ export class sendMsgDto {
   @IsNotEmpty()
   @IsString()
   senderId: string;
+
+  @IsNotEmpty()
+  @IsString()
+  channelName: string;
 }
 
 /*

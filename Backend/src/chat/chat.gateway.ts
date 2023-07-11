@@ -68,6 +68,7 @@ export class ChatGateway implements OnModuleInit {
   }
 
 
+  // [?] gestion de tous les message ou differencier les prives des autres ?
   @SubscribeMessage('newPrivateMsg')
   yoping(@MessageBody() message: newMsgDto, @Request() req) {
     if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
@@ -83,6 +84,7 @@ export class ChatGateway implements OnModuleInit {
         content: message.content,
         date: nowtoISOString,
         senderId: req.user.id,
+		channelName: message.channel,
       }
 
       console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?

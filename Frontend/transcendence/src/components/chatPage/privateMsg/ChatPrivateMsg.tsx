@@ -20,6 +20,7 @@ type SendMsg = {
   content: string;
   date: Date;
   senderId: string;
+  channelName: string;
 };
 
 export default function ChatPrivateMsg({
@@ -64,7 +65,10 @@ export default function ChatPrivateMsg({
         sender: sendMsg.senderId === pongie.id.toString() ? pongie : me,
         date: receivedDate,
       };
-      setMessages((previous) => [...previous, msg]);
+
+	  // [?][!] gerer si un pb de reception qui match pas le bon nom de channel ?
+	  if (sendMsg.channelName === channelName)
+      	setMessages((previous) => [...previous, msg]);
     };
 
     // abonement à l'event
