@@ -8,7 +8,7 @@
 	/* border: dashed 2px var(--notif); */ /*checking */
 }
 
-/* HEADER */
+/* ----------------- HEADER ----------------- */
 .privateMsgFrame .header {
 	min-height: 40px;
 	max-height: 60px;
@@ -47,14 +47,89 @@
 	aspect-ratio: 1;
 	height: 100%;
 }
-/* MESSAGE BOARD */
+/* ----------------- MESSAGE BOARD ----------------- */
 
+/* a améliorer pour que le conenu suppl devienne scrollable */
 .privateMsgFrame .msgBoard {
-	flex: 1;
 	background-color: var(--primary-darker1);
+	padding: 6px 20px 6px 10px;
+	
+	
+	/* min-height: 0px; */
+	flex-grow: 1;
+	overflow-y: scroll;
+	
+	/* [!] pas idéal */
+	/* max-height: 900px; */
+
+	/* mieux [?] mais rapetisse le tout [?] depend des parents ? */
+	height:0px;
 }
 
-/* PROMPT */
+.privateMsgFrame .msgBoard .msgItem {
+	margin-bottom: 20px;
+	display:flex;
+
+	/* border: 2px dashed var(--accent); */
+}
+
+.privateMsgFrame .msgBoard .msgItem .avatarSide {
+	width: 60px;
+	margin-right: 6px;
+	/* display: flex; */
+	/* justify-content: center; */
+	
+	/* background-color: cadetblue; */
+}
+
+.privateMsgFrame .msgBoard .msgItem .avatarSide .avatarSlot {
+	width: 46px;
+	height: 46px;
+	margin-left: 6px;
+}
+
+
+
+.privateMsgFrame .msgBoard .msgItem .textSide {
+	flex:1;
+	
+	/* background-color: rgb(151, 190, 107); */
+}
+
+.privateMsgFrame .msgBoard .msgItem .textSide .tsheader {
+	display: flex;
+	justify-content: flex-start;
+	align-items: baseline;
+	gap:0.3rem;
+	margin-bottom: 4px;;
+	
+	/* background-color: rgb(151, 190, 107); */
+}
+
+.privateMsgFrame .msgBoard .msgItem .textSide .tsheader .name {
+	font-family: var(--title-font);
+	font-weight: 650;
+	font-size: 1.2rem;
+
+	
+	/* background-color: rgb(151, 190, 107); */
+}
+
+.privateMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
+	color: var(--tertiary-lighter1);
+	font-size: 0.85rem;
+	
+	/* background-color: rgb(151, 190, 107); */
+}
+
+.privateMsgFrame .msgBoard .msgItem .textSide {
+	overflow-wrap: break-word;
+	min-width: 0;
+}
+
+
+
+/* ----------------- PROMPT ----------------- */
 .privateMsgFrame .prompt {
 	min-height: 80px;
 	background-color: var(--primary-darker2);

@@ -66,14 +66,32 @@ export class User {
   @Column({ nullable: true, default: 0 })
   historyLevel: number;
 
-  @ManyToMany(() => Channel, (channel) => channel.users, {
-    cascade: true,
+  @ManyToMany(() => Channel, (channel) => channel.users)
+  @JoinTable({
+    name: "user_channel_relation",
+    joinColumn: {
+      name: "userId",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "channelId",
+      referencedColumnName: "id",
+    },
   })
-  @JoinTable()
   channels: Channel[];
 
   @ManyToMany(() => User, (user) => user.pongies)
-  @JoinTable()
+  @JoinTable({
+    name: "user_pongie_relation",
+    joinColumn: {
+      name: "userId",
+      referencedColumnName: "id",
+    },
+    inverseJoinColumn: {
+      name: "friendId",
+      referencedColumnName: "id",
+    },
+  })
   pongies: User[];
 
   @OneToOne(() => Avatar)

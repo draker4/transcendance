@@ -1,10 +1,10 @@
-import ProfileMainFrame from "@/components/loggedIn/profile/ProfileMainFrame";
+import ProfileMainFrame from "@/components/profile/ProfileMainFrame";
 import { verifyAuth } from "@/lib/auth/auth";
 import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
 import Avatar_Service from "@/services/Avatar.service";
 import Profile_Service from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
-import styles from "@/styles/loggedIn/profile/Profile.module.css";
+import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
 
 type Params = {

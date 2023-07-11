@@ -1,4 +1,4 @@
-import WelcomeContainer from "@/components/notLogged/Welcome";
+import WelcomeContainer from "@/components/welcome/Welcome";
 
 export default function Home() {
   console.log("welcome");

@@ -1,30 +1,38 @@
 /* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { User } from "./User.entity";
-import { Avatar } from "./Avatar.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { User } from './User.entity';
+import { Avatar } from './Avatar.entity';
 
 @Entity()
 export class Channel {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-	@PrimaryGeneratedColumn()
-	id: number;
-	
-	@CreateDateColumn()
-	createdAd: Date;
-  
-	@UpdateDateColumn()
-	updatedAt: Date;
+  @CreateDateColumn()
+  createdAd: Date;
 
-	@Column()
-	name: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-	@Column({default : "default", nullable: false})
-	type: "default" | "privateMsg";
+  @Column()
+  name: string;
 
-	@ManyToMany(() => User, (user) => user.channels)
-	users: User[];
-	
-	@OneToOne(() => Avatar)
-	@JoinColumn()
-	avatar: Avatar;
+  @Column({ default: 'default', nullable: false })
+  type: 'default' | 'privateMsg';
+
+  @ManyToMany(() => User, (user) => user.channels)
+  users: User[];
+
+  @OneToOne(() => Avatar)
+  @JoinColumn()
+  avatar: Avatar;
 }

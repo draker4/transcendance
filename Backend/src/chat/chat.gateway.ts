@@ -11,6 +11,8 @@ import { WsJwtGuard } from './guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
 import { Message } from './dto/message.dto';
 import { ChatService } from './chat.service';
+import { newMsgDto } from './dto/newMsg.dto';
+import { sendMsgDto } from './dto/sendMsg.dto';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -51,7 +53,13 @@ export class ChatGateway implements OnModuleInit {
           console.log(`User with ID ${payload.sub} disconnected`);
           console.log(this.connectedUsers);
         });
-        console.log(this.connectedUsers);
+
+        // [+] ici gestion des room a join en fonction des channels de l'user ?
+       socket.join("1 2"); // [!] en vrac&brut pour test
+
+
+        console.log("connected users = ", this.connectedUsers);
+
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -59,6 +67,36 @@ export class ChatGateway implements OnModuleInit {
     });
   }
 
+
+  @SubscribeMessage('newPrivateMsg')
+  yoping(@MessageBody() message: newMsgDto, @Request() req) {
+    if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
+      // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
+
+
+      // passer une une date en objet direct pose problème
+      // conversion par ISOString
+      const now = new Date();
+      const nowtoISOString = now.toISOString();
+   
+      const sendMsg:sendMsgDto = {
+        content: message.content,
+        date: nowtoISOString,
+        senderId: req.user.id,
+      }
+
+      console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?
+      this.server.to(message.channel).emit('sendMsg', sendMsg);
+    } else {
+      // [?] Besoin de mieux sécuriser ou gérer ce cas ?
+      // [!] Avec une throw WsException ?
+      console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
+    }
+
+  }
+
+  // [!] je laisse ça telquel pour le moment, je remplace avec dessus
+  // [!] le fichier Message des dto sera a supprimer aussi
   @SubscribeMessage('newMessage')
   create(@MessageBody() message: Message, @Request() req) {
     this.server.emit('onMessage', {
@@ -88,16 +126,22 @@ export class ChatGateway implements OnModuleInit {
 	  return await this.chatService.getAllPongies(req.user.id);
   }
 
-  // [!] add dto pour le data
+  // [!][+] add dto pour le data
   @SubscribeMessage('joinPrivateMsgChannel')
-  async joinOrCreatePrivateMsgChannel(
-    @MessageBody() data: { pongieId: string },
+  async joinOrCreatePrivateMsgChannel( @MessageBody() data: { pongieId: string },
     @Request() req,
   ) {
+
     return await this.chatService.joinOrCreatePrivateMsgChannel(
       req.user.id,
       data.pongieId,
     );
   }
+
+
+
+
+/* ------------------------------ tools -------------------------------------- */
+
 
 }

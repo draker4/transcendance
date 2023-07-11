@@ -1,0 +1,23 @@
+
+
+.info_line {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    vertical-align: auto;
+    padding: 10px;
+    padding-left: 30%;
+}
+
+.info_line img {
+    height: 40px;
+    width: auto;
+}
+
+.info_line p {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    padding-left: 10px;
+}

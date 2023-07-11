@@ -48,13 +48,50 @@ function drawMenu(game: Game) {
 }
 
 function drawPlayer(game: Game, player: Player) {
-  game.context.fillStyle = player.color;
-  game.context.fillRect(
+  const radius = 8; // Adjust the radius to control the roundness of the corners
+
+  game.context.fillStyle = `rgb(255, 0, 0)`;
+
+  game.context.beginPath();
+  game.context.moveTo(player.pos.x + radius, player.pos.y);
+  game.context.lineTo(player.pos.x + player.width - radius, player.pos.y);
+  game.context.arcTo(
+    player.pos.x + player.width,
+    player.pos.y,
+    player.pos.x + player.width,
+    player.pos.y + radius,
+    radius
+  );
+  game.context.lineTo(
+    player.pos.x + player.width,
+    player.pos.y + player.height - radius
+  );
+  game.context.arcTo(
+    player.pos.x + player.width,
+    player.pos.y + player.height,
+    player.pos.x + player.width - radius,
+    player.pos.y + player.height,
+    radius
+  );
+  game.context.lineTo(player.pos.x + radius, player.pos.y + player.height);
+  game.context.arcTo(
+    player.pos.x,
+    player.pos.y + player.height,
+    player.pos.x,
+    player.pos.y + player.height - radius,
+    radius
+  );
+  game.context.lineTo(player.pos.x, player.pos.y + radius);
+  game.context.arcTo(
     player.pos.x,
     player.pos.y,
-    player.width,
-    player.height
+    player.pos.x + radius,
+    player.pos.y,
+    radius
   );
+  game.context.closePath();
+
+  game.context.fill();
 }
 
 function drawBall(game: Game) {

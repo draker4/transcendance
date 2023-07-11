@@ -2,14 +2,20 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import styles from "@/styles/chatPage/ChatPage.module.css";
 import ChatClient from "@/components/chatPage/ChatClient";
+import Profile_Service from "@/services/Profile.service";
 
 export default async function ChatPage() {
 	let		token: string | undefined;
+	let		myself: Profile & { avatar: Avatar };
 
 	try {
 		token = cookies().get("crunchy-token")?.value;
 		if (!token)
 			throw new Error("No token value");
+
+		const profilService = new Profile_Service(token);
+		myself = await profilService.getProfileAndAvatar();
+
 	} catch (err) {
 		console.log(err);
 		return (
@@ -23,6 +29,6 @@ export default async function ChatPage() {
 	}
 
 	return (
-		<ChatClient token={token}/>
+		<ChatClient token={token} myself={myself}/>
 	)
 }

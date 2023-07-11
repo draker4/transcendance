@@ -1,5 +1,4 @@
 import styles from "@/styles/chatPage/ChatDisplay.module.css";
-import privMsgStyles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
 import { faPeopleGroup, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
@@ -13,11 +12,15 @@ export default function ChatClient({
 	display,
 	littleScreen,
 	closeDisplay,
+	myself,
+	openDisplay,
 }: {
 	socket: Socket;
 	display: Display;
 	littleScreen: boolean;
 	closeDisplay: () => void;
+	myself: Profile & { avatar: Avatar };
+	openDisplay: (display: Display) => void;
 }) {
 
 	const	renderIcon = (): ReactNode => {
@@ -70,6 +73,7 @@ export default function ChatClient({
 					icon={renderIcon()}
 					socket={socket}
 					display={display}
+					openDisplay={openDisplay}
 				/>
 			</div>
 		)
@@ -88,7 +92,7 @@ export default function ChatClient({
 			console.log(display);
 		return (
 			<div className={styles.main + ' ' + styles.noPadding}>
-				<ChatPrivateMsg icon={renderIcon()} pongie={display}/>
+				<ChatPrivateMsg icon={renderIcon()} pongie={display} myself={myself} socket={socket}/>
 			</div>
 		)
 	

@@ -1,0 +1,43 @@
+.logIn {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
+  padding: clamp(20px, 5vh, 100px);
+  margin: 0 auto;
+  background-color: var(--secondary-lighter2-light);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 4rem);
+  font-weight: bold;
+  padding-bottom: clamp(20px, 5vh, 100px);
+}
+
+.separator {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 20px;
+}
+
+.separator:before,
+.separator:after {
+  content: "";
+  border-bottom: 3px solid var(--secondary-lighter3);
+  flex: 1 0 auto;
+}
+
+.separator span {
+  text-align: center;
+  flex: 0.2 0 auto;
+  text-transform: uppercase;
+  font-family: var(--title-font);
+  font-size: 16px;
+  font-weight: bold;
+}

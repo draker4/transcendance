@@ -28,6 +28,16 @@ export class UsersController {
     return user;
   }
 
+  // GET user + his dependency avatar
+  @Get('myAvatar')
+  getUserProfileWithAvatar(@Request() req) {
+    const user = this.usersService.getUserAvatar(req.user.id);
+
+    if (!user) throw new NotFoundException();
+
+    return user;
+  }
+
   @Get('profile/:login')
   async getUserByLogin(@Param('login') login: string) {
     login = decodeURIComponent(login);
@@ -79,7 +89,7 @@ export class UsersController {
   // [!] utiliser trycatch pour manip la database
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-    console.log("User @Put called, properties = \n", properties);
+    // console.log("User @Put called, properties = \n", properties);
 
     const updatedProperties = [];
     let message = "";
@@ -89,8 +99,13 @@ export class UsersController {
         updatedProperties.push(key);
       }
     }
+    // console.log("Array of updatedProperties = ", updatedProperties); // checking
+    // console.log("updatedProperties.length  = ", updatedProperties.length ); // checking
 
+    
     if (updatedProperties.length > 0) {
+      this.usersService.updateUser(req.user.id, properties);
+
       message = `Properties : ${updatedProperties.join(', ')} : successfully updated`
     }
 
@@ -165,21 +180,21 @@ export class UsersController {
   async joinChannel() {
     const user1 = await this.usersService.getUserChannels(1);
     const user2 = await this.usersService.getUserChannels(2);
-    const user3 = await this.usersService.getUserChannels(3);
+    // const user3 = await this.usersService.getUserChannels(3);
 
     const channel1 = await this.usersService.getChannelByName("test1");
     const channel2 = await this.usersService.getChannelByName("test2");
     const channel3 = await this.usersService.getChannelByName("test3");
 
-    // await this.usersService.updateUserChannels(user1, channel1);
-    // await this.usersService.updateUserChannels(user1, channel2);
-    // await this.usersService.updateUserChannels(user1, channel3);
-    // await this.usersService.updateUserChannels(user2, channel1);
-    // await this.usersService.updateUserChannels(user2, channel2);
-    // await this.usersService.updateUserChannels(user2, channel3);
-    await this.usersService.updateUserChannels(user3, channel1);
-    await this.usersService.updateUserChannels(user3, channel2);
-    await this.usersService.updateUserChannels(user3, channel3);
+    await this.usersService.updateUserChannels(user1, channel1);
+    await this.usersService.updateUserChannels(user1, channel2);
+    await this.usersService.updateUserChannels(user1, channel3);
+    await this.usersService.updateUserChannels(user2, channel1);
+    await this.usersService.updateUserChannels(user2, channel2);
+    await this.usersService.updateUserChannels(user2, channel3);
+    // await this.usersService.updateUserChannels(user3, channel1);
+    // await this.usersService.updateUserChannels(user3, channel2);
+    // await this.usersService.updateUserChannels(user3, channel3);
   }
 
   @Public()

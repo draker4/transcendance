@@ -8,8 +8,9 @@ import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/chat/Chat.service";
 import Link from "next/link";
 
-export default function ChatClient({ token }: {
+export default function ChatClient({ token, myself }: {
 	token: string;
+	myself: Profile & { avatar: Avatar };
 }) {
 	const	[littleScreen, setLittleScreen] = useState<boolean>(true);
 	const	[open, setOpen] = useState<boolean>(false);
@@ -81,6 +82,8 @@ export default function ChatClient({ token }: {
 					display={display}
 					littleScreen={littleScreen}
 					closeDisplay={closeDisplay}
+					myself={myself}
+					openDisplay={openDisplay}
 				/>
 			</div>
 		);
@@ -98,6 +101,8 @@ export default function ChatClient({ token }: {
 				display={display}
 				littleScreen={littleScreen}
 				closeDisplay={closeDisplay}
+				myself={myself}
+				openDisplay={openDisplay}
 			/>
 		</div>
 	)

@@ -1,4 +1,4 @@
-import AvatarUser from "@/components/loggedIn/avatarUser/AvatarUser";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -16,7 +16,7 @@ export default function Header({ icon, pongie }: Props) {
         <div className={styles.avatar}>
           <AvatarUser
             avatar={pongie.avatar}
-            borderSize="2px"
+            borderSize="3px"
             borderColor={pongie.avatar.borderColor}
             backgroundColor={pongie.avatar.backgroundColor}
           />

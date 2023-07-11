@@ -52,6 +52,12 @@ export default class ChatService {
 		});
 	}
 
+	// [!] pour unregister les event, socket.off prend en 2nd argument la fonction appellée lors de l'enregistrment
+	// ex sur ma page <ChatPrivateMessage /> et sur la doc : https://socket.io/fr/how-to/use-with-react
+
+	// [!][!] Register un event dans un composant enfant est une mauvaise pratique, il faut le faire dans un 
+	// composant parent qui est monté tout au long du cycle de vie de l'app
+
 	// Disconnect socket + stop listen errors & exceptions
 	public disconnect(reconnect: boolean) {
 		if (this.socket) {
