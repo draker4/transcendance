@@ -23,6 +23,14 @@ type SendMsg = {
   channelName: string;
 };
 
+type ReceivedMsg = {
+	content: string,
+	createdAd: string,
+	id: number, // not needed
+    isServerNotif: boolean,
+    updatedAt: string, // not needed
+}
+
 export default function ChatPrivateMsg({
   icon,
   pongie,
@@ -55,6 +63,31 @@ export default function ChatPrivateMsg({
     updatedAt: new Date(), // [?][!] moyen de faire mieux ? une utilité ici ?
   };
 
+  // useEffect to load previous messages - dependecies : [] to load it only once
+  useEffect(() => {
+	// j'aurais acces a ce channel id une fois que bperriol aura remanie
+	socket.emit("getMessages", { channelId:"1"}, (response:ReceivedMsg[]) => {
+
+		console.log("reponse : ", response);
+		const previousMsg:PrivateMsgType[] = [];
+		// [+] extraire cette fonction ? ou plutot le tout
+		response.forEach((item) => {
+			const msg: PrivateMsgType = {
+				content: item.content,
+				sender: item.id === myself.id ? me : pongie,
+				date: new Date(item.createdAd),
+			}
+			previousMsg.push(msg);
+		});
+
+		setMessages(previousMsg);
+
+	});
+
+  // no dependencies, only want to effect it only once
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     // Fonction utilisée pour l'abonnement à l'event 'sendMsg'
     // [!] Mauvaise pratique, le register doit etre fait dans un composant parent qui reste monté
@@ -84,11 +117,13 @@ export default function ChatPrivateMsg({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
+
+
   // [!] temporaire
   const messagesExample: PrivateMsgType[] = generateMessageExample(me, pongie);
 
   // [+] charger les anciens messages --> faire une demande au back-->database lorsque ce sera pret
-  const [messages, setMessages] = useState<PrivateMsgType[]>(messagesExample);
+  const [messages, setMessages] = useState<PrivateMsgType[]>([]);
 
   const addMsg = (msg: PrivateMsgType) => {
     socket.emit("newPrivateMsg", {

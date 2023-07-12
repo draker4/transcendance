@@ -27,10 +27,10 @@ export class MessagesService {
 	) {}
 
 	async addMessage(message:sendMsgDto) {
-		console.log("pshhhhhhehhshhhzzzz surpression du cerveau");
-		console.log("message : ", message);
+		// console.log("message : ", message);
 
 		// 1 - creer le message et l'enregistrer dans sa table
+		// 2 - son ajout dans la table channel est autpomatique grae aux relations
 
 		// besoin de l'objet channel concerne [?][+] avec sa relation message
 		const channel = await this.channelService.getChannelById(message.channelId);
@@ -51,17 +51,11 @@ export class MessagesService {
 		// [!] try catch a placer en ammont, dans l'appel de cette fction
 		try {
 			await this.messageRepository.save(newMsg);
-			const channelAfter = await this.channelService.getChannelMessages(message.channelId);
-			console.log(" channelAfter : ", channelAfter);
+			// const channelAfter = await this.channelService.getChannelMessages(message.channelId);
+			// console.log(" channelAfter : ", channelAfter); // checking only
 		} catch(e) {
 			console.log("crashouille : ", e);
 		}
-
-
-
-		// 2 - ajouter le message dans le tableau de la channel
-		// channel.messages.push();
-
 	}
 
 
