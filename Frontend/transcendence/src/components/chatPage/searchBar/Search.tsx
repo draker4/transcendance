@@ -10,20 +10,20 @@ export default function Search({
   list,
   error,
   getData,
-  createList,
   openDisplay,
   socket,
   setList,
   setError,
+  setText,
 }: {
   list: (Channel | Pongie | CreateOne)[];
   error: ListError | null;
-  getData: (event: React.MouseEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => void;
-  createList: (text: string) => void;
+  getData: (event: React.MouseEvent<HTMLInputElement>) => void;
 	openDisplay: (display: Display) => void;
   socket: Socket;
   setList: React.Dispatch<React.SetStateAction<(CreateOne | Channel | Pongie)[]>>;
   setError: React.Dispatch<React.SetStateAction<ListError | null>>;
+  setText: React.Dispatch<React.SetStateAction<string>>;
 }) {
 
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -65,34 +65,50 @@ export default function Search({
     const handleClick = () => {
       
       setDropdownVisible(false);
+      setList([]);
+      setError(null);
 
-      // create channel if id = -1
-      if (item.id === -1 && 'name' in item) {
-        const name = item.name.slice(15, item.name.length);
+      const name = 'joined' in item
+                    ? item.name
+                    : 'login' in item
+                    ? item.login
+                    : item.name.slice(15, item.name.length);
+              
+      const type = 'joined' in item
+                    ? item.type
+                    : 'login' in item
+                    ? "privateMsg"
+                    : "public";
 
-        socket.emit("create", name, (payload: {
-          success: boolean,
-          channel: Channel,
-        }) => {
-          if (payload.success) {
-            openDisplay(payload.channel);
-          }
-          else {
-            setList([]);
-            setError({
-              id: -1,
-              error: true,
-              msg: `${name} is private, please choose an other name`,
-            });
-          }
-        });
-      }
-
-      // join channel
-      if (item.id !== -1 && "joined" in item || "login" in item) {
-        socket.emit("join", key);
-        openDisplay(item);
-      }
+      socket.emit("join", {
+        id: item.id,
+        channelName: name,
+        channelType: type,
+      }, (payload: {
+        success: boolean,
+        exists: boolean,
+        banned: boolean,
+        channel: boolean,
+      }) => {
+        if (payload.success) {
+          openDisplay(payload.channel);
+        }
+        else if (payload.exists) {
+          setError({
+            error: true,
+            msg: `${name} is private, please choose an other name`,
+          });
+          setDropdownVisible(true);
+        }
+        else if (payload.banned) {
+          console.log("laaaaa");
+          setError({
+            error: true,
+            msg: `You are banned from ${name}`,
+          });
+          setDropdownVisible(true);
+        }
+      });
     }
 
     const color = 'isFriend' in item
@@ -171,8 +187,7 @@ export default function Search({
   });
 
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    createList(event.target.value);
-    setDropdownVisible(true);
+    setText(event.target.value);
   };
 
   return (
@@ -181,12 +196,11 @@ export default function Search({
         <input
           type="text"
           placeholder="Channels, pongies..."
-          onClick={getData}
-          onChange={handleSearch}
-          onFocus={(e) => {
-            // getData(e);
+          onClick={(e) => {
+            getData(e);
             setDropdownVisible(true);
           }}
+          onChange={handleSearch}
         />
         <FontAwesomeIcon icon={faMagnifyingGlass} className={styles.icon} />
       </div>

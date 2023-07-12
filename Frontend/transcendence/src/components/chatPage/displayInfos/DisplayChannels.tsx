@@ -75,6 +75,7 @@ export default function DisplayInfos({
 	
 	useEffect(() => {
 		socket.emit("getChannels", (channels: Channel []) => {
+			channels = channels.filter(channel => channel.type !== 'privateMsg');
 			setChannels(channels);
 		});
 	}, [socket]);

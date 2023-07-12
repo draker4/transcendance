@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Not, Repository } from "typeorm";
 import { ChannelDto } from "./dto/Channel.dto";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
@@ -19,9 +19,16 @@ export class ChannelService {
 	
 	) {}
 
-	async getChannelByName(name: string) {
+	async getChannelByName(
+		name: string,
+		privateMsg: boolean,
+	) {
+		if (privateMsg)
+			return await this.channelRepository.findOne({
+				where: { name: name, type: "privateMsg" },
+			});
 		return await this.channelRepository.findOne({
-			where: { name: name },
+			where: { name: name, type: Not("privateMsg") },
 		});
 	}
 
@@ -30,7 +37,7 @@ export class ChannelService {
 		type: 'public' | 'protected' | 'private' | 'privateMsg',
 	) {
 
-		const	channel = await this.getChannelByName(channelName);
+		const	channel = await this.getChannelByName(channelName, false);
 
 		if (channel)
 			return null;
@@ -87,7 +94,7 @@ export class ChannelService {
 
 	// name of Private Message channel format 
 	// 'id1 id2' with id1 < id2
-	private formatPrivateMsgChannelName(id1: string, id2:string): string {
+	public formatPrivateMsgChannelName(id1: string, id2:string): string {
 		const lower:string = id1 < id2 ? id1 : id2;
 		const higher:string = id1 > id2 ? id1 : id2;
 
@@ -128,4 +135,13 @@ export class ChannelService {
 		  .of(channel.id)
 		  .add(user);
 	  }
+
+	public async getPrivatePongie(channelId: number, userId: number) {
+		const	channel = await this.getChannelUsers(channelId);
+
+		if (!channel)
+			return null;
+		
+		return channel.users.find(user => user.id !== userId);
+	}
 }

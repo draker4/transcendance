@@ -156,38 +156,28 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(
-    @MessageBody() channelId: string,
+    @MessageBody() payload: {
+      id: number,
+      channelName: string,
+      channelType: "public" | "protected" | "private" | "privateMsg",
+    },
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
-    if (channelId.includes(".channel"))
-      return await this.chatService.joinChannel(
-        req.user.id,
-        parseInt(channelId.slice(0, channelId.length - 8)),
-        socket,
-        this.server,
-      );
-    else
+    if (payload.channelType === "privateMsg")
       return await this.chatService.joinPongie(
         req.user.id,
-        channelId.slice(0, channelId.length - 8),
+        payload.id,
+        socket,
+      );
+    else
+      return await this.chatService.joinChannel(
+        req.user.id,
+        payload.id,
+        payload.channelName,
+        payload.channelType,
         socket,
         this.server,
       );
   }
-
-  @SubscribeMessage("create")
-  async createChannel(
-    @MessageBody() channelName: string,
-    @Request() req,
-    @ConnectedSocket() socket: Socket,
-  ) {
-    return await this.chatService.create(
-      req.user.id,
-      channelName,
-      socket,
-      this.server,
-    );
-  }
-
 }

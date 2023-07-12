@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Search from "./Search";
 
 export default function SearchBar({ socket, openDisplay }: {
@@ -10,6 +10,7 @@ export default function SearchBar({ socket, openDisplay }: {
 	const	[pongies, setPongies] = useState<Pongie []>([]);
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
 	const	[error, setError] = useState<ListError | null>(null);
+	const	[text, setText] = useState<string>("");
 
 	const	verifyChannel = (text: string) => {
 		if (text.includes("'") || text.includes('"'))
@@ -26,7 +27,7 @@ export default function SearchBar({ socket, openDisplay }: {
 		};
 	}
 
-	const	getData = (event: React.MouseEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
 		socket.emit('getAllChannels', (channels: Channel[]) => {
 			setChannels(channels);
 		});
@@ -34,69 +35,73 @@ export default function SearchBar({ socket, openDisplay }: {
 			setPongies(pongies);
 		});
 
-		createList(event.currentTarget.value);
+		setText(event.currentTarget.value);
 	}
 
-	const	createList = (text: string) => {
-		let	hasChannel: boolean = false;
-		setError(null);
-		
-		if (!text) {
-			setList([]);
-			return ;
-		}
-
-		const	textlowerCase: string = text.toLocaleLowerCase();
-		
-		let		list: (Channel | Pongie | CreateOne)[] = [];
-		list = list.concat(
-			channels.filter(channel => channel?.name.toLowerCase().includes(textlowerCase))
-		);
-
-		if (list.length !== 0)
-			hasChannel = true;
-
-		list = list.concat(
-			pongies.filter(pongie => pongie?.login.toLowerCase().includes(textlowerCase))
-		);
-
-		if (list.length === 0) {
-			const	err: ListError = verifyChannel(text);
-
-			if (err.error) {
+	useEffect(() => {
+		const	createList = (text: string) => {
+			let	hasChannel: boolean = false;
+			setError(null);
+			
+			if (!text) {
 				setList([]);
-				setError(err);
 				return ;
 			}
-		}
-
-		if (!hasChannel) {
-			const	addChannel: CreateOne = {
-				id: -1,
-				avatar: {
-					name: "",
-					image: "",
-					variant: "rounded",
-					borderColor: "#22d3ee",
-					backgroundColor: "#22d3ee",
-					text: text,
-					empty: true,
-					isChannel: true,
-					decrypt: false,
-				},
-				name: "Create channel " + text,
+	
+			const	textlowerCase: string = text.toLocaleLowerCase();
+	
+			let		list: (Channel | Pongie | CreateOne)[] = [];
+			list = list.concat(
+				channels.filter(channel => channel?.name.toLowerCase().includes(textlowerCase))
+			);
+	
+			if (channels.find(channel => channel?.name.toLowerCase() === text.toLowerCase()))
+				hasChannel = true;
+	
+			list = list.concat(
+				pongies.filter(pongie => pongie?.login.toLowerCase().includes(textlowerCase))
+			);
+	
+			if (list.length === 0) {
+				const	err: ListError = verifyChannel(text);
+	
+				if (err.error) {
+					setList([]);
+					setError(err);
+					return ;
+				}
 			}
-			list = list.concat(addChannel);
+	
+			if (!hasChannel) {
+				const	addChannel: CreateOne = {
+					id: -1,
+					avatar: {
+						name: "",
+						image: "",
+						variant: "rounded",
+						borderColor: "#22d3ee",
+						backgroundColor: "#22d3ee",
+						text: text,
+						empty: true,
+						isChannel: true,
+						decrypt: false,
+					},
+					name: "Create channel " + text,
+				}
+				list = list.concat(addChannel);
+			}
+	
+			setList(list);
 		}
 
-		setList(list);
-	}
+		createList(text);
+	}, [channels, pongies, text]);
 
 	return <Search
 				list={list}
 				error={error}
 				getData={getData}
-				createList={createList}
+				setText={setText}
 				openDisplay={openDisplay}
 				socket={socket}
 				setList={setList}
