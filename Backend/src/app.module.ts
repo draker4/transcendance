@@ -24,6 +24,7 @@ import { UserChannelRelation } from './utils/typeorm/UserChannelRelation';
 import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
 
 import { Message } from './utils/typeorm/Message.entity';
+import { MessageModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { Message } from './utils/typeorm/Message.entity';
     ChatModule,
     ChannelModule,
     HistoryModule,
+    MessageModule,
   ],
   controllers: [],
   providers: [],
