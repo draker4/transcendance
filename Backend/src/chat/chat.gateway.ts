@@ -196,6 +196,4 @@ export class ChatGateway implements OnModuleInit {
     
     return (await this.chatService.getMessages(id)).messages;
   }
-
-
 }
