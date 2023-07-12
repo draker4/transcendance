@@ -4,10 +4,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { ChannelService } from 'src/channels/channel.service';
 import { sendMsgDto } from 'src/chat/dto/sendMsg.dto';
-import { Channel } from 'src/utils/typeorm/Channel.entity';
+import { UsersService } from 'src/users/users.service';
 import { Message } from 'src/utils/typeorm/Message.entity';
 import { Repository } from 'typeorm';
-import { AddMsgDto } from './dto/saveNewMsg.dto';
+import { saveNewMsgDto } from './dto/saveNewMsg.dto';
 
 @Injectable()
 export class MessagesService {
@@ -20,6 +20,7 @@ export class MessagesService {
 		// @InjectRepository(Channel)
 		// private readonly channelRepository: Repository<Channel>,
 		private readonly channelService: ChannelService,
+		private readonly userService: UsersService,
 		
 		// et apres userRepo ?
 		
@@ -31,22 +32,30 @@ export class MessagesService {
 
 		// 1 - creer le message et l'enregistrer dans sa table
 
-		// besoin de l'objet channel concerne [+] avec sa relation message
+		// besoin de l'objet channel concerne [?][+] avec sa relation message
 		const channel = await this.channelService.getChannelById(message.channelId);
-		if (!channel)
+
+		// idem pour relation one to one user
+		const user = await this.userService.getUserById(message.senderId);
+
+		if (!channel || !user)
 			throw new WsException("Database can't find " + message.channelName);
 
-			// besoin du dto de nouveau msg
-			const newMsg :AddMsgDto = {
-				content: message.content,
-				channel: channel,
-			}
+		// besoin du dto de nouveau msg
+		const newMsg :saveNewMsgDto = {
+			content: message.content,
+			channel: channel,
+			user: user,
+		}
 
-			try {
-				await this.messageRepository.save(newMsg);
-			} catch(e) {
-				console.log("crashouille : ", e);
-			}
+		// [!] try catch a placer en ammont, dans l'appel de cette fction
+		try {
+			await this.messageRepository.save(newMsg);
+			const channelAfter = await this.channelService.getChannelMessages(message.channelId);
+			console.log(" channelAfter : ", channelAfter);
+		} catch(e) {
+			console.log("crashouille : ", e);
+		}
 
 
 
