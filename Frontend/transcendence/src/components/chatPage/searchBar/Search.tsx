@@ -184,7 +184,7 @@ export default function Search({
           onClick={getData}
           onChange={handleSearch}
           onFocus={(e) => {
-            getData(e);
+            // getData(e);
             setDropdownVisible(true);
           }}
         />

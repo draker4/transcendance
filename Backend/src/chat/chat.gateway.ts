@@ -163,7 +163,7 @@ export class ChatGateway implements OnModuleInit {
     if (channelId.includes(".channel"))
       return await this.chatService.joinChannel(
         req.user.id,
-        channelId.slice(0, channelId.length - 8),
+        parseInt(channelId.slice(0, channelId.length - 8)),
         socket,
         this.server,
       );

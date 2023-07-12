@@ -289,14 +289,14 @@ export class ChatService {
   // check before if channel exists
   async joinChannel(
     userId: number,
-    channelId: string,
+    channelId: number,
     socket: Socket,
     server: Server,
   ) {
     try {
       // check if user already in channel
       const relation = await this.userChannelRelation.findOne({
-        where: { userId: userId, channelId: parseInt(channelId) },
+        where: { userId: userId, channelId: channelId },
         relations: ["user", "channel"],
       });
 
@@ -319,20 +319,22 @@ export class ChatService {
         
         const date = new Date();
 
-        const msg = {
+        const msg: sendMsgDto = {
           content: `${user.login} just arrived`,
           date: date.toISOString(),
           senderId: userId,
+          channelName: relation.channel.name,
+          channelId: channelId,
         };
 
-        server.to("channel:" + channelId).emit("onMessage", msg);
+        server.to("channel:" + channelId).emit("sendMsg", msg);
         socket.join("channel:" + channelId);
 
         return ;
       }
 
       // add channel to the user
-      const channel = await this.channelService.getChannelById(parseInt(channelId));
+      const channel = await this.channelService.getChannelById(channelId);
 
       if (!channel)
         throw new Error('no channel found');
