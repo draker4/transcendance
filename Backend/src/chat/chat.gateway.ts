@@ -180,4 +180,22 @@ export class ChatGateway implements OnModuleInit {
         this.server,
       );
   }
+
+  // reception des messages contenus dans une channel
+  // [+] creer dto pour reception du channelId ?
+  @SubscribeMessage("getMessages")
+  async getMessages(
+	@MessageBody() payload: {channelId:string},
+    @Request() req,
+  ) {
+    const id:number = parseInt(payload.channelId);
+    console.log("getmessages proc --> id : ", id);
+
+    // verif avec req.user.id que la channel est bien dans sa channelList
+    // this.chatService.isUserIntoChannel()
+    
+    return (await this.chatService.getMessages(id)).messages;
+  }
+
+
 }

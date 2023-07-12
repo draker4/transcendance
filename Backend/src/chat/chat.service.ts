@@ -250,6 +250,10 @@ export class ChatService {
     }
   }
 
+  async getMessages(channelId:number) {
+	return this.channelService.getChannelMessages(channelId);
+  }
+
   async addPongie(userId: number, pongieId: number) {
     try {
       const relation = await this.userPongieRelation.findOne({
