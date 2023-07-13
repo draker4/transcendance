@@ -49,7 +49,7 @@ import { MessageModule } from './messages/messages.module';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     UsersModule,
     AuthModule,

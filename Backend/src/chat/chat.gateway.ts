@@ -58,9 +58,6 @@ export class ChatGateway implements OnModuleInit {
           console.log(this.connectedUsers);
         });
 
-        // [+] ici gestion des room a join en fonction des channels de l'user ?
-       socket.join("1 2"); // [!] en vrac&brut pour test
-
         console.log("connected users = ", this.connectedUsers);
 
       } catch (error) {
@@ -179,6 +176,15 @@ export class ChatGateway implements OnModuleInit {
         socket,
         this.server,
       );
+  }
+
+  @SubscribeMessage("leave")
+  async leave(
+    @MessageBody() channelId: number,
+    @Request() req,
+    @ConnectedSocket() socket,
+  ) {
+    return await this.chatService.leave(req.user.id, channelId, socket, this.server);
   }
 
   // reception des messages contenus dans une channel

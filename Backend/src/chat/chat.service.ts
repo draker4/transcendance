@@ -15,6 +15,7 @@ import { pongieDto } from './dto/pongie.dto';
 import { channelDto } from './dto/channel.dto';
 import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
+import { channel } from 'diagnostics_channel';
 
 @Injectable()
 export class ChatService {
@@ -448,6 +449,30 @@ export class ChatService {
     }
     catch (error) {
       throw new WsException(error.msg);
+    }
+  }
+
+  async leave(userId: number, channelId: number, socket: Socket, server: Server) {
+    try {
+      const relation = await this.userChannelRelation.findOne({
+        where: { userId: userId, channelId: channelId },
+        relations: ["user", "channel"],
+      });
+
+      if (!relation)
+        throw new Error("no relation found");
+      
+      relation.joined = false;
+      await this.userChannelRelation.save(relation);
+
+      socket.leave("channel:" + channelId);
+      socket.emit("notif");
+
+      // send message server [!]
+
+    }
+    catch (error) {
+      throw new WsException(error.message);
     }
   }
 }
