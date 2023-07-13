@@ -2,6 +2,7 @@ import { cookies } from "next/dist/client/components/headers";
 import fs from "fs";
 import FormLogin from "@/components/createLogin/FormLogin";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
 
 export default async function CreatePage() {
   let profile: Profile = {
@@ -46,6 +47,7 @@ export default async function CreatePage() {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
+      <Refresher />
       <FormLogin token={token as string} avatars={avatars} />
     </div>
   );

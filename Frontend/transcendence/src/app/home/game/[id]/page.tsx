@@ -7,6 +7,7 @@ import { cookies } from "next/dist/client/components/headers";
 import styles from "@/styles/game/game.module.css";
 import Game from "@/components/game/Game";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
 
 export default async function GamePage({ params, searchParams }: any) {
   // [!] Bperriol i changed this profile
@@ -37,6 +38,7 @@ export default async function GamePage({ params, searchParams }: any) {
 
   return (
     <main className={styles.First_Frame}>
+      <Refresher />
       <Game profile={profile} token={token} gameID={gameID} />
     </main>
   );

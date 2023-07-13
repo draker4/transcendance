@@ -1,4 +1,5 @@
 import ProfileMainFrame from "@/components/profile/ProfileMainFrame";
+import { Refresher } from "@/components/refresher/Refresher";
 import { verifyAuth } from "@/lib/auth/auth";
 import Avatar_Service from "@/services/Avatar.service";
 import Profile_Service from "@/services/Profile.service";
@@ -80,6 +81,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
 
   return (
     <main className={styles.main}>
+      <Refresher />
       <ProfileMainFrame
         profile={targetProfile}
         avatar={avatar}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Refresher } from "@/components/refresher/Refresher";
 import LogIn from "@/components/welcome/login/LogIn";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
@@ -15,6 +16,7 @@ export default function SignUpPage() {
         nonce: undefined,
       }}
     >
+      <Refresher />
       <LogIn />
     </GoogleReCaptchaProvider>
   );

@@ -3,6 +3,9 @@ import Link from "next/link";
 import styles from "@/styles/chatPage/ChatPage.module.css";
 import ChatClient from "@/components/chatPage/ChatClient";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
+
+export const dynamic = 'force-dynamic';
 
 export default async function ChatPage() {
 	let		token: string | undefined;
@@ -29,6 +32,9 @@ export default async function ChatPage() {
 	}
 
 	return (
-		<ChatClient token={token} myself={myself}/>
+		<>
+			<Refresher />
+			<ChatClient token={token} myself={myself}/>
+		</>
 	)
 }
