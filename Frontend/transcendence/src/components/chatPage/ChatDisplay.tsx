@@ -3,11 +3,12 @@ import { faPeopleGroup, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReactNode } from "react";
 import { Socket } from "socket.io-client";
-import ChatPrivateMsg from "./privateMsg/ChatPrivateMsg";
+import ChatChannel from "./ChatChannel/ChatChannel";
 import DisplayInfos from "./displayInfos/DisplayInfos";
 import { faMessage, faFaceLaughBeam } from "@fortawesome/free-regular-svg-icons";
 
-export default function ChatClient({
+
+export default function ChatDisplay({
 	socket,
 	display,
 	littleScreen,
@@ -78,7 +79,23 @@ export default function ChatClient({
 		)
 	}
 
-	if ('name' in display)
+
+	if ('name' in display) {
+
+	return (
+			<div className={styles.main + ' ' + styles.noPadding}>
+				<ChatChannel icon={renderIcon()} channel={display} myself={myself} socket={socket}/>
+			</div>
+		)
+
+
+
+	}
+
+	/* [!] plus besoin de differencier pongie et channel
+
+	// [!] condition en vrac pour test
+	if ('name' in display && 'type' in display && display.type !== 'privateMsg')
 		return (
 			<div className={styles.main}>
 				{renderIcon()}
@@ -86,13 +103,14 @@ export default function ChatClient({
 			</div>
 		)
 
-	// PrivateMsg
-	if ('login' in display)
+	// PrivateMsg [!] conditions en vrac pour tester
+	if ('name' in display && 'type' in display && display.type === 'privateMsg')
 			console.log(display);
 		return (
 			<div className={styles.main + ' ' + styles.noPadding}>
 				<ChatPrivateMsg icon={renderIcon()} pongie={display} myself={myself} socket={socket}/>
 			</div>
 		)
-	
+	*/
 }
+

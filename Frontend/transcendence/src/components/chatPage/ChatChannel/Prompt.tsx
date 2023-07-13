@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  pongie: Pongie;
-  me: Pongie;
-  addMsg: (msg: PrivateMsgType) => void;
+  channel: Channel;
+  myself: User;
+  addMsg: (msg: Message) => void;
 };
 
-export default function Prompt({ pongie, me, addMsg }: Props ) {
+export default function Prompt({ channel, myself, addMsg }: Props ) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [text, setText] = useState<string>("");
@@ -23,7 +23,10 @@ export default function Prompt({ pongie, me, addMsg }: Props ) {
     }
   }, [text]);
 
-  const placeholder = "Send a message at " + pongie.login;
+  const junctionWord = channel.type === "privateMsg" ? "at " : "into ";
+  const placeholder = "Send a message " + junctionWord + channel.name;
+
+
   const buttonAddedClass = isEmpty
     ? styles.disabledButton
     : styles.activeButton;
@@ -32,9 +35,9 @@ export default function Prompt({ pongie, me, addMsg }: Props ) {
     e?.preventDefault();
 
     // console.log("Message to send :", text);
-    const newMsg:PrivateMsgType = {
+    const newMsg:Message = {
       content: text,
-      sender: me,
+      sender: myself,
       date: new Date(),
     }
 

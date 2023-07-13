@@ -15,6 +15,8 @@ import { pongieDto } from './dto/pongie.dto';
 import { channelDto } from './dto/channel.dto';
 import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
+import { userLightDto } from './dto/userLight.dto';
+import { Message } from 'src/utils/typeorm/Message.entity';
 
 @Injectable()
 export class ChatService {
@@ -250,9 +252,37 @@ export class ChatService {
     }
   }
 
+  // Light User is a Partial User type to send to frontend
+  async getChannelUsersLight(channelId:number):Promise<userLightDto[]> {
+	// ici j'ai la relation channel->User mais la relation User->avatar ??
+	const channel:Channel = await this.channelService.getChannelUsers(channelId);
+	const users: userLightDto[] = [];
+
+	channel.users.forEach((user:User) => {
+		const userLight:userLightDto = {
+			id: user.id,
+			login: user.login,
+			avatar: user.avatar,
+		}
+		users.push(userLight);
+	});
+
+	return users;
+  }
+
   async getMessages(channelId:number) {
 	return this.channelService.getChannelMessages(channelId);
   }
+
+  // [!] a clean 
+  // type UserLight is the User type used in frontend
+//   async getMessagesLight(channelId:number) {
+// 	const messages:Message[] = (await (this.channelService.getChannelMessages(channelId))).messages;
+	
+// 	messagesLight
+
+//   }
+
 
   async addPongie(userId: number, pongieId: number) {
     try {
@@ -296,17 +326,7 @@ export class ChatService {
       throw new WsException(error.message);
     }
   }
-  /* ------------PRIVATE MSG------------------- */
-
-  checkPrivateMsgId(id:number, channelName:string):boolean {
-    if (channelName.split(" ").length > 2)
-      return false;
-
-    const [id1, id2] = channelName.split(" ", 2);
-    
-    return (id === parseInt(id1) || id === parseInt(id2));
-  }
-
+ 
   // check before if channel exists
   async joinChannel(
     userId: number,

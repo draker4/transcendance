@@ -14,6 +14,9 @@ import { ChatService } from './chat.service';
 import { newMsgDto } from './dto/newMsg.dto';
 import { sendMsgDto } from './dto/sendMsg.dto';
 import { MessagesService } from 'src/messages/messages.service';
+import { userLightDto } from './dto/userLight.dto';
+import { Message } from 'src/utils/typeorm/Message.entity';
+import { ChannelService } from 'src/channels/channel.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -30,6 +33,7 @@ export class ChatGateway implements OnModuleInit {
   constructor(
 	private readonly chatService: ChatService,
 	private readonly messageService: MessagesService,
+	private readonly channelService: ChannelService,
 	) {}
 
   // Container of connected users : Map<userId, socket.id>
@@ -71,38 +75,42 @@ export class ChatGateway implements OnModuleInit {
   }
 
 
-  // [?] gestion de tous les message ou differencier les prives des autres ?
-  // [?] ce qui change le plus c'est pour determiner le nom de la channel
-  // [!] implementer un try catch ?
-  @SubscribeMessage('newPrivateMsg')
-  yoping(@MessageBody() message: newMsgDto, @Request() req) {
-    if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
-      // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
 
+  // [!][+] implementer un try catch ?
+  // [+] nettoyer ranger en placant un max dans le service ?
+  @SubscribeMessage('newMsg')
+  async yoping(@MessageBody() message: newMsgDto, @Request() req) {
+    if (1/* check si l'user est bien dans la channel */) {
+      // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
 
       // passer une une date en objet direct pose problème
       // conversion par ISOString
       const now = new Date();
       const nowtoISOString = now.toISOString();
-   
+	
+	  // [?] passer au dessus du if ?
+	  const fetchedChannel = await this.channelService.getChannelById(message.channelId);
+      // [+] la secu que req.user.id est bien dans la channel, en guard/ fction ?
+	  
+
       const sendMsg:sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
         senderId: req.user.id,
-		channelName: message.channel,
+		channelName: fetchedChannel.name,
 		channelId: message.channelId,
       }
 
-      console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?
+      console.log("going to send " + sendMsg.content + " to " + fetchedChannel.name); // checking - garder ce log ?
      
 	  // [!][+] ici ajouter le message dans la database via messageService
 	  this.messageService.addMessage(sendMsg);
 	 
-	  this.server.to(message.channel).emit('sendMsg', sendMsg);
+	  this.server.to(sendMsg.channelName).emit('sendMsg', sendMsg);
     } else {
       // [?] Besoin de mieux sécuriser ou gérer ce cas ?
       // [!] Avec une throw WsException ?
-      console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
+      console.log("@SubscribeMessage('newMsg') error detected user :",req.user.id, " is not in channel nammed");
     }
   }
 
@@ -189,11 +197,34 @@ export class ChatGateway implements OnModuleInit {
     @Request() req,
   ) {
     const id:number = parseInt(payload.channelId);
-    console.log("getmessages proc --> id : ", id);
 
+	// [+] securiser (aussi besoin pour en dessous "getChannelUsers" en faire un fonction ou un Guard ??)
     // verif avec req.user.id que la channel est bien dans sa channelList
     // this.chatService.isUserIntoChannel()
-    
+	
+	// const data:Message[] = (await this.chatService.getMessages(id)).messages;
+	// data.forEach((msg) => {
+	// 	console.log("msg.user = ", msg.user)
+	// });
+
     return (await this.chatService.getMessages(id)).messages;
+  }
+
+
+  // [!] au final pas utilise dans <ChatChannel />
+  @SubscribeMessage("getChannelUsers")
+  async getChannelUsers(
+	@MessageBody() payload: {channelId:string},
+    @Request() req,
+  ) {
+    const id:number = parseInt(payload.channelId);
+    console.log("getChannelUsers proc --> ChannelId : ", id);
+
+	// [+] secu du req.user.id (voir dessus)
+	// [+][?] virer ce userLight au final ?
+	const usersLight:userLightDto[] = await this.chatService.getChannelUsersLight(id);
+	console.log(usersLight);
+    
+    return usersLight;
   }
 }

@@ -5,24 +5,26 @@ import { ReactNode } from "react";
 
 type Props = {
   icon: ReactNode;
-  pongie: Pongie;
+  channel: Channel;
 };
 
 export default function 
-Header({ icon, pongie }: Props) {
+Header({ icon, channel }: Props) {
   return (
     <div className={styles.header}>
       <div className={styles.icon}>{icon}</div>
-      <Link href={"/home/profile/" + pongie.login} className={styles.card}>
+
+	  {/* [+][!] Attention si besoin de changer le link en fonctin du channel.type */}
+      <Link href={"/home/profile/" + channel.name} className={styles.card}>
         <div className={styles.avatar}>
           <AvatarUser
-            avatar={pongie.avatar}
+            avatar={channel.avatar}
             borderSize="3px"
-            borderColor={pongie.avatar.borderColor}
-            backgroundColor={pongie.avatar.backgroundColor}
+            borderColor={channel.avatar.borderColor}
+            backgroundColor={channel.avatar.backgroundColor}
           />
         </div>
-        <div style={{ color: pongie.avatar.borderColor }}> {pongie.login} </div>
+        <div style={{ color: channel.avatar.borderColor }}> {channel.name} </div>
       </Link>
     </div>
   );

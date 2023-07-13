@@ -110,13 +110,13 @@ export class ChannelService {
 	}
 
 	public async getChannelMessages(id: number):Promise<Channel> {
-		return await this.channelRepository.findOne({ where: { id : id }, relations:["messages"] });
+		return await this.channelRepository.findOne({ where: { id : id }, relations:["messages", "messages.user", "messages.user.avatar"] });
 	}
 
 	public async getChannelUsers(id: number):Promise<Channel> {
 		return await this.channelRepository.findOne({
 			where: { id : id },
-			relations: ["users"],
+			relations: ["users", "users.avatar"],
 		});
 	}
 	
