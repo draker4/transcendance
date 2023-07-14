@@ -14,9 +14,9 @@ import { ChatService } from './chat.service';
 import { newMsgDto } from './dto/newMsg.dto';
 import { sendMsgDto } from './dto/sendMsg.dto';
 import { MessagesService } from 'src/messages/messages.service';
-import { userLightDto } from './dto/userLight.dto';
-import { Message } from 'src/utils/typeorm/Message.entity';
 import { ChannelService } from 'src/channels/channel.service';
+import { User } from 'src/utils/typeorm/User.entity';
+import { UsersService } from 'src/users/users.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -34,6 +34,7 @@ export class ChatGateway implements OnModuleInit {
 	private readonly chatService: ChatService,
 	private readonly messageService: MessagesService,
 	private readonly channelService: ChannelService,
+  private readonly userService: UsersService,
 	) {}
 
   // Container of connected users : Map<userId, socket.id>
@@ -86,24 +87,28 @@ export class ChatGateway implements OnModuleInit {
       const nowtoISOString = now.toISOString();
 	
 	  // [?] passer au dessus du if ?
-	  const fetchedChannel = await this.channelService.getChannelById(message.channelId);
-      // [+] la secu que req.user.id est bien dans la channel, en guard/ fction ?
-	  
+    // [+] la secu que req.user.id est bien dans la channel, en guard/ fction ?
+	  const [fetchedChannel, sender] = await Promise.all([
+      this.channelService.getChannelById(message.channelId),
+      this.userService.getUserAvatar(req.user.id)
+    ]);
 
       const sendMsg:sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
-        senderId: req.user.id,
-		channelName: fetchedChannel.name,
-		channelId: message.channelId,
+        sender: sender,
+		    channelName: fetchedChannel.name,
+		    channelId: fetchedChannel.id,
       }
 
-      console.log("going to send " + sendMsg.content + " to " + fetchedChannel.name); // checking - garder ce log ?
-     
-	  // [!][+] ici ajouter le message dans la database via messageService
+    console.log("going to send " + sendMsg.content + " to " + fetchedChannel.name); // checking
 	  this.messageService.addMessage(sendMsg);
 	 
-	  this.server.to(sendMsg.channelName).emit('sendMsg', sendMsg);
+     if (fetchedChannel.type === "privateMsg")
+	    this.server.to("channel:" + sendMsg.channelName).emit('sendMsg', sendMsg);
+    else
+      this.server.to("channel:" + sendMsg.channelId).emit('sendMsg', sendMsg);
+
     } else {
       // [?] Besoin de mieux sécuriser ou gérer ce cas ?
       // [!] Avec une throw WsException ?
@@ -129,18 +134,6 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('getAllPongies')
   async getAllPongies(@Request() req) {
 	  return await this.chatService.getAllPongies(req.user.id);
-  }
-
-  // [!][+] add dto pour le data
-  @SubscribeMessage('joinPrivateMsgChannel')
-  async joinOrCreatePrivateMsgChannel( @MessageBody() data: { pongieId: string },
-    @Request() req,
-  ) {
-
-    return await this.chatService.joinOrCreatePrivateMsgChannel(
-      req.user.id,
-      data.pongieId,
-    );
   }
 
   @SubscribeMessage('addPongie')
@@ -227,10 +220,12 @@ export class ChatGateway implements OnModuleInit {
     console.log("getChannelUsers proc --> ChannelId : ", id);
 
 	// [+] secu du req.user.id (voir dessus)
-	// [+][?] virer ce userLight au final ?
-	const usersLight:userLightDto[] = await this.chatService.getChannelUsersLight(id);
-	console.log(usersLight);
+	const users:User[] = await this.chatService.getChannelUsers(id);
+	console.log(users); 
+  // [!] je laisse ce console log car pas pu tester cette fnction encore, 
+  // une fois qu'elle sera validée, retourner directement le resultat sans 
+  // variable intermédiaire
     
-    return usersLight;
+    return users;
   }
 }

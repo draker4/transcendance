@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { ChannelService } from 'src/channels/channel.service';
-import { CreatePrivateMsgChannelDto } from 'src/channels/dto/CreatePrivateMsgChannel.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
@@ -15,7 +14,6 @@ import { pongieDto } from './dto/pongie.dto';
 import { channelDto } from './dto/channel.dto';
 import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
-import { userLightDto } from './dto/userLight.dto';
 
 @Injectable()
 export class ChatService {
@@ -157,27 +155,6 @@ export class ChatService {
     }
   }
 
-  async joinOrCreatePrivateMsgChannel(userId: string, pongieId: string) {
-    let channel:CreatePrivateMsgChannelDto;
-
-    try {
-    // verification si la channel n'existe pas deja (dans les tables)
-    // creation de la channel apres verif
-    channel = await this.channelService.joinOrCreatePrivateMsgChannel(userId, pongieId);
-    
-  } catch (e) {
-    return {
-      success: 'false',
-      message: 'creatPrivateMessageChannel failed : ' + e.message,
-    };
-  }
-    return {
-      success: 'true',
-      channel: channel,
-    };
-  }
-
-
   async getPongies(id: number) {
     try {
 
@@ -251,37 +228,13 @@ export class ChatService {
     }
   }
 
-  // Light User is a Partial User type to send to frontend
-  async getChannelUsersLight(channelId:number):Promise<userLightDto[]> {
-	// ici j'ai la relation channel->User mais la relation User->avatar ??
-	const channel:Channel = await this.channelService.getChannelUsers(channelId);
-	const users: userLightDto[] = [];
-
-	channel.users.forEach((user:User) => {
-		const userLight:userLightDto = {
-			id: user.id,
-			login: user.login,
-			avatar: user.avatar,
-		}
-		users.push(userLight);
-	});
-
-	return users;
+  async getChannelUsers(channelId:number):Promise<User[]> {
+	return (await this.channelService.getChannelUsers(channelId)).users;
   }
 
   async getMessages(channelId:number) {
 	return this.channelService.getChannelMessages(channelId);
   }
-
-  // [!] a clean 
-  // type UserLight is the User type used in frontend
-//   async getMessagesLight(channelId:number) {
-// 	const messages:Message[] = (await (this.channelService.getChannelMessages(channelId))).messages;
-	
-// 	messagesLight
-
-//   }
-
 
   async addPongie(userId: number, pongieId: number) {
     try {
@@ -385,13 +338,13 @@ export class ChatService {
       const msg: sendMsgDto = {
         content: `${user.login} just arrived`,
         date: date.toISOString(),
-        senderId: userId,
+        sender: user,
         channelName: relation.channel.name,
         channelId: channelId,
       };
       
       server.to("channel:" + channelId).emit("sendMsg", msg);
-      socket.join("channel:" + channelId);
+      ("channel:" + channelId);
       socket.emit("notif");
         
       // check if user already joined

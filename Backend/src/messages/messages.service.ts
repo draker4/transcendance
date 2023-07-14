@@ -15,46 +15,28 @@ export class MessagesService {
 	constructor(
 		@InjectRepository(Message)
 		private readonly messageRepository : Repository<Message>,
-		
-		// ajouter aussi Channel Repo ?
-		// @InjectRepository(Channel)
-		// private readonly channelRepository: Repository<Channel>,
+
 		private readonly channelService: ChannelService,
 		private readonly userService: UsersService,
-		
-		// et apres userRepo ?
-		
 	) {}
 
 	async addMessage(message:sendMsgDto) {
-		// console.log("message : ", message);
-
-		// 1 - creer le message et l'enregistrer dans sa table
-		// 2 - son ajout dans la table channel est autpomatique grae aux relations
-
-		// besoin de l'objet channel concerne [?][+] avec sa relation message
 		const channel = await this.channelService.getChannelById(message.channelId);
 
-		// idem pour relation one to one user
-		const user = await this.userService.getUserById(message.senderId);
-
-		if (!channel || !user)
+		if (!channel || !message.sender)
 			throw new WsException("Database can't find " + message.channelName);
 
-		// besoin du dto de nouveau msg
 		const newMsg :saveNewMsgDto = {
 			content: message.content,
 			channel: channel,
-			user: user,
+			user: message.sender,
 		}
 
-		// [!] try catch a placer en ammont, dans l'appel de cette fction
+		// [!][+] try catch a placer en ammont, dans l'appel de cette fction
 		try {
 			await this.messageRepository.save(newMsg);
-			// const channelAfter = await this.channelService.getChannelMessages(message.channelId);
-			// console.log(" channelAfter : ", channelAfter); // checking only
 		} catch(e) {
-			console.log("crashouille : ", e);
+			console.log("addMessage() error : ", e);
 		}
 	}
 

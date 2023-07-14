@@ -5,7 +5,6 @@ import { Not, Repository } from "typeorm";
 import { ChannelDto } from "./dto/Channel.dto";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
-import { CreatePrivateMsgChannelDto } from "./dto/CreatePrivateMsgChannel.dto";
 import { User } from "src/utils/typeorm/User.entity";
 
 @Injectable()
@@ -63,29 +62,6 @@ export class ChannelService {
 	}
 
 
-	// verification si la channel n'existe pas deja (dans les tables)
-    // creation de la channel c'est bien le cas
-	async joinOrCreatePrivateMsgChannel(userID:string, pongieId:string):Promise<CreatePrivateMsgChannelDto> {
-
-		if(!userID || !pongieId || userID.length === 0 || pongieId.length === 0)
-			throw new Error("a given id is null or an empty string");
-
-		const name = this.formatPrivateMsgChannelName(userID, pongieId)
-		
-		// verif si la channel existe, on la cree sinon :
-		let channel = await this.getChannelbyName(name);
-		if (!channel) {
-			this.createPrivateMsgChannel(name);
-			// check que la creation a eu lieu correctement
-			channel = await this.getChannelbyName(name);
-			if (!channel)
-				throw new Error("can't create the channel " + name);
-		}
-
-		// console.log("La channel existe ou a été créé : ", channel); // checking
-
-		return channel;
-	  }
 
 
 
@@ -118,14 +94,6 @@ export class ChannelService {
 			where: { id : id },
 			relations: ["users", "users.avatar"],
 		});
-	}
-	
-	private async createPrivateMsgChannel(name: string) {
-		const channel :CreatePrivateMsgChannelDto = {
-			name: name,
-			type: "privateMsg",
-		}
-		await this.channelRepository.save(channel);
 	}
 
 	public async updateChannelUsers(channel: Channel, user: User) {
