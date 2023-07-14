@@ -14,6 +14,8 @@ import { pongieDto } from './dto/pongie.dto';
 import { channelDto } from './dto/channel.dto';
 import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
+import { newMsgDto } from './dto/newMsg.dto';
+import { MessagesService } from 'src/messages/messages.service';
 
 @Injectable()
 export class ChatService {
@@ -29,9 +31,10 @@ export class ChatService {
 
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
-	
+
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
+    private readonly messageService: MessagesService,
     private readonly cryptoService: CryptoService,
   ) {}
 
@@ -39,63 +42,60 @@ export class ChatService {
     try {
       const relations = await this.userChannelRelation.find({
         where: { userId: id, joined: true, isbanned: false },
-        relations: ["channel", "channel.avatar"],
+        relations: ['channel', 'channel.avatar'],
       });
 
-      if (!relations)
-        return [];
+      if (!relations) return [];
 
-      const channels = await Promise.all(relations.map(async (relation) => {
-        const channel = relation.channel;
-        let   pongieId: number;
-        
-        if (channel.type === "privateMsg") {
-          const ids = channel.name.split(" ");
-          if (id.toString() === ids[0])
-            pongieId = parseInt(ids[1]);
-          else
-            pongieId = parseInt(ids[0]);
+      const channels = await Promise.all(
+        relations.map(async (relation) => {
+          const channel = relation.channel;
+          let pongieId: number;
 
-          const pongie = await this.usersService.getUserAvatar(pongieId);
+          if (channel.type === 'privateMsg') {
+            const ids = channel.name.split(' ');
+            if (id.toString() === ids[0]) pongieId = parseInt(ids[1]);
+            else pongieId = parseInt(ids[0]);
 
-          if (!pongie)
-            throw new Error('no pongie found');
-          
-          channel.avatar = pongie.avatar;
-          channel.name = pongie.login;
-        }
+            const pongie = await this.usersService.getUserAvatar(pongieId);
 
-        return channel;
-      }));
-  
+            if (!pongie) throw new Error('no pongie found');
+
+            channel.avatar = pongie.avatar;
+            channel.name = pongie.login;
+          }
+
+          return channel;
+        }),
+      );
+
       return channels;
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
 
-  async getAllChannels(id: number): Promise<channelDto[]>{
+  async getAllChannels(id: number): Promise<channelDto[]> {
     try {
-
       // get all channels
       const channels = await this.channelRepository.find({
-        relations: ["avatar"],
-        where: { type: Not("privateMsg") },
+        relations: ['avatar'],
+        where: { type: Not('privateMsg') },
       });
 
       // get channels already joined
       const channelsJoined = await this.getChannels(id);
 
-      const all = channels.map(channel => {
+      const all = channels.map((channel) => {
         let joined = false;
         let see = true;
 
-        if (channel.type === "private")
-          see = false;
+        if (channel.type === 'private') see = false;
 
-        const channelJoined = channelsJoined.find(channelJoined => channelJoined.id === channel.id);
-                
+        const channelJoined = channelsJoined.find(
+          (channelJoined) => channelJoined.id === channel.id,
+        );
+
         if (channelJoined) {
           joined = true;
           see = true;
@@ -113,8 +113,7 @@ export class ChatService {
 
       // console.log(all);
       return all;
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
@@ -122,61 +121,68 @@ export class ChatService {
   async getAllPongies(id: number): Promise<pongieDto[]> {
     try {
       let pongies = await this.userRepository.find({
-        relations: ["avatar"],
+        relations: ['avatar'],
       });
 
-      pongies = pongies.filter(pongie => pongie.id !== id);
+      pongies = pongies.filter((pongie) => pongie.id !== id);
 
       const friends = await this.getPongies(id);
 
-      const all = await Promise.all(pongies.map(async (pongie) => {
-        let isFriend = false;
+      const all = await Promise.all(
+        pongies.map(async (pongie) => {
+          let isFriend = false;
 
-        if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
-          pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
-          pongie.avatar.decrypt = false;
-        }
+          if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+            pongie.avatar.image = await this.cryptoService.decrypt(
+              pongie.avatar.image,
+            );
+            pongie.avatar.decrypt = false;
+          }
 
-        if (friends.find(friend => friend.id === pongie.id))
-          isFriend = true;
+          if (friends.find((friend) => friend.id === pongie.id))
+            isFriend = true;
 
-        return {
-          id: pongie.id,
-          login: pongie.login,
-          avatar: pongie.avatar,
-          isFriend: isFriend,
-        };
-      }));
+          return {
+            id: pongie.id,
+            login: pongie.login,
+            avatar: pongie.avatar,
+            isFriend: isFriend,
+          };
+        }),
+      );
 
       return all;
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
 
   async getPongies(id: number) {
     try {
-
       const relations = await this.userPongieRelation.find({
         where: { userId: id, deleted: false, isFriend: true },
-        relations: ["pongie", "pongie.avatar"],
+        relations: ['pongie', 'pongie.avatar'],
       });
 
-      if (!relations)
-        return [];
+      if (!relations) return [];
 
-      const pongies = await Promise.all(relations.map(async (relation) => {
-        if (relation.pongie.avatar?.decrypt && relation.pongie.avatar?.image?.length > 0) {
-          relation.pongie.avatar.image = await this.cryptoService.decrypt(relation.pongie.avatar.image);
-          relation.pongie.avatar.decrypt = false;
-        }
-        return relation.pongie;
-      }));
-  
+      const pongies = await Promise.all(
+        relations.map(async (relation) => {
+          if (
+            relation.pongie.avatar?.decrypt &&
+            relation.pongie.avatar?.image?.length > 0
+          ) {
+            relation.pongie.avatar.image = await this.cryptoService.decrypt(
+              relation.pongie.avatar.image,
+            );
+            relation.pongie.avatar.decrypt = false;
+          }
+          return relation.pongie;
+        }),
+      );
+
       return pongies;
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
       throw new WsException(error.message);
     }
@@ -184,13 +190,12 @@ export class ChatService {
 
   async deletePongie(userId: number, pongieId: number) {
     try {
-
       const relation1 = await this.userPongieRelation.findOne({
-        where: {userId: userId, pongieId: pongieId}
+        where: { userId: userId, pongieId: pongieId },
       });
 
       const relation2 = await this.userPongieRelation.findOne({
-        where: {userId: pongieId, pongieId: userId}
+        where: { userId: pongieId, pongieId: userId },
       });
 
       relation1.deleted = true;
@@ -198,58 +203,54 @@ export class ChatService {
 
       await this.userPongieRelation.save(relation1);
       await this.userPongieRelation.save(relation2);
-
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
-      throw new WsException("cannot delete pongie");
+      throw new WsException('cannot delete pongie');
     }
   }
 
   async addChannel(userId: number, channelId: number) {
     try {
       const relation = await this.userChannelRelation.findOne({
-        where: { userId: userId, channelId: channelId},
-        relations: ["user", "channel"],
+        where: { userId: userId, channelId: channelId },
+        relations: ['user', 'channel'],
       });
 
       if (!relation) {
         const user = await this.usersService.getUserPongies(userId);
         const channel = await this.channelService.getChannelById(channelId);
-       
+
         await this.usersService.updateUserChannels(user, channel);
       }
       // else {
       //   await this.userPongieRelation.save(relation);
       // }
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
 
-  async getChannelUsers(channelId:number):Promise<User[]> {
-	return (await this.channelService.getChannelUsers(channelId)).users;
+  async getChannelUsers(channelId: number): Promise<User[]> {
+    return (await this.channelService.getChannelUsers(channelId)).users;
   }
 
-  async getMessages(channelId:number) {
-	return this.channelService.getChannelMessages(channelId);
+  async getMessages(channelId: number) {
+    return this.channelService.getChannelMessages(channelId);
   }
 
   async addPongie(userId: number, pongieId: number) {
     try {
       const relation = await this.userPongieRelation.findOne({
-        where: { userId: userId, pongieId: pongieId},
-        relations: ["user", "pongie"],
+        where: { userId: userId, pongieId: pongieId },
+        relations: ['user', 'pongie'],
       });
 
       if (!relation) {
         const user = await this.usersService.getUserPongies(userId);
         const pongie = await this.usersService.getUserPongies(pongieId);
-        
+
         await this.usersService.updateUserPongies(user, pongie);
-      }
-      else {
+      } else {
         relation.invited = true;
         relation.deleted = false;
 
@@ -258,7 +259,7 @@ export class ChatService {
 
       const relation2 = await this.userPongieRelation.findOne({
         where: { userId: pongieId, pongieId: userId },
-        relations: ["user", "pongie"],
+        relations: ['user', 'pongie'],
       });
 
       if (!relation2) {
@@ -266,40 +267,39 @@ export class ChatService {
         const pongie = await this.usersService.getUserPongies(pongieId);
 
         await this.usersService.updateUserPongies(user, pongie);
-      }
-      else {
+      } else {
         relation2.invited = true;
         relation2.deleted = false;
 
         await this.userPongieRelation.save(relation2);
       }
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
- 
+
   // check before if channel exists
   async joinChannel(
     userId: number,
     channelId: number,
     channelName: string,
-    channelType: "public" | "protected" | "private" | "privateMsg",
+    channelType: 'public' | 'protected' | 'private' | 'privateMsg',
     socket: Socket,
     server: Server,
   ) {
     try {
-      
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      if (!user)
-        throw new Error("no user found");
+      if (!user) throw new Error('no user found');
 
       // check if channel already exists
       let channel = await this.channelService.getChannelById(channelId);
 
       if (!channel) {
-        channel = await this.channelService.addChannel(channelName, channelType);
+        channel = await this.channelService.addChannel(
+          channelName,
+          channelType,
+        );
 
         if (!channel)
           return {
@@ -307,20 +307,20 @@ export class ChatService {
             exists: true,
             banned: false,
             channel: null,
-          }
+          };
       }
 
       // check if user already in channel
       let relation = await this.userChannelRelation.findOne({
         where: { userId: userId, channelId: channelId },
-        relations: ["user", "channel"],
+        relations: ['user', 'channel'],
       });
 
       if (!relation) {
         await this.usersService.updateUserChannels(user, channel);
         relation = await this.userChannelRelation.findOne({
           where: { userId: userId, channelId: channel.id },
-          relations: ["user", "channel"],
+          relations: ['user', 'channel'],
         });
       }
 
@@ -331,7 +331,7 @@ export class ChatService {
           exists: false,
           banned: true,
           channel: null,
-        }
+        };
 
       const date = new Date();
 
@@ -342,55 +342,61 @@ export class ChatService {
         channelName: relation.channel.name,
         channelId: channelId,
       };
-      
-      server.to("channel:" + channelId).emit("sendMsg", msg);
-      ("channel:" + channelId);
-      socket.emit("notif");
-        
+
+      server.to('channel:' + channelId).emit('sendMsg', msg);
+      'channel:' + channelId;
+      socket.emit('notif');
+
       // check if user already joined
       if (!relation.joined) {
         relation.joined = true;
         await this.userChannelRelation.save(relation);
       }
-      
+
       return {
         success: true,
         exists: false,
         banned: false,
         channel: channel,
       };
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.msg);
     }
   }
 
   async joinPongie(userId: number, pongieId: number, socket: Socket) {
     try {
-      
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      if (!user)
-        throw new Error("no user found");
-      
+      if (!user) throw new Error('no user found');
+
       // check if channel of type 'privateMsg' already exists
-      const channelName = this.channelService.formatPrivateMsgChannelName(userId.toString(), pongieId.toString());
-      let channel = await this.channelService.getChannelByName(channelName, true);
+      const channelName = this.channelService.formatPrivateMsgChannelName(
+        userId.toString(),
+        pongieId.toString(),
+      );
+      let channel = await this.channelService.getChannelByName(
+        channelName,
+        true,
+      );
 
       if (!channel)
-        channel = await this.channelService.addChannel(channelName, "privateMsg");
+        channel = await this.channelService.addChannel(
+          channelName,
+          'privateMsg',
+        );
 
       // check if relations exists
       let relationUser = await this.userChannelRelation.findOne({
         where: { userId: userId, channelId: channel.id },
-        relations: ["user", "channel"],
+        relations: ['user', 'channel'],
       });
 
       if (!relationUser) {
         await this.usersService.updateUserChannels(user, channel);
         relationUser = await this.userChannelRelation.findOne({
           where: { userId: userId, channelId: channel.id },
-          relations: ["user", "channel"],
+          relations: ['user', 'channel'],
         });
       }
 
@@ -403,47 +409,90 @@ export class ChatService {
           channel: null,
         };
 
-      socket.join("channel:" + channelName);
-      socket.emit("notif");
-      
+      socket.join('channel:' + channelName);
+      socket.emit('notif');
+
       if (!relationUser.joined) {
         relationUser.joined = true;
         await this.userChannelRelation.save(relationUser);
       }
-      
+
       return {
         success: true,
         exists: false,
         banned: false,
         channel: channel,
       };
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.msg);
     }
   }
 
-  async leave(userId: number, channelId: number, socket: Socket, server: Server) {
+  async leave(
+    userId: number,
+    channelId: number,
+    socket: Socket,
+    server: Server,
+  ) {
     try {
       const relation = await this.userChannelRelation.findOne({
         where: { userId: userId, channelId: channelId },
-        relations: ["user", "channel"],
+        relations: ['user', 'channel'],
       });
 
-      if (!relation)
-        throw new Error("no relation found");
-      
+      if (!relation) throw new Error('no relation found');
+
       relation.joined = false;
       await this.userChannelRelation.save(relation);
 
-      socket.leave("channel:" + channelId);
-      socket.emit("notif");
+      socket.leave('channel:' + channelId);
+      socket.emit('notif');
 
       // send message server [!]
-
-    }
-    catch (error) {
+    } catch (error) {
       throw new WsException(error.message);
     }
   }
+
+  async receiveNewMsg(message: newMsgDto, reqUserId: number, server: Server) {
+    try {
+      const now = new Date();
+      const nowtoISOString = now.toISOString();
+      const [fetchedChannel, sender] = await Promise.all([
+        this.channelService.getChannelById(message.channelId),
+        this.usersService.getUserAvatar(reqUserId),
+      ]);
+
+      const sendMsg: sendMsgDto = {
+        content: message.content,
+        date: nowtoISOString,
+        sender: sender,
+        channelName: fetchedChannel.name,
+        channelId: fetchedChannel.id,
+      };
+
+      this.log(
+        'sending : ' + sendMsg.content + ' to : ' + fetchedChannel.name,
+      ); // checking
+      this.messageService.addMessage(sendMsg);
+
+      if (fetchedChannel.type === 'privateMsg')
+        server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
+      else 
+        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
+
+    } catch (error) {
+      throw new WsException(error.message);
+    }
+
+  }
+
+  // tools
+  private log(msg:string) {
+    const green = "\x1b[32m";
+    const stop = "\x1b[0m"
+
+    console.log(green + "  [message service]  " + stop + msg);
+  }
+
 }

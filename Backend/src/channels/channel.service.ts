@@ -6,6 +6,7 @@ import { ChannelDto } from "./dto/Channel.dto";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
 import { User } from "src/utils/typeorm/User.entity";
+import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 
 @Injectable()
 export class ChannelService {
@@ -15,6 +16,10 @@ export class ChannelService {
 		private readonly channelRepository: Repository<Channel>,
 		@InjectRepository(Avatar)
 		private readonly avatarRepository: Repository<Avatar>,
+
+		// [!] ajouté pour mon guard Channel
+		@InjectRepository(UserChannelRelation)
+    	private readonly userChannelRelation: Repository<UserChannelRelation>
 	
 	) {}
 
@@ -62,12 +67,6 @@ export class ChannelService {
 	}
 
 
-
-
-
-
-	/* ------------------- tools -------------------------- */
-
 	// name of Private Message channel format 
 	// 'id1 id2' with id1 < id2
 	public formatPrivateMsgChannelName(id1: string, id2:string): string {
@@ -111,5 +110,13 @@ export class ChannelService {
 			return null;
 		
 		return channel.users.find(user => user.id !== userId);
+	}
+
+	public async isUserInChannel(userId: number, channelId: number):Promise<boolean> {
+		const	relation = await this.userChannelRelation.findOne({
+			where: { userId:userId, channelId:channelId, joined:true, isbanned:false }
+		});
+
+		return relation ? true : false;
 	}
 }

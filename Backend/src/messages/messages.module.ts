@@ -10,10 +10,11 @@ import { Channel } from "src/utils/typeorm/Channel.entity";
 import { Message } from "src/utils/typeorm/Message.entity";
 import { User } from "src/utils/typeorm/User.entity";
 import { MessagesService } from "./messages.service";
+import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([Message, Channel, Avatar, User]),
+		TypeOrmModule.forFeature([Message, Channel, Avatar, User, UserChannelRelation]),
 	],
 	providers: [
 		MessagesService,

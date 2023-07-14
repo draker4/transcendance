@@ -14,6 +14,7 @@ import { UserPongieRelation } from "src/utils/typeorm/UserPongieRelation";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { MessagesService } from "src/messages/messages.service";
 import { Message } from "src/utils/typeorm/Message.entity";
+import { ChannelAuthGuard } from "./guard/channelAuthGuard";
 
 @Module({
 	imports: [
@@ -22,6 +23,7 @@ import { Message } from "src/utils/typeorm/Message.entity";
 	providers: [
 		ChatGateway,
 		WsJwtGuard,
+		ChannelAuthGuard,
 		UsersService,
 		CryptoService,
 		ChatService,

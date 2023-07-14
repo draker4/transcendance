@@ -36,14 +36,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-
-    // [!][+] join fait ici temporairement
-    socket.emit('join', {
-      id: channel.id,
-      channelName: channel.name,
-      channelType: channel.type,
-    })
-
     socket.emit(
       "getMessages",
       { channelId: channel.id },
