@@ -471,7 +471,7 @@ export class ChatService {
         channelId: fetchedChannel.id,
       };
 
-      this.log(`sending : ${sendMsg.content} to : ${fetchedChannel.name}`); // checking
+      this.log(`[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`); // checking
 
       this.messageService.addMessage(sendMsg);
 

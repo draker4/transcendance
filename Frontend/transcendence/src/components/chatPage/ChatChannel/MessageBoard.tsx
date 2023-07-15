@@ -1,4 +1,4 @@
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import MessageItem from "./MessageItem";
 import { useEffect, useState } from "react";
 

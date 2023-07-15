@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import Header from "./Header";
 import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
@@ -59,6 +59,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
+
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
         content: receivedMsg.content,
@@ -66,7 +67,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         date: receivedDate,
       };
 
-      console.log("event 'sendMsg' proc -> msg = ", msg); // checking
+    //   console.log("event 'sendMsg' proc -> msg = ", msg); // [!] checking
 
       setMessages((previous) => [...previous, msg]);
     };
@@ -87,7 +88,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   };
 
   return (
-    <div className={styles.privateMsgFrame}>
+    <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} />
       <MessageBoard messages={messages} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} />

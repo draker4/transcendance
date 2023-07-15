@@ -1,4 +1,4 @@
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 
@@ -15,7 +15,7 @@ type Props = {
 export default function MessageItem({ groupedMessages }: Props) {
   
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
-    <p key={index}>{msg.content}</p>
+    <pre key={index}>{msg.content}</pre>
   ));
 
   const formatedDate = makeHumanDateFormat(groupedMessages.date);
@@ -49,7 +49,9 @@ export default function MessageItem({ groupedMessages }: Props) {
           </div>
         </div>
         {/* Content */}
-        <div className={styles.content}>{mappingMessages}</div>
+        <div className={styles.content}>
+			{mappingMessages}
+		</div>
       </div>
     </div>
   );

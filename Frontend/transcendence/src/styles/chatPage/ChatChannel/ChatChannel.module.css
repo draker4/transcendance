@@ -1,6 +1,6 @@
 
 /* FRAME - PARENT COMPONENT */
-.privateMsgFrame {
+.channelMsgFrame {
 	width:100%;
 	height:100%;
 	display: flex;
@@ -9,7 +9,7 @@
 }
 
 /* ----------------- HEADER ----------------- */
-.privateMsgFrame .header {
+.channelMsgFrame .header {
 	min-height: 40px;
 	max-height: 60px;
 	background-color: var(--primary-darker2);
@@ -20,12 +20,12 @@
 	/* background-color: var(--notif); */
 }
 
-.privateMsgFrame .header .icon {
+.channelMsgFrame .header .icon {
 	justify-content: flex-start;
 	font-size: 1.5rem;
 }
 
-.privateMsgFrame .header .card {
+.channelMsgFrame .header .card {
 	margin: 0 auto;
 	height: 100%;
 	display:flex;
@@ -39,18 +39,18 @@
 	
 	/* border: 2px dashed var(--notif); */
 }
-.privateMsgFrame .header .card {
+.channelMsgFrame .header .card {
 	cursor: pointer;
 }
 
-.privateMsgFrame .header .card .avatar {
+.channelMsgFrame .header .card .avatar {
 	aspect-ratio: 1;
 	height: 100%;
 }
 /* ----------------- MESSAGE BOARD ----------------- */
 
 /* a améliorer pour que le conenu suppl devienne scrollable */
-.privateMsgFrame .msgBoard {
+.channelMsgFrame .msgBoard {
 	background-color: var(--primary-darker1);
 	padding: 6px 20px 6px 10px;
 	
@@ -66,14 +66,14 @@
 	height:0px;
 }
 
-.privateMsgFrame .msgBoard .msgItem {
+.channelMsgFrame .msgBoard .msgItem {
 	margin-bottom: 20px;
 	display:flex;
 
 	/* border: 2px dashed var(--accent); */
 }
 
-.privateMsgFrame .msgBoard .msgItem .avatarSide {
+.channelMsgFrame .msgBoard .msgItem .avatarSide {
 	width: 60px;
 	margin-right: 6px;
 	/* display: flex; */
@@ -82,7 +82,7 @@
 	/* background-color: cadetblue; */
 }
 
-.privateMsgFrame .msgBoard .msgItem .avatarSide .avatarSlot {
+.channelMsgFrame .msgBoard .msgItem .avatarSide .avatarSlot {
 	width: 46px;
 	height: 46px;
 	margin-left: 6px;
@@ -90,13 +90,13 @@
 
 
 
-.privateMsgFrame .msgBoard .msgItem .textSide {
+.channelMsgFrame .msgBoard .msgItem .textSide {
 	flex:1;
 	
 	/* background-color: rgb(151, 190, 107); */
 }
 
-.privateMsgFrame .msgBoard .msgItem .textSide .tsheader {
+.channelMsgFrame .msgBoard .msgItem .textSide .tsheader {
 	display: flex;
 	justify-content: flex-start;
 	align-items: baseline;
@@ -106,7 +106,7 @@
 	/* background-color: rgb(151, 190, 107); */
 }
 
-.privateMsgFrame .msgBoard .msgItem .textSide .tsheader .name {
+.channelMsgFrame .msgBoard .msgItem .textSide .tsheader .name {
 	font-family: var(--title-font);
 	font-weight: 650;
 	font-size: 1.2rem;
@@ -115,22 +115,28 @@
 	/* background-color: rgb(151, 190, 107); */
 }
 
-.privateMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
+.channelMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
 	color: var(--tertiary-lighter1);
 	font-size: 0.85rem;
 	
 	/* background-color: rgb(151, 190, 107); */
 }
 
-.privateMsgFrame .msgBoard .msgItem .textSide {
-	overflow-wrap: break-word;
+.channelMsgFrame .msgBoard .msgItem .textSide {
 	min-width: 0;
+}
+
+.channelMsgFrame .msgBoard .msgItem .textSide .content pre {
+	overflow-wrap: break-word;
+	white-space: pre-wrap;
+	font-family: var(--text);
+	font-size: 1rem;
 }
 
 
 
 /* ----------------- PROMPT ----------------- */
-.privateMsgFrame .prompt {
+.channelMsgFrame .prompt {
 	min-height: 80px;
 	background-color: var(--primary-darker2);
 
@@ -145,7 +151,7 @@
 }
 
 
-.privateMsgFrame .prompt form {
+.channelMsgFrame .prompt form {
 
 	background-color: var(--primary-darker1);
 	border-radius: 8px;
@@ -162,7 +168,7 @@
 }
 
 
-.privateMsgFrame .prompt textarea {
+.channelMsgFrame .prompt textarea {
 	border: none;
 	resize: none;
 	background: none;
@@ -181,11 +187,11 @@
 
 }
 
-.privateMsgFrame .prompt textarea:focus {
+.channelMsgFrame .prompt textarea:focus {
 	outline: none;
   }
 
-.privateMsgFrame .prompt .paperPlane {
+.channelMsgFrame .prompt .paperPlane {
 	color:var(--accent);
 	font-size: 1.3rem;
 	background: none;
@@ -196,15 +202,15 @@
 	
 }
 
-.privateMsgFrame .prompt .paperPlane.disabledButton {
+.channelMsgFrame .prompt .paperPlane.disabledButton {
 	color:var(--primary-darker2);
 	cursor:default;
 }
 
-.privateMsgFrame .prompt .paperPlane.disabledButton:hover {
+.channelMsgFrame .prompt .paperPlane.disabledButton:hover {
 	cursor:default;
 }
 
-.privateMsgFrame .prompt .paperPlane:hover {
+.channelMsgFrame .prompt .paperPlane:hover {
 	cursor: pointer;
 }

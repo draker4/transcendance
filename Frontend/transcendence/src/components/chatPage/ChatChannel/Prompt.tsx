@@ -1,4 +1,4 @@
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ type Props = {
   addMsg: (msg: Message) => void;
 };
 
-export default function Prompt({ channel, myself, addMsg }: Props ) {
+export default function Prompt({ channel, myself, addMsg }: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [text, setText] = useState<string>("");
@@ -26,7 +26,6 @@ export default function Prompt({ channel, myself, addMsg }: Props ) {
   const junctionWord = channel.type === "privateMsg" ? "at " : "into ";
   const placeholder = "Send a message " + junctionWord + channel.name;
 
-
   const buttonAddedClass = isEmpty
     ? styles.disabledButton
     : styles.activeButton;
@@ -34,14 +33,16 @@ export default function Prompt({ channel, myself, addMsg }: Props ) {
   const handleSendMsg = (e: React.FormEvent | null) => {
     e?.preventDefault();
 
-    // console.log("Message to send :", text);
-    const newMsg:Message = {
-      content: text,
-      sender: myself,
-      date: new Date(),
-    }
+    if (text.length > 0) {
+    //   console.log("Message to send :", text); // [!] checking
+      const newMsg: Message = {
+        content: text,
+        sender: myself,
+        date: new Date(),
+      };
 
-    addMsg(newMsg);
+      addMsg(newMsg);
+    }
 
     setText("");
     setIsEmpty(true);

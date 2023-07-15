@@ -91,26 +91,5 @@ export default function ChatDisplay({
 
 
 	}
-
-	/* [!] plus besoin de differencier pongie et channel
-
-	// [!] condition en vrac pour test
-	if ('name' in display && 'type' in display && display.type !== 'privateMsg')
-		return (
-			<div className={styles.main}>
-				{renderIcon()}
-				{display.name}
-			</div>
-		)
-
-	// PrivateMsg [!] conditions en vrac pour tester
-	if ('name' in display && 'type' in display && display.type === 'privateMsg')
-			console.log(display);
-		return (
-			<div className={styles.main + ' ' + styles.noPadding}>
-				<ChatPrivateMsg icon={renderIcon()} pongie={display} myself={myself} socket={socket}/>
-			</div>
-		)
-	*/
 }
 

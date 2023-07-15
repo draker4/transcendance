@@ -1,5 +1,5 @@
 import AvatarUser from "@/components/avatarUser/AvatarUser";
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import Link from "next/link";
 import { ReactNode } from "react";
 
