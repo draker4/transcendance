@@ -471,28 +471,26 @@ export class ChatService {
         channelId: fetchedChannel.id,
       };
 
-      this.log(
-        'sending : ' + sendMsg.content + ' to : ' + fetchedChannel.name,
-      ); // checking
+      this.log(`sending : ${sendMsg.content} to : ${fetchedChannel.name}`); // checking
+
       this.messageService.addMessage(sendMsg);
 
       if (fetchedChannel.type === 'privateMsg')
         server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
-      else 
-        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
-
+      else server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
     } catch (error) {
       throw new WsException(error.message);
     }
-
   }
 
   // tools
-  private log(msg:string) {
-    const green = "\x1b[32m";
-    const stop = "\x1b[0m"
 
-    console.log(green + "  [message service]  " + stop + msg);
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const green = '\x1b[32m';
+    const stop = '\x1b[0m';
+
+	process.stdout.write(green + '[chat service]  ' + stop);
+    console.log(message);
   }
-
 }

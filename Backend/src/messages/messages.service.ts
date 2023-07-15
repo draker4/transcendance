@@ -11,43 +11,26 @@ import { saveNewMsgDto } from './dto/saveNewMsg.dto';
 
 @Injectable()
 export class MessagesService {
+  constructor(
+    @InjectRepository(Message)
+    private readonly messageRepository: Repository<Message>,
 
-	constructor(
-		@InjectRepository(Message)
-		private readonly messageRepository : Repository<Message>,
+    private readonly channelService: ChannelService,
+    private readonly userService: UsersService,
+  ) {}
 
-		private readonly channelService: ChannelService,
-		private readonly userService: UsersService,
-	) {}
+  async addMessage(message: sendMsgDto) {
+    const channel = await this.channelService.getChannelById(message.channelId);
 
-	async addMessage(message:sendMsgDto) {
-		const channel = await this.channelService.getChannelById(message.channelId);
+    if (!channel || !message.sender)
+      throw new WsException("Database can't find " + message.channelName);
 
-		if (!channel || !message.sender)
-			throw new WsException("Database can't find " + message.channelName);
+    const newMsg: saveNewMsgDto = {
+      content: message.content,
+      channel: channel,
+      user: message.sender,
+    };
 
-		const newMsg :saveNewMsgDto = {
-			content: message.content,
-			channel: channel,
-			user: message.sender,
-		}
-
-		// [!][+] try catch a placer en ammont, dans l'appel de cette fction
-		try {
-			await this.messageRepository.save(newMsg);
-		} catch(e) {
-			console.log("addMessage() error : ", e);
-		}
-	}
-
-
-
-
-
-
-
-
-
-
-
+    await this.messageRepository.save(newMsg);
+  }
 }

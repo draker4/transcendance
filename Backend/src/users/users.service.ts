@@ -7,6 +7,8 @@ import { createUserDto } from './dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
+import { EditUserDto } from './dto/EditUser.dto';
+import { repDto } from './dto/rep.dto';
 
 @Injectable()
 export class UsersService {
@@ -39,8 +41,8 @@ export class UsersService {
     for (const client of clients) {
       const emailClient = await this.cryptoService.decrypt(client.email);
       if (
-        emailClient.toLowerCase() === emailDecrypted
-        && client.provider === provider
+        emailClient.toLowerCase() === emailDecrypted &&
+        client.provider === provider
       )
         return client;
     }
@@ -56,21 +58,21 @@ export class UsersService {
   async getUserChannels(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ["channels", "channels.avatar"],
+      relations: ['channels', 'channels.avatar'],
     });
   }
 
   async getUserPongies(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ["pongies", "pongies.avatar"],
+      relations: ['pongies', 'pongies.avatar'],
     });
   }
 
   async getUserAvatar(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ["avatar"],
+      relations: ['avatar'],
     });
   }
 
@@ -85,7 +87,7 @@ export class UsersService {
   async updateUserChannels(user: User, channel: Channel) {
     await this.userRepository
       .createQueryBuilder()
-      .relation(User, "channels")
+      .relation(User, 'channels')
       .of(user.id)
       .add(channel);
   }
@@ -93,7 +95,7 @@ export class UsersService {
   async updateUserAvatar(user: User, avatar: Avatar) {
     await this.userRepository
       .createQueryBuilder()
-      .relation(User, "avatar")
+      .relation(User, 'avatar')
       .of(user.id)
       .set(avatar);
   }
@@ -101,12 +103,64 @@ export class UsersService {
   async updateUserPongies(user: User, pongie: User) {
     await this.userRepository
       .createQueryBuilder()
-      .relation(User, "pongies")
+      .relation(User, 'pongies')
       .of(user.id)
       .add(pongie);
   }
 
   async getChannelByName(name: string) {
-    return await this.channelRepository.findOne({ where: { name: name }, relations: ["users"] });
+    return await this.channelRepository.findOne({
+      where: { name: name },
+      relations: ['users'],
+    });
+  }
+
+  async editUser(userId: number, properties: EditUserDto) {
+    const rep: repDto = {
+      success: false,
+      message: '',
+    };
+
+    try {
+      const updatedProperties: string[] = [];
+
+      for (const key in properties) {
+        if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
+          updatedProperties.push(key);
+        }
+      }
+
+      if (updatedProperties.length > 0) {
+        if (updatedProperties.indexOf('login') !== -1) {
+          rep.message = 'sorry, editing login is not implemented yet';
+        } else {
+          this.updateUser(userId, properties);
+
+          rep.success = true;
+          rep.message = `Properties : ${updatedProperties.join(
+            ', ',
+          )} : successfully updated`;
+
+          this.log(`${rep.message} for user : ${userId}`);
+        }
+      } else {
+        rep.message = 'missing or incorrect properties sent in request';
+      }
+    } catch (error) {
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
+
+  // tools
+
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const yellow = '\x1b[33m';
+    const stop = '\x1b[0m';
+
+	process.stdout.write(yellow + '[user service]  ' + stop);
+    console.log(message);
   }
 }

@@ -85,94 +85,9 @@ export class UsersController {
     return { exists: false };
   }
 
-
-  // [!] utiliser trycatch pour manip la database
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-    // console.log("User @Put called, properties = \n", properties);
-
-    const updatedProperties = [];
-    let message = "";
-
-    for (const key in properties) {
-      if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
-        updatedProperties.push(key);
-      }
-    }
-    // console.log("Array of updatedProperties = ", updatedProperties); // checking
-    // console.log("updatedProperties.length  = ", updatedProperties.length ); // checking
-
-    
-    if (updatedProperties.length > 0) {
-      this.usersService.updateUser(req.user.id, properties);
-
-      message = `Properties : ${updatedProperties.join(', ')} : successfully updated`
-    }
-
-    return {
-      message: message,
-    }
-  }
-
-  // [!] utiliser un PUT + foutre en trycatch
-  // faire ca de maniere générique
-  @Post('edit-motto')
-  async editMotto(@Request() req, @Body('submitedMotto') motto: string) {
-    console.log('POST~edit-motto method called'); //checking
-    const user = await this.usersService.getUserById(req.user.id);
-
-    if (!user)
-      throw new NotFoundException('User not found');
-    
-    // user.motto = motto.filterBadWords();
-    // console.log(user);
-    await this.usersService.updateUser(user.id, {
-      motto: motto.filterBadWords(),
-    });
-
-    // cets moi qui ai changé ca (baptiste),
-    // la fonction updateUser retourne pas d'erreur
-    // juste elle update, mais je sais pas comment le checker encore
-    // mais ce quon faisait prenait du temps pour rien
-    // (de retourner le user a chaque fois)
-
-    // if (!updatedUser || updatedUser.motto != motto) {
-    // throw new BadRequestException('issue while updating motto');
-    // return {
-    // 	"exists": false,
-    // };
-    // }
-
-    return {
-      message: 'motto updated successfully ',
-    };
-  }
-
-  @Post('edit-story')
-  async editStory(@Request() req, @Body('submitedStory') story: string) {
-    const user = await this.usersService.getUserById(req.user.id);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    // user.story = story.filterBadWords();
-
-    // console.log('Story recup :', story);
-    // await this.usersService.updateUser(user.id, user);
-    await this.usersService.updateUser(user.id, {
-      story: story.filterBadWords(),
-    });
-    // if (!updatedUser || updatedUser.story != story) {
-    // throw new BadRequestException('issue while updating story');
-    // return {
-    // 	"exists": false,
-    // };
-    // }
-
-    return {
-      message: 'story updated successfully ',
-    };
+	return await this.usersService.editUser(req.user.id, properties);
   }
 
   @Public()

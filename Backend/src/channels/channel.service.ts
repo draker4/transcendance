@@ -17,7 +17,6 @@ export class ChannelService {
 		@InjectRepository(Avatar)
 		private readonly avatarRepository: Repository<Avatar>,
 
-		// [!] ajouté pour mon guard Channel
 		@InjectRepository(UserChannelRelation)
     	private readonly userChannelRelation: Repository<UserChannelRelation>
 	

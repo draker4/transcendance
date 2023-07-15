@@ -51,11 +51,12 @@ export class ChatGateway implements OnModuleInit {
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(payload.sub);
-          console.log(`User with ID ${payload.sub} disconnected`);
-          console.log(this.connectedUsers);
+          this.log(`User with ID ${payload.sub} disconnected`); // [?]
         });
 
-        console.log('connected users = ', this.connectedUsers);
+       this.log('connected users = '); // [?]
+	   this.log(this.connectedUsers); // [?]
+
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -160,5 +161,17 @@ export class ChatGateway implements OnModuleInit {
     // variable intermédiaire
 
     return users;
+  }
+
+
+  // tools
+
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const green = '\x1b[32m';
+    const stop = '\x1b[0m';
+
+	process.stdout.write(green + '[chat gateway]  ' + stop);
+    console.log(message);
   }
 }
