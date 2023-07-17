@@ -56,12 +56,6 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
       // est necessaire
     );
 
-    // const response = await submitAvatarColors(
-    //   topColor.toString(),
-    //   botColor.toString(),
-    //   token
-    // );
-
     avatar.borderColor = topColor.toString();
     avatar.backgroundColor = botColor.toString();
     setDisplaySettings(false);

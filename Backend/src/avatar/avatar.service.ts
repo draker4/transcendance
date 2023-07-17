@@ -52,7 +52,7 @@ export class AvatarService {
         await this.avatarRepository.update(avatar.id, avatar);
 
         this.log(
-          `border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+          `user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
         );
         rep.success = true;
         rep.message = 'Avatar colors successfully updated';

@@ -34,41 +34,56 @@ export default function SettingsCard({
   toogleDisplaySettings,
   saveColorChanges,
 }: Props) {
+
+
   return (
     <div className={styles.settingsCard}>
-      <Stack direction="row" spacing="3rem">
-        <ToggleButtonGroup
-          color="primary"
-          value={selectedArea}
-          exclusive
-          onChange={handleArea}
-          aria-label="Platform"
-        >
-          <ToggleButtonS value="border" aria-label="border-selected">
-            <RadioButtonUncheckedIcon fontSize="small" />
-          </ToggleButtonS>
-          <ToggleButtonS value="background" aria-label="background-selected">
-            <CircleIcon fontSize="small" />
-          </ToggleButtonS>
-        </ToggleButtonGroup>
+				{/* [!] RECONSTRUCTION EN COURS */}
+				<div style={{display: "inline"}}>
+					<RadioButtonUncheckedIcon fontSize="small" />
 
-        <Stack direction="row" spacing="0.5rem">
-          <ToggleButtonS
-            value="cancel"
-            aria-label="cancel-change-color"
-            onClick={toogleDisplaySettings}
-          >
-            <CancelIcon fontSize="small" sx={{ color: "#ff5555" }} />
-          </ToggleButtonS>
+					<CircleIcon fontSize="small" />
+      			</div>
+	  
+	  <Stack direction="row" spacing="3rem">
 
-          <ToggleButtonS
-            value="valid"
-            aria-label="valid-change-color"
-            onClick={saveColorChanges}
-          >
-            <CheckCircleIcon fontSize="small" sx={{ color: "#22d3ee" }} />
-          </ToggleButtonS>
-        </Stack>
+				{/* TOOGLE BUTTON */}
+				<ToggleButtonGroup
+				color="primary"
+				value={selectedArea}
+				exclusive
+				onChange={handleArea}
+				aria-label="Platform"
+				>
+				<ToggleButtonS value="border" aria-label="border-selected">
+					<RadioButtonUncheckedIcon fontSize="small" />
+				</ToggleButtonS>
+				<ToggleButtonS value="background" aria-label="background-selected">
+					<CircleIcon fontSize="small" />
+				</ToggleButtonS>
+				</ToggleButtonGroup>
+
+
+				<Stack direction="row" spacing="0.5rem">
+					{/* CANCEL BUTTON */}
+				<ToggleButtonS
+					value="cancel"
+					aria-label="cancel-change-color"
+					onClick={toogleDisplaySettings}
+				>
+					<CancelIcon fontSize="small" sx={{ color: "#ff5555" }} />
+				</ToggleButtonS>
+
+
+					{/* VALIDATE BUTTON */}
+				<ToggleButtonS
+					value="valid"
+					aria-label="valid-change-color"
+					onClick={saveColorChanges}
+				>
+					<CheckCircleIcon fontSize="small" sx={{ color: "#22d3ee" }} />
+				</ToggleButtonS>
+				</Stack>
       </Stack>
 
       <ColorSelector
