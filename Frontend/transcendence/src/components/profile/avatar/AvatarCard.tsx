@@ -29,7 +29,6 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   const avatarService = new Avatar_Service(token);
 
   const handleArea = (
-    event: React.MouseEvent<HTMLElement>,
     newArea: "border" | "background" | null
   ) => {
     if (newArea) setSelectedArea(newArea);

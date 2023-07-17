@@ -3,7 +3,8 @@
   background: var(--primary);
   
   overflow: scroll;
-  padding-left: 15vw;
+
+  margin-left: 13vw; 
 
   /* border:1px dashed chartreuse; */
 
@@ -65,7 +66,7 @@
 		align-items: center;
 		justify-content: center;
 		flex-direction: column;
-		padding-left: 0;
+		margin-left: 0;
 	  }
 
   .profileMainFrame {
