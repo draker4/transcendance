@@ -23,7 +23,7 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
     TypeOrmModule.forFeature([User, Avatar, Channel]),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '5m' },
     }),
     MailModule,
   ],

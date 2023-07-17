@@ -1,29 +1,30 @@
-import Client from "@/services/Client.service";
-import { getCookie } from "cookies-next";
 import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
-
-const	client = new Client();
 
 export async function GET(req: NextRequest) {
 
 	const	code: string | null = req.nextUrl.searchParams.get('code');
-	const	cookie = getCookie("crunchy-token");
 	
-	if (code && !cookie) {
+	if (code) {
 		try {
-			await client.logIn42(code);
-		} catch (err) {
-			console.log(err);
-		}
-		
-		if (client.token.length > 0) {
+			const	res = await fetch(`http://backend:4000/api/auth/42/${code}`);
+			
+			const	{ access_token } = await res.json();
+			if (!access_token)
+				throw new Error("no token");
+			
 			const	response = NextResponse.redirect(`http://${process.env.HOST_IP}:3000/home`);
 			response.cookies.set({
 				name: "crunchy-token",
-				value: client.token,
+				value: access_token,
+				httpOnly: true,
+				sameSite: true,
+				path: "/",
 			})
 			return response;
+
+		} catch (err) {
+			console.log(err);
 		}
 	}
 	

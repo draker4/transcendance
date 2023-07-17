@@ -1,0 +1,17 @@
+.main {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(1, 1, 1, 0.7);
+}
+
+.main h2 {
+	width: 70%;
+	text-align: center;
+	color: aliceblue;
+}

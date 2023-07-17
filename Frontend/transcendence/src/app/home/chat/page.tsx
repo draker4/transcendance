@@ -5,8 +5,6 @@ import ChatClient from "@/components/chatPage/ChatClient";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
 
-export const dynamic = 'force-dynamic';
-
 export default async function ChatPage() {
 	let		token: string | undefined;
 	let		myself: Profile & { avatar: Avatar };

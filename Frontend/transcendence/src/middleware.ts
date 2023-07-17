@@ -1,23 +1,51 @@
 import { verifyAuth } from "@/lib/auth/auth";
+import { Token } from "@mui/icons-material";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const crunchyToken = req.cookies.get("crunchy-token")?.value;
+  let refreshToken: string = "";
 
-  const verifiedToken =
+  let verifiedToken =
     crunchyToken &&
     (await verifyAuth(crunchyToken).catch((err) => {
       console.log(err);
     }));
   // const url = req.nextUrl;
-  // console.log(verifiedToken, url);
+  // console.log(verifiedToken);
+
+  // refresh token if token expires in less than 5 minutes
+  if (verifiedToken && verifiedToken.exp && req.nextUrl.pathname.startsWith("/home")) {
+
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+
+    if (verifiedToken.exp - currentTimestamp < 300) {
+      console.log(verifiedToken.exp - currentTimestamp);
+    }
+    // try {
+    //   const res = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/refresh`, {
+    //     method: "POST",
+    //   });
+
+    //   refreshToken = await res.json();
+    // }
+    // catch (error) {
+    //   console.log(error);
+    // }
+  }
 
   if (
     verifiedToken &&
     verifiedToken.login &&
     req.nextUrl.pathname === "/home/create"
   ) {
-    return NextResponse.redirect(new URL("/home", req.url));
+    const response = NextResponse.redirect(new URL("/home", req.url));
+    if (refreshToken.length > 0)
+      response.cookies.set("crunchy-token", refreshToken, {
+        httpOnly: true,
+        sameSite: true,
+      });
+    return response;
   }
 
   if (
@@ -34,11 +62,23 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname === "/" && verifiedToken) {
-    return NextResponse.redirect(new URL("/home", req.url));
+    const response = NextResponse.redirect(new URL("/home", req.url));
+    if (refreshToken.length > 0)
+      response.cookies.set("crunchy-token", refreshToken, {
+        httpOnly: true,
+        sameSite: true,
+      });
+    return response;
   }
 
   if (req.nextUrl.pathname.startsWith("/welcome") && verifiedToken) {
-    return NextResponse.redirect(new URL("/home", req.url));
+    const response = NextResponse.redirect(new URL("/home/create", req.url));
+    if (refreshToken.length > 0)
+      response.cookies.set("crunchy-token", refreshToken, {
+        httpOnly: true,
+        sameSite: true,
+      });
+    return response;
   }
 
   if (req.nextUrl.pathname.startsWith("/home") && !verifiedToken) {

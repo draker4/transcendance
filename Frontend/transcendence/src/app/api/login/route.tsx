@@ -18,6 +18,8 @@ export async function POST(
 		response.cookies.set({
 			name: "crunchy-token",
 			value: access_token,
+			httpOnly: true,
+			sameSite: true,
 		});
 		return response;
 	}
