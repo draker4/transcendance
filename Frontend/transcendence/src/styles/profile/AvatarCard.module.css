@@ -37,8 +37,7 @@
 }
 
 .avatarCard .rectangle {
-  width: 300px;
-  width: 500px;
+  width: 500px; /* [!] */
   height: clamp(80px, 20px + 20vw, 35vw);
   background-color: rgba(67, 80, 126, 0.22);
   position: relative;
@@ -101,8 +100,8 @@
   display: flex;
   gap: clamp(0.2rem, 0.5vw, 0.6rem);
   flex-direction: column;
-  position: absolute;
-  right: 30%;
+  position: relative;
+  right: 50%;
   user-select: none;
 }
 

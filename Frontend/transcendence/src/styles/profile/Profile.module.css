@@ -1,10 +1,14 @@
 .main {
-  height: 100vh;
+  height: 75vh;
   background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  /* [!] TESTS */
+  overflow: scroll;
+
 } /* MAIN ISSU DE HOME */
 
 /* ------------------------------ */
@@ -43,7 +47,6 @@
   justify-content: left;
   gap: 1rem;
 
-  /* TEST */
   padding: 0;
   min-width: 300px;
   overflow: hidden;
