@@ -1,13 +1,11 @@
 .main {
   height: 75vh;
   background: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-
-  /* [!] TESTS */
+  
   overflow: scroll;
+  padding-left: 15vw;
+
+  /* border:1px dashed chartreuse; */
 
 } /* MAIN ISSU DE HOME */
 
@@ -49,7 +47,7 @@
 
   padding: 0;
   min-width: 300px;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .profileMainFrame .second {
@@ -60,9 +58,20 @@
 
 /* Breakpoint 1 : width > smartphone */
 @media (min-width: 38rem) {
+
+
+	.main {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		padding-left: 0;
+	  }
+
   .profileMainFrame {
     /* flex-direction: column; */
     display: flex;
+
     gap: 1rem; /* a voir si besoin en plus des paddings */
   }
 

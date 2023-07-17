@@ -22,53 +22,48 @@ export class AvatarService {
   // }
 
   async getAvatarByName(name: string, isChannel: boolean): Promise<Avatar> {
-    return await this.avatarRepository.findOne({ where: { name: name, isChannel: isChannel} });
+    return await this.avatarRepository.findOne({
+      where: { name: name, isChannel: isChannel },
+    });
   }
 
-  async editUserAvatarColors(req: any, updateUserAvatarDto: UpdateUserAvatarDto) {
-    const avatar: Avatar = await this.getAvatarByName(req.user.login, false);
-
-    // si on trouve pas d'avatar, on lui fourni un avatar par defaut
-    if (!avatar) {
-      const defaultAvatar = this.createDefaultAvatar(
-        req.user.login,
-      );
-
-      const Data = {
-        success: false,
-        message: 'Avatar not found - default avatar created instead',
-      };
-
-      // si la creation par defaut a aussi echouee
-      if (!defaultAvatar) {
-        Data.message = 'Avatar not found, then failed default avatar creation';
-      }
-
-      return Data;
-    }
-
-    avatar.borderColor = updateUserAvatarDto.borderColor;
-    avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
-
-    // [!] rajouter try catch --> passer un try catch  + geneaal dans le controller
-    await this.avatarRepository.update(avatar.id, avatar);
-
-    const Data = {
-      success: true,
-      message: 'Avatar colors successfully updated',
+  async editUserAvatarColors(
+    req: any,
+    updateUserAvatarDto: UpdateUserAvatarDto,
+  ) {
+    // [+] en faire un type si utilise souvent
+    const rep = {
+      success: false,
+      message: '',
     };
 
-    return Data;
+    try {
+      const avatar: Avatar = await this.getAvatarByName(req.user.login, false);
+
+      if (!avatar) {
+        const defaultAvatar = this.createDefaultAvatar(req.user.login);
+        rep.message = 'Avatar not found - default avatar created instead';
+
+        if (!defaultAvatar)
+          rep.message = 'Avatar not found, then failed default avatar creation';
+      } else {
+        avatar.borderColor = updateUserAvatarDto.borderColor;
+        avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
+        await this.avatarRepository.update(avatar.id, avatar);
+
+        this.log(
+          `border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+        );
+        rep.success = true;
+        rep.message = 'Avatar colors successfully updated';
+      }
+    } catch (error) {
+      rep.message = error.message;
+    }
+    return rep;
   }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */
-
-  //   private async isAvatarExists(id: number): Promise<boolean> {
-  //     const avatar: Avatar = await this.avatarRepository.findOne({
-  //       where: { userId: id },
-  //     });
-  //     return avatar ? true : false;
-  //   }
 
   private async createDefaultAvatar(name: string) {
     const avatar: AvatarDto = {
@@ -84,5 +79,14 @@ export class AvatarService {
     };
 
     return await this.avatarRepository.save(avatar);
+  }
+
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const cyan = '\x1b[36m';
+    const stop = '\x1b[0m';
+
+    process.stdout.write(cyan + '[Avatar service]  ' + stop);
+    console.log(message);
   }
 }
