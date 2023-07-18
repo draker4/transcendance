@@ -16,15 +16,13 @@ import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
+import { RefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [
     PassportModule,
     TypeOrmModule.forFeature([User, Avatar, Channel]),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '50m' },
-    }),
+    JwtModule,
     MailModule,
   ],
   controllers: [AuthController],
@@ -33,6 +31,7 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
     UsersService,
     AvatarService,
     JwtStrategy,
+    RefreshTokenStrategy,
     GoogleStrategy,
     LocalStrategy,
     CryptoService,

@@ -70,6 +70,9 @@ export class User {
   @Column({ nullable: true, default: 0 })
   historyLevel: number;
 
+  @Column({ nullable: true })
+  refreshToken: string;
+
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({
     name: "user_channel_relation",

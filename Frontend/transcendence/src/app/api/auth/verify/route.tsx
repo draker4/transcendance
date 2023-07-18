@@ -17,6 +17,14 @@ export async function GET(req: NextRequest) {
 					value: data.token,
 					httpOnly: true,
 					sameSite: true,
+					path: "/",
+				});
+				response.cookies.set({
+					name: "refresh-token",
+					value: data.refresh_token,
+					httpOnly: true,
+					sameSite: true,
+					path: "/",
 				});
 			}
 

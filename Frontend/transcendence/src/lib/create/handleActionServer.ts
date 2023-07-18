@@ -11,7 +11,8 @@ export async function handleActionServer(
   token: string
 ): Promise<{
   exists: string;
-  token: string;
+  access_token: string;
+  refresh_token: string;
 }> {
   try {
     const res = await getDoubleLogin(login);
@@ -26,6 +27,7 @@ export async function handleActionServer(
       avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
     }
 
+    console.log("laaaaaa");
     const register = await fetch(
       `http://${process.env.HOST_IP}:4000/api/auth/firstLogin`,
       {
@@ -42,17 +44,20 @@ export async function handleActionServer(
     );
 
     const data = await register.json();
+    console.log(data);
 
     if (data.error) throw new Error(data.message);
 
     return {
       exists: res,
-      token: data.access_token,
+      access_token: data.access_token,
+      refresh_token: data.refresh_token,
     };
   } catch (err) {
     return {
       exists: "Something went wrong, please try again!",
-      token: "",
+      access_token: "",
+      refresh_token: "",
     };
   }
 }
