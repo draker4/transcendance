@@ -1,12 +1,12 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class History {
+export class Training {
   @PrimaryGeneratedColumn({
     type: 'int',
-    name: 'history_id',
+    name: 'training_id',
   })
-  historyId: number;
+  trainingId: number;
 
   @Column({
     nullable: false,

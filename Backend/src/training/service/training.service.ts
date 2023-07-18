@@ -2,37 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { History } from 'src/utils/typeorm/History.entity';
-import { HistoryDto } from '../../dto/history.dto';
+import { Training } from 'src/utils/typeorm/Training.entity';
+import { TrainingDto } from 'src/training/dto/training.dto';
 
 import { User } from 'src/utils/typeorm/User.entity';
 
-import { UpdateHistoryLevelDto } from 'src/history/dto/updateHistoryLevel.dto';
+import { UpdateTrainingLevelDto } from 'src/training/dto/updateTrainingLevel.dto';
 
 @Injectable()
-export class HistoryService {
+export class TrainingService {
   constructor(
-    @InjectRepository(History)
-    private readonly historyRepository: Repository<History>,
+    @InjectRepository(Training)
+    private readonly trainingRepository: Repository<Training>,
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getHistory(): Promise<any> {
+  async getTraining(): Promise<any> {
     try {
-      const History: History[] = await this.historyRepository.find();
-      if (History.length === 0) {
+      const Training: Training[] = await this.trainingRepository.find();
+      if (Training.length === 0) {
         const Data = {
           success: false,
-          message: 'No history found',
+          message: 'No training found',
         };
         return Data;
       }
       const Data = {
         success: true,
         message: 'Request successfull',
-        data: History,
+        data: Training,
       };
       return Data;
     } catch (error) {
@@ -45,16 +45,16 @@ export class HistoryService {
     }
   }
 
-  async getUserHistoryLevel(userId: number): Promise<any> {
+  async getUserTrainingLevel(userId: number): Promise<any> {
     try {
       const User: User[] = await this.userRepository.find({
         where: { id: userId },
       });
-      const UserHistoryLevel: number = User[0].historyLevel;
+      const UserTrainingLevel: number = User[0].trainingLevel;
       const Data = {
         success: true,
         message: 'Request successfull',
-        data: UserHistoryLevel,
+        data: UserTrainingLevel,
       };
       return Data;
     } catch (error) {
@@ -67,15 +67,15 @@ export class HistoryService {
     }
   }
 
-  async UpdateUserHistoryLevel(
+  async UpdateUserTrainingLevel(
     userId: number,
-    updateHistoryLevelDto: UpdateHistoryLevelDto,
+    updateTrainingLevelDto: UpdateTrainingLevelDto,
   ): Promise<any> {
     try {
       const User: User[] = await this.userRepository.find({
         where: { id: userId },
       });
-      User[0].historyLevel = updateHistoryLevelDto.levelValidated;
+      User[0].trainingLevel = updateTrainingLevelDto.levelValidated;
       await this.userRepository.save(User[0]);
       const Data = {
         success: true,
@@ -92,24 +92,24 @@ export class HistoryService {
     }
   }
 
-  async initHistory(initialHistory: HistoryDto[]): Promise<any> {
+  async initTraining(initialTraining: TrainingDto[]): Promise<any> {
     try {
-      let History: History[] = await this.historyRepository.find();
-      if (History.length !== 0) {
+      let Training: Training[] = await this.trainingRepository.find();
+      if (Training.length !== 0) {
         const Data = {
           success: true,
-          message: 'History already initialized',
+          message: 'Training already initialized',
         };
         return Data;
       }
-      initialHistory.forEach(async (historyDto) => {
-        await this.historyRepository.save(historyDto);
+      initialTraining.forEach(async (trainingDto) => {
+        await this.trainingRepository.save(trainingDto);
       });
-      History = await this.historyRepository.find();
+      Training = await this.trainingRepository.find();
       const Data = {
         success: true,
         message: 'Request successfull',
-        data: History,
+        data: Training,
       };
       return Data;
     } catch (error) {

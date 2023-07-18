@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class UpdateHistoryLevelDto {
+export class UpdateTrainingLevelDto {
   @IsNotEmpty()
   @IsNumber()
   levelValidated: number;

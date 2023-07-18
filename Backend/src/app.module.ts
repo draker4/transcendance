@@ -19,8 +19,8 @@ import { ChatModule } from './chat/chat.module';
 import { Channel } from './utils/typeorm/Channel.entity';
 import { ChannelModule } from './channels/channel.module';
 import { GameModule } from './game/game.module';
-import { History } from './utils/typeorm/History.entity';
-import { HistoryModule } from './history/history.module';
+import { Training } from './utils/typeorm/Training.entity';
+import { TrainingModule } from './training/training.module';
 import { UserChannelRelation } from './utils/typeorm/UserChannelRelation';
 import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
 import { Score } from './utils/typeorm/Score.entity';
@@ -47,23 +47,23 @@ import { MessageModule } from './messages/messages.module';
         Channel,
         Message,
         Score,
-        History,
+        Training,
         UserChannelRelation,
         UserPongieRelation,
       ],
       synchronize: true,
     }),
-    UsersModule,
     AuthModule,
+    AvatarModule,
+    ChannelModule,
+    ChatModule,
+    GameModule,
     MailModule,
     LobbyModule,
     MatchmakingModule,
-    AvatarModule,
-    ChatModule,
-    ChannelModule,
-    HistoryModule,
+    TrainingModule,
     MessageModule,
-    GameModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

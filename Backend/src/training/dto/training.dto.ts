@@ -6,10 +6,10 @@ import {
   IsBoolean,
 } from 'class-validator';
 
-export class HistoryDto {
+export class TrainingDto {
   @IsNotEmpty()
   @IsNumber()
-  historyId: number;
+  trainingId: number;
 
   @IsNotEmpty()
   @IsNumber()
