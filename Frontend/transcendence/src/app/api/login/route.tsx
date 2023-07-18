@@ -1,4 +1,3 @@
-import { deleteCookie } from "cookies-next";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
@@ -9,9 +8,7 @@ export async function POST(
 	try {
 		if (!access_token || !refresh_token)
 			throw new Error("No valid token");
-	
-		deleteCookie("crunchy-token");
-		deleteCookie("refresh-token");
+
 		const	data = {
 			error: false,
 		}
@@ -25,7 +22,7 @@ export async function POST(
 		});
 		response.cookies.set({
 			name: "refresh-token",
-			value: access_token,
+			value: refresh_token,
 			httpOnly: true,
 			sameSite: true,
 			path: "/",
