@@ -55,6 +55,29 @@
   min-width: 300px;
 }
 
+/* ------------------------------ */
+/* ERROR PAGE */
+
+p.error {
+	color: var(--notif);
+	font-size: 1.2rem;
+	margin-bottom: 1.5rem;
+}
+p.icon {
+	/* color: var(--notif); */
+	font-size: 7.5rem;
+}
+
+.link {
+	text-decoration: none;
+	color: var(--accent);
+	font-family: var(--title-font);
+	font-size: 1.2rem;
+	font-weight: 650;
+
+}
+
+
 /* RESPONSIVE */
 
 /* Breakpoint 1 : width > smartphone */

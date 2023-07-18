@@ -1,8 +1,6 @@
 import styles from "@/styles/profile/AvatarCard.module.css";
 import { Stack, ToggleButton } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ColorSelector from "./ColorSelector";
 import MyToggleButton from "./ToggleButton";
 import SingleButton from "./SingleButton";

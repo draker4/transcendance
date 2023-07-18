@@ -40,6 +40,10 @@ export default function Conversations({
             />
           </div>
           <div className={styles.name}>{channel.name}</div>
+
+		{/* [!][+] PROVISOIRE checking */}
+		 <div>{`(id:${channel.id})`}</div>
+
         </div>
       </React.Fragment>
     );
