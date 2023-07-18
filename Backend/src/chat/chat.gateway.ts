@@ -138,10 +138,10 @@ export class ChatGateway implements OnModuleInit {
     );
   }
 
-
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
   async getMessages(@MessageBody() payload:channelIdDto) {
+	this.log(`'getMessage' event, with channelId: ${payload.id}`); // checking
     return (await this.chatService.getMessages(payload.id)).messages;
   }
 

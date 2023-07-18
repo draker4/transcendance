@@ -235,6 +235,7 @@ export class ChatService {
   }
 
   async getMessages(channelId: number) {
+	this.log(`getmessage function channelId : ${channelId}`); // [!] checking
     return this.channelService.getChannelMessages(channelId);
   }
 

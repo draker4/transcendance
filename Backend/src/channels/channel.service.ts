@@ -84,6 +84,7 @@ export class ChannelService {
 	}
 
 	public async getChannelMessages(id: number):Promise<Channel> {
+		this.log(`getmessage function channelId : ${id}`);  // [!] checking
 		return await this.channelRepository.findOne({ where: { id : id }, relations:["messages", "messages.user", "messages.user.avatar"] });
 	}
 
@@ -118,4 +119,15 @@ export class ChannelService {
 
 		return relation ? true : false;
 	}
+
+	// tools
+
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const cyan = '\x1b[36m';
+    const stop = '\x1b[0m';
+
+	process.stdout.write(cyan + '[channel service]  ' + stop);
+    console.log(message);
+  }
 }
