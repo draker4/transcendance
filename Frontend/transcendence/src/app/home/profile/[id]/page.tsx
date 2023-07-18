@@ -10,13 +10,13 @@ import ErrorProfile from "@/components/profile/ErrorProfile";
 
 type Params = {
   params: {
-    login: string;
+    id: number;
   };
 };
 
 const Crypto = new CryptoService();
 
-export default async function ProfilByIdPage({ params: { login } }: Params) {
+export default async function ProfilByIdPage({ params: { id } }: Params) {
   let isProfilOwner: boolean = false;
   let avatar: Avatar = {
     name: "",
@@ -61,10 +61,10 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     const profileService = new Profile_Service(token);
     myProfile = await profileService.getProfileByToken();
 
-    if (myProfile.login === login) {
+    if (myProfile.id === id) {
       targetProfile = myProfile;
     } else {
-      targetProfile = await profileService.getProfileByLogin(login);
+      targetProfile = await profileService.getProfileById(id);
     }
 
 	if (targetProfile.id < 0)
@@ -76,10 +76,15 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
 
     const payload = await verifyAuth(token);
 
-    if (payload.login === decodeURIComponent(login)) isProfilOwner = true;
+	console.log("payload.sub = ", payload.sub);
+	console.log("id = ", id);
+	console.log("payload.sub === id.toString() = ", payload.sub === id.toString());
+
+
+    if (payload.sub?.toString() === id.toString()) isProfilOwner = true;
   } catch (err) {
     console.log(err);
-    return <ErrorProfile params={{login}}/>;
+    return <ErrorProfile params={{id}}/>;
   }
 
   if (targetProfile.id !== -1) {
@@ -94,6 +99,6 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
       </main>
     );
   } else {
-    return <ErrorProfile params={{login}}/>;
+    return <ErrorProfile params={{id}}/>;
   }
 }

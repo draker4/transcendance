@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { OnModuleInit, Request, UseGuards } from '@nestjs/common';
+import { OnModuleInit, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -140,9 +140,17 @@ export class ChatGateway implements OnModuleInit {
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
-  async getMessages(@MessageBody() payload:channelIdDto) {
-	this.log(`'getMessage' event, with channelId: ${payload.id}`); // checking
-    return (await this.chatService.getMessages(payload.id)).messages;
+  async getMessages(@MessageBody() id:number) {
+	this.log(`'getMessage' event, with channelId: ${id}`); // checking
+    return (await this.chatService.getMessages(id)).messages;
+  }
+
+  
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('getChannelName')
+  async getChannelName(@MessageBody() id:number) {
+	this.log(`'getChannelName' event, with channelId: ${id}`); // checking
+    return "1 2";
   }
 
   // [!] au final pas utilisé dans <ChatChannel />

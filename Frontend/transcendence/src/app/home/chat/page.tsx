@@ -7,7 +7,7 @@ import { Refresher } from "@/components/refresher/Refresher";
 
 export default async function ChatPage() {
 	let		token: string | undefined;
-	let		myself: Profile & { avatar: Avatar };
+	let		myself: User;
 
 	try {
 		token = cookies().get("crunchy-token")?.value;

@@ -6,13 +6,13 @@ import HelpIcon from '@mui/icons-material/Help';
 
 type Params = {
 	params: {
-	  login: string;
+	  id: number;
 	};
   };
 
-export default function ErrorProfile({ params: {login}}:Params) {
+export default function ErrorProfile({ params: {id}}:Params) {
 
-const errorMsg:string = `Sorry the user ${login} is not a Ponger`;
+const errorMsg:string = `Sorry the user of id :${id} is not a Ponger`;
 
 
 	return (

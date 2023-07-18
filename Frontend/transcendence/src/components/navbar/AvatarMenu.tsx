@@ -53,7 +53,7 @@ export default function NavbarHome({ avatar, profile }: Props) {
       {menuOpen && profile.id > 0 && (
         <div className={styles.dropdown} ref={menuRef}>
           <ul className={styles.list}>
-            <Link href={`/home/profile/${encodeURIComponent(profile.login)}`}>
+            <Link href={`/home/profile/${profile.id}`}>
               <li className={styles.profile}>{profile.login}</li>
             </Link>
             <li onClick={signoff} className={styles.logOut}>

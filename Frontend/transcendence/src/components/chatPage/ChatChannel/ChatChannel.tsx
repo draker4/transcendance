@@ -34,11 +34,10 @@ type LoadMsg = {
 
 export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
+  let channelCodeName:string | undefined = undefined;
 
   useEffect(() => {
-    socket.emit(
-      "getMessages",
-      { channelId: channel.id },
+    socket.emit( "getMessages", channel.id,
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
 
@@ -50,6 +49,16 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
           };
           previousMsg.push(msg);
         });
+
+		if (channel.type === "privateMsg") {
+			// [!] en brut pour l  moment
+			socket.emit("getChannelName", channel.id);
+			// , (response :string) => {
+				// [!] Warning ici dans le useEffect
+				// [+] finir une fois que channel.if ne sera pas undefined
+				// channelCodeName = response;
+			// });
+		}
 
         setMessages(previousMsg);
       }
@@ -89,7 +98,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   return (
     <div className={styles.channelMsgFrame}>
-      <Header icon={icon} channel={channel} />
+      <Header icon={icon} channel={channel} channelCodeName={channelCodeName} myself={myself} />
       <MessageBoard messages={messages} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} />
     </div>
