@@ -32,23 +32,23 @@ export class AvatarController {
     return user.avatar;
   }
 
-  @Get(':name/:isChannel')
-  async getAvatarByName(
-    @Param('name') name: string,
-    @Param('isChannel', ParseBoolPipe) isChannel: boolean,
-  ) {
-    const avatar = await this.avatarService.getAvatarByName(
-      name,
-      isChannel,
-    );
+  // @Get(':name/:isChannel')
+  // async getAvatarByName(
+  //   @Param('name') name: string,
+  //   @Param('isChannel', ParseBoolPipe) isChannel: boolean,
+  // ) {
+  //   const avatar = await this.avatarService.getAvatarByName(
+  //     name,
+  //     isChannel,
+  //   );
 
-    if (!avatar) throw new NotFoundException('avatar not found');
+  //   if (!avatar) throw new NotFoundException('avatar not found');
 
-    return avatar;
-  }
+  //   return avatar;
+  // }
 
-  @Put()
-  async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
-    return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
-  }
+  // @Put()
+  // async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
+  //   return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
+  // }
 }

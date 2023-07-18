@@ -7,10 +7,11 @@ export async function GET(req: NextRequest) {
 	
 	if (code) {
 		try {
-			const	res = await fetch(`http://backend:4000/api/auth/42/${code}`);
+			const	res = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/42/${code}`);
 			
-			const	{ access_token } = await res.json();
-			if (!access_token)
+			const	{ access_token, refresh_token } = await res.json();
+			console.log(access_token, refresh_token);
+			if (!access_token || !refresh_token)
 				throw new Error("no token");
 			
 			const	response = NextResponse.redirect(`http://${process.env.HOST_IP}:3000/home`);
@@ -20,7 +21,14 @@ export async function GET(req: NextRequest) {
 				httpOnly: true,
 				sameSite: true,
 				path: "/",
-			})
+			});
+			response.cookies.set({
+				name: "refresh-token",
+				value: refresh_token,
+				httpOnly: true,
+				sameSite: true,
+				path: "/",
+			});
 			return response;
 
 		} catch (err) {

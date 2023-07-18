@@ -16,7 +16,8 @@ export default function FormLogin({
 }) {
   const [notif, setNotif] = useState<string>("");
   const [text, setText] = useState<string>("");
-  const [access_token, setToken] = useState<string>("");
+  const [access_token, setAccessToken] = useState<string>("");
+  const [refresh_token, setRefreshToken] = useState<string>("");
   const router = useRouter();
   const avatarChosenRef = useRef<Avatar>({
     image: "",
@@ -61,6 +62,7 @@ export default function FormLogin({
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               access_token,
+              refresh_token,
             }),
           }
         );
@@ -91,11 +93,13 @@ export default function FormLogin({
 
     const res: {
       exists: string;
-      token: string;
+      access_token: string;
+      refresh_token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
 
     setNotif(res.exists);
-    setToken(res.token);
+    setAccessToken(res.access_token);
+    setRefreshToken(res.refresh_token);
   };
 
   return (

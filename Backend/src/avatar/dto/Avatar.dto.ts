@@ -9,10 +9,6 @@ import {
 export class AvatarDto {
 
   @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @IsString()
   image: string;
 
   @IsString()

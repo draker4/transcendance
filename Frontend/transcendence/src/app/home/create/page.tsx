@@ -21,7 +21,8 @@ export default async function CreatePage() {
 
   try {
     token = cookies().get("crunchy-token")?.value;
-    if (!token) throw new Error("No token value");
+    if (!token)
+      throw new Error("No token value");
 
     const profileData = new Profile_Service(token);
     profile = await profileData.getProfileByToken();

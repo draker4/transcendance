@@ -7,9 +7,6 @@ export class Avatar {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Column()
-	name: string;
-
 	@CreateDateColumn()
  	createdAd: Date;
 

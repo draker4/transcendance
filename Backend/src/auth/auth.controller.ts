@@ -118,11 +118,12 @@ export class AuthController {
 
       const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
 
-      const { access_token } = await this.authService.login(user);
+      const { access_token, refresh_token } = await this.authService.login(user);
 
       return {
         error: false,
         access_token,
+        refresh_token,
       };
     } catch (err) {
       return {
@@ -138,4 +139,10 @@ export class AuthController {
   loginEmail(@Request() req) {
     return this.authService.login(req.user);
   }
+
+  // @Public()
+  // @Post('refresh')
+  // async refresh(@Request() req) {
+
+  // }
 }

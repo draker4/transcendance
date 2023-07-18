@@ -21,65 +21,64 @@ export class AvatarService {
   //   return await this.avatarRepository.findOne({ where: { userId: userId } });
   // }
 
-  async getAvatarByName(name: string, isChannel: boolean): Promise<Avatar> {
-    return await this.avatarRepository.findOne({
-      where: { name: name, isChannel: isChannel },
-    });
-  }
+  // async getAvatarByName(name: string, isChannel: boolean): Promise<Avatar> {
+  //   return await this.avatarRepository.findOne({
+  //     where: { name: name, isChannel: isChannel },
+  //   });
+  // }
 
-  async editUserAvatarColors(
-    req: any,
-    updateUserAvatarDto: UpdateUserAvatarDto,
-  ) {
-    // [+] en faire un type si utilise souvent
-    const rep = {
-      success: false,
-      message: '',
-    };
+  // async editUserAvatarColors(
+  //   req: any,
+  //   updateUserAvatarDto: UpdateUserAvatarDto,
+  // ) {
+  //   // [+] en faire un type si utilise souvent
+  //   const rep = {
+  //     success: false,
+  //     message: '',
+  //   };
 
-    try {
-      const avatar: Avatar = await this.getAvatarByName(req.user.login, false);
+  //   try {
+  //     const avatar: Avatar = await this.getAvatarById(req.user.id, false);
 
-      if (!avatar) {
-        const defaultAvatar = this.createDefaultAvatar(req.user.login);
-        rep.message = 'Avatar not found - default avatar created instead';
+  //     if (!avatar) {
+  //       const defaultAvatar = this.createDefaultAvatar(req.user.login);
+  //       rep.message = 'Avatar not found - default avatar created instead';
 
-        if (!defaultAvatar)
-          rep.message = 'Avatar not found, then failed default avatar creation';
-      } else {
-        avatar.borderColor = updateUserAvatarDto.borderColor;
-        avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
-        await this.avatarRepository.update(avatar.id, avatar);
+  //       if (!defaultAvatar)
+  //         rep.message = 'Avatar not found, then failed default avatar creation';
+  //     } else {
+  //       avatar.borderColor = updateUserAvatarDto.borderColor;
+  //       avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
+  //       await this.avatarRepository.update(avatar.id, avatar);
 
-        this.log(
-          `user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
-        );
-        rep.success = true;
-        rep.message = 'Avatar colors successfully updated';
-      }
-    } catch (error) {
-      rep.message = error.message;
-    }
-    return rep;
-  }
+  //       this.log(
+  //         `user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+  //       );
+  //       rep.success = true;
+  //       rep.message = 'Avatar colors successfully updated';
+  //     }
+  //   } catch (error) {
+  //     rep.message = error.message;
+  //   }
+  //   return rep;
+  // }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */
 
-  private async createDefaultAvatar(name: string) {
-    const avatar: AvatarDto = {
-      name: name,
-      image: '',
-      text: '',
-      variant: 'circular',
-      borderColor: '#22d3ee',
-      backgroundColor: '#22d3ee',
-      empty: true,
-      isChannel: false,
-      decrypt: false,
-    };
+  // private async createDefaultAvatar(name: string) {
+  //   const avatar: AvatarDto = {
+  //     image: '',
+  //     text: '',
+  //     variant: 'circular',
+  //     borderColor: '#22d3ee',
+  //     backgroundColor: '#22d3ee',
+  //     empty: true,
+  //     isChannel: false,
+  //     decrypt: false,
+  //   };
 
-    return await this.avatarRepository.save(avatar);
-  }
+  //   return await this.avatarRepository.save(avatar);
+  // }
 
   // [!][?] virer ce log pour version build ?
   private log(message?: any) {
