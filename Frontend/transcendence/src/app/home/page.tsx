@@ -8,7 +8,7 @@ import HomeProfile from "@/components/lobby/HomeProfile";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
 
-export default async function Lobby_Frame() {
+export default async function HomePage() {
   let profile: Profile = {
     id: -1,
     login: "",

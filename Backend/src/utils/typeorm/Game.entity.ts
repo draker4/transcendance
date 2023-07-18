@@ -1,64 +1,69 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+
+import { Score } from './Score.entity';
 
 @Entity()
 export class Game {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
 
-  @Column()
-  Name: string;
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Column()
-  Host: number;
+  name: string;
 
   @Column()
-  Opponent: number;
+  host: number;
 
-  @Column('integer', { array: true, default: [] })
-  Viewers_List: number[];
+  @Column({ default: -1 })
+  opponent: number;
 
-  @Column()
-  Score_Host: number;
+  @OneToOne(() => Score)
+  @JoinColumn()
+  score: Score;
 
-  @Column()
-  Score_Opponent: number;
+  @Column({ default: 'Waiting' })
+  status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
 
-  @Column()
-  Status: string;
+  @Column({ default: 'Not Started' })
+  result: 'Player1' | 'Player2' | 'Draw' | 'On Going' | 'Not Started';
 
-  @Column()
-  CreatedAt: string;
-
-  @Column()
-  Winner: number;
+  @Column({ default: 0 })
+  actualRound: number;
 
   @Column()
-  Loser: number;
+  maxPoint: number;
 
   @Column()
-  Score: number;
+  maxRound: number;
 
   @Column()
-  Difficulty: number;
+  hostSide: 'Left' | 'Right';
 
   @Column()
-  Push: boolean;
+  difficulty: number;
 
   @Column()
-  Round: number;
+  push: boolean;
 
   @Column()
-  Side: string;
+  background: string;
 
   @Column()
-  Background: string;
+  ball: string;
 
   @Column()
-  Ball: string;
-  
-  @Column()
-  Type: string;
-
-  @Column()
-  Mode: string;
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
 }
