@@ -26,6 +26,7 @@ export default function Game({ profile, token, gameID }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameInfos, setGameInfo] = useState<GameSettings>();
   const [error, setError] = useState<boolean>(false);
+  const gameService = new GameService(token as string);
 
   //------------------------------------Chargement------------------------------------//
 
@@ -47,17 +48,6 @@ export default function Game({ profile, token, gameID }: Props) {
         setIsLoading(false);
       });
   }, []);
-
-  const gameService = new GameService(token as string);
-
-  useEffect(() => {
-    return () => {
-      gameService.socket?.off("connect_error");
-      gameService.socket?.off("error");
-      gameService.socket?.off("exception");
-      gameService.socket?.disconnect();
-    };
-  }, [gameService.socket]);
 
   console.log(gameService);
 
@@ -97,10 +87,10 @@ export default function Game({ profile, token, gameID }: Props) {
   }
 
   //Si la page n'est pas chargé
-  if (!isLoading && gameInfos) {
+  if (!isLoading && gameInfos && gameService.socket) {
     return (
       <div className={styles.game}>
-        <Pong gameInfos={gameInfos} AI={true} />
+        <Pong gameInfos={gameInfos} AI={true} socket={gameService.socket} />
         <button onClick={Quit} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>

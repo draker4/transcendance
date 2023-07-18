@@ -1,12 +1,12 @@
 //standard imports
 import { OnModuleInit, UseGuards, Req } from '@nestjs/common';
-import { Request } from 'express';
 
 // websockets imports
 import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -15,7 +15,7 @@ import { WsJwtGuard } from '../guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
 
 import { GameService } from '../service/game.service';
-import { GameManager } from '../manager/GameManager';
+import { GameManager } from '../class/GameManager';
 
 @WebSocketGateway({
   cors: {
@@ -31,15 +31,17 @@ export class GameGateway implements OnModuleInit {
     string,
     string
   >();
-  private gameManager: GameManager;
-
-  constructor(private readonly gameService: GameService) {}
+  constructor(
+    private readonly gameService: GameService,
+    private readonly gameManager: GameManager,
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
   onModuleInit() {
-    this.gameManager = new GameManager(this.server);
+    this.gameManager.setServer(this.server);
+
     this.server.on('connection', (socket: Socket) => {
       const token = socket.handshake.headers.authorization?.split(' ')[1];
 
@@ -69,8 +71,9 @@ export class GameGateway implements OnModuleInit {
     });
   }
 
-  @SubscribeMessage('play')
-  handleMessage(@Req() req: Request): string {
-    return 'Hello world!';
+  @SubscribeMessage('join')
+  async joinGame(@MessageBody() gameId: string, @Req() req) {
+    console.log('Join Game: ' + gameId + ' by User ' + req.user.id);
+    return await this.gameManager.joinGame(gameId, req.user.id);
   }
 }

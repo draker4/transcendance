@@ -27,14 +27,14 @@ export class LobbyController {
 
   // 03 - api/lobby/getall
   @Get('getall')
-  GetAllGames(@Request() req) {
-    return this.lobbyService.GetAll(req);
+  GetAllGames() {
+    return this.lobbyService.GetAll();
   }
 
   // 04 - api/lobby/get/:id
   @Get('get/:id')
   GetGame(@Param('id') id: string, @Request() req) {
-    return this.lobbyService.GetGameById(id, req);
+    return this.lobbyService.GetGameById(id, req.user.id);
   }
 
   // 04 - api/lobby/quit

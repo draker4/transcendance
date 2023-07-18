@@ -1,9 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { LobbyUtils } from './lobbyUtils';
-import { GameInfo } from 'src/utils/types/game.types';
+import { GameData } from 'src/utils/types/game.types';
+
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Game } from 'src/utils/typeorm/Game.entity';
 
 @Injectable()
 export class LobbyService extends LobbyUtils {
+  @InjectRepository(Game)
+  public readonly GameRepository: Repository<Game>;
+
   async CreateGame(req: any): Promise<any> {
     try {
       //Si le joueur est déjà dans une partie
@@ -130,21 +137,23 @@ export class LobbyService extends LobbyUtils {
     return Data;
   }
 
-  async GetAll(req: any): Promise<any> {
+  async GetAll(): Promise<any> {
     try {
       //Renvoi toutes les games Waiting ou Playing
       const games = await this.GameRepository.find({
         where: { status: 'Waiting' || 'Playing' },
       });
       //Clean les infos
-      const gamesInfos: GameInfo[] = [];
+      const gamesInfos: GameData[] = [];
       for (let i = 0; i < games.length; i++) {
         const hostLogin = await this.GetPlayerName(games[i].host);
         const opponentLogin = await this.GetPlayerName(games[i].opponent);
-        const gameInfo: GameInfo = {
+        const gameInfo: GameData = {
           uuid: games[i].uuid,
           name: games[i].name,
+          host: games[i].host,
           hostName: hostLogin,
+          opponent: games[i].opponent,
           opponentName: opponentLogin,
           status: games[i].status,
           result: games[i].result,
@@ -177,28 +186,29 @@ export class LobbyService extends LobbyUtils {
     }
   }
 
-  async GetGameById(id: string, req: any): Promise<any> {
+  async GetGameById(gameId: string, userId: number): Promise<any> {
     try {
+      console.log('GetGameById: ' + gameId + ' by UserId: ' + userId);
       //Si il manque des datas
-      if (id == null) {
+      if (gameId == null) {
         const Data = {
           success: false,
           message: 'Not enough parameters',
         };
         return Data;
       }
-
+      console.log('GetGameById: 1');
       //Si la partie existe pas
-      if (!(await this.CheckIfGameExist(id))) {
+      if (!(await this.CheckIfGameExist(gameId))) {
         const Data = {
           success: false,
           message: "Game doesn't exist",
         };
         return Data;
       }
-
+      console.log('GetGameById: 2');
       //Si le joueur est pas dans cette partie
-      if (!(await this.CheckIfPlayerIsAlreadyInThisGame(id, req.user.id))) {
+      if (!(await this.CheckIfPlayerIsAlreadyInThisGame(gameId, userId))) {
         const Data = {
           success: false,
           message: 'You are not in this game',
@@ -207,15 +217,18 @@ export class LobbyService extends LobbyUtils {
       }
 
       //Renvoi la game
+      console.log('GetGameById: 3');
       const game = await this.GameRepository.findOne({
-        where: { uuid: id },
+        where: { uuid: gameId },
       });
       const hostLogin = await this.GetPlayerName(game.host);
       const opponentLogin = await this.GetPlayerName(game.opponent);
-      const gameInfo: GameInfo = {
+      const gameData: GameData = {
         uuid: game.uuid,
         name: game.name,
+        host: game.host,
         hostName: hostLogin,
+        opponent: game.opponent,
         opponentName: opponentLogin,
         status: game.status,
         result: game.result,
@@ -232,9 +245,10 @@ export class LobbyService extends LobbyUtils {
 
       const Data = {
         success: true,
-        message: 'Request successfulld',
-        data: gameInfo,
+        message: 'Request successfull',
+        data: gameData,
       };
+      console.log('GetGameById data: ' + Data);
       return Data;
     } catch (error) {
       const Data = {

@@ -8,12 +8,6 @@ import { User } from 'src/utils/typeorm/User.entity';
 
 import { v4 as uuidv4 } from 'uuid';
 
-interface Player {
-  login: string;
-  score: number;
-  rank: number;
-}
-
 export class LobbyUtils {
   constructor(
     @InjectRepository(Game)

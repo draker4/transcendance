@@ -3,15 +3,31 @@ import styles from "@/styles/game/Pong.module.css";
 import { useRef, useEffect } from "react";
 import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
 import { initGame, gameLoop } from "@/lib/game/handleGame";
+import { Socket } from "socket.io-client";
 
 type Props = {
   gameInfos: GameSettings;
   AI: boolean;
+  socket: Socket;
 };
 
-export default function Pong({ gameInfos, AI }: Props) {
+export default function Pong({ gameInfos, AI, socket }: Props) {
   console.log(gameInfos);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const getData = () => {
+      socket?.emit("join", gameInfos.uuid);
+    };
+
+    socket.on("notif", () => getData());
+
+    getData();
+
+    return () => {
+      socket.off("notif");
+    };
+  }, [socket]);
 
   useEffect(() => {
     canvasRef.current!.focus();

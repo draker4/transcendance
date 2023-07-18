@@ -1,12 +1,3 @@
-import { Socket } from 'socket.io';
-import { Party } from 'src/game/party/Party';
-
-export type AuthenticatedSocket = Socket & {
-  data: {
-    party: null | Party;
-  };
-};
-
 export type ScoreData = {
   id: number;
   hostRound1: number;
@@ -33,24 +24,8 @@ export type GameData = {
   uuid: string;
   name: string;
   host: number;
-  opponent: number;
-  status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
-  result: 'Player1' | 'Player2' | 'Draw' | 'On Going' | 'Not Started';
-  actualRound: number;
-  maxPoint: number;
-  maxRound: number;
-  hostSide: 'Left' | 'Right';
-  difficulty: number;
-  push: boolean;
-  background: string;
-  ball: string;
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
-};
-
-export type GameInfo = {
-  uuid: string;
-  name: string;
   hostName: string;
+  opponent: number;
   opponentName: string;
   status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
   result: 'Player1' | 'Player2' | 'Draw' | 'On Going' | 'Not Started';
