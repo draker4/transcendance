@@ -37,12 +37,7 @@ export default async function GamePage({ params }: any) {
   }
 
   return (
-<<<<<<< HEAD
     <main className={styles.gamePage}>
-=======
-    <main className={styles.First_Frame}>
-      <Refresher />
->>>>>>> 126481a331c59eb4e8bc62d0cb64f560e27aab55
       <Game profile={profile} token={token} gameID={gameID} />
     </main>
   );

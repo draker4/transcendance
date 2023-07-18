@@ -80,12 +80,12 @@ type GameInfos = {
   Mode: string;
 };
 
-type Game_Settings = {
+type GameSettings = {
   name: string;
   push: boolean;
-  score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  round: 1 | 3 | 5 | 7 | 9;
-  side: "left" | "right";
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxRound: 1 | 3 | 5 | 7 | 9;
+  hostSide: "Left" | "Right";
   difficulty: 1 | 2 | 3 | 4 | 5;
   background: string;
   ball: string;

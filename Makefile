@@ -77,12 +77,7 @@ redata :
 	@echo "----Restarting Database----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart database
 
-rebuild :
-	@echo "----Rebuilding all Docker----"	
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
-
-
-re : clean rebuild
+re : clean start
 
 ipAddress:
 	@echo "Host IP: $(HOST_IP)"

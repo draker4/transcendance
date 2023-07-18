@@ -31,7 +31,7 @@ export default function Lobby({ profile, token }: Props) {
   Lobby.IsInGame()
     .then((cur_game_id) => {
       if (cur_game_id != false) {
-        Lobby.Resume_Game(cur_game_id);
+        Lobby.ResumeGame(cur_game_id);
       }
       setIsLoading(false);
     })

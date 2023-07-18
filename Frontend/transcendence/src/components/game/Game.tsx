@@ -21,7 +21,7 @@ type Props = {
 };
 
 export default function Game({ profile, token, gameID }: Props) {
-  const Lobby = useMemo(() => new LobbyService(token), [token]);
+  const Lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
   const [gameInfos, setGameInfo] = useState<GameInfos>();
@@ -32,10 +32,10 @@ export default function Game({ profile, token, gameID }: Props) {
   //Regarde si le joueur est en game, si oui , le remet dans la game
   useEffect(() => {
     //Si pas possible d'avoir les données de la game -> retour au lobby
-    Lobby.Get_Game_Info(gameID)
+    Lobby.GetGameInfo(gameID)
       .then((gameInfos) => {
         if (gameInfos.success == false) {
-          Lobby.Load_Page("/home");
+          Lobby.LoadPage("/home");
         } else {
           setGameInfo(gameInfos);
         }
@@ -46,7 +46,7 @@ export default function Game({ profile, token, gameID }: Props) {
         console.error(error);
         setIsLoading(false);
       });
-  }, [Lobby, gameID]);
+  }, []);
 
   const gameService = new GameService(token as string);
 
@@ -62,8 +62,8 @@ export default function Game({ profile, token, gameID }: Props) {
   console.log(gameService);
 
   const Quit = () => {
-    Lobby.Quit_Game();
-    Lobby.Load_Page("/home");
+    Lobby.QuitGame();
+    Lobby.LoadPage("/home");
   };
 
   // WsException Managing
