@@ -11,7 +11,7 @@ type Player = {
   move: Direction;
   color: string;
   score: number;
-  side: "left" | "right";
+  side: "Left" | "Right";
   push: number;
   roundWon: number;
 };
@@ -34,8 +34,8 @@ type Game = {
   ball: Ball;
   playerLeft: Player;
   playerRight: Player;
-  playerSide: "left" | "right";
-  playerServe: "left" | "right" | null;
+  playerSide: "Left" | "Right";
+  playerServe: "Left" | "Right" | null;
   color: string;
   fontColor: string;
   roundColor: string;
@@ -56,32 +56,11 @@ type Game = {
   push: boolean;
 };
 
-type GameInfos = {
-  uuid: string;
-  Name: string;
-  Host: number;
-  Opponent: number;
-  Viewers_List: number;
-  Score_Host: number;
-  Score_Opponent: number;
-  Status: string;
-  CreatedAt: string;
-  Winner: number;
-  Loser: number;
-  Push: boolean;
-  Score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  Round: 1 | 3 | 5 | 7 | 9;
-  Difficulty: 1 | 2 | 3 | 4 | 5;
-  Side: "left" | "right";
-  Background: string;
-  Ball: string;
-  Paddle: string;
-  Type: string;
-  Mode: string;
-};
-
 type GameSettings = {
+  uuid: string;
   name: string;
+  hostName: number;
+  opponentName: number;
   push: boolean;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
@@ -90,5 +69,4 @@ type GameSettings = {
   background: string;
   ball: string;
   type: string;
-  mode: string;
 };

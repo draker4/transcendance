@@ -7,14 +7,14 @@ import {
   DirY,
 } from "@/lib/game/pongUtils";
 
-function resetTurn(winner: "left" | "right", game: Game) {
+function resetTurn(winner: "Left" | "Right", game: Game) {
   resetBall(game.ball, game);
   game.playerServe = winner;
   game.timer = new Date().getTime();
 
-  if (winner === "left") {
+  if (winner === "Left") {
     game.playerLeft.score++;
-  } else if (winner === "right") {
+  } else if (winner === "Right") {
     game.playerRight.score++;
   }
 }
@@ -52,10 +52,10 @@ function handleRound(game: Game) {
 function handleMovement(game: Game): void {
   const { playerLeft, playerRight, ball } = game;
   if (game.AI) {
-    if (game.playerSide === "left") {
+    if (game.playerSide === "Left") {
       updatePlayer(game, playerLeft);
       moveAI(game, playerRight, ball);
-    } else if (game.playerSide === "right") {
+    } else if (game.playerSide === "Right") {
       updatePlayer(game, playerRight);
       moveAI(game, playerLeft, ball);
     }
@@ -70,10 +70,10 @@ function handleMovement(game: Game): void {
 
   if (turnDelayIsOver(game.timer)) {
     const status = updateBall(ball, game);
-    if (status === "reset left") {
-      resetTurn("right", game);
-    } else if (status === "reset right") {
-      resetTurn("left", game);
+    if (status === "reset Left") {
+      resetTurn("Right", game);
+    } else if (status === "reset Right") {
+      resetTurn("Left", game);
     }
   }
 }

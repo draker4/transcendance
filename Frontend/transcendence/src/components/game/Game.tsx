@@ -24,7 +24,7 @@ export default function Game({ profile, token, gameID }: Props) {
   const Lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [gameInfos, setGameInfo] = useState<GameInfos>();
+  const [gameInfos, setGameInfo] = useState<GameSettings>();
   const [error, setError] = useState<boolean>(false);
 
   //------------------------------------Chargement------------------------------------//

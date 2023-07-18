@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Request } from '@nestjs/common';
+import { Controller, Post, Get, Request, Param } from '@nestjs/common';
 import { LobbyService } from '../lobby-service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 
@@ -27,14 +27,14 @@ export class LobbyController {
 
   // 03 - api/lobby/getall
   @Get('getall')
-  GetAll(@Request() req) {
+  GetAllGames(@Request() req) {
     return this.lobbyService.GetAll(req);
   }
 
-  // 04 - api/lobby/getone
-  @Post('getone')
-  GetOne(@Request() req) {
-    return this.lobbyService.GetOne(req);
+  // 04 - api/lobby/get/:id
+  @Get('get/:id')
+  GetGame(@Param('id') id: string, @Request() req) {
+    return this.lobbyService.GetGameById(id, req);
   }
 
   // 04 - api/lobby/quit

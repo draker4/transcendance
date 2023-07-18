@@ -5,7 +5,7 @@ import updatePong from "@/lib/game/updatePong";
 
 export function initGame(
   canvasRef: HTMLCanvasElement,
-  gameInfos: GameInfos,
+  gameInfos: GameSettings,
   AI: boolean
 ): Game {
   var game: Game = {
@@ -22,34 +22,34 @@ export function initGame(
     timerFont: "100px Arial",
     result: "",
     round: 1,
-    roundPoint: gameInfos.Score,
-    roundMax: gameInfos.Round,
-    difficulty: gameInfos.Difficulty,
+    roundPoint: gameInfos.maxPoint,
+    roundMax: gameInfos.maxRound,
+    difficulty: gameInfos.difficulty,
     startTimer: 6,
     over: false,
     running: false,
-    playerSide: gameInfos.Side,
+    playerSide: gameInfos.hostSide,
     AI: AI,
-    push: gameInfos.Push,
+    push: gameInfos.push,
   } as Game;
   game.playerLeft = initPlayer(
     game.width,
     game.height,
-    "left",
-    gameInfos.Difficulty - 1
+    "Left",
+    gameInfos.difficulty - 1
   );
   game.playerRight = initPlayer(
     game.width,
     game.height,
-    "right",
-    gameInfos.Difficulty - 1
+    "Right",
+    gameInfos.difficulty - 1
   );
-  game.ball = initBall(game.width, game.height, gameInfos.Difficulty - 1);
+  game.ball = initBall(game.width, game.height, gameInfos.difficulty - 1);
   game.timer = new Date().getTime();
   if (Math.random() < 0.5) {
-    game.playerServe = "left";
+    game.playerServe = "Left";
   } else {
-    game.playerServe = "right";
+    game.playerServe = "Right";
   }
   handleStartTimer(game);
   return game;
@@ -64,21 +64,21 @@ export function resetGame(game: Game) {
   game.playerLeft = initPlayer(
     game.width,
     game.height,
-    "left",
+    "Left",
     game.difficulty
   );
   game.playerRight = initPlayer(
     game.width,
     game.height,
-    "right",
+    "Right",
     game.difficulty
   );
   game.ball = initBall(game.width, game.height, game.difficulty);
   game.timer = new Date().getTime();
   if (Math.random() < 0.5) {
-    game.playerServe = "left";
+    game.playerServe = "Left";
   } else {
-    game.playerServe = "right";
+    game.playerServe = "Right";
   }
   handleStartTimer(game);
 }

@@ -84,8 +84,7 @@ class LobbyService {
 
   //Recupere les infos de la game
   public async GetGameInfo(gameID: String | undefined): Promise<any> {
-    const body = JSON.stringify({ game_id: gameID });
-    const response = await this.FetchData("lobby/getone", "POST", body);
+    const response = await this.FetchData(`lobby/get/${gameID}`, "GET");
     const data = await response.json();
     return data.data;
   }
