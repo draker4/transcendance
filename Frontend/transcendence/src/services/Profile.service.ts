@@ -57,24 +57,20 @@ export default class Profile_Service {
   public async editUser(properties: Record<string, string>) {
 
     const body = JSON.stringify({properties : properties});
-
-    // [+][!] gestion reponse ?
     const response = await this.fetchDataClientSide("", "PUT", body);
 
+	let rep:Rep = {
+		success: false,
+		message: ""
+	};
+
     if (response.ok) {
-      const data = await response.json();
-      const message = data.message;
-
-      console.log("response of editUser : ", message);
-      
-      // [+] finir cette gestion
-      return "";
+      rep = await response.json();
     } else {
-      // [+] ici throw error ou success false ... a finir
+      rep.message = "error response from server, try it later please";
     }
-    
 
-    return "";
+    return rep;
   }
 
   // GetProfilByToken() version fetching Avatar too

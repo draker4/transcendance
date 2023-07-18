@@ -1,21 +1,21 @@
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 
-type GroupedPrivateMsgType = {
-  sender: Pongie;
+type GroupedMsgType = {
+  user: User;
   date: Date;
-  messages: PrivateMsgType[];
+  messages: Message[];
 };
 
 type Props = {
-  groupedMessages: GroupedPrivateMsgType;
+  groupedMessages: GroupedMsgType;
 };
 
 export default function MessageItem({ groupedMessages }: Props) {
   
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
-    <p key={index}>{msg.content}</p>
+    <pre key={index}>{msg.content}</pre>
   ));
 
   const formatedDate = makeHumanDateFormat(groupedMessages.date);
@@ -26,10 +26,10 @@ export default function MessageItem({ groupedMessages }: Props) {
       <div className={styles.avatarSide}>
         <div className={styles.avatarSlot}>
           <AvatarUser
-            avatar={groupedMessages.sender.avatar}
+            avatar={groupedMessages.user.avatar}
             borderSize="3px"
-            borderColor={groupedMessages.sender.avatar.borderColor}
-            backgroundColor={groupedMessages.sender.avatar.backgroundColor}
+            borderColor={groupedMessages.user.avatar.borderColor}
+            backgroundColor={groupedMessages.user.avatar.backgroundColor}
           />
         </div>
       </div>
@@ -40,16 +40,18 @@ export default function MessageItem({ groupedMessages }: Props) {
         <div className={styles.tsheader}>
           <div
             className={styles.name}
-            style={{ color: groupedMessages.sender.avatar.borderColor }}
+            style={{ color: groupedMessages.user.avatar.borderColor }}
           >
-            {groupedMessages.sender.login}
+            {groupedMessages.user.login}
           </div>
           <div className={styles.date}>
             {formatedDate}
           </div>
         </div>
         {/* Content */}
-        <div className={styles.content}>{mappingMessages}</div>
+        <div className={styles.content}>
+			{mappingMessages}
+		</div>
       </div>
     </div>
   );

@@ -85,9 +85,37 @@ export class AuthService {
   }
 
   async login(user: User) {
+
     const payload = { sub: user.id, login: user.login };
+    const [access_token, refresh_token] = await Promise.all([
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: process.env.JWT_SECRET,
+          expiresIn: '15m',
+        },
+      ),
+      this.jwtService.signAsync(
+        payload,
+        {
+          secret: process.env.JWT_REFRESH_SECRET,
+          expiresIn: '1d',
+        },
+      ),
+    ]);
+
+    try {
+      await this.usersService.updateUser(user.id, {
+        refreshToken: refresh_token,
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token,
+      refresh_token,
     };
   }
 

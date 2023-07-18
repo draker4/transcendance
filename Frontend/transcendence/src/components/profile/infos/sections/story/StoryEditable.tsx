@@ -3,6 +3,7 @@ import submitStory from "@/lib/profile/edit/submitStory";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
+import Profile_Service from "@/services/Profile.service";
 
 type Props = {
   profile: Profile;
@@ -10,7 +11,9 @@ type Props = {
 };
 
 export default function StoryEditable({ profile, token }: Props) {
-  const [editMode, setEditMode] = useState<boolean>(false);
+	const profileService = new Profile_Service(token);
+	
+	const [editMode, setEditMode] = useState<boolean>(false);
   const [story, setStory] = useState<string>(
     profile.story === null ? "" : profile.story
   );
@@ -43,16 +46,21 @@ export default function StoryEditable({ profile, token }: Props) {
       setNotif(checkedStory);
 
       if (checkedStory.length == 0) {
-        const response = await submitStory(submitedStory, token);
+        const rep:Rep = await profileService.editUser({
+			story: submitedStory,
+		  });;
 
-        if (response === "") {
+        if (rep.success) {
           const updatedProfile = profile;
           updatedProfile.story = filterBadWords(submitedStory);
 
           setProf(updatedProfile);
           setStory(updatedProfile.story);
           setEditMode(false);
-        }
+        } else {
+			setNotif(rep.message);
+			setEditMode(false);
+		}
       }
     }
   };

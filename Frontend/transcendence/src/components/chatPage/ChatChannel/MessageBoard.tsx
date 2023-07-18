@@ -1,20 +1,20 @@
-import styles from "@/styles/chatPage/privateMsg/ChatPrivateMsg.module.css";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import MessageItem from "./MessageItem";
 import { useEffect, useState } from "react";
 
 type Props = {
-  messages: PrivateMsgType[];
+  messages: Message[];
 };
 
-type GroupedPrivateMsgType = {
-  sender: Pongie;
+type GroupedMsgType = {
+  user: User;
   date: Date;
-  messages: PrivateMsgType[];
+  messages: Message[];
 };
 
 export default function MessageBoard({ messages }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
-    GroupedPrivateMsgType[]
+    GroupedMsgType[]
   >([]);
 
   // [!] peu etre un peu lourd de join tous les messages à chaque new message ?
@@ -24,7 +24,7 @@ export default function MessageBoard({ messages }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
-  const isSameSender = (senderA: Pongie, senderB: Pongie) => {
+  const isSameSender = (senderA: User, senderB: User) => {
     return senderA.id === senderB.id;
   };
 
@@ -52,13 +52,13 @@ export default function MessageBoard({ messages }: Props) {
 
       if (
         lastGroup &&
-        isSameSender(currentMsg.sender, lastGroup.sender) &&
+        isSameSender(currentMsg.sender, lastGroup.user) &&
         isWithinTwoMinutes(currentMsg.date, lastGroup.date)
       ) {
         lastGroup.messages.push(currentMsg);
       } else {
         join.push({
-          sender: currentMsg.sender,
+          user: currentMsg.sender,
           date: currentMsg.date,
           messages: [currentMsg],
         });

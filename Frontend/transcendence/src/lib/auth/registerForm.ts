@@ -28,7 +28,7 @@ export async function loginPassword(
 	
 		const	passwordCrypt = await Crypto.encrypt(passwordUser);
 		const	res = await logUserEmail(emailCrypt, passwordCrypt);
-		console.log(res);
+
 		if (res === "wrong password") {
 			return {
 				passwordSecured: "Wrong password, please try again!",

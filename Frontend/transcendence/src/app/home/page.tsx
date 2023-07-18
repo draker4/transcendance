@@ -6,6 +6,7 @@ import styles from "@/styles/lobby/Lobby.module.css";
 import Lobby from "@/components/lobby/Lobby";
 import HomeProfile from "@/components/lobby/HomeProfile";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
 
 export default async function HomePage() {
   let profile: Profile = {
@@ -36,6 +37,7 @@ export default async function HomePage() {
 
   return (
     <div className={styles.home}>
+      <Refresher />
       <HomeProfile profile={profile} />
       <Lobby profile={profile} token={token} />
     </div>

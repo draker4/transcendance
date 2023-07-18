@@ -101,7 +101,6 @@ export default function Search({
           setDropdownVisible(true);
         }
         else if (payload.banned) {
-          console.log("laaaaa");
           setError({
             error: true,
             msg: `You are banned from ${name}`,

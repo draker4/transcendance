@@ -4,7 +4,6 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 
 export class saveNewMsgDto {
-
   @IsNotEmpty()
   @IsString()
   @Length(1, 350)
@@ -16,8 +15,5 @@ export class saveNewMsgDto {
 
   @IsNotEmpty()
   @IsObject()
-  user:User;
-
-
-  // [+] gestion one to one (ou many to one ?) avec user a implementer ensuite
+  user: User;
 }

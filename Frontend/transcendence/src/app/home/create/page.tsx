@@ -2,6 +2,7 @@ import { cookies } from "next/dist/client/components/headers";
 import fs from "fs";
 import FormLogin from "@/components/createLogin/FormLogin";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
 
 export default async function CreatePage() {
   let profile: Profile = {
@@ -20,7 +21,8 @@ export default async function CreatePage() {
 
   try {
     token = cookies().get("crunchy-token")?.value;
-    if (!token) throw new Error("No token value");
+    if (!token)
+      throw new Error("No token value");
 
     const profileData = new Profile_Service(token);
     profile = await profileData.getProfileByToken();
@@ -46,6 +48,7 @@ export default async function CreatePage() {
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
+      <Refresher />
       <FormLogin token={token as string} avatars={avatars} />
     </div>
   );

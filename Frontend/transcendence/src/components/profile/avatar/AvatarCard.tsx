@@ -29,7 +29,6 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   const avatarService = new Avatar_Service(token);
 
   const handleArea = (
-    event: React.MouseEvent<HTMLElement>,
     newArea: "border" | "background" | null
   ) => {
     if (newArea) setSelectedArea(newArea);
@@ -55,12 +54,6 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
       // [+][!] voir une fois les avatar channel mis en place si le boolean isChannel
       // est necessaire
     );
-
-    // const response = await submitAvatarColors(
-    //   topColor.toString(),
-    //   botColor.toString(),
-    //   token
-    // );
 
     avatar.borderColor = topColor.toString();
     avatar.backgroundColor = botColor.toString();

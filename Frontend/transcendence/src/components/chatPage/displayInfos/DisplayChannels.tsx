@@ -28,6 +28,9 @@ export default function DisplayInfos({
 
   const	deleteItem = (channel: Channel, event: React.MouseEvent) => {
 	event.stopPropagation();
+
+	socket.emit("leave", channel.id);
+
 	const updatedChannels = channels.filter((item) => item !== channel);
 	setChannels(updatedChannels);
   }
@@ -48,13 +51,17 @@ export default function DisplayInfos({
 								backgroundColor={channel.avatar.backgroundColor}
 							/>
 						</div>
+						
 						<div className={styles.name}>
 							{channel.name}
 						</div>
-						<div className={styles.delete}>
+
+						<div 
+							className={styles.delete}
+							onClick={(event) => confirmDelete(channel, event)}
+						>
 							<FontAwesomeIcon
 								icon={faTrashCan}
-								onClick={(event) => confirmDelete(channel, event)}
 							/>
 						</div>
 					</div>

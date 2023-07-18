@@ -50,11 +50,7 @@
 }
 
 .delete:hover {
-	scale: 1.05;
-}
-
-.delete:active {
-	scale: 0.95;
+	color: var(--accent);
 }
 
 .search {
@@ -83,9 +79,5 @@
 }
 
 .confirm Button:hover {
-	scale: 1.05;
-}
-
-.confirm Button:active {
-	scale: 0.95;
+	color: var(--accent);
 }

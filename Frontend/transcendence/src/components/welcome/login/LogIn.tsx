@@ -18,7 +18,10 @@ export default function LogInComponent() {
 
   useEffect(() => {
     if (login.length > 0) {
-      setCookie("crunchy-token", login);
+      setCookie("crunchy-token", login, {
+        httpOnly: true,
+        sameSite: true,
+      });
       router.push("/home");
     }
 

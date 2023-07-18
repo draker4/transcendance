@@ -27,6 +27,7 @@ export class AuthController {
   @Public()
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
+
     const dataToken = await this.authService.getToken42(code);
     if (!dataToken)
       throw new UnauthorizedException();
@@ -118,11 +119,12 @@ export class AuthController {
 
       const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
 
-      const { access_token } = await this.authService.login(user);
+      const { access_token, refresh_token } = await this.authService.login(user);
 
       return {
         error: false,
         access_token,
+        refresh_token,
       };
     } catch (err) {
       return {
@@ -138,4 +140,10 @@ export class AuthController {
   loginEmail(@Request() req) {
     return this.authService.login(req.user);
   }
+
+  // @Public()
+  // @Post('refresh')
+  // async refresh(@Request() req) {
+
+  // }
 }
