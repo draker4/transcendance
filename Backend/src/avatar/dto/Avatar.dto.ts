@@ -1,13 +1,7 @@
 /* eslint-disable prettier/prettier */
-import {
-  IsBoolean,
-  IsHexColor,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsHexColor, IsNotEmpty, IsString } from 'class-validator';
 
 export class AvatarDto {
-
   @IsString()
   image: string;
 
@@ -30,12 +24,7 @@ export class AvatarDto {
   @IsBoolean()
   empty: boolean;
 
-	@IsBoolean()
-	@IsNotEmpty()
-	isChannel: boolean;
-
-	@IsBoolean()
-	@IsNotEmpty()
-	decrypt: boolean;
-
+  @IsBoolean()
+  @IsNotEmpty()
+  decrypt: boolean;
 }
