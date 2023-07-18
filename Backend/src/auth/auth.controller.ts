@@ -27,6 +27,7 @@ export class AuthController {
   @Public()
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
+
     const dataToken = await this.authService.getToken42(code);
     if (!dataToken)
       throw new UnauthorizedException();

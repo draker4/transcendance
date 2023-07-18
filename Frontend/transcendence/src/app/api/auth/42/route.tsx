@@ -7,7 +7,8 @@ export async function GET(req: NextRequest) {
 	
 	if (code) {
 		try {
-			const	res = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/42/${code}`);
+			console.log("laaaaa debut", code);
+			const	res = await fetch(`http://backend:4000/api/auth/42/${code}`);
 			
 			const	{ access_token, refresh_token } = await res.json();
 			console.log(access_token, refresh_token);

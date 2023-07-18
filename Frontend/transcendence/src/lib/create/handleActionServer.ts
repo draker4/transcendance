@@ -20,7 +20,8 @@ export async function handleActionServer(
     if (res.length > 0)
       return {
         exists: res,
-        token: "",
+        access_token: "",
+        refresh_token: "",
       };
 
     if (avatarChosen.decrypt && avatarChosen.image !== "") {
