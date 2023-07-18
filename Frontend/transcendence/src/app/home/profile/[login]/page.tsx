@@ -68,6 +68,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     }
 
     const Avatar = new Avatar_Service(token);
+	// [+] continuer ici !!!
     avatar = await Avatar.getAvatarByName(login);
 
     const payload = await verifyAuth(token);
