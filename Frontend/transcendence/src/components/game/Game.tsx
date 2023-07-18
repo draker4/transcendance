@@ -2,71 +2,110 @@
 
 //Import les composants react
 import { useEffect, useState, useMemo } from "react";
+import Link from "next/link";
 
 //Import les services
 import LobbyService from "@/services/Lobby.service";
+import GameService from "@/services/game/Game.service";
 
 //Import les composants
-import ButtonImg from "./ButtonImg";
-import styles from "@/styles/game/game.module.css";
+import styles from "@/styles/game/Game.module.css";
+import stylesError from "@/styles/game/GameError.module.css";
 import Pong from "./Pong";
+import { MdLogout } from "react-icons/md";
 
 type Props = {
-	profile: Profile;
-	token: String | undefined;
-	gameID: String | undefined;
+  profile: Profile;
+  token: String | undefined;
+  gameID: String | undefined;
 };
 
 export default function Game({ profile, token, gameID }: Props) {
-	const Lobby = useMemo(() => new LobbyService(token), [token]);
+  const Lobby = useMemo(() => new LobbyService(token), [token]);
 
-	const [isLoading, setIsLoading] = useState(true);
-	const [gameInfos, setGameInfo] = useState<GameInfos>();
+  const [isLoading, setIsLoading] = useState(true);
+  const [gameInfos, setGameInfo] = useState<GameInfos>();
+  const [error, setError] = useState<boolean>(false);
 
-	//------------------------------------Chargement------------------------------------//
+  //------------------------------------Chargement------------------------------------//
 
-	//Regarde si le joueur est en game, si oui , le remet dans la game
-	useEffect(() => {
-		//Si pas possible d'avoir les données de la game -> retour au lobby
-		Lobby.Get_Game_Info(gameID)
-			.then((gameInfos) => {
-				if (gameInfos.success == false) {
-					Lobby.Load_Page("/home");
-				} else {
-					setGameInfo(gameInfos);
-				}
-				console.log(gameInfos);
-				setIsLoading(false);
-			})
-			.catch((error) => {
-				console.error(error);
-				setIsLoading(false);
-			});
-	}, [Lobby, gameID]);
+  //Regarde si le joueur est en game, si oui , le remet dans la game
+  useEffect(() => {
+    //Si pas possible d'avoir les données de la game -> retour au lobby
+    Lobby.Get_Game_Info(gameID)
+      .then((gameInfos) => {
+        if (gameInfos.success == false) {
+          Lobby.Load_Page("/home");
+        } else {
+          setGameInfo(gameInfos);
+        }
+        console.log(gameInfos);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+  }, [Lobby, gameID]);
 
-	const Quit = () => {
-		Lobby.Quit_Game();
-		Lobby.Load_Page("/home");
-	};
+  const gameService = new GameService(token as string);
 
-	//------------------------------------RENDU------------------------------------//
+  useEffect(() => {
+    return () => {
+      gameService.socket?.off("connect_error");
+      gameService.socket?.off("error");
+      gameService.socket?.off("exception");
+      gameService.socket?.disconnect();
+    };
+  }, [gameService.socket]);
 
-	//Si la page n'est pas chargé
-	if (isLoading) {
-		return (
-			<div className={styles.gameLoading}>
-				<h1>Chargement...</h1>
-			</div>
-		);
-	}
+  console.log(gameService);
 
-	//Si la page n'est pas chargé
-	if (!isLoading && gameInfos) {
-		return (
-			<div className={styles.Game}>
-				<Pong gameInfos={gameInfos} AI={true} />
-				<ButtonImg text="quit" onClick={Quit} img="lobby/check" />
-			</div>
-		);
-	}
+  const Quit = () => {
+    Lobby.Quit_Game();
+    Lobby.Load_Page("/home");
+  };
+
+  // WsException Managing
+  useEffect(() => {
+    gameService.socket?.on("exception", () => {
+      setError(true);
+    });
+  }, [gameService.socket]);
+
+  //------------------------------------RENDU------------------------------------//
+
+  // Si une erreur est survenue
+  if (!gameService.socket || error) {
+    return (
+      <div className={stylesError.socketError}>
+        <h2>Oops... Something went wrong!</h2>
+        <Link href={"/home"} className={stylesError.errorLink}>
+          <p>Return to Home Page!</p>
+        </Link>
+      </div>
+    );
+  }
+
+  //Si la page n'est pas chargé
+  if (isLoading) {
+    return (
+      <div className={styles.gameLoading}>
+        <h1>Chargement...</h1>
+      </div>
+    );
+  }
+
+  //Si la page n'est pas chargé
+  if (!isLoading && gameInfos) {
+    return (
+      <div className={styles.game}>
+        <Pong gameInfos={gameInfos} AI={true} />
+        <button onClick={Quit} className={styles.quitBtn}>
+          <MdLogout />
+          <p className={styles.btnTitle}>Leave</p>
+        </button>
+      </div>
+    );
+  }
 }

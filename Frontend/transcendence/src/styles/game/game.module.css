@@ -1,15 +1,53 @@
-.loading_page {
-    min-height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    text-align: center;
-    /* background: var(--primary); */
-    color: var(--tertiary);
+.gamePage {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
 }
-  
-.loading_page h1 {
-    align-self: center;
+
+.game {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary-lighter2-light);
+  margin-block: 20px;
+  border-radius: 10px;
+  width: 90%;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+.gameLoading {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.quitBtn {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  padding: 10px;
+  margin: 10px;
+  font-size: 40px;
+  font-weight: Bold;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 3px solid var(--accent);
+  transition: all 0.3s ease-in;
+}
+
+.btnTitle {
+  font-size: 20px;
+}
+
+.quitBtn:hover {
+  color: var(--accent-lighter1);
+  border: 3px solid var(--accent-lighter1);
 }

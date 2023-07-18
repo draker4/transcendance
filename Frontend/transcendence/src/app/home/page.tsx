@@ -7,7 +7,7 @@ import Lobby from "@/components/lobby/Lobby";
 import HomeProfile from "@/components/lobby/HomeProfile";
 import Profile_Service from "@/services/Profile.service";
 
-export default async function Lobby_Frame() {
+export default async function HomePage() {
   let profile: Profile = {
     id: -1,
     login: "",
