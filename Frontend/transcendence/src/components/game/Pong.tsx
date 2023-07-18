@@ -19,6 +19,7 @@ export default function Pong({ gameInfos, AI }: Props) {
     console.log(game);
 
     const handleKeyDown = (event: KeyboardEvent) => {
+      console.log(event);
       pongKeyDown(event, game);
     };
 

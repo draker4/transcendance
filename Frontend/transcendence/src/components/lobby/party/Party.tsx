@@ -13,9 +13,8 @@ type Props = {
 };
 
 export default function Party({ Lobby, isLoading, token }: Props) {
-  // ----------------------------------  CHARGEMENT  ---------------------------------- //
   const [createParty, setCreateParty] = useState<boolean>(false);
-  // -------------------------------------  RENDU  ------------------------------------ //
+
   if (isLoading) {
     return (
       <div className={styles.loading}>

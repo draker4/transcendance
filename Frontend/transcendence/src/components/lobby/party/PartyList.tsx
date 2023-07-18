@@ -30,7 +30,7 @@ interface Game {
 
 export default function PartyList({ token }: Props) {
   //Import le service pour les games
-  const Lobby = useMemo(() => new LobbyService(token), [token]);
+  const Lobby = new LobbyService(token);
   const [jsonGame, setJsonGame] = useState([] as Game[]);
   const [filteredGames, setFilteredGames] = useState([] as Game[]);
   const [LastSearch, setLastSearch] = useState("");
@@ -38,12 +38,12 @@ export default function PartyList({ token }: Props) {
   //Recupere la liste des games regulierement
   useEffect(() => {
     const interval = setInterval(() => {
-      Lobby.Get_Game_List().then((json) => {
+      Lobby.GetGameList().then((json) => {
         setJsonGame(json);
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [Lobby]);
+  }, []);
 
   //Filter les games en fonction de la recherche
   useEffect(() => {

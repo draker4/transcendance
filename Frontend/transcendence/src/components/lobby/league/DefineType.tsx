@@ -22,11 +22,11 @@ export default function DefineType({ type, setType }: Props) {
   };
 
   const setBest3 = () => {
-    setType("best3");
+    setType("3rounds");
   };
 
   const setBest5 = () => {
-    setType("best5");
+    setType("5rounds");
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //
