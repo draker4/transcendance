@@ -18,11 +18,12 @@ import { AvatarModule } from './avatar/avatar.module';
 import { ChatModule } from './chat/chat.module';
 import { Channel } from './utils/typeorm/Channel.entity';
 import { ChannelModule } from './channels/channel.module';
-import { HistoryModule } from './history/history.module';
+import { GameModule } from './game/game.module';
 import { History } from './utils/typeorm/History.entity';
+import { HistoryModule } from './history/history.module';
 import { UserChannelRelation } from './utils/typeorm/UserChannelRelation';
 import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
-
+import { Score } from './utils/typeorm/Score.entity';
 import { Message } from './utils/typeorm/Message.entity';
 import { MessageModule } from './messages/messages.module';
 
@@ -45,6 +46,7 @@ import { MessageModule } from './messages/messages.module';
         Avatar,
         Channel,
         Message,
+        Score,
         History,
         UserChannelRelation,
         UserPongieRelation,
@@ -61,8 +63,7 @@ import { MessageModule } from './messages/messages.module';
     ChannelModule,
     HistoryModule,
     MessageModule,
+    GameModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

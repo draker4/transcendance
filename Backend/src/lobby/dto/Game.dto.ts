@@ -1,69 +1,48 @@
-import {
-  IsNumber,
-  IsString,
-  IsArray,
-  IsBoolean,
-} from 'class-validator';
+import { IsNumber, IsString, IsBoolean, IsUUID } from 'class-validator';
 
 export class GameDTO {
-  @IsString()
+  @IsUUID()
   uuid: string;
 
   @IsString()
-  Name: string;
+  name: string;
 
   @IsNumber()
-  Host: number;
+  host: number;
 
   @IsNumber()
-  Opponent: number;
-
-  @IsArray()
-  @IsNumber({}, { each: true })
-  viewersList: number[];
-
-  @IsNumber()
-  Score_Host: number;
-
-  @IsNumber()
-  Score_Opponent: number;
+  opponent: number;
 
   @IsString()
-  Status: string;
+  status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
 
   @IsString()
-  CreatedAt: string;
+  result: 'Player1' | 'Player2' | 'Draw' | 'On Going' | 'Not Started';
 
   @IsNumber()
-  Winner: number;
+  actualRound: number;
 
   @IsNumber()
-  Loser: number;
+  maxPoint: number;
+
+  @IsNumber()
+  maxRound: number;
+
+  @IsString()
+  hostSide: 'Left' | 'Right';
+
+  @IsNumber()
+  difficulty: number;
 
   @IsBoolean()
-  Push: boolean;
-
-  @IsNumber()
-  Score: number;
-
-  @IsNumber()
-  Difficulty: number;
-
-  @IsNumber()
-  Round: number;
+  push: boolean;
 
   @IsString()
-  Side: string;
+  background: string;
 
   @IsString()
-  Background: string;
+  ball: string;
 
   @IsString()
-  Ball: string;
-
-  @IsString()
-  Type: string;
-
-  @IsString()
-  Mode: string;
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
 }
