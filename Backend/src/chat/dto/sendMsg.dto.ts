@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { IsDateString, IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsObject, IsString, Length } from 'class-validator';
+import { User } from 'src/utils/typeorm/User.entity';
 
 export class sendMsgDto {
   @IsNotEmpty()
@@ -12,8 +13,16 @@ export class sendMsgDto {
   date: string;
 
   @IsNotEmpty()
+  @IsObject()
+  sender: User;
+
+  @IsNotEmpty()
   @IsString()
-  senderId: string;
+  channelName: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  channelId: number;
 }
 
 /*

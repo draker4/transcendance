@@ -8,15 +8,12 @@ import { MatchmakingController } from './matchmaking-controller/matchmaking.cont
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
+import { LobbyUtils } from 'src/lobby/lobby-service/lobbyUtils';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Game]),
-    TypeOrmModule.forFeature([Matchmaking]),
-    TypeOrmModule.forFeature([User]),
-  ],
+  imports: [TypeOrmModule.forFeature([Game, Matchmaking, User])],
   controllers: [MatchmakingController],
-  providers: [MatchmakingService],
+  providers: [MatchmakingService, LobbyUtils],
   exports: [MatchmakingService],
 })
 export class MatchmakingModule {}

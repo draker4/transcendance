@@ -30,6 +30,7 @@
   flex-direction: row;
   gap: clamp(0.15rem, 0.3rem + 2vw, 1rem);
 }
+
 .avatarCard h1 {
   font-family: var(--title-font);
   font-weight: 700;
@@ -37,8 +38,7 @@
 }
 
 .avatarCard .rectangle {
-  width: 300px;
-  width: 500px;
+  width: 500px; /* [!] */
   height: clamp(80px, 20px + 20vw, 35vw);
   background-color: rgba(67, 80, 126, 0.22);
   position: relative;
@@ -66,19 +66,25 @@
   z-index: 1;
 }
 
+
+
 .avatar .circle {
   width: clamp(80px, 20px + 20vw, 200px);
   height: clamp(80px, 20px + 20vw, 200px);
   border-radius: 50%;
   border: clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem) solid var(--primary);
-  /* box-shadow:
-		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem) 
-		clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-		clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem)
-		rgba(67, 80, 126221, 0.22); */
   background-color: var(--notif);
   overflow: hidden;
+}
+
+.avatar .circle:hover {
   cursor: pointer;
+  scale: 1.03;
+}
+
+.avatar .circle:hover.disabled {
+  cursor: auto;
+  scale: 1;
 }
 
 .avatar .circle .image {
@@ -88,13 +94,15 @@
   object-position: center;
 }
 
+
 /* LOGIN MODULE */
 .loginCard {
   display: flex;
   gap: clamp(0.2rem, 0.5vw, 0.6rem);
   flex-direction: column;
-  position: absolute;
-  right: 30%;
+  position: relative;
+  right: 50%;
+  user-select: none;
 }
 
 .loginCard .login {

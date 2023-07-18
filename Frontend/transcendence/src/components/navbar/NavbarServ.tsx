@@ -5,7 +5,6 @@ import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
 
 export default async function NavbarServ() {
-
   let token: string | undefined;
   let avatar: Avatar = {
     image: "",
@@ -32,23 +31,17 @@ export default async function NavbarServ() {
   };
 
   try {
-      token = cookies().get("crunchy-token")?.value;
-      if (!token)
-        throw new Error("No token value");
+    token = cookies().get("crunchy-token")?.value;
+    if (!token) throw new Error("No token value");
 
-      const profileData = new Profile_Service(token);
-      profile = await profileData.getProfileByToken();
+    const profileData = new Profile_Service(token);
+    profile = await profileData.getProfileByToken();
 
-      const Avatar = new Avatar_Service(token);
-      avatar = await Avatar.getAvatarByName(profile.login);
-
+    const Avatar = new Avatar_Service(token);
+    avatar = await Avatar.getAvatarByName(profile.login);
   } catch (err) {
     // console.log(err);
   }
 
-  return (
-    <div>
-      <NavbarFront avatar={avatar} profile={profile} token={token}/>
-    </div>
-  );
+  return <NavbarFront avatar={avatar} profile={profile} token={token} />;
 }

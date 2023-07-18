@@ -14,6 +14,7 @@ export default function DisplayInfos({
   confirm,
   cancel,
   confirmDelete,
+  littleScreen,
 }: {
   icon: ReactNode;
   socket: Socket;
@@ -21,11 +22,16 @@ export default function DisplayInfos({
   confirm: Pongie | Channel | null;
   cancel: (event: React.MouseEvent) => void;
   confirmDelete: (data: Pongie | Channel, event: React.MouseEvent) => void;
+  littleScreen: boolean,
 }) {
   const [pongies, setPongies] = useState<Pongie []>([]);
 
   const	deleteItem = (pongie: Pongie, event: React.MouseEvent) => {
 	event.stopPropagation();
+
+	// socket.emit("addPongie", 1);
+	socket.emit("deletePongie", pongie.id);
+
 	const updatedPongies = pongies.filter((item) => item !== pongie);
 	setPongies(updatedPongies);
   }
@@ -85,14 +91,15 @@ export default function DisplayInfos({
 				<div></div>
 			</div>
 			<div className={styles.main}>
-				<div className={styles.search}>
-					<SearchBar
-						socket={socket}
-						search="myPongies"
-						openDisplay={openDisplay}
-						placeHolder="Find my pongies"
-					/>
-				</div>
+				{
+					littleScreen && 
+					<div className={styles.search}>
+						<SearchBar
+							socket={socket}
+							openDisplay={openDisplay}
+						/>
+					</div>
+				}
 				{pongiesList}
 			</div>
 		</>

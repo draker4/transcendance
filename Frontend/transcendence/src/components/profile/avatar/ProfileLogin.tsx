@@ -17,7 +17,7 @@ export default function ProfileLogin({ profile, isOwner }: Props) {
       <div className={styles.login}>
         <h1>{profile.login}</h1>
       </div>
-      {isOwner && <EditButton />}
+      {/* {isOwner && <EditButton />} */}
     </div>
   );
 }

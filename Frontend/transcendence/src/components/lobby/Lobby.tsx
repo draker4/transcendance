@@ -9,7 +9,7 @@ import LobbyService from "@/services/Lobby.service";
 import styles from "@/styles/lobby/Lobby.module.css";
 import League from "@/components/lobby/league/League";
 import Party from "@/components/lobby/party/Party";
-import History from "@/components/lobby/history/History";
+import History from "@/components/lobby/training/Training";
 import NavLobby from "./NavLobby";
 import MatchmakingService from "@/services/Matchmaking.service";
 

@@ -74,6 +74,13 @@ Mkfile.old
 dkms.conf
 
 # misc
-.DS_Store
+**/*.DS_Store
+**/*.icloud
+
+
+# Database
+Database
+
+install_docker.sh
 
 

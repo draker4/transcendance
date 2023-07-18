@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { OnModuleInit, Request, UseGuards } from '@nestjs/common';
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -9,18 +10,16 @@ import {
 import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from './guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
-import { Message } from './dto/message.dto';
 import { ChatService } from './chat.service';
 import { newMsgDto } from './dto/newMsg.dto';
-import { sendMsgDto } from './dto/sendMsg.dto';
+import { User } from 'src/utils/typeorm/User.entity';
+import { ChannelAuthGuard } from './guard/channelAuthGuard';
+import { channelIdDto } from './dto/channelId.dto';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
   cors: {
-    origin: [
-      `http://${process.env.HOST_IP}:3000`,
-      "http://localhost:3000",
-    ],
+    origin: [`http://${process.env.HOST_IP}:3000`, 'http://localhost:3000'],
   },
   namespace: '/chat',
   path: '/chat/socket.io',
@@ -46,19 +45,17 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
+        socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
+
         this.connectedUsers.set(payload.sub, socket.id);
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(payload.sub);
-          console.log(`User with ID ${payload.sub} disconnected`);
-          console.log(this.connectedUsers);
+          this.log(`User with ID ${payload.sub} disconnected`); // [?]
         });
 
-        // [+] ici gestion des room a join en fonction des channels de l'user ?
-       socket.join("1 2"); // [!] en vrac&brut pour test
-
-
-        console.log("connected users = ", this.connectedUsers);
+       this.log('connected users = '); // [?]
+	   this.log(this.connectedUsers); // [?]
 
       } catch (error) {
         console.log(error);
@@ -67,43 +64,10 @@ export class ChatGateway implements OnModuleInit {
     });
   }
 
-
-  @SubscribeMessage('newPrivateMsg')
-  yoping(@MessageBody() message: newMsgDto, @Request() req) {
-    if (this.chatService.checkPrivateMsgId(req.user.id, message.channel)) {
-      // [?] Si la room n'existe pas elle est créée -> besoin de vérifier que la room existe ?
-
-
-      // passer une une date en objet direct pose problème
-      // conversion par ISOString
-      const now = new Date();
-      const nowtoISOString = now.toISOString();
-   
-      const sendMsg:sendMsgDto = {
-        content: message.content,
-        date: nowtoISOString,
-        senderId: req.user.id,
-      }
-
-      console.log("going to send " + sendMsg.content + " to " + message.channel); // checking - garder ce log ?
-      this.server.to(message.channel).emit('sendMsg', sendMsg);
-    } else {
-      // [?] Besoin de mieux sécuriser ou gérer ce cas ?
-      // [!] Avec une throw WsException ?
-      console.log("@SubscribeMessage('newPrivateMsg') error detected user id is ", req.user.id, "but channel name is ",  message.channel);
-    }
-
-  }
-
-  // [!] je laisse ça telquel pour le moment, je remplace avec dessus
-  // [!] le fichier Message des dto sera a supprimer aussi
-  @SubscribeMessage('newMessage')
-  create(@MessageBody() message: Message, @Request() req) {
-    this.server.emit('onMessage', {
-      id: req.user.sub,
-      login: req.user.login,
-      text: message.text,
-    });
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('newMsg')
+  async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
+    await this.chatService.receiveNewMsg(message, req.user.id, this.server);
   }
 
   @SubscribeMessage('getChannels')
@@ -112,36 +76,102 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('getAllChannels')
-  async getAllChannels() {
-    return await this.chatService.getAllChannels();
+  async getAllChannels(@Request() req) {
+    return await this.chatService.getAllChannels(req.user.id);
   }
 
   @SubscribeMessage('getPongies')
   async getPongies(@Request() req) {
-	  return await this.chatService.getPongies(req.user.id);
+    return await this.chatService.getPongies(req.user.id);
   }
 
   @SubscribeMessage('getAllPongies')
   async getAllPongies(@Request() req) {
-	  return await this.chatService.getAllPongies(req.user.id);
+    return await this.chatService.getAllPongies(req.user.id);
   }
 
-  // [!][+] add dto pour le data
-  @SubscribeMessage('joinPrivateMsgChannel')
-  async joinOrCreatePrivateMsgChannel( @MessageBody() data: { pongieId: string },
-    @Request() req,
-  ) {
+  @SubscribeMessage('addPongie')
+  async addPongie(@MessageBody() pongieId: number, @Request() req) {
+    return await this.chatService.addPongie(req.user.id, pongieId);
+  }
 
-    return await this.chatService.joinOrCreatePrivateMsgChannel(
+  @SubscribeMessage('deletePongie')
+  async deletePongie(@MessageBody() pongieId: number, @Request() req) {
+    return await this.chatService.deletePongie(req.user.id, pongieId);
+  }
+
+  @SubscribeMessage('join')
+  async join(
+    @MessageBody()
+    payload: {
+      id: number;
+      channelName: string;
+      channelType: 'public' | 'protected' | 'private' | 'privateMsg';
+    },
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (payload.channelType === 'privateMsg')
+      return await this.chatService.joinPongie(req.user.id, payload.id, socket);
+    else
+      return await this.chatService.joinChannel(
+        req.user.id,
+        payload.id,
+        payload.channelName,
+        payload.channelType,
+        socket,
+        this.server,
+      );
+  }
+
+  @SubscribeMessage('leave')
+  async leave(
+    @MessageBody() channelId: number,
+    @Request() req,
+    @ConnectedSocket() socket,
+  ) {
+    return await this.chatService.leave(
       req.user.id,
-      data.pongieId,
+      channelId,
+      socket,
+      this.server,
     );
   }
 
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('getMessages')
+  async getMessages(@MessageBody() payload:channelIdDto) {
+	this.log(`'getMessage' event, with channelId: ${payload.id}`); // checking
+    return (await this.chatService.getMessages(payload.id)).messages;
+  }
+
+  // [!] au final pas utilisé dans <ChatChannel />
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('getChannelUsers')
+  async getChannelUsers(@MessageBody() payload:channelIdDto) {
+    const id: number = payload.id;
+    console.log('getChannelUsers proc --> ChannelId : ', id);
+
+    const users: User[] = await this.chatService.getChannelUsers(
+      payload.id,
+    );
+    console.log(users);
+    // [!] je laisse ces console log car pas pu tester cette fonction encore,
+    // une fois qu'elle sera validée, retourner directement le resultat sans
+    // variable intermédiaire
+
+    return users;
+  }
 
 
+  // tools
 
-/* ------------------------------ tools -------------------------------------- */
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const green = '\x1b[32m';
+    const stop = '\x1b[0m';
 
-
+	process.stdout.write(green + '[chat gateway]  ' + stop);
+    console.log(message);
+  }
 }

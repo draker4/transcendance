@@ -4,6 +4,8 @@ import NavbarServ from "@/components/navbar/NavbarServ";
 import Footer from "@/components/footer/Footer";
 import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: "Transcendence",
   description:

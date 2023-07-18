@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "@/styles/navbar/AvatarMenu.module.css";
 import { useRouter } from "next/navigation";
-import { deleteCookie } from "cookies-next";
 import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
 
@@ -17,9 +16,14 @@ export default function NavbarHome({ avatar, profile }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const signoff = () => {
-    deleteCookie("crunchy-token");
-    router.push("/welcome");
+  const signoff = async () => {
+    try {
+      await fetch(`http://${process.env.HOST_IP}:3000/api/signoff`);
+      router.push("/welcome");
+    }
+    catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

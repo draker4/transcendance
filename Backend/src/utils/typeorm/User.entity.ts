@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   Entity,
   Column,
@@ -9,9 +10,12 @@ import {
   AfterLoad,
   OneToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Channel } from './Channel.entity';
 import { Avatar } from './Avatar.entity';
+import { UserPongieRelation } from './UserPongieRelation';
+import { UserChannelRelation } from './UserChannelRelation';
 
 @Entity()
 export class User {
@@ -64,35 +68,56 @@ export class User {
   story: string;
 
   @Column({ nullable: true, default: 0 })
-  historyLevel: number;
+  trainingLevel: number;
+
+  @Column({ nullable: true })
+  refreshToken: string;
 
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({
-    name: "user_channel_relation",
+    name: 'user_channel_relation',
     joinColumn: {
-      name: "userId",
-      referencedColumnName: "id",
+      name: 'userId',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "channelId",
-      referencedColumnName: "id",
+      name: 'channelId',
+      referencedColumnName: 'id',
     },
   })
   channels: Channel[];
 
+  @OneToMany(
+    () => UserChannelRelation,
+    (userChannelRelation) => userChannelRelation.channel,
+  )
+  userChannelRelations: UserChannelRelation[];
+
   @ManyToMany(() => User, (user) => user.pongies)
   @JoinTable({
-    name: "user_pongie_relation",
+    name: 'user_pongie_relation',
     joinColumn: {
-      name: "userId",
-      referencedColumnName: "id",
+      name: 'userId',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "friendId",
-      referencedColumnName: "id",
+      name: 'pongieId',
+      referencedColumnName: 'id',
     },
   })
   pongies: User[];
+
+  @OneToMany(
+    () => UserPongieRelation,
+    (userPongieRelation) => userPongieRelation.pongie,
+  )
+  userPongieRelations: UserPongieRelation[];
+
+  @OneToMany(
+    () => UserPongieRelation,
+    (pongieUserRelation) => pongieUserRelation.pongie,
+  )
+  pongieUserRelations: UserPongieRelation[];
 
   @OneToOne(() => Avatar)
   @JoinColumn()
@@ -106,6 +131,10 @@ export class User {
 
     if (!this.pongies) {
       this.pongies = [];
+    }
+
+    if (!this.userPongieRelations) {
+      this.userPongieRelations = [];
     }
   }
 }

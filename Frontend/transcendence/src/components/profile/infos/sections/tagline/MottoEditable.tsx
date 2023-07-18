@@ -43,19 +43,21 @@ export default function MottoEditable({ profile, token }: Props) {
       setNotif(checkedMotto);
 
       if (checkedMotto.length === 0) {
-        const response = await profileService.editUser({
+        const rep:Rep = await profileService.editUser({
           motto: submitedMotto,
         });
-        // const response = await submitMotto(submitedMotto, token);
 
-        if (response === "") {
+        if (rep.success) {
           const updatedProfile = profile;
           updatedProfile.motto = filterBadWords(submitedMotto);
 
           setProf(updatedProfile);
           setMotto(updatedProfile.motto);
           setEditMode(false);
-        }
+        } else {
+			setNotif(rep.message);
+			setEditMode(false);
+		}
       }
     }
   };

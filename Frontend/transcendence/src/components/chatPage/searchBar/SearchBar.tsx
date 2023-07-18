@@ -1,30 +1,16 @@
 import { Socket } from "socket.io-client";
-import React from "react";
-import SearchAll from "./SearchAll";
-import SearchMyPongies from "./SearchMyPongies";
-import SearchMyChannels from "./SearchMyChannels";
+import React, { useEffect, useState } from "react";
+import Search from "./Search";
 
-export default function SearchBar({ socket, search, openDisplay, placeHolder }: {
+export default function SearchBar({ socket, openDisplay }: {
 	socket: Socket;
-	search: "all" | "myPongies" | "myChannels";
 	openDisplay: (display: Display) => void;
-	placeHolder: string;
 }) {
-
-	const	verifyPongie = (text: string): ListError => {
-		if (text.includes(" "))
-			return {
-				id: -1,
-				error: true,
-				msg: "No space in the login please",
-			};
-		
-		return {
-			id: -1,
-			error: false,
-			msg: "",
-		};
-	}
+	const	[channels, setChannels] = useState<Channel []>([]);
+	const	[pongies, setPongies] = useState<Pongie []>([]);
+	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
+	const	[error, setError] = useState<ListError | null>(null);
+	const	[text, setText] = useState<string>("");
 
 	const	verifyChannel = (text: string) => {
 		if (text.includes("'") || text.includes('"'))
@@ -41,27 +27,84 @@ export default function SearchBar({ socket, search, openDisplay, placeHolder }: 
 		};
 	}
 
-	if (search === "all")
-		return <SearchAll
-					socket={socket}
-					openDisplay={openDisplay}
-					verifyChannel={verifyChannel}
-					placeHolder={placeHolder}
-				/>
+	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
+		socket.emit('getAllChannels', (channels: Channel[]) => {
+			setChannels(channels);
+		});
+		socket.emit('getAllPongies', (pongies: Pongie[]) => {
+			setPongies(pongies);
+		});
 
-	if (search === "myPongies")
-		return <SearchMyPongies
-					socket={socket}
-					openDisplay={openDisplay}
-					verifyPongie={verifyPongie}
-					placeHolder={placeHolder}
-				/>
+		setText(event.currentTarget.value);
+	}
 
-	if (search === "myChannels")
-		return <SearchMyChannels
-					socket={socket}
-					openDisplay={openDisplay}
-					verifyChannel={verifyChannel}
-					placeHolder={placeHolder}
-				/>
+	useEffect(() => {
+		const	createList = (text: string) => {
+			let	hasChannel: boolean = false;
+			setError(null);
+			
+			if (!text) {
+				setList([]);
+				return ;
+			}
+	
+			const	textlowerCase: string = text.toLocaleLowerCase();
+	
+			let		list: (Channel | Pongie | CreateOne)[] = [];
+			list = list.concat(
+				channels.filter(channel => channel?.name.toLowerCase().includes(textlowerCase))
+			);
+	
+			if (channels.find(channel => channel?.name.toLowerCase() === text.toLowerCase()))
+				hasChannel = true;
+	
+			list = list.concat(
+				pongies.filter(pongie => pongie?.login.toLowerCase().includes(textlowerCase))
+			);
+	
+			if (list.length === 0) {
+				const	err: ListError = verifyChannel(text);
+	
+				if (err.error) {
+					setList([]);
+					setError(err);
+					return ;
+				}
+			}
+	
+			if (!hasChannel) {
+				const	addChannel: CreateOne = {
+					id: -1,
+					avatar: {
+						name: "",
+						image: "",
+						variant: "rounded",
+						borderColor: "#22d3ee",
+						backgroundColor: "#22d3ee",
+						text: text,
+						empty: true,
+						isChannel: true,
+						decrypt: false,
+					},
+					name: "Create channel " + text,
+				}
+				list = list.concat(addChannel);
+			}
+	
+			setList(list);
+		}
+
+		createList(text);
+	}, [channels, pongies, text]);
+
+	return <Search
+				list={list}
+				error={error}
+				getData={getData}
+				setText={setText}
+				openDisplay={openDisplay}
+				socket={socket}
+				setList={setList}
+				setError={setError}
+			/>
 }

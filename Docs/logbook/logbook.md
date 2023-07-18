@@ -70,3 +70,12 @@ Crunchy Team : bboisson tquere bperriol loumarti
   > `bperriol` &nbsp; &nbsp; &nbsp; : &nbsp; &nbsp; &nbsp; `<ChatHome />`
   <br>
   > `loumarti` &nbsp; &nbsp; &nbsp; : &nbsp; &nbsp; &nbsp; `<ChatPrivateMsg />`
+
+## samedi 15 juillet
+
+  - Le `Chat` progresse bien. Les channels privateMsg deviennent des channels comme les autres qui seront differenciees avec : <br> `type: 'public' | 'protected' | 'private' | 'privateMsg'`
+  - Le type `Message` contient la `Channel` cible, le `User` emetteur et un booleen indiquant si c'est une notification du serveur.
+  - Les relations entre les tables fonctionnent bien, utilisation de tables e joonction customisees pour ajoutter des proprietes de status aux relations. (ex : banned, invited, joined)
+  - week-end de clean et reorganisation de fichiers, fix de petits pbs.
+  - Creation d'un `@UseGuard` pour les `Channel` afin de verifier automatiquement que l'user en fait partie.
+  > prochaines etapes : channel qui ne sont pas de type msgPrivate + automatiser les join des channels + fonctionnememt de 'notifs'

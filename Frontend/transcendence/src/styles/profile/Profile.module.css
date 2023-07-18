@@ -1,10 +1,13 @@
 .main {
-  height: 100vh;
+  height: 75vh;
   background: var(--primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  
+  overflow: scroll;
+
+  margin-left: 13vw; 
+
+  /* border:1px dashed chartreuse; */
+
 } /* MAIN ISSU DE HOME */
 
 /* ------------------------------ */
@@ -43,23 +46,56 @@
   justify-content: left;
   gap: 1rem;
 
-  /* TEST */
   padding: 0;
   min-width: 300px;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .profileMainFrame .second {
   min-width: 300px;
 }
 
+/* ------------------------------ */
+/* ERROR PAGE */
+
+p.error {
+	color: var(--notif);
+	font-size: 1.2rem;
+	margin-bottom: 1.5rem;
+}
+p.icon {
+	/* color: var(--notif); */
+	font-size: 7.5rem;
+}
+
+.link {
+	text-decoration: none;
+	color: var(--accent);
+	font-family: var(--title-font);
+	font-size: 1.2rem;
+	font-weight: 650;
+
+}
+
+
 /* RESPONSIVE */
 
 /* Breakpoint 1 : width > smartphone */
 @media (min-width: 38rem) {
+
+
+	.main {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		margin-left: 0;
+	  }
+
   .profileMainFrame {
     /* flex-direction: column; */
     display: flex;
+
     gap: 1rem; /* a voir si besoin en plus des paddings */
   }
 

@@ -2,5 +2,6 @@ type	Channel = {
 	id: number,
 	name: string,
 	avatar: Avatar,
-	updatedAt: Date,
+	type: 'public' | 'protected' | 'private' | 'privateMsg',
+	joined: boolean;
 };

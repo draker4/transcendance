@@ -4,11 +4,12 @@
 import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
-import styles from "@/styles/game/game.module.css";
+import styles from "@/styles/game/Game.module.css";
 import Game from "@/components/game/Game";
 import Profile_Service from "@/services/Profile.service";
+import { Refresher } from "@/components/refresher/Refresher";
 
-export default async function GamePage({ params, searchParams }: any) {
+export default async function GamePage({ params }: any) {
   // [!] Bperriol i changed this profile
   let profile: Profile = {
     id: -1,
@@ -30,13 +31,18 @@ export default async function GamePage({ params, searchParams }: any) {
     if (!token) throw new Error("No token value");
 
     const profileData = new Profile_Service(token);
-        profile = await profileData.getProfileByToken();
+    profile = await profileData.getProfileByToken();
   } catch (err) {
     console.log(err);
   }
 
   return (
+<<<<<<< HEAD
+    <main className={styles.gamePage}>
+=======
     <main className={styles.First_Frame}>
+      <Refresher />
+>>>>>>> 126481a331c59eb4e8bc62d0cb64f560e27aab55
       <Game profile={profile} token={token} gameID={gameID} />
     </main>
   );

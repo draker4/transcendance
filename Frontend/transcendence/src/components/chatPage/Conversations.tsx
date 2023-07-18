@@ -40,6 +40,10 @@ export default function Conversations({
             />
           </div>
           <div className={styles.name}>{channel.name}</div>
+
+		{/* [!][+] PROVISOIRE checking */}
+		 <div>{`(id:${channel.id})`}</div>
+
         </div>
       </React.Fragment>
     );
@@ -68,12 +72,23 @@ export default function Conversations({
   });
 
   useEffect(() => {
-    socket?.emit("getChannels", (channels: Channel[]) => {
-      setChannels(channels);
-    });
-    socket?.emit("getPongies", (pongies: Pongie[]) => {
-      setPongies(pongies);
-    });
+
+    const getData = () => {
+      socket?.emit("getChannels", (channels: Channel[]) => {
+        setChannels(channels);
+      });
+      socket?.emit("getPongies", (pongies: Pongie[]) => {
+        setPongies(pongies);
+      });
+    }
+
+    socket.on("notif", () => getData());
+
+    getData();
+    
+    return () => {
+      socket.off("notif");
+    }
   }, [socket]);
 
   const handleClickPongie = () => {
@@ -92,9 +107,7 @@ export default function Conversations({
     <div className={styles.main} style={{ maxWidth: maxWidth }}>
       <SearchBar
         socket={socket}
-        search="all"
         openDisplay={openDisplay}
-        placeHolder="Find new channels and pongies"
       />
 
       <div className={styles.title}>
@@ -117,8 +130,10 @@ export default function Conversations({
           />
         </div>
       </div>
-      {channelsList}
-      {pongiesList}
+      <div className={styles.scroll}>
+        {channelsList}
+        {pongiesList}
+      </div>
     </div>
   );
 }

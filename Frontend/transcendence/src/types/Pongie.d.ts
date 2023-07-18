@@ -3,4 +3,5 @@ type	Pongie = {
 	login: string,
 	avatar: Avatar,
 	updatedAt: Date,
+	isfriend: boolean,
 };

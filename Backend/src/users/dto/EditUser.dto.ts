@@ -3,7 +3,7 @@ import { IsOptional, IsString, Length, Matches } from 'class-validator';
 export class EditUserDto {
   @IsOptional()
   @IsString()
-  @Matches(/^[!-~À-ÿ&&[^'"`]]+$/)
+  @Matches(/^(?!.*(?:'|\"|`))[!-~À-ÿ]+/)
   @Length(4, 12)
   login?: string;
 

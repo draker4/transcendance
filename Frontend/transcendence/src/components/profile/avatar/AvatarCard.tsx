@@ -29,32 +29,31 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   const avatarService = new Avatar_Service(token);
 
   const handleArea = (
-    event: React.MouseEvent<HTMLElement>,
     newArea: "border" | "background" | null
   ) => {
     if (newArea) setSelectedArea(newArea);
   };
 
   const toogleDisplaySettings = () => {
+    if (!isOwner)
+      return ;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
   };
 
   const saveColorChanges = async () => {
+
+    if (!isOwner)
+      return ;
     // [?] verif si il y a eut un changement avant ?
 
     // [!] ici envoyer les updates color au back
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
-      false
+      // [+][!] voir une fois les avatar channel mis en place si le boolean isChannel
+      // est necessaire
     );
-
-    // const response = await submitAvatarColors(
-    //   topColor.toString(),
-    //   botColor.toString(),
-    //   token
-    // );
 
     avatar.borderColor = topColor.toString();
     avatar.backgroundColor = botColor.toString();
@@ -87,6 +86,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
 
           <Avatar
             avatar={avatar}
+            isOwner={isOwner}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}

@@ -5,34 +5,45 @@ import {
   Entity,
   JoinColumn,
   ManyToMany,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './User.entity';
 import { Avatar } from './Avatar.entity';
+import { UserChannelRelation } from './UserChannelRelation';
+import { Message } from './Message.entity';
 
 @Entity()
 export class Channel {
-  @PrimaryGeneratedColumn()
-  id: number;
 
-  @CreateDateColumn()
-  createdAd: Date;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+	@CreateDateColumn()
+	createdAd: Date;
 
-  @Column()
-  name: string;
+	@UpdateDateColumn()
+	updatedAt: Date;
 
-  @Column({ default: 'default', nullable: false })
-  type: 'default' | 'privateMsg';
+	@Column()
+	name: string;
 
-  @ManyToMany(() => User, (user) => user.channels)
-  users: User[];
+	@ManyToMany(() => User, (user) => user.channels)
+	users: User[];
 
-  @OneToOne(() => Avatar)
-  @JoinColumn()
-  avatar: Avatar;
+	@OneToMany(() => UserChannelRelation, userChannelRelation => userChannelRelation.user)
+	userChannelRelations: UserChannelRelation[];
+
+	@OneToOne(() => Avatar)
+	@JoinColumn()
+	avatar: Avatar;
+
+	@Column({ default: 'public', nullable: false })
+	type: 'public' | 'protected' | 'private' | 'privateMsg';
+
+	// Relation one<Channel> [to] Many<Message>
+	@OneToMany(() => Message, (message) => message.channel)
+	messages: Message[];
 }

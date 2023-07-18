@@ -10,13 +10,13 @@ export default function DisplayInfos({
 	socket,
 	display,
 	openDisplay,
+	littleScreen,
 }: {
 	icon: ReactNode;
 	socket: Socket;
-	display: {
-		button: string,
-	};
+	display: { button: string };
 	openDisplay: (display: Display) => void;
+	littleScreen: boolean,
 }) {
 	const	[confirm, setConfirm] = useState<Pongie | Channel | null>(null);
 	
@@ -38,6 +38,7 @@ export default function DisplayInfos({
 					confirm={confirm}
 					cancel={cancel}
 					confirmDelete={confirmDelete}
+					littleScreen={littleScreen}
 				/>
 
 	if (display.button === "channels")
@@ -48,6 +49,7 @@ export default function DisplayInfos({
 					confirm={confirm}
 					cancel={cancel}
 					confirmDelete={confirmDelete}
+					littleScreen={littleScreen}
 				/>
 
 	return (

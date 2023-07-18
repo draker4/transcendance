@@ -14,6 +14,7 @@ export default function DisplayInfos({
   confirm,
   cancel,
   confirmDelete,
+  littleScreen,
 }: {
   icon: ReactNode;
   socket: Socket;
@@ -21,11 +22,15 @@ export default function DisplayInfos({
   confirm: Pongie | Channel | null;
   cancel: (event: React.MouseEvent) => void;
   confirmDelete: (data: Pongie | Channel, event: React.MouseEvent) => void;
+  littleScreen: boolean,
 }) {
   const [channels, setChannels] = useState<Channel []>([]);
 
   const	deleteItem = (channel: Channel, event: React.MouseEvent) => {
 	event.stopPropagation();
+
+	socket.emit("leave", channel.id);
+
 	const updatedChannels = channels.filter((item) => item !== channel);
 	setChannels(updatedChannels);
   }
@@ -46,13 +51,17 @@ export default function DisplayInfos({
 								backgroundColor={channel.avatar.backgroundColor}
 							/>
 						</div>
+						
 						<div className={styles.name}>
 							{channel.name}
 						</div>
-						<div className={styles.delete}>
+
+						<div 
+							className={styles.delete}
+							onClick={(event) => confirmDelete(channel, event)}
+						>
 							<FontAwesomeIcon
 								icon={faTrashCan}
-								onClick={(event) => confirmDelete(channel, event)}
 							/>
 						</div>
 					</div>
@@ -73,6 +82,7 @@ export default function DisplayInfos({
 	
 	useEffect(() => {
 		socket.emit("getChannels", (channels: Channel []) => {
+			channels = channels.filter(channel => channel.type !== 'privateMsg');
 			setChannels(channels);
 		});
 	}, [socket]);
@@ -85,14 +95,15 @@ export default function DisplayInfos({
 				<div></div>
 			</div>
 			<div className={styles.main}>
-				<div className={styles.search}>
-					<SearchBar
-						socket={socket}
-						search="myChannels"
-						openDisplay={openDisplay}
-						placeHolder="Find my channels"
-					/>
-				</div>
+				{
+					littleScreen && 
+					<div className={styles.search}>
+						<SearchBar
+							socket={socket}
+							openDisplay={openDisplay}
+						/>
+					</div>
+				}
 				{channelsList}
 			</div>
 		</>

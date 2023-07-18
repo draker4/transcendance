@@ -1,11 +1,12 @@
 import ProfileMainFrame from "@/components/profile/ProfileMainFrame";
+import { Refresher } from "@/components/refresher/Refresher";
 import { verifyAuth } from "@/lib/auth/auth";
-import { getProfileByLogin } from "@/lib/profile/getProfileInfos";
 import Avatar_Service from "@/services/Avatar.service";
 import Profile_Service from "@/services/Profile.service";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
+import ErrorProfile from "@/components/profile/ErrorProfile";
 
 type Params = {
   params: {
@@ -28,7 +29,7 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     isChannel: false,
     decrypt: false,
   };
-  let profile: Profile = {
+  let myProfile: Profile = {
     id: -1,
     login: "",
     first_name: "",
@@ -41,12 +42,30 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     story: "",
   };
 
+  let targetProfile: Profile = {
+    id: -1,
+    login: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    image: "",
+    provider: "",
+    motto: "",
+    story: "",
+  };
   try {
     const token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
 
-    const profileData = new Profile_Service(token);
-    profile = await profileData.getProfileByToken();
+    const profileService = new Profile_Service(token);
+    myProfile = await profileService.getProfileByToken();
+
+    if (myProfile.login === login) {
+      targetProfile = myProfile;
+    } else {
+      targetProfile = await profileService.getProfileByLogin(login);
+    }
 
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarByName(login);
@@ -56,15 +75,21 @@ export default async function ProfilByIdPage({ params: { login } }: Params) {
     if (payload.login === decodeURIComponent(login)) isProfilOwner = true;
   } catch (err) {
     console.log(err);
+    return <ErrorProfile params={{login}}/>;
   }
 
-  return (
-    <main className={styles.main}>
-      <ProfileMainFrame
-        profile={profile}
-        avatar={avatar}
-        isOwner={isProfilOwner}
-      />
-    </main>
-  );
+  if (targetProfile.id !== -1) {
+    return (
+      <main className={styles.main}>
+        <Refresher />
+        <ProfileMainFrame
+          profile={targetProfile}
+          avatar={avatar}
+          isOwner={isProfilOwner}
+        />
+      </main>
+    );
+  } else {
+    return <ErrorProfile params={{login}}/>;
+  }
 }
