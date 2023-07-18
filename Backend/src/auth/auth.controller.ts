@@ -77,10 +77,11 @@ export class AuthController {
         verified: true,
       });
 
-      const { access_token } = await this.authService.login(user);
+      const { access_token, refresh_token } = await this.authService.login(user);
       return {
         message: 'Loading...',
-        token: access_token,
+        access_token,
+        refresh_token,
       };
     }
     catch(error) {
@@ -100,8 +101,17 @@ export class AuthController {
   @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
   async googleOauthCallback(@Req() req, @Res() res: Response) {
-    const { access_token } = await this.authService.loginWithGoogle(req.user);
-    res.cookie('crunchy-token', access_token);
+    const { access_token, refresh_token } = await this.authService.loginWithGoogle(req.user);
+    res.cookie('crunchy-token', access_token, {
+      path: "/",
+      sameSite: true,
+      httpOnly: true,
+    });
+    res.cookie('refresh-token', refresh_token, {
+      path: "/",
+      sameSite: true,
+      httpOnly: true,
+    });
     return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
 

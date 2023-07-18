@@ -43,7 +43,6 @@ export default class Avatar_Service {
     method: string,
     body: any = null
   ) {
-
     const response = await fetch(
       `http://${process.env.HOST_IP}:4000/api/avatar/${url}`,
       {
@@ -71,15 +70,27 @@ export default class Avatar_Service {
     console.log("Avatar service is working");
   }
 
-  public async getAvatarByName(login: string): Promise<Avatar> {
-    const response: Response = await this.fetchData(login, "GET");
+  //   public async getAvatarByName(login: string): Promise<Avatar> {
+  //     const response: Response = await this.fetchData(login, "GET");
+  //     const data: Avatar = await response.json();
+
+  //     if (data?.decrypt && data?.image.length > 0) {
+  //       data.image = await Crypto.decrypt(data.image);
+  //       data.decrypt = false;
+  //     }
+
+  //     return data;
+  //   }
+
+  public async getAvatarbyUserId(id: number): Promise<Avatar> {
+    const response: Response = await this.fetchData( id.toString(), "GET");
     const data: Avatar = await response.json();
 
     if (data?.decrypt && data?.image.length > 0) {
       data.image = await Crypto.decrypt(data.image);
       data.decrypt = false;
     }
-    
+
     return data;
   }
 
@@ -89,7 +100,7 @@ export default class Avatar_Service {
   //     en fonction success -> false ?
   public async submitAvatarColors(
     borderColor: string,
-    backgroundColor: string,
+    backgroundColor: string
     // isChannel: boolean [!][?] nécessaire ?
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor });

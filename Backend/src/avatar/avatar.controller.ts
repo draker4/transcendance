@@ -29,26 +29,36 @@ export class AvatarController {
         exists: false,
       };
 
+	console.log("[!] UTILISE ?????");
+
     return user.avatar;
   }
 
-  // @Get(':name/:isChannel')
-  // async getAvatarByName(
-  //   @Param('name') name: string,
-  //   @Param('isChannel', ParseBoolPipe) isChannel: boolean,
-  // ) {
-  //   const avatar = await this.avatarService.getAvatarByName(
-  //     name,
-  //     isChannel,
-  //   );
 
-  //   if (!avatar) throw new NotFoundException('avatar not found');
 
-  //   return avatar;
-  // }
+  // [!][+] Dto  + finir lorsquon veut avatar de channel
+  @Get(':id/:isChannel')
+  async getAvatarByUserId(
+    @Param('id') id: number,
+    @Param('isChannel', ParseBoolPipe) isChannel: boolean,
+  ) {
 
-  // @Put()
-  // async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
-  //   return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
-  // }
+	if (!isChannel) {
+    	const avatar = (await this.userService.getUserAvatar(id)).avatar;
+
+    if (!avatar) throw new NotFoundException('avatar not found');
+
+    return avatar;
+
+	}
+
+	// [+] continuer pour version isavatar === true
+	return "";
+		
+  }
+
+  @Put()
+  async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
+    return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
+  }
 }
