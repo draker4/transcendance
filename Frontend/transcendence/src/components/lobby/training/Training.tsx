@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/lobby/history/History.module.css";
+import styles from "@/styles/lobby/training/Training.module.css";
 import ContentLoading from "../ContentLoading";
 import LobbyService from "@/services/Lobby.service";
 
@@ -8,7 +8,7 @@ type Props = {
   isLoading: boolean;
 };
 
-export default function History({ Lobby, isLoading }: Props) {
+export default function Training({ Lobby, isLoading }: Props) {
   // -------------------------------------Traning-------------------------------------//
 
   if (isLoading) {
