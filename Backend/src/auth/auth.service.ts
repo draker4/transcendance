@@ -94,7 +94,7 @@ export class AuthService {
         payload,
         {
           secret: process.env.JWT_SECRET,
-          expiresIn: '30s',
+          expiresIn: '30m',
         },
       ),
       this.jwtService.signAsync(
