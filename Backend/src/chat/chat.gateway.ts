@@ -15,6 +15,7 @@ import { newMsgDto } from './dto/newMsg.dto';
 import { User } from 'src/utils/typeorm/User.entity';
 import { ChannelAuthGuard } from './guard/channelAuthGuard';
 import { channelIdDto } from './dto/channelId.dto';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -140,17 +141,20 @@ export class ChatGateway implements OnModuleInit {
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
-  async getMessages(@MessageBody() id:number) {
-	this.log(`'getMessage' event, with channelId: ${id}`); // checking
-    return (await this.chatService.getMessages(id)).messages;
+  async getMessages(@MessageBody() payload:channelIdDto) {
+    return (await this.chatService.getMessages(payload.id)).messages;
   }
 
   
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getChannelName')
-  async getChannelName(@MessageBody() id:number) {
-	this.log(`'getChannelName' event, with channelId: ${id}`); // checking
-    return "1 2";
+  async getChannelName(@MessageBody() payload:channelIdDto) {
+	this.log(`'getChannelName' event, with channelId: ${payload.id}`); // checking
+	const channel:Channel  = await this.chatService.getChannelById(payload.id);
+    return ({
+		success: channel? true : false,
+		message: channel? channel.name : "",
+	});
   }
 
   // [!] au final pas utilisé dans <ChatChannel />

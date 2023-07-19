@@ -17,17 +17,17 @@ Header({ icon, channel, myself, channelCodeName }: Props) {
 	const channelService = new Channel_Service();
 	let url:string = "";
 	
-	console.log("channelCodeName = ", channelCodeName);
+	// console.log("channelCodeName = ", channelCodeName); [!]
 
 	if (channel.type === "privateMsg" && channelCodeName) {
 
-	// 	const tuple: {
-	// 		id1: number;
-	// 		id2: number;
-	// 	} = channelService.getIdsFromPrivateMsgChannelName(channel.name);
+		const tuple: {
+			id1: number;
+			id2: number;
+		} = channelService.getIdsFromPrivateMsgChannelName(channelCodeName);
 
-	// 	const otherId:number = myself.id === channel.id ? t.id2 : tuple.id1;
-	// 	url = "/home/profile/" + channel.id;
+		const otherId:number = myself.id === channel.id ? tuple.id2 : tuple.id1;
+		url = "/home/profile/" + otherId;
 	} else {
 		// [+] gestion des channels d'autres types
 	}

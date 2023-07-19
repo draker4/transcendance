@@ -76,11 +76,6 @@ export default async function ProfilByIdPage({ params: { id } }: Params) {
 
     const payload = await verifyAuth(token);
 
-	console.log("payload.sub = ", payload.sub);
-	console.log("id = ", id);
-	console.log("payload.sub === id.toString() = ", payload.sub === id.toString());
-
-
     if (payload.sub?.toString() === id.toString()) isProfilOwner = true;
   } catch (err) {
     console.log(err);

@@ -4,7 +4,7 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import Header from "./Header";
 import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -34,10 +34,10 @@ type LoadMsg = {
 
 export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
-  let channelCodeName:string | undefined = undefined;
+  const [codeName, setCodename] = useState<string>("");
 
   useEffect(() => {
-    socket.emit( "getMessages", channel.id,
+    socket.emit( "getMessages", {id : channel.id},
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
 
@@ -51,13 +51,11 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         });
 
 		if (channel.type === "privateMsg") {
-			// [!] en brut pour l  moment
-			socket.emit("getChannelName", channel.id);
-			// , (response :string) => {
-				// [!] Warning ici dans le useEffect
-				// [+] finir une fois que channel.if ne sera pas undefined
-				// channelCodeName = response;
-			// });
+			socket.emit("getChannelName", {id : channel.id}, (response: Rep) => {
+				if (response.success) {
+					setCodename(response.message);
+				}
+			});
 		}
 
         setMessages(previousMsg);
@@ -75,8 +73,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         sender: receivedMsg.sender,
         date: receivedDate,
       };
-
-    //   console.log("event 'sendMsg' proc -> msg = ", msg); // [!] checking
 
       setMessages((previous) => [...previous, msg]);
     };
@@ -98,7 +94,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   return (
     <div className={styles.channelMsgFrame}>
-      <Header icon={icon} channel={channel} channelCodeName={channelCodeName} myself={myself} />
+      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
       <MessageBoard messages={messages} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} />
     </div>

@@ -234,8 +234,11 @@ export class ChatService {
     return (await this.channelService.getChannelUsers(channelId)).users;
   }
 
+  async getChannelById(channelId: number): Promise<Channel> {
+    return await this.channelService.getChannelById(channelId);
+  }
+
   async getMessages(channelId: number) {
-	this.log(`getmessage function channelId : ${channelId}`); // [!] checking
     return this.channelService.getChannelMessages(channelId);
   }
 
