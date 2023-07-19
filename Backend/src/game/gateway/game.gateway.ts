@@ -1,13 +1,21 @@
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+//standard imports
+import { OnModuleInit, UseGuards, Req } from '@nestjs/common';
+import { Request } from 'express';
+
+// websockets imports
 import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+
+// jwt imports
 import { WsJwtGuard } from '../guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
+
 import { GameService } from '../service/game.service';
+import { GameManager } from '../manager/GameManager';
 
 @WebSocketGateway({
   cors: {
@@ -18,8 +26,12 @@ import { GameService } from '../service/game.service';
 })
 @UseGuards(WsJwtGuard)
 export class GameGateway implements OnModuleInit {
-  // Container of connected users : Map<userId, socket.id>
-  private connectedUsers: Map<string, string> = new Map<string, string>();
+  // Container of connected users
+  private readonly connectedUsers: Map<string, string> = new Map<
+    string,
+    string
+  >();
+  private gameManager: GameManager;
 
   constructor(private readonly gameService: GameService) {}
 
@@ -27,17 +39,17 @@ export class GameGateway implements OnModuleInit {
   server: Server;
 
   onModuleInit() {
+    this.gameManager = new GameManager(this.server);
     this.server.on('connection', (socket: Socket) => {
       const token = socket.handshake.headers.authorization?.split(' ')[1];
 
       try {
+        //check if token is valid and get user id(payload.sub)
         const payload = verify(token, process.env.JWT_SECRET) as any;
-
         if (!payload.sub) {
           socket.disconnect();
           return;
         }
-
         this.connectedUsers.set(payload.sub, socket.id);
 
         socket.on('disconnect', () => {
@@ -57,8 +69,8 @@ export class GameGateway implements OnModuleInit {
     });
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any): string {
+  @SubscribeMessage('play')
+  handleMessage(@Req() req: Request): string {
     return 'Hello world!';
   }
 }

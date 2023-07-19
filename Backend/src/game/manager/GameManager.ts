@@ -3,7 +3,7 @@ import { AuthenticatedSocket } from 'src/utils/types/game.types';
 import { Party } from '../party/Party';
 import { LobbyService } from 'src/lobby/lobby-service/lobby.service';
 
-export class Manager {
+export class GameManager {
   // -----------------------------------  VARIABLE  ----------------------------------- //
   private readonly lobbies: Map<Party['uuid'], Party> = new Map<
     Party['uuid'],

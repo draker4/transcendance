@@ -2,21 +2,21 @@ import styles from "@/styles/lobby/selector/Selector.module.css";
 
 type Props = {
   id: string;
-  value: "left" | "right";
+  value: "Left" | "Right";
   setValue: Function;
 };
 
 export default function Selector({ id, value, setValue }: Props) {
   const handleChangeRight = (event: React.MouseEvent<HTMLButtonElement>) => {
     event?.preventDefault();
-    if (value === "left") {
-      setValue("right");
+    if (value === "Left") {
+      setValue("Right");
     }
   };
   const handleChangeLeft = (event: React.MouseEvent<HTMLButtonElement>) => {
     event?.preventDefault();
-    if (value === "right") {
-      setValue("left");
+    if (value === "Right") {
+      setValue("Left");
     }
   };
   return (
@@ -24,9 +24,9 @@ export default function Selector({ id, value, setValue }: Props) {
       <button
         id={id}
         name="sideSelector"
-        value="left"
+        value="Left"
         className={
-          value === "left" ? styles.activeButton : styles.inactiveButton
+          value === "Left" ? styles.activeButton : styles.inactiveButton
         }
         onClick={handleChangeLeft}
       >
@@ -35,9 +35,9 @@ export default function Selector({ id, value, setValue }: Props) {
       <button
         id={id}
         name="sideSelector"
-        value="right"
+        value="Right"
         className={
-          value === "right" ? styles.activeButton : styles.inactiveButton
+          value === "Right" ? styles.activeButton : styles.inactiveButton
         }
         onClick={handleChangeRight}
       >

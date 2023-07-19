@@ -49,10 +49,10 @@ function calculateBallAngle(ball: Ball, posY: number, height: number): number {
 function handlePlayerCollision(ball: Ball, player: Player): void {
   const margin = ball.speed * 1.5;
   if (
-    (player.side === "left" &&
+    (player.side === "Left" &&
       ball.pos.x >= player.pos.x + player.width - margin / 2 &&
       ball.pos.x <= player.pos.x + player.width + margin / 2) ||
-    (player.side === "right" &&
+    (player.side === "Right" &&
       ball.pos.x + ball.size >= player.pos.x - margin / 2 &&
       ball.pos.x + ball.size <= player.pos.x + margin / 2)
   ) {
@@ -99,9 +99,9 @@ export function updateBall(ball: Ball, game: Game): string {
 
   // Handle Wall collisions
   if (ball.pos.x <= 0) {
-    return "reset left";
+    return "reset Left";
   } else if (ball.pos.x >= game.width - ball.size) {
-    return "reset right";
+    return "reset Right";
   }
   if (ball.pos.y <= 0) {
     ball.moveY *= -1;
@@ -114,7 +114,7 @@ export function updateBall(ball: Ball, game: Game): string {
 }
 
 export function handleServe(ball: Ball, game: Game): void {
-  ball.moveX = game.playerServe === "left" ? DirX.Right : DirX.Left;
+  ball.moveX = game.playerServe === "Left" ? DirX.Right : DirX.Left;
   if (Math.random() < 0.5) {
     ball.moveY = DirY.Up;
   } else {

@@ -129,7 +129,7 @@ function drawRound(
   game: Game,
   roundDraw: number,
   color: string,
-  side: "left" | "right"
+  side: "left" | "Right"
 ) {
   game.context.fillStyle = color;
   const sign = side === "left" ? -1 : 1;
@@ -171,8 +171,8 @@ function drawScoreTable(game: Game) {
   // Draw player round won
   drawRound(game, game.roundMax / 2, game.roundColor, "left");
   drawRound(game, game.playerLeft.roundWon, game.roundWinColor, "left");
-  drawRound(game, game.roundMax / 2, game.roundColor, "right");
-  drawRound(game, game.playerRight.roundWon, game.roundWinColor, "right");
+  drawRound(game, game.roundMax / 2, game.roundColor, "Right");
+  drawRound(game, game.playerRight.roundWon, game.roundWinColor, "Right");
 }
 
 function drawTimer(game: Game) {

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 
-import One_Game from "@/components/lobby2/noupdated/Matchmaking_Game_Infos";
-import Matchmaking_Search from "@/components/lobby2/noupdated/Matchmaking_Search";
+import One_Game from "./Matchmaking_Game_Infos";
+import Matchmaking_Search from "./Matchmaking_Search";
 
 import Lobby_Service from "@/services/Lobby.service";
 
@@ -38,7 +38,7 @@ export default function Matchmaking_Game_List({ token }: Props) {
   //Recupere la liste des games regulierement
   useEffect(() => {
     const interval = setInterval(() => {
-      Lobby.Get_Game_List().then((json) => {
+      Lobby.GetGameList().then((json) => {
         setJsonGame(json);
       });
     }, 1000);

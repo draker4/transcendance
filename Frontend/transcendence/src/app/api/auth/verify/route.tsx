@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 			if (data?.message === "Loading...") {
 				response.cookies.set({
 					name: "crunchy-token",
-					value: data.token,
+					value: data.access_token,
 					httpOnly: true,
 					sameSite: true,
 					path: "/",

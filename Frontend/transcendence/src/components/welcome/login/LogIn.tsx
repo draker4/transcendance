@@ -18,16 +18,29 @@ export default function LogInComponent() {
 
   useEffect(() => {
     if (login.length > 0) {
-      setCookie("crunchy-token", login, {
-        httpOnly: true,
-        sameSite: true,
-      });
-      router.push("/home");
+      const tokens = login.split(" ");
+
+      if (tokens.length === 2) {
+        setCookie("crunchy-token", tokens[0], {
+          httpOnly: true,
+          sameSite: true,
+          path: "/",
+        });
+        setCookie("refresh-token", tokens[1], {
+          httpOnly: true,
+          sameSite: true,
+          path: "/",
+        });
+        router.push("/home");
+      }
+      else
+        setNotif("Something went wrong, please try again!");
     }
 
     if (register) router.push("/welcome/confirm");
 
-    if (test === "wrong") setNotif("Something went wrong, please try again!");
+    if (test === "wrong")
+      setNotif("Something went wrong, please try again!");
   }, [register, login, router, test]);
 
   // -------------------------------------  RENDU  ------------------------------------ //

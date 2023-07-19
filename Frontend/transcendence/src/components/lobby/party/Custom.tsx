@@ -7,19 +7,19 @@ import Slider from "@/components/lobby/selector/Slider";
 type Props = {
   push: boolean;
   setPush: Function;
-  score: 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  setScore: Function;
-  round: 1 | 3 | 5 | 7 | 9;
-  setRound: Function;
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  setMaxPoint: Function;
+  maxRound: 1 | 3 | 5 | 7 | 9;
+  setMaxRound: Function;
 };
 
 export default function Custom({
   push,
   setPush,
-  score,
-  setScore,
-  round,
-  setRound,
+  maxPoint,
+  setMaxPoint,
+  maxRound,
+  setMaxRound,
 }: Props) {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
@@ -33,11 +33,23 @@ export default function Custom({
 
       {/* Score */}
       <label className={styles.section}>Score</label>
-      <Slider min={3} max={9} step={1} value={score} setValue={setScore} />
+      <Slider
+        min={3}
+        max={9}
+        step={1}
+        value={maxPoint}
+        setValue={setMaxPoint}
+      />
 
       {/* Round */}
       <label className={styles.section}>Round</label>
-      <Slider min={1} max={9} step={2} value={round} setValue={setRound} />
+      <Slider
+        min={1}
+        max={9}
+        step={2}
+        value={maxRound}
+        setValue={setMaxRound}
+      />
     </div>
   );
 }

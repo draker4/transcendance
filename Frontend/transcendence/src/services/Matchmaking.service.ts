@@ -34,8 +34,9 @@ class Matchmaking_Service {
 	}
 
 	//Mets le joueur dans la file d'attente
-	public async Start_Matchmaking(): Promise<any> {
-		const response = await this.FetchData("matchmaking/start ", "POST");
+	public async Start_Matchmaking(type : string): Promise<any> {
+		const body = JSON.stringify({ type });
+		const response = await this.FetchData("matchmaking/start ", "POST", body);
 		const data = await response.json();
 		this.searching = data.success;
 		this.Update_Matchmaking();

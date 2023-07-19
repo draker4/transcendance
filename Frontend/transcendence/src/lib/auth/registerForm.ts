@@ -63,7 +63,7 @@ export async function loginPassword(
 		return {
 			passwordSecured: "",
 			register: false,
-			login: res.access_token,
+			login: res.access_token + " " + res.refresh_token,
 		}
 	}
 	catch (err) {
