@@ -4,7 +4,7 @@
 import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
-import styles from "@/styles/game/Game.module.css";
+import styles from "@/styles/game/game.module.css";
 import Game from "@/components/game/Game";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
@@ -38,6 +38,7 @@ export default async function GamePage({ params }: any) {
 
   return (
     <main className={styles.gamePage}>
+      <Refresher />
       <Game profile={profile} token={token} gameID={gameID} />
     </main>
   );

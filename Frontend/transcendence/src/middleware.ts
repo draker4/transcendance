@@ -67,6 +67,9 @@ export async function middleware(req: NextRequest) {
     return response;
   }
 
+  if (!verifiedToken && req.nextUrl.pathname === "/home/create")
+    return NextResponse.redirect(new URL("/welcome", req.url));
+
   if (
     verifiedToken &&
     !verifiedToken.login &&

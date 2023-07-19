@@ -6,6 +6,7 @@ import styles from "@/styles/createLogin/FormLogin.module.css";
 import { useEffect, useRef, useState } from "react";
 import { handleActionServer } from "@/lib/create/handleActionServer";
 import { useRouter } from "next/navigation";
+import { PongColors } from "@/lib/enums/PongColors.enum";
 
 export default function FormLogin({
   avatars,
@@ -22,8 +23,8 @@ export default function FormLogin({
   const avatarChosenRef = useRef<Avatar>({
     image: "",
     variant: "circular",
-    borderColor: "#22d3ee",
-    backgroundColor: "#22d3ee",
+    borderColor: PongColors.appleGreen,
+    backgroundColor: PongColors.appleGreen,
     text: "",
     empty: true,
     name: "",

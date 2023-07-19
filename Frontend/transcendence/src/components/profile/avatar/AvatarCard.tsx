@@ -8,9 +8,6 @@ import SettingsCard from "./SettingsCard";
 import { Color, ColorChangeHandler, ColorResult } from "react-color";
 import Avatar_Service from "@/services/Avatar.service";
 
-// [!] a supprimer a terme
-import submitAvatarColors from "@/lib/avatar/submitAvatarColors";
-
 type Props = {
   profile: Profile;
   isOwner: boolean;

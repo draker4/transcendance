@@ -94,7 +94,7 @@ export class AuthService {
         payload,
         {
           secret: process.env.JWT_SECRET,
-          expiresIn: '30m',
+          expiresIn: '30s',
         },
       ),
       this.jwtService.signAsync(
@@ -268,20 +268,17 @@ export class AuthService {
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
       
-      console.log("ismatch ", isMatch.id);
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
         //send mail [!] user change password;
         throw new Error('token not valid!');
       }
 
-      console.log("nb of refreshes ", isMatch.id);
       if (isMatch.NbOfRefreshes >= 120) {
         await this.usersService.deleteAllUserTokens(user);
         throw new Error("Too long, needs to reconnect");
       }
 
-      console.log("delete ", isMatch.id);
       await this.usersService.deleteToken(isMatch);
       return this.login(user, isMatch.NbOfRefreshes + 1);
     }
