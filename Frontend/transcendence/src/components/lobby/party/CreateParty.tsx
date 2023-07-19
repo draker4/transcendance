@@ -18,9 +18,9 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
   //Pong Settings
   const [name, setName] = useState<string>("");
   const [push, setPush] = useState<boolean>(false);
-  const [score, setScore] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
-  const [round, setRound] = useState<1 | 3 | 5 | 7 | 9>(3);
-  const [side, setSide] = useState<"left" | "right">("left");
+  const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
+  const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
+  const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
   const [background, setBackground] = useState<string>("background/0");
   const [ball, setBall] = useState<string>("ball/0");
   const [type, setType] = useState<string>("classic");
@@ -29,12 +29,12 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
   //Fonction pour rejoindre une game
   const Create_Game = async () => {
     //Creer un objet avec les settings
-    const settings: Game_Settings = {
+    const settings: GameSettings = {
       name: name,
       push: push,
-      score: score,
-      round: round,
-      side: side,
+      maxPoint: maxPoint,
+      maxRound: maxRound,
+      hostSide: hostSide,
       background: background,
       ball: ball,
       type: type,
@@ -43,15 +43,15 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
     };
 
     //Creer la game
-    const res = await Lobby.Create_Game(settings);
+    const res = await Lobby.CreateGame(settings);
   };
 
   const resetCreate = () => {
     setName("");
     setPush(false);
-    setScore(3);
-    setRound(1);
-    setSide("left");
+    setMaxPoint(3);
+    setMaxRound(1);
+    setHostSide("Left");
     setBackground("background/0");
     setBall("ball/0");
     setType("classic");
@@ -80,14 +80,14 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
           <DefineType
             push={push}
             setPush={setPush}
-            score={score}
-            setScore={setScore}
-            round={round}
-            setRound={setRound}
+            maxPoint={maxPoint}
+            setMaxPoint={setMaxPoint}
+            maxRound={maxRound}
+            setMaxRound={setMaxRound}
             type={type}
             setType={setType}
-            side={side}
-            setSide={setSide}
+            hostSide={hostSide}
+            setHostSide={setHostSide}
           />
         </div>
         <div className={styles.field}>

@@ -28,11 +28,11 @@ export class LobbyService extends LobbyUtils {
       const game_id = await this.CreateGameInDB(
         req.user.id,
         req.body.name,
-        req.body.push,
-        req.body.score,
+        req.body.maxPoint,
+        req.body.maxRound,
         req.body.difficulty,
-        req.body.round,
-        req.body.side,
+        req.body.push,
+        req.body.hostSide,
         req.body.background,
         req.body.ball,
         req.body.type,
@@ -177,10 +177,10 @@ export class LobbyService extends LobbyUtils {
     }
   }
 
-  async GetOne(req: any): Promise<any> {
+  async GetGameById(id: string, req: any): Promise<any> {
     try {
       //Si il manque des datas
-      if (req.body.game_id == null) {
+      if (id == null) {
         const Data = {
           success: false,
           message: 'Not enough parameters',
@@ -189,7 +189,7 @@ export class LobbyService extends LobbyUtils {
       }
 
       //Si la partie existe pas
-      if (!(await this.CheckIfGameExist(req.body.game_id))) {
+      if (!(await this.CheckIfGameExist(id))) {
         const Data = {
           success: false,
           message: "Game doesn't exist",
@@ -198,12 +198,7 @@ export class LobbyService extends LobbyUtils {
       }
 
       //Si le joueur est pas dans cette partie
-      if (
-        !(await this.CheckIfPlayerIsAlreadyInThisGame(
-          req.body.game_id,
-          req.user.id,
-        ))
-      ) {
+      if (!(await this.CheckIfPlayerIsAlreadyInThisGame(id, req.user.id))) {
         const Data = {
           success: false,
           message: 'You are not in this game',
@@ -213,7 +208,7 @@ export class LobbyService extends LobbyUtils {
 
       //Renvoi la game
       const game = await this.GameRepository.findOne({
-        where: { uuid: req.body.game_id },
+        where: { uuid: id },
       });
       const hostLogin = await this.GetPlayerName(game.host);
       const opponentLogin = await this.GetPlayerName(game.opponent);

@@ -7,7 +7,6 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
-  Post,
   Put,
   Query,
   Request,
@@ -40,10 +39,10 @@ export class UsersController {
     return user;
   }
 
-  @Get('profile/:login')
-  async getUserByLogin(@Param('login') login: string) {
-    login = decodeURIComponent(login);
-    const user = await this.usersService.getUserByLogin(login);
+  // [!] secu + dto
+  @Get('profile/:id')
+  async getUserByLogin(@Param('id') id: number) {
+    const user = await this.usersService.getUserById(id);
 
     if (!user) throw new NotFoundException();
 

@@ -13,9 +13,8 @@ type Props = {
 };
 
 export default function Party({ Lobby, isLoading, token }: Props) {
-  // ----------------------------------  CHARGEMENT  ---------------------------------- //
   const [createParty, setCreateParty] = useState<boolean>(false);
-  // -------------------------------------  RENDU  ------------------------------------ //
+
   if (isLoading) {
     return (
       <div className={styles.loading}>
@@ -36,7 +35,7 @@ export default function Party({ Lobby, isLoading, token }: Props) {
       {createParty && (
         <CreateParty Lobby={Lobby} setCreateParty={setCreateParty} />
       )}
-      {!createParty && <Game_List token={token} />}
+      {/* {!createParty && <Game_List token={token} />} */}
     </div>
   );
 }

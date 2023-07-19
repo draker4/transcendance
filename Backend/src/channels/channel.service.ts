@@ -19,7 +19,6 @@ export class ChannelService {
 
 		@InjectRepository(UserChannelRelation)
     	private readonly userChannelRelation: Repository<UserChannelRelation>
-	
 	) {}
 
 	async getChannelByName(
@@ -84,7 +83,6 @@ export class ChannelService {
 	}
 
 	public async getChannelMessages(id: number):Promise<Channel> {
-		this.log(`getmessage function channelId : ${id}`);  // [!] checking
 		return await this.channelRepository.findOne({ where: { id : id }, relations:["messages", "messages.user", "messages.user.avatar"] });
 	}
 

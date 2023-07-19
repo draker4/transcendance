@@ -3,7 +3,7 @@ import { Direction, DirY, DirX } from "@/lib/game/pongUtils";
 export function initPlayer(
   gameWidth: number,
   gameHeight: number,
-  playerSide: "left" | "right",
+  playerSide: "Left" | "Right",
   difficulty: number
 ): Player {
   const player: Player = {
@@ -19,7 +19,7 @@ export function initPlayer(
     roundWon: 0,
   };
   player.pos.x =
-    playerSide === "left" ? player.width * 3 : gameWidth - player.width * 4;
+    playerSide === "Left" ? player.width * 3 : gameWidth - player.width * 4;
   player.pos.y = gameHeight / 2 - player.height / 2;
 
   return player;
@@ -28,10 +28,10 @@ export function initPlayer(
 function handlePush(player: Player): void {
   if (player.push > 0 && player.push <= 3) {
     player.push++;
-    player.pos.x += player.side === "left" ? 5 : -5;
+    player.pos.x += player.side === "Left" ? 5 : -5;
   } else if (player.push > 3 && player.push <= 6) {
     player.push++;
-    player.pos.x += player.side === "left" ? -5 : 5;
+    player.pos.x += player.side === "Left" ? -5 : 5;
     if (player.push === 7) {
       player.push = 0;
     }
@@ -63,8 +63,8 @@ export function moveAI(game: Game, player: Player, ball: Ball): void {
   // Determine the movement direction and speed based on the ball's movement and the player's side
   let movementSpeed = moveSlow;
   if (
-    (player.side === "left" && ball.moveX < DirX.Idle) ||
-    (player.side === "right" && ball.moveX > DirX.Idle)
+    (player.side === "Left" && ball.moveX < DirX.Idle) ||
+    (player.side === "Right" && ball.moveX > DirX.Idle)
   ) {
     movementSpeed = moveFast;
   }

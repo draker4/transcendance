@@ -4,7 +4,7 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import Header from "./Header";
 import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -34,11 +34,10 @@ type LoadMsg = {
 
 export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [codeName, setCodename] = useState<string>("");
 
   useEffect(() => {
-    socket.emit(
-      "getMessages",
-      { channelId: channel.id },
+    socket.emit( "getMessages", {id : channel.id},
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
 
@@ -51,11 +50,18 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
           previousMsg.push(msg);
         });
 
+		if (channel.type === "privateMsg") {
+			socket.emit("getChannelName", {id : channel.id}, (response: Rep) => {
+				if (response.success) {
+					setCodename(response.message);
+				}
+			});
+		}
+
         setMessages(previousMsg);
       }
     );
-    //   eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [channel, socket]);
 
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
@@ -67,7 +73,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         date: receivedDate,
       };
 
-    //   console.log("event 'sendMsg' proc -> msg = ", msg); // [!] checking
+	  console.log(`[channel : ${channel.name}] recMsg : ${msg.content}`);
 
       setMessages((previous) => [...previous, msg]);
     };
@@ -77,8 +83,10 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     return () => {
       socket.off("sendMsg", handleReceivedMsg);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+    
+
+
+  }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
     socket.emit("newMsg", {
@@ -89,7 +97,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   return (
     <div className={styles.channelMsgFrame}>
-      <Header icon={icon} channel={channel} />
+      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
       <MessageBoard messages={messages} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} />
     </div>

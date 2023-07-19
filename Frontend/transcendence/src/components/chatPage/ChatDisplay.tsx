@@ -71,6 +71,7 @@ export default function ChatDisplay({
   }
 
   if ("name" in display) {
+	// [+][!] a clean une fois inutile
     // if ("type" in display && display.type === "privateMsg") {
       return (
         <div className={styles.main + " " + styles.noPadding}>

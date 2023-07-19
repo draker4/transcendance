@@ -5,11 +5,12 @@ import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
 import { initGame, gameLoop } from "@/lib/game/handleGame";
 
 type Props = {
-  gameInfos: GameInfos;
+  gameInfos: GameSettings;
   AI: boolean;
 };
 
 export default function Pong({ gameInfos, AI }: Props) {
+  console.log(gameInfos);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
