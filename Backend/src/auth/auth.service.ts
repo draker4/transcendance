@@ -17,7 +17,9 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
+import { Token } from 'src/utils/typeorm/Token.entity';
 
 @Injectable()
 export class AuthService {
@@ -84,7 +86,7 @@ export class AuthService {
     }
   }
 
-  async login(user: User) {
+  async login(user: User, nbOfRefreshes: number) {
 
     const payload = { sub: user.id, login: user.login };
     const [access_token, refresh_token] = await Promise.all([
@@ -92,7 +94,7 @@ export class AuthService {
         payload,
         {
           secret: process.env.JWT_SECRET,
-          expiresIn: '15m',
+          expiresIn: '30s',
         },
       ),
       this.jwtService.signAsync(
@@ -105,9 +107,7 @@ export class AuthService {
     ]);
 
     try {
-      await this.usersService.updateUser(user.id, {
-        refreshToken: refresh_token,
-      });
+      await this.updateRefreshToken(user, refresh_token, nbOfRefreshes);
     }
     catch (error) {
       console.log(error);
@@ -181,7 +181,7 @@ export class AuthService {
       if (!user) user = await this.usersService.addUser(createUserDto);
       else await this.usersService.updateUser(user.id, createUserDto);
 
-      return this.login(user);
+      return this.login(user, 0);
     }
     catch(error) {
       throw new UnauthorizedException('Unauthenticated');
@@ -236,5 +236,57 @@ export class AuthService {
 
   async getUserById(id: number) {
     return await this.usersService.getUserById(id);
+  }
+
+  async updateRefreshToken(user: User, refreshToken: string, nbOfRefreshes: number) {
+    const hashedRefreshToken = await argon2.hash(refreshToken);
+
+    const token = new Token();
+    token.user = user;
+    token.value = hashedRefreshToken;
+    token.NbOfRefreshes = nbOfRefreshes;
+
+    await this.usersService.saveToken(token);
+  }
+
+  async findMatchingToken(refreshToken: string, tokens: Token[]): Promise<Token | undefined> {
+    for (const token of tokens) {
+      const isMatch = await argon2.verify(token.value, refreshToken);
+      if (isMatch) {
+        return token;
+      }
+    }
+    return undefined;
+  }
+
+  async refreshToken(userId: number, refreshToken: string) {
+    try {
+      const user = await this.usersService.getUserTokens(userId);
+
+      if (!user)
+        throw new Error('no user found');
+
+      const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
+      
+      console.log("ismatch ", isMatch.id);
+      if (!isMatch) {
+        await this.usersService.deleteAllUserTokens(user);
+        //send mail [!] user change password;
+        throw new Error('token not valid!');
+      }
+
+      console.log("nb of refreshes ", isMatch.id);
+      if (isMatch.NbOfRefreshes >= 120) {
+        await this.usersService.deleteAllUserTokens(user);
+        throw new Error("Too long, needs to reconnect");
+      }
+
+      console.log("delete ", isMatch.id);
+      await this.usersService.deleteToken(isMatch);
+      return this.login(user, isMatch.NbOfRefreshes + 1);
+    }
+    catch (error) {
+      throw new UnauthorizedException(error.message);
+    }
   }
 }

@@ -17,14 +17,14 @@ export async function POST(
 			name: "crunchy-token",
 			value: access_token,
 			httpOnly: true,
-			sameSite: true,
+			sameSite: "strict",
 			path: "/",
 		});
 		response.cookies.set({
 			name: "refresh-token",
 			value: refresh_token,
 			httpOnly: true,
-			sameSite: true,
+			sameSite: "strict",
 			path: "/",
 		});
 		return response;

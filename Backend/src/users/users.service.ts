@@ -9,6 +9,7 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { EditUserDto } from './dto/EditUser.dto';
 import { repDto } from './dto/rep.dto';
+import { Token } from 'src/utils/typeorm/Token.entity';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +18,8 @@ export class UsersService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
     private cryptoService: CryptoService,
   ) {}
 
@@ -74,6 +77,25 @@ export class UsersService {
       where: { id: id },
       relations: ['avatar'],
     });
+  }
+
+  async getUserTokens(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['tokens', 'tokens.user'],
+    });
+  }
+
+  async saveToken(token: Token) {
+    await this.tokenRepository.save(token);
+  }
+
+  async deleteToken(token: Token) {
+    await this.tokenRepository.remove(token);
+  }
+
+  async deleteAllUserTokens(user: User) {
+    await this.tokenRepository.remove(user.tokens);
   }
 
   async getUserByCode(code: string) {

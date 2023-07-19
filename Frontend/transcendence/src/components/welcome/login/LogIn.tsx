@@ -23,12 +23,12 @@ export default function LogInComponent() {
       if (tokens.length === 2) {
         setCookie("crunchy-token", tokens[0], {
           httpOnly: true,
-          sameSite: true,
+          sameSite: "strict",
           path: "/",
         });
         setCookie("refresh-token", tokens[1], {
           httpOnly: true,
-          sameSite: true,
+          sameSite: "strict",
           path: "/",
         });
         router.push("/home");

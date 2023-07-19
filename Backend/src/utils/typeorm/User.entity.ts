@@ -16,6 +16,7 @@ import { Channel } from './Channel.entity';
 import { Avatar } from './Avatar.entity';
 import { UserPongieRelation } from './UserPongieRelation';
 import { UserChannelRelation } from './UserChannelRelation';
+import { Token } from './Token.entity';
 
 @Entity()
 export class User {
@@ -123,6 +124,9 @@ export class User {
   @JoinColumn()
   avatar: Avatar;
 
+  @OneToMany(() => Token, token => token.user)
+  tokens: Token[];
+
   @AfterLoad()
   async nullChecks() {
     if (!this.channels) {
@@ -135,6 +139,18 @@ export class User {
 
     if (!this.userPongieRelations) {
       this.userPongieRelations = [];
+    }
+
+    if (!this.pongieUserRelations) {
+      this.pongieUserRelations = [];
+    }
+
+    if (!this.userChannelRelations) {
+      this.userChannelRelations = [];
+    }
+
+    if (!this.tokens) {
+      this.tokens = [];
     }
   }
 }

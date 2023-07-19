@@ -17,11 +17,13 @@ import { AvatarService } from 'src/avatar/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { RefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
+import { Token } from 'src/utils/typeorm/Token.entity';
+import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.strategy';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([User, Avatar, Channel]),
+    TypeOrmModule.forFeature([User, Avatar, Channel, Token]),
     JwtModule,
     MailModule,
   ],
@@ -32,6 +34,7 @@ import { RefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
     AvatarService,
     JwtStrategy,
     RefreshTokenStrategy,
+    JwtNoExpirationTimeStrategy,
     GoogleStrategy,
     LocalStrategy,
     CryptoService,

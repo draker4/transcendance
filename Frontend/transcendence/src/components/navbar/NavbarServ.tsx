@@ -1,10 +1,11 @@
-import { cookies } from "next/dist/client/components/headers";
+import { cookies, headers } from "next/dist/client/components/headers";
 import Avatar_Service from "@/services/Avatar.service";
 
 import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
 
 export default async function NavbarServ() {
+  const url = headers().get('referer');
   let token: string | undefined;
   let avatar: Avatar = {
     image: "",
@@ -31,14 +32,16 @@ export default async function NavbarServ() {
   };
 
   try {
-    token = cookies().get("crunchy-token")?.value;
-    if (!token) throw new Error("No token value");
+    if (url?.includes("home") && !url.includes("create")) {
+      token = cookies().get("crunchy-token")?.value;
+      if (!token) throw new Error("No token value");
 
-    const profileData = new Profile_Service(token);
-    profile = await profileData.getProfileByToken();
+      const profileData = new Profile_Service(token);
+      profile = await profileData.getProfileByToken();
 
-    const Avatar = new Avatar_Service(token);
-    avatar = await Avatar.getAvatarbyUserId(profile.id);
+      const Avatar = new Avatar_Service(token);
+      avatar = await Avatar.getAvatarbyUserId(profile.id);
+    }
   } catch (err) {
     console.log("NAVBAR error : ", err);
   }

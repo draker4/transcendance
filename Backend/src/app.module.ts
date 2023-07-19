@@ -26,6 +26,7 @@ import { UserPongieRelation } from './utils/typeorm/UserPongieRelation';
 import { Score } from './utils/typeorm/Score.entity';
 import { Message } from './utils/typeorm/Message.entity';
 import { MessageModule } from './messages/messages.module';
+import { Token } from './utils/typeorm/Token.entity';
 
 @Module({
   imports: [
@@ -50,8 +51,9 @@ import { MessageModule } from './messages/messages.module';
         Training,
         UserChannelRelation,
         UserPongieRelation,
+        Token,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     AvatarModule,
