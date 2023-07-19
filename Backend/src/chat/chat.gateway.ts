@@ -47,6 +47,7 @@ export class ChatGateway implements OnModuleInit {
         }
 
         socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
+		socket.join('channel:2'); // [!] ouh c'est moche
 
         this.connectedUsers.set(payload.sub, socket.id);
 

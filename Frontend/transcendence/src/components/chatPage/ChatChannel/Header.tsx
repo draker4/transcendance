@@ -8,7 +8,7 @@ type Props = {
   icon: ReactNode;
   channel: Channel;
   myself: Profile & { avatar: Avatar };
-  channelCodeName: string | undefined;
+  channelCodeName: string;
 };
 
 export default function 
@@ -29,7 +29,7 @@ Header({ icon, channel, myself, channelCodeName }: Props) {
 		const otherId:number = myself.id === channel.id ? tuple.id2 : tuple.id1;
 		url = "/home/profile/" + otherId;
 	} else {
-		// [+] gestion des channels d'autres types
+		url = "/home/channel/" + channel.id;
 	}
 
 

@@ -61,8 +61,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         setMessages(previousMsg);
       }
     );
-    //   eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [channel, socket]);
 
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
@@ -74,6 +73,8 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         date: receivedDate,
       };
 
+	  console.log(`[channel : ${channel.name}] recMsg : ${msg.content}`);
+
       setMessages((previous) => [...previous, msg]);
     };
 
@@ -82,8 +83,10 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     return () => {
       socket.off("sendMsg", handleReceivedMsg);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket]);
+    
+
+
+  }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
     socket.emit("newMsg", {

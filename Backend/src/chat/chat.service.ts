@@ -475,26 +475,32 @@ export class ChatService {
         channelId: fetchedChannel.id,
       };
 
-      this.log(`[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`); // checking
+      this.log(
+        `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
+      ); // checking
 
       this.messageService.addMessage(sendMsg);
 
-      if (fetchedChannel.type === 'privateMsg')
+      if (fetchedChannel.type === 'privateMsg') {
+        this.log(`message emit to room : 'channel:${sendMsg.channelName}'`);
         server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
-      else server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
+      } else {
+        this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
+        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
+      }
     } catch (error) {
       throw new WsException(error.message);
     }
   }
 
   // tools
-
+  
   // [!][?] virer ce log pour version build ?
   private log(message?: any) {
     const green = '\x1b[32m';
     const stop = '\x1b[0m';
 
-	process.stdout.write(green + '[chat service]  ' + stop);
+    process.stdout.write(green + '[chat service]  ' + stop);
     console.log(message);
   }
 }
