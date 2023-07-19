@@ -38,7 +38,7 @@
 }
 
 .avatarCard .rectangle {
-  width: 500px; /* [!] */
+  width: 700px; /* [!] */
   height: clamp(80px, 20px + 20vw, 35vw);
   background-color: rgba(67, 80, 126, 0.22);
   position: relative;
