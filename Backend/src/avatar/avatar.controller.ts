@@ -3,9 +3,9 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Param,
   ParseBoolPipe,
+  ParseIntPipe,
   Put,
   Request,
 } from '@nestjs/common';
@@ -29,32 +29,18 @@ export class AvatarController {
         exists: false,
       };
 
-	console.log("[!] UTILISE ?????");
+	console.log("[!] EST CE QU'ON UTILISE CE ENDPOINT ?");
 
     return user.avatar;
   }
 
 
-
-  // [!][+] Dto  + finir lorsquon veut avatar de channel
   @Get(':id/:isChannel')
-  async getAvatarByUserId(
-    @Param('id') id: number,
+  async getAvatarById(
+    @Param('id', ParseIntPipe) id: number,
     @Param('isChannel', ParseBoolPipe) isChannel: boolean,
   ) {
-
-	if (!isChannel) {
-    	const avatar = (await this.userService.getUserAvatar(id)).avatar;
-
-    if (!avatar) throw new NotFoundException('avatar not found');
-
-    return avatar;
-
-	}
-
-	// [+] continuer pour version isavatar === true
-	return "";
-		
+	return this.avatarService.getAvatarById(id, isChannel);
   }
 
   @Put()

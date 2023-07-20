@@ -9,16 +9,20 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
+import { ChannelService } from 'src/channels/channel.service';
+import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 
 @Module({
   imports: [
-		TypeOrmModule.forFeature([Avatar, User, Channel, Token]),
+		TypeOrmModule.forFeature([Avatar, User, Channel, Token, UserChannelRelation]),
 	],
   controllers: [AvatarController],
   providers: [
     AvatarService,
     UsersService,
     CryptoService,
+	ChannelService,
+	
   ],
 })
 export class AvatarModule {}

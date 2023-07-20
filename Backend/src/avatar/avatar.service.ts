@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ChannelService } from 'src/channels/channel.service';
 import { UsersService } from 'src/users/users.service';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
@@ -12,15 +13,34 @@ export class AvatarService {
   constructor(
     @InjectRepository(Avatar)
     private readonly avatarRepository: Repository<Avatar>,
-	private readonly usersService: UsersService,
 
-
+    private readonly usersService: UsersService,
+    private readonly channelService: ChannelService,
   ) {}
 
   async createAvatar(avatarDto: AvatarDto) {
     return await this.avatarRepository.save(avatarDto);
   }
 
+  public async getAvatarById(id: number, isChannel: boolean) {
+    try {
+      if (!isChannel) {
+        const avatar = (await this.usersService.getUserAvatar(id)).avatar;
+
+        if (!avatar) throw new NotFoundException('avatar not found');
+
+        return avatar;
+      } else {
+        const avatar = (await this.channelService.getChannelAvatar(id)).avatar;
+
+        if (!avatar) throw new NotFoundException('avatar not found');
+
+        return avatar;
+      }
+    } catch (error) {
+      return undefined;
+    }
+  }
 
   async editUserAvatarColors(
     req: any,
@@ -33,7 +53,9 @@ export class AvatarService {
     };
 
     try {
-      const avatar: Avatar = (await this.usersService.getUserAvatar(req.user.id)).avatar;
+      const avatar: Avatar = (
+        await this.usersService.getUserAvatar(req.user.id)
+      ).avatar;
 
       if (!avatar) {
         const defaultAvatar = this.createDefaultAvatar();

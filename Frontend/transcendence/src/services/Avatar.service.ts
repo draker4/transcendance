@@ -10,11 +10,11 @@ export default class Avatar_Service {
   }
 
   // Fonction generique pour toutes les requettes http
-  private async fetchData(url: string, method: string, body: any = null) {
-    // console.log("into FetchData"); // checking
+  private async fetchData(isServerSide:boolean, url: string, method: string, body: any = null) {
+	const preUrl:string = isServerSide ? `http://backend:4000/api/avatar/` : `http://${process.env.HOST_IP}:4000/api/avatar/`;
 
     const response = await fetch(
-      `http://backend:4000/api/avatar/${url}/false`,
+      preUrl + url,
       {
         method: method,
         headers: {
@@ -25,65 +25,22 @@ export default class Avatar_Service {
       }
     );
 
-    // console.log("response :", response); // checking
-
     if (!response.ok)
-      // [?] throw exception? -> attention de comment je gere ca
       throw new Error(
-        "fetched failed at http://backend:4000/api/avatar/" + url + "/false"
+        "fetched failed at " +  preUrl + url
       );
+	  // [+] VERIFIER TOUS LES TRY CATCH comme ici
 
     return response;
   }
 
-  // [?][!] c'est merdique non ? ^_^
-  // [!] url different si on est cote client
-  private async fetchDataClientSide(
-    url: string,
-    method: string,
-    body: any = null
-  ) {
-    const response = await fetch(
-      `http://${process.env.HOST_IP}:4000/api/avatar/${url}`,
-      {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.token,
-        },
-        body: body,
-      }
-    );
-
-    // console.log("response :", response); // checking
-
-    if (!response.ok)
-      // [?] throw exception? -> attention de comment je gere ca
-      throw new Error(
-        `fetched failed at http://${process.env.HOST_IP}:4000/api/avatar/${url}`
-      );
-
-    return response;
+  private makeUrl(id:number, isChannel:boolean):string {
+	const boolAsString:string = isChannel ? "true" : "false";
+	return id.toString() + "/" + boolAsString;
   }
-
-  public test(): void {
-    console.log("Avatar service is working");
-  }
-
-  //   public async getAvatarByName(login: string): Promise<Avatar> {
-  //     const response: Response = await this.fetchData(login, "GET");
-  //     const data: Avatar = await response.json();
-
-  //     if (data?.decrypt && data?.image.length > 0) {
-  //       data.image = await Crypto.decrypt(data.image);
-  //       data.decrypt = false;
-  //     }
-
-  //     return data;
-  //   }
 
   public async getAvatarbyUserId(id: number): Promise<Avatar> {
-    const response: Response = await this.fetchData( id.toString(), "GET");
+    const response: Response = await this.fetchData( true, this.makeUrl(id, false), "GET");
     const data: Avatar = await response.json();
 
     if (data?.decrypt && data?.image.length > 0) {
@@ -94,10 +51,20 @@ export default class Avatar_Service {
     return data;
   }
 
+  public async getChannelAvatarById(id: number): Promise<Avatar> {
+	const response: Response = await this.fetchData(true, this.makeUrl(id, true), "GET");
+	const avatar: Avatar = await response.json();
+
+    if (avatar?.decrypt && avatar?.image.length > 0) {
+		avatar.image = await Crypto.decrypt(avatar.image);
+		avatar.decrypt = false;
+    }
+
+	return avatar;
+}
+
   // [?] type de retour ?   : Promise<any> (@_@')
-  // [?] dans le backend verifier que les couleurs sont des hexa valides
-  //     si c'est pas le cas, pas de changement de couleur + response
-  //     en fonction success -> false ?
+  // [+] gestion de la reponse ?
   public async submitAvatarColors(
     borderColor: string,
     backgroundColor: string
@@ -107,7 +74,7 @@ export default class Avatar_Service {
 
     // console.log("body = ", body);
 
-    const response = await this.fetchDataClientSide("", "PUT", body);
+    const response = await this.fetchData(false, "", "PUT", body);
 
     // const data = await response.json();
   }

@@ -1,29 +1,27 @@
 "use client";
-
-import styles from "@/styles/profile/AvatarCard.module.css";
-import Avatar from "./Avatar";
-import ProfileLogin from "./ProfileLogin";
-import { CSSProperties, useState } from "react";
-import SettingsCard from "./SettingsCard";
-import { Color } from "react-color";
+import Avatar from "@/components/profile/avatar/Avatar";
+import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
 import Avatar_Service from "@/services/Avatar.service";
+import styles from "@/styles/profile/AvatarCard.module.css";
+import { CSSProperties, useState } from "react";
+import { Color } from "react-color";
 
 type Props = {
-  profile: Profile;
-  isOwner: boolean;
+  userStatus: UserStatusInChannel;
   avatar: Avatar;
-  token: string;
+  token: string,
 };
 
-export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
+export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) {
+
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
     "border"
-  );
+	);
 
-  const avatarService = new Avatar_Service(token);
+	const avatarService = new Avatar_Service(token);
 
   const handleArea = (
     newArea: "border" | "background" | null
@@ -32,7 +30,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
   };
 
   const toogleDisplaySettings = () => {
-    if (!isOwner)
+    if (!userStatus.chanOp)
       return ;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
@@ -40,7 +38,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
 
   const saveColorChanges = async () => {
 
-    if (!isOwner)
+    if (!userStatus.chanOp)
       return ;
 
     await avatarService.submitAvatarColors(
@@ -70,25 +68,27 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     setBotColor(avatar.backgroundColor);
   };
 
+
+
   return (
     <div className={styles.avatarFrame}>
       <div className={styles.avatarCard}>
         <div className={styles.rectangle} style={colorAddedStyle}>
           <div className={styles.top} style={colorAddedStyle}></div>
           <div className={styles.bot}></div>
-
-          <Avatar
+		  <Avatar
             avatar={avatar}
-            isOwner={isOwner}
+            isOwner={userStatus.chanOp}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}
             previewBackground={botColor.toString()}
           />
         </div>
-        <ProfileLogin name={profile.login} isOwner={isOwner} />
+
+        {/* <ProfileLogin name={avatar.} isOwner={false} */}
       </div>
-      {displaySettings && (
+      {/* {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}
           previewChangeBotColor={previewChangeBotColor}
@@ -97,7 +97,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
           toogleDisplaySettings={toogleDisplaySettings}
           saveColorChanges={saveColorChanges}
         />
-      )}
+      )} */}
     </div>
   );
 }
