@@ -27,13 +27,11 @@ export default function FormLogin({
     backgroundColor: PongColors.appleGreen,
     text: "",
     empty: true,
-    name: "",
     isChannel: false,
     decrypt: false,
   });
 
   const selectAvatar = (avatar: Avatar) => {
-    avatar.name = avatarChosenRef.current.name;
     avatarChosenRef.current = avatar;
   };
 
@@ -49,7 +47,6 @@ export default function FormLogin({
     const text = e.target.value;
 
     avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
-    avatarChosenRef.current.name = text;
     setText(text.toUpperCase().slice(0, 2));
   };
 
@@ -79,10 +76,13 @@ export default function FormLogin({
       }
     };
 
-    if (access_token && access_token.length > 0
-      && refresh_token && refresh_token.length > 0)
+    if (
+      access_token &&
+      access_token.length > 0 &&
+      refresh_token &&
+      refresh_token.length > 0
+    )
       changeCookie();
-    
   }, [access_token, router, refresh_token]);
 
   const handleSubmit = async (e: any) => {
