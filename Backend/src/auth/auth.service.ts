@@ -94,7 +94,7 @@ export class AuthService {
         payload,
         {
           secret: process.env.JWT_SECRET,
-          expiresIn: '1d', // [!] token refresh time setting
+          expiresIn: "15m",
         },
       ),
       this.jwtService.signAsync(

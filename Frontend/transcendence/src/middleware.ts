@@ -6,13 +6,21 @@ export async function middleware(req: NextRequest) {
   let refreshToken = req.cookies.get("refresh-token")?.value;
   let changeCookies = false;
 
+  if (!refreshToken)
+    crunchyToken = undefined;
+
   let verifiedToken =
     crunchyToken &&
     (await verifyAuth(crunchyToken).catch((err) => {
       console.log(err);
     }));
-  const url = req.nextUrl;
-  // console.log(verifiedToken);
+  // const url = req.nextUrl;
+  // console.log(verifiedToken, crunchyToken, url);
+
+  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
+    console.log("do nothing go to google");
+    return ;
+  }
 
   // refresh token if token expires in less than 10 minutes
   if (req.nextUrl.pathname.startsWith("/home") && refreshToken) {
@@ -51,6 +59,7 @@ export async function middleware(req: NextRequest) {
     verifiedToken.login &&
     req.nextUrl.pathname === "/home/create"
   ) {
+    console.log("redirect go to home")
     const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -67,8 +76,10 @@ export async function middleware(req: NextRequest) {
     return response;
   }
 
-  if (!verifiedToken && req.nextUrl.pathname === "/home/create")
-    return NextResponse.redirect(new URL("/welcome", req.url));
+  // if (!verifiedToken && req.nextUrl.pathname === "/home/create") {
+  //   console.log("laaaaa retour welcome");
+  //   return NextResponse.redirect(new URL("/welcome", req.url));
+  // }
 
   if (
     verifiedToken &&
@@ -76,6 +87,7 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/home") &&
     req.nextUrl.pathname !== "/home/create"
   ) {
+    console.log("redkirect go create");
     const response = NextResponse.redirect(new URL("/home/create", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -93,10 +105,12 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname === "/" && !verifiedToken && !changeCookies) {
+    console.log("redirect go to welcome")
     return NextResponse.redirect(new URL("/welcome", req.url));
   }
 
   if (req.nextUrl.pathname === "/" && (verifiedToken || changeCookies)) {
+    console.log("redirect go to home from /")
     const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -114,7 +128,9 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname.startsWith("/welcome") && (verifiedToken || changeCookies)) {
-    const response = NextResponse.redirect(new URL("/home/create", req.url));
+    console.log("redirect go to home from /welcome")
+
+    const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
         httpOnly: true,
@@ -131,8 +147,12 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname.startsWith("/home") && !verifiedToken && !changeCookies) {
+    console.log("redirect go to welcome from /home")
+
     return NextResponse.redirect(new URL("/welcome", req.url));
   }
+
+  console.log("nothing redirected");
 
   if (changeCookies && refreshToken) {
     const response = NextResponse.next();
