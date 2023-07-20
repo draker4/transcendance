@@ -1,0 +1,38 @@
+.settings {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.save {
+  appearance: none;
+  width: 80px;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--accent);
+  background-color: var(--primary-darker);
+  border: 3px solid var(--accent);
+  transition: all 0.3s ease-in;
+  margin-top: 20px;
+}
+
+.save:hover {
+  color: var(--black-2);
+  border: 3px solid var(--accent-lighter1);
+}
+
+.save:checked {
+  transition: all 0.3s ease-out;
+}
+
+.save .go {
+  transform: scale(1.1);
+  transition: all 0.3s ease-in;
+}

@@ -1,0 +1,93 @@
+.LogEmail {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.description {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.input {
+  appearance: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary);
+  background-color: var(--primary-darker1);
+  border: 3px solid var(--secondary);
+  padding: 6px;
+  width: 90%;
+  max-width: 400px;
+  transition: all 0.3s ease-in;
+  text-align: left;
+}
+
+.input::placeholder {
+  color: var(--tertiary-color);
+  font-weight: bold;
+}
+
+.input:focus {
+  outline: none;
+  border: 3px solid var(--accent);
+}
+
+.email {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--tertiary);
+}
+
+.emailBtn {
+  padding-inline: 10px;
+}
+
+.notif {
+  padding-bottom: clamp(10px, 2vh, 30px);
+  color: var(--notif);
+  font-size: clamp(0.8rem, 1vh, 1.2rem);
+}
+
+.continueBtn {
+  appearance: none;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease-in;
+  margin-block: 20px;
+  margin-inline: 10px;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 3px solid var(--accent);
+}
+
+.continueBtn:checked {
+  transition: all 0.3s ease-out;
+}
+
+.continueBtn:hover {
+  color: var(--accent);
+  border: 3px solid var(--accent-lighter1);
+}
+
+.openPassword {
+  height: auto;
+  opacity: 1;
+  transition: height 1s ease, opacity 0.5s ease;
+}
+
+.closePassword {
+  height: 0;
+  opacity: 0;
+  visibility: hidden;
+}

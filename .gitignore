@@ -65,7 +65,6 @@ install_docker.sh
 *.pdb
 
 # ------ Kernel Module ----- #
-*.mod*
 *.cmd
 .tmp_versions/
 modules.order

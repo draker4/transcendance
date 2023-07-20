@@ -1,0 +1,114 @@
+.formLogin {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 90%;
+  margin: 0 auto;
+  background-color: var(--secondary-lighter2-light);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.title {
+  color: var(--tertiary-color);
+  padding-top: clamp(0px, 6vh, 100px);
+  font-size: clamp(1.7rem, 3vh, 3rem);
+  padding-bottom: clamp(0px, 3vh, 60px);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.description {
+  color: var(--tertiary-color);
+  font-size: clamp(1.1rem, 1.6vh, 2rem);
+  padding-bottom: 20px;
+  padding-bottom: 1vh;
+  padding-bottom: clamp(0px, 1vh, 20px);
+}
+
+.little {
+  font-size: clamp(0.7rem, 0.8vh, 1rem);
+  padding-bottom: clamp(0px, 2vh, 30px);
+  color: var(--tertiary-color);
+}
+
+.login {
+  appearance: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary);
+  background-color: var(--primary-darker1);
+  border: 3px solid var(--secondary);
+  padding: 6px;
+  width: 90%;
+  max-width: 400px;
+  transition: all 0.3s ease-in;
+  text-align: left;
+}
+
+.login::placeholder {
+  color: var(--tertiary-color);
+  font-weight: bold;
+}
+
+.login:focus {
+  outline: none;
+  border: 3px solid var(--accent);
+}
+
+.notif {
+  font-size: clamp(0.8rem, 1.2vh, 1.5rem);
+  color: var(--notif);
+  padding-top: clamp(5px, 1.2vh, 30px);
+}
+
+.choose {
+  padding-top: clamp(10px, 8vh, 250px);
+  font-size: clamp(1rem, 1.6vh, 2rem);
+  padding-bottom: clamp(0px, 2vh, 50px);
+}
+
+.avatars {
+  width: 100%;
+  align-items: center;
+}
+
+.confirmBtn {
+  appearance: none;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.3s ease-in;
+  margin-block: 20px;
+  margin-inline: 10px;
+  color: var(--primary);
+  background-color: var(--secondary);
+  border: 3px solid var(--accent);
+}
+
+.confirmBtn:checked {
+  transition: all 0.3s ease-out;
+}
+
+.confirmBtn:hover {
+  color: var(--accent);
+  border: 3px solid var(--accent-lighter1);
+}
+
+@media screen and (max-height: 1000px) {
+  .choose {
+    padding-top: clamp(0px, 3vh, 100px);
+  }
+
+  .avatars {
+    padding-bottom: clamp(0px, 3vh, 100px);
+  }
+}
