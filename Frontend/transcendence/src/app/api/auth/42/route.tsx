@@ -7,11 +7,10 @@ export async function GET(req: NextRequest) {
 	
 	if (code) {
 		try {
-			console.log("laaaaa debut", code);
 			const	res = await fetch(`http://backend:4000/api/auth/42/${code}`);
 			
 			const	{ access_token, refresh_token } = await res.json();
-			console.log(access_token, refresh_token);
+
 			if (!access_token || !refresh_token)
 				throw new Error("no token");
 			
@@ -20,14 +19,14 @@ export async function GET(req: NextRequest) {
 				name: "crunchy-token",
 				value: access_token,
 				httpOnly: true,
-				sameSite: true,
+				sameSite: "strict",
 				path: "/",
 			});
 			response.cookies.set({
 				name: "refresh-token",
 				value: refresh_token,
 				httpOnly: true,
-				sameSite: true,
+				sameSite: "strict",
 				path: "/",
 			});
 			return response;

@@ -15,10 +15,11 @@ import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { MessagesService } from "src/messages/messages.service";
 import { Message } from "src/utils/typeorm/Message.entity";
 import { ChannelAuthGuard } from "./guard/channelAuthGuard";
+import { Token } from "src/utils/typeorm/Token.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([User, Channel, Avatar, UserPongieRelation, UserChannelRelation, Message]),
+		TypeOrmModule.forFeature([User, Channel, Avatar, UserPongieRelation, UserChannelRelation, Message, Token]),
 	],
 	providers: [
 		ChatGateway,

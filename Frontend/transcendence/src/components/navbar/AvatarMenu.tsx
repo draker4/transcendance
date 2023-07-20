@@ -18,7 +18,7 @@ export default function NavbarHome({ avatar, profile }: Props) {
 
   const signoff = async () => {
     try {
-      await fetch(`http://${process.env.HOST_IP}:3000/api/signoff`);
+      await fetch(`http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`);
       router.push("/welcome");
     }
     catch (error) {
@@ -53,7 +53,7 @@ export default function NavbarHome({ avatar, profile }: Props) {
       {menuOpen && profile.id > 0 && (
         <div className={styles.dropdown} ref={menuRef}>
           <ul className={styles.list}>
-            <Link href={`/home/profile/${encodeURIComponent(profile.login)}`}>
+            <Link href={`/home/profile/${profile.id}`}>
               <li className={styles.profile}>{profile.login}</li>
             </Link>
             <li onClick={signoff} className={styles.logOut}>

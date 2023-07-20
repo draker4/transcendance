@@ -19,6 +19,7 @@ import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { JwtNoExpirationGuard } from './guards/jwtNoExpiration.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,7 +37,7 @@ export class AuthController {
     if (!user42logged)
       throw new UnauthorizedException();
 
-    return this.authService.login(user42logged);
+    return this.authService.login(user42logged, 0);
   }
 
   @Public()
@@ -77,7 +78,7 @@ export class AuthController {
         verified: true,
       });
 
-      const { access_token, refresh_token } = await this.authService.login(user);
+      const { access_token, refresh_token } = await this.authService.login(user, 0);
       return {
         message: 'Loading...',
         access_token,
@@ -104,12 +105,12 @@ export class AuthController {
     const { access_token, refresh_token } = await this.authService.loginWithGoogle(req.user);
     res.cookie('crunchy-token', access_token, {
       path: "/",
-      sameSite: true,
+      sameSite: "strict",
       httpOnly: true,
     });
     res.cookie('refresh-token', refresh_token, {
       path: "/",
-      sameSite: true,
+      sameSite: "strict",
       httpOnly: true,
     });
     return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
@@ -129,7 +130,7 @@ export class AuthController {
 
       const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
 
-      const { access_token, refresh_token } = await this.authService.login(user);
+      const { access_token, refresh_token } = await this.authService.login(user, 0);
 
       return {
         error: false,
@@ -148,12 +149,16 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   loginEmail(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.login(req.user, 0);
   }
 
-  // @Public()
-  // @Post('refresh')
-  // async refresh(@Request() req) {
-
-  // }
+  @Public()
+  @UseGuards(JwtNoExpirationGuard)
+  @Post('refresh')
+  async refresh(
+    @Request() req,
+    @Body('refreshToken') refreshToken: string,
+  ) {
+    return this.authService.refreshToken(req.user.id, refreshToken);
+  }
 }

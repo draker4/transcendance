@@ -2,10 +2,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
-  Post,
+  ParseIntPipe,
   Put,
   Query,
   Request,
@@ -38,10 +39,10 @@ export class UsersController {
     return user;
   }
 
-  @Get('profile/:login')
-  async getUserByLogin(@Param('login') login: string) {
-    login = decodeURIComponent(login);
-    const user = await this.usersService.getUserByLogin(login);
+  // [!] secu + dto
+  @Get('profile/:id')
+  async getUserByLogin(@Param('id') id: number) {
+    const user = await this.usersService.getUserById(id);
 
     if (!user) throw new NotFoundException();
 
@@ -125,5 +126,20 @@ export class UsersController {
     // await this.usersService.updateUserPongies(user2, user3);
     // await this.usersService.updateUserPongies(user3, user1);
     // await this.usersService.updateUserPongies(user3, user2);
+  }
+
+  @Public()
+  @Delete('disconnect/:id')
+  async deleteTokens(@Param('id', ParseIntPipe) id: number) {
+    try {
+      console.log("laaaaa", id);
+      const user = await this.usersService.getUserTokens(id);
+
+      if (user)
+        return await this.usersService.deleteAllUserTokens(user);
+    }
+    catch (error) {
+      console.log(error.message);
+    }
   }
 }

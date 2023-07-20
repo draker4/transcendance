@@ -4,6 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import styles from "@/styles/createLogin/ChooseAvatar.module.css";
 import { useState } from "react";
 import ChooseColor from "./ChooseColor";
+import { PongColors } from "@/lib/enums/PongColors.enum";
 
 export default function ChooseAvatar({
   selectBorder,
@@ -18,8 +19,8 @@ export default function ChooseAvatar({
   text: string;
   avatars: string[];
 }) {
-  const [colorBorder, setColorBorder] = useState("#22d3ee");
-  const [backgroundColor, setBackgroundColor] = useState("#22d3ee");
+  const [colorBorder, setColorBorder] = useState<string>(PongColors.appleGreen);
+  const [backgroundColor, setBackgroundColor] = useState<string>(PongColors.appleGreen);
   const [selectedAvatar, setSelectedAvatar] = useState<string>("empty");
 
   const handleBorder = (color: string) => {

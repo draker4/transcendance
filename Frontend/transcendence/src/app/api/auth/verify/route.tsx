@@ -16,14 +16,14 @@ export async function GET(req: NextRequest) {
 					name: "crunchy-token",
 					value: data.access_token,
 					httpOnly: true,
-					sameSite: true,
+					sameSite: "strict",
 					path: "/",
 				});
 				response.cookies.set({
 					name: "refresh-token",
 					value: data.refresh_token,
 					httpOnly: true,
-					sameSite: true,
+					sameSite: "strict",
 					path: "/",
 				});
 			}

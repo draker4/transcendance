@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { OnModuleInit, Request, UseGuards } from '@nestjs/common';
+import { OnModuleInit, Request, UseGuards, ValidationPipe } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -15,6 +15,7 @@ import { newMsgDto } from './dto/newMsg.dto';
 import { User } from 'src/utils/typeorm/User.entity';
 import { ChannelAuthGuard } from './guard/channelAuthGuard';
 import { channelIdDto } from './dto/channelId.dto';
+import { Channel } from 'src/utils/typeorm/Channel.entity';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -46,6 +47,7 @@ export class ChatGateway implements OnModuleInit {
         }
 
         socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
+		socket.join('channel:2'); // [!] ouh c'est moche
 
         this.connectedUsers.set(payload.sub, socket.id);
 
@@ -141,8 +143,19 @@ export class ChatGateway implements OnModuleInit {
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
   async getMessages(@MessageBody() payload:channelIdDto) {
-	this.log(`'getMessage' event, with channelId: ${payload.id}`); // checking
     return (await this.chatService.getMessages(payload.id)).messages;
+  }
+
+  
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('getChannelName')
+  async getChannelName(@MessageBody() payload:channelIdDto) {
+	this.log(`'getChannelName' event, with channelId: ${payload.id}`); // checking
+	const channel:Channel  = await this.chatService.getChannelById(payload.id);
+    return ({
+		success: channel? true : false,
+		message: channel? channel.name : "",
+	});
   }
 
   // [!] au final pas utilisé dans <ChatChannel />
