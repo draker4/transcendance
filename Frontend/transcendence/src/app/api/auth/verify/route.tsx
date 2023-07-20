@@ -1,11 +1,9 @@
-import { getCookie } from "cookies-next";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 	const	code: string | null = req.nextUrl.searchParams.get('code');
-	const	cookie = getCookie("crunchy-token");
 
-	if (code && !cookie) {
+	if (code) {
 		try {
 			const	res = await fetch(`http://backend:4000/api/auth/verifyCode/${code}`);
 			const	data = await res.json();
@@ -36,4 +34,8 @@ export async function GET(req: NextRequest) {
 			console.log(err);
 		}
 	}
+	const	data = {
+		message: "Something went wrong, please try again !",
+	}
+	return NextResponse.json(data);
 }

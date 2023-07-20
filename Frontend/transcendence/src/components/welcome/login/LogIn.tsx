@@ -17,21 +17,42 @@ export default function LogInComponent() {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
   useEffect(() => {
+
+    const setCookies = async (accessToken: string, refreshToken: string) => {
+      try {
+        const res = await fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            accessToken,
+            refreshToken,
+          }),
+        });
+        
+        if (!res.ok)
+          throw new Error('fetch setCookies failed');
+        
+        const data = await res.json();
+
+        if (data.message === "Loading...") {
+          setTextButton(data.message);
+          router.push("/home");
+        }
+        
+        else
+          throw new Error("cant change cookies");
+      }
+      catch (error) {
+        console.log(error);
+        setNotif("Something went wrong, please try again!");
+      }
+    }
+
     if (login.length > 0) {
       const tokens = login.split(" ");
 
       if (tokens.length === 2) {
-        setCookie("crunchy-token", tokens[0], {
-          httpOnly: true,
-          sameSite: "strict",
-          path: "/",
-        });
-        setCookie("refresh-token", tokens[1], {
-          httpOnly: true,
-          sameSite: "strict",
-          path: "/",
-        });
-        router.push("/home");
+        setCookies(tokens[0], tokens[1]);
       }
       else
         setNotif("Something went wrong, please try again!");
