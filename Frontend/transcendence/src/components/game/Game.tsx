@@ -40,18 +40,17 @@ export default function Game({ profile, token, gameID }: Props) {
         } else {
           setGameInfo(gameInfos);
         }
-        console.log(gameInfos);
         setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        Lobby.LoadPage("/home");
         setIsLoading(false);
       });
   }, []);
 
-  console.log(gameService);
-
   const Quit = () => {
+    gameService.socket?.disconnect();
     Lobby.QuitGame();
     Lobby.LoadPage("/home");
   };

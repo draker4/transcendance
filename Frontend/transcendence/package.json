@@ -1,5 +1,5 @@
 {
-  "name": "transcendence-app",
+  "name": "@transcendence/frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {

@@ -1,4 +1,10 @@
-import { Direction, DirY, DirX } from "@/lib/game/pongUtils";
+import { Action, DirX, Player, GameData, Ball } from "./Game.type";
+import {
+  GAME_HEIGHT,
+  BALL_SIZE,
+  PLAYER_HEIGHT,
+  PLAYER_WIDTH,
+} from "./Game.constants";
 
 export function initPlayer(
   gameWidth: number,
@@ -7,20 +13,21 @@ export function initPlayer(
   difficulty: number
 ): Player {
   const player: Player = {
-    pos: { x: 0, y: 0 },
-    width: 14,
-    height: 140,
+    id: 0,
+    name: "",
+    posX: 0,
+    posY: 0,
     speed: 8 + difficulty,
-    move: Direction.Idle,
+    move: Action.Idle,
     color: "#FFFFFF",
     score: 0,
     push: 0,
     side: playerSide,
     roundWon: 0,
   };
-  player.pos.x =
-    playerSide === "Left" ? player.width * 3 : gameWidth - player.width * 4;
-  player.pos.y = gameHeight / 2 - player.height / 2;
+  player.posX =
+    playerSide === "Left" ? PLAYER_WIDTH * 3 : gameWidth - PLAYER_WIDTH * 4;
+  player.posY = gameHeight / 2 - PLAYER_HEIGHT / 2;
 
   return player;
 }
@@ -28,33 +35,31 @@ export function initPlayer(
 function handlePush(player: Player): void {
   if (player.push > 0 && player.push <= 3) {
     player.push++;
-    player.pos.x += player.side === "Left" ? 5 : -5;
+    player.posX += player.side === "Left" ? 5 : -5;
   } else if (player.push > 3 && player.push <= 6) {
     player.push++;
-    player.pos.x += player.side === "Left" ? -5 : 5;
+    player.posX += player.side === "Left" ? -5 : 5;
     if (player.push === 7) {
       player.push = 0;
     }
   }
 }
 
-export function updatePlayer(game: Game, player: Player): void {
-  const { move, speed, pos, height } = player;
-
-  if (move === Direction.Up) {
-    pos.y -= speed;
-  } else if (move === Direction.Down) {
-    pos.y += speed;
+export function updatePlayer(player: Player): void {
+  if (player.move === Action.Up) {
+    player.posY -= player.speed;
+  } else if (player.move === Action.Down) {
+    player.posY += player.speed;
   }
 
   // Limit player position within the game height
-  pos.y = Math.max(0, Math.min(game.height - height, pos.y));
+  player.posY = Math.max(0, Math.min(GAME_HEIGHT - PLAYER_HEIGHT, player.posY));
   handlePush(player);
 }
 
-export function moveAI(game: Game, player: Player, ball: Ball): void {
+export function moveAI(game: GameData, player: Player, ball: Ball): void {
   // Calculate the target position for the paddle
-  const targetY = ball.pos.y - player.height / 2;
+  const targetY = ball.posY - PLAYER_HEIGHT / 2;
 
   // Define the movement speeds based on the player's side
   const moveSlow = player.speed / 3;
@@ -70,19 +75,19 @@ export function moveAI(game: Game, player: Player, ball: Ball): void {
   }
 
   // Move the player's paddle gradually towards the target position
-  if (player.pos.y > targetY) {
-    player.pos.y -= Math.min(movementSpeed, player.pos.y - targetY);
-  } else if (player.pos.y < targetY) {
-    player.pos.y += Math.min(movementSpeed, targetY - player.pos.y);
+  if (player.posY > targetY) {
+    player.posY -= Math.min(movementSpeed, player.posY - targetY);
+  } else if (player.posY < targetY) {
+    player.posY += Math.min(movementSpeed, targetY - player.posY);
   }
 
   // Handle Push
   if (game.push) {
     const ballNearPlayerPaddle =
-      ball.pos.x - ball.size <= player.pos.x + player.width &&
-      ball.pos.x + ball.size * 2 >= player.pos.x &&
-      ball.pos.y + ball.size >= player.pos.y &&
-      ball.pos.y <= player.pos.y + player.height;
+      ball.posX - BALL_SIZE <= player.posX + PLAYER_WIDTH &&
+      ball.posX + BALL_SIZE * 2 >= player.posX &&
+      ball.posY + BALL_SIZE >= player.posY &&
+      ball.posY <= player.posY + PLAYER_HEIGHT;
     if (ballNearPlayerPaddle && player.push === 0 && Math.random() > 0.33) {
       player.push = 1;
     }
@@ -90,8 +95,5 @@ export function moveAI(game: Game, player: Player, ball: Ball): void {
   }
 
   // Limit player position within the game height
-  player.pos.y = Math.max(
-    0,
-    Math.min(game.height - player.height, player.pos.y)
-  );
+  player.posY = Math.max(0, Math.min(GAME_HEIGHT - PLAYER_HEIGHT, player.posY));
 }

@@ -20,8 +20,8 @@
       }
     ],
     "paths": {
-      // "*": ["./node_modules/@types/*", "./node_modules/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@Shared/*": ["../../Shared/*"]
     }
   },
   "include": [

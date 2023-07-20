@@ -14,5 +14,4 @@ EXPOSE 4000
 
 # Entrypoint
 COPY ./tools/start_nestjs.sh /
-# RUN chmod +x start_nestjs.sh
 ENTRYPOINT ["./start_nestjs.sh"]

@@ -1,26 +1,31 @@
-import { DirX, DirY } from "@/lib/game/pongUtils";
+import { DirX, DirY, Ball, GameData, Player } from "./Game.type";
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  BALL_SIZE,
+  BALL_START_SPEED,
+  PLAYER_WIDTH,
+  PLAYER_HEIGHT,
+} from "./Game.constants";
 
-export function initBall(
-  gameWidth: number,
-  gameHeight: number,
-  difficulty: number
-): Ball {
+export function initBall(difficulty: number): Ball {
   const ball: Ball = {
-    pos: { x: gameWidth / 2 - 5, y: gameHeight / 2 - 5 },
-    size: 16,
-    speed: 10 + difficulty,
+    posX: GAME_WIDTH / 2 - 5,
+    posY: GAME_HEIGHT / 2 - 5,
+    speed: BALL_START_SPEED + difficulty,
     moveX: DirX.Idle,
     moveY: DirY.Idle,
     color: "#FFFFFF",
     push: 0,
+    img: null,
   };
 
   return ball;
 }
 
-export function resetBall(ball: Ball, game: Game): void {
-  ball.pos.x = game.width / 2;
-  ball.pos.y = game.height / 2;
+export function resetBall(ball: Ball, game: GameData): void {
+  ball.posX = GAME_WIDTH / 2;
+  ball.posY = GAME_HEIGHT / 2;
   ball.moveX = DirX.Idle;
   ball.moveY = DirY.Idle;
   while (ball.push > 0) {
@@ -40,7 +45,7 @@ function handlePush(ball: Ball, player: Player): void {
 }
 
 function calculateBallAngle(ball: Ball, posY: number, height: number): number {
-  const relativeIntersectY = posY + height / 2 - (ball.pos.y + ball.size / 2);
+  const relativeIntersectY = posY + height / 2 - (ball.posY + BALL_SIZE / 2);
   const normalIntersectY = relativeIntersectY / (height / 2);
   const bounceAngle = normalIntersectY * 45;
   return bounceAngle * (Math.PI / 180);
@@ -50,17 +55,17 @@ function handlePlayerCollision(ball: Ball, player: Player): void {
   const margin = ball.speed * 1.5;
   if (
     (player.side === "Left" &&
-      ball.pos.x >= player.pos.x + player.width - margin / 2 &&
-      ball.pos.x <= player.pos.x + player.width + margin / 2) ||
+      ball.posX >= player.posX + PLAYER_WIDTH - margin / 2 &&
+      ball.posX <= player.posX + PLAYER_WIDTH + margin / 2) ||
     (player.side === "Right" &&
-      ball.pos.x + ball.size >= player.pos.x - margin / 2 &&
-      ball.pos.x + ball.size <= player.pos.x + margin / 2)
+      ball.posX + BALL_SIZE >= player.posX - margin / 2 &&
+      ball.posX + BALL_SIZE <= player.posX + margin / 2)
   ) {
     if (
-      ball.pos.y + ball.size >= player.pos.y &&
-      ball.pos.y <= player.pos.y + player.height
+      ball.posY + BALL_SIZE >= player.posY &&
+      ball.posY <= player.posY + PLAYER_HEIGHT
     ) {
-      const newAngle = calculateBallAngle(ball, player.pos.y, player.height);
+      const newAngle = calculateBallAngle(ball, player.posY, PLAYER_HEIGHT);
       const newMoveX = Math.cos(newAngle);
       if (Math.sign(ball.moveX) === Math.sign(newMoveX)) {
         ball.moveX = -1 * newMoveX;
@@ -70,14 +75,14 @@ function handlePlayerCollision(ball: Ball, player: Player): void {
       ball.moveY = -Math.sin(newAngle);
       handlePush(ball, player);
     } else if (
-      ball.pos.y + ball.size >= player.pos.y - margin &&
-      ball.pos.y + ball.size < player.pos.y &&
+      ball.posY + BALL_SIZE >= player.posY - margin &&
+      ball.posY + BALL_SIZE < player.posY &&
       ball.moveY < DirY.Idle
     ) {
       ball.moveY *= -1;
     } else if (
-      ball.pos.y > player.pos.y + player.width &&
-      ball.pos.y < player.pos.y + player.width + margin &&
+      ball.posY > player.posY + PLAYER_WIDTH &&
+      ball.posY < player.posY + PLAYER_WIDTH + margin &&
       ball.moveY > DirY.Idle
     ) {
       ball.moveY *= -1;
@@ -85,7 +90,7 @@ function handlePlayerCollision(ball: Ball, player: Player): void {
   }
 }
 
-export function updateBall(ball: Ball, game: Game): string {
+export function updateBall(ball: Ball, game: GameData): string {
   // Handle Player collisions
   if (ball.moveX < DirX.Idle) {
     handlePlayerCollision(ball, game.playerLeft);
@@ -94,35 +99,35 @@ export function updateBall(ball: Ball, game: Game): string {
   }
 
   // Move ball in intended direction based on moveY and moveX values
-  ball.pos.y += ball.moveY * ball.speed;
-  ball.pos.x += ball.moveX * ball.speed;
+  ball.posY += ball.moveY * ball.speed;
+  ball.posX += ball.moveX * ball.speed;
 
   // Handle Wall collisions
-  if (ball.pos.x <= 0) {
+  if (ball.posX <= 0) {
     return "reset Left";
-  } else if (ball.pos.x >= game.width - ball.size) {
+  } else if (ball.posX >= GAME_WIDTH - BALL_SIZE) {
     return "reset Right";
   }
-  if (ball.pos.y <= 0) {
+  if (ball.posY <= 0) {
     ball.moveY *= -1;
-    ball.pos.y = 1;
-  } else if (ball.pos.y >= game.height - ball.size) {
+    ball.posY = 1;
+  } else if (ball.posY >= GAME_HEIGHT - BALL_SIZE) {
     ball.moveY *= -1;
-    ball.pos.y = game.height - ball.size - 1;
+    ball.posY = GAME_HEIGHT - BALL_SIZE - 1;
   }
   return "Ball updated";
 }
 
-export function handleServe(ball: Ball, game: Game): void {
+export function handleServe(ball: Ball, game: GameData): void {
   ball.moveX = game.playerServe === "Left" ? DirX.Right : DirX.Left;
   if (Math.random() < 0.5) {
     ball.moveY = DirY.Up;
   } else {
     ball.moveY = DirY.Down;
   }
-  var pos = Math.random() * (game.height / 2 - ball.size);
+  var pos = Math.random() * (GAME_HEIGHT / 2 - BALL_SIZE);
   if (Math.random() < 0.5) pos *= -1;
-  const newAngle = calculateBallAngle(ball, pos, game.height);
+  const newAngle = calculateBallAngle(ball, pos, GAME_HEIGHT);
   const newMoveX = Math.cos(newAngle);
   if (Math.sign(ball.moveX) === Math.sign(newMoveX)) {
     ball.moveX = -1 * newMoveX;

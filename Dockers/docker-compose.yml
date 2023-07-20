@@ -5,7 +5,6 @@ networks:
     name: transcendence
 
 volumes:
-
   frontend_vol:
     driver: local
     driver_opts:
@@ -20,12 +19,18 @@ volumes:
       o: bind
       type: none
 
+  shared_vol:
+    driver: local
+    driver_opts:
+      device: ../Shared
+      o: bind
+      type: none
+
   database_conf_vol:
 
   database_data_vol:
 
 services:
-
   database:
     build: ./Database
     container_name: Postgresql
@@ -47,6 +52,7 @@ services:
       - 4000:4000
     volumes:
       - backend_vol:/nest-project
+      - shared_vol:/Shared
     env_file:
       - .env
     networks:
@@ -64,6 +70,7 @@ services:
       - "3000:3000"
     volumes:
       - frontend_vol:/app
+      - shared_vol:/Shared
     env_file:
       - .env
     networks:

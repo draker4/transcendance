@@ -12,46 +12,38 @@ type Props = {
 };
 
 export default function Pong({ gameInfos, AI, socket }: Props) {
-  console.log(gameInfos);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const getData = () => {
-      socket?.emit("join", gameInfos.uuid);
-    };
-
-    socket.on("notif", () => getData());
-
-    getData();
-
-    return () => {
-      socket.off("notif");
-    };
-  }, [socket]);
 
   useEffect(() => {
     canvasRef.current!.focus();
     const game = initGame(canvasRef.current!, gameInfos, AI);
-
-    console.log(game);
+    socket?.emit("join", gameInfos.uuid, (data: any) => {
+      console.log(data);
+    });
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      pongKeyDown(event, game);
+      pongKeyDown(event, game, gameInfos.uuid, socket);
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
-      pongKeyUp(event, game);
+      pongKeyUp(event, game, gameInfos.uuid, socket);
     };
 
     requestAnimationFrame((timestamp) => gameLoop(timestamp, game));
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
+    socket.on("update", (data: any) => {
+      console.log(data);
+    });
+    // socket.on("status", () => getData());
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
+      socket.off("update");
+      // socket.off("status");
     };
-  }, [gameInfos, AI]);
+  }, [gameInfos, AI, socket]);
 
   return (
     <div className={styles.pong}>

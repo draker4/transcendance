@@ -1,22 +1,29 @@
-import { Direction } from "@/lib/game/pongUtils";
-import { resetGame } from "@/lib/game/handleGame";
+import { Action, GameData } from "@Shared/Game/Game.type";
+import { Socket } from "socket.io-client";
 
-export const pongKeyDown = (event: KeyboardEvent, game: Game) => {
-  if (game.running) {
+export const pongKeyDown = (
+  event: KeyboardEvent,
+  game: GameData,
+  gameId: string,
+  socket: Socket
+) => {
+  if (game.status === "Playing") {
     if (event.key === "ArrowUp") {
       event.preventDefault();
       if (game.playerSide === "Right") {
-        game.playerRight.move = Direction.Up;
+        game.playerRight.move = Action.Up;
       } else if (game.playerSide === "Left") {
-        game.playerLeft.move = Direction.Up;
+        game.playerLeft.move = Action.Up;
       }
+      socket.emit("action", { gameId: gameId, action: Action.Up });
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
       if (game.playerSide === "Right") {
-        game.playerRight.move = Direction.Down;
+        game.playerRight.move = Action.Down;
       } else if (game.playerSide === "Left") {
-        game.playerLeft.move = Direction.Down;
+        game.playerLeft.move = Action.Down;
       }
+      socket.emit("action", { gameId: gameId, action: Action.Down });
     } else if (event.key === " ") {
       event.preventDefault();
       if (game.push) {
@@ -25,24 +32,35 @@ export const pongKeyDown = (event: KeyboardEvent, game: Game) => {
         } else if (game.playerSide === "Left" && game.playerLeft.push === 0) {
           game.playerLeft.push = 1;
         }
+        socket.emit("action", { gameId: gameId, action: Action.Push });
       }
     }
   }
   if (event.key === "Enter") {
     event.preventDefault();
-    if (!game.over && game.startTimer === 0) {
-      game.running = game.running === true ? false : true;
-      console.log(game);
-    } else if (game.over) {
-      resetGame(game);
+    if (
+      game.status === "Playing" ||
+      (game.status === "Waiting" && game.timer === 0)
+    ) {
+      game.status === "Playing"
+        ? (game.status = "Waiting")
+        : (game.status = "Playing");
+      socket.emit("action", { gameId: gameId, action: Action.Stop });
     }
   }
 };
 
-export const pongKeyUp = (event: KeyboardEvent, game: Game) => {
+export const pongKeyUp = (
+  event: KeyboardEvent,
+  game: GameData,
+  gameId: string,
+  socket: Socket
+) => {
   if (game.playerSide === "Left") {
-    game.playerLeft.move = Direction.Idle;
+    game.playerLeft.move = Action.Idle;
+    socket.emit("action", { gameId: gameId, action: Action.Idle });
   } else {
-    game.playerRight.move = Direction.Idle;
+    game.playerRight.move = Action.Idle;
+    socket.emit("action", { gameId: gameId, action: Action.Idle });
   }
 };

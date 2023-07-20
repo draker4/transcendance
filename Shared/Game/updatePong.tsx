@@ -1,13 +1,9 @@
-import { updatePlayer, moveAI } from "@/lib/game/handlePlayer";
-import { resetBall, updateBall, handleServe } from "@/lib/game/handleBall";
-import {
-  generateRoundColor,
-  turnDelayIsOver,
-  DirX,
-  DirY,
-} from "@/lib/game/pongUtils";
+import { updatePlayer, moveAI } from "@Shared/Game/handlePlayer";
+import { resetBall, updateBall, handleServe } from "@Shared/Game/handleBall";
+import { generateRoundColor, turnDelayIsOver } from "@Shared/Game/pongUtils";
+import { GameData } from "@Shared/Game/Game.type";
 
-function resetTurn(winner: "Left" | "Right", game: Game) {
+function resetTurn(winner: "Left" | "Right", game: GameData) {
   resetBall(game.ball, game);
   game.playerServe = winner;
   game.timer = new Date().getTime();
@@ -19,10 +15,10 @@ function resetTurn(winner: "Left" | "Right", game: Game) {
   }
 }
 
-function handleRound(game: Game) {
+function handleRound(game: GameData) {
   if (
-    game.playerLeft.score === game.roundPoint ||
-    game.playerRight.score === game.roundPoint
+    game.playerLeft.score === game.maxPoint ||
+    game.playerRight.score === game.maxPoint
   ) {
     if (game.playerLeft.score > game.playerRight.score) {
       game.playerLeft.roundWon++;
@@ -30,38 +26,38 @@ function handleRound(game: Game) {
       game.playerRight.roundWon++;
     }
     if (
-      game.playerLeft.roundWon > game.roundMax / 2 ||
-      game.playerRight.roundWon > game.roundMax / 2
+      game.playerLeft.roundWon > game.maxRound / 2 ||
+      game.playerRight.roundWon > game.maxRound / 2
     ) {
-      game.over = true;
+      game.status = "Finished";
       if (game.playerLeft.roundWon > game.playerRight.roundWon) {
-        game.result = "Left Player has won!";
+        game.result = "Player1";
       } else if (game.playerLeft.roundWon < game.playerRight.roundWon) {
-        game.result = "Right Player has won!";
+        game.result = "Player2";
       }
     } else {
       game.color = generateRoundColor(game.color);
       game.playerLeft.score = game.playerRight.score = 0;
       game.playerLeft.speed = game.playerRight.speed += 1;
       game.ball.speed += 1;
-      game.round += 1;
+      game.actualRound += 1;
     }
   }
 }
 
-function handleMovement(game: Game): void {
+function handleMovement(game: GameData): void {
   const { playerLeft, playerRight, ball } = game;
   if (game.AI) {
     if (game.playerSide === "Left") {
-      updatePlayer(game, playerLeft);
+      updatePlayer(playerLeft);
       moveAI(game, playerRight, ball);
     } else if (game.playerSide === "Right") {
-      updatePlayer(game, playerRight);
+      updatePlayer(playerRight);
       moveAI(game, playerLeft, ball);
     }
   } else {
-    updatePlayer(game, playerLeft);
-    updatePlayer(game, playerRight);
+    updatePlayer(playerLeft);
+    updatePlayer(playerRight);
   }
 
   if (turnDelayIsOver(game.timer) && game.playerServe) {
@@ -78,7 +74,7 @@ function handleMovement(game: Game): void {
   }
 }
 
-export default function updatePong(game: Game) {
+export default function updatePong(game: GameData) {
   handleMovement(game);
   handleRound(game);
 }

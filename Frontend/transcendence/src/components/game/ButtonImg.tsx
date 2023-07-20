@@ -2,16 +2,15 @@
 
 import styles from "@/styles/game/ButtonImg.module.css";
 import Image from "next/image";
+import { Socket } from "socket.io-client";
 
-export default function ButtonImg({
-  text,
-  onClick,
-  img,
-}: {
+type Props = {
   text: string;
   onClick: any;
   img: string;
-}) {
+};
+
+export default function ButtonImg({ text, onClick, img }: Props) {
   return (
     <button className={styles.home_button} onClick={onClick}>
       <div className={styles.button_icone}>

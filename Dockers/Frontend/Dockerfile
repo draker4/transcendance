@@ -14,5 +14,4 @@ RUN npm install -g next@latest
 
 # Entrypoint
 COPY ./tools/start_react.sh /
-# RUN chmod +x start_react.sh
 ENTRYPOINT ["./start_react.sh"]
