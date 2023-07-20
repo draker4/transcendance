@@ -33,9 +33,9 @@ export default function NavLobby({ menu, setMenu }: Props) {
       </button>
       <button
         className={`${
-          menu === "History" ? styles.activeBtn : styles.inactiveBtn
+          menu === "Training" ? styles.activeBtn : styles.inactiveBtn
         }`}
-        onClick={() => setMenu("History")}
+        onClick={() => setMenu("Training")}
       >
         <MdHistory size={40} />
         <h2>Training</h2>

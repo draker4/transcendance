@@ -1,8 +1,12 @@
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
+  // Disable React Strict Mode (set to false to turn it off)
   reactStrictMode: false,
+
+  // Set the output directory for the production build (default is ".next")
   distDir: "build",
+
+  // Custom rewrite rules for the Next.js server
   async rewrites() {
     return [
       {
@@ -11,6 +15,8 @@ const nextConfig = {
       },
     ];
   },
+
+  // Environment variables available to the client-side code
   env: {
     URL_42: process.env.URL_42,
     STATE_42: process.env.STATE_42,
@@ -22,6 +28,8 @@ const nextConfig = {
     SECRET_KEY: process.env.SECRET_KEY,
     HOST_IP: process.env.HOST_IP,
   },
+
+  // Image domains to allow image optimization and usage
   images: {
     domains: ["cdn.intra.42.fr", "lh3.googleusercontent.com"],
   },

@@ -56,7 +56,7 @@ export class AuthService {
         headers: { Authorization: 'Bearer ' + dataToken.access_token },
       });
 
-      if (!response.ok) throw new Error("Api 42 fetch error");
+      if (!response.ok) throw new Error('Api 42 fetch error');
 
       const content = await response.json();
 
@@ -80,36 +80,27 @@ export class AuthService {
         image: user.image,
       });
       return user_old;
-    }
-    catch (error) {
+    } catch (error) {
       throw new UnauthorizedException();
     }
   }
 
   async login(user: User, nbOfRefreshes: number) {
-
     const payload = { sub: user.id, login: user.login };
     const [access_token, refresh_token] = await Promise.all([
-      this.jwtService.signAsync(
-        payload,
-        {
-          secret: process.env.JWT_SECRET,
-          expiresIn: '30s',
-        },
-      ),
-      this.jwtService.signAsync(
-        payload,
-        {
-          secret: process.env.JWT_REFRESH_SECRET,
-          expiresIn: '1d',
-        },
-      ),
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET,
+        expiresIn: '1d',
+      }),
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '1d',
+      }),
     ]);
 
     try {
       await this.updateRefreshToken(user, refresh_token, nbOfRefreshes);
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
 
@@ -158,8 +149,7 @@ export class AuthService {
 
   async loginWithGoogle(createUserDto: createUserDto) {
     try {
-      if (!createUserDto)
-        throw new Error('Unauthenticated');
+      if (!createUserDto) throw new Error('Unauthenticated');
 
       const encryptedValues = await Promise.all([
         this.cryptoService.encrypt(createUserDto.email),
@@ -182,8 +172,7 @@ export class AuthService {
       else await this.usersService.updateUser(user.id, createUserDto);
 
       return this.login(user, 0);
-    }
-    catch(error) {
+    } catch (error) {
       throw new UnauthorizedException('Unauthenticated');
     }
   }
@@ -194,15 +183,14 @@ export class AuthService {
 
   async updateAvatarLogin(userId: number, login: string, avatar: Avatar) {
     const user = await this.usersService.getUserById(userId);
-    if (!user)
-      throw new Error('No user found');
+    if (!user) throw new Error('No user found');
 
     user.login = login;
     await this.usersService.updateUser(user.id, {
       login: login,
     });
     await this.usersService.updateUserAvatar(user, avatar);
-    
+
     return user;
   }
 
@@ -215,21 +203,17 @@ export class AuthService {
       const user = await this.usersService.getUserByEmail(email, 'email');
       let isMatch = false;
 
-      if (!user)
-        throw new NotFoundException();
+      if (!user) throw new NotFoundException();
 
       const passDecrypted = await this.cryptoService.decrypt(password);
       isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
 
-      if (!isMatch)
-        throw new UnauthorizedException();
+      if (!isMatch) throw new UnauthorizedException();
 
-      if (!user.verified)
-        throw new ForbiddenException();
+      if (!user.verified) throw new ForbiddenException();
 
       return await this.usersService.saveUserEntity(user);
-    }
-    catch(error) {
+    } catch (error) {
       throw new BadGatewayException();
     }
   }
@@ -238,7 +222,11 @@ export class AuthService {
     return await this.usersService.getUserById(id);
   }
 
-  async updateRefreshToken(user: User, refreshToken: string, nbOfRefreshes: number) {
+  async updateRefreshToken(
+    user: User,
+    refreshToken: string,
+    nbOfRefreshes: number,
+  ) {
     const hashedRefreshToken = await argon2.hash(refreshToken);
 
     const token = new Token();
@@ -249,7 +237,10 @@ export class AuthService {
     await this.usersService.saveToken(token);
   }
 
-  async findMatchingToken(refreshToken: string, tokens: Token[]): Promise<Token | undefined> {
+  async findMatchingToken(
+    refreshToken: string,
+    tokens: Token[],
+  ): Promise<Token | undefined> {
     for (const token of tokens) {
       const isMatch = await argon2.verify(token.value, refreshToken);
       if (isMatch) {
@@ -263,11 +254,10 @@ export class AuthService {
     try {
       const user = await this.usersService.getUserTokens(userId);
 
-      if (!user)
-        throw new Error('no user found');
+      if (!user) throw new Error('no user found');
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
-      
+
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
         //send mail [!] user change password;
@@ -276,13 +266,12 @@ export class AuthService {
 
       if (isMatch.NbOfRefreshes >= 120) {
         await this.usersService.deleteAllUserTokens(user);
-        throw new Error("Too long, needs to reconnect");
+        throw new Error('Too long, needs to reconnect');
       }
 
       await this.usersService.deleteToken(isMatch);
       return this.login(user, isMatch.NbOfRefreshes + 1);
-    }
-    catch (error) {
+    } catch (error) {
       throw new UnauthorizedException(error.message);
     }
   }

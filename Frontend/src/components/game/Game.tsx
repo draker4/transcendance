@@ -9,7 +9,7 @@ import LobbyService from "@/services/Lobby.service";
 import GameService from "@/services/game/Game.service";
 
 //Import les composants
-import styles from "@/styles/game/Game.module.css";
+import styles from "@/styles/game/game.module.css";
 import stylesError from "@/styles/game/GameError.module.css";
 import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
@@ -24,7 +24,7 @@ export default function Game({ profile, token, gameID }: Props) {
   const Lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [gameInfos, setGameInfo] = useState<GameSettings>();
+  const [gameData, setgameData] = useState<GameSettings>();
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
 
@@ -34,11 +34,11 @@ export default function Game({ profile, token, gameID }: Props) {
   useEffect(() => {
     //Si pas possible d'avoir les données de la game -> retour au lobby
     Lobby.GetGameInfo(gameID)
-      .then((gameInfos) => {
-        if (gameInfos.success == false) {
+      .then((gameData) => {
+        if (gameData.success == false) {
           Lobby.LoadPage("/home");
         } else {
-          setGameInfo(gameInfos);
+          setgameData(gameData);
         }
         setIsLoading(false);
       })
@@ -86,10 +86,10 @@ export default function Game({ profile, token, gameID }: Props) {
   }
 
   //Si la page n'est pas chargé
-  if (!isLoading && gameInfos && gameService.socket) {
+  if (!isLoading && gameData && gameService.socket) {
     return (
       <div className={styles.game}>
-        <Pong gameInfos={gameInfos} AI={true} socket={gameService.socket} />
+        <Pong gameData={gameData} socket={gameService.socket} />
         <button onClick={Quit} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>
