@@ -105,15 +105,15 @@ export class AuthController {
     const { access_token, refresh_token } = await this.authService.loginWithGoogle(req.user);
     res.cookie('crunchy-token', access_token, {
       path: "/",
-      sameSite: "strict",
       httpOnly: true,
+      // sameSite: "lax",
     });
     res.cookie('refresh-token', refresh_token, {
       path: "/",
-      sameSite: "strict",
       httpOnly: true,
+      // sameSite: "lax",
     });
-    return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
+    return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
   }
 
   @Post('firstLogin')

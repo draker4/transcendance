@@ -19,11 +19,19 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { RefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.strategy';
+import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
+import { ChannelService } from 'src/channels/channel.service';
 
 @Module({
   imports: [
     PassportModule,
-    TypeOrmModule.forFeature([User, Avatar, Channel, Token]),
+    TypeOrmModule.forFeature([
+      User,
+      Avatar,
+      Channel,
+      Token,
+      UserChannelRelation,
+    ]),
     JwtModule,
     MailModule,
   ],
@@ -32,6 +40,7 @@ import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.st
     AuthService,
     UsersService,
     AvatarService,
+    ChannelService,
     JwtStrategy,
     RefreshTokenStrategy,
     JwtNoExpirationTimeStrategy,

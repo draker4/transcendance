@@ -8,6 +8,11 @@ import { Channel } from "src/utils/typeorm/Channel.entity";
 import { User } from "src/utils/typeorm/User.entity";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 
+type ChannelAndUsers = {
+	channel: Channel;
+	usersRelation: UserChannelRelation[];
+}
+
 @Injectable()
 export class ChannelService {
 	
@@ -16,7 +21,6 @@ export class ChannelService {
 		private readonly channelRepository: Repository<Channel>,
 		@InjectRepository(Avatar)
 		private readonly avatarRepository: Repository<Avatar>,
-
 		@InjectRepository(UserChannelRelation)
     	private readonly userChannelRelation: Repository<UserChannelRelation>
 	) {}
@@ -82,6 +86,11 @@ export class ChannelService {
 		return await this.channelRepository.findOne({ where: { id : id }});
 	}
 
+	public async getChannelAvatar(id: number):Promise<Channel> {
+		return await this.channelRepository.findOne({ where: { id : id }, relations:["avatar"] });
+	}
+
+
 	public async getChannelMessages(id: number):Promise<Channel> {
 		return await this.channelRepository.findOne({ where: { id : id }, relations:["messages", "messages.user", "messages.user.avatar"] });
 	}
@@ -91,6 +100,21 @@ export class ChannelService {
 			where: { id : id },
 			relations: ["users", "users.avatar"],
 		});
+	}
+
+	public async getChannelUsersRelations(id: number):Promise<ChannelAndUsers> {
+		const channel: Channel = await this.channelRepository.findOne({
+			where: { id : id }
+		});
+
+		const usersRelation : UserChannelRelation[] = await this.userChannelRelation.find({
+			where: { channelId : id }
+		});
+		
+		return {
+			channel: channel,
+			usersRelation: usersRelation,
+		}
 	}
 
 	public async updateChannelUsers(channel: Channel, user: User) {

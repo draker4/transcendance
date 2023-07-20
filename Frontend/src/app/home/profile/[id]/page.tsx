@@ -19,15 +19,14 @@ const Crypto = new CryptoService();
 export default async function ProfilByIdPage({ params: { id } }: Params) {
   let isProfilOwner: boolean = false;
   let avatar: Avatar = {
-    name: "",
-    image: "",
-    variant: "",
-    borderColor: "",
-    backgroundColor: "",
-    text: "",
-    empty: true,
-    isChannel: false,
-    decrypt: false,
+	  image: "",
+	  variant: "",
+	  borderColor: "",
+	  backgroundColor: "",
+	  text: "",
+	  empty: true,
+	  isChannel: false,
+	  decrypt: false,
   };
   let myProfile: Profile = {
     id: -1,

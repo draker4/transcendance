@@ -1,0 +1,1 @@
+type	ChannelUsersStatus = Channel & { usersStatus:UsersStatus[] }

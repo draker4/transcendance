@@ -58,7 +58,7 @@ export class UsersController {
 
     if (!user) throw new NotFoundException();
 
-    return user;
+    // return user;
   }
 
   @Public()

@@ -22,7 +22,12 @@ export default function Avatar({
 }: Props) {
   return (
     <div className={styles.avatar}>
-      <div className={`${styles.circle} ${!isOwner ? styles.disabled : ''}`} onClick={onClick}>
+      <div
+        className={`${styles[avatar.variant]} 
+        ${!isOwner ? styles.disabled : ""}`}
+        onClick={onClick}
+        style={{ backgroundColor: avatar.backgroundColor }}
+      >
         {!displaySettings && (
           <AvatarUser
             avatar={avatar}

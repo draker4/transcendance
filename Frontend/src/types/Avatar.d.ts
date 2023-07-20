@@ -1,5 +1,4 @@
 type Avatar = {
-  name: string;
   image: string;
   variant: string;
   borderColor: string;

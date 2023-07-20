@@ -1,15 +1,60 @@
 // [!] voir si ce service est necessaire, pour le moment juste une fonction bebette
 
 export default class Channel_Service {
-  private static instance: Channel_Service;
+  private token: string;
 
-  // intance singleton
-  constructor() {
-    if (Channel_Service.instance) {
-      return Channel_Service.instance;
-    }
-    Channel_Service.instance = this;
+  // default value, in case of using bottom func
+  constructor(token: string = "") {
+    this.token = token;
   }
+
+   // Fonction generique pour toutes les requettes http
+   private async fetchData(isServerSide:boolean, url: string, method: string, body: any = null) {
+	const preUrl:string = isServerSide ? `http://backend:4000/api/channel/` : `http://${process.env.HOST_IP}:4000/api/channel/`;
+
+    const response = await fetch(
+      preUrl + url,
+      {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.token,
+        },
+        body: body,
+      }
+    );
+
+    if (!response.ok)
+      throw new Error("fetched failed at " +  preUrl + url );
+
+    return response;
+  }
+
+  // [+] reTravailler pour avoir des types clairs !
+  public async getChannelAndUsers(id: number): Promise<any> {
+	const response: Response = await this.fetchData( true, id.toString(), "GET");
+	const data :
+	{
+		channel:Channel,
+		usersRelation: UserStatus[],
+	} = await response.json();
+
+	return data;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* -------- vvv NO NEED TOKEN HERE vvv ------- */
 
   public getIdsFromPrivateMsgChannelName(channelName: string): {
     id1: number;

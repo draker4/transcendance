@@ -54,7 +54,6 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar("empty", {
               image: "",
-              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
@@ -84,7 +83,6 @@ export default function ChooseAvatar({
               onClick={() =>
                 handleSelectAvatar(avatar, {
                   image: avatar,
-                  name: "",
                   variant: "circular",
                   borderColor: colorBorder,
                   backgroundColor: backgroundColor,
@@ -115,7 +113,6 @@ export default function ChooseAvatar({
           onClick={() =>
             handleSelectAvatar(text, {
               image: "",
-              name: "",
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
