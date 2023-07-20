@@ -1,8 +1,0 @@
-.main {
-	/* border: 1px solid red; */
-	display: flex;
-	flex-direction: row;
-	flex-flow: row nowrap;
-	margin: auto 5%;
-	height: 75vh;
-}

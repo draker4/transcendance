@@ -1,12 +1,10 @@
 #!/bin/bash
 
 #Go to the react project folder
-echo "Creating folder for react project"
-mkdir -p /app
-cd /app
+echo "Creating folder for next project"
 
 #If no react projet , create one
-# if [ ! -d "/app/transcendence" ]; then
+# if [ ! -d "/app" ]; then
 #     echo "No next project found, creating one......."
     
 #     #React + next.js
@@ -16,19 +14,18 @@ cd /app
 #     echo "Next project created"
 # fi
 
-#Start react project
-echo "Starting react project"
-# chmod -R 777 transcendence
-cd transcendence
-
+#Install required depedencies
 echo "install required depedencies"
+cd /app
 npm install
+
+#Update required depedencies
 #echo "update required depedencies"
 #npm update
 
-#As dev
+#Start dev env
 echo "starting dev server"
 npm run dev
 
-#As prod
+#Start production
 #npm run build && npm run start

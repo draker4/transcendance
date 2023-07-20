@@ -33,7 +33,7 @@ volumes:
 services:
   database:
     build: ./Database
-    container_name: Postgresql
+    container_name: Database
     ports:
       - 5432:5432
     volumes:
@@ -47,7 +47,7 @@ services:
 
   backend:
     build: ./Backend
-    container_name: NestJS
+    container_name: Backend
     ports:
       - 4000:4000
     volumes:
@@ -63,7 +63,7 @@ services:
 
   frontend:
     build: ./Frontend
-    container_name: React
+    container_name: Frontend
     depends_on:
       - backend
     ports:

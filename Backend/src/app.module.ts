@@ -53,7 +53,7 @@ import { Token } from './utils/typeorm/Token.entity';
         UserPongieRelation,
         Token,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     AvatarModule,

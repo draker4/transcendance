@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LobbyUtils } from './lobbyUtils';
-import { GameData } from 'src/utils/types/game.types';
+import { GameData } from '@Shared/Game/Game.type';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -144,38 +144,38 @@ export class LobbyService extends LobbyUtils {
         where: { status: 'Waiting' || 'Playing' },
       });
       //Clean les infos
-      const gamesInfos: GameData[] = [];
-      for (let i = 0; i < games.length; i++) {
-        const hostLogin = await this.GetPlayerName(games[i].host);
-        const opponentLogin = await this.GetPlayerName(games[i].opponent);
-        const gameInfo: GameData = {
-          uuid: games[i].uuid,
-          name: games[i].name,
-          host: games[i].host,
-          hostName: hostLogin,
-          opponent: games[i].opponent,
-          opponentName: opponentLogin,
-          status: games[i].status,
-          result: games[i].result,
-          actualRound: games[i].actualRound,
-          maxPoint: games[i].maxPoint,
-          maxRound: games[i].maxRound,
-          hostSide: games[i].hostSide,
-          difficulty: games[i].difficulty,
-          push: games[i].push,
-          background: games[i].background,
-          ball: games[i].ball,
-          type: games[i].type,
-        };
-        gamesInfos.push(gameInfo);
-      }
+      // const gamesInfos: GameData[] = [];
+      // for (let i = 0; i < games.length; i++) {
+      //   const hostLogin = await this.GetPlayerName(games[i].host);
+      //   const opponentLogin = await this.GetPlayerName(games[i].opponent);
+      //   const gameInfo: GameData = {
+      //     uuid: games[i].uuid,
+      //     name: games[i].name,
+      //     host: games[i].host,
+      //     hostName: hostLogin,
+      //     opponent: games[i].opponent,
+      //     opponentName: opponentLogin,
+      //     status: games[i].status,
+      //     result: games[i].result,
+      //     actualRound: games[i].actualRound,
+      //     maxPoint: games[i].maxPoint,
+      //     maxRound: games[i].maxRound,
+      //     hostSide: games[i].hostSide,
+      //     difficulty: games[i].difficulty,
+      //     push: games[i].push,
+      //     background: games[i].background,
+      //     ball: games[i].ball,
+      //     type: games[i].type,
+      //   };
+      //   gamesInfos.push(gameInfo);
+      // }
 
-      const Data = {
-        success: true,
-        message: 'Request successfulld',
-        data: gamesInfos,
-      };
-      return Data;
+      // const Data = {
+      //   success: true,
+      //   message: 'Request successfulld',
+      //   data: gamesInfos,
+      // };
+      // return Data;
     } catch (error) {
       const Data = {
         success: false,
@@ -221,35 +221,35 @@ export class LobbyService extends LobbyUtils {
       const game = await this.GameRepository.findOne({
         where: { uuid: gameId },
       });
-      const hostLogin = await this.GetPlayerName(game.host);
-      const opponentLogin = await this.GetPlayerName(game.opponent);
-      const gameData: GameData = {
-        uuid: game.uuid,
-        name: game.name,
-        host: game.host,
-        hostName: hostLogin,
-        opponent: game.opponent,
-        opponentName: opponentLogin,
-        status: game.status,
-        result: game.result,
-        actualRound: game.actualRound,
-        maxPoint: game.maxPoint,
-        maxRound: game.maxRound,
-        hostSide: game.hostSide,
-        difficulty: game.difficulty,
-        push: game.push,
-        background: game.background,
-        ball: game.ball,
-        type: game.type,
-      };
+      // const hostLogin = await this.GetPlayerName(game.host);
+      // const opponentLogin = await this.GetPlayerName(game.opponent);
+      // const gameData: GameData = {
+      //   uuid: game.uuid,
+      //   name: game.name,
+      //   host: game.host,
+      //   hostName: hostLogin,
+      //   opponent: game.opponent,
+      //   opponentName: opponentLogin,
+      //   status: game.status,
+      //   result: game.result,
+      //   actualRound: game.actualRound,
+      //   maxPoint: game.maxPoint,
+      //   maxRound: game.maxRound,
+      //   hostSide: game.hostSide,
+      //   difficulty: game.difficulty,
+      //   push: game.push,
+      //   background: game.background,
+      //   ball: game.ball,
+      //   type: game.type,
+      // };
 
-      const Data = {
-        success: true,
-        message: 'Request successfull',
-        data: gameData,
-      };
-      console.log('GetGameById data: ' + Data);
-      return Data;
+      // const Data = {
+      //   success: true,
+      //   message: 'Request successfull',
+      //   data: gameData,
+      // };
+      // console.log('GetGameById data: ' + Data);
+      // return Data;
     } catch (error) {
       const Data = {
         success: false,

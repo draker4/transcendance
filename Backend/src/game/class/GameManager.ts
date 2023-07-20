@@ -1,16 +1,19 @@
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Pong } from './Pong';
-import { LobbyService } from 'src/lobby/lobby-service/lobby.service';
+import { LobbyService } from '../../lobby/lobby-service/lobby.service';
 import { WsException } from '@nestjs/websockets';
 import { Injectable } from '@nestjs/common';
+import { ActionDTO } from '../dto/Action.dto';
+import { UserInfo } from './UserInfo';
 
 @Injectable()
 export class GameManager {
   // -----------------------------------  VARIABLE  ----------------------------------- //
-  private readonly lobbies: Map<Pong['uuid'], Pong> = new Map<
+  private readonly pongOnGoing: Map<Pong['uuid'], Pong> = new Map<
     Pong['uuid'],
     Pong
   >();
+  private usersConnected: UserInfo[] = [];
   private server: Server;
 
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
@@ -26,58 +29,77 @@ export class GameManager {
     console.log('GameManager setup with server');
   }
 
-  public async joinGame(gameId: string, userId: number): Promise<any> {
-    const game = this.lobbies.get(gameId);
+  public async joinGame(
+    gameId: string,
+    userId: number,
+    socket: Socket,
+  ): Promise<any> {
+    const game = this.pongOnGoing.get(gameId);
 
     // If game doesn't exist, create it
     if (!game) {
       try {
-        console.log('game doesnt exist');
-        return await this.createGame(gameId, userId);
+        console.log(`Game ${gameId} haven't beed started yet`);
+        return await this.createPong(gameId, userId, socket);
       } catch (error) {
-        // throw new WsException(error.message);
+        throw new WsException(error.message);
       }
     }
 
-    // if user is a player join the game as a Player
-    if (userId === game.gameData.host || userId === game.gameData.opponent) {
-      game.joinPlayer(userId);
-    }
-
-    // if user is a spectator join the game as a Spectator
-    else {
-      game.joinSpectator(userId);
-    }
-    return await this.lobbyService.GetGameById(gameId, userId);
+    // Add the user to userInfo array
+    const user = new UserInfo(userId, socket, gameId);
+    this.usersConnected.push(user);
+    return game.join(user);
   }
 
-  // public Leave(partyId: string): void {}
+  public async playerAction(action: ActionDTO, userId: number): Promise<any> {
+    const pong = this.pongOnGoing.get(action.gameId);
+    if (!pong) {
+      throw new WsException('Game not found');
+    }
+    return pong.playerAction(userId, action);
+  }
+
+  public async disconnect(userId: number, socket: Socket): Promise<any> {
+    // Find user in the collection based on userId and socketId
+    const user = this.usersConnected.find(
+      (user) => user.id === userId && user.socket.id === socket.id,
+    );
+    if (!user) {
+      throw new WsException('User not found');
+    }
+
+    //Find the game linked to the user
+    const pong = this.pongOnGoing.get(user.gameId);
+    if (!pong) {
+      throw new WsException('Game not found');
+    }
+
+    // Remove the user from the game and userConnected array
+    pong.disconnect(user);
+    this.usersConnected = this.usersConnected.filter(
+      (user) => user.id !== userId && user.socket.id !== socket.id,
+    );
+  }
 
   // ---------------------------------  PRIVATE METHODS  -------------------------------- //
 
-  private async createGame(gameId: string, userId: number): Promise<any> {
+  private async createPong(
+    gameId: string,
+    userId: number,
+    socket: Socket,
+  ): Promise<any> {
     try {
-      console.log('Create Game: ' + gameId + ' by UserId: ' + userId);
       const data = await this.lobbyService.GetGameById(gameId, userId);
-
       if (data.success === false) {
-        console.log(
-          'game doesnt exist and cant be created: ' +
-            data.message +
-            ' ' +
-            data.error,
-        );
         throw new WsException(data.message);
       } else {
-        console.log('game exist and can be created: ' + data);
         const pong = new Pong(this.server, gameId, data.data);
-        this.lobbies.set(gameId, pong);
-        console.log('Pong created: ' + gameId + ' pong ' + pong);
-        return data;
+        this.pongOnGoing.set(gameId, pong);
+        return this.joinGame(gameId, userId, socket);
       }
     } catch (error) {
-      console.log('error: ' + error);
-      //throw new WsException(error.message);
+      throw new WsException(error.message);
     }
   }
 }

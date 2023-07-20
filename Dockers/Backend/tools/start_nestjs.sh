@@ -2,9 +2,6 @@
 
 echo "Begin NestJS configuration"
 
-mkdir -p nest-project/config
-# chmod -R 777 nest-project
-
 #If no react projet , create one
 # if [ ! -d "./nest-project/node_modules" ]; then
 #     echo "No NestJS project found, creating one..."
@@ -27,14 +24,18 @@ mkdir -p nest-project/config
 #     sed -i 's/3000/4000/g' ./nest-project/src/main.ts
 # fi
 
-cd nest-project
-
 echo "install npm package"
+cd nest-project
 npm cache clean --force
 npm install
 
 # echo "check for update"
 # npm update
 
-echo "start server"
+#Start dev env
+echo "Start server for developement"
 npm run start:dev
+
+#Start production
+#echo "Start server for production"
+#npm run build && npm run start:prod

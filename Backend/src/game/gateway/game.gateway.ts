@@ -7,6 +7,7 @@ import {
   WebSocketGateway,
   WebSocketServer,
   MessageBody,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
@@ -26,11 +27,6 @@ import { GameManager } from '../class/GameManager';
 })
 @UseGuards(WsJwtGuard)
 export class GameGateway implements OnModuleInit {
-  // Container of connected users
-  private readonly connectedUsers: Map<string, string> = new Map<
-    string,
-    string
-  >();
   constructor(
     private readonly gameService: GameService,
     private readonly gameManager: GameManager,
@@ -52,18 +48,12 @@ export class GameGateway implements OnModuleInit {
           socket.disconnect();
           return;
         }
-        this.connectedUsers.set(payload.sub, socket.id);
 
         socket.on('disconnect', () => {
-          this.connectedUsers.delete(payload.sub);
           console.log(`User with ID ${payload.sub} disconnected`);
-          console.log(this.connectedUsers);
+          this.gameManager.disconnect(payload.sub, socket);
+          socket.disconnect();
         });
-
-        // [+] ici gestion des room a join en fonction des channels de l'user ?
-        socket.join('1 2'); // [!] en vrac&brut pour test
-
-        console.log('connected users = ', this.connectedUsers);
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -72,8 +62,12 @@ export class GameGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('join')
-  async joinGame(@MessageBody() gameId: string, @Req() req) {
+  async joinGame(
+    @MessageBody() gameId: string,
+    @Req() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
     console.log('Join Game: ' + gameId + ' by User ' + req.user.id);
-    return await this.gameManager.joinGame(gameId, req.user.id);
+    return await this.gameManager.joinGame(gameId, req.user.id, socket);
   }
 }
