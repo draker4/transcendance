@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
   // console.log(verifiedToken, crunchyToken, url);
 
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-    console.log("do nothing go to google");
+    // console.log("do nothing go to google");
     return ;
   }
 
@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
 
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
-    if (!verifiedToken || (verifiedToken && verifiedToken.exp! - currentTimestamp < 900)) {
+    if (!verifiedToken || (verifiedToken && verifiedToken.exp! - currentTimestamp < 300)) {
       try {
         const res = await fetch(`http://backend:4000/api/auth/refresh`, {
           method: "POST",
