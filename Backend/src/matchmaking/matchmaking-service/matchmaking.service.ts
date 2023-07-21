@@ -180,16 +180,17 @@ export class MatchmakingService {
         const name_1 = await this.GetPlayerName(user1.Player_Id);
         const name_2 = await this.GetPlayerName(user2.Player_Id);
         const game_id = await this.lobbyUtils.CreateGameInDB(
-          user1.Player_Id,
           name_1 + ' vs ' + name_2,
-          5,
-          3,
-          2,
-          true,
-          'Left',
-          '',
-          '',
           'Classic',
+          'League',
+          user1.Player_Id,
+          'Left',
+          9,
+          1,
+          2,
+          false,
+          'football',
+          'football',
         );
         await this.AddPlayerToGame(game_id, user2.Player_Id);
         return game_id;

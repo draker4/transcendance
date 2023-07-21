@@ -25,10 +25,19 @@ export class Game {
   name: string;
 
   @Column()
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
+
+  @Column()
+  mode: 'League' | 'Party' | 'Training';
+
+  @Column()
   host: number;
 
   @Column({ default: -1 })
   opponent: number;
+
+  @Column()
+  hostSide: 'Left' | 'Right';
 
   @OneToOne(() => Score)
   @JoinColumn()
@@ -38,22 +47,25 @@ export class Game {
   status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
 
   @Column({ default: 'Not Started' })
-  result: 'Player1' | 'Player2' | 'Draw' | 'On Going' | 'Not Started';
+  result:
+    | 'Not Started'
+    | 'On Going'
+    | 'Draw'
+    | 'Player1'
+    | 'Player2'
+    | 'Deleted';
 
   @Column({ default: 0 })
-  actualRound: number;
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column()
-  maxPoint: number;
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column()
-  maxRound: number;
+  maxRound: 1 | 3 | 5 | 7 | 9;
 
   @Column()
-  hostSide: 'Left' | 'Right';
-
-  @Column()
-  difficulty: number;
+  difficulty: 1 | 2 | 3 | 4 | 5;
 
   @Column()
   push: boolean;
@@ -63,7 +75,4 @@ export class Game {
 
   @Column()
   ball: string;
-
-  @Column()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
 }

@@ -27,6 +27,8 @@ import { Score } from './utils/typeorm/Score.entity';
 import { Message } from './utils/typeorm/Message.entity';
 import { MessageModule } from './messages/messages.module';
 import { Token } from './utils/typeorm/Token.entity';
+import { StatsModule } from './stats/stats.module';
+import { Stats } from './utils/typeorm/Stats.entity';
 
 @Module({
   imports: [
@@ -48,6 +50,7 @@ import { Token } from './utils/typeorm/Token.entity';
         Channel,
         Message,
         Score,
+        Stats,
         Training,
         UserChannelRelation,
         UserPongieRelation,
@@ -63,6 +66,7 @@ import { Token } from './utils/typeorm/Token.entity';
     MailModule,
     LobbyModule,
     MatchmakingModule,
+    StatsModule,
     TrainingModule,
     MessageModule,
     UsersModule,

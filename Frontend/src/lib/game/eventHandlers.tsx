@@ -1,4 +1,4 @@
-import { Action, GameData } from "@Shared/Game/Game.type";
+import { Action, GameData } from "@Shared/types/Game.types";
 import { Socket } from "socket.io-client";
 
 export const pongKeyDown = (

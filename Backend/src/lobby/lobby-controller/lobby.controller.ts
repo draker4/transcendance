@@ -1,6 +1,16 @@
-import { Controller, Post, Get, Request, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Request,
+  Param,
+  UsePipes,
+  ValidationPipe,
+  Body,
+} from '@nestjs/common';
 import { LobbyService } from '../lobby-service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
+import { GameDTO } from '../dto/Game.dto';
 
 @Controller('lobby/')
 export class LobbyController {
@@ -15,8 +25,9 @@ export class LobbyController {
 
   // 01 - api/lobby/create
   @Post('create')
-  CreateGame(@Request() req) {
-    return this.lobbyService.CreateGame(req);
+  @UsePipes(ValidationPipe)
+  CreateGame(@Request() req, @Body() game: GameDTO) {
+    return this.lobbyService.CreateGame(req.user.id, game);
   }
 
   // 02 - api/lobby/join

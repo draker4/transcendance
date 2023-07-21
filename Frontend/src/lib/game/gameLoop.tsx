@@ -1,6 +1,6 @@
-import updatePong from "@Shared/Game/updatePong";
+import updatePong from "@Shared/game/updatePong";
 import drawPong from "./drawPong";
-import { GameData, Draw } from "@Shared/Game/Game.type";
+import { GameData, Draw } from "@Shared/types/Game.types";
 
 const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };

@@ -1,5 +1,5 @@
-import { turnDelayIsOver } from "@Shared/Game/pongUtils";
-import { GameData, Player, Draw } from "@Shared/Game/Game.type";
+import { turnDelayIsOver } from "@Shared/game/pongUtils";
+import { GameData, Player, Draw } from "@Shared/types/Game.types";
 import {
   FONT_MENU,
   PLAYER_WIDTH,
@@ -7,7 +7,7 @@ import {
   BALL_SIZE,
   FONT_SCORE,
   FONT_TIMER,
-} from "@Shared/Game/Game.constants";
+} from "@Shared/constants/Game.constants";
 
 function drawEndMenu(game: GameData, draw: Draw) {
   // Draw the menu background
