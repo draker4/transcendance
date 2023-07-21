@@ -1,7 +1,7 @@
-import { updatePlayer, moveAI } from "@Shared/Game/handlePlayer";
-import { resetBall, updateBall, handleServe } from "@Shared/Game/handleBall";
-import { generateRoundColor, turnDelayIsOver } from "@Shared/Game/pongUtils";
-import { GameData } from "@Shared/Game/Game.type";
+import { updatePlayer, moveAI } from "@Shared/game/class/Player";
+import { resetBall, updateBall, handleServe } from "@Shared/game/class/Ball";
+import { generateRoundColor, turnDelayIsOver } from "@Shared/game/pongUtils";
+import { GameData } from "@Shared/types/Game.types";
 
 function resetTurn(winner: "Left" | "Right", game: GameData) {
   resetBall(game.ball, game);

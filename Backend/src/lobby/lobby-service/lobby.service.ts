@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { LobbyUtils } from './lobbyUtils';
-import { GameData } from '@Shared/Game/Game.type';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Game } from 'src/utils/typeorm/Game.entity';
+import { GameDTO } from '../dto/Game.dto';
+
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LobbyService extends LobbyUtils {
   @InjectRepository(Game)
   public readonly GameRepository: Repository<Game>;
 
-  async CreateGame(req: any): Promise<any> {
+  async CreateGame(userId: number, game: GameDTO): Promise<any> {
     try {
       //Si le joueur est déjà dans une partie
-      if (await this.CheckIfAlreadyInGame(req.user.id)) {
+      if (await this.CheckIfAlreadyInGame(userId)) {
         const Data = {
           success: false,
           message: 'You are already in a game',
@@ -23,7 +25,7 @@ export class LobbyService extends LobbyUtils {
       }
 
       //Si le joueur recherche deja une partie
-      if (await this.CheckIfAlreadyInMatchmaking(req.user.id)) {
+      if (await this.CheckIfAlreadyInMatchmaking(userId)) {
         const Data = {
           success: false,
           message: 'You are already in matchmaking',
@@ -32,24 +34,14 @@ export class LobbyService extends LobbyUtils {
       }
 
       //Creer une game
-      const game_id = await this.CreateGameInDB(
-        req.user.id,
-        req.body.name,
-        req.body.maxPoint,
-        req.body.maxRound,
-        req.body.difficulty,
-        req.body.push,
-        req.body.hostSide,
-        req.body.background,
-        req.body.ball,
-        req.body.type,
-      );
+      game.uuid = uuidv4();
+      await this.GameRepository.save(game);
 
       const Data = {
         success: true,
         message: 'Game created',
         data: {
-          id: game_id,
+          id: game.uuid,
         },
       };
 

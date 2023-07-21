@@ -87,33 +87,32 @@ export class LobbyUtils {
 
   //Creer une game dans la base de donnée
   async CreateGameInDB(
-    userId: number,
     name: string,
-    maxPoint: number,
-    maxRound: number,
-    difficulty: number,
-    push: boolean,
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training',
+    mode: 'League' | 'Party' | 'Training',
+    userId: number,
     hostSide: 'Left' | 'Right',
+    maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9,
+    maxRound: 1 | 3 | 5 | 7 | 9,
+    difficulty: 1 | 2 | 3 | 4 | 5,
+    push: boolean,
     background: string,
     ball: string,
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training',
   ): Promise<any> {
     const gameDTO = new GameDTO();
-
     gameDTO.uuid = uuidv4();
     gameDTO.name = name;
+    gameDTO.type = type;
+    gameDTO.mode = mode;
     gameDTO.host = userId;
+    gameDTO.hostSide = hostSide;
     gameDTO.maxPoint = maxPoint;
     gameDTO.maxRound = maxRound;
     gameDTO.difficulty = difficulty;
     gameDTO.push = push;
-    gameDTO.hostSide = hostSide;
     gameDTO.background = background;
     gameDTO.ball = ball;
-    gameDTO.type = type;
-
     await this.GameRepository.save(gameDTO);
-
     return gameDTO.uuid;
   }
 

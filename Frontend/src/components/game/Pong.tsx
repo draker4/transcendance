@@ -2,10 +2,10 @@
 import styles from "@/styles/game/Pong.module.css";
 import { useRef, useEffect } from "react";
 import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
-import { initGame } from "@Shared/Game/handleGame";
+import { initGame } from "@Shared/game/class/Pong";
 import { gameLoop } from "@/lib/game/gameLoop";
 import { Socket } from "socket.io-client";
-import { GameData, Draw } from "@Shared/Game/Game.type";
+import { GameData, Draw } from "@Shared/types/Game.types";
 
 type Props = {
   gameData: GameSettings;

@@ -18,56 +18,62 @@ export class Score {
   updatedAt: Date;
 
   @Column({ default: 0 })
-  hostRound1: number;
+  hostRoundWon: 0 | 1 | 2 | 3 | 4;
 
   @Column({ default: 0 })
-  opponentRound1: number;
+  opponentRoundWon: 0 | 1 | 2 | 3 | 4;
 
   @Column({ default: 0 })
-  hostRound2: number;
+  hostRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound2: number;
+  opponentRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound3: number;
+  hostRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound3: number;
+  opponentRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound4: number;
+  hostRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound4: number;
+  opponentRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound5: number;
+  hostRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound5: number;
+  opponentRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound6: number;
+  hostRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound6: number;
+  opponentRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound7: number;
+  hostRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound7: number;
+  opponentRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound8: number;
+  hostRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound8: number;
+  opponentRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound9: number;
+  hostRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound9: number;
+  opponentRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
+  @Column({ default: 0 })
+  hostRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
+  @Column({ default: 0 })
+  opponentRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 }

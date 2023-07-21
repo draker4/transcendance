@@ -1,8 +1,8 @@
-import { initBall } from "./handleBall";
-import { initPlayer } from "./handlePlayer";
+import { initBall } from "./Ball";
+import { initPlayer } from "./Player";
 
-import { GAME_HEIGHT, GAME_WIDTH } from "./Game.constants";
-import { GameData } from "./Game.type";
+import { GAME_HEIGHT, GAME_WIDTH } from "@Shared/constants/Game.constants";
+import { GameData } from "@Shared/types/Game.types";
 
 export function initGame(gameData: GameData) {
   var game: GameData = {

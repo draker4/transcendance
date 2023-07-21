@@ -1,4 +1,4 @@
-import { DirX, DirY, Ball, GameData, Player } from "./Game.type";
+import { DirX, DirY, Ball, GameData, Player } from "@Shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
@@ -6,7 +6,7 @@ import {
   BALL_START_SPEED,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
-} from "./Game.constants";
+} from "@Shared/constants/Game.constants";
 
 export function initBall(difficulty: number): Ball {
   const ball: Ball = {

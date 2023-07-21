@@ -1,7 +1,6 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class MatchmakingDTO {
-
   @IsNotEmpty()
   @IsNumber()
   Waiter_Id: number;
@@ -17,4 +16,3 @@ export class MatchmakingDTO {
   @IsNotEmpty()
   CreatedAt: Date;
 }
-

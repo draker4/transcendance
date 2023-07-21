@@ -1,10 +1,10 @@
-import { Action, DirX, Player, GameData, Ball } from "./Game.type";
+import { Action, DirX, Player, GameData, Ball } from "@Shared/types/Game.types";
 import {
   GAME_HEIGHT,
   BALL_SIZE,
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
-} from "./Game.constants";
+} from "@Shared/constants/Game.constants";
 
 export function initPlayer(
   gameWidth: number,
