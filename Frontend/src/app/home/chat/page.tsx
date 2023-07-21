@@ -16,6 +16,7 @@ export default async function ChatPage() {
 
 		const profilService = new Profile_Service(token);
 		myself = await profilService.getProfileAndAvatar();
+		console.log(myself.login);
 
 	} catch (err) {
 		console.log(err);
@@ -32,7 +33,7 @@ export default async function ChatPage() {
 	return (
 		<>
 			<Refresher />
-			<ChatClient token={token} myself={myself}/>
+			{/* <ChatClient token={token} myself={myself}/> */}
 		</>
 	)
 }

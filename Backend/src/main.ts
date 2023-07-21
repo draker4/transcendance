@@ -1,13 +1,13 @@
+/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-
+import * as cookieParser from 'cookie-parser';
 import { WinstonModule } from 'nest-winston';
 import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: true,
     logger: WinstonModule.createLogger({
       transports: [
         // let's log errors into its own file
@@ -40,9 +40,13 @@ async function bootstrap() {
       ],
     }),
   });
+  app.enableCors({
+    origin: `http://${process.env.HOST_IP}:3000`,
+    credentials: true,
+  });
   app.setGlobalPrefix('api');
+  app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({ origin: '*' });
   await app.listen(parseInt(process.env.PORT_NESTJS));
 }
 bootstrap();

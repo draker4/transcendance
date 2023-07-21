@@ -88,7 +88,8 @@ export class UsersController {
 
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-	return await this.usersService.editUser(req.user.id, properties);
+    console.log("laaa");
+	  return await this.usersService.editUser(req.user.id, properties);
   }
 
   @Public()

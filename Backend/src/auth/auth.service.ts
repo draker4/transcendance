@@ -20,6 +20,7 @@ import * as bcrypt from 'bcrypt';
 import * as argon2 from 'argon2';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
+import { verify } from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -90,7 +91,7 @@ export class AuthService {
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
-        expiresIn: '1d',
+        expiresIn: '10s',
       }),
       this.jwtService.signAsync(payload, {
         secret: process.env.JWT_REFRESH_SECRET,
@@ -256,6 +257,13 @@ export class AuthService {
 
       if (!user) throw new Error('no user found');
 
+      const payload = verify(refreshToken, process.env.JWT_REFRESH_SECRET) as any;
+
+      if (!payload || payload.sub !== userId) {
+        // send mail refresh password [!]
+        throw new Error("cannot verify token");
+      }
+
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
 
       if (!isMatch) {
@@ -272,6 +280,7 @@ export class AuthService {
       await this.usersService.deleteToken(isMatch);
       return this.login(user, isMatch.NbOfRefreshes + 1);
     } catch (error) {
+      console.log(error.message);
       throw new UnauthorizedException(error.message);
     }
   }
