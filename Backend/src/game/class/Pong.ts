@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { GameData } from '@Shared/Game/Game.type';
+import { GameData } from '@Shared/types/Game.types';
 import { Injectable } from '@nestjs/common';
 import { ActionDTO } from '../dto/Action.dto';
 import { UserInfo } from './UserInfo';

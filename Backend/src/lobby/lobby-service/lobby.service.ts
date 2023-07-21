@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LobbyUtils } from './lobbyUtils';
-import { GameData } from '@Shared/Game/Game.type';
+import { GameData } from '@Shared/types/Game.types';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
