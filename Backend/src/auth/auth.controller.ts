@@ -106,14 +106,15 @@ export class AuthController {
     res.cookie('crunchy-token', access_token, {
       path: "/",
       httpOnly: true,
-      // sameSite: "lax",
+      sameSite: "lax",
     });
     res.cookie('refresh-token', refresh_token, {
       path: "/",
       httpOnly: true,
-      // sameSite: "lax",
+      sameSite: "lax",
     });
     return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
+    // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
 
   @Post('firstLogin')
@@ -159,6 +160,16 @@ export class AuthController {
     @Request() req,
     @Body('refreshToken') refreshToken: string,
   ) {
+    return this.authService.refreshToken(req.user.id, refreshToken);
+  }
+
+  @Public()
+  @UseGuards(JwtNoExpirationGuard)
+  @Post('refreshToken')
+  async refreshToken(
+    @Request() req,
+  ) {
+    const refreshToken = req.cookies['refresh-token'];
     return this.authService.refreshToken(req.user.id, refreshToken);
   }
 }

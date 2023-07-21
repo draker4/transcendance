@@ -3,7 +3,6 @@ import { Refresher } from "@/components/refresher/Refresher";
 import { verifyAuth } from "@/lib/auth/auth";
 import Avatar_Service from "@/services/Avatar.service";
 import Profile_Service from "@/services/Profile.service";
-import { CryptoService } from "@/services/crypto/Crypto.service";
 import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
 import ErrorProfile from "@/components/profile/ErrorProfile";
@@ -13,8 +12,6 @@ type Params = {
     id: number;
   };
 };
-
-const Crypto = new CryptoService();
 
 export default async function ProfilByIdPage({ params: { id } }: Params) {
   let isProfilOwner: boolean = false;

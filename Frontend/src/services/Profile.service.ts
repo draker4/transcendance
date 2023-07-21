@@ -1,4 +1,5 @@
 import { CryptoService } from "./crypto/Crypto.service";
+import fetchClientSide from "@/lib/fetch/fetchClientSide";
 
 const Crypto = new CryptoService();
 
@@ -121,13 +122,24 @@ export default class Profile_Service {
     method: string,
     body: any = null
   ) {
-    const response = await fetch(
+    // const response = await fetch(
+    //   `http://${process.env.HOST_IP}:4000/api/users/${url}`,
+    //   {
+    //     method: method,
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: "Bearer " + this.token,
+    //     },
+    //     body: body,
+    //     // credentials: "include",
+    //   }
+    // );
+    const response = await fetchClientSide(
       `http://${process.env.HOST_IP}:4000/api/users/${url}`,
       {
         method: method,
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + this.token,
         },
         body: body,
       }

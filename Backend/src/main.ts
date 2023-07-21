@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { WinstonModule } from 'nest-winston';
 import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   try {
@@ -56,9 +58,13 @@ async function bootstrap() {
       }),
     });
 
+    app.enableCors({
+      origin: `http://${process.env.HOST_IP}:3000`,
+      credentials: true,
+    });
     app.setGlobalPrefix('api');
+    app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe());
-    app.enableCors({ origin: '*' });
 
     await app.listen(parseInt(process.env.PORT_NESTJS));
     console.log(`Application is running on port ${process.env.PORT_NESTJS}`);

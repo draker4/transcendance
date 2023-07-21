@@ -52,9 +52,6 @@ class LobbyService {
 
   //Creer la game
   public async CreateGame(gameData: GameDTO): Promise<any> {
-    if (!gameData || !gameData.name || !gameData.type || !gameData.hostSide) {
-      throw new Error("Invalid game data. Required fields are missing.");
-    }
     const body = JSON.stringify(gameData);
     const response = await this.FetchData("lobby/create", "POST", body);
     const data = await response.json();

@@ -16,7 +16,6 @@ import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
-import { RefreshTokenStrategy } from './strategies/jwt-refresh.strategy';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.strategy';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
@@ -42,7 +41,6 @@ import { ChannelService } from 'src/channels/channel.service';
     AvatarService,
     ChannelService,
     JwtStrategy,
-    RefreshTokenStrategy,
     JwtNoExpirationTimeStrategy,
     GoogleStrategy,
     LocalStrategy,

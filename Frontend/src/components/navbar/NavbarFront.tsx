@@ -9,8 +9,8 @@ import Link from "next/link";
 import ChatBtn from "./ChatBtn";
 
 type Props = {
-  avatar: Avatar;
-  profile: Profile;
+  avatar: Avatar | undefined;
+  profile: Profile | undefined;
   token: string | undefined;
 };
 
@@ -31,7 +31,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
     );
   }
 
-  if (!profile.login)
+  if (!profile || !profile.login || !avatar)
     return (
       <header>
         <nav className={styles.nav}>
