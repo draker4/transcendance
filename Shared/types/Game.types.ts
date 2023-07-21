@@ -31,6 +31,17 @@ export type Score = {
   round: RoundScore[];
 };
 
+export type Timer = {
+  reason: "Start" | "Round" | "Pause" | "Waiting";
+  time: number;
+};
+
+export type RGB = {
+  r: number;
+  g: number;
+  b: number;
+};
+
 export type Player = {
   // Fixed Data
   id: number;
@@ -44,12 +55,13 @@ export type Player = {
   speed: number;
   move: Action;
   push: number;
+  status: "Connected" | "Playing" | "Paused" | "Disconnected";
 };
 
 export type Ball = {
   // Fixed Data
   img: string | null;
-  color: string; // utiliser uniquement si img = null et faire attention si couleur du ball = couleur du background
+  color: string | null; // utiliser uniquement si img = null et faire attention si couleur du ball = couleur du background
 
   // Dynamic Data
   posX: number;
@@ -67,29 +79,27 @@ export type Draw = {
 
 export type GameData = {
   // Fixed Data from Backend
-  uuid: string;
+  id: string;
   name: string;
   ball: Ball;
-  playerLeft: Player;
-  playerRight: Player;
-  playerSide: "Left" | "Right" | null;
+  playerLeft: Player | null;
+  playerRight: Player | null;
   background: string;
-  color: string; //TBR
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  mode: "League" | "Party" | "Training";
   difficulty: 1 | 2 | 3 | 4 | 5;
-  AI: boolean;
   push: boolean;
-  fontColor: string; // define font color based on background
-  roundColor: string; // define font color based on background
-  roundWinColor: string; // define font color based on background
+  fontColor: RGB;
+  roundColor: RGB;
+  roundWinColor: RGB;
 
   // Dynamic Data
   playerServe: "Left" | "Right" | null;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
-  score: Score;
-  timer: number;
+  score: Score | null;
+  timer: Timer;
   status: "Waiting" | "Playing" | "Finished" | "Deleted";
   result:
     | "Not Started"

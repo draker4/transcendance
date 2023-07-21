@@ -20,10 +20,9 @@ export function initPlayer(
     speed: 8 + difficulty,
     move: Action.Idle,
     color: "#FFFFFF",
-    score: 0,
     push: 0,
     side: playerSide,
-    roundWon: 0,
+    status: "Connected",
   };
   player.posX =
     playerSide === "Left" ? PLAYER_WIDTH * 3 : gameWidth - PLAYER_WIDTH * 4;

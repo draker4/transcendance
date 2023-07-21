@@ -27,7 +27,10 @@ class LobbyService {
       }
     );
 
-    if (!response.ok) throw new Error("connexion refused");
+    if (!response.ok) {
+      console.log(response);
+      throw new Error("connexion refused");
+    }
 
     return response;
   }
@@ -47,9 +50,12 @@ class LobbyService {
     return false;
   }
 
-  //Creer une game avec un nom et un mot de passe
-  public async CreateGame(Settings: GameSettings): Promise<any> {
-    const body = JSON.stringify(Settings);
+  //Creer la game
+  public async CreateGame(gameData: GameDTO): Promise<any> {
+    if (!gameData || !gameData.name || !gameData.type || !gameData.hostSide) {
+      throw new Error("Invalid game data. Required fields are missing.");
+    }
+    const body = JSON.stringify(gameData);
     const response = await this.FetchData("lobby/create", "POST", body);
     const data = await response.json();
     if (data.success === false) {
@@ -83,8 +89,8 @@ class LobbyService {
   }
 
   //Recupere les infos de la game
-  public async GetGameInfo(gameID: String | undefined): Promise<any> {
-    const response = await this.FetchData(`lobby/get/${gameID}`, "GET");
+  public async accessGame(gameID: String | undefined): Promise<any> {
+    const response = await this.FetchData(`lobby/access/${gameID}`, "GET");
     const data = await response.json();
     return data.data;
   }

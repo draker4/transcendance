@@ -1,16 +1,27 @@
+// import standard nest packages
 import { Server, Socket } from 'socket.io';
-import { Pong } from './Pong';
-import { LobbyService } from '../../lobby/lobby-service/lobby.service';
 import { WsException } from '@nestjs/websockets';
 import { Injectable } from '@nestjs/common';
-import { ActionDTO } from '../dto/Action.dto';
+
+// import game classes
+import { Pong } from './Pong';
 import { UserInfo } from './UserInfo';
+
+// import services
+import { GameService } from '../service/game.service';
+
+// import DTOs
+import { ActionDTO } from '../dto/Action.dto';
+
+// import entities
+import { Game } from '@/utils/typeorm/Game.entity';
+import { UsersService } from '@/users/users.service';
 
 @Injectable()
 export class GameManager {
   // -----------------------------------  VARIABLE  ----------------------------------- //
-  private readonly pongOnGoing: Map<Pong['uuid'], Pong> = new Map<
-    Pong['uuid'],
+  private readonly pongOnGoing: Map<Pong['gameId'], Pong> = new Map<
+    Pong['gameId'],
     Pong
   >();
   private usersConnected: UserInfo[] = [];
@@ -18,7 +29,10 @@ export class GameManager {
 
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
-  constructor(private readonly lobbyService: LobbyService) {
+  constructor(
+    private readonly gameService: GameService,
+    private readonly usersService: UsersService,
+  ) {
     console.log('GameManager created');
   }
 
@@ -36,7 +50,7 @@ export class GameManager {
   ): Promise<any> {
     const game = this.pongOnGoing.get(gameId);
 
-    // If game doesn't exist, create it
+    // If Pong Session doesn't exist, create it
     if (!game) {
       try {
         console.log(`Game ${gameId} haven't beed started yet`);
@@ -49,7 +63,7 @@ export class GameManager {
     // Add the user to userInfo array
     const user = new UserInfo(userId, socket, gameId);
     this.usersConnected.push(user);
-    return game.join(user);
+    return game.join(user, this.usersService);
   }
 
   public async playerAction(action: ActionDTO, userId: number): Promise<any> {
@@ -90,14 +104,10 @@ export class GameManager {
     socket: Socket,
   ): Promise<any> {
     try {
-      const data = await this.lobbyService.GetGameById(gameId, userId);
-      if (data.success === false) {
-        throw new WsException(data.message);
-      } else {
-        const pong = new Pong(this.server, gameId, data.data);
-        this.pongOnGoing.set(gameId, pong);
-        return this.joinGame(gameId, userId, socket);
-      }
+      const game: Game = await this.gameService.getGameData(gameId);
+      const pong = new Pong(this.server, gameId, game);
+      this.pongOnGoing.set(gameId, pong);
+      return this.joinGame(gameId, userId, socket);
     } catch (error) {
       throw new WsException(error.message);
     }

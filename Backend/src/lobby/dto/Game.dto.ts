@@ -7,11 +7,10 @@ import {
 } from 'class-validator';
 
 export class GameDTO {
-  @IsUUID()
+  // @IsUUID()
   uuid: string;
 
-  @IsString()
-  @IsNotEmpty()
+  // @IsString()
   name: string;
 
   @IsString()
@@ -22,20 +21,20 @@ export class GameDTO {
   @IsNotEmpty()
   mode: 'League' | 'Party' | 'Training';
 
-  @IsNumber()
-  @IsNotEmpty()
+  // @IsNumber()
   host: number;
 
-  @IsNumber()
+  // @IsNumber()
   opponent: number;
 
   @IsString()
+  @IsNotEmpty()
   hostSide: 'Left' | 'Right';
 
-  @IsString()
+  // @IsString()
   status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
 
-  @IsString()
+  // @IsString()
   result:
     | 'Not Started'
     | 'On Going'
@@ -44,7 +43,7 @@ export class GameDTO {
     | 'Player2'
     | 'Deleted';
 
-  @IsNumber()
+  // @IsNumber()
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @IsNumber()

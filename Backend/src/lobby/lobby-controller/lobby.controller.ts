@@ -24,8 +24,9 @@ export class LobbyController {
   }
 
   // 01 - api/lobby/create
+  @Public()
   @Post('create')
-  @UsePipes(ValidationPipe)
+  @UsePipes(new ValidationPipe({ transform: true })) // Use ValidationPipe with transform option
   CreateGame(@Request() req, @Body() game: GameDTO) {
     return this.lobbyService.CreateGame(req.user.id, game);
   }
@@ -43,9 +44,9 @@ export class LobbyController {
   }
 
   // 04 - api/lobby/get/:id
-  @Get('get/:id')
+  @Get('access/:id')
   GetGame(@Param('id') id: string, @Request() req) {
-    return this.lobbyService.GetGameById(id, req.user.id);
+    return this.lobbyService.accessGame(id, req.user.id);
   }
 
   // 04 - api/lobby/quit

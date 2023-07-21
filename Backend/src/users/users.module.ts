@@ -9,13 +9,9 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 
 @Module({
-	imports: [
-		TypeOrmModule.forFeature([User, Channel, Token]),
-	],
-	controllers: [UsersController],
-	providers: [
-		UsersService,
-		CryptoService,
-	],
+  imports: [TypeOrmModule.forFeature([User, Channel, Token])],
+  controllers: [UsersController],
+  providers: [UsersService, CryptoService],
+  exports: [UsersService],
 })
 export class UsersModule {}

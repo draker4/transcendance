@@ -35,6 +35,7 @@ export class LobbyService extends LobbyUtils {
 
       //Creer une game
       game.uuid = uuidv4();
+      game.host = userId;
       await this.GameRepository.save(game);
 
       const Data = {
@@ -178,77 +179,35 @@ export class LobbyService extends LobbyUtils {
     }
   }
 
-  async GetGameById(gameId: string, userId: number): Promise<any> {
+  async accessGame(gameId: string, userId: number): Promise<any> {
+    const data: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
     try {
-      console.log('GetGameById: ' + gameId + ' by UserId: ' + userId);
       //Si il manque des datas
-      if (gameId == null) {
-        const Data = {
-          success: false,
-          message: 'Not enough parameters',
-        };
-        return Data;
+      if (gameId == null || userId == null) {
+        data.message = 'Not enough parameters';
+        return data;
       }
-      console.log('GetGameById: 1');
-      //Si la partie existe pas
-      if (!(await this.CheckIfGameExist(gameId))) {
-        const Data = {
-          success: false,
-          message: "Game doesn't exist",
-        };
-        return Data;
-      }
-      console.log('GetGameById: 2');
-      //Si le joueur est pas dans cette partie
-      if (!(await this.CheckIfPlayerIsAlreadyInThisGame(gameId, userId))) {
-        const Data = {
-          success: false,
-          message: 'You are not in this game',
-        };
-        return Data;
-      }
-
-      //Renvoi la game
-      console.log('GetGameById: 3');
+      //Retrouver la partie et confirmer si player ou spectator
       const game = await this.GameRepository.findOne({
         where: { uuid: gameId },
       });
-      // const hostLogin = await this.GetPlayerName(game.host);
-      // const opponentLogin = await this.GetPlayerName(game.opponent);
-      // const gameData: GameData = {
-      //   uuid: game.uuid,
-      //   name: game.name,
-      //   host: game.host,
-      //   hostName: hostLogin,
-      //   opponent: game.opponent,
-      //   opponentName: opponentLogin,
-      //   status: game.status,
-      //   result: game.result,
-      //   actualRound: game.actualRound,
-      //   maxPoint: game.maxPoint,
-      //   maxRound: game.maxRound,
-      //   hostSide: game.hostSide,
-      //   difficulty: game.difficulty,
-      //   push: game.push,
-      //   background: game.background,
-      //   ball: game.ball,
-      //   type: game.type,
-      // };
-
-      // const Data = {
-      //   success: true,
-      //   message: 'Request successfull',
-      //   data: gameData,
-      // };
-      // console.log('GetGameById data: ' + Data);
-      // return Data;
+      if (!game) {
+        data.message = 'Game not found';
+        return data;
+      }
+      data.success = true;
+      if (game.host == userId || game.opponent == userId) {
+        data.message = 'User will join as player';
+      } else {
+        data.message = 'User will join as spectator';
+        return data;
+      }
     } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
+      data.error = error;
+      return data;
     }
   }
 

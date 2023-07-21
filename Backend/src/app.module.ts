@@ -29,6 +29,7 @@ import { MessageModule } from './messages/messages.module';
 import { Token } from './utils/typeorm/Token.entity';
 import { StatsModule } from './stats/stats.module';
 import { Stats } from './utils/typeorm/Stats.entity';
+import { ScoreModule } from './score/score.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { Stats } from './utils/typeorm/Stats.entity';
     TrainingModule,
     MessageModule,
     UsersModule,
+    ScoreModule,
   ],
 })
 export class AppModule {}
