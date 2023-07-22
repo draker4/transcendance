@@ -104,13 +104,15 @@ export class ChannelService {
 
 	public async getChannelUsersRelations(id: number):Promise<ChannelAndUsers> {
 		const channel: Channel = await this.channelRepository.findOne({
-			where: { id : id }
+			where: { id : id }, relations: ["user", "user.avatar"]
 		});
 
 		const usersRelation : UserChannelRelation[] = await this.userChannelRelation.find({
 			where: { channelId : id }
 		});
 		
+		// console.log("USER RELATION = ", usersRelation);
+
 		return {
 			channel: channel,
 			usersRelation: usersRelation,
