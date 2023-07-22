@@ -1,22 +1,23 @@
 "use client";
 import Avatar from "@/components/profile/avatar/Avatar";
 import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
+import SettingsCard from "@/components/profile/avatar/SettingsCard";
 import Avatar_Service from "@/services/Avatar.service";
 import styles from "@/styles/profile/AvatarCard.module.css";
 import { CSSProperties, useState } from "react";
 import { Color } from "react-color";
 
 type Props = {
-  userStatus: UserStatusInChannel;
-  avatar: Avatar;
-  token: string,
-};
+	channelAndUsersRelation: ChannelUsersRelation;
+	myRelation:UserRelation;
+	token:string;
+  };
 
-export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) {
+export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation, token }: Props) {
 
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
-  const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
-  const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
+  const [topColor, setTopColor] = useState<Color>(channelAndUsersRelation.channel.avatar.borderColor);
+  const [botColor, setBotColor] = useState<Color>(channelAndUsersRelation.channel.avatar.backgroundColor);
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
     "border"
 	);
@@ -30,7 +31,7 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
   };
 
   const toogleDisplaySettings = () => {
-    if (!userStatus.chanOp)
+    if (!myRelation.isChanOp)
       return ;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
@@ -38,16 +39,17 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
 
   const saveColorChanges = async () => {
 
-    if (!userStatus.chanOp)
+    if (!myRelation.isChanOp)
       return ;
 
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
+	  channelAndUsersRelation.channel.id,
     );
 
-    avatar.borderColor = topColor.toString();
-    avatar.backgroundColor = botColor.toString();
+    channelAndUsersRelation.channel.avatar.borderColor = topColor.toString();
+    channelAndUsersRelation.channel.avatar.backgroundColor = botColor.toString();
     setDisplaySettings(false);
   };
 
@@ -64,10 +66,9 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
   };
 
   const cancelColorChange = () => {
-    setTopColor(avatar.borderColor);
-    setBotColor(avatar.backgroundColor);
+    setTopColor(channelAndUsersRelation.channel.avatar.borderColor);
+    setBotColor(channelAndUsersRelation.channel.avatar.backgroundColor);
   };
-
 
 
   return (
@@ -77,8 +78,8 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
           <div className={styles.top} style={colorAddedStyle}></div>
           <div className={styles.bot}></div>
 		  <Avatar
-            avatar={avatar}
-            isOwner={userStatus.chanOp}
+            avatar={channelAndUsersRelation.channel.avatar}
+            isOwner={myRelation.isChanOp}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}
@@ -86,9 +87,9 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
           />
         </div>
 
-        {/* <ProfileLogin name={avatar.} isOwner={false} */}
+        <ProfileLogin name={channelAndUsersRelation.channel.name} isOwner={myRelation.isChanOp} />
       </div>
-      {/* {displaySettings && (
+      {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}
           previewChangeBotColor={previewChangeBotColor}
@@ -97,7 +98,7 @@ export default function ChannelAvatarCard({ avatar, userStatus, token }: Props) 
           toogleDisplaySettings={toogleDisplaySettings}
           saveColorChanges={saveColorChanges}
         />
-      )} */}
+      )}
     </div>
   );
 }

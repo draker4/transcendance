@@ -29,22 +29,26 @@ export class AvatarController {
         exists: false,
       };
 
-	console.log("[!] EST CE QU'ON UTILISE CE ENDPOINT ?");
+    console.log("[!] EST CE QU'ON UTILISE CE ENDPOINT ?");
 
     return user.avatar;
   }
-
 
   @Get(':id/:isChannel')
   async getAvatarById(
     @Param('id', ParseIntPipe) id: number,
     @Param('isChannel', ParseBoolPipe) isChannel: boolean,
   ) {
-	return this.avatarService.getAvatarById(id, isChannel);
+    return this.avatarService.getAvatarById(id, isChannel);
   }
 
   @Put()
-  async updateUserAvatar(@Request() req, @Body() updateUserAvatarDto: UpdateUserAvatarDto) {
-    return this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
+  async updateUserAvatar(
+    @Request() req,
+    @Body() updateUserAvatarDto: UpdateUserAvatarDto,
+  ) {
+    return updateUserAvatarDto.isChannel > 0
+      ? this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto)
+      : this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
   }
 }

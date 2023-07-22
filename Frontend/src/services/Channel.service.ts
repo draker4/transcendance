@@ -30,26 +30,13 @@ export default class Channel_Service {
     return response;
   }
 
-  // [+] reTravailler pour avoir des types clairs !
-  public async getChannelAndUsers(id: number): Promise<any> {
+
+  public async getChannelAndUsers(id: number): Promise<ChannelUsersStatus> {
 	const response: Response = await this.fetchData( true, id.toString(), "GET");
-	const data :
-	{
-		channel:Channel,
-		usersRelation: UserStatus[],
-	} = await response.json();
+	const data:ChannelUsersStatus = await response.json();
 
 	return data;
   }
-
-
-
-
-
-
-
-
-
 
 
 

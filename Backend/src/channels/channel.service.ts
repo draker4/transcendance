@@ -136,7 +136,7 @@ export class ChannelService {
 
 	public async isUserInChannel(userId: number, channelId: number):Promise<boolean> {
 		const	relation = await this.userChannelRelation.findOne({
-			where: { userId:userId, channelId:channelId, joined:true, isbanned:false }
+			where: { userId:userId, channelId:channelId, joined:true, isBanned:false }
 		});
 
 		return relation ? true : false;

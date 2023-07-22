@@ -46,6 +46,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
+	  0,
     );
 
     avatar.borderColor = topColor.toString();

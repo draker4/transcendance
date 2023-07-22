@@ -20,7 +20,7 @@ import {
   PLAYER_START_SPEED,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
-} from '@Shared/constants/game.constants';
+} from '@Shared/constants/Game.constants';
 import { UsersService } from '@/users/users.service';
 
 Injectable();

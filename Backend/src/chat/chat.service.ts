@@ -41,7 +41,7 @@ export class ChatService {
   async getChannels(id: number) {
     try {
       const relations = await this.userChannelRelation.find({
-        where: { userId: id, joined: true, isbanned: false },
+        where: { userId: id, joined: true, isBanned: false },
         relations: ['channel', 'channel.avatar'],
       });
 
@@ -329,7 +329,7 @@ export class ChatService {
       }
 
       // check if user banned
-      if (relation.isbanned)
+      if (relation.isBanned)
         return {
           success: false,
           exists: false,
@@ -405,7 +405,7 @@ export class ChatService {
       }
 
       // check if banned
-      if (relationUser.isbanned)
+      if (relationUser.isBanned)
         return {
           success: false,
           exists: false,

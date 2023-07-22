@@ -46,8 +46,7 @@ export class AvatarService {
     req: any,
     updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-    // [+] en faire un type si utilise souvent
-    const rep = {
+    const rep:ReturnData = {
       success: false,
       message: '',
     };
@@ -76,8 +75,51 @@ export class AvatarService {
       }
     } catch (error) {
       rep.message = error.message;
+	  rep.error
     }
     return rep;
+  }
+
+  async editChannelAvatarColors(
+    req: any,
+    updateUserAvatarDto: UpdateUserAvatarDto,
+  ) {
+	const rep:ReturnData = {
+		success: false,
+		message: '',
+	  };
+	  try {
+
+		// [+] gestion / guard, user.req.id doit etre isChanOp dans relations --> fonction a extraire voire passer en guard ?
+		const userRelation = (await this.channelService.getChannelUsersRelations(updateUserAvatarDto.isChannel)).usersRelation.find( (relation) => relation.userId === req.user.id);
+		if (!userRelation)
+		 throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) has no relation with user(id: ${req.user.id})`);
+		else if (userRelation.isBanned)
+			throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) user(id: ${req.user.id}) is banned`);
+		else if (!userRelation.isChanOp)
+			throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) user(id: ${req.user.id}) channel operator privileges required`);
+		
+		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel))).avatar;
+
+		if (!avatar)
+			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.isChannel})`);
+		avatar.borderColor = updateUserAvatarDto.borderColor;
+		avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
+		await this.avatarRepository.update(avatar.id, avatar);
+
+		this.log(
+			`channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+		  );
+
+		rep.success = true;
+		rep.message = `channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
+
+	} catch (error) {
+		rep.message = error.message;
+		rep.error = error;
+	}
+
+	return rep;
   }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */
