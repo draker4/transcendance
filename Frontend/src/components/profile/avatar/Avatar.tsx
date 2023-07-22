@@ -26,7 +26,7 @@ export default function Avatar({
         className={`${styles[avatar.variant]} 
         ${!isOwner ? styles.disabled : ""}`}
         onClick={onClick}
-        style={{ backgroundColor: avatar.backgroundColor }}
+        style={{ backgroundColor: previewBorder }}
       >
         {!displaySettings && (
           <AvatarUser
