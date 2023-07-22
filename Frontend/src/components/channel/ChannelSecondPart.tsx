@@ -1,11 +1,16 @@
 import styles from "@/styles/profile/Profile.module.css";
+import ChannelInfoCard from "./infos/ChannelInfoCard";
 
-export default function ChannelSecondPart() {
+type Props = {
+	channelAndUsersRelation: ChannelUsersRelation;
+	myRelation: UserRelation;
+  };
+
+export default function ChannelSecondPart({ channelAndUsersRelation, myRelation }: Props) {
+
   return (
 	<div className={styles.both + " " + styles.second}>
-		<div style={{minHeight:'600px',}}>
-			<h3>channel 2nd part</h3>
-		</div>
+		<ChannelInfoCard channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
 	</div>
   )
 }

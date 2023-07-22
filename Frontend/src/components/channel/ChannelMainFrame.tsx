@@ -12,7 +12,7 @@ export default function ChannelMainFrame({ channelAndUsersRelation, myRelation }
   return (
     <div className={styles.profileMainFrame}>
       <ChannelFirstPart channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
-      <ChannelSecondPart />
+      <ChannelSecondPart channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
     </div>
   );
 }
