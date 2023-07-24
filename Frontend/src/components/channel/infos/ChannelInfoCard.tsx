@@ -3,6 +3,7 @@
 import { useState } from "react";
 import styles from "@/styles/profile/InfoCard.module.css";
 import NavbarChannelInfo from "./NavbarChannelInfo";
+import SectionPongers from "./sections/SectionPongers";
 
 
 type Props = {
@@ -24,7 +25,8 @@ export default function ChannelInfoCard({ channelAndUsersRelation, myRelation }:
             return <div className={styles.sections}>contenu section1 : Channel</div>;
           case 1:
             return (
-              <div className={styles.sections}>contenu section2 : Pongers</div>
+              <SectionPongers channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
+
             );
           case 2:
             return (

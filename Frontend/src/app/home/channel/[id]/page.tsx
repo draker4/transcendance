@@ -15,7 +15,7 @@ type Params = {
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
 
-  // [+] en brut pour le moment
+  // [+] s'occuper du pb eslint
   let myRelation: UserRelation = {
     userId: 0,
     isChanOp: false,
@@ -59,16 +59,16 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
     channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
 
-    console.log("channelAndUserStatus = ", channelAndUsersRelation); // checking
+    // console.log("channelAndUserStatus = ", channelAndUsersRelation); // checking
     
 	// [+]
     const myProfile = await profileService.getProfileByToken();
 	// console.log("myProfile = ", myProfile);
-	console.log("channelAndUserStatus.usersStatus = ", channelAndUsersRelation.usersRelation);
+	// console.log("channelAndUserStatus.usersStatus = ", channelAndUsersRelation.usersRelation); //checking
 
 	const findStatus: UserRelation | undefined = channelAndUsersRelation.usersRelation.find((relation)=> relation.userId === myProfile.id);
 	
-	console.log("findStatus = ", findStatus);
+	// console.log("findStatus = ", findStatus); //checking
 
 	if (findStatus !== undefined)
 		myRelation = findStatus;

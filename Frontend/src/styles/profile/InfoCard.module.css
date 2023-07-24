@@ -154,17 +154,6 @@
   color: var(--accent-darker1);
 }
 
-/* [!] emplace par text area en readonly */
-/* .sections .story.display {
-  word-wrap: break-word;
-}
-
-.sections .story.display p {
-  background-color: var(--notif);
-  font-size: 0.85rem;
-
-} */
-
 /* ----------------------------------- */
 
 /* into .sections */
@@ -185,4 +174,46 @@
   color: var(--primary);
   font-family: var(--title-font);
   font-size: 0.7rem;
+}
+
+
+/* ----------------------------------- */
+
+/* into .sections */
+.rolesList {
+  margin-top: 10px;
+
+  /* border: dashed 1px chartreuse; */
+}
+
+.rolesList ul,
+.rolesList li {
+  list-style: none;
+}
+
+.rolesList .row {
+  padding: 6px;
+  height: 45px;
+  display: flex;
+  cursor: pointer;
+}
+
+.rolesList .row.focused {
+  background-color: var(--primary-darker2);
+  
+}
+
+.rolesList .row .avatar {
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.rolesList .row a {
+  padding-left: 4px;
+  text-decoration: none;
+  margin: auto 0;
+  font-family: var(--title);
+  font-weight: 600;
+  font-size: 1rem;
+  user-select: none;
 }
