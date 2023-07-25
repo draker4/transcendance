@@ -15,12 +15,39 @@ type Params = {
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
 
-  // [+] s'occuper du pb eslint
+	//   const emptyProfile: Profile = {
+		// 	  id: -1,
+		// 	  login: "",
+		// 	  first_name: "",
+// 	  last_name: "",
+// 	  email: "",
+// 	  phone: "",
+// 	  image: "",
+// 	  provider: "",
+// 	  motto: "",
+// 	  story: ""
+//   }
+
+//   const emptyAvatar:Avatar = {
+// 	  image: "",
+// 	  variant: "",
+// 	  borderColor: "",
+// 	  backgroundColor: "",
+// 	  text: "",
+// 	  empty: false,
+// 	  isChannel: false,
+// 	  decrypt: false
+//   }
+
+
+// [+] s'occuper du pb eslint
+
   let myRelation: UserRelation = {
-    userId: 0,
-    isChanOp: false,
-    isBanned: false,
-    joined: false,
+	  userId: 0,
+	  isChanOp: false,
+	  isBanned: false,
+	  joined: false,
+
   };
 
   // [+] Recup l'info du statut user par rapport a channel
