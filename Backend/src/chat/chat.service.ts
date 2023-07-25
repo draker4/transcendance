@@ -389,7 +389,7 @@ export class ChatService {
     try {
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      const pongie = await this.usersService.getUserChannels(pongieId);
+      const pongie = await this.usersService.getUserAvatar(pongieId);
       
       if (!user || !pongie)
         throw new Error('no user found');
@@ -442,8 +442,8 @@ export class ChatService {
       }
       
       channel.name = pongie.login;
+      channel.avatar = pongie.avatar;
 
-      console.log(channel);
       return {
         success: true,
         exists: false,

@@ -88,7 +88,7 @@ export default function Search({
         success: boolean,
         exists: boolean,
         banned: boolean,
-        channel: boolean,
+        channel: Channel,
       }) => {
         if (payload.success) {
           openDisplay(payload.channel);
