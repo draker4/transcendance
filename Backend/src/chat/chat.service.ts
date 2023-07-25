@@ -239,7 +239,24 @@ export class ChatService {
   }
 
   async getMessages(channelId: number) {
-    return this.channelService.getChannelMessages(channelId);
+    try {
+      const channel = await this.channelService.getChannelMessages(channelId);
+
+      channel.messages = await Promise.all(channel.messages.map(async (message) => {
+
+        // decrypt image if needed
+        if (message.user.avatar.decrypt) {
+          message.user.avatar.image = await this.cryptoService.decrypt(message.user.avatar.image);
+        }
+
+        return message;
+      }));
+
+      return channel;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   async addPongie(userId: number, pongieId: number) {

@@ -266,6 +266,7 @@ export class AuthService {
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
 
+      console.log(isMatch.id + ' to delete');
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
         //send mail [!] user change password;
@@ -277,7 +278,10 @@ export class AuthService {
         throw new Error('Too long, needs to reconnect');
       }
 
-      await this.usersService.deleteToken(isMatch);
+      setTimeout(() => {
+        this.usersService.deleteToken(isMatch);
+      }, 20000);
+
       return this.login(user, isMatch.NbOfRefreshes + 1);
     } catch (error) {
       console.log(error.message);
