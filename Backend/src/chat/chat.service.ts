@@ -367,6 +367,8 @@ export class ChatService {
       'channel:' + channelId;
       socket.emit('notif');
 
+      socket.join('channel:' + channel.id);
+
       // check if user already joined
       if (!relation.joined) {
         relation.joined = true;
@@ -488,11 +490,11 @@ export class ChatService {
         this.channelService.getChannelById(message.channelId),
         this.usersService.getUserAvatar(reqUserId),
       ]);
-
+      
       if (sender.avatar.decrypt) {
         sender.avatar.image = await this.cryptoService.decrypt(sender.avatar.image);
       }
-
+            
       const sendMsg: sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
@@ -500,18 +502,18 @@ export class ChatService {
         channelName: fetchedChannel.name,
         channelId: fetchedChannel.id,
       };
-
+      
       this.log(
         `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
-      ); // checking
-
+        ); // checking
+        
       this.messageService.addMessage(sendMsg);
-
+      
       this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
       server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
 
       } catch (error) {
-      throw new WsException(error.message);
+        throw new WsException(error.message);
     }
   }
   
@@ -521,7 +523,6 @@ export class ChatService {
     });
     
     relations.map(relation => {
-      console.log(relation);
       socket.join('channel:' + relation.channelId);
     });
   }
@@ -534,6 +535,6 @@ export class ChatService {
     const stop = '\x1b[0m';
 
     process.stdout.write(green + '[chat service]  ' + stop);
-    // console.log(message);
+    console.log(message);
   }
 }
