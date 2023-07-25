@@ -89,6 +89,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
+    console.log("laaaa", msg);
     socket.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,

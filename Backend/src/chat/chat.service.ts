@@ -111,7 +111,6 @@ export class ChatService {
           };
       });
 
-      // console.log(all);
       return all;
     } catch (error) {
       throw new WsException(error.message);
@@ -368,6 +367,8 @@ export class ChatService {
       'channel:' + channelId;
       socket.emit('notif');
 
+      socket.join('channel:' + channel.id);
+
       // check if user already joined
       if (!relation.joined) {
         relation.joined = true;
@@ -489,7 +490,11 @@ export class ChatService {
         this.channelService.getChannelById(message.channelId),
         this.usersService.getUserAvatar(reqUserId),
       ]);
-
+      
+      if (sender.avatar.decrypt) {
+        sender.avatar.image = await this.cryptoService.decrypt(sender.avatar.image);
+      }
+            
       const sendMsg: sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
@@ -497,23 +502,29 @@ export class ChatService {
         channelName: fetchedChannel.name,
         channelId: fetchedChannel.id,
       };
-
+      
       this.log(
         `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
-      ); // checking
-
+        ); // checking
+        
       this.messageService.addMessage(sendMsg);
+      
+      this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
+      server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
 
-      if (fetchedChannel.type === 'privateMsg') {
-        this.log(`message emit to room : 'channel:${sendMsg.channelName}'`);
-        server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
-      } else {
-        this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
-        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
-      }
-    } catch (error) {
-      throw new WsException(error.message);
+      } catch (error) {
+        throw new WsException(error.message);
     }
+  }
+  
+  async joinAllMyChannels(socket: Socket, userId: number) {
+    const relations = await this.userChannelRelation.find({
+      where: { userId: userId, joined: true, isBanned: false }
+    });
+    
+    relations.map(relation => {
+      socket.join('channel:' + relation.channelId);
+    });
   }
 
   // tools
