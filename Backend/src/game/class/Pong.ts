@@ -5,7 +5,17 @@ import { WsException } from '@nestjs/websockets';
 
 // import game types
 import { ActionDTO } from '../dto/Action.dto';
-import { GameData, Ball, Score } from '@Shared/types/Game.types';
+import {
+  GameData,
+  Ball,
+  BallDynamic,
+  Score,
+  Player,
+  PlayerDynamic,
+  Action,
+  Timer,
+  StatusMessage,
+} from '@Shared/types/Game.types';
 
 // import game classes
 import { UserInfo } from './UserInfo';
@@ -18,6 +28,10 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
   BALL_SIZE,
+  BALL_START_SPEED,
+  PLAYER_HEIGHT,
+  PLAYER_WIDTH,
+  PLAYER_START_SPEED,
 } from '@Shared/constants/Game.constants';
 
 // import services
@@ -41,13 +55,57 @@ export class Pong {
     public readonly gameId: string,
     private readonly gameDB: Game,
     private readonly gameService: GameService,
+    private readonly usersService: UsersService,
   ) {
     this.initGame();
   }
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
-  public async join(user: UserInfo, usersService: UsersService): Promise<any> {
+  public async initPlayer(): Promise<void> {
+    try {
+      if (this.gameDB.hostSide === 'Left') {
+        this.data.playerLeft = await this.gameService.definePlayer(
+          this.gameDB.host,
+          this.usersService,
+          'Left',
+        );
+        this.data.playerLeftDynamic.status = 'Disconnected';
+        if (this.gameDB.opponent !== -1) {
+          this.data.playerRight = await this.gameService.definePlayer(
+            this.gameDB.opponent,
+            this.usersService,
+            'Right',
+          );
+          this.data.playerRightDynamic.status = 'Disconnected';
+        }
+      } else if (this.gameDB.hostSide === 'Right') {
+        this.data.playerRight = await this.gameService.definePlayer(
+          this.gameDB.host,
+          this.usersService,
+          'Right',
+        );
+        this.data.playerRightDynamic.status = 'Disconnected';
+        if (this.gameDB.opponent !== -1) {
+          this.data.playerLeft = await this.gameService.definePlayer(
+            this.gameDB.opponent,
+            this.usersService,
+            'Left',
+          );
+          this.data.playerLeftDynamic.status = 'Disconnected';
+        }
+      }
+    } catch (error) {
+      this.logger.error(
+        `Error Initializing Players: ${error.message}`,
+        'Pong - initPlayer',
+        error,
+      );
+      throw new WsException('Error while initializing players');
+    }
+  }
+
+  public async join(user: UserInfo): Promise<any> {
     const data: ReturnData = {
       success: false,
       message: '',
@@ -60,14 +118,18 @@ export class Pong {
           this.gameDB.uuid,
         );
       } catch (error) {
-        this.logger.error('Error Updating game opponent', 'Pong - Join', error);
+        this.logger.error(
+          `Error Updating game opponent: ${error.message}`,
+          'Pong - Join',
+          error,
+        );
         throw new WsException('Error while updating game opponent');
       }
     }
 
     if (user.id === this.gameDB.host || user.id === this.gameDB.opponent) {
       try {
-        await this.joinAsPlayer(user, usersService);
+        await this.joinAsPlayer(user);
         this.logger.log(
           `User ${user.id} joined ${this.gameId} as ${
             user.id === this.gameDB.host ? 'Host' : 'Opponent'
@@ -75,7 +137,11 @@ export class Pong {
           'Pong - Join',
         );
       } catch (error) {
-        this.logger.error('Error Joining as player', 'Pong - Join', error);
+        this.logger.error(
+          `Error Joining as player: ${error.message}`,
+          'Pong - Join',
+          error,
+        );
         throw new WsException('Error while joining as player');
       }
     } else {
@@ -139,19 +205,18 @@ export class Pong {
     return data;
   }
 
-  // ---------------------------------  PRIVATE METHODS  -------------------------------- //
-
-  /**
-   * Method to initialize the game data.
-   */
-  private initGame(): void {
+  // ---------------------------------  INIT METHODS  --------------------------------- //
+  private async initGame(): Promise<void> {
     if (this.gameDB) {
       this.data = {
         id: this.gameDB.uuid,
         name: this.gameDB.name,
         ball: this.initBall(),
+        ballDynamic: this.initBallDynamic(),
         playerLeft: null,
         playerRight: null,
+        playerLeftDynamic: this.initPlayerDynamic('Left'),
+        playerRightDynamic: this.initPlayerDynamic('Right'),
         background: this.gameDB.background,
         type: this.gameDB.type,
         mode: this.gameDB.mode,
@@ -172,16 +237,32 @@ export class Pong {
     }
   }
 
+  private initPlayerDynamic(side: 'Left' | 'Right'): PlayerDynamic {
+    return {
+      posX: side === 'Left' ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
+      posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
+      speed: PLAYER_START_SPEED,
+      move: Action.Idle,
+      push: 0,
+      status: 'Unknown',
+    };
+  }
+
+  private initBallDynamic(): BallDynamic {
+    return {
+      posX: GAME_WIDTH / 2 - BALL_SIZE / 2,
+      posY: GAME_HEIGHT / 2 - BALL_SIZE / 2,
+      speed: BALL_START_SPEED,
+      moveX: 0,
+      moveY: 0,
+      push: 0,
+    };
+  }
+
   private initBall(): Ball {
     return {
       img: this.gameDB.ball,
       color: null,
-      posX: GAME_WIDTH / 2 - BALL_SIZE / 2,
-      posY: GAME_HEIGHT / 2 - BALL_SIZE / 2,
-      speed: 0,
-      moveX: 0,
-      moveY: 0,
-      push: 0,
     };
   }
 
@@ -203,56 +284,87 @@ export class Pong {
     };
   }
 
-  private async joinAsPlayer(user: UserInfo, usersService: UsersService) {
-    if (user.id === this.gameDB.host && this.gameDB.hostSide === 'Left') {
-      this.playerLeft = user;
-      if (!this.data.playerLeft) {
-        const player = await this.gameService.definePlayer(
-          user.id,
-          usersService,
-          'Left',
-        );
-        this.data.playerLeft = player;
-      } else this.data.playerLeft.status = 'Connected';
-    } else if (
-      user.id === this.gameDB.host &&
-      this.gameDB.hostSide === 'Right'
-    ) {
-      this.playerRight = user;
-      if (!this.data.playerRight) {
-        const player = await this.gameService.definePlayer(
-          user.id,
-          usersService,
-          'Right',
-        );
-        this.data.playerRight = player;
-      } else this.data.playerRight.status = 'Connected';
-    } else if (
-      user.id === this.gameDB.opponent &&
-      this.gameDB.hostSide === 'Left'
-    ) {
-      this.playerRight = user;
-      if (!this.data.playerRight) {
-        const player = await this.gameService.definePlayer(
-          user.id,
-          usersService,
-          'Right',
-        );
-        this.data.playerRight = player;
+  // ---------------------------------  EMITS METHODS  -------------------------------- //
+
+  private sendPlayerData(player: Player) {
+    this.server.to(this.gameId).emit('player', player);
+    this.logger.log("Player's data sent", 'Pong - sendPlayerDatas');
+  }
+
+  private sendStatus() {
+    const status: StatusMessage = {
+      status: this.data.status,
+      result: this.data.result,
+      playerLeft: this.data.playerLeftDynamic.status,
+      playerRight: this.data.playerRightDynamic.status,
+      timer: this.data.timer,
+    };
+    this.server.to(this.gameId).emit('status', status);
+    this.logger.log('Status sent', 'Pong - sendStatus');
+  }
+
+  // ---------------------------------  OTHER METHODS  -------------------------------- //
+
+  private async joinAsPlayer(user: UserInfo) {
+    if (user.id === this.gameDB.host) {
+      if (this.gameDB.hostSide === 'Left') {
+        this.playerLeft = user;
+        this.data.playerLeftDynamic.status = 'Connected';
+      } else if (this.gameDB.hostSide === 'Right') {
+        this.playerRight = user;
+        this.data.playerRightDynamic.status = 'Connected';
       }
-    } else if (
-      user.id === this.gameDB.opponent &&
-      this.gameDB.hostSide === 'Right'
-    ) {
-      this.playerLeft = user;
-      if (!this.data.playerLeft) {
-        const player = await this.gameService.definePlayer(
-          user.id,
-          usersService,
-          'Left',
-        );
-        this.data.playerLeft = player;
+    } else if (user.id === this.gameDB.opponent) {
+      if (this.gameDB.hostSide === 'Left') {
+        this.playerRight = user;
+        if (!this.data.playerRight) {
+          this.data.playerRight = await this.gameService.definePlayer(
+            user.id,
+            this.usersService,
+            'Right',
+          );
+          this.sendPlayerData(this.data.playerRight);
+        }
+        this.data.playerRightDynamic.status = 'Connected';
+      } else if (this.gameDB.hostSide === 'Right') {
+        this.playerLeft = user;
+        if (!this.data.playerLeft) {
+          this.data.playerLeft = await this.gameService.definePlayer(
+            user.id,
+            this.usersService,
+            'Left',
+          );
+          this.sendPlayerData(this.data.playerLeft);
+        }
+        this.data.playerLeftDynamic.status = 'Connected';
+      }
+      if (
+        this.playerLeft &&
+        this.data.playerLeftDynamic.status === 'Connected' &&
+        this.playerRight &&
+        this.data.playerRightDynamic.status === 'Connected'
+      ) {
+        if (this.data.result === 'Not Started') {
+          this.data.status = 'Playing';
+          this.data.result = 'On Going';
+          this.data.timer = this.defineTimer(10, 'Start');
+        } else if (this.data.result === 'On Going') {
+          this.data.status = 'Playing';
+          this.data.timer = this.defineTimer(10, 'ReStart');
+        }
       }
     }
+    this.sendStatus();
+  }
+
+  private defineTimer(
+    second: number,
+    reason: 'Start' | 'ReStart' | 'Round' | 'Pause' | 'Waiting',
+  ): Timer {
+    return {
+      start: new Date(),
+      end: new Date(new Date().getTime() + second * 1000),
+      reason: reason,
+    };
   }
 }

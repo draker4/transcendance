@@ -16,6 +16,7 @@ import WIPPong from "./WIPPong";
 import { MdLogout } from "react-icons/md";
 
 import { GameData } from "@Shared/types/Game.types";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
@@ -27,7 +28,7 @@ export default function Game({ profile, token, gameID }: Props) {
   const lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [gameData, setgameData] = useState<GameData>();
+  const [gameData, setGameData] = useState<GameData>();
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
 
@@ -44,7 +45,7 @@ export default function Game({ profile, token, gameID }: Props) {
             if (gameData.success == false) {
               setError(true);
             } else {
-              setgameData(gameData.data);
+              setGameData(gameData.data);
               setIsLoading(false);
               console.log(gameData.data);
             }
@@ -97,7 +98,11 @@ export default function Game({ profile, token, gameID }: Props) {
   if (!isLoading && gameData && gameService.socket) {
     return (
       <div className={styles.game}>
-        <WIPPong gameData={gameData}></WIPPong>
+        <WIPPong
+          gameData={gameData}
+          setGameData={setGameData}
+          socket={gameService.socket}
+        ></WIPPong>
         <button onClick={quit} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>

@@ -14,16 +14,7 @@ import { ScoreService } from '@/score/service/score.service';
 import { StatsService } from '@/stats/service/stats.service';
 
 // import types
-import { Player, Action } from '@Shared/types/Game.types';
-
-// import constants
-import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  PLAYER_START_SPEED,
-  PLAYER_WIDTH,
-  PLAYER_HEIGHT,
-} from '@Shared/constants/Game.constants';
+import { Player, RGB } from '@Shared/types/Game.types';
 
 @Injectable()
 export class GameService {
@@ -70,15 +61,8 @@ export class GameService {
       const player: Player = {
         id: userId,
         name: user.login,
-        color: avatar.avatar.backgroundColor,
+        color: this.convertColor(avatar.avatar.backgroundColor),
         side: side,
-        posX:
-          side === 'Left' ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
-        posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
-        speed: PLAYER_START_SPEED,
-        move: Action.Idle,
-        push: 0,
-        status: 'Connected',
       };
       return player;
     } catch (error) {
@@ -101,4 +85,13 @@ export class GameService {
   }
 
   // --------------------------------  PRIVATE METHODS  ------------------------------- //
+
+  private convertColor(hexaColor: string): RGB {
+    const r = parseInt(hexaColor.slice(1, 3), 16);
+    const g = parseInt(hexaColor.slice(3, 5), 16);
+    const b = parseInt(hexaColor.slice(5, 7), 16);
+
+    const rgb: RGB = { r, g, b };
+    return rgb;
+  }
 }
