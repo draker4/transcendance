@@ -1,7 +1,6 @@
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
-import submitMotto from "@/lib/profile/edit/submitMotto";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 import Profile_Service from "@/services/Profile.service";
 
@@ -43,6 +42,7 @@ export default function MottoEditable({ profile, token }: Props) {
       setNotif(checkedMotto);
 
       if (checkedMotto.length === 0) {
+
         const rep:Rep = await profileService.editUser({
           motto: submitedMotto,
         });
@@ -69,14 +69,12 @@ export default function MottoEditable({ profile, token }: Props) {
           {" "}
           set here your crunchy motto{" "}
         </p>
-        {/* <button onClick={handleClickEdit}>Edit</button> */}
       </div>
     );
   } else if (!editMode && motto !== "") {
     return (
       <div onClick={handleClickEdit}>
         <p className={styles.motto}> {motto} </p>
-        {/* <button onClick={handleClickEdit}>Edit</button> */}
       </div>
     );
   } else {
