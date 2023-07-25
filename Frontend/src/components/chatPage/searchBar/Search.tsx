@@ -53,7 +53,7 @@ export default function Search({
   const renderList = list.map((item) => {
     let key: string = item.id.toString();
 
-    if ("type" in item && 
+    if ("type" in item &&
     ((item.type === "private" && !item.joined) || item.type === "privateMsg"))
       return ;
 
@@ -91,6 +91,7 @@ export default function Search({
         channel: boolean,
       }) => {
         if (payload.success) {
+          // console.log(payload.channel);
           openDisplay(payload.channel);
         }
         else if (payload.exists) {

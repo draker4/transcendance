@@ -32,9 +32,11 @@ export class ChannelService {
 		if (privateMsg)
 			return await this.channelRepository.findOne({
 				where: { name: name, type: "privateMsg" },
+				relations: ['avatar'],
 			});
 		return await this.channelRepository.findOne({
 			where: { name: name, type: Not("privateMsg") },
+			relations: ['avatar'],
 		});
 	}
 
@@ -83,7 +85,10 @@ export class ChannelService {
 	}
 
 	public async getChannelById(id: number):Promise<Channel> {
-		return await this.channelRepository.findOne({ where: { id : id }});
+		return await this.channelRepository.findOne({
+			where: { id : id },
+			relations: ['avatar'],
+		});
 	}
 
 	public async getChannelAvatar(id: number):Promise<Channel> {
