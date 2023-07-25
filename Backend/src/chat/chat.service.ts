@@ -239,7 +239,24 @@ export class ChatService {
   }
 
   async getMessages(channelId: number) {
-    return this.channelService.getChannelMessages(channelId);
+    try {
+      const channel = await this.channelService.getChannelMessages(channelId);
+
+      channel.messages = await Promise.all(channel.messages.map(async (message) => {
+
+        // decrypt image if needed
+        if (message.user.avatar.decrypt) {
+          message.user.avatar.image = await this.cryptoService.decrypt(message.user.avatar.image);
+        }
+
+        return message;
+      }));
+
+      return channel;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   async addPongie(userId: number, pongieId: number) {
@@ -372,7 +389,10 @@ export class ChatService {
     try {
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      if (!user) throw new Error('no user found');
+      const pongie = await this.usersService.getUserChannels(pongieId);
+      
+      if (!user || !pongie)
+        throw new Error('no user found');
 
       // check if channel of type 'privateMsg' already exists
       const channelName = this.channelService.formatPrivateMsgChannelName(
@@ -420,7 +440,10 @@ export class ChatService {
         relationUser.joined = true;
         await this.userChannelRelation.save(relationUser);
       }
+      
+      channel.name = pongie.login;
 
+      console.log(channel);
       return {
         success: true,
         exists: false,

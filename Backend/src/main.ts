@@ -9,7 +9,6 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule, {
-      cors: true,
       logger: WinstonModule.createLogger({
         transports: [
           // let's log errors into its own file

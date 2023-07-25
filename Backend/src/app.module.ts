@@ -57,7 +57,7 @@ import { ScoreModule } from './score/score.module';
         UserPongieRelation,
         Token,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     AvatarModule,

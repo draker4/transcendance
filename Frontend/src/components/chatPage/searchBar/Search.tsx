@@ -53,7 +53,7 @@ export default function Search({
   const renderList = list.map((item) => {
     let key: string = item.id.toString();
 
-    if ("type" in item && 
+    if ("type" in item &&
     ((item.type === "private" && !item.joined) || item.type === "privateMsg"))
       return ;
 
