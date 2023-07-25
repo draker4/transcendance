@@ -8,7 +8,7 @@ import { Socket } from "socket.io-client";
 import { GameData, Draw } from "@Shared/types/Game.types";
 
 type Props = {
-  gameData: GameSettings;
+  gameData: GameData;
   socket: Socket;
 };
 
@@ -21,33 +21,33 @@ export default function Pong({ gameData, socket }: Props) {
       context: canvasRef.current!.getContext("2d")!,
     };
     draw.canvas.focus();
-    // const game = initGame();
-    // socket?.emit("join", gameData.uuid, (data: any) => {
-    //   console.log(data);
-    // });
+    const game = initGame();
+    socket?.emit("join", gameData.uuid, (data: any) => {
+      console.log(data);
+    });
 
-    // const handleKeyDown = (event: KeyboardEvent) => {
-    //   pongKeyDown(event, game, gameData.uuid, socket);
-    // };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      pongKeyDown(event, game, gameData.uuid, socket);
+    };
 
-    // const handleKeyUp = (event: KeyboardEvent) => {
-    //   pongKeyUp(event, game, gameData.uuid, socket);
-    // };
+    const handleKeyUp = (event: KeyboardEvent) => {
+      pongKeyUp(event, game, gameData.uuid, socket);
+    };
 
-    // requestAnimationFrame((timestamp) => gameLoop(timestamp, game, draw));
-    // document.addEventListener("keydown", handleKeyDown);
-    // document.addEventListener("keyup", handleKeyUp);
-    // socket.on("update", (data: any) => {
-    //   console.log(data);
-    // });
-    // socket.on("status", () => getData());
+    requestAnimationFrame((timestamp) => gameLoop(timestamp, game, draw));
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+    socket.on("update", (data: any) => {
+      console.log(data);
+    });
+    socket.on("status", () => getData());
 
-    // return () => {
-    //   document.removeEventListener("keydown", handleKeyDown);
-    //   document.removeEventListener("keyup", handleKeyUp);
-    //   socket.off("update");
-    //   // socket.off("status");
-    // };
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+      socket.off("update");
+      // socket.off("status");
+    };
   }, [socket, gameData]);
 
   return (

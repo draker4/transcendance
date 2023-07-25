@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { GameDTO } from '../dto/Game.dto';
+import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class LobbyUtils {
   constructor(
     @InjectRepository(Game)
-    public readonly GameRepository: Repository<Game>,
+    public readonly gameRepository: Repository<Game>,
 
     @InjectRepository(Matchmaking)
     private readonly MatchMakeRepository: Repository<Matchmaking>,
@@ -35,16 +35,16 @@ export class LobbyUtils {
   }
 
   // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou Playing"
-  async CheckIfAlreadyInGame(user_id: number): Promise<any> {
-    if (user_id != null) {
-      const host = await this.GameRepository.findOne({
-        where: { host: user_id, status: 'Waiting' || 'Playing' },
+  async checkIfAlreadyInGame(userId: number): Promise<any> {
+    if (userId != null) {
+      const host = await this.gameRepository.findOne({
+        where: { host: userId, status: 'Waiting' || 'Playing' },
       });
       if (host != null) {
         return true;
       }
-      const opponent = await this.GameRepository.findOne({
-        where: { opponent: user_id, status: 'Waiting' || 'Playing' },
+      const opponent = await this.gameRepository.findOne({
+        where: { opponent: userId, status: 'Waiting' || 'Playing' },
       });
       if (opponent != null) {
         return true;
@@ -54,16 +54,10 @@ export class LobbyUtils {
   }
 
   // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou Playing" et renvoi son id de game
-  async GetGameId(user_id: number): Promise<any> {
-    if (user_id != null) {
-      let game = await this.GameRepository.findOne({
-        where: { host: user_id, status: 'Waiting' || 'Playing' },
-      });
-      if (game != null) {
-        return game;
-      }
-      game = await this.GameRepository.findOne({
-        where: { opponent: user_id, status: 'Waiting' || 'Playing' },
+  async getGameId(userId: number): Promise<any> {
+    if (userId != null) {
+      const game = await this.gameRepository.findOne({
+        where: { host: userId, status: 'Waiting' || 'Playing' },
       });
       if (game != null) {
         return game;
@@ -86,45 +80,45 @@ export class LobbyUtils {
   }
 
   //Creer une game dans la base de donnée
-  async CreateGameInDB(
-    name: string,
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training',
-    mode: 'League' | 'Party' | 'Training',
-    userId: number,
-    hostSide: 'Left' | 'Right',
-    maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9,
-    maxRound: 1 | 3 | 5 | 7 | 9,
-    difficulty: 1 | 2 | 3 | 4 | 5,
-    push: boolean,
-    background: string,
-    ball: string,
-  ): Promise<any> {
-    const gameDTO = new GameDTO();
-    gameDTO.uuid = uuidv4();
-    gameDTO.name = name;
-    gameDTO.type = type;
-    gameDTO.mode = mode;
-    gameDTO.host = userId;
-    gameDTO.hostSide = hostSide;
-    gameDTO.maxPoint = maxPoint;
-    gameDTO.maxRound = maxRound;
-    gameDTO.difficulty = difficulty;
-    gameDTO.push = push;
-    gameDTO.background = background;
-    gameDTO.ball = ball;
-    await this.GameRepository.save(gameDTO);
-    return gameDTO.uuid;
-  }
+  // async CreateGameInDB(
+  //   name: string,
+  //   type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training',
+  //   mode: 'League' | 'Party' | 'Training',
+  //   userId: number,
+  //   hostSide: 'Left' | 'Right',
+  //   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9,
+  //   maxRound: 1 | 3 | 5 | 7 | 9,
+  //   difficulty: 1 | 2 | 3 | 4 | 5,
+  //   push: boolean,
+  //   background: string,
+  //   ball: string,
+  // ): Promise<any> {
+  //   const gameDTO = new CreateGameDTO();
+  //   gameDTO.uuid = uuidv4();
+  //   gameDTO.name = name;
+  //   gameDTO.type = type;
+  //   gameDTO.mode = mode;
+  //   gameDTO.host = userId;
+  //   gameDTO.hostSide = hostSide;
+  //   gameDTO.maxPoint = maxPoint;
+  //   gameDTO.maxRound = maxRound;
+  //   gameDTO.difficulty = difficulty;
+  //   gameDTO.push = push;
+  //   gameDTO.background = background;
+  //   gameDTO.ball = ball;
+  //   await this.gameRepository.save(gameDTO);
+  //   return gameDTO.uuid;
+  // }
 
   //Check si la partie existe
   async CheckIfGameExist(game_id: string): Promise<any> {
     if (game_id != null) {
       //Check si c'est un uuid
-      if (game_id.length != 36) {
-        return false;
-      }
+      // if (game_id.length != 36) {
+      //   return false;
+      // }
 
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { uuid: game_id },
       });
       if (game != null) {
@@ -142,7 +136,7 @@ export class LobbyUtils {
         return false;
       }
 
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { uuid: game_id },
       });
 
@@ -166,7 +160,7 @@ export class LobbyUtils {
         return false;
       }
 
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { uuid: game_id },
       });
       if (game != null) {
@@ -189,12 +183,12 @@ export class LobbyUtils {
         return false;
       }
 
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { uuid: game_id },
       });
       if (game != null) {
         game.opponent = user_id;
-        await this.GameRepository.save(game);
+        await this.gameRepository.save(game);
         return true;
       }
     }
@@ -202,60 +196,46 @@ export class LobbyUtils {
   }
 
   //Retire le joueur de la game ( ne le retire pas mais on mets fin à la game )
-  async RemovePlayerFromGame(game_id: string, user_id: number): Promise<any> {
-    if (game_id != null) {
-      //Check si c'est un uuid
-      if (game_id.length != 36) {
-        return false;
-      }
-
-      const game = await this.GameRepository.findOne({
-        where: { uuid: game_id },
+  async RemovePlayerFromGame(gameId: string, userId: number): Promise<any> {
+    if (gameId != null) {
+      const game = await this.gameRepository.findOne({
+        where: { uuid: gameId },
       });
       if (game != null) {
-        if (game.host == user_id || game.opponent == user_id) {
+        if (game.host == userId || game.opponent == userId) {
           //Si game en cours -> on mets fin à la game
           if (game.status == 'Playing') {
             game.status = 'Finished';
-            await this.GameRepository.save(game);
+            await this.gameRepository.save(game);
           }
 
           //Si game en waiting -> Si host qui quitte -> on supprime la game
-          if (game.status == 'Waiting' && game.host == user_id) {
+          if (game.status == 'Waiting' && game.host == userId) {
             game.status = 'Deleted';
-            await this.GameRepository.save(game);
+            await this.gameRepository.save(game);
           }
 
           //Si game en waiting -> Si opponent qui quitte -> on mets fin a la game
-          if (game.status == 'Waiting' && game.opponent == user_id) {
+          if (game.status == 'Waiting' && game.opponent == userId) {
             game.status = 'Finished';
-            await this.GameRepository.save(game);
+            await this.gameRepository.save(game);
           }
-
           return true;
         }
-        // if (game.viewers_List.includes(user_id)) {
-        //   const index = game.Viewers_List.indexOf(user_id);
-        //   if (index > -1) {
-        //     game.Viewers_List.splice(index, 1);
-        //   }
-        //   await this.GameRepository.save(game);
-        //   return true;
-        // }
       }
     }
     return false;
   }
 
   //Retire le joueur de toutes les game ou il est ( si game en Waiting ou Playing )
-  async RemovePlayerFromAllGames(user_id: number): Promise<any> {
-    if (user_id != null) {
-      const all_game = await this.GameRepository.find({
+  async RemovePlayerFromAllGames(userId: number): Promise<any> {
+    if (userId != null) {
+      const all_game = await this.gameRepository.find({
         where: { status: 'Waiting' || 'Playing' },
       });
       if (all_game != null) {
         for (let i = 0; i < all_game.length; i++) {
-          this.RemovePlayerFromGame(all_game[i].uuid, user_id);
+          this.RemovePlayerFromGame(all_game[i].uuid, userId);
         }
         return true;
       }

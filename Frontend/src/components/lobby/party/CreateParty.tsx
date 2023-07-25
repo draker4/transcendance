@@ -9,11 +9,12 @@ import DefineField from "@/components/lobby/party/DefineField";
 import DefineInvite from "@/components/lobby/party/DefineInvite";
 
 type Props = {
-  Lobby: Lobby_Service;
+  lobby: Lobby_Service;
   setCreateParty: Function;
+  userId: number;
 };
 
-export default function CreateParty({ Lobby, setCreateParty }: Props) {
+export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
@@ -35,6 +36,8 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
       name: name,
       type: type,
       mode: "Party",
+      host: userId,
+      opponent: -1,
       hostSide: hostSide,
       maxPoint: maxPoint,
       maxRound: maxRound,
@@ -46,7 +49,7 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
     console.log("Create: " + JSON.stringify(settings));
 
     //Creer la game
-    const res = await Lobby.CreateGame(settings);
+    const res = await lobby.CreateGame(settings);
   };
 
   const resetCreate = () => {

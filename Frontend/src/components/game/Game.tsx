@@ -39,24 +39,28 @@ export default function Game({ profile, token, gameID }: Props) {
     lobby
       .accessGame(gameID)
       .then((gameData) => {
-        if (gameData.success == true && gameService.socket) {
-          const data = gameService.socket?.emit("joinGame", gameID);
-          setgameData(gameData);
+        if (gameData.success == true) {
+          gameService.socket?.emit("join", gameID, (gameData: any) => {
+            if (gameData.success == false) {
+              setError(true);
+            } else {
+              setgameData(gameData.data);
+              setIsLoading(false);
+              console.log(gameData.data);
+            }
+          });
         } else {
           lobby.LoadPage("/home");
         }
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
         lobby.LoadPage("/home");
-        setIsLoading(false);
       });
   }, []);
 
-  const Quit = () => {
-    gameService.socket?.disconnect();
-    lobby.QuitGame();
+  const quit = () => {
+    lobby.quitGame();
     lobby.LoadPage("/home");
   };
 
@@ -69,7 +73,7 @@ export default function Game({ profile, token, gameID }: Props) {
 
   //------------------------------------RENDU------------------------------------//
 
-  // Si une erreur est survenue
+  //Si une erreur est survenue
   if (!gameService.socket || error) {
     return (
       <div className={stylesError.socketError}>
@@ -90,12 +94,11 @@ export default function Game({ profile, token, gameID }: Props) {
     );
   }
 
-  //Si la page n'est pas chargé
   if (!isLoading && gameData && gameService.socket) {
     return (
       <div className={styles.game}>
         <WIPPong gameData={gameData}></WIPPong>
-        <button onClick={Quit} className={styles.quitBtn}>
+        <button onClick={quit} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>
         </button>

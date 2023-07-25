@@ -4,11 +4,11 @@ import ContentLoading from "../ContentLoading";
 import LobbyService from "@/services/Lobby.service";
 
 type Props = {
-  Lobby: LobbyService;
+  lobby: LobbyService;
   isLoading: boolean;
 };
 
-export default function Training({ Lobby, isLoading }: Props) {
+export default function Training({ lobby, isLoading }: Props) {
   // -------------------------------------Traning-------------------------------------//
 
   if (isLoading) {

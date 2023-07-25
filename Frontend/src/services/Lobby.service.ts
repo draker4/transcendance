@@ -13,10 +13,10 @@ class LobbyService {
     LobbyService.instance = this;
   }
 
-  //Fait une requette et renvoie la reponse
-  public async FetchData(url: string, methode: string, body: any = null) {
+  // Fonction generique pour toutes les requettes http
+  public async fetchData(url: string, methode: string, body: any = null) {
     const response = await fetch(
-      `http://${process.env.HOST_IP}:4000/api/${url}`,
+      `http://${process.env.HOST_IP}:4000/api/lobby/${url}`,
       {
         method: methode,
         headers: {
@@ -27,33 +27,27 @@ class LobbyService {
       }
     );
 
-    if (!response.ok) {
-      console.log(response);
-      throw new Error("connexion refused");
-    }
+    if (!response.ok) throw new Error("connexion refused");
 
     return response;
   }
 
   //Recupere l'etat du joueur ( in game or not )
   public async IsInGame(): Promise<any> {
-    const response = await this.FetchData("lobby/isingame", "GET");
-    if (response.status === 200) {
-      const data = await response.json();
-      if (data.success === true) {
-        return data.data.id;
-      }
-      if (data.success === false) {
-        return false;
-      }
+    const response = await this.fetchData("isingame", "GET");
+    const data = await response.json();
+    if (data.success === true) {
+      return data.data.uuid;
     }
-    return false;
+    if (data.success === false) {
+      return "";
+    }
   }
 
   //Creer la game
   public async CreateGame(gameData: GameDTO): Promise<any> {
     const body = JSON.stringify(gameData);
-    const response = await this.FetchData("lobby/create", "POST", body);
+    const response = await this.fetchData("create", "POST", body);
     const data = await response.json();
     if (data.success === false) {
       return false;
@@ -69,13 +63,13 @@ class LobbyService {
   }
 
   //Quit la partie en cours
-  public async QuitGame(): Promise<any> {
-    await this.FetchData("lobby/quit", "POST");
+  public async quitGame(): Promise<any> {
+    await this.fetchData("quit", "POST");
   }
 
   //Recupere la liste des game en cours
   public async GetGameList(): Promise<any> {
-    const response = await this.FetchData("lobby/getall", "GET");
+    const response = await this.fetchData("getall", "GET");
     const data = await response.json();
     return data.data;
   }
@@ -87,16 +81,17 @@ class LobbyService {
 
   //Recupere les infos de la game
   public async accessGame(gameID: String | undefined): Promise<any> {
-    const response = await this.FetchData(`lobby/access/${gameID}`, "GET");
+    if (gameID === undefined) return false;
+    const response = await this.fetchData(`access/${gameID}`, "GET");
     const data = await response.json();
-    return data.data;
+    return data;
   }
 
   //Get league data
   public async GetLeague(): Promise<any> {
-    const response = await this.FetchData("lobby/getleague", "GET");
+    const response = await this.fetchData("getleague", "GET");
     const data = await response.json();
-    return data.data;
+    return data;
   }
 }
 
