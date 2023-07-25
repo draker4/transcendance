@@ -38,13 +38,13 @@ export default function NavbarProfilInfo({
   const buttonData: ButtonData[] = isOwner
     ? [
         { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Contacts", icon: faFaceSmileWink },
+        { id: 1, name: "Pongies", icon: faFaceSmileWink },
         { id: 2, name: "Channels", icon: faMessage },
         { id: 3, name: "Custom", icon: faGear },
       ]
     : [
         { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Contacts", icon: faFaceSmileWink },
+        { id: 1, name: "Pongies", icon: faFaceSmileWink },
         { id: 2, name: "Channels", icon: faMessage },
       ];
 

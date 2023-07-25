@@ -1,5 +1,7 @@
 // [!] voir si ce service est necessaire, pour le moment juste une fonction bebette
 
+import fetchClientSide from "@/lib/fetch/fetchClientSide";
+
 export default class Channel_Service {
   private token: string;
 
@@ -8,43 +10,54 @@ export default class Channel_Service {
     this.token = token;
   }
 
-   // Fonction generique pour toutes les requettes http
-   private async fetchData(isServerSide:boolean, url: string, method: string, body: any = null) {
-	const preUrl:string = isServerSide ? `http://backend:4000/api/channel/` : `http://${process.env.HOST_IP}:4000/api/channel/`;
+  // Fonction generique pour toutes les requettes http
+  private async fetchData(
+    isServerSide: boolean,
+    url: string,
+    method: string,
+    body: any = null
+  ) {
+    const preUrl: string = isServerSide
+      ? `http://backend:4000/api/channel/`
+      : `http://${process.env.HOST_IP}:4000/api/channel/`;
 
-    const response = await fetch(
-      preUrl + url,
-      {
+    if (isServerSide) {
+      const response = await fetch(preUrl + url, {
         method: method,
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.token,
         },
         body: body,
-      }
-    );
+      });
 
-    if (!response.ok)
-      throw new Error("fetched failed at " +  preUrl + url );
+      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
 
-    return response;
+      return response;
+    } else {
+      const response = await fetchClientSide(preUrl + url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      });
+
+      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
+
+      return response;
+    }
   }
-
 
   public async getChannelAndUsers(id: number): Promise<ChannelUsersRelation> {
-	const response: Response = await this.fetchData( true, id.toString(), "GET");
-	const data:ChannelUsersRelation = await response.json();
+    const response: Response = await this.fetchData(true, id.toString(), "GET");
+    const data: ChannelUsersRelation = await response.json();
 
-  console.log("GET CHANNEL & USERS \n :", data);
-	return data;
-
-
+    console.log("GET CHANNEL & USERS \n :", data);
+    return data;
   }
 
-
-
-
-/* -------- vvv NO NEED TOKEN HERE vvv ------- */
+  /* -------- vvv NO NEED TOKEN HERE vvv ------- */
 
   public getIdsFromPrivateMsgChannelName(channelName: string): {
     id1: number;

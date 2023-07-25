@@ -4,7 +4,6 @@ import {
   faFaceSmileWink,
   faGear,
   faSquarePollHorizontal,
-  faSquareNfi
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,13 +34,13 @@ export default function NavbarChannelInfo({
 
   const buttonData: ButtonData[] = myRelation.isChanOp
     ? [
-        { id: 0, name: "Channel", icon: faSquarePollHorizontal },
-        { id: 1, name: "Pongers", icon: faFaceSmileWink },
+		{ id: 0, name: "Pongers", icon: faFaceSmileWink },
+        { id: 1, name: "Channel", icon: faSquarePollHorizontal },
         { id: 2, name: "Custom", icon: faGear },
       ]
     : [
-        { id: 0, name: "Channel", icon: faSquareNfi },
-        { id: 1, name: "Pongers", icon: faFaceSmileWink },
+        { id: 0, name: "Pongers", icon: faFaceSmileWink },
+        { id: 1, name: "Channel", icon: faSquarePollHorizontal },
       ];
 
   return (

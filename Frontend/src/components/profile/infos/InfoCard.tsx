@@ -28,7 +28,7 @@ export default function InfoCard({ profile, token, isOwner }: Props) {
             return <SectionPongStats profile={profile} />;
           case 1:
             return (
-              <div className={styles.sections}>contenu section2 : Contacts</div>
+              <div className={styles.sections}>contenu section2 : Pongies</div>
             );
           case 2:
             return (

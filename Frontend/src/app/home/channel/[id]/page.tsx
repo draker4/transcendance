@@ -14,8 +14,32 @@ type Params = {
 };
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
+  //   const emptyProfile: Profile = {
+  // 	  id: -1,
+  // 	  login: "",
+  // 	  first_name: "",
+  // 	  last_name: "",
+  // 	  email: "",
+  // 	  phone: "",
+  // 	  image: "",
+  // 	  provider: "",
+  // 	  motto: "",
+  // 	  story: ""
+  //   }
 
-  // [+] s'occuper du pb eslint
+  //   const emptyAvatar:Avatar = {
+  // 	  image: "",
+  // 	  variant: "",
+  // 	  borderColor: "",
+  // 	  backgroundColor: "",
+  // 	  text: "",
+  // 	  empty: false,
+  // 	  isChannel: false,
+  // 	  decrypt: false
+  //   }
+
+  // [+] vvv s'occuper du pb eslint vvv
+
   let myRelation: UserRelation = {
     userId: 0,
     isChanOp: false,
@@ -57,37 +81,37 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
-    channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
+    channelAndUsersRelation.channel.avatar =
+      await avatarService.getChannelAvatarById(id);
 
     // console.log("channelAndUserStatus = ", channelAndUsersRelation); // checking
-    
-	// [+]
+
+    // [+]
     const myProfile = await profileService.getProfileByToken();
-	// console.log("myProfile = ", myProfile);
-	// console.log("channelAndUserStatus.usersStatus = ", channelAndUsersRelation.usersRelation); //checking
+    // console.log("myProfile = ", myProfile);
+    // console.log("channelAndUserStatus.usersStatus = ", channelAndUsersRelation.usersRelation); //checking
 
-	const findStatus: UserRelation | undefined = channelAndUsersRelation.usersRelation.find((relation)=> relation.userId === myProfile.id);
-	
-	// console.log("findStatus = ", findStatus); //checking
+    const findStatus: UserRelation | undefined =
+      channelAndUsersRelation.usersRelation.find(
+        (relation) => relation.userId === myProfile.id
+      );
 
-	if (findStatus !== undefined)
-		myRelation = findStatus;
-	else
-		myRelation.userId = myProfile.id;
+    // console.log("findStatus = ", findStatus); //checking
 
-
+    if (findStatus !== undefined) myRelation = findStatus;
+    else myRelation.userId = myProfile.id;
   } catch (err) {
     console.log(err);
     return <ErrorChannel params={{ id }} />;
-}
+  }
 
-if (
-	!channelAndUsersRelation ||
+  if (
+    !channelAndUsersRelation ||
     !channelAndUsersRelation.channel ||
-	!channelAndUsersRelation.channel.avatar ||
+    !channelAndUsersRelation.channel.avatar ||
     channelAndUsersRelation.channel.id === -1
-	) {
-	// [+] ajoutter des param a ErrorChanel, si private par ex
+  ) {
+    // [+] ajoutter des param a ErrorChanel, si private par ex
     return <ErrorChannel params={{ id }} />;
   }
 
@@ -95,7 +119,8 @@ if (
     <div className={styles.main}>
       <Refresher />
       <ChannelMainFrame
-        channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation}
+        channelAndUsersRelation={channelAndUsersRelation}
+        myRelation={myRelation}
       />
     </div>
   );
