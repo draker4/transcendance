@@ -1,8 +1,8 @@
 import React from "react";
 import "@/styles/globals.css";
-import NavbarServ from "@/components/navbar/NavbarServ";
 import Footer from "@/components/footer/Footer";
 import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
+import Navbar from "@/components/navbar/Navbar";
 
 export const dynamic = 'force-dynamic';
 
@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavbarServ />
+        <Navbar />
         {children}
         <Footer />
         <ScrollBtn />

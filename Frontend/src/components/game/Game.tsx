@@ -9,7 +9,7 @@ import LobbyService from "@/services/Lobby.service";
 import GameService from "@/services/game/Game.service";
 
 //Import les composants
-import styles from "@/styles/game/game.module.css";
+import styles from "@/styles/game/Game.module.css";
 import stylesError from "@/styles/game/GameError.module.css";
 import Pong from "./Pong";
 import WIPPong from "./WIPPong";

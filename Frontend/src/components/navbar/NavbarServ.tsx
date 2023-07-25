@@ -31,7 +31,6 @@ export default async function NavbarServ() {
   };
 
   try {
-    if (url?.includes("home")) {
       token = cookies().get("crunchy-token")?.value;
       if (!token) throw new Error("No token value");
 
@@ -40,10 +39,9 @@ export default async function NavbarServ() {
 
       const Avatar = new Avatar_Service(token);
       avatar = await Avatar.getAvatarbyUserId(profile.id);
-      
-      return <NavbarFront avatar={avatar} profile={profile} token={token} />;
-    }
-  } catch (error) {}
 
-  return <NavbarFront avatar={undefined} profile={undefined} token={undefined} />;
+  } catch (error) {
+  }
+
+  return <NavbarFront avatar={avatar} profile={profile} token={token} />;
 }

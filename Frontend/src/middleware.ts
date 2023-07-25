@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
       console.log(err);
     }));
   // const url = req.nextUrl;
-  // console.log(verifiedToken, crunchyToken, url);
+  // console.log(verifiedToken);
 
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
     // console.log("do nothing go to google");
