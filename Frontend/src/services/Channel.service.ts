@@ -31,11 +31,14 @@ export default class Channel_Service {
   }
 
 
-  public async getChannelAndUsers(id: number): Promise<ChannelUsersStatus> {
+  public async getChannelAndUsers(id: number): Promise<ChannelUsersRelation> {
 	const response: Response = await this.fetchData( true, id.toString(), "GET");
-	const data:ChannelUsersStatus = await response.json();
+	const data:ChannelUsersRelation = await response.json();
 
+  console.log("GET CHANNEL & USERS \n :", data);
 	return data;
+
+
   }
 
 

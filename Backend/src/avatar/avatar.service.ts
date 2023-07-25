@@ -90,15 +90,11 @@ export class AvatarService {
 	  };
 	  try {
 
-		// [+] gestion / guard, user.req.id doit etre isChanOp dans relations --> fonction a extraire voire passer en guard ?
-		const userRelation = (await this.channelService.getChannelUsersRelations(updateUserAvatarDto.isChannel)).usersRelation.find( (relation) => relation.userId === req.user.id);
-		if (!userRelation)
-		 throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) has no relation with user(id: ${req.user.id})`);
-		else if (userRelation.isBanned)
-			throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) user(id: ${req.user.id}) is banned`);
-		else if (!userRelation.isChanOp)
-			throw new Error(`channel(id: ${updateUserAvatarDto.isChannel}) user(id: ${req.user.id}) channel operator privileges required`);
-		
+    const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.isChannel);
+
+    if (!check.isChanOp)
+      throw new Error(rep.error);
+
 		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel))).avatar;
 
 		if (!avatar)
