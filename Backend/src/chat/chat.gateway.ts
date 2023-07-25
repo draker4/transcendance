@@ -1,5 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { OnModuleInit, Request, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  OnModuleInit,
+  Request,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -46,8 +51,8 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-    //     socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
-		// socket.join('channel:2'); // [!] ouh c'est moche
+        //     socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
+        // socket.join('channel:2'); // [!] ouh c'est moche
 
         this.connectedUsers.set(payload.sub, socket.id);
         this.chatService.joinAllMyChannels(socket, payload.sub);
@@ -58,8 +63,7 @@ export class ChatGateway implements OnModuleInit {
         });
 
         this.log('connected users = '); // [?]
-	      this.log(this.connectedUsers); // [?]
-
+        this.log(this.connectedUsers); // [?]
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -143,32 +147,29 @@ export class ChatGateway implements OnModuleInit {
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
-  async getMessages(@MessageBody() payload:channelIdDto) {
+  async getMessages(@MessageBody() payload: channelIdDto) {
     return (await this.chatService.getMessages(payload.id)).messages;
   }
 
-  
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getChannelName')
-  async getChannelName(@MessageBody() payload:channelIdDto) {
-	this.log(`'getChannelName' event, with channelId: ${payload.id}`); // checking
-	const channel:Channel  = await this.chatService.getChannelById(payload.id);
-    return ({
-		success: channel? true : false,
-		message: channel? channel.name : "",
-	});
+  async getChannelName(@MessageBody() payload: channelIdDto) {
+    this.log(`'getChannelName' event, with channelId: ${payload.id}`); // checking
+    const channel: Channel = await this.chatService.getChannelById(payload.id);
+    return {
+      success: channel ? true : false,
+      message: channel ? channel.name : '',
+    };
   }
 
   // [!] au final pas utilisé dans <ChatChannel />
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getChannelUsers')
-  async getChannelUsers(@MessageBody() payload:channelIdDto) {
+  async getChannelUsers(@MessageBody() payload: channelIdDto) {
     const id: number = payload.id;
     console.log('getChannelUsers proc --> ChannelId : ', id);
 
-    const users: User[] = await this.chatService.getChannelUsers(
-      payload.id,
-    );
+    const users: User[] = await this.chatService.getChannelUsers(payload.id);
     console.log(users);
     // [!] je laisse ces console log car pas pu tester cette fonction encore,
     // une fois qu'elle sera validée, retourner directement le resultat sans
@@ -177,7 +178,6 @@ export class ChatGateway implements OnModuleInit {
     return users;
   }
 
-
   // tools
 
   // [!][?] virer ce log pour version build ?
@@ -185,7 +185,7 @@ export class ChatGateway implements OnModuleInit {
     const green = '\x1b[32m';
     const stop = '\x1b[0m';
 
-	process.stdout.write(green + '[chat gateway]  ' + stop);
+    process.stdout.write(green + '[chat gateway]  ' + stop);
     console.log(message);
   }
 }

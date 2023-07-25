@@ -69,7 +69,15 @@ export class GameGateway implements OnModuleInit {
             'OnModuleInit - Disconnection',
           );
           // Perform necessary clean-up operations
-          this.gameManager.disconnect(payload.sub, socket);
+          try {
+            this.gameManager.disconnect(payload.sub, socket);
+          } catch (error) {
+            this.logger.error(
+              `Error while disconnecting user: ${error.message}`,
+              'OnModuleInit - Disconnection',
+              error,
+            );
+          }
           socket.disconnect();
         });
       } catch (error) {

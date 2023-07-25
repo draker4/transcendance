@@ -32,8 +32,12 @@ export default function Game({ profile, token, gameId }: Props) {
 
   //------------------------------------Chargement------------------------------------//
 
-  //Regarde si le joueur est en game, si oui , le remet dans la game
   useEffect(() => {
+    const handleUnload = () => {
+      //gameService.socket?.emit("disconnecting");
+      console.log("disconnecting");
+    };
+
     gameService.socket?.emit("join", gameId, (gameData: any) => {
       if (gameData.success == false) {
         setError(true);
@@ -43,9 +47,15 @@ export default function Game({ profile, token, gameId }: Props) {
         console.log(gameData.data);
       }
     });
+    window.addEventListener("unload", handleUnload);
+
     gameService.socket?.on("exception", () => {
       setError(true);
     });
+    return () => {
+      gameService.socket?.off("exception");
+      window.removeEventListener("unload", handleUnload);
+    };
   }, [gameId, gameService.socket]);
 
   const quit = () => {

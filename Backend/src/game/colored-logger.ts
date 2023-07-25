@@ -8,7 +8,7 @@ class ColoredLogger extends Logger {
 
   log(message: any, context?: string) {
     const blue = '\x1b[34m';
-    super.log(message, context, true);
+    super.log(message, context, false);
     process.stdout.write(
       this.getColorPrefix(blue, context) + ' ' + message + '\n',
     );

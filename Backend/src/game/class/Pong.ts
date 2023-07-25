@@ -186,10 +186,10 @@ export class Pong {
     };
     if (this.playerLeft && this.playerLeft === user) {
       this.playerLeft = null;
-      // update game
+      this.disconnectPlayer('Left');
     } else if (this.playerRight && this.playerRight === user) {
       this.playerRight = null;
-      // update game
+      this.disconnectPlayer('Right');
     } else {
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';
@@ -359,12 +359,29 @@ export class Pong {
 
   private defineTimer(
     second: number,
-    reason: 'Start' | 'ReStart' | 'Round' | 'Pause' | 'Waiting',
+    reason: 'Start' | 'ReStart' | 'Round' | 'Pause' | 'Deconnection',
   ): Timer {
     return {
       start: new Date(),
       end: new Date(new Date().getTime() + second * 1000),
       reason: reason,
     };
+  }
+
+  private disconnectPlayer(side: 'Left' | 'Right') {
+    if (side === 'Left') {
+      this.data.playerLeftDynamic.status = 'Disconnected';
+      if (this.data.status === 'Playing') {
+        this.data.status = 'Waiting';
+        this.data.timer = this.defineTimer(60, 'Deconnection');
+      }
+    } else if (side === 'Right') {
+      this.data.playerRightDynamic.status = 'Disconnected';
+      if (this.data.status === 'Playing') {
+        this.data.status = 'Waiting';
+        this.data.timer = this.defineTimer(60, 'Deconnection');
+      }
+    }
+    this.sendStatus();
   }
 }

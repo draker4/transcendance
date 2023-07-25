@@ -6,13 +6,8 @@ import {
   BallDynamic,
   Player,
   PlayerDynamic,
-  StatusMessage,
 } from "@Shared/types/Game.types";
 
-import { useEffect } from "react";
-import { Socket } from "socket.io-client";
-
-// Function to show PlayerDynamic data
 function showPlayerDynamic(playerDynamic: PlayerDynamic, position: string) {
   return (
     <div>

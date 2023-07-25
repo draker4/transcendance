@@ -46,7 +46,7 @@ export type StatusMessage = {
 };
 
 export type Timer = {
-  reason: "Start" | "ReStart" | "Round" | "Pause" | "Waiting";
+  reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection";
   start: Date;
   end: Date;
 };
