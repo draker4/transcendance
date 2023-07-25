@@ -12,7 +12,10 @@ import GameService from "@/services/game/Game.service";
 import styles from "@/styles/game/Game.module.css";
 import stylesError from "@/styles/game/GameError.module.css";
 import Pong from "./Pong";
+import WIPPong from "./WIPPong";
 import { MdLogout } from "react-icons/md";
+
+import { GameData } from "@Shared/types/Game.types";
 
 type Props = {
   profile: Profile;
@@ -21,10 +24,10 @@ type Props = {
 };
 
 export default function Game({ profile, token, gameID }: Props) {
-  const Lobby = new LobbyService(token);
+  const lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [gameData, setgameData] = useState<GameSettings>();
+  const [gameData, setgameData] = useState<GameData>();
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
 
@@ -33,26 +36,32 @@ export default function Game({ profile, token, gameID }: Props) {
   //Regarde si le joueur est en game, si oui , le remet dans la game
   useEffect(() => {
     //Si pas possible d'avoir les données de la game -> retour au lobby
-    Lobby.GetGameInfo(gameID)
+    lobby
+      .accessGame(gameID)
       .then((gameData) => {
-        if (gameData.success == false) {
-          Lobby.LoadPage("/home");
+        if (gameData.success == true) {
+          gameService.socket?.emit("join", gameID, (gameData: any) => {
+            if (gameData.success == false) {
+              setError(true);
+            } else {
+              setgameData(gameData.data);
+              setIsLoading(false);
+              console.log(gameData.data);
+            }
+          });
         } else {
-          setgameData(gameData);
+          lobby.LoadPage("/home");
         }
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error(error);
-        Lobby.LoadPage("/home");
-        setIsLoading(false);
+        lobby.LoadPage("/home");
       });
   }, []);
 
-  const Quit = () => {
-    gameService.socket?.disconnect();
-    Lobby.QuitGame();
-    Lobby.LoadPage("/home");
+  const quit = () => {
+    lobby.quitGame();
+    lobby.LoadPage("/home");
   };
 
   // WsException Managing
@@ -64,7 +73,7 @@ export default function Game({ profile, token, gameID }: Props) {
 
   //------------------------------------RENDU------------------------------------//
 
-  // Si une erreur est survenue
+  //Si une erreur est survenue
   if (!gameService.socket || error) {
     return (
       <div className={stylesError.socketError}>
@@ -85,12 +94,11 @@ export default function Game({ profile, token, gameID }: Props) {
     );
   }
 
-  //Si la page n'est pas chargé
   if (!isLoading && gameData && gameService.socket) {
     return (
       <div className={styles.game}>
-        <Pong gameData={gameData} socket={gameService.socket} />
-        <button onClick={Quit} className={styles.quitBtn}>
+        <WIPPong gameData={gameData}></WIPPong>
+        <button onClick={quit} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>
         </button>

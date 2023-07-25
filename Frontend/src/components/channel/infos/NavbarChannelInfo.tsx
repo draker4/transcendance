@@ -1,20 +1,18 @@
-"use client";
-
-import { useState, Dispatch, SetStateAction } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   faFaceSmileWink,
   faGear,
-  faMessage,
-  faTableTennisPaddleBall,
+  faSquarePollHorizontal,
+  faSquareNfi
 } from "@fortawesome/free-solid-svg-icons";
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "@/styles/profile/InfoCard.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type Props = {
   activeButton: number;
   setActiveButton: Dispatch<SetStateAction<number>>;
-  isOwner: boolean;
+  myRelation: UserRelation;
 };
 
 type ButtonData = {
@@ -23,10 +21,10 @@ type ButtonData = {
   icon: IconProp;
 };
 
-export default function NavbarProfilInfo({
+export default function NavbarChannelInfo({
   activeButton,
   setActiveButton,
-  isOwner,
+  myRelation,
 }: Props) {
   const [selectedItem, setSelectedItem] = useState(0);
 
@@ -35,17 +33,15 @@ export default function NavbarProfilInfo({
     setSelectedItem(buttonId);
   };
 
-  const buttonData: ButtonData[] = isOwner
+  const buttonData: ButtonData[] = myRelation.isChanOp
     ? [
-        { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Contacts", icon: faFaceSmileWink },
-        { id: 2, name: "Channels", icon: faMessage },
-        { id: 3, name: "Custom", icon: faGear },
+        { id: 0, name: "Channel", icon: faSquarePollHorizontal },
+        { id: 1, name: "Pongers", icon: faFaceSmileWink },
+        { id: 2, name: "Custom", icon: faGear },
       ]
     : [
-        { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Contacts", icon: faFaceSmileWink },
-        { id: 2, name: "Channels", icon: faMessage },
+        { id: 0, name: "Channel", icon: faSquareNfi },
+        { id: 1, name: "Pongers", icon: faFaceSmileWink },
       ];
 
   return (

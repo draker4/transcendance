@@ -4,19 +4,19 @@ import { LobbyUtils } from './lobbyUtils';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Game } from 'src/utils/typeorm/Game.entity';
-import { GameDTO } from '../dto/Game.dto';
+import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class LobbyService extends LobbyUtils {
   @InjectRepository(Game)
-  public readonly GameRepository: Repository<Game>;
+  public readonly gameRepository: Repository<Game>;
 
-  async CreateGame(userId: number, game: GameDTO): Promise<any> {
+  async CreateGame(userId: number, game: CreateGameDTO): Promise<any> {
     try {
       //Si le joueur est déjà dans une partie
-      if (await this.CheckIfAlreadyInGame(userId)) {
+      if (await this.checkIfAlreadyInGame(userId)) {
         const Data = {
           success: false,
           message: 'You are already in a game',
@@ -33,15 +33,15 @@ export class LobbyService extends LobbyUtils {
         return Data;
       }
 
-      //Creer une game
-      game.uuid = uuidv4();
-      await this.GameRepository.save(game);
+      const newGame: Game = this.gameRepository.create(game);
+      newGame.createdAt = new Date();
+      await this.gameRepository.save(newGame);
 
       const Data = {
         success: true,
         message: 'Game created',
         data: {
-          id: game.uuid,
+          id: newGame.uuid,
         },
       };
 
@@ -132,7 +132,7 @@ export class LobbyService extends LobbyUtils {
   async GetAll(): Promise<any> {
     try {
       //Renvoi toutes les games Waiting ou Playing
-      const games = await this.GameRepository.find({
+      const games = await this.gameRepository.find({
         where: { status: 'Waiting' || 'Playing' },
       });
       //Clean les infos
@@ -178,148 +178,90 @@ export class LobbyService extends LobbyUtils {
     }
   }
 
-  async GetGameById(gameId: string, userId: number): Promise<any> {
+  async accessGame(gameId: string, userId: number): Promise<ReturnData> {
+    const data: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
     try {
-      console.log('GetGameById: ' + gameId + ' by UserId: ' + userId);
       //Si il manque des datas
-      if (gameId == null) {
-        const Data = {
-          success: false,
-          message: 'Not enough parameters',
-        };
-        return Data;
+      if (gameId == null || userId == null) {
+        data.message = 'Not enough parameters';
+        return data;
       }
-      console.log('GetGameById: 1');
-      //Si la partie existe pas
-      if (!(await this.CheckIfGameExist(gameId))) {
-        const Data = {
-          success: false,
-          message: "Game doesn't exist",
-        };
-        return Data;
-      }
-      console.log('GetGameById: 2');
-      //Si le joueur est pas dans cette partie
-      if (!(await this.CheckIfPlayerIsAlreadyInThisGame(gameId, userId))) {
-        const Data = {
-          success: false,
-          message: 'You are not in this game',
-        };
-        return Data;
-      }
-
-      //Renvoi la game
-      console.log('GetGameById: 3');
-      const game = await this.GameRepository.findOne({
+      //Retrouver la partie et confirmer si player ou spectator
+      const game: Game = await this.gameRepository.findOne({
         where: { uuid: gameId },
       });
-      // const hostLogin = await this.GetPlayerName(game.host);
-      // const opponentLogin = await this.GetPlayerName(game.opponent);
-      // const gameData: GameData = {
-      //   uuid: game.uuid,
-      //   name: game.name,
-      //   host: game.host,
-      //   hostName: hostLogin,
-      //   opponent: game.opponent,
-      //   opponentName: opponentLogin,
-      //   status: game.status,
-      //   result: game.result,
-      //   actualRound: game.actualRound,
-      //   maxPoint: game.maxPoint,
-      //   maxRound: game.maxRound,
-      //   hostSide: game.hostSide,
-      //   difficulty: game.difficulty,
-      //   push: game.push,
-      //   background: game.background,
-      //   ball: game.ball,
-      //   type: game.type,
-      // };
-
-      // const Data = {
-      //   success: true,
-      //   message: 'Request successfull',
-      //   data: gameData,
-      // };
-      // console.log('GetGameById data: ' + Data);
-      // return Data;
+      if (!game) {
+        data.message = 'Game not found';
+        return data;
+      }
+      data.success = true;
+      if (game.host == userId || game.opponent == userId) {
+        data.message = 'User will join as player';
+      } else {
+        data.message = 'User will join as spectator';
+      }
+      return data;
     } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
+      data.error = error;
+      return data;
     }
   }
 
-  async Quit(req: any): Promise<any> {
+  async Quit(userId: number): Promise<any> {
+    const data: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    if (userId == null) {
+      data.message = 'Not enough parameters';
+      return data;
+    }
     try {
       //Regarde is le joueur est dans une game
-      if (!(await this.CheckIfAlreadyInGame(req.user.id))) {
-        const Data = {
-          success: false,
-          message: 'You are not in a game',
-        };
-        return Data;
+      if (!(await this.checkIfAlreadyInGame(userId))) {
+        data.message = 'You are not in a game';
+        return data;
       }
-
       //Retire le joueur de toutes les game ou il est ( si game en Waiting ou Playing )
-      if (await this.RemovePlayerFromAllGames(req.user.id)) {
-        const Data = {
-          success: true,
-          message: 'You have been removed from all game',
-        };
-        return Data;
+      if (await this.RemovePlayerFromAllGames(userId)) {
+        data.success = true;
+        data.message = 'You have been removed from all game';
       }
+      return data;
     } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
+      return data;
     }
-
-    const Data = {
-      success: false,
-      message: 'Case not handled',
-    };
-    return Data;
   }
 
   //Si le joueur est en game renvoi "In game" et l'id de la game, si le joueur en Matchmaking le retire de la liste
-  async IsInGame(req: any): Promise<any> {
+  async IsInGame(userId: number): Promise<any> {
+    const data: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
     try {
       //Si le joueur est en matchmaking le retire de la liste
-      if (await this.CheckIfAlreadyInMatchmaking(req.user.id)) {
-        await this.RemovePlayerFromMatchmaking(req.user.id);
+      if (await this.CheckIfAlreadyInMatchmaking(userId)) {
+        await this.RemovePlayerFromMatchmaking(userId);
       }
 
       //Si il est dans une game recupere son id
-      if (await this.CheckIfAlreadyInGame(req.user.id)) {
-        const game = await this.GetGameId(req.user.id);
-        const Data = {
-          success: true,
-          message: 'You are in a game',
-          data: {
-            id: game.uuid,
-          },
-        };
-        return Data;
+      data.data = await this.getGameId(userId);
+      if (data.data) {
+        data.success = true;
+        data.message = 'You are in a game';
+        return data;
       } else {
-        const Data = {
-          success: false,
-          message: 'You are not in a game',
-        };
-        return Data;
+        data.success = false;
+        data.message = 'You are not in a game';
+        return data;
       }
     } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
+      data.error = error;
+      return data;
     }
   }
 }

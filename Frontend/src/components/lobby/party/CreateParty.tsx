@@ -9,11 +9,12 @@ import DefineField from "@/components/lobby/party/DefineField";
 import DefineInvite from "@/components/lobby/party/DefineInvite";
 
 type Props = {
-  Lobby: Lobby_Service;
+  lobby: Lobby_Service;
   setCreateParty: Function;
+  userId: number;
 };
 
-export default function CreateParty({ Lobby, setCreateParty }: Props) {
+export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
@@ -23,26 +24,32 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
   const [background, setBackground] = useState<string>("background/0");
   const [ball, setBall] = useState<string>("ball/0");
-  const [type, setType] = useState<string>("classic");
+  const [type, setType] = useState<
+    "Classic" | "Best3" | "Best5" | "Custom" | "Training"
+  >("Classic");
   const difficulty: 1 | 2 | 3 | 4 | 5 = 3;
 
   //Fonction pour rejoindre une game
   const Create_Game = async () => {
     //Creer un objet avec les settings
-    const settings = {
+    const settings: GameDTO = {
       name: name,
-      push: push,
+      type: type,
+      mode: "Party",
+      host: userId,
+      opponent: -1,
+      hostSide: hostSide,
       maxPoint: maxPoint,
       maxRound: maxRound,
-      hostSide: hostSide,
+      difficulty: difficulty,
+      push: push,
       background: background,
       ball: ball,
-      type: type,
-      difficulty: difficulty,
     };
+    console.log("Create: " + JSON.stringify(settings));
 
     //Creer la game
-    const res = await Lobby.CreateGame(settings);
+    const res = await lobby.CreateGame(settings);
   };
 
   const resetCreate = () => {
@@ -53,7 +60,7 @@ export default function CreateParty({ Lobby, setCreateParty }: Props) {
     setHostSide("Left");
     setBackground("background/0");
     setBall("ball/0");
-    setType("classic");
+    setType("Classic");
     setCreateParty(false);
   };
 

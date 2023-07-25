@@ -11,12 +11,13 @@ import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 
 import { LobbyUtils } from 'src/lobby/lobby-service/lobbyUtils';
+import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
 @Injectable()
 export class MatchmakingService {
   constructor(
     @InjectRepository(Game)
-    private readonly GameRepository: Repository<Game>,
+    private readonly gameRepository: Repository<Game>,
 
     @InjectRepository(Matchmaking)
     private readonly MatchMakeRepository: Repository<Matchmaking>,
@@ -179,21 +180,24 @@ export class MatchmakingService {
         await this.MatchMakeRepository.remove(user2);
         const name_1 = await this.GetPlayerName(user1.Player_Id);
         const name_2 = await this.GetPlayerName(user2.Player_Id);
-        const game_id = await this.lobbyUtils.CreateGameInDB(
-          name_1 + ' vs ' + name_2,
-          'Classic',
-          'League',
-          user1.Player_Id,
-          'Left',
-          9,
-          1,
-          2,
-          false,
-          'football',
-          'football',
-        );
-        await this.AddPlayerToGame(game_id, user2.Player_Id);
-        return game_id;
+        const createGameDTO: CreateGameDTO = {
+          name: name_1 + ' vs ' + name_2,
+          type: 'Classic',
+          mode: 'League',
+          host: user1.Player_Id,
+          opponent: user2.Player_Id,
+          hostSide: 'Left',
+          maxPoint: 9,
+          maxRound: 1,
+          difficulty: 2,
+          push: false,
+          background: 'football',
+          ball: 'football',
+        };
+        const newGame: Game = this.gameRepository.create(createGameDTO);
+        newGame.createdAt = new Date();
+        await this.gameRepository.save(newGame);
+        return newGame.uuid;
       }
     }
     return false;
@@ -215,13 +219,13 @@ export class MatchmakingService {
   // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou InProgress" et renvoi son id de game
   async GetGameId(user_id: number): Promise<any> {
     if (user_id != null) {
-      let game = await this.GameRepository.findOne({
+      let game = await this.gameRepository.findOne({
         where: { host: user_id, status: 'Waiting' || 'Playing' },
       });
       if (game != null) {
         return game;
       }
-      game = await this.GameRepository.findOne({
+      game = await this.gameRepository.findOne({
         where: { opponent: user_id, status: 'Waiting' || 'Playing' },
       });
       if (game != null) {
@@ -234,13 +238,13 @@ export class MatchmakingService {
   // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou InProgress" et renvoi true or false
   async CheckIfAlreadyInGame(user_id: number): Promise<any> {
     if (user_id != null) {
-      const host = await this.GameRepository.findOne({
+      const host = await this.gameRepository.findOne({
         where: { host: user_id, status: 'Waiting' || 'Playing' },
       });
       if (host != null) {
         return true;
       }
-      const opponent = await this.GameRepository.findOne({
+      const opponent = await this.gameRepository.findOne({
         where: { opponent: user_id, status: 'Waiting' || 'Playing' },
       });
       if (opponent != null) {
@@ -314,12 +318,12 @@ export class MatchmakingService {
         return false;
       }
 
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { uuid: game_id },
       });
       if (game != null) {
         game.opponent = user_id;
-        await this.GameRepository.save(game);
+        await this.gameRepository.save(game);
         return true;
       }
     }

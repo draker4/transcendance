@@ -104,52 +104,99 @@ export class ChannelService {
 
 	public async getChannelUsersRelations(id: number):Promise<ChannelAndUsers> {
 		const channel: Channel = await this.channelRepository.findOne({
-			where: { id : id }
+			where: { id : id }, relations: ["users", "users.avatar"]
 		});
 
+
+		// console.log("channel = ", channel); //checking
+
 		const usersRelation : UserChannelRelation[] = await this.userChannelRelation.find({
-			where: { channelId : id }
+			where: { channelId : id }, relations: ["user", "user.avatar"]
 		});
 		
+		
+		// console.log("USER RELATION[0].user = ", usersRelation[0].user); //checking
+
 		return {
 			channel: channel,
 			usersRelation: usersRelation,
 		}
 	}
 
+
+	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isChanOp:boolean, error?:string}> {
+		const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
+		try {
+			this.verifyPermissions(userId, channelId, relation);
+			return {
+				isChanOp:relation.isChanOp,
+			}
+		} catch (error) {
+			return {
+				isChanOp:false,
+				error:error.message,
+			}
+		}
+	}
+
+	
+	
+	
 	public async updateChannelUsers(channel: Channel, user: User) {
 		await this.channelRepository
-		  .createQueryBuilder()
-		  .relation(Channel, "users")
-		  .of(channel.id)
-		  .add(user);
-	  }
+		.createQueryBuilder()
+		.relation(Channel, "users")
+		.of(channel.id)
+		.add(user);
+	}
 
 	public async getPrivatePongie(channelId: number, userId: number) {
 		const	channel = await this.getChannelUsers(channelId);
 
 		if (!channel)
-			return null;
+		return null;
 		
 		return channel.users.find(user => user.id !== userId);
 	}
 
 	public async isUserInChannel(userId: number, channelId: number):Promise<boolean> {
 		const	relation = await this.userChannelRelation.findOne({
-			where: { userId:userId, channelId:channelId, joined:true, isbanned:false }
+			where: { userId:userId, channelId:channelId, joined:true, isBanned:false }
 		});
-
+		
 		return relation ? true : false;
 	}
+	
 
+
+	// ------------------- PRIVATE ---------------------------------- //
+
+	private async getOneUserChannelRelation(userId:number, channelId:number):Promise<UserChannelRelation> {
+		return (await this.getChannelUsersRelations(channelId)).usersRelation.find( (relation) => relation.userId === userId);
+	}
+	
+	// [+] a affinner avec l'evolution des types de channel, banlist guestlist etc.
+	private verifyPermissions(userId:number, channelId:number, relation: UserChannelRelation) {
+		if (!relation)
+		 throw new Error(`channel(id: ${channelId}) has no relation with user(id: ${userId})`);
+		else if (relation.isBanned)
+			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) is banned`);
+		else if (!relation.isChanOp)
+			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) channel operator privileges required`);
+	}
+	
+	
+	
+	
+	
 	// tools
-
-  // [!][?] virer ce log pour version build ?
-  private log(message?: any) {
-    const cyan = '\x1b[36m';
-    const stop = '\x1b[0m';
-
-	process.stdout.write(cyan + '[channel service]  ' + stop);
-    console.log(message);
-  }
+	
+	// [!][?] virer ce log pour version build ?
+	private log(message?: any) {
+		const cyan = '\x1b[36m';
+		const stop = '\x1b[0m';
+		
+		process.stdout.write(cyan + '[channel service]  ' + stop);
+		console.log(message);
+	}
 }

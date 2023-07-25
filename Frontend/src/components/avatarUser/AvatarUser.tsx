@@ -23,6 +23,7 @@ export default function AvatarUser({
             borderStyle: "solid",
             borderColor: `${borderColor}`,
             backgroundColor: `${backgroundColor}`,
+			borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
           }}
         ></Avatar>
       ) : (
@@ -36,6 +37,7 @@ export default function AvatarUser({
             borderStyle: "solid",
             borderColor: `${borderColor}`,
             backgroundColor: `${backgroundColor}`,
+			borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
           }}
         >
           {avatar.text}

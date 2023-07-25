@@ -2,7 +2,6 @@
 
 //Import les composants react
 import { useState } from "react";
-import { MdHistory, MdGames, MdLeaderboard } from "react-icons/md";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -18,17 +17,18 @@ type Props = {
   token: string | undefined;
 };
 
-export default function Lobby({ token }: Props) {
-  const Lobby = new LobbyService(token);
+export default function Lobby({ profile, token }: Props) {
+  const lobby = new LobbyService(token);
   const Matchmaking = new MatchmakingService(token);
 
   const [isLoading, setIsLoading] = useState(true);
   const [menu, setMenu] = useState("League");
 
-  Lobby.IsInGame()
-    .then((cur_game_id) => {
-      if (cur_game_id != false) {
-        Lobby.ResumeGame(cur_game_id);
+  lobby
+    .IsInGame()
+    .then((gameId) => {
+      if (gameId) {
+        lobby.ResumeGame(gameId);
       }
       setIsLoading(false);
     })
@@ -50,9 +50,14 @@ export default function Lobby({ token }: Props) {
           />
         )}
         {menu == "Party" && (
-          <Party Lobby={Lobby} isLoading={isLoading} token={token} />
+          <Party
+            lobby={lobby}
+            isLoading={isLoading}
+            token={token}
+            userId={profile.id}
+          />
         )}
-        {menu == "Training" && <Training Lobby={Lobby} isLoading={isLoading} />}
+        {menu == "Training" && <Training lobby={lobby} isLoading={isLoading} />}
       </div>
     </div>
   );

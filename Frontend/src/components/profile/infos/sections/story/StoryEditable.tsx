@@ -1,5 +1,4 @@
 import { checkStory } from "@/lib/profile/edit/checkStory";
-import submitStory from "@/lib/profile/edit/submitStory";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";

@@ -28,7 +28,10 @@ export class UserChannelRelation {
     channel: Channel;
 
 	@Column({ default: false})
-	isbanned: boolean;
+	isBanned: boolean;
+
+	@Column({ default: false})
+	isChanOp: boolean;
 
 	// @Column({ default: true })
 	// joined: boolean;

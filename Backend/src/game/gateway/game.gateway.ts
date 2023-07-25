@@ -15,9 +15,12 @@ import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from '../guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
 
+// services imports
 import { GameService } from '../service/game.service';
 import { GameManager } from '../class/GameManager';
+import ColoredLogger from '../colored-logger';
 
+// Decorator to define WebSocketGateway settings
 @WebSocketGateway({
   cors: {
     origin: [`http://${process.env.HOST_IP}:3000`, 'http://localhost:3000'],
@@ -27,6 +30,9 @@ import { GameManager } from '../class/GameManager';
 })
 @UseGuards(WsJwtGuard)
 export class GameGateway implements OnModuleInit {
+  private readonly logger = new ColoredLogger();
+
+  // Inject necessary services (GameService and GameManager)
   constructor(
     private readonly gameService: GameService,
     private readonly gameManager: GameManager,
@@ -35,27 +41,39 @@ export class GameGateway implements OnModuleInit {
   @WebSocketServer()
   server: Server;
 
+  // Lifecycle hook, called when the module is initialized
   onModuleInit() {
+    // init the game manager with the server
     this.gameManager.setServer(this.server);
 
+    // Event handler for new socket connections
     this.server.on('connection', (socket: Socket) => {
       const token = socket.handshake.headers.authorization?.split(' ')[1];
-
+      // Verify the JWT token and obtain the payload data
       try {
-        //check if token is valid and get user id(payload.sub)
         const payload = verify(token, process.env.JWT_SECRET) as any;
         if (!payload.sub) {
           socket.disconnect();
           return;
         }
 
+        this.logger.log(
+          `User with ID ${payload.sub} connected to Game`,
+          'OnModuleInit - Connection',
+        );
+
+        // Event handler for socket disconnection
         socket.on('disconnect', () => {
-          console.log(`User with ID ${payload.sub} disconnected`);
+          this.logger.log(
+            `User with ID ${payload.sub} disconnected`,
+            'OnModuleInit - Disconnection',
+          );
+          // Perform necessary clean-up operations
           this.gameManager.disconnect(payload.sub, socket);
           socket.disconnect();
         });
       } catch (error) {
-        console.log(error);
+        this.logger.error(error, 'OnModuleInit');
         socket.disconnect();
       }
     });
@@ -67,7 +85,6 @@ export class GameGateway implements OnModuleInit {
     @Req() req,
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log('Join Game: ' + gameId + ' by User ' + req.user.id);
     return await this.gameManager.joinGame(gameId, req.user.id, socket);
   }
 }

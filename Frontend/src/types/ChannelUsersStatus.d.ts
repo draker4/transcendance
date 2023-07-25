@@ -1,1 +1,1 @@
-type	ChannelUsersStatus = Channel & { usersStatus:UsersStatus[] }
+type ChannelUsersRelation = { channel: Channel } & { usersRelation: UserRelation[] };

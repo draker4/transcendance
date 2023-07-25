@@ -65,12 +65,13 @@ export default class Avatar_Service {
 
   // [?] type de retour ?   : Promise<any> (@_@')
   // [+] gestion de la reponse ?
+  // isChannel value is the channelId, 0 mean it's not a channel but an user's.
   public async submitAvatarColors(
     borderColor: string,
-    backgroundColor: string
-    // isChannel: boolean [!][?] nécessaire ?
+    backgroundColor: string,
+    isChannel: number,
   ) {
-    const body = JSON.stringify({ borderColor, backgroundColor });
+    const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
 
     // console.log("body = ", body);
 

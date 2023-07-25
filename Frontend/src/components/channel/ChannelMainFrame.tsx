@@ -1,22 +1,18 @@
-import React from 'react'
+import React from "react";
 import styles from "@/styles/profile/Profile.module.css";
-import ChannelFirstPart from './ChannelFirstPart';
-import ChannelSecondPart from './ChannelSecondPart';
+import ChannelFirstPart from "./ChannelFirstPart";
+import ChannelSecondPart from "./ChannelSecondPart";
 
 type Props = {
-	userStatus: UserStatusInChannel;
-	avatar: Avatar;
-	channel: Channel;
-  };
+  channelAndUsersRelation: ChannelUsersRelation;
+  myRelation: UserRelation;
+};
 
-export default function ChannelMainFrame({avatar, userStatus, channel}:Props) {
-
-
-
+export default function ChannelMainFrame({ channelAndUsersRelation, myRelation }: Props) {
   return (
-	<div className={styles.profileMainFrame}>
-		<ChannelFirstPart avatar={avatar} userStatus={userStatus}/>
-		<ChannelSecondPart />
-	</div>
+    <div className={styles.profileMainFrame}>
+      <ChannelFirstPart channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
+      <ChannelSecondPart channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
+    </div>
   );
 }

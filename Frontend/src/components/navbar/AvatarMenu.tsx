@@ -11,17 +11,18 @@ type Props = {
   profile: Profile;
 };
 
-export default function NavbarHome({ avatar, profile }: Props) {
+export default function AvatarMenu({ avatar, profile }: Props) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const signoff = async () => {
     try {
-      await fetch(`http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`);
+      await fetch(
+        `http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`
+      );
       router.push("/welcome");
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error);
     }
   };

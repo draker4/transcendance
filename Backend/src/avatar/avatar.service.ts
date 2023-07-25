@@ -46,8 +46,7 @@ export class AvatarService {
     req: any,
     updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-    // [+] en faire un type si utilise souvent
-    const rep = {
+    const rep:ReturnData = {
       success: false,
       message: '',
     };
@@ -76,8 +75,47 @@ export class AvatarService {
       }
     } catch (error) {
       rep.message = error.message;
+	  rep.error
     }
     return rep;
+  }
+
+  async editChannelAvatarColors(
+    req: any,
+    updateUserAvatarDto: UpdateUserAvatarDto,
+  ) {
+	const rep:ReturnData = {
+		success: false,
+		message: '',
+	  };
+	  try {
+
+    const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.isChannel);
+
+    if (!check.isChanOp)
+      throw new Error(rep.error);
+
+		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel))).avatar;
+
+		if (!avatar)
+			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.isChannel})`);
+		avatar.borderColor = updateUserAvatarDto.borderColor;
+		avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
+		await this.avatarRepository.update(avatar.id, avatar);
+
+		this.log(
+			`channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+		  );
+
+		rep.success = true;
+		rep.message = `channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
+
+	} catch (error) {
+		rep.message = error.message;
+		rep.error = error;
+	}
+
+	return rep;
   }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */

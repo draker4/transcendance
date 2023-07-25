@@ -2,14 +2,11 @@ import {
   IsNumber,
   IsString,
   IsBoolean,
-  IsUUID,
   IsNotEmpty,
+  IsOptional,
 } from 'class-validator';
 
-export class GameDTO {
-  @IsUUID()
-  uuid: string;
-
+export class CreateGameDTO {
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -27,25 +24,12 @@ export class GameDTO {
   host: number;
 
   @IsNumber()
+  @IsOptional()
   opponent: number;
 
   @IsString()
+  @IsNotEmpty()
   hostSide: 'Left' | 'Right';
-
-  @IsString()
-  status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
-
-  @IsString()
-  result:
-    | 'Not Started'
-    | 'On Going'
-    | 'Draw'
-    | 'Player1'
-    | 'Player2'
-    | 'Deleted';
-
-  @IsNumber()
-  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @IsNumber()
   @IsNotEmpty()
