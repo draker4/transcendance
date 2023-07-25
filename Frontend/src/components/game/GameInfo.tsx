@@ -121,29 +121,9 @@ function showBall(ball: Ball) {
 
 type Props = {
   gameData: GameData;
-  setGameData: Function;
-  socket: Socket;
 };
 
-export default function WIPPong({ gameData, setGameData, socket }: Props) {
-  useEffect(() => {
-    socket?.on("player", (player: Player) => {
-      const newGameData = { ...gameData };
-      if (player.side === "Left") newGameData.playerLeft = player;
-      else newGameData.playerRight = player;
-      setGameData(newGameData);
-    });
-    socket?.on("status", (fullStatus: StatusMessage) => {
-      const newGameData = { ...gameData };
-      newGameData.status = fullStatus.status;
-      newGameData.result = fullStatus.result;
-      newGameData.playerLeftDynamic.status = fullStatus.playerLeft;
-      newGameData.playerRightDynamic.status = fullStatus.playerRight;
-      newGameData.timer = fullStatus.timer;
-      setGameData(newGameData);
-    });
-  }, [socket, gameData, setGameData]);
-
+export default function GameInfo({ gameData }: Props) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div>

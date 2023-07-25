@@ -16,7 +16,7 @@
 }
 
 .main::-webkit-scrollbar-thumb {
-  background-color: var(--accent);
+  background-color: var(--accent1);
 }
 
 .cercle {
@@ -36,5 +36,5 @@
 }
 
 .cercle.selected {
-  box-shadow: 0 0 10px 2px var(--accent-opacity);
+  box-shadow: 0 0 10px 2px var(--accent2);
 }

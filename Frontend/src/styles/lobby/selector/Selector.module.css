@@ -7,20 +7,20 @@
   margin-bottom: 20px;
 }
 
-.activeButton {
+.activeBtn {
   appearance: none;
   width: 80px;
   height: 30px;
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
   transition: all 0.3s ease-in;
 }
 
-.inactiveButton {
+.inactiveBtn {
   appearance: none;
   appearance: none;
   width: 80px;
@@ -28,13 +28,13 @@
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: var(--secondary-lighter3);
-  background-color: var(--primary-darker);
-  border: 3px solid var(--secondary-lighter3);
+  color: var(--primary3);
+  background-color: var(--primary2);
+  border: 3px solid var(--primary3);
   transition: all 0.3s ease-out;
 }
 
-.inactiveButton:hover {
-  color: var(--accent-lighter1);
-  border: 3px solid var(--accent-lighter1);
+.inactiveBtn:hover {
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
 }

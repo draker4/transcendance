@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState, useRef } from "react";
 import styles from "@/styles/lobby/party/CreateParty.module.css";
 
 import Lobby_Service from "@/services/Lobby.service";
@@ -12,18 +12,25 @@ type Props = {
   lobby: Lobby_Service;
   setCreateParty: Function;
   userId: number;
+  createBtnRef: React.RefObject<HTMLButtonElement>;
 };
 
-export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
+export default function CreateParty({
+  lobby,
+  setCreateParty,
+  userId,
+  createBtnRef,
+}: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
+  const [enterName, setEnterName] = useState<boolean>(false); //Si le nom est vide, on affiche un message d'erreur
   const [push, setPush] = useState<boolean>(false);
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
-  const [background, setBackground] = useState<string>("background/0");
-  const [ball, setBall] = useState<string>("ball/0");
+  const [background, setBackground] = useState<string>("Earth");
+  const [ball, setBall] = useState<string>("0");
   const [type, setType] = useState<
     "Classic" | "Best3" | "Best5" | "Custom" | "Training"
   >("Classic");
@@ -31,6 +38,13 @@ export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
 
   //Fonction pour rejoindre une game
   const Create_Game = async () => {
+    if (name.trim() === "") {
+      // if name is empty
+      setName("");
+      setEnterName(true);
+      createBtnRef.current!.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     //Creer un objet avec les settings
     const settings: GameDTO = {
       name: name,
@@ -49,7 +63,7 @@ export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
     console.log("Create: " + JSON.stringify(settings));
 
     //Creer la game
-    const res = await lobby.CreateGame(settings);
+    const res = await lobby.createGame(settings);
   };
 
   const resetCreate = () => {
@@ -58,8 +72,8 @@ export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
     setMaxPoint(3);
     setMaxRound(1);
     setHostSide("Left");
-    setBackground("background/0");
-    setBall("ball/0");
+    setBackground("Earth");
+    setBall("0");
     setType("Classic");
     setCreateParty(false);
   };
@@ -70,12 +84,16 @@ export default function CreateParty({ lobby, setCreateParty, userId }: Props) {
       <div className={styles.name}>
         <label className={styles.section}>Party Name</label>
         <input
-          className={styles.nameInput}
+          className={enterName ? styles.nameInputError : styles.nameInput}
           type="text"
+          placeholder={enterName ? "Please enter a name" : ""}
           id="name"
           name="name"
           value={name}
-          onChange={(event) => setName(event.target.value)}
+          onChange={(event) => {
+            setName(event.target.value);
+            setEnterName(false);
+          }}
         />
       </div>
 

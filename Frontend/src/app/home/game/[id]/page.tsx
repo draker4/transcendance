@@ -24,7 +24,7 @@ export default async function GamePage({ params }: any) {
     story: "",
   };
   let token: string | undefined;
-  let gameID = params.id;
+  let gameId = params.id;
 
   try {
     token = cookies().get("crunchy-token")?.value;
@@ -39,7 +39,7 @@ export default async function GamePage({ params }: any) {
   return (
     <main className={styles.gamePage}>
       <Refresher />
-      <Game profile={profile} token={token} gameID={gameID} />
+      <Game profile={profile} token={token} gameId={gameId} />
     </main>
   );
 }

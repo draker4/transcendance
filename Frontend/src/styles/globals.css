@@ -13,45 +13,41 @@
 
   /* COLOR DEFINES - LIGHT*/
 
-  --primary-light: rgba(254, 254, 254, 1);
-  --primary-darker1-light: rgba(241, 245, 249, 1);
-  --primary-darker2-light: rgb(227, 234, 241);
-  --primary-darker3-light: rgb(209, 218, 226);
+  --primary1-light: rgb(254, 254, 254);
+  --primary2-light: rgb(220, 222, 233);
+  --primary3-light: rgb(183, 184, 207);
 
-  --secondary-light: rgba(100, 116, 139, 1);
-  --secondary-lighter1-light: rgb(145, 153, 163);
-  --secondary-lighter2-light: rgb(179, 185, 194);
-  --secondary-lighter3-light: rgb(220, 226, 233);
+  --secondary1-light: rgb(93, 95, 124);
+  --secondary2-light: rgb(123, 125, 150);
+  --secondary3-light: rgb(170, 171, 184);
 
-  --tertiary-light: rgba(15, 23, 42, 1);
-  --tertiary-lighter1-light: rgb(72, 83, 107);
+  --tertiary1-light: rgb(22, 32, 55);
+  --tertiary2-light: rgb(40, 54, 87);
+  --tertiary3-light: rgb(61, 77, 115);
 
-  --accent-light: rgba(34, 211, 238, 1);
-  --accent-lighter1-light: rgb(159, 225, 236);
-  --accent-opacity-light: rgba(34, 211, 238, 0.6);
-  --accent-darker1-light: rgba(53, 235, 237, 1);
+  --accent1-light: rgb(15 139 222);
+  --accent2-light: rgb(47, 151, 220);
+  --accent3-light: rgb(102, 174, 223);
 
   --notif-light: rgba(255, 85, 85, 1);
 
   /* COLOR DEFINES - DARK*/
 
-  --primary-dark: rgb(42, 41, 41);
-  --primary-darker1-dark: rgb(56, 55, 55);
-  --primary-darker2-dark: rgb(49, 48, 48);
-  --primary-darker3-dark: rgb(59, 56, 56);;
+  --primary1-dark: rgb(17, 19, 31);
+  --primary2-dark: rgb(38, 41, 58);
+  --primary3-dark: rgb(69, 70, 92);
 
-  --secondary-dark: rgb(152, 165, 180);
-  --secondary-lighter1-dark: rgb(138, 144, 155);
-  --secondary-lighter2-dark: rgb(98, 103, 111);
-  --secondary-lighter3-dark: rgb(58, 62, 66);
+  --secondary1-dark: rgb(131, 135, 162);
+  --secondary2-dark: rgb(105, 114, 132);
+  --secondary3-dark: rgb(71, 72, 85);
 
-  --tertiary-dark: rgb(200, 203, 210);
-  --tertiary-lighter1-dark: rgb(127, 130, 138);
+  --tertiary1-dark: rgb(200, 206, 233);
+  --tertiary2-dark: rgb(181, 189, 221);
+  --tertiary3-dark: rgb(140, 144, 194);
 
-  --accent-dark: rgba(34, 211, 238, 1);
-  --accent-lighter1-dark: rgb(159, 225, 236);
-  --accent-opacity-dark: rgba(34, 211, 238, 0.6);
-  --accent-darker1-dark: rgba(53, 235, 237, 1);
+  --accent1-dark: rgb(15 139 222);
+  --accent2-dark: rgb(47, 151, 220);
+  --accent3-dark: rgb(102, 174, 223);
 
   --notif-dark: rgba(255, 85, 85, 1);
 
@@ -66,54 +62,50 @@
   margin: 0;
 }
 
-[color-scheme="dark"] {
-  --primary: var(--primary-dark);
-  --primary-darker1: var(--primary-darker1-dark);
-  --primary-darker2: var(--primary-darker2-dark);
-  --primary-darker3: var(--primary-darker3-dark);
-
-  --secondary: var(--secondary-dark);
-  --secondary-lighter1: var(--secondary-lighter1-dark);
-  --secondary-lighter2: var(--secondary-lighter2-dark);
-  --secondary-lighter3: var(--secondary-lighter3-dark);
-
-  --tertiary: var(--tertiary-dark);
-  --tertiary-lighter1: var(--tertiary-lighter1-dark);
-
-  --accent: var(--accent-dark);
-  --accent-lighter1: var(--accent-lighter1-dark);
-  --accent-opacity: var(--accent-opacity-dark);
-  --accent-darker1: var(--accent-darker1-dark);
-
-  --notif: var(--notif-dark);
-}
-
 [color-scheme="light"] {
-  --primary: var(--primary-light);
-  --primary-darker1: var(--primary-darker1-light);
-  --primary-darker2: var(--primary-darker2-light);
-  --primary-darker3: var(--primary-darker3-light);
+  --primary1: var(--primary1-light);
+  --primary2: var(--primary2-light);
+  --primary3: var(--primary3-light);
 
-  --secondary: var(--secondary-light);
-  --secondary-lighter1: var(--secondary-lighter1-light);
-  --secondary-lighter2: var(--secondary-lighter2-light);
-  --secondary-lighter3: var(--secondary-lighter3-light);
+  --secondary1: var(--secondary1-light);
+  --secondary2: var(--secondary2-light);
+  --secondary3: var(--secondary3-light);
 
-  --tertiary: var(--tertiary-light);
-  --tertiary-lighter1: var(--tertiary-lighter1-light);
+  --tertiary1: var(--tertiary1-light);
+  --tertiary2: var(--tertiary2-light);
+  --tertiary3: var(--tertiary3-light);
 
-  --accent: var(--accent-light);
-  --accent-lighter1: var(--accent-lighter1-light);
-  --accent-opacity: var(--accent-opacity-light);
-  --accent-darker1: var(--accent-darker1-light);
+  --accent1: var(--accent1-light);
+  --accent2: var(--accent2-light);
+  --accent3: var(--accent3-light);
 
   --notif: var(--notif-light);
 }
 
+[color-scheme="dark"] {
+  --primary1: var(--primary1-dark);
+  --primary2: var(--primary2-dark);
+  --primary3: var(--primary3-dark);
+
+  --secondary1: var(--secondary1-dark);
+  --secondary2: var(--secondary2-dark);
+  --secondary3: var(--secondary3-dark);
+
+  --tertiary1: var(--tertiary1-dark);
+  --tertiary2: var(--tertiary2-dark);
+  --tertiary3: var(--tertiary3-dark);
+
+  --accent1: var(--accent1-dark);
+  --accent2: var(--accent2-dark);
+  --accent3: var(--accent3-dark);
+
+  --notif: var(--notif-dark);
+}
+
 html,
 body {
-  background: var(--primary);
-  color: var(--tertiary);
+  background: var(--primary1);
+  color: var(--tertiary1);
   font-family: var(--text-font);
   width: 100%;
   min-height: 100vh;
@@ -132,6 +124,6 @@ h6 {
 }
 
 ::selection {
-  background: var(--primary);
-  color: var(--accent);
+  background: var(--primary1);
+  color: var(--accent1);
 }

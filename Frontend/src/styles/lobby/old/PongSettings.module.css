@@ -16,16 +16,16 @@
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: var(--accent);
-  background-color: var(--primary-darker);
-  border: 3px solid var(--accent);
+  color: var(--accent1);
+  background-color: var(--primary2);
+  border: 3px solid var(--accent1);
   transition: all 0.3s ease-in;
   margin-top: 20px;
 }
 
 .save:hover {
   color: var(--black-2);
-  border: 3px solid var(--accent-lighter1);
+  border: 3px solid var(--accent2);
 }
 
 .save:checked {

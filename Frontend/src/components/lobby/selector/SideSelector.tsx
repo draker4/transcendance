@@ -25,9 +25,7 @@ export default function Selector({ id, value, setValue }: Props) {
         id={id}
         name="sideSelector"
         value="Left"
-        className={
-          value === "Left" ? styles.activeButton : styles.inactiveButton
-        }
+        className={value === "Left" ? styles.activeBtn : styles.inactiveBtn}
         onClick={handleChangeLeft}
       >
         Left
@@ -36,9 +34,7 @@ export default function Selector({ id, value, setValue }: Props) {
         id={id}
         name="sideSelector"
         value="Right"
-        className={
-          value === "Right" ? styles.activeButton : styles.inactiveButton
-        }
+        className={value === "Right" ? styles.activeBtn : styles.inactiveBtn}
         onClick={handleChangeRight}
       >
         Right

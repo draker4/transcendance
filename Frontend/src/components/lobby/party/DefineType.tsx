@@ -72,7 +72,6 @@ export default function DefineType({
 
   return (
     <div className={styles.defineType}>
-      <label className={styles.section}>Type</label>
       <div className={styles.type}>
         {/* Classic */}
         <button

@@ -20,23 +20,23 @@
 }
 
 .activeBtn {
-  color: var(--primary);
-  background-color: var(--secondary-lighter2-light);
-  border: 5px solid var(--secondary-lighter2-light);
+  color: var(--secondary1);
+  background-color: var(--primary2);
+  border: 5px solid var(--primary2);
   border-bottom: none;
   transition: all 0.3s ease-in;
 }
 
 .inactiveBtn {
-  color: var(--secondary-lighter2);
-  background-color: var(--primary-darker);
-  border: 5px solid var(--secondary-lighter2);
+  color: var(--secondary1);
+  background-color: var(--primary1);
+  border: 5px solid var(--primary2);
   border-bottom: none;
   transition: all 0.3s ease-out;
 }
 
 .inactiveBtn:hover {
-  color: var(--accent-lighter1);
-  border: 5px solid var(--accent-lighter1);
+  color: var(--secondary2);
+  border: 5px solid var(--primary3);
   border-bottom: none;
 }

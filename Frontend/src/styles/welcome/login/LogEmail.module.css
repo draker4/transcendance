@@ -16,9 +16,9 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  color: var(--secondary);
-  background-color: var(--primary-darker1);
-  border: 3px solid var(--secondary);
+  color: var(--secondary1);
+  background-color: var(--primary2);
+  border: 3px solid var(--secondary1);
   padding: 6px;
   width: 90%;
   max-width: 400px;
@@ -27,13 +27,13 @@
 }
 
 .input::placeholder {
-  color: var(--tertiary-color);
+  color: var(--tertiary1);
   font-weight: bold;
 }
 
 .input:focus {
   outline: none;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--accent1);
 }
 
 .email {
@@ -44,7 +44,7 @@
   padding-bottom: 10px;
   font-size: 18px;
   font-weight: bold;
-  color: var(--tertiary);
+  color: var(--tertiary1);
 }
 
 .emailBtn {
@@ -66,9 +66,9 @@
   transition: all 0.3s ease-in;
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .continueBtn:checked {
@@ -76,8 +76,8 @@
 }
 
 .continueBtn:hover {
-  color: var(--accent);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
 }
 
 .openPassword {

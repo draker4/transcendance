@@ -11,13 +11,13 @@
   width: clamp(40px, 3vh, 50px);
   height: clamp(40px, 3vh, 50px);
   border-radius: 100%;
-  color: var(--secondary);
-  border: 3px solid var(--accent);
-  background-color: var(--primary-darker1);
+  color: var(--secondary1);
+  border: 3px solid var(--accent1);
+  background-color: var(--primary2);
   font-size: 22px;
 }
 
 .theme button:hover {
-  border: 3px solid var(--accent-darker1);
+  border: 3px solid var(--accent1);
   cursor: pointer;
 }

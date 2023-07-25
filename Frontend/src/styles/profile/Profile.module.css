@@ -1,6 +1,6 @@
 .main {
   height: 75vh;
-  background: var(--primary);
+  background: var(--primary1);
   overflow: scroll;
 
   /* border: 1px dashed chartreuse; */
@@ -9,12 +9,12 @@
 /* -------------PROFILE MAIN FRAME----------------- */
 
 .profileMainFrame {
-  color: var(--secondary);
+  color: var(--secondary1);
   display: block;
   flex-direction: row;
   padding: 1rem;
 
-  background-color: var(--primary-darker1);
+  background-color: var(--primary2);
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
   box-shadow: inset clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
     clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
@@ -29,7 +29,7 @@
   box-shadow: clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
     clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
     clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) rgba(67, 80, 126, 0.22);
-  background-color: var(--primary);
+  background-color: var(--primary1);
 }
 
 .profileMainFrame .first {
@@ -62,7 +62,7 @@ p.icon {
 
 .link {
   text-decoration: none;
-  color: var(--accent);
+  color: var(--accent1);
   font-family: var(--title-font);
   font-size: 1.2rem;
   font-weight: 650;

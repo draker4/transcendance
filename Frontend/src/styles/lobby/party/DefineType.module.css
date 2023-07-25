@@ -8,7 +8,7 @@
 .section {
   font-size: 16px;
   font-weight: bold;
-  color: var(--secondary);
+  color: var(--tertiary2);
   margin-bottom: 5px;
 }
 
@@ -29,20 +29,20 @@
 }
 
 .activeBtn {
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
   transition: all 0.3s ease-in;
 }
 
 .inactiveBtn {
-  color: var(--secondary-lighter3);
-  background-color: var(--primary-darker);
-  border: 3px solid var(--secondary-lighter3);
+  color: var(--tertiary3);
+  background-color: var(--primary2);
+  border: 3px solid var(--tertiary3);
   transition: all 0.3s ease-out;
 }
 
 .inactiveBtn:hover {
-  color: var(--accent-lighter1);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
 }

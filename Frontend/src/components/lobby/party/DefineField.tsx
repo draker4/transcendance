@@ -21,25 +21,18 @@ export default function DefineField({
 
   // reset settings
   useEffect(() => {
-    setBackground("background/Field");
-    setBall("ball/0");
+    setBackground("Earth");
+    setBall("0");
   }, [setBackground, setBall]);
 
   return (
     <div className={styles.fieldSelector}>
       {/* Background */}
-      <label className={styles.section}>Background</label>
       <ImgSelector
+        type={"background"}
         value={background}
         setValue={setBackground}
-        imgs={[
-          "background/Field",
-          "background/Football",
-          "background/Island",
-          "background/Rugby",
-          "background/Tennis",
-          "background/Winter",
-        ]}
+        imgs={["Earth", "Football", "Island", "Rugby", "Tennis", "Winter"]}
         width={135}
         height={80}
       />
@@ -47,9 +40,10 @@ export default function DefineField({
       {/* Ball */}
       <label className={styles.section}>Ball</label>
       <ImgSelector
+        type={"ball"}
         value={ball}
         setValue={setBall}
-        imgs={["ball/0", "ball/1", "ball/2", "ball/3"]}
+        imgs={["0", "1", "2", "3"]}
         width={30}
         height={30}
       />
