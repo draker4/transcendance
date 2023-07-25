@@ -372,7 +372,10 @@ export class ChatService {
     try {
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      if (!user) throw new Error('no user found');
+      const pongie = await this.usersService.getUserChannels(pongieId);
+      
+      if (!user || !pongie)
+        throw new Error('no user found');
 
       // check if channel of type 'privateMsg' already exists
       const channelName = this.channelService.formatPrivateMsgChannelName(
@@ -420,7 +423,10 @@ export class ChatService {
         relationUser.joined = true;
         await this.userChannelRelation.save(relationUser);
       }
+      
+      channel.name = pongie.login;
 
+      console.log(channel);
       return {
         success: true,
         exists: false,

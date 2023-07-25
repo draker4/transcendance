@@ -91,7 +91,6 @@ export default function Search({
         channel: boolean,
       }) => {
         if (payload.success) {
-          // console.log(payload.channel);
           openDisplay(payload.channel);
         }
         else if (payload.exists) {
