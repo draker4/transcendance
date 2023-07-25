@@ -46,18 +46,19 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-        socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
-		socket.join('channel:2'); // [!] ouh c'est moche
+    //     socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
+		// socket.join('channel:2'); // [!] ouh c'est moche
 
         this.connectedUsers.set(payload.sub, socket.id);
+        this.chatService.joinAllMyChannels(socket, payload.sub);
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(payload.sub);
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
         });
 
-       this.log('connected users = '); // [?]
-	   this.log(this.connectedUsers); // [?]
+        this.log('connected users = '); // [?]
+	      this.log(this.connectedUsers); // [?]
 
       } catch (error) {
         console.log(error);

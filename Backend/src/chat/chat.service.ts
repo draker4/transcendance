@@ -111,7 +111,6 @@ export class ChatService {
           };
       });
 
-      // console.log(all);
       return all;
     } catch (error) {
       throw new WsException(error.message);
@@ -490,6 +489,10 @@ export class ChatService {
         this.usersService.getUserAvatar(reqUserId),
       ]);
 
+      if (sender.avatar.decrypt) {
+        sender.avatar.image = await this.cryptoService.decrypt(sender.avatar.image);
+      }
+
       const sendMsg: sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
@@ -504,16 +507,23 @@ export class ChatService {
 
       this.messageService.addMessage(sendMsg);
 
-      if (fetchedChannel.type === 'privateMsg') {
-        this.log(`message emit to room : 'channel:${sendMsg.channelName}'`);
-        server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
-      } else {
-        this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
-        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
-      }
-    } catch (error) {
+      this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
+      server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
+
+      } catch (error) {
       throw new WsException(error.message);
     }
+  }
+  
+  async joinAllMyChannels(socket: Socket, userId: number) {
+    const relations = await this.userChannelRelation.find({
+      where: { userId: userId, joined: true, isBanned: false }
+    });
+    
+    relations.map(relation => {
+      console.log(relation);
+      socket.join('channel:' + relation.channelId);
+    });
   }
 
   // tools
@@ -524,6 +534,6 @@ export class ChatService {
     const stop = '\x1b[0m';
 
     process.stdout.write(green + '[chat service]  ' + stop);
-    console.log(message);
+    // console.log(message);
   }
 }
