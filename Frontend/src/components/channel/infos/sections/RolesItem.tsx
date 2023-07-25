@@ -2,16 +2,18 @@ import styles from "@/styles/profile/InfoCard.module.css";
 import AvatarUser from "../../../avatarUser/AvatarUser";
 import Link from "next/link";
 import { useState } from "react";
+import ChanOpControlPannel from "./ChanOpControlPannel";
 
 type Props = {
   relation: UserRelation;
+  myRelation: UserRelation;
   onFocusOn: () => void;
   onFocusOff: () => void;
   onHover: () => void;
   onLeave: () => void;
 };
 
-export default function RolesItem({ relation, onFocusOn, onFocusOff, onHover, onLeave }: Props) {
+export default function RolesItem({ relation, myRelation, onFocusOn, onFocusOff, onHover, onLeave }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocusOn = () => {
@@ -59,8 +61,7 @@ export default function RolesItem({ relation, onFocusOn, onFocusOff, onHover, on
         {relation.user.login}
       </Link>
 
-      {/* isFocused && <button>X</button>/* [+] ajouter ici boutons kick - bann - give chanOp 
-       visible seulement au survol de la row */}
+      { isFocused && myRelation.isChanOp && <ChanOpControlPannel relation={relation} myRelation={myRelation} />}
     </article>
   );
 }

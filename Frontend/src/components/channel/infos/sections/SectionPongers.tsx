@@ -28,7 +28,7 @@ export default function SectionPongers({
       return <></>
     } else {
       return (
-        <RolesList relations={relations} role={role} />
+        <RolesList relations={relations} myRelation={myRelation} role={role} />
       );
     }
   };

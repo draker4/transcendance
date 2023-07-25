@@ -200,7 +200,6 @@
 
 .rolesList .row.focused {
   background-color: var(--primary-darker2);
-  
 }
 
 .rolesList .row .avatar {
@@ -216,4 +215,8 @@
   font-weight: 600;
   font-size: 1rem;
   user-select: none;
+}
+
+.rolesList .row .controlPannel {
+  margin: auto 0;
 }
