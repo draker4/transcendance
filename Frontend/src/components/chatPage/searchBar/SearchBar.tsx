@@ -76,7 +76,6 @@ export default function SearchBar({ socket, openDisplay }: {
 				const	addChannel: CreateOne = {
 					id: -1,
 					avatar: {
-						name: "",
 						image: "",
 						variant: "rounded",
 						borderColor: "#22d3ee",

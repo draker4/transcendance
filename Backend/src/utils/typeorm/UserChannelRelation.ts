@@ -33,8 +33,8 @@ export class UserChannelRelation {
 	@Column({ default: false})
 	isChanOp: boolean;
 
-	// @Column({ default: true })
-	// joined: boolean;
+	@Column({ default: false })
+	invited: boolean;
 
 	@Column({ default: true })
   	joined: boolean;

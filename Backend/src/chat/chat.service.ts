@@ -111,7 +111,6 @@ export class ChatService {
           };
       });
 
-      // console.log(all);
       return all;
     } catch (error) {
       throw new WsException(error.message);
@@ -239,7 +238,24 @@ export class ChatService {
   }
 
   async getMessages(channelId: number) {
-    return this.channelService.getChannelMessages(channelId);
+    try {
+      const channel = await this.channelService.getChannelMessages(channelId);
+
+      channel.messages = await Promise.all(channel.messages.map(async (message) => {
+
+        // decrypt image if needed
+        if (message.user.avatar.decrypt) {
+          message.user.avatar.image = await this.cryptoService.decrypt(message.user.avatar.image);
+        }
+
+        return message;
+      }));
+
+      return channel;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   async addPongie(userId: number, pongieId: number) {
@@ -351,6 +367,8 @@ export class ChatService {
       'channel:' + channelId;
       socket.emit('notif');
 
+      socket.join('channel:' + channel.id);
+
       // check if user already joined
       if (!relation.joined) {
         relation.joined = true;
@@ -372,7 +390,10 @@ export class ChatService {
     try {
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
-      if (!user) throw new Error('no user found');
+      const pongie = await this.usersService.getUserAvatar(pongieId);
+      
+      if (!user || !pongie)
+        throw new Error('no user found');
 
       // check if channel of type 'privateMsg' already exists
       const channelName = this.channelService.formatPrivateMsgChannelName(
@@ -420,6 +441,9 @@ export class ChatService {
         relationUser.joined = true;
         await this.userChannelRelation.save(relationUser);
       }
+      
+      channel.name = pongie.login;
+      channel.avatar = pongie.avatar;
 
       return {
         success: true,
@@ -466,7 +490,11 @@ export class ChatService {
         this.channelService.getChannelById(message.channelId),
         this.usersService.getUserAvatar(reqUserId),
       ]);
-
+      
+      if (sender.avatar.decrypt) {
+        sender.avatar.image = await this.cryptoService.decrypt(sender.avatar.image);
+      }
+            
       const sendMsg: sendMsgDto = {
         content: message.content,
         date: nowtoISOString,
@@ -474,23 +502,29 @@ export class ChatService {
         channelName: fetchedChannel.name,
         channelId: fetchedChannel.id,
       };
-
+      
       this.log(
         `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
-      ); // checking
-
+        ); // checking
+        
       this.messageService.addMessage(sendMsg);
+      
+      this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
+      server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
 
-      if (fetchedChannel.type === 'privateMsg') {
-        this.log(`message emit to room : 'channel:${sendMsg.channelName}'`);
-        server.to('channel:' + sendMsg.channelName).emit('sendMsg', sendMsg);
-      } else {
-        this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
-        server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
-      }
-    } catch (error) {
-      throw new WsException(error.message);
+      } catch (error) {
+        throw new WsException(error.message);
     }
+  }
+  
+  async joinAllMyChannels(socket: Socket, userId: number) {
+    const relations = await this.userChannelRelation.find({
+      where: { userId: userId, joined: true, isBanned: false }
+    });
+    
+    relations.map(relation => {
+      socket.join('channel:' + relation.channelId);
+    });
   }
 
   // tools

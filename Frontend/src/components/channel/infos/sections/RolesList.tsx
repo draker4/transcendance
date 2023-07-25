@@ -5,9 +5,10 @@ import RolesItem from "./RolesItem";
 type Props = {
   relations: UserRelation[];
   role: ChannelRoles;
+  myRelation: UserRelation;
 };
 
-export default function RolesList({ relations, role }: Props) {
+export default function RolesList({ relations, role, myRelation }: Props) {
   return (
     <div className={styles.rolesList}>
       <p className={styles.tinyTitle}>{role}</p>
@@ -16,10 +17,11 @@ export default function RolesList({ relations, role }: Props) {
           <li key={relation.userId}>
             <RolesItem
               relation={relation}
-              onFocusOn={() => console.log("Focused")}
-              onFocusOff={() => console.log("Blurred")}
-              onHover={() => console.log("Hoover")}
-              onLeave={() => console.log("Leave")}
+			  myRelation={myRelation}
+              onFocusOn={() => {/*console.log("Focused")*/}}
+              onFocusOff={() => {/* console.log("Blurred") */}}
+              onHover={() => {/* console.log("Hoover") */}}
+              onLeave={() => {/* console.log("Leave") */}}
             />
           </li>
         ))}

@@ -187,6 +187,7 @@ export default function Search({
       <div className={styles.searchBar} ref={inputRef}>
         <input
           type="text"
+          maxLength={100}
           placeholder="Channels, pongies..."
           onClick={(e) => {
             getData(e);

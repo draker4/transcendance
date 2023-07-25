@@ -11,17 +11,19 @@
 .channelMsgFrame .header {
   min-height: 40px;
   max-height: 60px;
-  background-color: var(--primary3);
+  background-color: var(--primary2);
   display: flex;
   justify-content: center;
   padding: 10px 35px;
   align-items: center;
+  flex-flow: row nowrap;
   /* background-color: var(--notif); */
 }
 
 .channelMsgFrame .header .icon {
   justify-content: flex-start;
   font-size: 1.5rem;
+  padding-right: 15px;
 }
 
 .channelMsgFrame .header .card {
@@ -38,8 +40,15 @@
 
   /* border: 2px dashed var(--notif); */
 }
+
 .channelMsgFrame .header .card {
   cursor: pointer;
+}
+.channelMsgFrame .header .name {
+  cursor: pointer;
+  border: 2px solid red;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .channelMsgFrame .header .card .avatar {

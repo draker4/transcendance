@@ -10,9 +10,9 @@ type Props = {
 };
 
 export default function StoryEditable({ profile, token }: Props) {
-	const profileService = new Profile_Service(token);
-	
-	const [editMode, setEditMode] = useState<boolean>(false);
+  const profileService = new Profile_Service(token);
+
+  const [editMode, setEditMode] = useState<boolean>(false);
   const [story, setStory] = useState<string>(
     profile.story === null ? "" : profile.story
   );
@@ -26,8 +26,6 @@ export default function StoryEditable({ profile, token }: Props) {
 
   const handleEditedStoryChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     setEditedStory(event.target.value);
-    // event.target.style.height = 'auto';
-    // event.target.style.height = event.target.scrollHeight + 'px';
   };
 
   const handleSubmitStory = async (e: any) => {
@@ -45,9 +43,9 @@ export default function StoryEditable({ profile, token }: Props) {
       setNotif(checkedStory);
 
       if (checkedStory.length == 0) {
-        const rep:Rep = await profileService.editUser({
-			story: submitedStory,
-		  });;
+        const rep: Rep = await profileService.editUser({
+          story: submitedStory,
+        });
 
         if (rep.success) {
           const updatedProfile = profile;
@@ -57,9 +55,9 @@ export default function StoryEditable({ profile, token }: Props) {
           setStory(updatedProfile.story);
           setEditMode(false);
         } else {
-			setNotif(rep.message);
-			setEditMode(false);
-		}
+          setNotif(rep.message);
+          setEditMode(false);
+        }
       }
     }
   };
@@ -74,7 +72,6 @@ export default function StoryEditable({ profile, token }: Props) {
           onClick={handleClickEdit}
         >
           <textarea value={story} rows={6} readOnly />
-          {/* <button onClick={handleClickEdit}>Edit</button> */}
         </div>
       )}
 
@@ -84,7 +81,6 @@ export default function StoryEditable({ profile, token }: Props) {
             {" "}
             set here your crunchy story{" "}
           </p>
-          {/* <button onClick={handleClickEdit}>Edit</button> */}
         </div>
       )}
 
@@ -113,9 +109,4 @@ export default function StoryEditable({ profile, token }: Props) {
       )}
     </div>
   );
-}
-
-// [?][!] c'est moi qui ait fait ça par erreur ? un quickfix failed ?
-function filterBadwords(submitedStory: string): string {
-  throw new Error("Function not implemented.");
 }
