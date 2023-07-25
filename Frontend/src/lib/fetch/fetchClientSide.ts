@@ -13,6 +13,7 @@ export default async function fetchClientSide(
 		body?: any,
 	},
 ) {
+
 	// Make the API request with the access token in the "Authorization" header
 	const	fetchOptions: RequestInit = {
 		method: options?.method || 'GET',
@@ -39,9 +40,9 @@ export default async function fetchClientSide(
 		});
 
 		if (!res.ok)
-			throw new Error('error fetch refresh token');
+			throw new Error('disconnect');
 
-		const data = await res.json();
+		const	data = await res.json();
 		const	token = data.access_token;
 		const	refreshToken = data.refresh_token;
 		fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
@@ -67,6 +68,9 @@ export default async function fetchClientSide(
 		}
 
 		const resAgain = await fetch(url, fetchOptions);
+		if (resAgain.status === 401)
+			throw new Error('disconnect');
+
 		return resAgain;
 	}
 
