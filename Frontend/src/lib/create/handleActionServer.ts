@@ -28,7 +28,6 @@ export async function handleActionServer(
       avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
     }
 
-    console.log("laaaaaa");
     const register = await fetch(
       `http://${process.env.HOST_IP}:4000/api/auth/firstLogin`,
       {
@@ -45,7 +44,6 @@ export async function handleActionServer(
     );
 
     const data = await register.json();
-    console.log(data);
 
     if (data.error) throw new Error(data.message);
 

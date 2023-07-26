@@ -61,6 +61,9 @@ export class ChatService {
 
             if (!pongie) throw new Error('no pongie found');
 
+            if (pongie.avatar.decrypt)
+              pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
+            
             channel.avatar = pongie.avatar;
             channel.name = pongie.login;
           }
@@ -174,7 +177,6 @@ export class ChatService {
             relation.pongie.avatar.image = await this.cryptoService.decrypt(
               relation.pongie.avatar.image,
             );
-            relation.pongie.avatar.decrypt = false;
           }
           return relation.pongie;
         }),
@@ -441,6 +443,9 @@ export class ChatService {
         relationUser.joined = true;
         await this.userChannelRelation.save(relationUser);
       }
+
+      if (pongie.avatar.decrypt)
+        pongie.avatar.image = await this.cryptoService.decrypt(pongie.avatar.image);
       
       channel.name = pongie.login;
       channel.avatar = pongie.avatar;
