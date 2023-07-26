@@ -1,36 +1,36 @@
 .defineType {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 20px auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 20px auto;
 }
 
 .defineType button {
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 10px;
-    margin-top: 5px;
-    width: 80px;
-    height: 80px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin: 10px;
+  margin-top: 5px;
+  width: 80px;
+  height: 80px;
 }
 
 .activeBtn {
-    color: var(--primary);
-    background-color: var(--secondary);
-    border: 3px solid var(--accent);
-    transition: all 0.3s ease-in;
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
+  transition: all 0.3s ease-in;
 }
 
 .inactiveBtn {
-    color: var(--secondary-lighter3);
-    background-color: var(--primary-darker);
-    border: 3px solid var(--secondary-lighter3);
-    transition: all 0.3s ease-out;
+  color: var(--secondary3);
+  background-color: var(--primary2);
+  border: 3px solid var(--secondary3);
+  transition: all 0.3s ease-out;
 }
 
 .inactiveBtn:hover {
-    color: var(--accent-lighter1);
-    border: 3px solid var(--accent-lighter1);
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
 }

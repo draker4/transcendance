@@ -33,7 +33,7 @@ class LobbyService {
   }
 
   //Recupere l'etat du joueur ( in game or not )
-  public async IsInGame(): Promise<any> {
+  public async isInGame(): Promise<any> {
     const response = await this.fetchData("isingame", "GET");
     const data = await response.json();
     if (data.success === true) {
@@ -45,7 +45,7 @@ class LobbyService {
   }
 
   //Creer la game
-  public async CreateGame(gameData: GameDTO): Promise<any> {
+  public async createGame(gameData: GameDTO): Promise<any> {
     const body = JSON.stringify(gameData);
     const response = await this.fetchData("create", "POST", body);
     const data = await response.json();
@@ -57,7 +57,7 @@ class LobbyService {
   }
 
   //Reprendre la partie en cours
-  public async ResumeGame(gameID: string): Promise<any> {
+  public async resumeGame(gameID: string): Promise<any> {
     const url = "home/game/" + gameID;
     this.router.push(url);
   }
@@ -68,14 +68,14 @@ class LobbyService {
   }
 
   //Recupere la liste des game en cours
-  public async GetGameList(): Promise<any> {
+  public async getGameList(): Promise<any> {
     const response = await this.fetchData("getall", "GET");
     const data = await response.json();
     return data.data;
   }
 
   //Charge une page
-  public async LoadPage(url: string): Promise<any> {
+  public async loadPage(url: string): Promise<any> {
     this.router.push(url);
   }
 
@@ -88,7 +88,7 @@ class LobbyService {
   }
 
   //Get league data
-  public async GetLeague(): Promise<any> {
+  public async getLeague(): Promise<any> {
     const response = await this.fetchData("getleague", "GET");
     const data = await response.json();
     return data;

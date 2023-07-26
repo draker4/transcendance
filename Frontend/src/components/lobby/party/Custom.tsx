@@ -26,7 +26,7 @@ export default function Custom({
   // -------------------------------------  RENDU  ------------------------------------ //
 
   return (
-    <div className={styles.customs}>
+    <div className={styles.custom}>
       {/* Push */}
       <label className={styles.section}>Push</label>
       <Selector id="push" value={push} setValue={setPush} />

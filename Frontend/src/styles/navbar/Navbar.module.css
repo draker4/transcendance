@@ -7,8 +7,8 @@
   justify-content: space-between;
   padding: 10px;
   user-select: none;
-  background-color: var(--primary);
-  border-bottom: 1.5px solid var(--secondary);
+  background-color: var(--primary1);
+  border-bottom: 1.5px solid var(--secondary1);
   margin-left: 5%;
   margin-bottom: 10px;
 }
@@ -22,7 +22,7 @@
   flex-flow: row nowrap;
   align-items: center;
   font-family: var(--title-font);
-  color: var(--secondary);
+  color: var(--secondary1);
   text-decoration: none;
 }
 
@@ -60,22 +60,22 @@
   border-radius: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
   transition: all 0.3s ease-in;
 }
 
 .logInBtn:hover {
-  color: var(--accent-lighter1);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
   cursor: pointer;
 }
 
 .title {
   display: flex;
   font-family: var(--title-font);
-  color: var(--tertiary);
+  color: var(--tertiary1);
   font-size: 20px;
   text-decoration: none;
 }
@@ -88,9 +88,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--secondary);
-  border: 3px solid var(--accent);
-  background-color: var(--primary-darker1);
+  color: var(--secondary1);
+  border: 3px solid var(--accent1);
+  background-color: var(--primary2);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -104,6 +104,6 @@
 }
 
 .chatBtn:hover {
-  border: 3px solid var(--accent-darker1);
+  border: 3px solid var(--accent1);
   cursor: pointer;
 }

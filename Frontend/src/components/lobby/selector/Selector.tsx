@@ -25,7 +25,7 @@ export default function Selector({ id, value, setValue }: Props) {
         id={id}
         name="ai"
         value="yes"
-        className={value ? styles.activeButton : styles.inactiveButton}
+        className={value ? styles.activeBtn : styles.inactiveBtn}
         onClick={handleChangeTrue}
       >
         Yes
@@ -34,7 +34,7 @@ export default function Selector({ id, value, setValue }: Props) {
         id={id}
         name="ai"
         value="no"
-        className={!value ? styles.activeButton : styles.inactiveButton}
+        className={!value ? styles.activeBtn : styles.inactiveBtn}
         onClick={handleChangeFalse}
       >
         No

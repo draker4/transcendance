@@ -2,6 +2,7 @@ import styles from "@/styles/lobby/selector/ImgSelector.module.css";
 import Image from "next/image";
 
 type Props = {
+  type: "background" | "ball";
   value: string;
   setValue: Function;
   imgs: string[];
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function ImgSelector({
+  type,
   value,
   setValue,
   imgs,
@@ -35,7 +37,7 @@ export default function ImgSelector({
           onClick={(event) => handleChange(event, img)}
         >
           <Image
-            src={`/images/game/${img}.png`}
+            src={`/images/game/${type}/${img}.png`}
             alt={img}
             width={width}
             height={height}

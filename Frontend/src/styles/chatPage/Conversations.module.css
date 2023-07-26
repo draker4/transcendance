@@ -1,10 +1,10 @@
 .main {
-	border: 1px solid grey;
-	border-radius: 10px;
-	padding: 20px;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
+  border: 1px solid grey;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .avatar {
@@ -14,9 +14,9 @@
 }
 
 .scroll {
-	/* border: 1px solid red; */
-	flex-grow: 1;
-	overflow-y: auto;
+  /* border: 1px solid red; */
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .list {
@@ -31,7 +31,7 @@
 }
 
 .list:hover {
-	background-color: var(--primary-darker2);
+  background-color: var(--primary3);
 }
 
 .name {
@@ -63,35 +63,35 @@
 }
 
 .title {
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	justify-content: space-between;
-	padding: 10px;
-	margin-bottom: 5px;
-	margin-top: 5px;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
 .menu {
-	height: 20px;
-	width: 20px;
-	cursor: pointer;
-	color: var(--tertiary);
-	margin-left: 20px;
-	border: 1px solid var(--tertiary);
-	padding: 2px;
-	border-radius: 10%;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  color: var(--tertiary1);
+  margin-left: 20px;
+  border: 1px solid var(--tertiary1);
+  padding: 2px;
+  border-radius: 10%;
 }
 
 .menu:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .menu:active {
-	scale: 0.95;
+  scale: 0.95;
 }
 
 .icons {
-	display: flex;
-	flex-flow: row nowrap;
+  display: flex;
+  flex-flow: row nowrap;
 }

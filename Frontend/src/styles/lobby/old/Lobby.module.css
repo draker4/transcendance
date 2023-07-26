@@ -10,8 +10,8 @@
   align-items: center;
   flex-grow: 1;
   text-align: center;
-  background: var(--primary);
-  color: var(--tertiary);
+  background: var(--primary1);
+  color: var(--tertiary1);
 }
 
 .loading_page h1 {

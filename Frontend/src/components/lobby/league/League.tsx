@@ -10,11 +10,10 @@ import StreamGame from "@/components/lobby/league/StreamGame";
 
 type Props = {
   Matchmaking: any;
-  isLoading: boolean;
   token: string | undefined;
 };
 
-export default function League({ Matchmaking, isLoading, token }: Props) {
+export default function League({ Matchmaking, token }: Props) {
   //Creer l'objet lobby
   const Lobby = new LobbyService(token);
   const [json, setJson] = useState<League>({
@@ -54,13 +53,6 @@ export default function League({ Matchmaking, isLoading, token }: Props) {
   //   }, [Lobby]);
 
   // -------------------------------------  RENDU  ------------------------------------ //
-  if (isLoading) {
-    return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.league}>

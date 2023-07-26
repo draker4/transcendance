@@ -19,9 +19,24 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  color: var(--secondary);
-  background-color: var(--primary-darker1);
-  border: 3px solid var(--accent);
+  color: var(--secondary1);
+  background-color: var(--primary1);
+  border: 3px solid var(--accent1);
+  padding: 6px;
+  width: 90%;
+  max-width: 200px;
+  transition: all 0.3s ease-in;
+  text-align: center;
+}
+
+.nameInputError {
+  appearance: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--secondary1);
+  background-color: var(--primary1);
+  border: 3px solid var(--notif);
   padding: 6px;
   width: 90%;
   max-width: 200px;
@@ -32,7 +47,7 @@
 .section {
   font-size: 18px;
   font-weight: bold;
-  color: var(--primary);
+  color: var(--tertiary1);
   margin-bottom: 5px;
 }
 
@@ -41,7 +56,7 @@
   appearance: none;
   padding: 6px 20px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   transition: all 0.3s ease-in;
   margin: 2px;
@@ -53,25 +68,25 @@
 }
 
 .save {
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .save:hover {
-  color: var(--accent);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
 }
 
 .cancel {
-  color: var(--secondary-lighter3);
-  background-color: var(--primary-darker);
-  border: 3px solid var(--secondary-lighter3);
+  color: var(--secondary3);
+  background-color: var(--primary2);
+  border: 3px solid var(--secondary3);
 }
 
 .cancel:hover {
-  color: var(--accent-lighter1);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
 }
 
 .confirm {

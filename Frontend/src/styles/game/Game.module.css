@@ -10,7 +10,7 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  background-color: var(--secondary-lighter2-light);
+  background-color: var(--secondary3);
   margin-block: 20px;
   border-radius: 10px;
   width: 90%;
@@ -37,9 +37,9 @@
   margin: 10px;
   font-size: 40px;
   font-weight: Bold;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
   transition: all 0.3s ease-in;
 }
 
@@ -48,6 +48,6 @@
 }
 
 .quitBtn:hover {
-  color: var(--accent-lighter1);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent2);
+  border: 3px solid var(--accent2);
 }

@@ -55,7 +55,11 @@ export class GameManager {
       try {
         return this.createPong(gameId, userId, socket);
       } catch (error) {
-        this.logger.error("Can't create Pong Session", 'joinGame', error); // Use 'joinGame' as the context for this log message
+        this.logger.error(
+          `Can't create Pong Session: ${error.message}`,
+          'joinGame',
+          error,
+        ); // Use 'joinGame' as the context for this log message
         throw new WsException("Can't create Pong Session");
       }
     }
@@ -63,7 +67,7 @@ export class GameManager {
     // Add the user to userInfo array
     const user = new UserInfo(userId, socket, gameId);
     this.usersConnected.push(user);
-    return game.join(user, this.usersService);
+    return game.join(user);
   }
 
   // Method to handle player actions in the game
@@ -100,7 +104,11 @@ export class GameManager {
 
       return { success: true, message: 'User disconnected' };
     } catch (error) {
-      this.logger.error('Error while disconnecting user', 'disconnect', error);
+      this.logger.error(
+        `Error while disconnecting user: ${error.message}`,
+        'Manager - disconnect',
+        error,
+      );
       throw new WsException('Error while disconnecting user');
     }
   }
@@ -115,13 +123,20 @@ export class GameManager {
   ): Promise<any> {
     try {
       const game: Game = await this.gameService.getGameData(gameId);
-      const pong = new Pong(this.server, gameId, game, this.gameService);
+      const pong = new Pong(
+        this.server,
+        gameId,
+        game,
+        this.gameService,
+        this.usersService,
+      );
+      await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);
       this.printPongSessions();
       return this.joinGame(gameId, userId, socket);
     } catch (error) {
       this.logger.error(
-        'Error while creating Pong Session',
+        `Error while creating Pong Session: ${error.message}`,
         'createPong',
         error,
       );

@@ -1,30 +1,42 @@
-import { GameData, Player, Score, Timer, Ball } from "@Shared/types/Game.types";
+import {
+  GameData,
+  Score,
+  Timer,
+  Ball,
+  BallDynamic,
+  Player,
+  PlayerDynamic,
+} from "@Shared/types/Game.types";
 
-type Props = {
-  gameData: GameData;
-};
+function showPlayerDynamic(playerDynamic: PlayerDynamic, position: string) {
+  return (
+    <div>
+      <h3>{position} Dynamic</h3>
+      <p>PositionX: {playerDynamic.posX}</p>
+      <p>PositionY: {playerDynamic.posY}</p>
+      <p>Speed: {playerDynamic.speed}</p>
+      <p>Move: {playerDynamic.move}</p>
+      <p>Push: {playerDynamic.push}</p>
+      <p>Status: {playerDynamic.status}</p>
+    </div>
+  );
+}
 
 function showPlayer(player: Player | null, position: string) {
   if (!player)
     return (
       <div>
-        <h3>{position}</h3>
+        <h3>{position} Fixed</h3>
         <p>Player not defined</p>
       </div>
     );
   return (
     <div>
-      <h3>{position}</h3>
+      <h3>{position} Fixed</h3>
       <p>Id: {player.id}</p>
       <p>Name: {player.name}</p>
-      <p>Color: {player.color}</p>
+      <p>Color: {JSON.stringify(player.color)}</p>
       <p>Side: {player.side}</p>
-      <p>PositionX: {player.posX}</p>
-      <p>PositionY: {player.posY}</p>
-      <p>Speed: {player.speed}</p>
-      <p>Move: {player.move}</p>
-      <p>Push: {player.push}</p>
-      <p>Status: {player.status}</p>
     </div>
   );
 }
@@ -47,12 +59,47 @@ function showScore(score: Score | null) {
 }
 
 function showTimer(timer: Timer | null) {
-  if (!timer) return <p>Timer not defined</p>;
+  if (!timer)
+    return (
+      <div>
+        <h3>Timer</h3>
+        <p>Timer not defined</p>
+      </div>
+    );
+
+  function displayTime(time: Date): string {
+    return time.toLocaleTimeString();
+  }
+
+  const startTime = timer.start ? new Date(timer.start) : null;
+  const endTime = timer.end ? new Date(timer.end) : null;
+
+  const secondsRemaining =
+    endTime instanceof Date
+      ? Math.floor((endTime.getTime() - Date.now()) / 1000)
+      : 0;
+
   return (
     <div>
       <h3>Timer</h3>
       <p>Reason: {timer.reason}</p>
-      <p>Time: {timer.time}</p>
+      <p>Start: {startTime ? displayTime(startTime) : "N/A"}</p>
+      <p>End: {endTime ? displayTime(endTime) : "N/A"}</p>
+      <p>Seconds Remaining: {secondsRemaining}</p>
+    </div>
+  );
+}
+
+function showBallDynamic(ballDynamic: BallDynamic) {
+  return (
+    <div>
+      <h3>Ball Dynamic</h3>
+      <p>PositionX: {ballDynamic.posX}</p>
+      <p>PositionY: {ballDynamic.posY}</p>
+      <p>Speed: {ballDynamic.speed}</p>
+      <p>MoveX: {ballDynamic.moveX}</p>
+      <p>MoveY: {ballDynamic.moveY}</p>
+      <p>Push: {ballDynamic.push}</p>
     </div>
   );
 }
@@ -60,20 +107,18 @@ function showTimer(timer: Timer | null) {
 function showBall(ball: Ball) {
   return (
     <div>
-      <h2>Game Ball</h2>
+      <h3>Ball Fixed</h3>
       <p>Image: {ball.img}</p>
       <p>Color: {ball.color}</p>
-      <p>PositionX: {ball.posX}</p>
-      <p>PositionY: {ball.posY}</p>
-      <p>Speed: {ball.speed}</p>
-      <p>MoveX: {ball.moveX}</p>
-      <p>MoveY: {ball.moveY}</p>
-      <p>Push: {ball.push}</p>
     </div>
   );
 }
 
-export default function WIPPong({ gameData }: Props) {
+type Props = {
+  gameData: GameData;
+};
+
+export default function GameInfo({ gameData }: Props) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div>
@@ -81,10 +126,15 @@ export default function WIPPong({ gameData }: Props) {
       <p>Game ID: {gameData.id}</p>
       <p>Game Name: {gameData.name}</p>
 
+      <h2>Game Ball</h2>
       {showBall(gameData.ball)}
+      {showBallDynamic(gameData.ballDynamic)}
+
       <h2>Game Player</h2>
       {showPlayer(gameData.playerLeft, "Player Left")}
+      {showPlayerDynamic(gameData.playerLeftDynamic, "Player Left")}
       {showPlayer(gameData.playerRight, "Player Right")}
+      {showPlayerDynamic(gameData.playerRightDynamic, "Player Right")}
 
       <h2>Game Data</h2>
       <p>Background: {gameData.background}</p>
@@ -95,16 +145,14 @@ export default function WIPPong({ gameData }: Props) {
       <p>Font Color: {JSON.stringify(gameData.fontColor)}</p>
       <p>Round Color: {JSON.stringify(gameData.roundColor)}</p>
       <p>Round Win Color: {JSON.stringify(gameData.roundWinColor)}</p>
-
-      <h2>Dynamic Data</h2>
       <p>Player Serve: {gameData.playerServe}</p>
       <p>Actual Round: {gameData.actualRound}</p>
       <p>Max Point: {gameData.maxPoint}</p>
       <p>Max Round: {gameData.maxRound}</p>
-      {showScore(gameData.score)}
-      {showTimer(gameData.timer)}
       <p>Status: {gameData.status}</p>
       <p>Result: {gameData.result}</p>
+      {showScore(gameData.score)}
+      {showTimer(gameData.timer)}
     </div>
   );
 }

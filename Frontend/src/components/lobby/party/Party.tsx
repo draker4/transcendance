@@ -5,28 +5,22 @@ import styles from "@/styles/lobby/party/Party.module.css";
 import Lobby_Service from "@/services/Lobby.service";
 import CreateParty from "@/components/lobby/party/CreateParty";
 import Game_List from "@/components/lobby/party/PartyList";
+import { useRef } from "react";
 
 type Props = {
   lobby: Lobby_Service;
-  isLoading: boolean;
   token: string | undefined;
   userId: number;
 };
 
-export default function Party({ lobby, isLoading, token, userId }: Props) {
+export default function Party({ lobby, userId }: Props) {
   const [createParty, setCreateParty] = useState<boolean>(false);
-
-  if (isLoading) {
-    return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
-      </div>
-    );
-  }
+  const createBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div className={styles.party}>
       <button
+        ref={createBtnRef}
         className={styles.createBtn}
         onClick={() => setCreateParty(!createParty)}
       >
@@ -38,6 +32,7 @@ export default function Party({ lobby, isLoading, token, userId }: Props) {
           lobby={lobby}
           setCreateParty={setCreateParty}
           userId={userId}
+          createBtnRef={createBtnRef}
         />
       )}
       {/* {!createParty && <Game_List token={token} />} */}

@@ -2,6 +2,7 @@
 
 //Import les composants react
 import { useState } from "react";
+import { MdLogout, MdPlayArrow } from "react-icons/md";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -19,18 +20,17 @@ type Props = {
 
 export default function Lobby({ profile, token }: Props) {
   const lobby = new LobbyService(token);
-  const Matchmaking = new MatchmakingService(token);
+  const matchmaking = new MatchmakingService(token);
 
-  const [isLoading, setIsLoading] = useState(true);
-  const [menu, setMenu] = useState("League");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [gameId, setGameId] = useState<string>("");
+  const [menu, setMenu] = useState<string>("League");
 
   lobby
-    .IsInGame()
+    .isInGame()
     .then((gameId) => {
-      if (gameId) {
-        lobby.ResumeGame(gameId);
-      }
       setIsLoading(false);
+      setGameId(gameId);
     })
 
     .catch((error) => {
@@ -38,26 +38,46 @@ export default function Lobby({ profile, token }: Props) {
       setIsLoading(false);
     });
 
+  const quit = () => {
+    lobby.quitGame();
+    setGameId("");
+  };
+
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <h1>Loading...</h1>
+      </div>
+    );
+  } else if (gameId) {
+    return (
+      <div className={styles.isInGame}>
+        <h1>You are actually in Game</h1>
+        <div className={styles.inGameChoice}>
+          <button
+            className={styles.resumeBtn}
+            onClick={() => lobby.resumeGame(gameId)}
+          >
+            <MdPlayArrow />
+            Join
+          </button>
+          <button className={styles.quitBtn} onClick={() => lobby.quitGame()}>
+            <MdLogout />
+            Quit
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.lobby}>
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
-        {menu == "League" && (
-          <League
-            Matchmaking={Matchmaking}
-            isLoading={isLoading}
-            token={token}
-          />
-        )}
+        {menu == "League" && <League Matchmaking={matchmaking} token={token} />}
         {menu == "Party" && (
-          <Party
-            lobby={lobby}
-            isLoading={isLoading}
-            token={token}
-            userId={profile.id}
-          />
+          <Party lobby={lobby} token={token} userId={profile.id} />
         )}
-        {menu == "Training" && <Training lobby={lobby} isLoading={isLoading} />}
+        {menu == "Training" && <Training lobby={lobby} />}
       </div>
     </div>
   );

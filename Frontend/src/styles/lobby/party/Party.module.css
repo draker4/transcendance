@@ -15,9 +15,9 @@
   transition: all 0.3s ease-in;
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .createBtn:checked {
@@ -25,6 +25,6 @@
 }
 
 .createBtn:hover {
-  color: var(--accent);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
 }

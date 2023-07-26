@@ -1,10 +1,90 @@
+/* Home page layout */
 .home {
   width: 90%;
+  min-height: 70vh;
   margin: 0 auto;
   display: flex;
   flex-flow: column nowrap;
+}
+
+/* Loading */
+
+.loading {
+  width: 100%;
+  min-height: 50%;
+  margin-block: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-size: 18px;
+  color: var(--primary1);
+  background-color: var(--primary3);
+}
+
+/* Is already in a game block */
+
+.isInGame {
+  width: 100%;
+  min-height: 50%;
+  margin-block: 20px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  text-align: center;
+  background-color: var(--primary3);
+}
+
+.inGameChoice {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   align-items: center;
 }
+
+.resumeBtn,
+.quitBtn {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  appearance: none;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-size: 20px;
+  font-weight: bold;
+  transition: all 0.3s ease-in;
+  margin: 2px;
+}
+
+.resumeBtn:checked,
+.quitBtn:checked {
+  transition: all 0.3s ease-out;
+}
+
+.resumeBtn {
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
+}
+
+.quitBtn {
+  color: var(--primary1);
+  background-color: var(--tertiary1);
+  border: 3px solid var(--secondary1);
+}
+
+.resumeBtn:hover {
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
+}
+
+.quitBtn:hover {
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
+}
+
+/* Lobby */
 
 .lobby {
   width: 100%;
@@ -24,41 +104,6 @@
   align-items: center;
 }
 
-.menu > button {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  font-size: 14px;
-  margin-top: 5px;
-  width: 33%;
-}
-
-.activeBtn {
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 5px solid var(--secondary);
-  border-bottom: none;
-  transition: all 0.3s ease-in;
-}
-
-.inactiveBtn {
-  color: var(--secondary-lighter2);
-  background-color: var(--primary-darker);
-  border: 5px solid var(--secondary-lighter2);
-  border-bottom: none;
-  transition: all 0.3s ease-out;
-}
-
-.inactiveBtn:hover {
-  color: var(--accent-lighter1);
-  border: 5px solid var(--accent-lighter1);
-  border-bottom: none;
-}
-
 .content {
   width: 100%;
   min-height: 50%;
@@ -66,7 +111,9 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: var(--secondary);
+  border: 5px solid var(--primary2);
+  background-color: var(--primary2);
+  border-top: none;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }

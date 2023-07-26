@@ -5,13 +5,13 @@
   justify-content: flex-start;
   width: 90%;
   margin: 0 auto;
-  background-color: var(--secondary-lighter2-light);
+  background-color: var(--secondary3);
   border-radius: 10px;
   text-align: center;
 }
 
 .title {
-  color: var(--tertiary-color);
+  color: var(--tertiary1);
   padding-top: clamp(0px, 6vh, 100px);
   font-size: clamp(1.7rem, 3vh, 3rem);
   padding-bottom: clamp(0px, 3vh, 60px);
@@ -25,7 +25,7 @@
 }
 
 .description {
-  color: var(--tertiary-color);
+  color: var(--tertiary1);
   font-size: clamp(1.1rem, 1.6vh, 2rem);
   padding-bottom: 20px;
   padding-bottom: 1vh;
@@ -35,7 +35,7 @@
 .little {
   font-size: clamp(0.7rem, 0.8vh, 1rem);
   padding-bottom: clamp(0px, 2vh, 30px);
-  color: var(--tertiary-color);
+  color: var(--tertiary1);
 }
 
 .login {
@@ -43,9 +43,9 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  color: var(--secondary);
-  background-color: var(--primary-darker1);
-  border: 3px solid var(--secondary);
+  color: var(--secondary1);
+  background-color: var(--primary2);
+  border: 3px solid var(--secondary1);
   padding: 6px;
   width: 90%;
   max-width: 400px;
@@ -54,13 +54,13 @@
 }
 
 .login::placeholder {
-  color: var(--tertiary-color);
+  color: var(--tertiary1);
   font-weight: bold;
 }
 
 .login:focus {
   outline: none;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--accent1);
 }
 
 .notif {
@@ -89,9 +89,9 @@
   transition: all 0.3s ease-in;
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .confirmBtn:checked {
@@ -99,8 +99,8 @@
 }
 
 .confirmBtn:hover {
-  color: var(--accent);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
 }
 
 @media screen and (max-height: 1000px) {

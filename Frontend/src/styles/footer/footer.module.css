@@ -5,11 +5,11 @@
   align-items: center;
   margin: 10px auto;
   padding-top: 10px;
-  /* border-top: 1.5px solid var(--secondary); */
+  /* border-top: 1.5px solid var(--secondary1); */
   width: 90%;
 }
 
 .copyright {
   font-size: 0.8rem;
-  color: var(--secondary-lighter2);
+  color: var(--secondary3);
 }

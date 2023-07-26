@@ -6,7 +6,7 @@
   width: 90%;
   padding: clamp(20px, 5vh, 100px);
   margin: 0 auto;
-  background-color: var(--secondary-lighter2-light);
+  background-color: var(--secondary3);
   border-radius: 10px;
   text-align: center;
 }
@@ -39,7 +39,7 @@
 .inputCode input {
   outline: none;
   text-transform: uppercase;
-  border: 3px solid var(--secondary);
+  border: 3px solid var(--secondary1);
   text-align: center;
   margin: 2px;
   width: 50px;
@@ -50,7 +50,7 @@
 
 .inputs input:focus {
   outline: none;
-  border: 3px solid var(--accent);
+  border: 3px solid var(--accent1);
 }
 
 .msg {
@@ -66,9 +66,9 @@
   transition: all 0.3s ease-in;
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary);
-  background-color: var(--secondary);
-  border: 3px solid var(--accent);
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .submitBtn:checked {
@@ -76,8 +76,8 @@
 }
 
 .submitBtn:hover {
-  color: var(--accent);
-  border: 3px solid var(--accent-lighter1);
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
 }
 
 .bottomText {
@@ -91,15 +91,15 @@
   appearance: none;
   border: none;
   background-color: transparent;
-  color: var(--secondary);
+  color: var(--secondary1);
   font-size: 16px;
   margin-top: 10px;
 }
 
 .bottomText button:hover {
-  color: var(--accent);
+  color: var(--accent1);
 }
 
 .bottomText button:checked {
-  color: var(--accent-lighter1);
+  color: var(--accent2);
 }

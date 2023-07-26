@@ -31,9 +31,24 @@ export type Score = {
   round: RoundScore[];
 };
 
+export type StatusMessage = {
+  status: "Waiting" | "Playing" | "Finished" | "Deleted";
+  result:
+    | "Not Started"
+    | "On Going"
+    | "Draw"
+    | "Player1"
+    | "Player2"
+    | "Deleted";
+  playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
+  playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
+  timer: Timer | null;
+};
+
 export type Timer = {
-  reason: "Start" | "Round" | "Pause" | "Waiting";
-  time: number;
+  reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection";
+  start: Date;
+  end: Date;
 };
 
 export type RGB = {
@@ -43,27 +58,27 @@ export type RGB = {
 };
 
 export type Player = {
-  // Fixed Data
   id: number;
   name: string;
-  color: string; // attention si couleur du player = couleur du background
+  color: RGB;
   side: "Left" | "Right";
+};
 
-  // Dynamic Data
+export type PlayerDynamic = {
   posX: number;
   posY: number;
   speed: number;
   move: Action;
   push: number;
-  status: "Connected" | "Playing" | "Paused" | "Disconnected";
+  status: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
 };
 
 export type Ball = {
-  // Fixed Data
   img: string | null;
-  color: string | null; // utiliser uniquement si img = null et faire attention si couleur du ball = couleur du background
+  color: string | null;
+};
 
-  // Dynamic Data
+export type BallDynamic = {
   posX: number;
   posY: number;
   speed: number;
@@ -82,8 +97,11 @@ export type GameData = {
   id: string;
   name: string;
   ball: Ball;
+  ballDynamic: BallDynamic;
   playerLeft: Player | null;
   playerRight: Player | null;
+  playerLeftDynamic: PlayerDynamic;
+  playerRightDynamic: PlayerDynamic;
   background: string;
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
   mode: "League" | "Party" | "Training";
@@ -92,12 +110,12 @@ export type GameData = {
   fontColor: RGB;
   roundColor: RGB;
   roundWinColor: RGB;
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxRound: 1 | 3 | 5 | 7 | 9;
 
   // Dynamic Data
   playerServe: "Left" | "Right" | null;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  maxRound: 1 | 3 | 5 | 7 | 9;
   score: Score | null;
   timer: Timer | null;
   status: "Waiting" | "Playing" | "Finished" | "Deleted";
