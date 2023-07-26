@@ -20,6 +20,9 @@ export default function MessageItem({ groupedMessages }: Props) {
 
   const formatedDate = makeHumanDateFormat(groupedMessages.date);
 
+  if (!groupedMessages.user.avatar)
+    return ;
+
   return (
     <div className={styles.msgItem}>
       {/* Avatar Side */}

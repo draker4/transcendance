@@ -27,11 +27,13 @@
 .avatar {
 	height: 40px;
 	width: 40px;
+	flex-shrink: 0;
 }
 
 .name {
 	font-size: 1.2rem;
 	letter-spacing: 1px;
+	margin: auto 10px;
 }
 
 .main {
@@ -47,6 +49,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-shrink: 0;
 }
 
 .delete:hover {

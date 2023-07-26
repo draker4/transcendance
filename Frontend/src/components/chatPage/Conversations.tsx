@@ -21,7 +21,7 @@ export default function Conversations({
   openDisplay: (display: Display) => void;
 }) {
   const [channels, setChannels] = useState<Channel[]>([]);
-  const [pongies, setPongies] = useState<Pongie[]>([]);
+  // const [pongies, setPongies] = useState<Pongie[]>([]);
 
   const channelsList = channels.map((channel) => {
     const handleClick = () => {
@@ -49,27 +49,27 @@ export default function Conversations({
     );
   });
 
-  const pongiesList = pongies.map((pongie) => {
-    const handleClick = () => {
-      openDisplay(pongie);
-    };
+  // const pongiesList = pongies.map((pongie) => {
+  //   const handleClick = () => {
+  //     openDisplay(pongie);
+  //   };
 
-    return (
-      <React.Fragment key={pongie.id}>
-        <div className={styles.list} onClick={handleClick}>
-          <div className={styles.avatar}>
-            <AvatarUser
-              avatar={pongie.avatar}
-              borderSize="2px"
-              borderColor={pongie.avatar.borderColor}
-              backgroundColor={pongie.avatar.backgroundColor}
-            />
-          </div>
-          <div className={styles.name}>{pongie.login}</div>
-        </div>
-      </React.Fragment>
-    );
-  });
+  //   return (
+  //     <React.Fragment key={pongie.id}>
+  //       <div className={styles.list} onClick={handleClick}>
+  //         <div className={styles.avatar}>
+  //           <AvatarUser
+  //             avatar={pongie.avatar}
+  //             borderSize="2px"
+  //             borderColor={pongie.avatar.borderColor}
+  //             backgroundColor={pongie.avatar.backgroundColor}
+  //           />
+  //         </div>
+  //         <div className={styles.name}>{pongie.login}</div>
+  //       </div>
+  //     </React.Fragment>
+  //   );
+  // });
 
   useEffect(() => {
 
@@ -77,9 +77,9 @@ export default function Conversations({
       socket?.emit("getChannels", (channels: Channel[]) => {
         setChannels(channels);
       });
-      socket?.emit("getPongies", (pongies: Pongie[]) => {
-        setPongies(pongies);
-      });
+      // socket?.emit("getPongies", (pongies: Pongie[]) => {
+      //   setPongies(pongies);
+      // });
     }
 
     socket.on("notif", () => getData());
@@ -132,7 +132,7 @@ export default function Conversations({
       </div>
       <div className={styles.scroll}>
         {channelsList}
-        {pongiesList}
+        {/* {pongiesList} */}
       </div>
     </div>
   );
