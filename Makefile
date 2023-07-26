@@ -14,7 +14,7 @@ export HOST_IP
 
 all : start
 
-ip	: write-env-ip start ipAddress write-env-localhost
+ip	: write-env-ip start ipAddress
 
 start :
 	@echo "----Starting all Docker----"
@@ -32,7 +32,7 @@ rmvolume :
 	@echo "----All Volumes deleted-----"
 
 
-clean : down
+clean : down write-env-localhost
 	@echo "----Cleaning all Docker----"
 	@containers=$$(docker ps -qa); \
 	if [ "$$containers" ]; then \

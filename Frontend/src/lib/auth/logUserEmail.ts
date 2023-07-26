@@ -1,5 +1,6 @@
 export default async function logUserEmail(email: string, password: string) {
 	
+	console.log(email, password);
 	const	response = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/login`, {
 		method: "POST",
 		headers: {"Content-Type": "application/json"},

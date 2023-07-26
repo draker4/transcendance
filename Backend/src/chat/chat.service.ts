@@ -124,10 +124,12 @@ export class ChatService {
   async getAllPongies(id: number): Promise<pongieDto[]> {
     try {
       let pongies = await this.userRepository.find({
+        where: { verified: true },
         relations: ['avatar'],
       });
 
       pongies = pongies.filter((pongie) => pongie.id !== id);
+      pongies = pongies.filter(pongie => pongie.login && pongie.login !== "");
 
       const friends = await this.getPongies(id);
 

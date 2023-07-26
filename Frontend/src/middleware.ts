@@ -6,8 +6,8 @@ export async function middleware(req: NextRequest) {
   let refreshToken = req.cookies.get("refresh-token")?.value;
   let changeCookies = false;
 
-  if (!refreshToken)
-    crunchyToken = undefined;
+  // if (!refreshToken)
+  //   crunchyToken = undefined;
 
   let verifiedToken =
     crunchyToken &&
@@ -15,12 +15,12 @@ export async function middleware(req: NextRequest) {
       console.log(err);
     }));
   // const url = req.nextUrl;
-  // console.log(verifiedToken);
+  // console.log(verifiedToken, url);
 
-  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-    // console.log("do nothing go to google");
-    return ;
-  }
+  // if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
+  //   // console.log("do nothing go to google");
+  //   return ;
+  // }
 
   // refresh token if token expires in less than 10 minutes
   if (req.nextUrl.pathname.startsWith("/home") && refreshToken) {

@@ -74,6 +74,9 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
+  @Column({ nullable: true, default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
+
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({
     name: 'user_channel_relation',
