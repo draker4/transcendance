@@ -8,6 +8,7 @@ import { UsersService } from 'src/users/users.service';
 import { Message } from 'src/utils/typeorm/Message.entity';
 import { Repository } from 'typeorm';
 import { saveNewMsgDto } from './dto/saveNewMsg.dto';
+import { Channel } from '@/utils/typeorm/Channel.entity';
 
 @Injectable()
 export class MessagesService {
@@ -31,6 +32,8 @@ export class MessagesService {
       user: message.sender,
     };
 
-    await this.messageRepository.save(newMsg);
+    const messageSaved = await this.messageRepository.save(newMsg);
+
+    await this.channelService.saveLastMessage(channel.id, messageSaved);
   }
 }

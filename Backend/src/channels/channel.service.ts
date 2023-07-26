@@ -7,6 +7,7 @@ import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { Channel } from "src/utils/typeorm/Channel.entity";
 import { User } from "src/utils/typeorm/User.entity";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
+import { Message } from "@/utils/typeorm/Message.entity";
 
 type ChannelAndUsers = {
 	channel: Channel;
@@ -203,5 +204,13 @@ export class ChannelService {
 		
 		process.stdout.write(cyan + '[channel service]  ' + stop);
 		console.log(message);
+	}
+
+	async saveLastMessage(channelId: number, message: Message) {
+		await this.channelRepository
+			.createQueryBuilder()
+			.relation(Channel, 'lastMessage')
+			.of(channelId)
+			.set(message);
 	}
 }

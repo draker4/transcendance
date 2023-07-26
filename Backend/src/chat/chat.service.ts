@@ -42,10 +42,11 @@ export class ChatService {
     try {
       const relations = await this.userChannelRelation.find({
         where: { userId: id, joined: true, isBanned: false },
-        relations: ['channel', 'channel.avatar'],
+        relations: ['channel', 'channel.avatar', 'channel.lastMessage', 'channel.lastMessage.user'],
       });
 
-      if (!relations) return [];
+      if (!relations)
+        return [];
 
       const channels = await Promise.all(
         relations.map(async (relation) => {
