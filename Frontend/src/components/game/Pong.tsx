@@ -11,17 +11,24 @@ import {
   Player,
   StatusMessage,
 } from "@Shared/types/Game.types";
-import { GAME_HEIGHT, GAME_WIDTH } from "@Shared/constants/Game.constants";
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  PLAYER_HEARTBEAT,
+  SPECTATOR_HEARTBEAT,
+} from "@Shared/constants/Game.constants";
 import GameInfo from "./GameInfo";
 
 type Props = {
+  userId: number;
   gameData: GameData;
   setGameData: Function;
   socket: Socket;
 };
 
-export default function Pong({ gameData, setGameData, socket }: Props) {
+export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isMountedRef = useRef(true);
 
   useEffect(() => {
     const draw: Draw = {
@@ -42,12 +49,14 @@ export default function Pong({ gameData, setGameData, socket }: Props) {
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     socket?.on("player", (player: Player) => {
+      if (isMountedRef.current === false) return;
       const newGameData = { ...gameData };
       if (player.side === "Left") newGameData.playerLeft = player;
       else newGameData.playerRight = player;
       setGameData(newGameData);
     });
     socket?.on("status", (fullStatus: StatusMessage) => {
+      if (isMountedRef.current === false) return;
       const newGameData = { ...gameData };
       newGameData.status = fullStatus.status;
       newGameData.result = fullStatus.result;
@@ -56,14 +65,21 @@ export default function Pong({ gameData, setGameData, socket }: Props) {
       newGameData.timer = fullStatus.timer;
       setGameData(newGameData);
     });
+    socket?.on("ping", () => {
+      if (isMountedRef.current === false) return;
+      socket?.emit("pong", userId);
+      console.log(`pingPong user: ${userId} send`);
+    });
 
     return () => {
+      isMountedRef.current = false;
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
       socket.off("player");
       socket.off("status");
+      socket.off("ping");
     };
-  }, [socket, gameData, setGameData]);
+  }, [socket, gameData, setGameData, userId]);
 
   return (
     <div className={styles.pong}>

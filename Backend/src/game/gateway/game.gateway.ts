@@ -1,5 +1,5 @@
 //standard imports
-import { OnModuleInit, UseGuards, Req } from '@nestjs/common';
+import { OnModuleInit, UseGuards, Req, Injectable } from '@nestjs/common';
 
 // websockets imports
 import {
@@ -18,9 +18,11 @@ import { verify } from 'jsonwebtoken';
 // services imports
 import { GameService } from '../service/game.service';
 import { GameManager } from '../class/GameManager';
-import ColoredLogger from '../colored-logger';
+import { ColoredLogger } from '../colored-logger';
 
 // Decorator to define WebSocketGateway settings
+
+@Injectable()
 @WebSocketGateway({
   cors: {
     origin: [`http://${process.env.HOST_IP}:3000`, 'http://localhost:3000'],
@@ -30,12 +32,11 @@ import ColoredLogger from '../colored-logger';
 })
 @UseGuards(WsJwtGuard)
 export class GameGateway implements OnModuleInit {
-  private readonly logger = new ColoredLogger();
-
   // Inject necessary services (GameService and GameManager)
   constructor(
     private readonly gameService: GameService,
     private readonly gameManager: GameManager,
+    private readonly logger: ColoredLogger,
   ) {}
 
   @WebSocketServer()
@@ -93,6 +94,15 @@ export class GameGateway implements OnModuleInit {
     @Req() req,
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log('join');
     return await this.gameManager.joinGame(gameId, req.user.id, socket);
+  }
+
+  @SubscribeMessage('pong')
+  handleHeartbeat(
+    @MessageBody() userId: number,
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    this.gameManager.updatePong(userId, socket);
   }
 }

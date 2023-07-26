@@ -8,6 +8,8 @@ import styles from "@/styles/game/Game.module.css";
 import Game from "@/components/game/Game";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
+import { Suspense } from "react";
+import LoadingSuspense from "@/components/loading/LoadingSuspense";
 
 export default async function GamePage({ params }: any) {
   // [!] Bperriol i changed this profile

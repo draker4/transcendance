@@ -37,7 +37,7 @@ import {
 // import services
 import { UsersService } from '@/users/users.service';
 import { GameService } from '../service/game.service';
-import ColoredLogger from '../colored-logger';
+import { ColoredLogger } from '../colored-logger';
 
 Injectable();
 export class Pong {
@@ -46,7 +46,6 @@ export class Pong {
   private playerRight: UserInfo | null = null;
   private spectators: UserInfo[] = [];
   private data: GameData;
-  private readonly logger = new ColoredLogger();
 
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
@@ -56,6 +55,7 @@ export class Pong {
     private readonly gameDB: Game,
     private readonly gameService: GameService,
     private readonly usersService: UsersService,
+    private readonly logger: ColoredLogger,
   ) {
     this.initGame();
   }
@@ -151,7 +151,6 @@ export class Pong {
         'Pong - Join',
       );
     }
-
     user.socket.join(this.gameId);
     data.success = true;
     data.message = 'User joined game';
@@ -159,20 +158,20 @@ export class Pong {
     return data;
   }
 
-  public async playerAction(userId: number, action: ActionDTO): Promise<any> {
-    if (this.playerLeft && this.playerLeft.id === userId) {
+  public async playerAction(action: ActionDTO): Promise<any> {
+    if (this.playerLeft && this.playerLeft.id === action.userId) {
       this.server
         .to(this.gameId)
         .emit(
           'update',
-          `Action ${action.action} has been performed by left player with id: ${userId}`,
+          `Action ${action.action} has been performed by left player with id: ${action.userId}`,
         );
-    } else if (this.playerRight && this.playerRight.id === userId) {
+    } else if (this.playerRight && this.playerRight.id === action.userId) {
       this.server
         .to(this.gameId)
         .emit(
           'update',
-          `Action ${action.action} has been performed by right player with id: ${userId}`,
+          `Action ${action.action} has been performed by right player with id: ${action.userId}`,
         );
     } else {
       throw new WsException('Action not performed by player');
@@ -307,54 +306,77 @@ export class Pong {
 
   private async joinAsPlayer(user: UserInfo) {
     if (user.id === this.gameDB.host) {
-      if (this.gameDB.hostSide === 'Left') {
-        this.playerLeft = user;
-        this.data.playerLeftDynamic.status = 'Connected';
-      } else if (this.gameDB.hostSide === 'Right') {
-        this.playerRight = user;
-        this.data.playerRightDynamic.status = 'Connected';
-      }
+      this.joinAsHost(user);
     } else if (user.id === this.gameDB.opponent) {
-      if (this.gameDB.hostSide === 'Left') {
-        this.playerRight = user;
-        if (!this.data.playerRight) {
-          this.data.playerRight = await this.gameService.definePlayer(
-            user.id,
-            this.usersService,
-            'Right',
-          );
-          this.sendPlayerData(this.data.playerRight);
-        }
-        this.data.playerRightDynamic.status = 'Connected';
-      } else if (this.gameDB.hostSide === 'Right') {
-        this.playerLeft = user;
-        if (!this.data.playerLeft) {
-          this.data.playerLeft = await this.gameService.definePlayer(
-            user.id,
-            this.usersService,
-            'Left',
-          );
-          this.sendPlayerData(this.data.playerLeft);
-        }
-        this.data.playerLeftDynamic.status = 'Connected';
-      }
-      if (
-        this.playerLeft &&
-        this.data.playerLeftDynamic.status === 'Connected' &&
-        this.playerRight &&
-        this.data.playerRightDynamic.status === 'Connected'
-      ) {
-        if (this.data.result === 'Not Started') {
-          this.data.status = 'Playing';
-          this.data.result = 'On Going';
-          this.data.timer = this.defineTimer(10, 'Start');
-        } else if (this.data.result === 'On Going') {
-          this.data.status = 'Playing';
-          this.data.timer = this.defineTimer(10, 'ReStart');
-        }
+      try {
+        await this.joinAsOpponent(user);
+      } catch (error) {
+        this.logger.error(
+          `Error Joining as opponent: ${error.message}`,
+          'Pong - JoinAsOpponent',
+          error,
+        );
+        throw new WsException('Error while joining as opponent');
       }
     }
+    this.updateStatus();
     this.sendStatus();
+  }
+
+  private joinAsHost(user: UserInfo) {
+    user.isPlayer = true;
+    if (this.gameDB.hostSide === 'Left') {
+      this.playerLeft = user;
+      this.data.playerLeftDynamic.status = 'Connected';
+    } else if (this.gameDB.hostSide === 'Right') {
+      this.playerRight = user;
+      this.data.playerRightDynamic.status = 'Connected';
+    }
+  }
+
+  private async joinAsOpponent(user: UserInfo) {
+    user.isPlayer = true;
+    if (this.gameDB.hostSide === 'Left') {
+      this.playerRight = user;
+      if (!this.data.playerRight) {
+        this.data.playerRight = await this.gameService.definePlayer(
+          user.id,
+          this.usersService,
+          'Right',
+        );
+        this.sendPlayerData(this.data.playerRight);
+      }
+      this.data.playerRightDynamic.status = 'Connected';
+    } else if (this.gameDB.hostSide === 'Right') {
+      this.playerLeft = user;
+      if (!this.data.playerLeft) {
+        this.data.playerLeft = await this.gameService.definePlayer(
+          user.id,
+          this.usersService,
+          'Left',
+        );
+        this.sendPlayerData(this.data.playerLeft);
+      }
+      this.data.playerLeftDynamic.status = 'Connected';
+    }
+  }
+
+  private updateStatus() {
+    if (
+      this.playerLeft &&
+      this.data.playerLeftDynamic.status === 'Connected' &&
+      this.playerRight &&
+      this.data.playerRightDynamic.status === 'Connected'
+    ) {
+      if (this.data.result === 'Not Started') {
+        this.data.status = 'Playing';
+        this.data.result = 'On Going';
+        this.data.timer = this.defineTimer(10, 'Start');
+      } else if (this.data.result === 'On Going') {
+        this.data.status = 'Playing';
+        this.data.timer = this.defineTimer(10, 'ReStart');
+      }
+    }
   }
 
   private defineTimer(

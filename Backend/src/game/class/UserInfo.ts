@@ -1,16 +1,31 @@
 import { Socket } from 'socket.io';
+import { ColoredLogger } from '../colored-logger';
+import {
+  PLAYER_HEARTBEAT,
+  SPECTATOR_HEARTBEAT,
+} from '@Shared/constants/Game.constants';
 
 export class UserInfo {
-  // -----------------------------------  VARIABLE  ----------------------------------- //
+  public pingSend = 0;
+  public lastPing = 0;
+  private pingTimings = 0;
+  private readonly logger: ColoredLogger;
 
-  // ----------------------------------  CONSTRUCTOR  --------------------------------- //
   constructor(
     public id: number,
     public socket: Socket,
     public gameId: string,
-  ) {}
+    public isPlayer: boolean,
+  ) {
+    this.logger = new ColoredLogger(UserInfo.name);
+  }
 
-  // --------------------------------  PUBLIC METHODS  -------------------------------- //
+  public initUser(): void {
+    this.pingTimings = this.isPlayer ? PLAYER_HEARTBEAT : SPECTATOR_HEARTBEAT;
+  }
 
-  // --------------------------------  PRIVATE METHODS  ------------------------------- //
+  public sendPing(): void {
+    this.socket.emit('ping');
+    this.pingSend++;
+  }
 }

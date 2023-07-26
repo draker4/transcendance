@@ -7,6 +7,8 @@ import Lobby from "@/components/lobby/Lobby";
 import HomeProfile from "@/components/lobby/HomeProfile";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
+import { Suspense } from "react";
+import LoadingSuspense from "@/components/loading/LoadingSuspense";
 
 export default async function HomePage() {
   let profile: Profile = {
@@ -38,8 +40,10 @@ export default async function HomePage() {
   return (
     <div className={styles.home}>
       <Refresher />
-      <HomeProfile profile={profile} />
-      <Lobby profile={profile} token={token} />
+      <Suspense fallback={<LoadingSuspense />}>
+        <HomeProfile profile={profile} />
+        <Lobby profile={profile} token={token} />
+      </Suspense>
     </div>
   );
 }

@@ -6,18 +6,14 @@ import { Injectable } from '@nestjs/common';
 // import game classes
 import { Pong } from './Pong';
 import { UserInfo } from './UserInfo';
+import { ActionDTO } from '../dto/Action.dto';
+import { Game } from '@/utils/typeorm/Game.entity';
+import { CHECK_INTERVAL } from '@Shared/constants/Game.constants';
 
 // import services
 import { GameService } from '../service/game.service';
-
-// import DTOs
-import { ActionDTO } from '../dto/Action.dto';
-
-// import entities
-import { Game } from '@/utils/typeorm/Game.entity';
 import { UsersService } from '@/users/users.service';
-
-import ColoredLogger from '../colored-logger';
+import { ColoredLogger } from '../colored-logger';
 
 @Injectable()
 export class GameManager {
@@ -25,13 +21,13 @@ export class GameManager {
   private readonly pongOnGoing: Map<string, Pong> = new Map<string, Pong>();
   private usersConnected: UserInfo[] = [];
   private server: Server;
-  private readonly logger: ColoredLogger;
 
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
   constructor(
     private readonly gameService: GameService,
     private readonly usersService: UsersService,
+    private readonly logger: ColoredLogger,
   ) {
     this.logger = new ColoredLogger(GameManager.name); // Set the module name for the logger
   }
@@ -41,6 +37,9 @@ export class GameManager {
   // Set the WebSocket server instance in the game manager to handle game-related functionality
   public setServer(server: Server): void {
     this.server = server;
+    setInterval(() => {
+      this.checkConnexion();
+    }, CHECK_INTERVAL);
   }
 
   // Method to handle user joining a game
@@ -65,18 +64,57 @@ export class GameManager {
     }
 
     // Add the user to userInfo array
-    const user = new UserInfo(userId, socket, gameId);
+    const user = new UserInfo(userId, socket, gameId, false);
     this.usersConnected.push(user);
-    return game.join(user);
+    try {
+      const data: ReturnData = await game.join(user);
+      user.initUser();
+      return data;
+    } catch (error) {
+      this.logger.error(
+        `Error while joining game: ${error.message}`,
+        'joinGame',
+        error,
+      );
+      throw new WsException('Error while joining game');
+    }
   }
 
   // Method to handle player actions in the game
-  public async playerAction(action: ActionDTO, userId: number): Promise<any> {
+  public async playerAction(action: ActionDTO, socket: Socket): Promise<any> {
     const pong = this.pongOnGoing.get(action.gameId);
     if (!pong) {
       throw new WsException('Game not found');
     }
-    return pong.playerAction(userId, action);
+    const user = this.usersConnected.find(
+      (user) => user.id === action.userId && user.socket.id === socket.id,
+    );
+    if (!user) {
+      throw new WsException('User not found');
+    }
+    user.lastPing = Date.now();
+    this.logger.log(
+      `User with ID ${action.userId} performed action ${action.action}`,
+      'playerAction',
+    );
+    return pong.playerAction(action);
+  }
+
+  // Method to handle user updating their heartbeat to stay connected
+  public updatePong(userId: number, socket: Socket): void {
+    const user = this.usersConnected.find(
+      (user) => user.id === userId && user.socket.id === socket.id,
+    );
+    if (!user) {
+      this.logger.error(`User with ID ${userId} not found`, 'updateHeartbeat');
+      throw new WsException('User not found');
+    }
+    user.lastPing = Date.now();
+    user.pingSend = 0;
+    this.logger.log(
+      `User with ID ${userId} updated heartbeat`,
+      'updateHeartbeat',
+    );
   }
 
   // Method to handle user disconnection from a game
@@ -87,13 +125,15 @@ export class GameManager {
         (user) => user.id === userId && user.socket.id === socket.id,
       );
       if (!user) {
-        throw new WsException('User not found');
+        // throw new WsException('User already disconnected');
+        return;
       }
 
       //Find the game linked to the user
       const pong = this.pongOnGoing.get(user.gameId);
       if (!pong) {
-        throw new WsException('Cannot find the actual game');
+        // throw new WsException('The game does not exist');
+        return;
       }
 
       // Remove the user from the game and userConnected array
@@ -121,18 +161,22 @@ export class GameManager {
     userId: number,
     socket: Socket,
   ): Promise<any> {
+    let pong: Pong = this.pongOnGoing.get(gameId);
+    if (pong) {
+      throw new WsException('Game already exists');
+    }
     try {
       const game: Game = await this.gameService.getGameData(gameId);
-      const pong = new Pong(
+      pong = new Pong(
         this.server,
         gameId,
         game,
         this.gameService,
         this.usersService,
+        this.logger,
       );
       await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);
-      this.printPongSessions();
       return this.joinGame(gameId, userId, socket);
     } catch (error) {
       this.logger.error(
@@ -144,11 +188,25 @@ export class GameManager {
     }
   }
 
-  // Method to print actual Pong sessions
-  private printPongSessions(): void {
-    this.logger.log(
-      `Pong Sessions: ${Array.from(this.pongOnGoing.keys()).join(', ')}`,
-      'printPongSessions',
-    );
+  private checkConnexion(): void {
+    this.usersConnected.forEach((user) => {
+      if (user.pingSend >= 3) {
+        this.logger.log(`User with ID ${user.id} disconnected`);
+        this.disconnect(user.id, user.socket).catch((error) => {
+          // Handle any errors that occur during disconnection
+          this.logger.error(
+            `Error while disconnecting user: ${error.message}`,
+            'checkConnexion',
+            error,
+          );
+        });
+      } else {
+        this.logger.log(
+          `Ping sent to user: ${user.id} and socket id: ${user.socket.id}`,
+          'checkConnexion',
+        );
+        user.sendPing();
+      }
+    });
   }
 }

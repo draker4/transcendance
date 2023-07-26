@@ -15,6 +15,11 @@ import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
 
 import { GameData } from "@Shared/types/Game.types";
+import {
+  PLAYER_HEARTBEAT,
+  SPECTATOR_HEARTBEAT,
+} from "@Shared/constants/Game.constants";
+import { join } from "path";
 
 type Props = {
   profile: Profile;
@@ -29,34 +34,31 @@ export default function Game({ profile, token, gameId }: Props) {
   const [gameData, setGameData] = useState<GameData>();
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
+  const [joinEmitter, setJoinEmitter] = useState<boolean>(false);
 
   //------------------------------------Chargement------------------------------------//
 
   useEffect(() => {
-    const handleUnload = () => {
-      //gameService.socket?.emit("disconnecting");
-      console.log("disconnecting");
-    };
-
-    gameService.socket?.emit("join", gameId, (gameData: any) => {
-      if (gameData.success == false) {
-        setError(true);
-      } else {
-        setGameData(gameData.data);
-        setIsLoading(false);
-        console.log(gameData.data);
-      }
-    });
-    window.addEventListener("unload", handleUnload);
+    if (!joinEmitter) {
+      setJoinEmitter(true);
+      gameService.socket?.emit("join", gameId, (gameData: any) => {
+        if (gameData.success == false) {
+          setError(true);
+        } else {
+          setGameData(gameData.data);
+          setIsLoading(false);
+          console.log(gameData.data);
+        }
+      });
+    }
 
     gameService.socket?.on("exception", () => {
       setError(true);
     });
     return () => {
       gameService.socket?.off("exception");
-      window.removeEventListener("unload", handleUnload);
     };
-  }, [gameId, gameService.socket]);
+  }, [gameId, gameService.socket, profile, joinEmitter]);
 
   const quit = () => {
     lobby.quitGame();
@@ -90,6 +92,7 @@ export default function Game({ profile, token, gameId }: Props) {
     return (
       <div className={styles.game}>
         <Pong
+          userId={profile.id}
           gameData={gameData}
           setGameData={setGameData}
           socket={gameService.socket}
