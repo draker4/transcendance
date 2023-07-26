@@ -31,7 +31,7 @@
 }
 
 .list:hover {
-  background-color: var(--primary3);
+  background-color: var(--primary2);
 }
 
 .name {
@@ -94,4 +94,9 @@
 .icons {
   display: flex;
   flex-flow: row nowrap;
+}
+
+.time {
+	font-size: 0.8rem;
+	padding-left: 10px;
 }

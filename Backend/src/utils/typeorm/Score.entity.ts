@@ -12,7 +12,7 @@ export class Score {
   id: number;
 
   @CreateDateColumn()
-  createdAd: Date;
+  createdtd: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;

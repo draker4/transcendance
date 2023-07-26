@@ -21,11 +21,25 @@ export default function Conversations({
   openDisplay: (display: Display) => void;
 }) {
   const [channels, setChannels] = useState<Channel[]>([]);
+  let date = "";
 
   const channelsList = channels.map((channel) => {
     const handleClick = () => {
       openDisplay(channel);
     };
+
+    if (channel.lastMessage?.createdAt) {
+      const diff = (Date.now() - new Date(channel.lastMessage.createdAt).getTime()) / 1000;
+      date = diff < 60
+              ? Math.floor(diff) + "s"
+              : diff < 3600
+              ? Math.floor(diff / 60) + "min"
+              : diff < 86400
+              ? Math.floor(diff / 60 / 60) + "h"
+              : diff < 604800
+              ? Math.floor(diff / 60 / 60 / 24) + "d"
+              : Math.floor(diff / 60 / 60 / 24 / 7) + "w"
+    }
 
     return (
       <React.Fragment key={channel.id}>
@@ -50,6 +64,15 @@ export default function Conversations({
             }
           </div>
 
+          <div className={styles.time}>
+            {
+              channel.lastMessage &&
+              <p>
+                {date}
+              </p>
+            }
+          </div>
+
 		{/* [!][+] PROVISOIRE checking */}
 		 {/* <div>{`(id:${channel.id})`}</div> */}
 
@@ -63,7 +86,6 @@ export default function Conversations({
     const getData = () => {
       socket?.emit("getChannels", (channels: Channel[]) => {
         setChannels(channels);
-        console.log(channels[0].lastMessage)
       });
     }
 

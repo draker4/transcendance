@@ -22,7 +22,7 @@ export class Channel {
 	id: number;
 
 	@CreateDateColumn()
-	createdAd: Date;
+	createdAt: Date;
 
 	@UpdateDateColumn()
 	updatedAt: Date;

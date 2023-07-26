@@ -7,5 +7,6 @@ type	Channel = {
 	lastMessage: {
 		user: User;
 		content: string;
+		createdAt: Date;
 	};
 };

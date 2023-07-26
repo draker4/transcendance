@@ -8,7 +8,6 @@ import { UsersService } from 'src/users/users.service';
 import { Message } from 'src/utils/typeorm/Message.entity';
 import { Repository } from 'typeorm';
 import { saveNewMsgDto } from './dto/saveNewMsg.dto';
-import { Channel } from '@/utils/typeorm/Channel.entity';
 
 @Injectable()
 export class MessagesService {
