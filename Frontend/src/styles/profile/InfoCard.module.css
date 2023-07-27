@@ -5,7 +5,8 @@
   gap: 1rem;
   overflow-x: auto;
   white-space: nowrap;
-  padding: 0.5vw 0 1.5vw 0;
+  /* padding: 0.5vw 0 1.5vw 0; */
+  padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
 }
 
 .navbar .button {
@@ -39,7 +40,8 @@
   /* dimensions temporaires */
   min-height: 500px;
   min-width: 250px;
-  padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+  /* padding: 0.8rem 0.5rem 0.5rem 0.5rem; */
+  padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
 
   /* border-top: 0.15rem solid;
 	border-image: 
@@ -197,7 +199,7 @@
 }
 
 .rolesList .row.focused {
-  background-color: var(--primary3);
+  background-color: var(--primary2);
 }
 
 .rolesList .row .avatar {
@@ -217,4 +219,12 @@
 
 .rolesList .row .controlPannel {
   margin: auto 0;
+}
+
+/* -------------------- footer ------------------------- */
+
+.profileFooter {
+	background-color: var(--accent1);
+	color:var(--primary1);
+	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
 }

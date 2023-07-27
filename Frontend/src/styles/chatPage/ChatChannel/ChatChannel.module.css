@@ -11,13 +11,12 @@
 .channelMsgFrame .header {
   min-height: 40px;
   max-height: 60px;
-  background-color: var(--primary2);
+  background-color: var(--primary3);
   display: flex;
   justify-content: center;
   padding: 10px 35px;
   align-items: center;
   flex-flow: row nowrap;
-  /* background-color: var(--notif); */
 }
 
 .channelMsgFrame .header .icon {

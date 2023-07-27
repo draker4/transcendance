@@ -1,1 +1,1 @@
-type	User = Profile & { avatar: Avatar };
+type User = Profile & { avatar: Avatar };
