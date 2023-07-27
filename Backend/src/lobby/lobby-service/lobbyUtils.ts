@@ -56,11 +56,17 @@ export class LobbyUtils {
   // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou Playing" et renvoi son id de game
   async getGameId(userId: number): Promise<any> {
     if (userId != null) {
-      const game = await this.gameRepository.findOne({
+      let game = await this.gameRepository.findOne({
         where: { host: userId, status: 'Waiting' || 'Playing' },
       });
       if (game != null) {
-        return game;
+        return game.uuid;
+      }
+      game = await this.gameRepository.findOne({
+        where: { opponent: userId, status: 'Waiting' || 'Playing' },
+      });
+      if (game != null) {
+        return game.uuid;
       }
     }
     return false;

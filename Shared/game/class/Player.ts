@@ -18,7 +18,7 @@ export function initPlayer(
     posX: 0,
     posY: 0,
     speed: 8 + difficulty,
-    move: Action.Idle,
+    move: "Idle",
     color: "#FFFFFF",
     push: 0,
     side: playerSide,
@@ -45,9 +45,9 @@ function handlePush(player: Player): void {
 }
 
 export function updatePlayer(player: Player): void {
-  if (player.move === Action.Up) {
+  if (player.move === "Up") {
     player.posY -= player.speed;
-  } else if (player.move === Action.Down) {
+  } else if (player.move === "Down") {
     player.posY += player.speed;
   }
 

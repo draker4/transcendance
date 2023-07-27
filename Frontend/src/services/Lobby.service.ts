@@ -37,7 +37,7 @@ class LobbyService {
     const response = await this.fetchData("isingame", "GET");
     const data = await response.json();
     if (data.success === true) {
-      return data.data.uuid;
+      return data.data;
     }
     if (data.success === false) {
       return "";

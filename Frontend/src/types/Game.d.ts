@@ -12,3 +12,10 @@ type GameDTO = {
   background: string;
   ball: string;
 };
+
+type ActionDTO = {
+  userId: number;
+  gameId: string;
+  action: Action;
+  playerSide: "Left" | "Right";
+};

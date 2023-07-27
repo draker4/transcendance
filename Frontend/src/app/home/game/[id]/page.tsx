@@ -41,7 +41,9 @@ export default async function GamePage({ params }: any) {
   return (
     <main className={styles.gamePage}>
       <Refresher />
-      <Game profile={profile} token={token} gameId={gameId} />
+      <Suspense fallback={<LoadingSuspense />}>
+        <Game profile={profile} token={token} gameId={gameId} />
+      </Suspense>
     </main>
   );
 }

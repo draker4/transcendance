@@ -1,8 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useState } from "react";
-import { MdLogout, MdPlayArrow } from "react-icons/md";
+import { useState, useEffect } from "react";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -12,6 +11,7 @@ import Party from "@/components/lobby/party/Party";
 import Training from "@/components/lobby/training/Training";
 import NavLobby from "./NavLobby";
 import MatchmakingService from "@/services/Matchmaking.service";
+import InGame from "./InGame";
 
 type Props = {
   profile: Profile;
@@ -26,22 +26,18 @@ export default function Lobby({ profile, token }: Props) {
   const [gameId, setGameId] = useState<string>("");
   const [menu, setMenu] = useState<string>("League");
 
-  lobby
-    .isInGame()
-    .then((gameId) => {
-      setIsLoading(false);
-      setGameId(gameId);
-    })
-
-    .catch((error) => {
-      console.error(error);
-      setIsLoading(false);
-    });
-
-  const quit = () => {
-    lobby.quitGame();
-    setGameId("");
-  };
+  useEffect(() => {
+    lobby
+      .isInGame()
+      .then((gameId) => {
+        setIsLoading(false);
+        setGameId(gameId);
+      })
+      .catch((error) => {
+        console.error(error);
+        setIsLoading(false);
+      });
+  }, []);
 
   if (isLoading) {
     return (
@@ -50,24 +46,7 @@ export default function Lobby({ profile, token }: Props) {
       </div>
     );
   } else if (gameId) {
-    return (
-      <div className={styles.isInGame}>
-        <h1>You are actually in Game</h1>
-        <div className={styles.inGameChoice}>
-          <button
-            className={styles.resumeBtn}
-            onClick={() => lobby.resumeGame(gameId)}
-          >
-            <MdPlayArrow />
-            Join
-          </button>
-          <button className={styles.quitBtn} onClick={() => lobby.quitGame()}>
-            <MdLogout />
-            Quit
-          </button>
-        </div>
-      </div>
-    );
+    return <InGame lobby={lobby} gameId={gameId} />;
   }
   return (
     <div className={styles.lobby}>

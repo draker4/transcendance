@@ -32,10 +32,9 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  width: 200px;
-  padding: 10px;
+  padding: 8px 40px;
   margin: 10px;
-  font-size: 40px;
+  font-size: 24px;
   font-weight: Bold;
   color: var(--primary1);
   background-color: var(--secondary1);

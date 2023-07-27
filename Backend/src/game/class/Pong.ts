@@ -70,14 +70,14 @@ export class Pong {
           this.usersService,
           'Left',
         );
-        this.data.playerLeftDynamic.status = 'Disconnected';
+        this.data.playerLeftStatus = 'Disconnected';
         if (this.gameDB.opponent !== -1) {
           this.data.playerRight = await this.gameService.definePlayer(
             this.gameDB.opponent,
             this.usersService,
             'Right',
           );
-          this.data.playerRightDynamic.status = 'Disconnected';
+          this.data.playerRightStatus = 'Disconnected';
         }
       } else if (this.gameDB.hostSide === 'Right') {
         this.data.playerRight = await this.gameService.definePlayer(
@@ -85,14 +85,14 @@ export class Pong {
           this.usersService,
           'Right',
         );
-        this.data.playerRightDynamic.status = 'Disconnected';
+        this.data.playerRightStatus = 'Disconnected';
         if (this.gameDB.opponent !== -1) {
           this.data.playerLeft = await this.gameService.definePlayer(
             this.gameDB.opponent,
             this.usersService,
             'Left',
           );
-          this.data.playerLeftDynamic.status = 'Disconnected';
+          this.data.playerLeftStatus = 'Disconnected';
         }
       }
     } catch (error) {
@@ -216,6 +216,8 @@ export class Pong {
         playerRight: null,
         playerLeftDynamic: this.initPlayerDynamic('Left'),
         playerRightDynamic: this.initPlayerDynamic('Right'),
+        playerLeftStatus: 'Unknown',
+        playerRightStatus: 'Unknown',
         background: this.gameDB.background,
         type: this.gameDB.type,
         mode: this.gameDB.mode,
@@ -241,9 +243,8 @@ export class Pong {
       posX: side === 'Left' ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
       posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
       speed: PLAYER_START_SPEED,
-      move: Action.Idle,
+      move: 'Idle',
       push: 0,
-      status: 'Unknown',
     };
   }
 
@@ -267,18 +268,18 @@ export class Pong {
 
   private initScore(): Score {
     return {
-      hostRoundWon: 0,
-      opponentRoundWon: 0,
+      leftRound: 0,
+      rightRound: 0,
       round: [
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
-        { host: 0, opponent: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
+        { left: 0, right: 0 },
       ],
     };
   }
@@ -294,8 +295,8 @@ export class Pong {
     const status: StatusMessage = {
       status: this.data.status,
       result: this.data.result,
-      playerLeft: this.data.playerLeftDynamic.status,
-      playerRight: this.data.playerRightDynamic.status,
+      playerLeft: this.data.playerLeftStatus,
+      playerRight: this.data.playerRightStatus,
       timer: this.data.timer,
     };
     this.server.to(this.gameId).emit('status', status);
@@ -327,10 +328,10 @@ export class Pong {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
       this.playerLeft = user;
-      this.data.playerLeftDynamic.status = 'Connected';
+      this.data.playerLeftStatus = 'Connected';
     } else if (this.gameDB.hostSide === 'Right') {
       this.playerRight = user;
-      this.data.playerRightDynamic.status = 'Connected';
+      this.data.playerRightStatus = 'Connected';
     }
   }
 
@@ -346,7 +347,7 @@ export class Pong {
         );
         this.sendPlayerData(this.data.playerRight);
       }
-      this.data.playerRightDynamic.status = 'Connected';
+      this.data.playerRightStatus = 'Connected';
     } else if (this.gameDB.hostSide === 'Right') {
       this.playerLeft = user;
       if (!this.data.playerLeft) {
@@ -357,16 +358,16 @@ export class Pong {
         );
         this.sendPlayerData(this.data.playerLeft);
       }
-      this.data.playerLeftDynamic.status = 'Connected';
+      this.data.playerLeftStatus = 'Connected';
     }
   }
 
   private updateStatus() {
     if (
       this.playerLeft &&
-      this.data.playerLeftDynamic.status === 'Connected' &&
+      this.data.playerLeftStatus === 'Connected' &&
       this.playerRight &&
-      this.data.playerRightDynamic.status === 'Connected'
+      this.data.playerRightStatus === 'Connected'
     ) {
       if (this.data.result === 'Not Started') {
         this.data.status = 'Playing';
@@ -392,13 +393,13 @@ export class Pong {
 
   private disconnectPlayer(side: 'Left' | 'Right') {
     if (side === 'Left') {
-      this.data.playerLeftDynamic.status = 'Disconnected';
+      this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Waiting';
         this.data.timer = this.defineTimer(60, 'Deconnection');
       }
     } else if (side === 'Right') {
-      this.data.playerRightDynamic.status = 'Disconnected';
+      this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Waiting';
         this.data.timer = this.defineTimer(60, 'Deconnection');

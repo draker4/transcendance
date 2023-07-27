@@ -15,11 +15,6 @@ import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
 
 import { GameData } from "@Shared/types/Game.types";
-import {
-  PLAYER_HEARTBEAT,
-  SPECTATOR_HEARTBEAT,
-} from "@Shared/constants/Game.constants";
-import { join } from "path";
 
 type Props = {
   profile: Profile;

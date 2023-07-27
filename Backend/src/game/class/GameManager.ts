@@ -8,7 +8,11 @@ import { Pong } from './Pong';
 import { UserInfo } from './UserInfo';
 import { ActionDTO } from '../dto/Action.dto';
 import { Game } from '@/utils/typeorm/Game.entity';
-import { CHECK_INTERVAL } from '@Shared/constants/Game.constants';
+import {
+  CHECK_INTERVAL,
+  PLAYER_PING,
+  SPECTATOR_PING,
+} from '@Shared/constants/Game.constants';
 
 // import services
 import { GameService } from '../service/game.service';
@@ -63,12 +67,15 @@ export class GameManager {
       }
     }
 
-    // Add the user to userInfo array
-    const user = new UserInfo(userId, socket, gameId, false);
-    this.usersConnected.push(user);
+    let user = this.usersConnected.find(
+      (user) => user.id === userId && user.socket.id === socket.id,
+    );
+    if (!user) {
+      user = new UserInfo(userId, socket, gameId, false);
+      this.usersConnected.push(user);
+    }
     try {
       const data: ReturnData = await game.join(user);
-      user.initUser();
       return data;
     } catch (error) {
       this.logger.error(
@@ -92,7 +99,7 @@ export class GameManager {
     if (!user) {
       throw new WsException('User not found');
     }
-    user.lastPing = Date.now();
+    user.pingSend = 0;
     this.logger.log(
       `User with ID ${action.userId} performed action ${action.action}`,
       'playerAction',
@@ -106,15 +113,11 @@ export class GameManager {
       (user) => user.id === userId && user.socket.id === socket.id,
     );
     if (!user) {
-      this.logger.error(`User with ID ${userId} not found`, 'updateHeartbeat');
+      this.logger.error(`User with ID ${userId} not found`, 'updatePong');
       throw new WsException('User not found');
     }
-    user.lastPing = Date.now();
     user.pingSend = 0;
-    this.logger.log(
-      `User with ID ${userId} updated heartbeat`,
-      'updateHeartbeat',
-    );
+    this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
   }
 
   // Method to handle user disconnection from a game
@@ -190,10 +193,12 @@ export class GameManager {
 
   private checkConnexion(): void {
     this.usersConnected.forEach((user) => {
-      if (user.pingSend >= 3) {
+      if (
+        (user.isPlayer && user.pingSend >= PLAYER_PING) ||
+        (!user.isPlayer && user.pingSend >= SPECTATOR_PING)
+      ) {
         this.logger.log(`User with ID ${user.id} disconnected`);
         this.disconnect(user.id, user.socket).catch((error) => {
-          // Handle any errors that occur during disconnection
           this.logger.error(
             `Error while disconnecting user: ${error.message}`,
             'checkConnexion',

@@ -6,7 +6,7 @@ const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };
 const frameCountRef = { current: 0 };
 const fpsRef = { current: 0 };
-const showFpsRef = false;
+const showFpsRef = true;
 
 export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
   const elapsedTime = timestamp - lastTimestampRef.current;
@@ -14,7 +14,7 @@ export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
 
   if (elapsedTime >= 16.67) {
     if (game.status === "Playing") {
-      updatePong(game);
+      //updatePong(game);
     }
     drawPong(game, draw);
 
@@ -37,7 +37,7 @@ export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  const targetDelay = 1000 / 70; // 60 FPS
+  const targetDelay = 1000 / 60; // 60 FPS
   const remainingDelay = Math.max(
     targetDelay - (performance.now() - timestamp),
     0

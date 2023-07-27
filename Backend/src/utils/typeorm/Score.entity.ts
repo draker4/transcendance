@@ -11,6 +11,15 @@ export class Score {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({})
+  gameId: string;
+
+  @Column({})
+  leftPlayerId: number;
+
+  @Column({})
+  rightPlayerId: number;
+
   @CreateDateColumn()
   createdAd: Date;
 
@@ -18,62 +27,62 @@ export class Score {
   updatedAt: Date;
 
   @Column({ default: 0 })
-  hostRoundWon: 0 | 1 | 2 | 3 | 4;
+  leftPlayerRoundWon: 0 | 1 | 2 | 3 | 4;
 
   @Column({ default: 0 })
-  opponentRoundWon: 0 | 1 | 2 | 3 | 4;
+  rightPlayerRoundWon: 0 | 1 | 2 | 3 | 4;
 
   @Column({ default: 0 })
-  hostRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound2: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound3: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound4: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound5: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound6: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound7: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound8: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  hostRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  leftPlayerRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @Column({ default: 0 })
-  opponentRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  rightPlayerRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 }

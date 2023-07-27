@@ -22,68 +22,6 @@
   background-color: var(--primary3);
 }
 
-/* Is already in a game block */
-
-.isInGame {
-  width: 100%;
-  min-height: 50%;
-  margin-block: 20px;
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: center;
-  text-align: center;
-  background-color: var(--primary3);
-}
-
-.inGameChoice {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: center;
-}
-
-.resumeBtn,
-.quitBtn {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  appearance: none;
-  padding: 6px 20px;
-  border-radius: 4px;
-  font-size: 20px;
-  font-weight: bold;
-  transition: all 0.3s ease-in;
-  margin: 2px;
-}
-
-.resumeBtn:checked,
-.quitBtn:checked {
-  transition: all 0.3s ease-out;
-}
-
-.resumeBtn {
-  color: var(--primary1);
-  background-color: var(--secondary1);
-  border: 3px solid var(--accent1);
-}
-
-.quitBtn {
-  color: var(--primary1);
-  background-color: var(--tertiary1);
-  border: 3px solid var(--secondary1);
-}
-
-.resumeBtn:hover {
-  color: var(--accent1);
-  border: 3px solid var(--accent2);
-}
-
-.quitBtn:hover {
-  color: var(--accent1);
-  border: 3px solid var(--accent2);
-}
-
 /* Lobby */
 
 .lobby {

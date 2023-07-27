@@ -1,8 +1,13 @@
 "use client";
 import styles from "@/styles/game/Pong.module.css";
-import { useRef, useEffect } from "react";
-import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
-import { initGame } from "@Shared/game/class/Pong";
+import { useRef, useEffect, useMemo } from "react";
+import {
+  pongKeyDown,
+  pongKeyUp,
+  handlePlayerUpdate,
+  handleStatusMessage,
+  handlePing,
+} from "@/lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
 import { Socket } from "socket.io-client";
 import {
@@ -11,12 +16,7 @@ import {
   Player,
   StatusMessage,
 } from "@Shared/types/Game.types";
-import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  PLAYER_HEARTBEAT,
-  SPECTATOR_HEARTBEAT,
-} from "@Shared/constants/Game.constants";
+import { GAME_HEIGHT, GAME_WIDTH } from "@Shared/constants/Game.constants";
 import GameInfo from "./GameInfo";
 
 type Props = {
@@ -29,57 +29,65 @@ type Props = {
 export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
+  const isPlayer: "Left" | "Right" | "Spectator" =
+    gameData.playerLeft?.id === userId
+      ? "Left"
+      : gameData.playerRight?.id === userId
+      ? "Right"
+      : "Spectator";
+
+  const backgroundImage = useMemo(() => {
+    const image = new Image();
+    image.src = `/images/game/background/${gameData.background}.png`;
+    return image;
+  }, [gameData.background]);
 
   useEffect(() => {
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
+      backgroundImage: backgroundImage,
     };
     draw.canvas.focus();
+    function handleKeyDown(event: KeyboardEvent) {
+      pongKeyDown(event, gameData, socket, userId, isPlayer);
+    }
 
-    const handleKeyDown = (event: KeyboardEvent) => {
-      //pongKeyDown(event, game, gameData.uuid, socket);
-    };
+    function handleKeyUp(event: KeyboardEvent) {
+      pongKeyUp(event, gameData, socket, userId, isPlayer);
+    }
 
-    const handleKeyUp = (event: KeyboardEvent) => {
-      //pongKeyUp(event, game, gameData.uuid, socket);
-    };
-
-    //requestAnimationFrame((timestamp) => gameLoop(timestamp, game, draw));
+    requestAnimationFrame((timestamp) => gameLoop(timestamp, gameData, draw));
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
-    socket?.on("player", (player: Player) => {
-      if (isMountedRef.current === false) return;
-      const newGameData = { ...gameData };
-      if (player.side === "Left") newGameData.playerLeft = player;
-      else newGameData.playerRight = player;
-      setGameData(newGameData);
-    });
-    socket?.on("status", (fullStatus: StatusMessage) => {
-      if (isMountedRef.current === false) return;
-      const newGameData = { ...gameData };
-      newGameData.status = fullStatus.status;
-      newGameData.result = fullStatus.result;
-      newGameData.playerLeftDynamic.status = fullStatus.playerLeft;
-      newGameData.playerRightDynamic.status = fullStatus.playerRight;
-      newGameData.timer = fullStatus.timer;
-      setGameData(newGameData);
-    });
-    socket?.on("ping", () => {
-      if (isMountedRef.current === false) return;
-      socket?.emit("pong", userId);
-      console.log(`pingPong user: ${userId} send`);
-    });
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [socket, userId, isPlayer, gameData, backgroundImage]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    socket.on("player", handlePlayerUpdate(setGameData, isMountedRef));
+    socket.on("status", handleStatusMessage(setGameData, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
-      socket.off("player");
-      socket.off("status");
-      socket.off("ping");
+      socket.off("player", handlePlayerUpdate(setGameData, isMountedRef));
+      socket.off("status", handleStatusMessage(setGameData, isMountedRef));
     };
-  }, [socket, gameData, setGameData, userId]);
+  }, [socket, setGameData]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    socket.on("ping", handlePing(socket, userId, isMountedRef));
+
+    return () => {
+      isMountedRef.current = false;
+      socket.off("ping", handlePing(socket, userId, isMountedRef));
+    };
+  }, [socket, userId]);
 
   return (
     <div className={styles.pong}>

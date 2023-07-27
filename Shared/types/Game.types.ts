@@ -1,34 +1,37 @@
-export enum Action {
-  Idle,
-  Up,
-  Down,
-  Left,
-  Right,
-  Push,
-  Stop,
-}
+export type Action =
+  | "Idle"
+  | "Up"
+  | "Down"
+  | "Left"
+  | "Right"
+  | "Push"
+  | "Stop";
 
-export enum DirX {
-  Left = -1,
-  Idle = 0,
-  Right = 1,
-}
+// Instead of enums, use type aliases and constants for DirX and DirY
+export type DirX = -1 | 0 | 1;
+export type DirY = -1 | 0 | 1;
 
-export enum DirY {
-  Up = -1,
-  Idle = 0,
-  Down = 1,
-}
+export const DirXValues: { [key: string]: DirX } = {
+  Left: -1,
+  Idle: 0,
+  Right: 1,
+};
 
-export type RoundScore = {
-  host: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  opponent: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+export const DirYValues: { [key: string]: DirY } = {
+  Up: -1,
+  Idle: 0,
+  Down: 1,
+};
+
+export type Round = {
+  left: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  right: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 };
 
 export type Score = {
-  hostRoundWon: 0 | 1 | 2 | 3 | 4 | 5;
-  opponentRoundWon: 0 | 1 | 2 | 3 | 4 | 5;
-  round: RoundScore[];
+  leftRound: 0 | 1 | 2 | 3 | 4 | 5;
+  rightRound: 0 | 1 | 2 | 3 | 4 | 5;
+  round: Round[];
 };
 
 export type StatusMessage = {
@@ -70,12 +73,11 @@ export type PlayerDynamic = {
   speed: number;
   move: Action;
   push: number;
-  status: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
 };
 
 export type Ball = {
   img: string | null;
-  color: string | null;
+  color: RGB;
 };
 
 export type BallDynamic = {
@@ -90,6 +92,7 @@ export type BallDynamic = {
 export type Draw = {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
+  backgroundImage: HTMLImageElement;
 };
 
 export type GameData = {
@@ -102,6 +105,18 @@ export type GameData = {
   playerRight: Player | null;
   playerLeftDynamic: PlayerDynamic;
   playerRightDynamic: PlayerDynamic;
+  playerLeftStatus:
+    | "Unknown"
+    | "Connected"
+    | "Playing"
+    | "Paused"
+    | "Disconnected";
+  playerRightStatus:
+    | "Unknown"
+    | "Connected"
+    | "Playing"
+    | "Paused"
+    | "Disconnected";
   background: string;
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
   mode: "League" | "Party" | "Training";
@@ -116,7 +131,7 @@ export type GameData = {
   // Dynamic Data
   playerServe: "Left" | "Right" | null;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  score: Score | null;
+  score: Score;
   timer: Timer | null;
   status: "Waiting" | "Playing" | "Finished" | "Deleted";
   result:

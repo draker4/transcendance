@@ -1,5 +1,11 @@
 import { turnDelayIsOver } from "@Shared/game/pongUtils";
-import { GameData, Player, Draw } from "@Shared/types/Game.types";
+import {
+  GameData,
+  Player,
+  Draw,
+  PlayerDynamic,
+  RGB,
+} from "@Shared/types/Game.types";
 import {
   FONT_MENU,
   PLAYER_WIDTH,
@@ -7,11 +13,12 @@ import {
   BALL_SIZE,
   FONT_SCORE,
   FONT_TIMER,
+  MENU_COLOR,
 } from "@Shared/constants/Game.constants";
 
-function drawEndMenu(game: GameData, draw: Draw) {
+function drawMenu(gameData: GameData, draw: Draw) {
   // Draw the menu background
-  draw.context.fillStyle = game.color;
+  draw.context.fillStyle = MENU_COLOR;
   draw.context.fillRect(
     draw.canvas.width / 2 - 100,
     draw.canvas.height / 2 - 40,
@@ -20,33 +27,8 @@ function drawEndMenu(game: GameData, draw: Draw) {
   );
 
   // Draw the menu text;
-  draw.context.fillStyle = game.fontColor;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  draw.context.fillText(
-    game.result,
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 - 10
-  );
-  draw.context.fillText(
-    "Press Enter to restart",
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 30
-  );
-}
-
-function drawMenu(game: GameData, draw: Draw) {
-  // Draw the menu background
-  draw.context.fillStyle = game.color;
-  draw.context.fillRect(
-    draw.canvas.width / 2 - 100,
-    draw.canvas.height / 2 - 40,
-    200,
-    80
-  );
-
-  // Draw the menu text;
-  draw.context.fillStyle = game.fontColor;
+  const { r, g, b } = gameData.fontColor;
+  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
   draw.context.font = FONT_MENU;
   draw.context.textAlign = "center";
   draw.context.fillText(
@@ -56,46 +38,58 @@ function drawMenu(game: GameData, draw: Draw) {
   );
 }
 
-function drawPlayer(draw: Draw, player: Player) {
+function drawPlayer(
+  draw: Draw,
+  player: Player | null,
+  playerDynamic: PlayerDynamic
+) {
   const radius = 8; // Adjust the radius to control the roundness of the corners
 
-  draw.context.fillStyle = `rgb(255, 0, 0)`;
+  if (!player) return;
+  const { r, g, b } = player.color;
+  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
 
   draw.context.beginPath();
-  draw.context.moveTo(player.posX + radius, player.posY);
-  draw.context.lineTo(player.posX + PLAYER_WIDTH - radius, player.posY);
+  draw.context.moveTo(playerDynamic.posX + radius, playerDynamic.posY);
+  draw.context.lineTo(
+    playerDynamic.posX + PLAYER_WIDTH - radius,
+    playerDynamic.posY
+  );
   draw.context.arcTo(
-    player.posX + PLAYER_WIDTH,
-    player.posY,
-    player.posX + PLAYER_WIDTH,
-    player.posY + radius,
+    playerDynamic.posX + PLAYER_WIDTH,
+    playerDynamic.posY,
+    playerDynamic.posX + PLAYER_WIDTH,
+    playerDynamic.posY + radius,
     radius
   );
   draw.context.lineTo(
-    player.posX + PLAYER_WIDTH,
-    player.posY + PLAYER_HEIGHT - radius
+    playerDynamic.posX + PLAYER_WIDTH,
+    playerDynamic.posY + PLAYER_HEIGHT - radius
   );
   draw.context.arcTo(
-    player.posX + PLAYER_WIDTH,
-    player.posY + PLAYER_HEIGHT,
-    player.posX + PLAYER_WIDTH - radius,
-    player.posY + PLAYER_HEIGHT,
+    playerDynamic.posX + PLAYER_WIDTH,
+    playerDynamic.posY + PLAYER_HEIGHT,
+    playerDynamic.posX + PLAYER_WIDTH - radius,
+    playerDynamic.posY + PLAYER_HEIGHT,
     radius
   );
-  draw.context.lineTo(player.posX + radius, player.posY + PLAYER_HEIGHT);
+  draw.context.lineTo(
+    playerDynamic.posX + radius,
+    playerDynamic.posY + PLAYER_HEIGHT
+  );
   draw.context.arcTo(
-    player.posX,
-    player.posY + PLAYER_HEIGHT,
-    player.posX,
-    player.posY + PLAYER_HEIGHT - radius,
+    playerDynamic.posX,
+    playerDynamic.posY + PLAYER_HEIGHT,
+    playerDynamic.posX,
+    playerDynamic.posY + PLAYER_HEIGHT - radius,
     radius
   );
-  draw.context.lineTo(player.posX, player.posY + radius);
+  draw.context.lineTo(playerDynamic.posX, playerDynamic.posY + radius);
   draw.context.arcTo(
-    player.posX,
-    player.posY,
-    player.posX + radius,
-    player.posY,
+    playerDynamic.posX,
+    playerDynamic.posY,
+    playerDynamic.posX + radius,
+    playerDynamic.posY,
     radius
   );
   draw.context.closePath();
@@ -103,31 +97,19 @@ function drawPlayer(draw: Draw, player: Player) {
   draw.context.fill();
 }
 
-function drawBall(game: GameData, draw: Draw) {
+function drawBall(gameData: GameData, draw: Draw) {
   draw.context.beginPath();
   draw.context.arc(
-    game.ball.posX + BALL_SIZE / 2,
-    game.ball.posY + BALL_SIZE / 2,
+    gameData.ballDynamic.posX + BALL_SIZE / 2,
+    gameData.ballDynamic.posY + BALL_SIZE / 2,
     BALL_SIZE / 2,
     0,
     Math.PI * 2
   );
-  draw.context.fillStyle = game.ball.color;
+  const { r, g, b } = gameData.ball.color;
+  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
   draw.context.fill();
   draw.context.closePath();
-}
-
-function drawNet(game: GameData, draw: Draw) {
-  draw.context.beginPath();
-  draw.context.setLineDash([7, 15]);
-  draw.context.moveTo(
-    draw.canvas.width / 2,
-    draw.canvas.height - draw.canvas.height / 10
-  );
-  draw.context.lineTo(draw.canvas.width / 2, draw.canvas.height / 10);
-  draw.context.lineWidth = 10;
-  draw.context.strokeStyle = game.fontColor;
-  draw.context.stroke();
 }
 
 function drawScore(draw: Draw, score: number, posX: number, posY: number) {
@@ -137,10 +119,11 @@ function drawScore(draw: Draw, score: number, posX: number, posY: number) {
 function drawRound(
   draw: Draw,
   roundDraw: number,
-  color: string,
+  color: RGB,
   side: "left" | "Right"
 ) {
-  draw.context.fillStyle = color;
+  const { r, g, b } = color;
+  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
   const sign = side === "left" ? -1 : 1;
   for (let i = 0; i < roundDraw; i++) {
     draw.context.beginPath();
@@ -156,93 +139,102 @@ function drawRound(
   }
 }
 
-function drawScoreTable(game: GameData, draw: Draw) {
+function drawScoreTable(gameData: GameData, draw: Draw) {
   // Set font
-  draw.context.fillStyle = game.fontColor;
+  const { r, g, b } = gameData.fontColor;
+  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
 
   // Draw Score
-  drawScore(draw, game.playerLeft.score, draw.canvas.width / 4, 50);
   drawScore(
     draw,
-    game.playerRight.score,
+    gameData.score.round[gameData.actualRound].left,
+    draw.canvas.width / 4,
+    50
+  );
+  drawScore(
+    draw,
+    gameData.score.round[gameData.actualRound].right,
     draw.canvas.width / 4 + draw.canvas.width / 2,
     50
   );
 
   // Draw actual round
-  if (game.maxRound > 1) {
+  if (gameData.maxRound > 1) {
     draw.context.font = FONT_MENU;
     draw.context.fillText(
-      "Round " + game.actualRound,
+      "Round " + gameData.actualRound,
       draw.canvas.width / 2,
       40
     );
   }
 
   // Draw player round won
-  drawRound(draw, game.maxRound / 2, game.roundColor, "left");
-  drawRound(draw, game.playerLeft.roundWon, game.roundWinColor, "left");
-  drawRound(draw, game.maxRound / 2, game.roundColor, "Right");
-  drawRound(draw, game.playerRight.roundWon, game.roundWinColor, "Right");
+  drawRound(draw, gameData.maxRound / 2, gameData.roundColor, "left");
+  drawRound(draw, gameData.score.leftRound, gameData.roundWinColor, "left");
+  drawRound(draw, gameData.maxRound / 2, gameData.roundColor, "Right");
+  drawRound(draw, gameData.score.rightRound, gameData.roundWinColor, "Right");
 }
 
-function drawTimer(game: GameData, draw: Draw) {
-  // Draw the menu background
-  draw.context.fillStyle = game.color;
-  draw.context.fillRect(
-    draw.canvas.width / 2 - 100,
-    draw.canvas.height / 2 - 50,
-    200,
-    100
-  );
+// function drawTimer(gameData: GameData, draw: Draw) {
+//   // Draw the menu background
+//   draw.context.fillStyle = gameData.color;
+//   draw.context.fillRect(
+//     draw.canvas.width / 2 - 100,
+//     draw.canvas.height / 2 - 50,
+//     200,
+//     100
+//   );
 
-  // Draw the menu text;
-  draw.context.fillStyle = game.fontColor;
-  draw.context.font = FONT_TIMER;
-  draw.context.textAlign = "center";
-  if (game.timer > 1) {
-    const timer = game.timer - 1;
-    draw.context.fillText(
-      timer.toString(),
-      draw.canvas.width / 2,
-      draw.canvas.height / 2 + 40
-    );
-  } else {
-    draw.context.fillText(
-      "GO!",
-      draw.canvas.width / 2,
-      draw.canvas.height / 2 + 30
-    );
-  }
-}
+//   // Draw the menu text;
+//   draw.context.fillStyle = gameData.fontColor;
+//   draw.context.font = FONT_TIMER;
+//   draw.context.textAlign = "center";
+//   if (gameData.timer > 1) {
+//     const timer = gameData.timer - 1;
+//     draw.context.fillText(
+//       timer.toString(),
+//       draw.canvas.width / 2,
+//       draw.canvas.height / 2 + 40
+//     );
+//   } else {
+//     draw.context.fillText(
+//       "GO!",
+//       draw.canvas.width / 2,
+//       draw.canvas.height / 2 + 30
+//     );
+//   }
+// }
 
-export default function drawPong(game: GameData, draw: Draw) {
+export default function drawPong(gameData: GameData, draw: Draw) {
   // Clear the Canvas
   draw.context.clearRect(0, 0, draw.canvas.width, draw.canvas.height);
-  // Set the Canvas color
-  draw.context.fillStyle = game.color;
-  // Draw the background
-  draw.context.fillRect(0, 0, draw.canvas.width, draw.canvas.height);
+  // Draw the background image
+  draw.context.drawImage(
+    draw.backgroundImage,
+    0,
+    0,
+    draw.canvas.width,
+    draw.canvas.height
+  );
 
   // Draw the Player
-  drawPlayer(draw, game.playerLeft);
-  drawPlayer(draw, game.playerRight);
-
-  // Draw the net (Line in the middle)
-  drawNet(game, draw);
+  drawPlayer(draw, gameData.playerLeft, gameData.playerLeftDynamic);
+  drawPlayer(draw, gameData.playerRight, gameData.playerRightDynamic);
 
   // Draw the Score
-  drawScoreTable(game, draw);
+  drawScoreTable(gameData, draw);
+  // if (gameData.status === "Finished") {
+  //   drawEndMenu(gameData, draw);
+  // } else if (gameData.timer > 0) {
+  //   drawTimer(gameData, draw);
+  // } else
 
-  if (game.status === "Finished") {
-    drawEndMenu(game, draw);
-  } else if (game.timer > 0) {
-    drawTimer(game, draw);
-  } else if (game.status != "Playing") {
-    drawMenu(game, draw);
-  } else if (turnDelayIsOver(game.timer)) {
-    drawBall(game, draw);
+  if (gameData.status != "Playing") {
+    drawMenu(gameData, draw);
   }
+  // else if (turnDelayIsOver(gameData.timer)) {
+  //   drawBall(gameData, draw);
+  // }
 }

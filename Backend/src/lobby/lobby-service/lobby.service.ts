@@ -6,8 +6,6 @@ import { Repository } from 'typeorm';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
-import { v4 as uuidv4 } from 'uuid';
-
 @Injectable()
 export class LobbyService extends LobbyUtils {
   @InjectRepository(Game)
