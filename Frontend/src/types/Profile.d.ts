@@ -9,4 +9,5 @@ type Profile = {
   provider: string;
   motto: string;
   story: string;
+  isTwoFactorAuthenticationEnabled?: boolean;
 };

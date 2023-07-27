@@ -9,17 +9,20 @@ export async function GET(req: NextRequest) {
 		});
 
 	const	response = new NextResponse;
+	
 	response.cookies.set({
 		name: "crunchy-token",
 		value: "",
 		httpOnly: true,
 		sameSite: "strict",
-	})
+	});
+
 	response.cookies.set({
 		name: "refresh-token",
 		value: "",
 		httpOnly: true,
 		sameSite: "strict",
-	})
+	});
+	
 	return response;
 }

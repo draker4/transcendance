@@ -37,7 +37,7 @@ export default function DisconnectClient() {
 	if (draw)
 		return (
 			<div className={styles.main}>
-				<h2>Oh no! You just have been disconnected!❤️ Please sign in again!👍🚀</h2>
+				<h4>Oh no! You just have been disconnected!❤️ Please sign in again!👍🚀</h4>
 			</div>
 		)
 

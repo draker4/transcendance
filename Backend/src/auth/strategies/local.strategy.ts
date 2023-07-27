@@ -6,7 +6,7 @@ import { UsersService } from '@/users/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import * as bcrypt from 'bcrypt';
 import { User } from '@/utils/typeorm/User.entity';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -28,10 +28,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     } catch (error) {
       throw new BadGatewayException();
     }
-
     
     if (!user)
-    throw new NotFoundException();
+      throw new NotFoundException();
     
     const passDecrypted = await this.cryptoService.decrypt(password);
     const isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
@@ -40,10 +39,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
 
     if (!user.verified) {
-      await this.authService.sendNewCode(user);
+      this.authService.sendNewCode(user);
       throw new ForbiddenException();
     }
 
-    return await this.usersService.saveUserEntity(user);
+    return user;
   }
 }

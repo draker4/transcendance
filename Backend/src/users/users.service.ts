@@ -99,7 +99,9 @@ export class UsersService {
   }
 
   async getUserByCode(code: string) {
-    return await this.userRepository.findOne({ where: { verifyCode: code } });
+    return await this.userRepository.findOne({
+      where: { verifyCode: code, verified: false }
+    });
   }
 
   async updateUser(id: number, properties: Partial<User>) {

@@ -1,9 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
-  BadGatewayException,
-  ForbiddenException,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -16,7 +13,6 @@ import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
-import * as bcrypt from 'bcrypt';
 import * as argon2 from 'argon2';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
@@ -89,8 +85,8 @@ export class AuthService {
     }
   }
 
-  async login(user: User, nbOfRefreshes: number) {
-    const payload = { sub: user.id, login: user.login };
+  async login(user: User, nbOfRefreshes: number, isTwoFactorAuthenticationEnabled: boolean) {
+    const payload = { sub: user.id, login: user.login, twoFactorAuth: isTwoFactorAuthenticationEnabled };
     const [access_token, refresh_token] = await Promise.all([
       this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
@@ -267,7 +263,7 @@ export class AuthService {
         this.usersService.deleteToken(isMatch);
       }, 20000);
 
-      return this.login(user, isMatch.NbOfRefreshes + 1);
+      return this.login(user, isMatch.NbOfRefreshes + 1, false);
     } catch (error) {
       console.log(error.message);
       throw new UnauthorizedException(error.message);
