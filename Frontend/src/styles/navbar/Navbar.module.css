@@ -81,6 +81,7 @@
 }
 
 .chatBtn {
+  flex-shrink: 0;
   margin-left: 20px;
   border-radius: 100%;
   width: clamp(40px, 3vh, 50px);

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
 import { PassportModule } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,6 +19,7 @@ import { Token } from 'src/utils/typeorm/Token.entity';
 import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.strategy';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { ChannelService } from 'src/channels/channel.service';
+import { AuthService } from './services/auth.service';
 
 @Module({
   imports: [

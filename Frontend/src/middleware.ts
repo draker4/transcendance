@@ -15,12 +15,15 @@ export async function middleware(req: NextRequest) {
       console.log(err);
     }));
   // const url = req.nextUrl;
-  // console.log(verifiedToken, url);
 
   // if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
   //   // console.log("do nothing go to google");
   //   return ;
   // }
+
+  if (verifiedToken && verifiedToken.twoFactorAuth && req.nextUrl.pathname !== "/home/auth/2fa") {
+    return NextResponse.redirect(new URL("/home/auth/2fa", req.url));
+  }
 
   // refresh token if token expires in less than 10 minutes
   if (req.nextUrl.pathname.startsWith("/home") && refreshToken) {
@@ -144,7 +147,7 @@ export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/home") && !verifiedToken && !changeCookies) {
     // console.log("redirect go to welcome from /home")
 
-    return NextResponse.redirect(new URL("/welcome", req.url));
+    return NextResponse.redirect(new URL("/welcome/notif", req.url));
   }
 
   // console.log("nothing redirected");

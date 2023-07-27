@@ -74,8 +74,11 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column({ nullable: true, default: false })
+  @Column({ default: false })
   isTwoFactorAuthenticationEnabled: boolean;
+
+  @Column({ nullable: true})
+  twoFactorAuthenticationSecret: string;
 
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({

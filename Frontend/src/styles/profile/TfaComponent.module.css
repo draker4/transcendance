@@ -1,0 +1,111 @@
+.main p {
+	max-width: 350px;
+}
+
+.button {
+	appearance: none;
+	height: 30px;
+	border-radius: 4px;
+	font-size: 14px;
+	font-weight: bold;
+	color: var(--primary1);
+	background-color: var(--secondary1);
+	border: 3px solid var(--accent1);
+	transition: all 0.3s ease-in;
+	width: 100%;
+}
+
+.button:hover {
+	color: var(--accent2);
+	border: 3px solid var(--accent2);
+	cursor: pointer;
+}
+
+.notif {
+	color: var(--notif);
+}
+
+.popup2 {
+	/* border: 1px solid red; */
+	position: fixed;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: var(--primary1);
+	z-index: 10;
+	height: 100%;
+	width: 100%;
+	margin: auto auto;
+	opacity: 90%;
+}
+
+.popup2 p {
+	color: var(--tertiary3);
+	padding: 10px;
+	margin: 0;
+}
+
+.qrcode {
+	/* border: 2px solid green; */
+	max-width: 200px;
+	opacity: 100%;
+	background-color: var(--primary1);
+}
+
+.popup1 p{
+	margin: 0;
+}
+
+.popup1 input {
+	width: 100%;
+	margin: 10px;
+	border-bottom: 1px solid var(--tertiary1);
+	text-transform: uppercase;
+}
+
+.popup2 input {
+	width: 50%;
+	margin: 10px;
+	border-bottom: 1px solid var(--tertiary1);
+	text-transform: uppercase;
+	margin: 0;
+	margin-bottom: 10px;
+}
+
+.activate {
+	appearance: none;
+	height: 30px;
+	width: 30%;
+	border-radius: 4px;
+	font-size: 14px;
+	font-weight: bold;
+	color: var(--primary1);
+	background-color: var(--secondary1);
+	border: 3px solid var(--accent1);
+	transition: all 0.3s ease-in;
+}
+
+.activate:hover {
+	color: var(--accent2);
+	border: 3px solid var(--accent2);
+	cursor: pointer;
+}
+
+.icon {
+	/* border: 1px solid red; */
+	position: fixed;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+	color: var(--accent1);
+	width: 30px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}

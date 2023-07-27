@@ -30,6 +30,7 @@ import { Token } from './utils/typeorm/Token.entity';
 import { StatsModule } from './stats/stats.module';
 import { Stats } from './utils/typeorm/Stats.entity';
 import { ScoreModule } from './score/score.module';
+import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { ScoreModule } from './score/score.module';
     MessageModule,
     UsersModule,
     ScoreModule,
+    TwoFactorAuthenticationModule,
   ],
 })
 export class AppModule {}

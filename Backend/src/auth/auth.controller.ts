@@ -12,7 +12,6 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { createUserDto } from 'src/users/dto/CreateUser.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
@@ -20,6 +19,7 @@ import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtNoExpirationGuard } from './guards/jwtNoExpiration.guard';
+import { AuthService } from './services/auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -37,7 +37,7 @@ export class AuthController {
     if (!user42logged)
       throw new UnauthorizedException();
 
-    return this.authService.login(user42logged, 0);
+    return this.authService.login(user42logged, 0, user42logged.isTwoFactorAuthenticationEnabled);
   }
 
   @Public()
@@ -78,7 +78,7 @@ export class AuthController {
         verified: true,
       });
 
-      const { access_token, refresh_token } = await this.authService.login(user, 0);
+      const { access_token, refresh_token } = await this.authService.login(user, 0, user.isTwoFactorAuthenticationEnabled);
       return {
         message: 'Loading...',
         access_token,
@@ -105,7 +105,7 @@ export class AuthController {
     
     const user= await this.authService.loginWithGoogle(req.user, res);
 
-    const { access_token, refresh_token } = await this.authService.login(user, 0);
+    const { access_token, refresh_token } = await this.authService.login(user, 0, user.isTwoFactorAuthenticationEnabled);
     
     res.cookie('crunchy-token', access_token, {
       path: "/",
@@ -138,7 +138,7 @@ export class AuthController {
 
       const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
 
-      const { access_token, refresh_token } = await this.authService.login(user, 0);
+      const { access_token, refresh_token } = await this.authService.login(user, 0, false);
 
       return {
         error: false,
@@ -157,7 +157,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   loginEmail(@Request() req) {
-    return this.authService.login(req.user, 0);
+    return this.authService.login(req.user, 0, req.user.isTwoFactorAuthenticationEnabled);
   }
 
   @Public()

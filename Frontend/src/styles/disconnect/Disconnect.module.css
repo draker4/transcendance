@@ -7,11 +7,15 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(1, 1, 1, 0.7);
+	background: rgba(0, 0, 0, 0.5);
 }
 
-.main h2 {
+.main h4 {
+	/* border: 1px solid red; */
+	padding: 20px;
+	border-radius: 5px;
+	background: rgba(1, 1, 1, 0.8);
 	width: 70%;
 	text-align: center;
-	color: aliceblue;
+	color: var(--primary1);
 }
