@@ -207,7 +207,7 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
 //   }
 // }
 
-export default function drawPong(gameData: GameData, draw: Draw) {
+export function drawPong(gameData: GameData, draw: Draw) {
   // Clear the Canvas
   draw.context.clearRect(0, 0, draw.canvas.width, draw.canvas.height);
   // Draw the background image
@@ -231,10 +231,10 @@ export default function drawPong(gameData: GameData, draw: Draw) {
   //   drawTimer(gameData, draw);
   // } else
 
-  if (gameData.status != "Playing") {
-    drawMenu(gameData, draw);
-  }
+  // if (gameData.status != "Playing") {
+  //   drawMenu(gameData, draw);
+  // }
   // else if (turnDelayIsOver(gameData.timer)) {
-  //   drawBall(gameData, draw);
+  // drawBall(gameData, draw);
   // }
 }

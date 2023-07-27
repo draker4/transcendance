@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
   // Disable React Strict Mode (set to false to turn it off)
   reactStrictMode: false,

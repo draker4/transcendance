@@ -17,11 +17,12 @@ echo "Creating folder for next project"
 #Install required depedencies
 echo "install required depedencies"
 cd /app
+npm run clean
 npm install
 
 #Update required depedencies
-#echo "update required depedencies"
-#npm update
+echo "update required depedencies"
+npm update
 
 #Start dev env
 echo "starting dev server"

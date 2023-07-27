@@ -1,40 +1,30 @@
-import { DirX, DirY, Ball, GameData, Player } from "@Shared/types/Game.types";
+import {
+  DirXValues,
+  DirYValues,
+  GameData,
+  BallDynamic,
+  PlayerDynamic,
+} from "@Shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
   BALL_SIZE,
-  BALL_START_SPEED,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
 } from "@Shared/constants/Game.constants";
 
-export function initBall(difficulty: number): Ball {
-  const ball: Ball = {
-    posX: GAME_WIDTH / 2 - 5,
-    posY: GAME_HEIGHT / 2 - 5,
-    speed: BALL_START_SPEED + difficulty,
-    moveX: DirX.Idle,
-    moveY: DirY.Idle,
-    color: "#FFFFFF",
-    push: 0,
-    img: null,
-  };
-
-  return ball;
-}
-
-export function resetBall(ball: Ball, game: GameData): void {
+export function resetBall(ball: BallDynamic, game: GameData): void {
   ball.posX = GAME_WIDTH / 2;
   ball.posY = GAME_HEIGHT / 2;
-  ball.moveX = DirX.Idle;
-  ball.moveY = DirY.Idle;
+  ball.moveX = DirXValues.Idle;
+  ball.moveY = DirYValues.Idle;
   while (ball.push > 0) {
     ball.push--;
     ball.speed -= 1;
   }
 }
 
-function handlePush(ball: Ball, player: Player): void {
+export function handlePush(ball: BallDynamic, player: PlayerDynamic): void {
   if (player.push > 0 && player.push <= 5) {
     ball.push++;
     ball.speed += 1;
@@ -44,20 +34,28 @@ function handlePush(ball: Ball, player: Player): void {
   }
 }
 
-function calculateBallAngle(ball: Ball, posY: number, height: number): number {
+export function calculateBallAngle(
+  ball: BallDynamic,
+  posY: number,
+  height: number
+): number {
   const relativeIntersectY = posY + height / 2 - (ball.posY + BALL_SIZE / 2);
   const normalIntersectY = relativeIntersectY / (height / 2);
   const bounceAngle = normalIntersectY * 45;
   return bounceAngle * (Math.PI / 180);
 }
 
-function handlePlayerCollision(ball: Ball, player: Player): void {
+export function handlePlayerCollision(
+  ball: BallDynamic,
+  player: PlayerDynamic,
+  playerSide: "Left" | "Right"
+): void {
   const margin = ball.speed * 1.5;
   if (
-    (player.side === "Left" &&
+    (playerSide === "Left" &&
       ball.posX >= player.posX + PLAYER_WIDTH - margin / 2 &&
       ball.posX <= player.posX + PLAYER_WIDTH + margin / 2) ||
-    (player.side === "Right" &&
+    (playerSide === "Right" &&
       ball.posX + BALL_SIZE >= player.posX - margin / 2 &&
       ball.posX + BALL_SIZE <= player.posX + margin / 2)
   ) {
@@ -77,25 +75,25 @@ function handlePlayerCollision(ball: Ball, player: Player): void {
     } else if (
       ball.posY + BALL_SIZE >= player.posY - margin &&
       ball.posY + BALL_SIZE < player.posY &&
-      ball.moveY < DirY.Idle
+      ball.moveY < DirYValues.Idle
     ) {
       ball.moveY *= -1;
     } else if (
       ball.posY > player.posY + PLAYER_WIDTH &&
       ball.posY < player.posY + PLAYER_WIDTH + margin &&
-      ball.moveY > DirY.Idle
+      ball.moveY > DirYValues.Idle
     ) {
       ball.moveY *= -1;
     }
   }
 }
 
-export function updateBall(ball: Ball, game: GameData): string {
+export function updateBall(ball: BallDynamic, game: GameData): string {
   // Handle Player collisions
-  if (ball.moveX < DirX.Idle) {
-    handlePlayerCollision(ball, game.playerLeft);
-  } else if (ball.moveX > DirX.Idle) {
-    handlePlayerCollision(ball, game.playerRight);
+  if (ball.moveX < DirXValues.Idle) {
+    handlePlayerCollision(ball, game.playerLeftDynamic, "Left");
+  } else if (ball.moveX > DirXValues.Idle) {
+    handlePlayerCollision(ball, game.playerRightDynamic, "Right");
   }
 
   // Move ball in intended direction based on moveY and moveX values
@@ -118,12 +116,12 @@ export function updateBall(ball: Ball, game: GameData): string {
   return "Ball updated";
 }
 
-export function handleServe(ball: Ball, game: GameData): void {
-  ball.moveX = game.playerServe === "Left" ? DirX.Right : DirX.Left;
+export function handleServe(ball: BallDynamic, game: GameData): void {
+  ball.moveX = game.playerServe === "Left" ? DirXValues.Right : DirXValues.Left;
   if (Math.random() < 0.5) {
-    ball.moveY = DirY.Up;
+    ball.moveY = DirYValues.Up;
   } else {
-    ball.moveY = DirY.Down;
+    ball.moveY = DirYValues.Down;
   }
   var pos = Math.random() * (GAME_HEIGHT / 2 - BALL_SIZE);
   if (Math.random() < 0.5) pos *= -1;

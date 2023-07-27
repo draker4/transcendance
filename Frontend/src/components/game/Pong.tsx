@@ -43,12 +43,29 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   }, [gameData.background]);
 
   useEffect(() => {
+    isMountedRef.current = true;
+    let animationFrameId: number | undefined;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
       backgroundImage: backgroundImage,
     };
     draw.canvas.focus();
+
+    if (animationFrameId === undefined) {
+      animationFrameId = requestAnimationFrame((timestamp) =>
+        gameLoop(timestamp, gameData, draw)
+      );
+    }
+    return () => {
+      isMountedRef.current = false;
+      if (animationFrameId !== undefined) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       pongKeyDown(event, gameData, socket, userId, isPlayer);
     }
@@ -56,8 +73,6 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     function handleKeyUp(event: KeyboardEvent) {
       pongKeyUp(event, gameData, socket, userId, isPlayer);
     }
-
-    requestAnimationFrame((timestamp) => gameLoop(timestamp, gameData, draw));
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
 
@@ -65,7 +80,7 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [socket, userId, isPlayer, gameData, backgroundImage]);
+  }, [socket, userId, isPlayer, gameData]);
 
   useEffect(() => {
     isMountedRef.current = true;
