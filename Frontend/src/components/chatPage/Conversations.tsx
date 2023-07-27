@@ -21,12 +21,25 @@ export default function Conversations({
   openDisplay: (display: Display) => void;
 }) {
   const [channels, setChannels] = useState<Channel[]>([]);
-  // const [pongies, setPongies] = useState<Pongie[]>([]);
+  let date = "";
 
   const channelsList = channels.map((channel) => {
     const handleClick = () => {
       openDisplay(channel);
     };
+
+    if (channel.lastMessage?.createdAt) {
+      const diff = (Date.now() - new Date(channel.lastMessage.createdAt).getTime()) / 1000;
+      date = diff < 60
+              ? Math.floor(diff) + "s"
+              : diff < 3600
+              ? Math.floor(diff / 60) + "min"
+              : diff < 86400
+              ? Math.floor(diff / 60 / 60) + "h"
+              : diff < 604800
+              ? Math.floor(diff / 60 / 60 / 24) + "d"
+              : Math.floor(diff / 60 / 60 / 24 / 7) + "w"
+    }
 
     return (
       <React.Fragment key={channel.id}>
@@ -39,37 +52,34 @@ export default function Conversations({
               backgroundColor={channel.avatar.backgroundColor}
             />
           </div>
-          <div className={styles.name}>{channel.name}</div>
+          <div className={styles.name}>
+            <h4>{channel.name}</h4>
+            {
+              channel.lastMessage &&
+               <p>{
+                  channel.lastMessage.user?.login
+                  ? channel.lastMessage.user.login
+                  : "****"
+                }: {channel.lastMessage.content}</p>
+            }
+          </div>
+
+          <div className={styles.time}>
+            {
+              channel.lastMessage &&
+              <p>
+                {date}
+              </p>
+            }
+          </div>
 
 		{/* [!][+] PROVISOIRE checking */}
-		 <div>{`(id:${channel.id})`}</div>
+		 {/* <div>{`(id:${channel.id})`}</div> */}
 
         </div>
       </React.Fragment>
     );
   });
-
-  // const pongiesList = pongies.map((pongie) => {
-  //   const handleClick = () => {
-  //     openDisplay(pongie);
-  //   };
-
-  //   return (
-  //     <React.Fragment key={pongie.id}>
-  //       <div className={styles.list} onClick={handleClick}>
-  //         <div className={styles.avatar}>
-  //           <AvatarUser
-  //             avatar={pongie.avatar}
-  //             borderSize="2px"
-  //             borderColor={pongie.avatar.borderColor}
-  //             backgroundColor={pongie.avatar.backgroundColor}
-  //           />
-  //         </div>
-  //         <div className={styles.name}>{pongie.login}</div>
-  //       </div>
-  //     </React.Fragment>
-  //   );
-  // });
 
   useEffect(() => {
 
@@ -77,9 +87,6 @@ export default function Conversations({
       socket?.emit("getChannels", (channels: Channel[]) => {
         setChannels(channels);
       });
-      // socket?.emit("getPongies", (pongies: Pongie[]) => {
-      //   setPongies(pongies);
-      // });
     }
 
     socket.on("notif", () => getData());
@@ -132,7 +139,6 @@ export default function Conversations({
       </div>
       <div className={styles.scroll}>
         {channelsList}
-        {/* {pongiesList} */}
       </div>
     </div>
   );

@@ -85,7 +85,7 @@ export default function LogEmail({
 
   const submit = async (data: FormInputs) => {
     try {
-      await handleCaptcha();
+      // await handleCaptcha();
 
       //if email only, first step of authentification
       const emailUser = data.email;
@@ -97,7 +97,10 @@ export default function LogEmail({
           notif: boolean;
         } = await registerFormEmail(emailUser);
 
-        if (res.notif) throw new Error();
+        if (res.notif) {
+          setEmail("");
+          throw new Error();
+         }
 
         setPassword(true);
         setChangeEmail(true);

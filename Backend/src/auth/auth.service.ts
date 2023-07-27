@@ -21,6 +21,7 @@ import * as argon2 from 'argon2';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { verify } from 'jsonwebtoken';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -41,9 +42,11 @@ export class AuthService {
         client_id: process.env.CLIENT_ID_42,
         client_secret: process.env.SECRET_42,
         code: code,
-        redirect_uri: 'http://localhost:3000/api/auth/42',
+        redirect_uri: `http://localhost:3000/api/auth/42`,
       }),
     });
+
+    console.log(response.status);
 
     if (!response.ok) throw new UnauthorizedException();
 
@@ -148,7 +151,7 @@ export class AuthService {
     });
   }
 
-  async loginWithGoogle(createUserDto: createUserDto) {
+  async loginWithGoogle(createUserDto: createUserDto, res: Response) {
     try {
       if (!createUserDto) throw new Error('Unauthenticated');
 
@@ -169,10 +172,12 @@ export class AuthService {
         'google',
       );
 
-      if (!user) user = await this.usersService.addUser(createUserDto);
-      else await this.usersService.updateUser(user.id, createUserDto);
-
-      return this.login(user, 0);
+      if (!user)
+        user = await this.usersService.addUser(createUserDto);
+      else
+        await this.usersService.updateUser(user.id, createUserDto);
+      
+      return user;
     } catch (error) {
       throw new UnauthorizedException('Unauthenticated');
     }
@@ -197,26 +202,6 @@ export class AuthService {
 
   async createAvatar(avatar: AvatarDto) {
     return await this.avatarService.createAvatar(avatar);
-  }
-
-  async validateUser(email: string, password: string) {
-    try {
-      const user = await this.usersService.getUserByEmail(email, 'email');
-      let isMatch = false;
-
-      if (!user) throw new NotFoundException();
-
-      const passDecrypted = await this.cryptoService.decrypt(password);
-      isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
-
-      if (!isMatch) throw new UnauthorizedException();
-
-      if (!user.verified) throw new ForbiddenException();
-
-      return await this.usersService.saveUserEntity(user);
-    } catch (error) {
-      throw new BadGatewayException();
-    }
   }
 
   async getUserById(id: number) {

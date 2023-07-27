@@ -101,20 +101,27 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
-  async googleOauthCallback(@Req() req, @Res() res: Response) {
-    const { access_token, refresh_token } = await this.authService.loginWithGoogle(req.user);
+  async googleOauthCallback(@Req() req, @Res() res: Response) {    
+    
+    const user= await this.authService.loginWithGoogle(req.user, res);
+
+    const { access_token, refresh_token } = await this.authService.login(user, 0);
+    
     res.cookie('crunchy-token', access_token, {
       path: "/",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "strict",
     });
-    res.cookie('refresh-token', refresh_token, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-    });
-    return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
-    // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
+
+    if (!user.isTwoFactorAuthenticationEnabled)
+      res.cookie('refresh-token', refresh_token, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "strict",
+      });
+    
+    // return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
+    return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
 
   @Post('firstLogin')

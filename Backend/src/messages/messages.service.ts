@@ -31,6 +31,8 @@ export class MessagesService {
       user: message.sender,
     };
 
-    await this.messageRepository.save(newMsg);
+    const messageSaved = await this.messageRepository.save(newMsg);
+
+    await this.channelService.saveLastMessage(channel.id, messageSaved);
   }
 }

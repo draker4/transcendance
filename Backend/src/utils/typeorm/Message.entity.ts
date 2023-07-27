@@ -18,7 +18,7 @@ export class Message {
   id: number;
 
   @CreateDateColumn()
-  createdAd: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;

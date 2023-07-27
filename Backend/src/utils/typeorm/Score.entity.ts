@@ -21,7 +21,7 @@ export class Score {
   rightPlayerId: number;
 
   @CreateDateColumn()
-  createdAd: Date;
+  createdtd: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;

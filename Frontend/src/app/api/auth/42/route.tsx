@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
 			if (!access_token || !refresh_token)
 				throw new Error("no token");
 			
-			const	response = NextResponse.redirect(`http://${process.env.HOST_IP}:3000/home`);
+			const	response = NextResponse.redirect(`http://localhost:3000/home`);
 			response.cookies.set({
 				name: "crunchy-token",
 				value: access_token,

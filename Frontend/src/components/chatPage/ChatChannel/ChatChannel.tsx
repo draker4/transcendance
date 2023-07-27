@@ -26,7 +26,7 @@ type ReceivedMsg = {
 // Previous messages loaded from database
 type LoadMsg = {
   content: string;
-  createdAd: string;
+  createdAt: string;
   user: User;
   isServerNotif: boolean;
   updatedAt: string;
@@ -45,7 +45,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
           const msg: Message = {
             content: item.content,
             sender: item.user,
-            date: new Date(item.createdAd),
+            date: new Date(item.createdAt),
           };
           previousMsg.push(msg);
         });

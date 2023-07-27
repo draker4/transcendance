@@ -42,10 +42,11 @@ export class ChatService {
     try {
       const relations = await this.userChannelRelation.find({
         where: { userId: id, joined: true, isBanned: false },
-        relations: ['channel', 'channel.avatar'],
+        relations: ['channel', 'channel.avatar', 'channel.lastMessage', 'channel.lastMessage.user'],
       });
 
-      if (!relations) return [];
+      if (!relations)
+        return [];
 
       const channels = await Promise.all(
         relations.map(async (relation) => {
@@ -123,10 +124,12 @@ export class ChatService {
   async getAllPongies(id: number): Promise<pongieDto[]> {
     try {
       let pongies = await this.userRepository.find({
+        where: { verified: true },
         relations: ['avatar'],
       });
 
       pongies = pongies.filter((pongie) => pongie.id !== id);
+      pongies = pongies.filter(pongie => pongie.login && pongie.login !== "");
 
       const friends = await this.getPongies(id);
 

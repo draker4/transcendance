@@ -13,16 +13,17 @@ export async function GET() {
 				name: "crunchy-token",
 				value: crunchyToken,
 				httpOnly: true,
-				sameSite: "lax",
+				sameSite: "strict",
 				path: "/",
 			});
 			response.cookies.set({
 				name: "refresh-token",
 				value: refreshToken,
 				httpOnly: true,
-				sameSite: "lax",
+				sameSite: "strict",
 				path: "/",
 			});
+
 			return response;
 
 		} catch (err) {

@@ -8,7 +8,7 @@ export class Avatar {
 	id: number;
 
 	@CreateDateColumn()
- 	createdAd: Date;
+ 	createdAt: Date;
 
 	@UpdateDateColumn()
   	updatedAt: Date;

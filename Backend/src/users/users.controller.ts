@@ -88,7 +88,6 @@ export class UsersController {
 
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-    console.log("laaa");
 	  return await this.usersService.editUser(req.user.id, properties);
   }
 
@@ -133,7 +132,6 @@ export class UsersController {
   @Delete('disconnect/:id')
   async deleteTokens(@Param('id', ParseIntPipe) id: number) {
     try {
-      console.log("laaaaa", id);
       const user = await this.usersService.getUserTokens(id);
 
       if (user)

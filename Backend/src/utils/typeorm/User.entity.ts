@@ -24,7 +24,7 @@ export class User {
   id: number;
 
   @CreateDateColumn()
-  createdAd: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
@@ -73,6 +73,9 @@ export class User {
 
   @Column({ nullable: true })
   refreshToken: string;
+
+  @Column({ nullable: true, default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
 
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({

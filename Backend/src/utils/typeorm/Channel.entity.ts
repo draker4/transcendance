@@ -22,7 +22,7 @@ export class Channel {
 	id: number;
 
 	@CreateDateColumn()
-	createdAd: Date;
+	createdAt: Date;
 
 	@UpdateDateColumn()
 	updatedAt: Date;
@@ -46,4 +46,9 @@ export class Channel {
 	// Relation one<Channel> [to] Many<Message>
 	@OneToMany(() => Message, (message) => message.channel)
 	messages: Message[];
+
+	// In order to get the last message without get all messages
+	@OneToOne(() => Message)
+	@JoinColumn()
+	lastMessage: Message;
 }
