@@ -1,11 +1,20 @@
+import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faFaceSmileWink } from "@fortawesome/free-solid-svg-icons";
+import { faCertificate, faSkull, faRectangleXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 
 type Props = {
 	relation: UserRelation;
 	myRelation: UserRelation;
+	role: ChannelRoles;
+}
+
+export enum RolesIcons {
+    giveRmChanOp = "faCertificate",
+	cancelInvite = "faSkull",
+    giveRmBan = "faRectangleXmark",
 }
 
 type ButtonData = {
@@ -16,9 +25,26 @@ type ButtonData = {
   };
 
 
-
-export default function ChanOpControlPannel({relation, myRelation}:Props) {
+export default function ChanOpControlPannel({relation, myRelation, role}:Props) {
 	
+
+
+	/* 
+	
+	switch(role) {
+		case (ChannelRoles.operator):
+			return ()
+	}
+
+	
+	*/
+
+
+	// [?]
+	const [isChanOp, setIsChanOp] = useState(relation.isChanOp);
+
+
+	// [+] remplacer par un go-validation-msg
 	const handleChanOp = () => {
 	  if (relation.isChanOp) {
 		  console.log(`[+] removing chanOp to user ${relation.user.login}`)
@@ -27,8 +53,17 @@ export default function ChanOpControlPannel({relation, myRelation}:Props) {
 	  }
 	};
 
-  const buttonData : ButtonData[] = [
-	{id: 0, name: "chanOp", icon:faFaceSmileWink, onClick: handleChanOp},
+	const handleAskConfirmation = () => {
+		return ;
+	}
+
+
+	// [+] switch en fonction du role 
+  const buttonData : ButtonData[] = 
+	// switch(role) {}
+  [
+	{id: 0, name: "chanOp", icon:faCertificate, onClick: handleAskConfirmation},
+
   ];
 
 

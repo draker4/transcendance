@@ -18,6 +18,7 @@ export default function RolesList({ relations, role, myRelation }: Props) {
             <RolesItem
               relation={relation}
 			  myRelation={myRelation}
+			  role={role}
               onFocusOn={() => {/*console.log("Focused")*/}}
               onFocusOff={() => {/* console.log("Blurred") */}}
               onHover={() => {/* console.log("Hoover") */}}

@@ -3,17 +3,19 @@ import AvatarUser from "../../../avatarUser/AvatarUser";
 import Link from "next/link";
 import { useState } from "react";
 import ChanOpControlPannel from "./ChanOpControlPannel";
+import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 
 type Props = {
   relation: UserRelation;
   myRelation: UserRelation;
+  role: ChannelRoles;
   onFocusOn: () => void;
   onFocusOff: () => void;
   onHover: () => void;
   onLeave: () => void;
 };
 
-export default function RolesItem({ relation, myRelation, onFocusOn, onFocusOff, onHover, onLeave }: Props) {
+export default function RolesItem({ relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocusOn = () => {
@@ -61,7 +63,7 @@ export default function RolesItem({ relation, myRelation, onFocusOn, onFocusOff,
         {relation.user.login}
       </Link>
 
-      { isFocused && myRelation.isChanOp && <ChanOpControlPannel relation={relation} myRelation={myRelation} />}
+      { isFocused && myRelation.isChanOp && <ChanOpControlPannel role={role} relation={relation} myRelation={myRelation} />}
     </article>
   );
 }

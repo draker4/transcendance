@@ -25,11 +25,14 @@
 
 .profileMainFrame .both {
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
-  padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
   box-shadow: clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) rgba(67, 80, 126, 0.22);
+  clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+  clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) rgba(67, 80, 126, 0.22);
   background-color: var(--primary1);
+
+  /* [!] padding deplacer vers sous comp pour placer le footer 
+         dans le ficheir infocard.module.css */
+  /* padding: clamp(0.25rem, 0.5rem + 5vw, 1rem); */
 }
 
 .profileMainFrame .first {
@@ -46,6 +49,9 @@
 .profileMainFrame .second {
   min-width: 300px;
   flex: 1;
+  overflow: hidden;
+
+    /* border: 1px dashed hotpink; */
 }
 
 /* -------------- ERROR PAGE ---------------- */
