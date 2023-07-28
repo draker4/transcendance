@@ -51,6 +51,7 @@ clean : down write-env-localhost
 fclean : clean
 	@echo "----Full Cleaning all Docker----"
 	rm -rf node_modules
+	rm -rf yarn.lock
 	rm -rf workspaces/Backend/dist
 	rm -rf workspaces/Backend/logs
 	rm -rf workspaces/Backend/node_modules
