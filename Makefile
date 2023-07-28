@@ -1,7 +1,7 @@
 # **************************** Makefile Transcendence **************************** #
 
 DOCKER_COMPOSE = docker compose
-DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
+DOCKER_COMPOSE_FILE = ./docker-compose.yml
 
 .phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
 
@@ -51,6 +51,7 @@ clean : down write-env-localhost
 fclean : clean
 	@echo "----Full Cleaning all Docker----"
 	rm -rf node_modules
+	rm -rf yarn.lock
 	rm -rf workspaces/Backend/dist
 	rm -rf workspaces/Backend/logs
 	rm -rf workspaces/Backend/node_modules

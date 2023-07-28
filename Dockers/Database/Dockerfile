@@ -6,7 +6,7 @@ RUN apt-get install -y \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY ./tools/start_db.sh /
+COPY ./Dockers/Database/tools/start_db.sh /
 RUN chmod +x start_db.sh
 
 USER postgres

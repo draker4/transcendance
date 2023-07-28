@@ -81,6 +81,7 @@ dkms.conf
 Database
 
 /node_modules
+yarn.lock
 install_docker.sh
 
 

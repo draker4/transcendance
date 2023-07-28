@@ -8,7 +8,7 @@ volumes:
   transcendence_vol:
     driver: local
     driver_opts:
-      device: ../
+      device: .
       o: bind
       type: none
 
@@ -18,7 +18,9 @@ volumes:
 
 services:
   database:
-    build: ./Database
+    build:
+      context: .
+      dockerfile: ./Dockers/Database/Dockerfile
     container_name: Database
     ports:
       - 5432:5432
@@ -33,7 +35,7 @@ services:
 
   backend:
     build:
-      context: ../
+      context: .
       dockerfile: ./Dockers/Backend/Dockerfile
     container_name: Backend
     ports:
@@ -50,7 +52,7 @@ services:
 
   frontend:
     build:
-      context: ../
+      context: .
       dockerfile: ./Dockers/Frontend/Dockerfile
     container_name: Frontend
     depends_on:
