@@ -20,6 +20,7 @@ import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.st
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { ChannelService } from 'src/channels/channel.service';
 import { AuthService } from './services/auth.service';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthService } from './services/auth.service';
       Channel,
       Token,
       UserChannelRelation,
+      BackupCode,
     ]),
     JwtModule,
     MailModule,

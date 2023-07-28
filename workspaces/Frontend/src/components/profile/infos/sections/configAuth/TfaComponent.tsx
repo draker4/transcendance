@@ -1,31 +1,32 @@
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import styles from "@/styles/profile/TfaComponent.module.css";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import QRCode from "react-qr-code";
 import PopupCodeEmail from "./popups/PopupCodeEmail";
 import PopupActivate from "./popups/PopupActivate";
+import PopupDeactivate from "./popups/PopupDeactivate";
+import PopupDownloadCodes from "./popups/PopupDownloadCodes";
 
 export default function SectionCustom({ profile }: {
 	profile: Profile
 }) {
 
 	const	router = useRouter();
-	const	[notif, setNotif] = useState<string>('');
+	const	[notif1, setNotif1] = useState<string>('');
+	const	[notif2, setNotif2] = useState<string>('');
 	const	[notifPopup, setNotifPopup] = useState<string>('');
 	const	[code, setCode] = useState<string>('');
 	const	[popup1, setPopup1] = useState<boolean>(false);
 	const	[popup2, setPopup2] = useState<boolean>(false);
 	const	[popup3, setPopup3] = useState<boolean>(false);
 	const	[popup4, setPopup4] = useState<boolean>(false);
+	const	[popup5, setPopup5] = useState<boolean>(false);
 	const	[tfa, setTfa] = useState<boolean>(profile.isTwoFactorAuthenticationEnabled ? profile.isTwoFactorAuthenticationEnabled : false);
 	const	[secret, setSecret] = useState<string>("");
 	const	[otpauthUrl, setOtpauthUrl] = useState<string>("");
 
 	const	activate2fa = async () => {
-		setNotif('');
+		setNotif1('');
 		setNotifPopup('');
 
 		if (!popup1) {
@@ -56,9 +57,9 @@ export default function SectionCustom({ profile }: {
 
 			if (!data.success) {
 				if (data.error === "wrong code")
-					setNotif("This code was not found, a new one has been sent to you!")
+					setNotif1("This code was not found, a new one has been sent to you!")
 				if (data.error === "time out")
-					setNotif("This code has expired, a new one has been sent to you!")
+					setNotif1("This code has expired, a new one has been sent to you!")
 				return ;
 			}
 
@@ -83,7 +84,7 @@ export default function SectionCustom({ profile }: {
 	}
 
 	const	handleDoubleAuth = async () => {
-		setNotif('');
+		setNotif1('');
 		setNotifPopup('');
 
 		try {
@@ -98,99 +99,9 @@ export default function SectionCustom({ profile }: {
 				await fetch(
 					`http://${process.env.HOST_IP}:3000/api/signoff`
 				);
-				router.push("/welcome/notif");
+				router.refresh();
 			}
-			setNotif('Something went wrong, please try again!');
-		}
-	}
-
-	const	activateCode2fa = async () => {
-		setNotif('');
-		setNotifPopup('');
-
-		if (code.length !== 6) {
-			setNotifPopup("The code should have six characters");
-			return ;
-		}
-
-		try {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/activate`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					twoFactorAuthenticationCode: code.toUpperCase(),
-				}),
-			});
-
-			if (!res.ok)
-				throw new Error('error fetch');
-			
-			const	data = await res.json()
-
-			if (!data.success && data.error == 'wrong code') {
-				setNotifPopup('Wrong Authentification Code');
-				return ;
-			}
-
-			setTfa(true);
-			setPopup2(false);
-			setPopup4(true);
-		}
-		catch (error: any) {
-			console.log(error.message);
-			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
-				router.push("/welcome/notif");
-			}
-			setNotifPopup('Something went wrong, please try again!');
-		}
-	}
-
-	const	deactivateCode2fa = async () => {
-		setNotif('');
-		setNotifPopup('');
-
-		if (code.length !== 6) {
-			setNotifPopup("The code should have six characters");
-			return ;
-		}
-
-		try {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/deactivate`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					twoFactorAuthenticationCode: code.toUpperCase(),
-				}),
-			});
-
-			if (!res.ok)
-				throw new Error('error fetch');
-			
-			const	data = await res.json()
-
-			if (!data.success && data.error == 'wrong code') {
-				setNotifPopup('Wrong Authentification Code');
-				return ;
-			}
-
-			setTfa(false);
-			setPopup3(false);
-		}
-		catch (error: any) {
-			console.log(error.message);
-			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
-				router.push("/welcome/notif");
-			}
+			setNotif1('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
 		}
 	}
@@ -201,9 +112,94 @@ export default function SectionCustom({ profile }: {
 		setPopup4(false);
 	}
 
-	const	downloadCodes = () => {
-		setNotif('');
+	const	downloadCodes = async () => {
+		setNotif2('');
 		setNotifPopup('');
+
+		try {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/backupCodes`);
+
+			if (!res.ok)
+				throw new Error('fetch failed');
+				
+			const	data: string[] = await res.json();
+
+			let	text = "Here are your backup authentification codes for your Crunchy account!\nWithout them you won't be able to log in to your account anymore if you loose your authentification application!\n- ";
+			text = text += data.join('\n- ');
+
+			const	blob = new Blob([text], { type: 'text/plain' });
+			const	url = URL.createObjectURL(blob);
+			const	a = document.createElement('a');
+
+			a.href = url;
+			a.download = 'crunchy_backup_codes.txt';
+			a.click();
+			URL.revokeObjectURL(url);
+
+			setPopup4(false);
+			setPopup5(false);
+		}
+		catch (error: any) {
+			console.log(error.message);
+			if (error.message === "disconnect") {
+				await fetch(
+					`http://${process.env.HOST_IP}:3000/api/signoff`
+				);
+				router.refresh();
+			}
+			setNotif2('Something went wrong, please try again!');
+			setNotifPopup('Something went wrong, please try again!');
+		}
+	}
+
+	const	verifyAuthCode = async () => {
+		
+		setNotif2("");
+		setNotifPopup('');
+
+		if (code.length !== 6) {
+			setNotif2("The code should have six characters");
+			return ;
+		}
+
+		try {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/verifyAuthCode`, {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({
+					twoFactorAuthenticationCode: code,
+				}),
+			})
+
+			if (!res.ok)
+				throw new Error('fetch failed');
+
+			const	data = await res.json();
+
+			if (!data.success && data.error === 'wrong code') {
+				setNotif2('Wrong Authentification Code');
+				return ;
+			}
+
+			if (data.success) {
+				setPopup4(true);
+				return ;
+			}
+			
+			throw new Error('no success data');
+
+		}
+		catch (error: any) {
+			console.log(error.message);
+			if (error.message === "disconnect") {
+				await fetch(
+					`http://${process.env.HOST_IP}:3000/api/signoff`
+				);
+				router.refresh();
+			}
+			setNotif2('Something went wrong, please try again!');
+			setNotifPopup('Something went wrong, please try again!');
+		}
 	}
 
 	return (
@@ -228,8 +224,8 @@ export default function SectionCustom({ profile }: {
 			</button>
 
 			{
-				notif.length > 0 &&
-				<p className={styles.notif}>{notif}</p>
+				notif1.length > 0 &&
+				<p className={styles.notif}>{notif1}</p>
 			}
 
 			{
@@ -240,23 +236,52 @@ export default function SectionCustom({ profile }: {
 					secret={secret}
 					setCode={setCode}
 					notifPopup={notifPopup}
-					activateCode2fa={activateCode2fa}
+					setNotifPopup={setNotifPopup}
+					code={code}
+					setTfa={setTfa}
+					setPopup2={setPopup2}
+					setPopup4={setPopup4}
 				/>
 			}
 
 			{
 				popup3 &&
-				<div className={styles.popup2}>
-					<div className={styles.icon}>
-						<FontAwesomeIcon
-							icon={faXmark}
-							style={{width:"100%", height:"100%"}}
-							onClick={closePopup}
-						/>
-					</div>
+				<PopupDeactivate
+					closePopup={closePopup}
+					setCode={setCode}
+					notifPopup={notifPopup}
+					setNotifPopup={setNotifPopup}
+					code={code}
+					setTfa={setTfa}
+					setPopup3={setPopup3}
+				/>
+			}
+
+			{
+				popup4 &&
+				<PopupDownloadCodes
+					closePopup={closePopup}
+					notifPopup={notifPopup}
+					downloadCodes={downloadCodes}
+				/>
+			}
+
+			{
+				tfa &&
+				<div className={styles.backupCodes}>
 					<p>
-						Please enter the code generated in the authentifiaction application in your phone.
+						Your backup codes are the only way to get back your account if you loose your authentification application. Keep them safe!
 					</p>
+					<button onClick={() => setPopup5(!popup5)} className={styles.button}>
+						"Download my backup codes"
+					</button>
+				</div>
+			}
+
+			{
+				popup5 &&
+				<div className={styles.popup5}>
+					<p>Please enter the code generated in your authentification application:</p>
 					<input
 						type="text"
 						name="code"
@@ -266,44 +291,13 @@ export default function SectionCustom({ profile }: {
 							setCode(e.target.value);
 						}}
 					/>
-					<button className={styles.activate} onClick={deactivateCode2fa}>
-						Deactivate
+					<button className={styles.activate} onClick={verifyAuthCode}>
+						Verify
 					</button>
 					{
-						notifPopup.length > 0 &&
-						<div className={styles.notif}>{notifPopup}</div>
+						notif2.length > 0 &&
+						<div className={styles.notif}>{notif2}</div>
 					}
-				</div>
-			}
-
-			{
-				popup4 &&
-				<div className={styles.popup2}>
-					<div className={styles.icon}>
-						<FontAwesomeIcon
-							icon={faXmark}
-							style={{width:"100%", height:"100%"}}
-							onClick={closePopup}
-						/>
-					</div>
-					<h4>
-						Here what you can do if you loose your authentification application!
-					</h4>
-					<p>
-						Download your backup codes!
-					</p>
-					<p>
-						Without them you could definitely loose your account!
-					</p>
-					<button className={styles.activate} onClick={downloadCodes}>
-						Download my codes
-					</button>
-
-					{
-						notifPopup.length > 0 &&
-						<div className={styles.notif}>{notifPopup}</div>
-					}
-
 				</div>
 			}
 

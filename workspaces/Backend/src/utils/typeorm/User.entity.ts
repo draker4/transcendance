@@ -17,6 +17,7 @@ import { Avatar } from './Avatar.entity';
 import { UserPongieRelation } from './UserPongieRelation';
 import { UserChannelRelation } from './UserChannelRelation';
 import { Token } from './Token.entity';
+import { BackupCode } from './BackupCode.entity';
 
 @Entity()
 export class User {
@@ -129,6 +130,9 @@ export class User {
   @OneToOne(() => Avatar)
   @JoinColumn()
   avatar: Avatar;
+
+  @OneToMany(() => BackupCode, backupCode => backupCode.user)
+  backupCodes: BackupCode[];
 
   @OneToMany(() => Token, token => token.user)
   tokens: Token[];

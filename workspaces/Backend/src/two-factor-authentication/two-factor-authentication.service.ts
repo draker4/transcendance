@@ -2,8 +2,9 @@
 import { MailService } from "@/mail/mail.service";
 import { UsersService } from "@/users/users.service";
 import { CryptoService } from "@/utils/crypto/crypto";
+import { BackupCode } from "@/utils/typeorm/BackupCode.entity";
 import { User } from "@/utils/typeorm/User.entity";
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { randomBytes } from "crypto";
 import { authenticator } from "otplib";
 
@@ -27,8 +28,10 @@ export class TwoFactorAuthenticationService {
 			secret,
 		);
 
+		const	secretCrypted = await this.cryptoService.encrypt(secret);
+
 		await this.usersService.updateUser(user.id, {
-			twoFactorAuthenticationSecret: secret,
+			twoFactorAuthenticationSecret: secretCrypted,
 		});
 
 		return {
@@ -52,11 +55,29 @@ export class TwoFactorAuthenticationService {
 		});
 	}
 
-	public isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
+	public async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, user: User) {
+		
+		const	secret = await this.cryptoService.decrypt(user.twoFactorAuthenticationSecret);
+		
 		return authenticator.verify({
 			token: twoFactorAuthenticationCode,
-			secret: user.twoFactorAuthenticationSecret,
+			secret,
 		});
+	}
+
+	public async isBackupCodeValid(backupCode: string, user: User) {
+		
+		const	backupCodeValid = user.backupCodes.filter(async (backupCodeUser) => {
+			const	backupCodeDecrypted = await this.cryptoService.decrypt(backupCodeUser.code);
+			return backupCodeDecrypted === backupCode;
+		});
+
+		if (backupCodeValid[0]) {
+			this.usersService.deleteBackupCode(backupCodeValid[0]);
+			return true;
+		}
+
+		return false;
 	}
 
 	private generateBackupCode(length: number): string {
@@ -74,5 +95,48 @@ export class TwoFactorAuthenticationService {
 		}
 		
 		return backupCodes;
+	}
+
+	async updateBackupCodes(user: User) {
+
+		console.log("laaa");
+		await this.usersService.deleteBackupCodes(user);
+		console.log("after ici");
+		const	backupCodes = this.generateBackupCodes(10, 10);
+
+		const	backupCodesCrypted = await Promise.all(
+			backupCodes.map(backupCode => {
+				return this.cryptoService.encrypt(backupCode);
+			})
+		);
+
+		await Promise.all(
+			backupCodesCrypted.map(backupCode => {
+				this.usersService.saveBackupCode(user, backupCode);
+			})
+		);
+	}
+
+	async getBackupCodes(userId: number) {
+		try {
+			const	user = await this.usersService.getUserBackupCodes(userId);
+
+			if (!user)
+				throw new Error("no user found");
+			
+			if (!user.backupCodes)
+				await this.updateBackupCodes(user);
+			
+			const	backupCodes = await Promise.all(
+				user.backupCodes.map(backupCode => {
+					return this.cryptoService.decrypt(backupCode.code);
+				})
+			);
+
+			return backupCodes;	
+		}
+		catch (error) {
+			throw new BadRequestException(error.message);
+		}
 	}
 }

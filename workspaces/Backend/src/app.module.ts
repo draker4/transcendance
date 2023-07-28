@@ -31,6 +31,7 @@ import { StatsModule } from './stats/stats.module';
 import { Stats } from './utils/typeorm/Stats.entity';
 import { ScoreModule } from './score/score.module';
 import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
+import { BackupCode } from './utils/typeorm/BackupCode.entity';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
         UserChannelRelation,
         UserPongieRelation,
         Token,
+        BackupCode,
       ],
       synchronize: true,
     }),

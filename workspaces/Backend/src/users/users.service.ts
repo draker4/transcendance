@@ -10,6 +10,7 @@ import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { EditUserDto } from './dto/EditUser.dto';
 import { repDto } from './dto/rep.dto';
 import { Token } from 'src/utils/typeorm/Token.entity';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +21,8 @@ export class UsersService {
     private readonly channelRepository: Repository<Channel>,
     @InjectRepository(Token)
     private readonly tokenRepository: Repository<Token>,
+    @InjectRepository(BackupCode)
+    private readonly backupCodeRepository: Repository<BackupCode>,
     private cryptoService: CryptoService,
   ) {}
 
@@ -79,10 +82,17 @@ export class UsersService {
     });
   }
 
+  async getUserBackupCodes(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['backupCodes'],
+    });
+  }
+
   async getUserTokens(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ['tokens', 'tokens.user'],
+      relations: ['tokens'],
     });
   }
 
@@ -90,12 +100,28 @@ export class UsersService {
     await this.tokenRepository.save(token);
   }
 
+  async saveBackupCode(user: User, backupCode: string) {
+    const backupCodeEntity = new BackupCode();
+    backupCodeEntity.code = backupCode;
+    backupCodeEntity.user = user;
+
+    return await this.backupCodeRepository.save(backupCodeEntity);
+  }
+
   async deleteToken(token: Token) {
     await this.tokenRepository.remove(token);
   }
 
+  async deleteBackupCode(backupCode: BackupCode) {
+    await this.backupCodeRepository.remove(backupCode);
+  }
+
   async deleteAllUserTokens(user: User) {
     await this.tokenRepository.remove(user.tokens);
+  }
+
+  async deleteBackupCodes(user: User) {
+    await this.backupCodeRepository.remove(user.backupCodes);
   }
 
   async getUserByCode(code: string) {
@@ -130,6 +156,14 @@ export class UsersService {
       .relation(User, 'pongies')
       .of(user.id)
       .add(pongie);
+  }
+
+  async updateUserBackupCodes(user: User, backupCodes: BackupCode[]) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'backupCodes')
+      .of(user.id)
+      .set(backupCodes);
   }
 
   async getChannelByName(name: string) {

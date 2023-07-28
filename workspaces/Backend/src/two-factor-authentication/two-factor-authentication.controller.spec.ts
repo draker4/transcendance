@@ -3,8 +3,8 @@ import { BadGatewayException, Body, Controller, Get, HttpCode, Param, Post, Req,
 import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from '@/auth/services/auth.service';
-import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCodeDto';
-import { VerifYCodeDto } from './dto/VerifYCodeDto';
+import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCode.dto';
+import { VerifYCodeDto } from './dto/VerifYCode.dto';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {

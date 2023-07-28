@@ -22,10 +22,11 @@ import { StatsService } from '@/stats/service/stats.service';
 import { UsersService } from '@/users/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { ColoredLogger } from './colored-logger';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Game, Score, Stats, User, Channel, Token]),
+    TypeOrmModule.forFeature([Game, Score, Stats, User, Channel, Token, BackupCode]),
   ],
   providers: [
     GameGateway,

@@ -11,10 +11,11 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { ChannelService } from 'src/channels/channel.service';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Module({
   imports: [
-		TypeOrmModule.forFeature([Avatar, User, Channel, Token, UserChannelRelation]),
+		TypeOrmModule.forFeature([Avatar, User, Channel, Token, UserChannelRelation, BackupCode]),
 	],
   controllers: [AvatarController],
   providers: [
