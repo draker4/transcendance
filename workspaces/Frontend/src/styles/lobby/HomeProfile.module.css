@@ -19,9 +19,12 @@
   justify-content: center;
 }
 
-.profilePicture {
+.avatar {
   display: flex;
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+  border-radius: 100%;
+  width: 150px;
+  height: 150px;
+  color: var(--primary1);
+  margin: 0;
+  padding: 0;
 }
