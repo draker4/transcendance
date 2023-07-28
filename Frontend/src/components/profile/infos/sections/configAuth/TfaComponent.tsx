@@ -22,9 +22,7 @@ export default function SectionCustom({ profile }: {
 
 	const	activate2fa = async () => {
 		if (!popup1) {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/sendCode`, {
-				method: "POST",
-			});
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/sendCode`);
 
 			if (!res.ok)
 				throw new Error("fetch error");
@@ -34,9 +32,15 @@ export default function SectionCustom({ profile }: {
 		}
 
 		if (popup1) {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/verifyCode/${code.toUpperCase()}`, {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/verifyCode`, {
 				method: 'POST',
-			})
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					code: code.toUpperCase()
+				}),
+			});
 
 			if (!res.ok)
 				throw new Error('error fetch');
@@ -53,9 +57,7 @@ export default function SectionCustom({ profile }: {
 
 			setPopup1(false);
 
-			const	resGenerate = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/generate`, {
-				method: "POST",
-			});
+			const	resGenerate = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/generate`);
 
 			if (!resGenerate.ok)
 				throw new Error("fetch error");
@@ -77,7 +79,6 @@ export default function SectionCustom({ profile }: {
 		try {
 			if (!tfa)
 				await activate2fa();
-			
 			else
 				await deactivate2fa();
 		}
@@ -96,8 +97,14 @@ export default function SectionCustom({ profile }: {
 	const	activateCode2fa = async () => {
 		setNotif('');
 		try {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/activate/${code.toUpperCase()}`, {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/activate`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					twoFactorAuthenticationCode: code.toUpperCase(),
+				}),
 			});
 
 			if (!res.ok)
@@ -128,8 +135,14 @@ export default function SectionCustom({ profile }: {
 	const	deactivateCode2fa = async () => {
 		setNotif('');
 		try {
-			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/deactivate/${code.toUpperCase()}`, {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/deactivate`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					twoFactorAuthenticationCode: code.toUpperCase(),
+				}),
 			});
 
 			if (!res.ok)

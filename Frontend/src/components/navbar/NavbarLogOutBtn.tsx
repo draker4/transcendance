@@ -13,7 +13,7 @@ export default function NavbarLogOutBtn({ profile }: {
 			await fetch(
 			`http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`
 			);
-			router.push("/welcome");
+			router.refresh();
 		} catch (error) {
 			console.log(error);
 		}

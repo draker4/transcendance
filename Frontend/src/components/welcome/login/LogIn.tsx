@@ -51,9 +51,10 @@ export default function LogInComponent() {
     if (login.length > 0) {
       const tokens = login.split(" ");
 
-      if (tokens.length === 2) {
+      if (tokens.length === 1)
+        setCookies(tokens[0], "");
+      else if (tokens.length === 2)
         setCookies(tokens[0], tokens[1]);
-      }
       else
         setNotif("Something went wrong, please try again!");
     }

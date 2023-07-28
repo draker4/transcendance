@@ -17,13 +17,15 @@ export async function GET(req: NextRequest) {
 					sameSite: "strict",
 					path: "/",
 				});
-				response.cookies.set({
-					name: "refresh-token",
-					value: data.refresh_token,
-					httpOnly: true,
-					sameSite: "strict",
-					path: "/",
-				});
+
+				if (data.refresh_token)
+					response.cookies.set({
+						name: "refresh-token",
+						value: data.refresh_token,
+						httpOnly: true,
+						sameSite: "strict",
+						path: "/",
+					});
 			}
 
 			if (data?.message)

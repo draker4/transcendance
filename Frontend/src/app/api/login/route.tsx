@@ -6,7 +6,7 @@ export async function POST(
 	const	{access_token, refresh_token} = await req.json();
 
 	try {
-		if (!access_token || !refresh_token)
+		if (!access_token)
 			throw new Error("No valid token");
 
 		const	data = {
@@ -20,13 +20,16 @@ export async function POST(
 			sameSite: "strict",
 			path: "/",
 		});
-		response.cookies.set({
-			name: "refresh-token",
-			value: refresh_token,
-			httpOnly: true,
-			sameSite: "strict",
-			path: "/",
-		});
+
+		if (refresh_token)
+			response.cookies.set({
+				name: "refresh-token",
+				value: refresh_token,
+				httpOnly: true,
+				sameSite: "strict",
+				path: "/",
+			});
+			
 		return response;
 	}
 	catch (err) {

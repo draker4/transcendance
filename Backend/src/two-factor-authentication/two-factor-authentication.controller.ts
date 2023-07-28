@@ -1,7 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { BadGatewayException, Controller, Param, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, Body, Controller, Get, HttpCode, Param, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
 import { UsersService } from '@/users/users.service';
+import { AuthService } from '@/auth/services/auth.service';
+import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCodeDto';
+import { VerifYCodeDto } from './dto/VerifYCodeDto';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
@@ -9,9 +12,10 @@ export class TwoFactorAuthenticationController {
 	constructor(
 		private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
 		private readonly usersService: UsersService,
+		private readonly authService: AuthService,
 	) {}
 
-	@Post('generate')
+	@Get('generate')
 	async register(@Req() req) {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
@@ -26,7 +30,7 @@ export class TwoFactorAuthenticationController {
 		}
 	}
 
-	@Post('sendCode')
+	@Get('sendCode')
 	async sendCode(@Req() req) {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
@@ -42,8 +46,10 @@ export class TwoFactorAuthenticationController {
 		}
 	}
 
-	@Post('verifyCode/:code')
-	async verifyCode(@Param('code') code: string, @Req() req) {
+	@Post('verifyCode')
+	async verifyCode(
+		@Body() { code } : VerifYCodeDto,
+		@Req() req) {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
 
@@ -76,8 +82,10 @@ export class TwoFactorAuthenticationController {
 		}
 	}
 
-	@Post('activate/:code')
-	async activate(@Param('code') code: string, @Req() req) {
+	@Post('activate')
+	async activate(
+		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto,
+		@Req() req) {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
 
@@ -85,7 +93,7 @@ export class TwoFactorAuthenticationController {
 				throw new Error('no user found');
 			
 			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-				code, user
+				twoFactorAuthenticationCode, user
 			);
 
 			if (!isCodeValid)
@@ -108,8 +116,10 @@ export class TwoFactorAuthenticationController {
 		}
 	}
 
-	@Post('deactivate/:code')
-	async deactivate(@Param('code') code: string, @Req() req) {
+	@Post('deactivate')
+	async deactivate(
+		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto,
+		@Req() req) {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
 
@@ -117,7 +127,7 @@ export class TwoFactorAuthenticationController {
 				throw new Error('no user found');
 			
 			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-				code, user
+				twoFactorAuthenticationCode, user
 			);
 
 			if (!isCodeValid)
@@ -137,6 +147,43 @@ export class TwoFactorAuthenticationController {
 		catch (error) {
 			console.log(error.message);
 			throw new BadGatewayException();
+		}
+	}
+
+	@Post('authenticate')
+	@HttpCode(200)
+	async authenticate(
+		@Req() req,
+		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto
+	) {
+		try {
+
+			const	user = await this.usersService.getUserById(req.user.id);
+
+			if (!user)
+				throw new Error('no user found');
+
+			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+				twoFactorAuthenticationCode,
+				user,
+			);
+
+			if (!isCodeValid)
+				return {
+					success: false,
+					error: 'wrong code',
+				}
+			
+			const {access_token, refresh_token} = await this.authService.login(user, 0, false);
+
+			return {
+				success: true,
+				access_token,
+				refresh_token,
+			}
+		}
+		catch (error) {
+
 		}
 	}
 }

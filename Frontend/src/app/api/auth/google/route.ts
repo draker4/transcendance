@@ -5,7 +5,6 @@ export async function GET() {
 	const	refreshToken = cookies().get("refresh-token")?.value;
 	const	crunchyToken = cookies().get("crunchy-token")?.value;
 
-	console.log(refreshToken, crunchyToken);
 	if (crunchyToken) {
 		try {
 			

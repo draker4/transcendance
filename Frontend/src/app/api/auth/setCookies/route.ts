@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
 	const	accessToken = cookies.accessToken;
 	const	refreshToken = cookies.refreshToken;
 
-	if (!accessToken || !refreshToken) {
+	if (!accessToken) {
 		const	data = {
 			message: "Something went wrong, please try again !",
 		};
@@ -24,13 +24,15 @@ export async function POST(req: NextRequest) {
 		sameSite: "strict",
 		path: "/",
 	});
-	response.cookies.set({
-		name: "refresh-token",
-		value: refreshToken,
-		httpOnly: true,
-		sameSite: "strict",
-		path: "/",
-	});
+
+	if (refreshToken)
+		response.cookies.set({
+			name: "refresh-token",
+			value: refreshToken,
+			httpOnly: true,
+			sameSite: "strict",
+			path: "/",
+		});
 
 	return response;
 }

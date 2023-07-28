@@ -113,12 +113,11 @@ export class AuthController {
       sameSite: "lax",
     });
 
-    if (!user.isTwoFactorAuthenticationEnabled)
-      res.cookie('refresh-token', refresh_token, {
-        path: "/",
-        httpOnly: true,
-        sameSite: "lax",
-      });
+    res.cookie('refresh-token', refresh_token, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+    });
     
     return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
     // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
