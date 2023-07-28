@@ -1,4 +1,4 @@
-import { updatePong } from "./updatePong";
+import { updatePong } from "@transcendence/shared/game/updatePong";
 import { drawPong } from "./drawPong";
 import { GameData, Draw } from "@Shared/types/Game.types";
 
