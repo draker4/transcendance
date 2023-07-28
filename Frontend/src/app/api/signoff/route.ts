@@ -7,7 +7,6 @@ export async function GET(req: NextRequest) {
 		fetch(`http://backend:4000/api/users/disconnect/${id}`, {
 			method: "DELETE",
 		});
-
 	const	response = new NextResponse;
 	
 	response.cookies.set({

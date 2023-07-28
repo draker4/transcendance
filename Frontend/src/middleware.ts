@@ -16,10 +16,10 @@ export async function middleware(req: NextRequest) {
     }));
   // const url = req.nextUrl;
 
-  // if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-  //   // console.log("do nothing go to google");
-  //   return ;
-  // }
+  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
+    // console.log("do nothing go to google");
+    return ;
+  }
 
   if (verifiedToken && verifiedToken.twoFactorAuth && req.nextUrl.pathname !== "/home/auth/2fa") {
     return NextResponse.redirect(new URL("/home/auth/2fa", req.url));

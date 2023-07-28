@@ -110,18 +110,18 @@ export class AuthController {
     res.cookie('crunchy-token', access_token, {
       path: "/",
       httpOnly: true,
-      sameSite: "strict",
+      sameSite: "lax",
     });
 
     if (!user.isTwoFactorAuthenticationEnabled)
       res.cookie('refresh-token', refresh_token, {
         path: "/",
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "lax",
       });
     
-    // return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
-    return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
+    return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
+    // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
 
   @Post('firstLogin')
