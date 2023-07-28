@@ -17,13 +17,14 @@ all : start
 ip	: write-env-ip start ipAddress
 
 start :
+	make install-deps
 	@echo "----Starting all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
 	@echo "----All Docker started-----"
 
 down :
 	@echo "----Stopping all Docker----"
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) stop -t 1
 	@echo "----All Docker stopped-----"
 
 rmvolume :
@@ -50,6 +51,12 @@ clean : down write-env-localhost
 
 fclean : clean
 	@echo "----Full Cleaning all Docker----"
+	rm -rf node_modules
+	rm -rf workspaces/Backend/dist
+	rm -rf workspaces/Backend/logs
+	rm -rf workspaces/Backend/node_modules
+	rm -rf workspaces/Frontend/node_modules
+	rm -rf workspaces/Frontend/build
 	@volumes=$$(docker volume ls -q); \
 	if [ -n "$$volumes" ]; then \
 		docker volume rm $$volumes; \
@@ -98,4 +105,12 @@ write-env-localhost:
 	else \
 		echo "HOST_IP=localhost" >> ./Dockers/.env; \
 		echo "Created IP address in ./Dockers/.env file"; \
+	fi
+
+install-deps:
+	@echo "----Downloading Project Dependencies----"
+	@if [ ! -d "node_modules" ]; then \
+		yarn cache clean; \
+		yarn install; \
+		yarn install --check-files; \
 	fi
