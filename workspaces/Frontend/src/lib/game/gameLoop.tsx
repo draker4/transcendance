@@ -1,4 +1,4 @@
-import { updatePong } from "@Shared/game/updatePong";
+import { updatePong } from "./updatePong";
 import { drawPong } from "./drawPong";
 import { GameData, Draw } from "@Shared/types/Game.types";
 
@@ -14,7 +14,7 @@ export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
 
   if (elapsedTime >= 16.67) {
     if (game.status === "Playing") {
-      //updatePong(game);
+      updatePong(game);
     }
     drawPong(game, draw);
 

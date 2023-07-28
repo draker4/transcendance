@@ -1,4 +1,7 @@
 /** @type {import('next').NextConfig} */
+
+const withTM = require("next-transpile-modules")(["@transcendence/shared"]);
+
 const nextConfig = {
   // Disable React Strict Mode (set to false to turn it off)
   reactStrictMode: false,
@@ -33,6 +36,8 @@ const nextConfig = {
   images: {
     domains: ["cdn.intra.42.fr", "lh3.googleusercontent.com"],
   },
+
+  transpilePackages: ["@transcendence/shared"],
 };
 
 module.exports = nextConfig;

@@ -80,6 +80,7 @@ dkms.conf
 # Database
 Database
 
+/node_modules
 install_docker.sh
 
 

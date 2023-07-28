@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 networks:
   transcendence:
@@ -8,21 +8,21 @@ volumes:
   frontend_vol:
     driver: local
     driver_opts:
-      device: ../Frontend
+      device: ../workspaces/Frontend
       o: bind
       type: none
 
   backend_vol:
     driver: local
     driver_opts:
-      device: ../Backend
+      device: ../workspaces/Backend
       o: bind
       type: none
 
   shared_vol:
     driver: local
     driver_opts:
-      device: ../Shared
+      device: ../workspaces/Shared
       o: bind
       type: none
 
@@ -46,13 +46,15 @@ services:
     restart: always
 
   backend:
-    build: ./Backend
+    build:
+      context: ../
+      dockerfile: ./Dockers/Backend/Dockerfile
     container_name: Backend
     ports:
       - 4000:4000
     volumes:
-      - backend_vol:/nest-project
-      - shared_vol:/Shared
+      - backend_vol:/workspaces/Backend
+      - shared_vol:/workspaces/Shared
     env_file:
       - .env
     networks:
@@ -62,15 +64,17 @@ services:
     restart: always
 
   frontend:
-    build: ./Frontend
+    build:
+      context: ../
+      dockerfile: ./Dockers/Frontend/Dockerfile
     container_name: Frontend
     depends_on:
       - backend
     ports:
       - "3000:3000"
     volumes:
-      - frontend_vol:/app
-      - shared_vol:/Shared
+      - frontend_vol:/workspaces/Frontend
+      - shared_vol:/workspaces/Shared
     env_file:
       - .env
     networks:

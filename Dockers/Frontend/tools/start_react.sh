@@ -21,8 +21,8 @@ npm run clean
 npm install
 
 #Update required depedencies
-echo "update required depedencies"
-npm update
+# echo "update required depedencies"
+# npm update
 
 #Start dev env
 echo "starting dev server"

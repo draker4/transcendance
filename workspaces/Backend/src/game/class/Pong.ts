@@ -12,7 +12,6 @@ import {
   Score,
   Player,
   PlayerDynamic,
-  Action,
   Timer,
   StatusMessage,
 } from '@Shared/types/Game.types';

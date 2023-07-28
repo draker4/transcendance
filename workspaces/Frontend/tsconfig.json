@@ -29,6 +29,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "@Shared/**/*.ts",
+    "@Shared/**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
   ],
