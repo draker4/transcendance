@@ -17,7 +17,6 @@ all : start
 ip	: write-env-ip start ipAddress
 
 start :
-	make install-deps
 	@echo "----Starting all Docker----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up -d --build
 	@echo "----All Docker started-----"
