@@ -19,9 +19,10 @@ export class TwoFactorAuthenticationService {
 	public async generateTwoFactorAuthenticationSecret(user: User) {
 		
 		const	secret = authenticator.generateSecret();
+		const	email = await this.cryptoService.decrypt(user.email);
 
 		const	otpauthUrl = authenticator.keyuri(
-			user.email,
+			email,
 			process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
 			secret,
 		);
@@ -32,6 +33,7 @@ export class TwoFactorAuthenticationService {
 
 		return {
 			otpauthUrl,
+			secret,
 		};
 	}
 
@@ -55,5 +57,22 @@ export class TwoFactorAuthenticationService {
 			token: twoFactorAuthenticationCode,
 			secret: user.twoFactorAuthenticationSecret,
 		});
+	}
+
+	private generateBackupCode(length: number): string {
+		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		const bytes = randomBytes(length);
+		const backupCode = Array.from(bytes, (byte) => chars[byte % chars.length]).join('');
+		return backupCode;
+	}
+
+	public generateBackupCodes(count: number, length: number): string[] {
+		const backupCodes: string[] = [];
+
+		for (let i = 0; i < count; i++) {
+		  backupCodes.push(this.generateBackupCode(length));
+		}
+		
+		return backupCodes;
 	}
 }
