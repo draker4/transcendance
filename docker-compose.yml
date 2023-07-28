@@ -8,7 +8,7 @@ volumes:
   transcendence_vol:
     driver: local
     driver_opts:
-      device: ../
+      device: ./workspaces/..
       o: bind
       type: none
 
