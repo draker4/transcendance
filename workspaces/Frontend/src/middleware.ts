@@ -6,20 +6,18 @@ export async function middleware(req: NextRequest) {
   let refreshToken = req.cookies.get("refresh-token")?.value;
   let changeCookies = false;
 
-  // if (!refreshToken)
-  //   crunchyToken = undefined;
-
   let verifiedToken =
     crunchyToken &&
     (await verifyAuth(crunchyToken).catch((err) => {
       console.log(err);
     }));
   // const url = req.nextUrl;
+  // console.log(verifiedToken, url);
 
-  // if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-  //   // console.log("do nothing go to google");
-  //   return ;
-  // }
+  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
+    // console.log("do nothing go to google");
+    return ;
+  }
 
   if (verifiedToken && verifiedToken.twoFactorAuth && req.nextUrl.pathname !== "/home/auth/2fa") {
     return NextResponse.redirect(new URL("/home/auth/2fa", req.url));

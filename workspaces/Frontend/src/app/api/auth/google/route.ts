@@ -5,7 +5,7 @@ export async function GET() {
 	const	refreshToken = cookies().get("refresh-token")?.value;
 	const	crunchyToken = cookies().get("crunchy-token")?.value;
 
-	if (refreshToken && crunchyToken) {
+	if (crunchyToken) {
 		try {
 			
 			const	response = NextResponse.json({status:200});
@@ -16,13 +16,15 @@ export async function GET() {
 				sameSite: "strict",
 				path: "/",
 			});
-			response.cookies.set({
-				name: "refresh-token",
-				value: refreshToken,
-				httpOnly: true,
-				sameSite: "strict",
-				path: "/",
-			});
+
+			if (refreshToken)
+				response.cookies.set({
+					name: "refresh-token",
+					value: refreshToken,
+					httpOnly: true,
+					sameSite: "strict",
+					path: "/",
+				});
 
 			return response;
 

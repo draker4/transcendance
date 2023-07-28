@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 			
 			const	{ access_token, refresh_token } = await res.json();
 
-			if (!access_token || !refresh_token)
+			if (!access_token)
 				throw new Error("no token");
 			
 			const	response = NextResponse.redirect(`http://localhost:3000/home`);
@@ -22,13 +22,16 @@ export async function GET(req: NextRequest) {
 				sameSite: "strict",
 				path: "/",
 			});
-			response.cookies.set({
-				name: "refresh-token",
-				value: refresh_token,
-				httpOnly: true,
-				sameSite: "strict",
-				path: "/",
-			});
+
+			if (refresh_token)
+				response.cookies.set({
+					name: "refresh-token",
+					value: refresh_token,
+					httpOnly: true,
+					sameSite: "strict",
+					path: "/",
+				});
+			
 			return response;
 
 		} catch (err) {
