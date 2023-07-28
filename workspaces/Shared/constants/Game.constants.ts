@@ -3,10 +3,10 @@ export const GAME_HEIGHT = 768;
 
 export const PLAYER_WIDTH = 15;
 export const PLAYER_HEIGHT = 140;
-export const PLAYER_START_SPEED = 5;
+export const PLAYER_START_SPEED = 8;
 
-export const BALL_SIZE = 10;
-export const BALL_START_SPEED = 5;
+export const BALL_SIZE = 20;
+export const BALL_START_SPEED = 10;
 
 export const PUSH_SIZE = 6;
 

@@ -5,7 +5,7 @@ import {
   Player,
   PlayerDynamic,
   DirXValues,
-} from "@Shared/types/Game.types";
+} from "@transcendence/shared/types/Game.types";
 
 import {
   GAME_HEIGHT,
@@ -13,7 +13,7 @@ import {
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
   PUSH_SIZE,
-} from "@Shared/constants/Game.constants";
+} from "@transcendence/shared/constants/Game.constants";
 
 export function handlePush(player: Player, playerDynamic: PlayerDynamic): void {
   if (playerDynamic.push > 0 && playerDynamic.push <= PUSH_SIZE / 2) {

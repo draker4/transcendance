@@ -1,6 +1,6 @@
 import { updatePong } from "@transcendence/shared/game/updatePong";
 import { drawPong } from "./drawPong";
-import { GameData, Draw } from "@Shared/types/Game.types";
+import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 
 const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };

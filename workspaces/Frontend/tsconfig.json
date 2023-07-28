@@ -22,15 +22,15 @@
     "paths": {
       "@/*": ["./src/*"],
       "@images/*": ["./public/images/*"],
-      "@Shared/*": ["../Shared/*"]
+      "@transcendence/shared/*": ["../Shared/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "@Shared/**/*.ts",
-    "@Shared/**/*.tsx",
+    "@transcendence/shared/**/*.ts",
+    "@transcendence/shared/**/*.tsx",
     ".next/types/**/*.ts",
     "build/types/**/*.ts"
   ],

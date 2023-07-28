@@ -1,4 +1,8 @@
-import { GameData, Player, StatusMessage } from "@Shared/types/Game.types";
+import {
+  GameData,
+  Player,
+  StatusMessage,
+} from "@transcendence/shared/types/Game.types";
 
 import { Socket } from "socket.io-client";
 

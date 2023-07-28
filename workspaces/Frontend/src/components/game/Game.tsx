@@ -14,7 +14,7 @@ import stylesError from "@/styles/game/GameError.module.css";
 import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
 
-import { GameData } from "@Shared/types/Game.types";
+import { GameData } from "@transcendence/shared/types/Game.types";
 
 type Props = {
   profile: Profile;

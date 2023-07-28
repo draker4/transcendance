@@ -14,7 +14,7 @@ import { ScoreService } from '@/score/service/score.service';
 import { StatsService } from '@/stats/service/stats.service';
 
 // import types
-import { Player, RGB } from '@Shared/types/Game.types';
+import { Player, RGB } from '@transcendence/shared/types/Game.types';
 
 @Injectable()
 export class GameService {

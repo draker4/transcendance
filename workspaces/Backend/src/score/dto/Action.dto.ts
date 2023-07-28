@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Action } from '@Shared/types/Game.types';
+import { Action } from '@transcendence/shared/types/Game.types';
 
 export class ActionDTO {
   @IsNumber()

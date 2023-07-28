@@ -1,23 +1,28 @@
-import { updatePlayer, moveAI } from "@Shared/game/handlePlayer";
-import { resetBall, updateBall, handleServe } from "@Shared/game/handleBall";
-import { GameData } from "@Shared/types/Game.types";
-import { AI_ID } from "@Shared/constants/Game.constants";
+import { updatePlayer, moveAI } from "@transcendence/shared/game/handlePlayer";
+import {
+  resetBall,
+  updateBall,
+  handleServe,
+} from "@transcendence/shared/game/handleBall";
+import { GameData } from "@transcendence/shared/types/Game.types";
+import { AI_ID } from "@transcendence/shared/constants/Game.constants";
 
 function resetTurn(winner: "Left" | "Right", gameData: GameData) {
   resetBall(gameData.ballDynamic, gameData);
   gameData.playerServe = winner;
-  // gameData.timer = new Date().getTime();
 
+  const actualRound = gameData.actualRound > 0 ? gameData.actualRound - 1 : 0;
   if (winner === "Left") {
-    gameData.score.round[gameData.actualRound - 1].left++;
+    gameData.score.round[actualRound].left++;
   } else if (winner === "Right") {
-    gameData.score.round[gameData.actualRound - 1].right++;
+    gameData.score.round[actualRound].right++;
   }
 }
 
 function handleRound(gameData: GameData) {
-  const leftScore = gameData.score.round[gameData.actualRound - 1].left;
-  const rightScore = gameData.score.round[gameData.actualRound - 1].right;
+  const actualRound = gameData.actualRound > 0 ? gameData.actualRound - 1 : 0;
+  const leftScore = gameData.score.round[actualRound].left;
+  const rightScore = gameData.score.round[actualRound].right;
   //check if round is over
   if (leftScore === gameData.maxPoint || rightScore === gameData.maxPoint) {
     if (leftScore > rightScore) {
@@ -70,7 +75,7 @@ function handleMovement(gameData: GameData): void {
     updatePlayer(gameData.playerRight, gameData.playerRightDynamic);
   }
 
-  if (gameData.playerServe) {
+  if (gameData.playerServe && gameData.status === "Playing") {
     handleServe(gameData.ballDynamic, gameData);
   }
 

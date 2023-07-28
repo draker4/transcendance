@@ -12,7 +12,7 @@ import {
   CHECK_INTERVAL,
   PLAYER_PING,
   SPECTATOR_PING,
-} from '@Shared/constants/Game.constants';
+} from '@transcendence/shared/constants/Game.constants';
 
 // import services
 import { GameService } from '../service/game.service';

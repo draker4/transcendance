@@ -4,14 +4,14 @@ import {
   GameData,
   BallDynamic,
   PlayerDynamic,
-} from "@Shared/types/Game.types";
+} from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
   BALL_SIZE,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
-} from "@Shared/constants/Game.constants";
+} from "@transcendence/shared/constants/Game.constants";
 
 export function resetBall(ball: BallDynamic, game: GameData): void {
   ball.posX = GAME_WIDTH / 2;

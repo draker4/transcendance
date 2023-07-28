@@ -14,7 +14,7 @@ import {
   PlayerDynamic,
   Timer,
   StatusMessage,
-} from '@Shared/types/Game.types';
+} from '@transcendence/shared/types/Game.types';
 
 // import game classes
 import { UserInfo } from './UserInfo';
@@ -31,7 +31,7 @@ import {
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
   PLAYER_START_SPEED,
-} from '@Shared/constants/Game.constants';
+} from '@transcendence/shared/constants/Game.constants';
 
 // import services
 import { UsersService } from '@/users/users.service';
@@ -225,7 +225,7 @@ export class Pong {
         fontColor: { r: 255, g: 255, b: 255 },
         roundColor: { r: 255, g: 255, b: 255 },
         roundWinColor: { r: 255, g: 255, b: 255 },
-        playerServe: null,
+        playerServe: 'Left', // revoir pour faire un random
         actualRound: 0,
         maxPoint: this.gameDB.maxPoint,
         maxRound: this.gameDB.maxRound,
@@ -261,7 +261,7 @@ export class Pong {
   private initBall(): Ball {
     return {
       img: this.gameDB.ball,
-      color: null,
+      color: { r: 255, g: 255, b: 255 },
     };
   }
 

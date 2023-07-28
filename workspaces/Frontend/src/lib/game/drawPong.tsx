@@ -1,11 +1,11 @@
-import { turnDelayIsOver } from "@Shared/game/pongUtils";
+import { turnDelayIsOver } from "@transcendence/shared/game/pongUtils";
 import {
   GameData,
   Player,
   Draw,
   PlayerDynamic,
   RGB,
-} from "@Shared/types/Game.types";
+} from "@transcendence/shared/types/Game.types";
 import {
   FONT_MENU,
   PLAYER_WIDTH,
@@ -14,7 +14,9 @@ import {
   FONT_SCORE,
   FONT_TIMER,
   MENU_COLOR,
-} from "@Shared/constants/Game.constants";
+  GAME_WIDTH,
+  GAME_HEIGHT,
+} from "@transcendence/shared/constants/Game.constants";
 
 function drawMenu(gameData: GameData, draw: Draw) {
   // Draw the menu background
@@ -211,13 +213,7 @@ export function drawPong(gameData: GameData, draw: Draw) {
   // Clear the Canvas
   draw.context.clearRect(0, 0, draw.canvas.width, draw.canvas.height);
   // Draw the background image
-  draw.context.drawImage(
-    draw.backgroundImage,
-    0,
-    0,
-    draw.canvas.width,
-    draw.canvas.height
-  );
+  draw.context.drawImage(draw.backgroundImage, 0, 0, GAME_WIDTH, GAME_HEIGHT);
 
   // Draw the Player
   drawPlayer(draw, gameData.playerLeft, gameData.playerLeftDynamic);
@@ -235,6 +231,6 @@ export function drawPong(gameData: GameData, draw: Draw) {
   //   drawMenu(gameData, draw);
   // }
   // else if (turnDelayIsOver(gameData.timer)) {
-  // drawBall(gameData, draw);
+  drawBall(gameData, draw);
   // }
 }

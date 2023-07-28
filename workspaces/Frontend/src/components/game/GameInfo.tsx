@@ -7,7 +7,7 @@ import {
   BallDynamic,
   Player,
   PlayerDynamic,
-} from "@Shared/types/Game.types";
+} from "@transcendence/shared/types/Game.types";
 
 import styles from "@/styles/game/GameInfo.module.css";
 

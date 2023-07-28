@@ -10,13 +10,11 @@ import {
 } from "@/lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
 import { Socket } from "socket.io-client";
+import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
-  GameData,
-  Draw,
-  Player,
-  StatusMessage,
-} from "@Shared/types/Game.types";
-import { GAME_HEIGHT, GAME_WIDTH } from "@Shared/constants/Game.constants";
+  GAME_HEIGHT,
+  GAME_WIDTH,
+} from "@transcendence/shared/constants/Game.constants";
 import GameInfo from "./GameInfo";
 
 type Props = {
