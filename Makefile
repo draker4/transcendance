@@ -1,7 +1,7 @@
 # **************************** Makefile Transcendence **************************** #
 
 DOCKER_COMPOSE = docker compose
-DOCKER_COMPOSE_FILE = ./Dockers/docker-compose.yml
+DOCKER_COMPOSE_FILE = ./docker-compose.yml
 
 .phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
 
