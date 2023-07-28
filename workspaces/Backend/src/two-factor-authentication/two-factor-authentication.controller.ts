@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable prettier/prettier */
-import { BadGatewayException, Body, Controller, Get, HttpCode, Param, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Body, Controller, Get, HttpCode, Param, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from '@/auth/services/auth.service';
-import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCodeDto';
-import { VerifYCodeDto } from './dto/VerifYCodeDto';
+import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCode.dto';
+import { VerifYCodeDto } from './dto/VerifYCode.dto';
+import { BackupCodeDto } from './dto/BackupCode.dto';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
@@ -87,12 +89,12 @@ export class TwoFactorAuthenticationController {
 		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto,
 		@Req() req) {
 		try {
-			const	user = await this.usersService.getUserById(req.user.id);
+			const	user = await this.usersService.getUserBackupCodes(req.user.id);
 
 			if (!user)
 				throw new Error('no user found');
 			
-			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
 				twoFactorAuthenticationCode, user
 			);
 
@@ -101,6 +103,8 @@ export class TwoFactorAuthenticationController {
 					success: false,
 					error: "wrong code",
 				}
+      
+      this.twoFactorAuthenticationService.updateBackupCodes(user);
 			
 			this.usersService.updateUser(user.id, {
 				isTwoFactorAuthenticationEnabled: true,
@@ -123,10 +127,10 @@ export class TwoFactorAuthenticationController {
 		try {
 			const	user = await this.usersService.getUserById(req.user.id);
 
-			if (!user)
+      if (!user)
 				throw new Error('no user found');
 			
-			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
 				twoFactorAuthenticationCode, user
 			);
 
@@ -163,7 +167,7 @@ export class TwoFactorAuthenticationController {
 			if (!user)
 				throw new Error('no user found');
 
-			const	isCodeValid = this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
 				twoFactorAuthenticationCode,
 				user,
 			);
@@ -183,7 +187,90 @@ export class TwoFactorAuthenticationController {
 			}
 		}
 		catch (error) {
-
+      throw new BadRequestException();
 		}
 	}
+
+  @Get('backupCodes')
+  async backupCodes(@Req() req) {
+    return this.twoFactorAuthenticationService.getBackupCodes(req.user.id);
+  }
+
+  @Post('verifyAuthCode')
+  async verifyAuthCode(
+    @Req() req,
+		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto
+	) {
+
+    try {
+
+      const user = await this.usersService.getUserById(req.user.id);
+
+      if (!user)
+        throw new Error('no user found');
+
+      const isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+        twoFactorAuthenticationCode,
+        user,
+      );
+
+      if (!isCodeValid)
+        return {
+          success: false,
+          error: 'wrong code',
+        }
+      
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      console.log(error);
+      throw new BadGatewayException();
+    }
+  }
+
+  @Post('getAccountBack')
+  async getAccountBack(
+    @Req() req,
+		@Body() { backupCode } : BackupCodeDto
+	) {
+    try {
+      const user = await this.usersService.getUserBackupCodes(req.user.id);
+
+      if (!user)
+        throw new Error('no user found');
+      
+      const isCodeValid = await this.twoFactorAuthenticationService.isBackupCodeValid(
+        backupCode,
+        user,
+      );
+
+      if (!isCodeValid)
+        return {
+          success: false,
+          error: 'no code',
+        }
+
+      this.usersService.updateUser(user.id, {
+        isTwoFactorAuthenticationEnabled: false,
+      });
+
+      const { access_token, refresh_token } = await this.authService.login(
+        user, 0, false
+      );
+      
+      return {
+        success: true,
+        access_token,
+        refresh_token,
+      }
+
+    }
+    catch(error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
+  }
+
 }

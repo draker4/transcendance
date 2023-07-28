@@ -15,6 +15,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -23,6 +24,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
     Token,
     Avatar,
     UserChannelRelation,
+    BackupCode,
   ])],
   providers: [
     TwoFactorAuthenticationService,

@@ -2,7 +2,7 @@
 	max-width: 350px;
 }
 
-.button {
+.button, .popup5 button {
 	appearance: none;
 	height: 30px;
 	border-radius: 4px;
@@ -12,7 +12,7 @@
 	background-color: var(--secondary1);
 	border: 3px solid var(--accent1);
 	transition: all 0.3s ease-in;
-	width: 100%;
+	width: 80%;
 }
 
 .button:hover {
@@ -57,12 +57,12 @@
 	background-color: var(--primary1);
 }
 
-.popup1 p{
+.popup1 p, .popup5 p{
 	margin: 0;
 }
 
-.popup1 input {
-	width: 100%;
+.popup1 input, .popup5 input {
+	width: 70%;
 	margin: 10px;
 	border-bottom: 1px solid var(--tertiary1);
 	text-transform: uppercase;
@@ -108,4 +108,12 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.backupCodes {
+	padding-top: 10px;
+}
+
+.popup5 {
+	padding-top: 10px;
 }

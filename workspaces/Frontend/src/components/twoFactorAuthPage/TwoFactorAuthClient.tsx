@@ -1,5 +1,6 @@
 "use client"
 
+import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import styles from "@/styles/welcome/auth/Confirm.module.css";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -14,9 +15,13 @@ export default function TwoFactorAuthClient() {
 	
 	const	router = useRouter();
 	const	[msg, setMsg] = useState("");
+	const	[notif, setNotif] = useState("");
 	const	{ handleSubmit, setValue } = useForm<FormInputs>();
 	const	inputRefs = useRef<HTMLInputElement[]>([]);
 	const	[buttonText, setButtonText] = useState<string>("Verify");
+	const	[buttonBackText, setButtonBackText] = useState<string>("Get my account back");
+	const	[popup, openPopup] = useState<boolean>(false);
+	const	[code, setCode] = useState<string>("");
   
 	const indexes: number[] = [0, 1, 2, 3, 4, 5];
 	const inputs = indexes.map((index) => {
@@ -113,11 +118,80 @@ export default function TwoFactorAuthClient() {
 				await fetch(
 					`http://${process.env.HOST_IP}:3000/api/signoff`
 				);
-				router.push("/welcome/notif");
+				router.refresh();
 			}
 			setMsg('Oops... Something went wrong! Please try again!')
 		}
 	};
+
+	const	sendBackupCode = async () => {
+		setNotif('');
+		setButtonBackText("Loading...");
+
+		if (code.length !== 10) {
+			setNotif("The code should have ten characters");
+			setButtonBackText("Get my account back");
+			return ;
+		}
+
+		try {
+			const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/2fa/getAccountBack`, {
+				method: 'POST',
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					backupCode: code,
+				}),
+			});
+
+			if (!res.ok)
+				throw new Error("fetch failed");
+			
+			const	data = await res.json();
+
+			if (!data.success) {
+				if (data.error && data.error === "no code") {
+					setNotif("Wrong Backup Code or already used");
+					setButtonBackText("Get my account back");
+					return ;
+				}
+				throw new Error("disconnect");
+			}
+
+			if (data.success && data.access_token && data.refresh_token) {
+				const res = await fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+					  access_token: data.accessToken,
+					  refresh_token: data.refreshToken,
+					}),
+				});
+				  
+				if (!res.ok)
+					throw new Error('fetch setCookies failed');
+				
+				const dataApi = await res.json();
+		
+				if (dataApi.message === "Loading...") {
+					setButtonBackText(data.message);
+					router.push("/home");
+				}
+				
+				else
+					throw new Error("cant change cookies");
+			}
+		}
+		catch (err: any) {
+			setButtonBackText("Get my account back");
+			if (err.message === 'disconnect') {
+				await fetch(
+					`http://${process.env.HOST_IP}:3000/api/signoff`
+				);
+				router.refresh();
+			}
+			setNotif('Oops... Something went wrong! Please try again!')
+		}
+	}
   
 	return (
 	  <div className={styles.confirmEmail}>
@@ -138,6 +212,34 @@ export default function TwoFactorAuthClient() {
 				{buttonText}
 		  	</button>
 		</form>
+
+		<div className={styles.popup}>
+			<p>You lost your authentification application?</p>
+			<p><span onClick={() => openPopup(!popup)}>Get back your account !</span></p>
+			{
+				popup &&
+				<div className={styles.appears}>
+					<p>Send your backup code:</p>
+					<input
+						type="text"
+						minLength={10}
+						maxLength={10}
+						onChange={(e) => setCode(e.target.value)}
+					/>
+					<button
+						className={styles.submitBtn}
+						onClick={sendBackupCode}
+						disabled={buttonBackText !== "Get my account back"}
+					>
+						{buttonBackText}
+					</button>
+					{
+						notif.length > 0 &&
+						<p className={styles.notif}>{notif}</p>
+					}
+				</div>
+			}
+		</div>
 
 	  </div>
 	);

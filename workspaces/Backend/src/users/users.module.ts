@@ -7,9 +7,10 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Token])],
+  imports: [TypeOrmModule.forFeature([User, Channel, Token, BackupCode])],
   controllers: [UsersController],
   providers: [UsersService, CryptoService],
   exports: [UsersService],
