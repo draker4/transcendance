@@ -16,7 +16,6 @@ import {
 
 // import services
 import { GameService } from '../service/game.service';
-import { UsersService } from '@/users/users.service';
 import { ColoredLogger } from '../colored-logger';
 
 @Injectable()
@@ -30,7 +29,6 @@ export class GameManager {
 
   constructor(
     private readonly gameService: GameService,
-    private readonly usersService: UsersService,
     private readonly logger: ColoredLogger,
   ) {
     this.logger = new ColoredLogger(GameManager.name); // Set the module name for the logger
@@ -170,14 +168,7 @@ export class GameManager {
     }
     try {
       const game: Game = await this.gameService.getGameData(gameId);
-      pong = new Pong(
-        this.server,
-        gameId,
-        game,
-        this.gameService,
-        this.usersService,
-        this.logger,
-      );
+      pong = new Pong(this.server, gameId, game, this.gameService, this.logger);
       await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);
       return this.joinGame(gameId, userId, socket);

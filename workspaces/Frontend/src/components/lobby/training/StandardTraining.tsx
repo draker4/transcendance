@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/define/StandardTraining.module.css";
+import styles from "@/styles/lobby/training/StandardTraining.module.css";
 import TrainingSelector from "./TrainingSelector";
 
 type Props = {

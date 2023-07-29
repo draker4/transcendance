@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/game/Pong.module.css";
+import styles from "@/styles/gameSolo/GameSolo.module.css";
 import { useRef, useEffect, useMemo } from "react";
 import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
@@ -8,21 +8,20 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import PlayInfo from "./PlayInfo";
+import PlayInfo from "./InfoSolo";
 
 type Props = {
-  userId: number;
+  profile: Profile;
   gameData: GameData;
-  setGameData: Function;
 };
 
-export default function Play({ userId, gameData, setGameData }: Props) {
+export default function GameSolo({ profile, gameData }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const isPlayer: "Left" | "Right" | "Spectator" =
-    gameData.playerLeft?.id === userId
+    gameData.playerLeft?.id === profile.id
       ? "Left"
-      : gameData.playerRight?.id === userId
+      : gameData.playerRight?.id === profile.id
       ? "Right"
       : "Spectator";
 
@@ -64,11 +63,11 @@ export default function Play({ userId, gameData, setGameData }: Props) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, null, userId, isPlayer);
+      pongKeyDown(event, gameData, null, profile.id, isPlayer);
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, null, userId, isPlayer);
+      pongKeyUp(event, gameData, null, profile.id, isPlayer);
     }
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
@@ -77,7 +76,7 @@ export default function Play({ userId, gameData, setGameData }: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [userId, isPlayer, gameData]);
+  }, [profile.id, isPlayer, gameData]);
 
   return (
     <div className={styles.pong}>

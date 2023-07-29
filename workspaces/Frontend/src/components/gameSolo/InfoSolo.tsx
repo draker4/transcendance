@@ -4,8 +4,8 @@ import {
   Player,
 } from "@transcendence/shared/types/Game.types";
 
-import styles from "@/styles/game/GameInfo.module.css";
-import AvatarUser from "../avatarUser/AvatarUser";
+import styles from "@/styles/gameSolo/InfoSolo.module.css";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 
 import { useEffect } from "react";

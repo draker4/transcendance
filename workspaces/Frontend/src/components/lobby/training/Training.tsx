@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { GameData } from "@transcendence/shared/types/Game.types";
-import DefineTraining from "./define/DefineTraining";
-import Play from "./play/Play";
+import DefineTraining from "./DefineTraining";
+import GameSolo from "../../gameSolo/GameSolo";
 
 type Props = {
   profile: Profile;
@@ -12,6 +12,7 @@ type Props = {
 
 export default function Training({ profile, avatar }: Props) {
   const [gameData, setGameData] = useState<GameData | null>(null);
+  console.log("avatar: ", avatar);
 
   // -----------------------------------  TRAINING  ----------------------------------- //
   if (!gameData) {
@@ -23,8 +24,6 @@ export default function Training({ profile, avatar }: Props) {
       />
     );
   } else {
-    return (
-      <Play userId={profile.id} gameData={gameData} setGameData={setGameData} />
-    );
+    return <GameSolo profile={profile} gameData={gameData} />;
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/define/GeneralSettings.module.css";
+import styles from "@/styles/lobby/training/GeneralSettings.module.css";
 import SideSelector from "@/components/lobby/selector/SideSelector";
 import Slider from "@/components/lobby/selector/Slider";
 

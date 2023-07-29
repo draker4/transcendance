@@ -56,7 +56,7 @@ export default function DefineTraining({
     const player: Player = {
       id: profile.id,
       name: profile.login,
-      color: convertColor(avatar.backgroundColor),
+      color: convertColor(avatar.borderColor),
       avatar: avatar,
       side: hostSide,
     };

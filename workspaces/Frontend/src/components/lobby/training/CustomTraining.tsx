@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/define/CustomTraining.module.css";
+import styles from "@/styles/lobby/training/CustomTraining.module.css";
 import ImgSelector from "@/components/lobby/selector/ImgSelector";
 import Selector from "@/components/lobby/selector/Selector";
 import Slider from "@/components/lobby/selector/Slider";

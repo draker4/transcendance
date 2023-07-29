@@ -42,7 +42,6 @@ export class GameService {
 
   public async definePlayer(
     userId: number,
-    usersService: UsersService,
     side: 'Left' | 'Right',
   ): Promise<Player> {
     try {
@@ -51,7 +50,7 @@ export class GameService {
       const player: Player = {
         id: userId,
         name: user.login,
-        color: convertColor(avatar.backgroundColor),
+        color: convertColor(avatar.borderColor),
         avatar: avatar,
         side: side,
       };

@@ -19,7 +19,6 @@ import { UserInfo } from './UserInfo';
 import { Game } from '@/utils/typeorm/Game.entity';
 
 // import services
-import { UsersService } from '@/users/users.service';
 import { GameService } from '../service/game.service';
 import { ColoredLogger } from '../colored-logger';
 
@@ -38,7 +37,6 @@ export class Pong {
     public readonly gameId: string,
     private readonly gameDB: Game,
     private readonly gameService: GameService,
-    private readonly usersService: UsersService,
     private readonly logger: ColoredLogger,
   ) {
     if (this.gameDB) {
@@ -65,14 +63,12 @@ export class Pong {
       if (this.gameDB.hostSide === 'Left') {
         this.data.playerLeft = await this.gameService.definePlayer(
           this.gameDB.host,
-          this.usersService,
           'Left',
         );
         this.data.playerLeftStatus = 'Disconnected';
         if (this.gameDB.opponent !== -1) {
           this.data.playerRight = await this.gameService.definePlayer(
             this.gameDB.opponent,
-            this.usersService,
             'Right',
           );
           this.data.playerRightStatus = 'Disconnected';
@@ -80,14 +76,12 @@ export class Pong {
       } else if (this.gameDB.hostSide === 'Right') {
         this.data.playerRight = await this.gameService.definePlayer(
           this.gameDB.host,
-          this.usersService,
           'Right',
         );
         this.data.playerRightStatus = 'Disconnected';
         if (this.gameDB.opponent !== -1) {
           this.data.playerLeft = await this.gameService.definePlayer(
             this.gameDB.opponent,
-            this.usersService,
             'Left',
           );
           this.data.playerLeftStatus = 'Disconnected';
@@ -260,7 +254,6 @@ export class Pong {
       if (!this.data.playerRight) {
         this.data.playerRight = await this.gameService.definePlayer(
           user.id,
-          this.usersService,
           'Right',
         );
         this.sendPlayerData(this.data.playerRight);
@@ -271,7 +264,6 @@ export class Pong {
       if (!this.data.playerLeft) {
         this.data.playerLeft = await this.gameService.definePlayer(
           user.id,
-          this.usersService,
           'Left',
         );
         this.sendPlayerData(this.data.playerLeft);

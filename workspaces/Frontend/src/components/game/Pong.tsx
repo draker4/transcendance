@@ -15,7 +15,7 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import GameInfo from "./GameInfo";
+import Info from "./Info";
 
 type Props = {
   userId: number;
@@ -119,7 +119,7 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      <GameInfo gameData={gameData}></GameInfo>
+      <Info gameData={gameData} />
     </div>
   );
 }

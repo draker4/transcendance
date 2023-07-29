@@ -5,11 +5,13 @@ import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
 import styles from "@/styles/game/Game.module.css";
-import Game from "@/components/game/Game";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
 import { Suspense } from "react";
 import LoadingSuspense from "@/components/loading/LoadingSuspense";
+
+import GameSolo from "@/components/gameSolo/GameSolo";
+import { GameData } from "@transcendence/shared/types/Game.types";
 
 export default async function GamePage({ params }: any) {
   let profile: Profile = {
@@ -26,6 +28,7 @@ export default async function GamePage({ params }: any) {
   };
   let token: string | undefined;
   let gameId = params.id;
+  const gameData: GameData; //;
 
   try {
     token = cookies().get("crunchy-token")?.value;
@@ -41,7 +44,7 @@ export default async function GamePage({ params }: any) {
     <main className={styles.gamePage}>
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
-        <Game profile={profile} token={token} gameId={gameId} />
+        <GameSolo profile={profile} gameData={gameData} />
       </Suspense>
     </main>
   );

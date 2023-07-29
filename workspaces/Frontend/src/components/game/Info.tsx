@@ -4,8 +4,8 @@ import {
   Player,
 } from "@transcendence/shared/types/Game.types";
 
-import styles from "@/styles/game/GameInfo.module.css";
-import AvatarUser from "@/components/avatarUser/AvatarUser";
+import styles from "@/styles/game/Info.module.css";
+import AvatarUser from "../avatarUser/AvatarUser";
 import { CryptoService } from "@/services/crypto/Crypto.service";
 
 import { useEffect } from "react";
@@ -101,7 +101,7 @@ type Props = {
   gameData: GameData;
 };
 
-export default function GameInfo({ gameData }: Props) {
+export default function Info({ gameData }: Props) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div className={styles.gameInfo}>
