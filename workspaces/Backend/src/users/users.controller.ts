@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
+  BadGatewayException,
   Body,
   Controller,
   Delete,
@@ -76,14 +77,19 @@ export class UsersController {
     };
   }
 
-  @Public()
   @Get('login')
   async checkDoubleLogin(@Query('login') login: string) {
-    const decodeUrl = decodeURIComponent(login);
-    const user = await this.usersService.getUserByLogin(decodeUrl);
+    try {
+      const decodeUrl = decodeURIComponent(login);
+      const user = await this.usersService.getUserByLogin(decodeUrl);
 
-    if (user) return { exists: true };
-    return { exists: false };
+      if (user) return { exists: true };
+      return { exists: false };
+    }
+    catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
   }
 
   @Put()

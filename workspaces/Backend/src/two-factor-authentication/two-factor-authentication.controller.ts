@@ -240,7 +240,7 @@ export class TwoFactorAuthenticationController {
 
       if (!user)
         throw new Error('no user found');
-      
+
       const isCodeValid = await this.twoFactorAuthenticationService.isBackupCodeValid(
         backupCode,
         user,
@@ -265,7 +265,6 @@ export class TwoFactorAuthenticationController {
         access_token,
         refresh_token,
       }
-
     }
     catch(error) {
       console.log(error.message);

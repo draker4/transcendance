@@ -162,8 +162,8 @@ export default function TwoFactorAuthClient() {
 					method: "POST",
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
-					  access_token: data.accessToken,
-					  refresh_token: data.refreshToken,
+					  accessToken: data.access_token,
+					  refreshToken: data.refresh_token,
 					}),
 				});
 				  
@@ -173,10 +173,8 @@ export default function TwoFactorAuthClient() {
 				const dataApi = await res.json();
 		
 				if (dataApi.message === "Loading...") {
-					setButtonBackText(data.message);
 					router.push("/home");
 				}
-				
 				else
 					throw new Error("cant change cookies");
 			}

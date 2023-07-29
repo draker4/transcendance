@@ -32,7 +32,7 @@ export default async function CreatePage() {
   let avatars: string[] = [];
 
   try {
-    const directoryPath = "/app/public/images/avatars";
+    const directoryPath = "/home/workspaces/Frontend/public/images/avatars";
     avatars = fs.readdirSync(directoryPath);
 
     avatars = avatars.map((avatar) => {

@@ -2,6 +2,7 @@
 
 import { CryptoService } from "@/services/crypto/Crypto.service";
 import { getDoubleLogin } from "./checkLogin";
+import fetchClientSide from "../fetch/fetchClientSide";
 
 const Crypto = new CryptoService();
 
@@ -28,7 +29,7 @@ export async function handleActionServer(
       avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
     }
 
-    const register = await fetch(
+    const register = await fetchClientSide(
       `http://${process.env.HOST_IP}:4000/api/auth/firstLogin`,
       {
         method: "POST",

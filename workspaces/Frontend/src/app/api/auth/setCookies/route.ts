@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
 	const	cookies = await req.json();
+
+	console.log("laaa in api", cookies);
 	const	accessToken = cookies.accessToken;
 	const	refreshToken = cookies.refreshToken;
 
+	console.log(accessToken, refreshToken);
 	if (!accessToken) {
 		const	data = {
 			message: "Something went wrong, please try again !",

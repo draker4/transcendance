@@ -67,16 +67,14 @@ export class TwoFactorAuthenticationService {
 
 	public async isBackupCodeValid(backupCode: string, user: User) {
 		
-		const	backupCodeValid = user.backupCodes.filter(async (backupCodeUser) => {
-			const	backupCodeDecrypted = await this.cryptoService.decrypt(backupCodeUser.code);
-			return backupCodeDecrypted === backupCode;
-		});
+		for (const backupCodeUser of user.backupCodes) {
+			const backupCodeDecrypted = await this.cryptoService.decrypt(backupCodeUser.code);
 
-		if (backupCodeValid[0]) {
-			this.usersService.deleteBackupCode(backupCodeValid[0]);
-			return true;
+			if (backupCodeDecrypted === backupCode) {
+			  	this.usersService.deleteBackupCode(backupCodeUser);
+				return true;
+			}
 		}
-
 		return false;
 	}
 
@@ -99,9 +97,8 @@ export class TwoFactorAuthenticationService {
 
 	async updateBackupCodes(user: User) {
 
-		console.log("laaa");
 		await this.usersService.deleteBackupCodes(user);
-		console.log("after ici");
+
 		const	backupCodes = this.generateBackupCodes(10, 10);
 
 		const	backupCodesCrypted = await Promise.all(
