@@ -22,9 +22,9 @@ async function showPlayer(
   };
   if (!player)
     return (
-      <div>
+      <div className={side === "Left" ? styles.showLeft : styles.showRight}>
         <h2>Searching Player</h2>
-        <p></p>
+        <p>Status: {status}</p>
       </div>
     );
   const avatar: Avatar = {
@@ -104,7 +104,7 @@ type Props = {
 export default function Info({ gameData }: Props) {
   if (!gameData) return <div>Game not found</div>;
   return (
-    <div className={styles.gameInfo}>
+    <div className={styles.info}>
       <div className={styles.general}>
         {/* LEFT PLAYER */}
         {showPlayer(gameData.playerLeft, gameData.playerLeftStatus, "Left")}

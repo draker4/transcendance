@@ -14,7 +14,7 @@ type Props = {
 };
 
 interface Game {
-  uuid: string;
+  id: string;
   Name: string;
   Host: number;
   Opponent: number;
@@ -47,7 +47,7 @@ export default function PartyList({ token }: Props) {
   //Filter les games en fonction de la recherche
   useEffect(() => {
     // Parcours le JSON et ne garde que les game qui match avec la recherche
-    if (LastSearch !== "" && jsonGame[0].uuid != "Loading") {
+    if (LastSearch !== "" && jsonGame[0].id != "Loading") {
       const filteredGames = jsonGame.filter((item: Game) =>
         item.Name.toLowerCase().includes(LastSearch.toLowerCase())
       );

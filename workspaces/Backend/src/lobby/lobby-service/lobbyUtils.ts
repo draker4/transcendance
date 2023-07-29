@@ -1,12 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
-
-import { v4 as uuidv4 } from 'uuid';
 
 export class LobbyUtils {
   constructor(
@@ -38,13 +35,19 @@ export class LobbyUtils {
   async checkIfAlreadyInGame(userId: number): Promise<any> {
     if (userId != null) {
       const host = await this.gameRepository.findOne({
-        where: { host: userId, status: 'Waiting' || 'Playing' },
+        where: {
+          host: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (host != null) {
         return true;
       }
       const opponent = await this.gameRepository.findOne({
-        where: { opponent: userId, status: 'Waiting' || 'Playing' },
+        where: {
+          opponent: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (opponent != null) {
         return true;
@@ -57,16 +60,22 @@ export class LobbyUtils {
   async getGameId(userId: number): Promise<any> {
     if (userId != null) {
       let game = await this.gameRepository.findOne({
-        where: { host: userId, status: 'Waiting' || 'Playing' },
+        where: {
+          host: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (game != null) {
-        return game.uuid;
+        return game.id;
       }
       game = await this.gameRepository.findOne({
-        where: { opponent: userId, status: 'Waiting' || 'Playing' },
+        where: {
+          opponent: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (game != null) {
-        return game.uuid;
+        return game.id;
       }
     }
     return false;
@@ -85,47 +94,16 @@ export class LobbyUtils {
     return false;
   }
 
-  //Creer une game dans la base de donnée
-  // async CreateGameInDB(
-  //   name: string,
-  //   type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training',
-  //   mode: 'League' | 'Party' | 'Training',
-  //   userId: number,
-  //   hostSide: 'Left' | 'Right',
-  //   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9,
-  //   maxRound: 1 | 3 | 5 | 7 | 9,
-  //   difficulty: 1 | 2 | 3 | 4 | 5,
-  //   push: boolean,
-  //   background: string,
-  //   ball: string,
-  // ): Promise<any> {
-  //   const gameDTO = new CreateGameDTO();
-  //   gameDTO.uuid = uuidv4();
-  //   gameDTO.name = name;
-  //   gameDTO.type = type;
-  //   gameDTO.mode = mode;
-  //   gameDTO.host = userId;
-  //   gameDTO.hostSide = hostSide;
-  //   gameDTO.maxPoint = maxPoint;
-  //   gameDTO.maxRound = maxRound;
-  //   gameDTO.difficulty = difficulty;
-  //   gameDTO.push = push;
-  //   gameDTO.background = background;
-  //   gameDTO.ball = ball;
-  //   await this.gameRepository.save(gameDTO);
-  //   return gameDTO.uuid;
-  // }
-
   //Check si la partie existe
   async CheckIfGameExist(game_id: string): Promise<any> {
     if (game_id != null) {
-      //Check si c'est un uuid
+      //Check si c'est un id
       // if (game_id.length != 36) {
       //   return false;
       // }
 
       const game = await this.gameRepository.findOne({
-        where: { uuid: game_id },
+        where: { id: game_id },
       });
       if (game != null) {
         return true;
@@ -137,13 +115,13 @@ export class LobbyUtils {
   //Check si la partie a deja un opponent
   async CheckIfGameHasOpponent(game_id: string): Promise<any> {
     if (game_id != null) {
-      //Check si c'est un uuid
+      //Check si c'est un id
       if (game_id.length != 36) {
         return false;
       }
 
       const game = await this.gameRepository.findOne({
-        where: { uuid: game_id },
+        where: { id: game_id },
       });
 
       if (game != null) {
@@ -161,13 +139,13 @@ export class LobbyUtils {
     user_id: number,
   ): Promise<any> {
     if (game_id != null) {
-      //Check si c'est un uuid
+      //Check si c'est un id
       if (game_id.length != 36) {
         return false;
       }
 
       const game = await this.gameRepository.findOne({
-        where: { uuid: game_id },
+        where: { id: game_id },
       });
       if (game != null) {
         if (game.host == user_id) {
@@ -184,13 +162,13 @@ export class LobbyUtils {
   //Ajoute le joueur dans la game en temps qu'opponent
   async AddPlayerToGame(game_id: string, user_id: number): Promise<any> {
     if (game_id != null) {
-      //Check si c'est un uuid
+      //Check si c'est un id
       if (game_id.length != 36) {
         return false;
       }
 
       const game = await this.gameRepository.findOne({
-        where: { uuid: game_id },
+        where: { id: game_id },
       });
       if (game != null) {
         game.opponent = user_id;
@@ -205,28 +183,30 @@ export class LobbyUtils {
   async RemovePlayerFromGame(gameId: string, userId: number): Promise<any> {
     if (gameId != null) {
       const game = await this.gameRepository.findOne({
-        where: { uuid: gameId },
+        where: { id: gameId },
       });
       if (game != null) {
-        if (game.host == userId || game.opponent == userId) {
-          //Si game en cours -> on mets fin à la game
-          if (game.status == 'Playing') {
-            game.status = 'Finished';
-            await this.gameRepository.save(game);
+        //Si game n'a pas commencé
+        if (
+          game.status == 'Not Started' &&
+          (game.host == userId || game.opponent == userId)
+        ) {
+          game.status = 'Deleted';
+          game.result = 'Deleted';
+          await this.gameRepository.save(game);
+        }
+        //Si game en cours
+        else if (
+          game.status == 'Playing' &&
+          (game.host == userId || game.opponent == userId)
+        ) {
+          game.status = 'Finished';
+          if (game.host == userId) {
+            game.result = 'Opponent';
+          } else {
+            game.result = 'Host';
           }
-
-          //Si game en waiting -> Si host qui quitte -> on supprime la game
-          if (game.status == 'Waiting' && game.host == userId) {
-            game.status = 'Deleted';
-            await this.gameRepository.save(game);
-          }
-
-          //Si game en waiting -> Si opponent qui quitte -> on mets fin a la game
-          if (game.status == 'Waiting' && game.opponent == userId) {
-            game.status = 'Finished';
-            await this.gameRepository.save(game);
-          }
-          return true;
+          await this.gameRepository.save(game);
         }
       }
     }
@@ -237,11 +217,11 @@ export class LobbyUtils {
   async RemovePlayerFromAllGames(userId: number): Promise<any> {
     if (userId != null) {
       const all_game = await this.gameRepository.find({
-        where: { status: 'Waiting' || 'Playing' },
+        where: { status: 'Not Started' || 'Stopped' || 'Playing' },
       });
       if (all_game != null) {
         for (let i = 0; i < all_game.length; i++) {
-          this.RemovePlayerFromGame(all_game[i].uuid, userId);
+          this.RemovePlayerFromGame(all_game[i].id, userId);
         }
         return true;
       }

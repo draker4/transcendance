@@ -89,7 +89,7 @@ export function initPong(initData: InitData): GameData {
     maxRound: initData.maxRound,
     score: initScore(),
     timer: null,
-    status: "Waiting",
-    result: "Not Started",
+    status: "Not Started",
+    result: "Not Finished",
   };
 }

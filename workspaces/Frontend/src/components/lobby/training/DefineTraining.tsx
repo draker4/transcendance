@@ -11,7 +11,7 @@ import {
   Player,
 } from "@transcendence/shared/types/Game.types";
 import { initPong } from "@transcendence/shared/game/initPong";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as idv4 } from "uuid";
 import { convertColor } from "@transcendence/shared/game/pongUtils";
 
 type Props = {
@@ -41,7 +41,7 @@ export default function DefineTraining({
   function createPong() {
     const type = selected === "Random" ? "Custom" : selected;
     const initData: InitData = {
-      id: uuidv4(),
+      id: idv4(),
       name: `Training ${selected}`,
       type: type,
       mode: "Training",

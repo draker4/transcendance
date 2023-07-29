@@ -175,7 +175,7 @@ statusCode : 200
   "message": "Request successfulld",
   "data": [
   {
-    "uuid": string;
+    "id": string;
     "name": string;
     "host": number;
     "opponent": number;
@@ -234,7 +234,7 @@ statusCode : 200
   "message": "Request successfulld",
   "data":
   {
-    "uuid": string;
+    "id": string;
     "name": string;
     "host": number;
     "opponent": number;

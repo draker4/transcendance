@@ -10,7 +10,7 @@ interface PlayerLeaderBoard {
 }
 
 interface GameRanked {
-  uuid: string;
+  id: string;
   Name: string;
   Host: string;
   Opponent: string;

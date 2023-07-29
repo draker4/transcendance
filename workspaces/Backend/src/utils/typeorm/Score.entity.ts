@@ -8,23 +8,26 @@ import {
 
 @Entity()
 export class Score {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
-
-  @Column({})
-  gameId: string;
-
-  @Column({})
-  leftPlayerId: number;
-
-  @Column({})
-  rightPlayerId: number;
 
   @CreateDateColumn()
   createdtd: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({})
+  gameId: string;
+
+  @Column()
+  mode: 'League' | 'Party' | 'Training';
+
+  @Column({})
+  leftPlayerId: number;
+
+  @Column({})
+  rightPlayerId: number;
 
   @Column({ default: 0 })
   leftPlayerRoundWon: 0 | 1 | 2 | 3 | 4;

@@ -35,14 +35,8 @@ export type Score = {
 };
 
 export type StatusMessage = {
-  status: "Waiting" | "Playing" | "Finished" | "Deleted";
-  result:
-    | "Not Started"
-    | "On Going"
-    | "Draw"
-    | "Player1"
-    | "Player2"
-    | "Deleted";
+  status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
+  result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
   playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   timer: Timer | null;
@@ -132,7 +126,7 @@ export type GameData = {
     | "Disconnected";
   background: string;
   ballImg: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
   difficulty: 1 | 2 | 3 | 4 | 5;
   push: boolean;
@@ -145,20 +139,14 @@ export type GameData = {
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   score: Score;
   timer: Timer | null;
-  status: "Waiting" | "Playing" | "Finished" | "Deleted";
-  result:
-    | "Not Started"
-    | "On Going"
-    | "Draw"
-    | "Player1"
-    | "Player2"
-    | "Deleted";
+  status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
+  result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
 };
 
 export type InitData = {
   id: string;
   name: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;

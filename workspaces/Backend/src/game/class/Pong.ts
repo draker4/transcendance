@@ -41,7 +41,7 @@ export class Pong {
   ) {
     if (this.gameDB) {
       const initData: InitData = {
-        id: this.gameDB.uuid,
+        id: this.gameDB.id,
         name: this.gameDB.name,
         type: this.gameDB.type,
         mode: this.gameDB.mode,
@@ -107,7 +107,7 @@ export class Pong {
     if (this.gameDB.opponent === -1) {
       try {
         this.gameDB.opponent = await this.gameService.checkOpponent(
-          this.gameDB.uuid,
+          this.gameDB.id,
         );
       } catch (error) {
         this.logger.error(
@@ -279,11 +279,10 @@ export class Pong {
       this.playerRight &&
       this.data.playerRightStatus === 'Connected'
     ) {
-      if (this.data.result === 'Not Started') {
+      if (this.data.status === 'Not Started') {
         this.data.status = 'Playing';
-        this.data.result = 'On Going';
         this.data.timer = this.defineTimer(10, 'Start');
-      } else if (this.data.result === 'On Going') {
+      } else if (this.data.status === 'Stopped') {
         this.data.status = 'Playing';
         this.data.timer = this.defineTimer(10, 'ReStart');
       }
@@ -305,13 +304,13 @@ export class Pong {
     if (side === 'Left') {
       this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
-        this.data.status = 'Waiting';
+        this.data.status = 'Stopped';
         this.data.timer = this.defineTimer(60, 'Deconnection');
       }
     } else if (side === 'Right') {
       this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
-        this.data.status = 'Waiting';
+        this.data.status = 'Stopped';
         this.data.timer = this.defineTimer(60, 'Deconnection');
       }
     }

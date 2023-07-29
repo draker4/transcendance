@@ -13,11 +13,11 @@ export class CreateGameDTO {
 
   @IsString()
   @IsNotEmpty()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
 
   @IsString()
   @IsNotEmpty()
-  mode: 'League' | 'Party' | 'Training';
+  mode: 'League' | 'Party';
 
   @IsNumber()
   @IsNotEmpty()

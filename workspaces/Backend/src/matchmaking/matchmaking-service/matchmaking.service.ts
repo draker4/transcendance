@@ -121,7 +121,7 @@ export class MatchmakingService {
           success: true,
           message: 'Game found',
           data: {
-            id: game.uuid,
+            id: game.id,
           },
         };
         return Data;
@@ -197,7 +197,7 @@ export class MatchmakingService {
         const newGame: Game = this.gameRepository.create(createGameDTO);
         newGame.createdAt = new Date();
         await this.gameRepository.save(newGame);
-        return newGame.uuid;
+        return newGame.id;
       }
     }
     return false;
@@ -220,13 +220,19 @@ export class MatchmakingService {
   async GetGameId(user_id: number): Promise<any> {
     if (user_id != null) {
       let game = await this.gameRepository.findOne({
-        where: { host: user_id, status: 'Waiting' || 'Playing' },
+        where: {
+          host: user_id,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (game != null) {
         return game;
       }
       game = await this.gameRepository.findOne({
-        where: { opponent: user_id, status: 'Waiting' || 'Playing' },
+        where: {
+          opponent: user_id,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (game != null) {
         return game;
@@ -239,13 +245,19 @@ export class MatchmakingService {
   async CheckIfAlreadyInGame(user_id: number): Promise<any> {
     if (user_id != null) {
       const host = await this.gameRepository.findOne({
-        where: { host: user_id, status: 'Waiting' || 'Playing' },
+        where: {
+          host: user_id,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (host != null) {
         return true;
       }
       const opponent = await this.gameRepository.findOne({
-        where: { opponent: user_id, status: 'Waiting' || 'Playing' },
+        where: {
+          opponent: user_id,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
       });
       if (opponent != null) {
         return true;
@@ -313,13 +325,13 @@ export class MatchmakingService {
   //Ajoute le joueur dans la game en temps qu'opponent
   async AddPlayerToGame(game_id: string, user_id: number): Promise<any> {
     if (game_id != null) {
-      //Check si c'est un uuid
+      //Check si c'est un id
       if (game_id.length != 36) {
         return false;
       }
 
       const game = await this.gameRepository.findOne({
-        where: { uuid: game_id },
+        where: { id: game_id },
       });
       if (game != null) {
         game.opponent = user_id;

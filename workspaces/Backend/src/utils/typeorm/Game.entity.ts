@@ -13,7 +13,7 @@ import { Score } from './Score.entity';
 @Entity()
 export class Game {
   @PrimaryGeneratedColumn('uuid')
-  uuid: string;
+  id: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -25,10 +25,10 @@ export class Game {
   name: string;
 
   @Column()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
 
   @Column()
-  mode: 'League' | 'Party' | 'Training';
+  mode: 'League' | 'Party';
 
   @Column()
   host: number;
@@ -43,17 +43,11 @@ export class Game {
   @JoinColumn()
   score: Score;
 
-  @Column({ default: 'Waiting' })
-  status: 'Waiting' | 'Playing' | 'Finished' | 'Deleted';
-
   @Column({ default: 'Not Started' })
-  result:
-    | 'Not Started'
-    | 'On Going'
-    | 'Draw'
-    | 'Player1'
-    | 'Player2'
-    | 'Deleted';
+  status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted';
+
+  @Column({ default: 'Not Finished' })
+  result: 'Not Finished' | 'Draw' | 'Draw' | 'Host' | 'Opponent' | 'Deleted';
 
   @Column({ default: 0 })
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;

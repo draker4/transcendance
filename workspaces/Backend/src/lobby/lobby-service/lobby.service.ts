@@ -39,7 +39,7 @@ export class LobbyService extends LobbyUtils {
         success: true,
         message: 'Game created',
         data: {
-          id: newGame.uuid,
+          id: newGame.id,
         },
       };
 
@@ -131,7 +131,7 @@ export class LobbyService extends LobbyUtils {
     try {
       //Renvoi toutes les games Waiting ou Playing
       const games = await this.gameRepository.find({
-        where: { status: 'Waiting' || 'Playing' },
+        where: { status: 'Not Started' || 'Stopped' || 'Playing' },
       });
       //Clean les infos
       // const gamesInfos: GameData[] = [];
@@ -139,7 +139,7 @@ export class LobbyService extends LobbyUtils {
       //   const hostLogin = await this.GetPlayerName(games[i].host);
       //   const opponentLogin = await this.GetPlayerName(games[i].opponent);
       //   const gameInfo: GameData = {
-      //     uuid: games[i].uuid,
+      //     id: games[i].id,
       //     name: games[i].name,
       //     host: games[i].host,
       //     hostName: hostLogin,
@@ -189,7 +189,7 @@ export class LobbyService extends LobbyUtils {
       }
       //Retrouver la partie et confirmer si player ou spectator
       const game: Game = await this.gameRepository.findOne({
-        where: { uuid: gameId },
+        where: { id: gameId },
       });
       if (!game) {
         data.message = 'Game not found';

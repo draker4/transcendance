@@ -1,15 +1,16 @@
-.gameInfo {
+.info {
   display: flex;
   flex-flow: column nowrap;
   align-items: flex-start;
-  justify-content: center;
   width: 100%;
 }
 
 .general {
   display: flex;
   flex-flow: row nowrap;
+  justify-content: space-between;
   width: 100%;
+  margin: 10px auto;
 }
 
 .showLeft,
@@ -19,7 +20,6 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 30%;
-  margin: 5px auto;
   text-align: center;
 }
 
@@ -54,7 +54,6 @@
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  min-width: 50px;
   width: 30%;
 }
 

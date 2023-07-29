@@ -1,63 +1,66 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+
+import { Score } from './Score.entity';
 
 @Entity()
 export class Training {
-  @PrimaryGeneratedColumn({
-    type: 'int',
-    name: 'training_id',
-  })
-  trainingId: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column({
-    nullable: false,
-  })
-  level: number;
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Column({
-    nullable: false,
-    default: '',
-  })
-  title: string;
+  @UpdateDateColumn()
+  updatedAt: Date;
 
-  @Column({
-    nullable: false,
-    default: '',
-  })
-  description: string;
+  @Column()
+  name: string;
 
-  @Column({
-    nullable: false,
-    default: false,
-  })
+  @Column()
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
+
+  @Column()
+  player: number;
+
+  @Column()
+  side: 'Left' | 'Right';
+
+  @OneToOne(() => Score)
+  @JoinColumn()
+  score: Score;
+
+  @Column({ default: 'Not Started' })
+  status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted';
+
+  @Column({ default: 'Not Finished' })
+  result: 'Not Finished' | 'Draw' | 'Win' | 'Lose' | 'Deleted';
+
+  @Column({ default: 0 })
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
+  @Column()
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
+  @Column()
+  maxRound: 1 | 3 | 5 | 7 | 9;
+
+  @Column()
+  difficulty: 1 | 2 | 3 | 4 | 5;
+
+  @Column()
   push: boolean;
 
-  @Column({
-    nullable: false,
-    default: 3,
-  })
-  score: number;
-
-  @Column({
-    nullable: false,
-    default: 3,
-  })
-  round: number;
-
-  @Column({
-    nullable: false,
-    default: 0,
-  })
-  difficulty: number;
-
-  @Column({
-    nullable: true,
-    default: '',
-  })
+  @Column()
   background: string;
 
-  @Column({
-    nullable: true,
-    default: '',
-  })
+  @Column()
   ball: string;
 }

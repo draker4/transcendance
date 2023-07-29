@@ -8,7 +8,7 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import PlayInfo from "./InfoSolo";
+import Info from "@/components/game/Info";
 
 type Props = {
   profile: Profile;
@@ -88,7 +88,7 @@ export default function GameSolo({ profile, gameData }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      <PlayInfo gameData={gameData}></PlayInfo>
+      <Info gameData={gameData}></Info>
     </div>
   );
 }

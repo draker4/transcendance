@@ -29,7 +29,7 @@ export class GameService {
   public async getGameData(gameId: string): Promise<any> {
     try {
       const game = await this.GameRepository.findOne({
-        where: { uuid: gameId },
+        where: { id: gameId },
       });
       if (!game) {
         throw new Error('Game not found');
@@ -63,7 +63,7 @@ export class GameService {
   public async checkOpponent(gameId: string): Promise<number> {
     try {
       const game = await this.GameRepository.findOne({
-        where: { uuid: gameId },
+        where: { id: gameId },
       });
       if (!game) {
         throw new WsException('Game not found');
