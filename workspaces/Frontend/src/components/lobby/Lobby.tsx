@@ -53,10 +53,8 @@ export default function Lobby({ profile, token }: Props) {
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
         {menu == "League" && <League Matchmaking={matchmaking} token={token} />}
-        {menu == "Party" && (
-          <Party lobby={lobby} token={token} userId={profile.id} />
-        )}
-        {menu == "Training" && <Training lobby={lobby} />}
+        {menu == "Party" && <Party lobby={lobby} profile={profile} />}
+        {menu == "Training" && <Training profile={profile} />}
       </div>
     </div>
   );

@@ -2,18 +2,17 @@
 
 import { useState } from "react";
 import styles from "@/styles/lobby/party/Party.module.css";
-import Lobby_Service from "@/services/Lobby.service";
+import LobbyService from "@/services/Lobby.service";
 import CreateParty from "@/components/lobby/party/CreateParty";
-import Game_List from "@/components/lobby/party/partyList/PartyList";
+import PartyList from "@/components/lobby/party/partyList/PartyList";
 import { useRef } from "react";
 
 type Props = {
-  lobby: Lobby_Service;
-  token: string | undefined;
-  userId: number;
+  lobby: LobbyService;
+  profile: Profile;
 };
 
-export default function Party({ lobby, userId }: Props) {
+export default function Party({ lobby, profile }: Props) {
   const [createParty, setCreateParty] = useState<boolean>(false);
   const createBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -31,11 +30,11 @@ export default function Party({ lobby, userId }: Props) {
         <CreateParty
           lobby={lobby}
           setCreateParty={setCreateParty}
-          userId={userId}
+          userId={profile.id}
           createBtnRef={createBtnRef}
         />
       )}
-      {/* {!createParty && <Game_List token={token} />} */}
+      {/* {!createParty && <PartyList token={token} />} */}
     </div>
   );
 }

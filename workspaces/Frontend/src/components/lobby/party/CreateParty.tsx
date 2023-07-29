@@ -29,11 +29,11 @@ export default function CreateParty({
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
-  const [background, setBackground] = useState<string>("Earth");
-  const [ball, setBall] = useState<string>("0");
-  const [type, setType] = useState<
-    "Classic" | "Best3" | "Best5" | "Custom" | "Training"
-  >("Classic");
+  const [background, setBackground] = useState<string>("Classic");
+  const [ball, setBall] = useState<string>("Classic");
+  const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
+    "Classic"
+  );
   const difficulty: 1 | 2 | 3 | 4 | 5 = 3;
 
   //Fonction pour rejoindre une game

@@ -1,6 +1,6 @@
 type GameDTO = {
   name: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
   host: number;
   opponent: number;

@@ -5,21 +5,21 @@ import Selector from "@/components/lobby/selector/Selector";
 import Slider from "@/components/lobby/selector/Slider";
 
 type Props = {
-  push: boolean;
-  setPush: Function;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   setMaxPoint: Function;
   maxRound: 1 | 3 | 5 | 7 | 9;
   setMaxRound: Function;
+  push: boolean;
+  setPush: Function;
 };
 
 export default function Custom({
-  push,
-  setPush,
   maxPoint,
   setMaxPoint,
   maxRound,
   setMaxRound,
+  push,
+  setPush,
 }: Props) {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
