@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/Training.module.css";
+import styles from "@/styles/lobby/training/define/TrainingSelector.module.css";
 import Image from "next/image";
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
   points: number;
   rounds: number;
   img: string;
+  type: "Classic" | "Best3" | "Best5" | "Random";
   selected: string;
   setSelected: Function;
 };
@@ -17,23 +18,24 @@ export default function TrainingSelector({
   points,
   rounds,
   img,
+  type,
   selected,
   setSelected,
 }: Props) {
   // -------------------------------------Traning-------------------------------------//
   const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event?.preventDefault();
-    setSelected(selected);
+    setSelected(type);
   };
 
   return (
     <button
-      className={styles.selectTraining}
+      className={type === selected ? styles.active : styles.inactive}
       key={title}
       onClick={(event) => handleChange(event)}
     >
       <h2>{`${title}`}</h2>
-      <div>
+      <div className={styles.info}>
         <p>{`Points: ${points === 0 ? "?" : points}`}</p>
         <p>{`Rounds: ${rounds === 0 ? "?" : rounds}`}</p>
       </div>

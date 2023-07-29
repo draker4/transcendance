@@ -1,5 +1,5 @@
 "use client";
-import styles from "@/styles/game/Pong.module.css";
+import styles from "@/styles/lobby/training/play/Play.module.css";
 import { useRef, useEffect, useMemo } from "react";
 import {
   pongKeyDown,

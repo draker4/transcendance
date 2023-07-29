@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import styles from "@/styles/lobby/training/Training.module.css";
+import styles from "@/styles/lobby/training/define/StandardTraining.module.css";
 import TrainingSelector from "./TrainingSelector";
 
 type Props = {
@@ -9,17 +8,18 @@ type Props = {
   setSelected: Function;
 };
 
-export default function StandardTraining({ setSelected }: Props) {
+export default function StandardTraining({ selected, setSelected }: Props) {
   // -------------------------------------Traning-------------------------------------//
 
   return (
-    <div className={styles.ChooseTraining}>
+    <div className={styles.chooseTraining}>
       <TrainingSelector
         title="Classic"
         points={9}
         rounds={1}
         img="Classic"
-        selected="Classic"
+        type="Classic"
+        selected={selected}
         setSelected={setSelected}
       />
       <TrainingSelector
@@ -27,7 +27,8 @@ export default function StandardTraining({ setSelected }: Props) {
         points={7}
         rounds={3}
         img="Earth"
-        selected="Best3"
+        type="Best3"
+        selected={selected}
         setSelected={setSelected}
       />
       <TrainingSelector
@@ -35,7 +36,8 @@ export default function StandardTraining({ setSelected }: Props) {
         points={5}
         rounds={5}
         img="Island"
-        selected="Best5"
+        type="Best5"
+        selected={selected}
         setSelected={setSelected}
       />
       <TrainingSelector
@@ -43,7 +45,8 @@ export default function StandardTraining({ setSelected }: Props) {
         points={0}
         rounds={0}
         img="Random"
-        selected="Random"
+        type="Random"
+        selected={selected}
         setSelected={setSelected}
       />
     </div>

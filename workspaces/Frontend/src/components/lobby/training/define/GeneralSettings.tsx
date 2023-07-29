@@ -1,9 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import styles from "@/styles/lobby/training/Training.module.css";
-import StandardTraining from "./StandardTraining";
-import CustomTraining from "./CustomTraining";
+import styles from "@/styles/lobby/training/define/GeneralSettings.module.css";
 import SideSelector from "@/components/lobby/selector/SideSelector";
 import Slider from "@/components/lobby/selector/Slider";
 
@@ -25,13 +22,13 @@ export default function GeneralSettings({
   return (
     <div className={styles.generalSettings}>
       {/* Side */}
-      <div className={styles.side}>
+      <div className={styles.set}>
         <label className={styles.section}>Side</label>
         <SideSelector id="hostSide" value={hostSide} setValue={setHostSide} />
       </div>
       {/* Difficulty */}
-      <div className={styles.difficulty}>
-        <label className={styles.section}>difficulty</label>
+      <div className={styles.set}>
+        <label className={styles.section}>Difficulty</label>
         <Slider
           min={1}
           max={5}

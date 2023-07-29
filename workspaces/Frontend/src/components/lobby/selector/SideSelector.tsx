@@ -20,7 +20,7 @@ export default function Selector({ id, value, setValue }: Props) {
     }
   };
   return (
-    <div className={styles.sideSelector}>
+    <div className={styles.selector}>
       <button
         id={id}
         name="sideSelector"

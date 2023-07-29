@@ -9,7 +9,7 @@ import {
   PlayerDynamic,
 } from "@transcendence/shared/types/Game.types";
 
-import styles from "@/styles/game/GameInfo.module.css";
+import styles from "@/styles/lobby/training/play/PlayInfo.module.css";
 
 function showPlayer(player: Player | null, status: string) {
   const nameStyle = {

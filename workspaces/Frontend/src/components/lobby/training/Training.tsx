@@ -14,9 +14,6 @@ export default function Training({ profile }: Props) {
   const [selected, setSelected] = useState<
     "Classic" | "Best3" | "Best5" | "Random" | "Custom"
   >("Classic");
-  const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
-    "Classic"
-  );
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
@@ -50,7 +47,7 @@ export default function Training({ profile }: Props) {
         difficulty={difficulty}
         setDifficulty={setDifficulty}
       />
-      <button className={styles.save}>Create Game</button>
+      <button className={styles.save}>Play</button>
     </div>
   );
 }
