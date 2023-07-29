@@ -10,7 +10,7 @@ import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 
 import { User } from 'src/utils/typeorm/User.entity';
 
-import { LobbyUtils } from 'src/lobby/lobby-service/lobbyUtils';
+import { LobbyUtils } from '@/lobby/service/lobbyUtils';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
 @Injectable()

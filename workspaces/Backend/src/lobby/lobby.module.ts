@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { LobbyService } from './lobby-service/lobby.service';
-import { LobbyController } from './lobby-controller/lobby.controller';
+import { LobbyService } from './service/lobby.service';
+import { LobbyController } from './controller/lobby.controller';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';

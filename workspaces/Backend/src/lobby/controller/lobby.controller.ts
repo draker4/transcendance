@@ -2,13 +2,13 @@ import {
   Controller,
   Post,
   Get,
-  Request,
+  Req,
   Param,
   UsePipes,
   ValidationPipe,
   Body,
 } from '@nestjs/common';
-import { LobbyService } from '../lobby-service/lobby.service';
+import { LobbyService } from '../service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
@@ -26,13 +26,13 @@ export class LobbyController {
   // 01 - api/lobby/create
   @Post('create')
   @UsePipes(new ValidationPipe({ transform: true })) // Use ValidationPipe with transform option
-  CreateGame(@Request() req, @Body() game: CreateGameDTO) {
+  CreateGame(@Req() req, @Body() game: CreateGameDTO) {
     return this.lobbyService.CreateGame(req.user.id, game);
   }
 
   // 02 - api/lobby/join
   @Post('join')
-  JoinGame(@Request() req) {
+  JoinGame(@Req() req) {
     return this.lobbyService.JoinGame(req);
   }
 
@@ -44,25 +44,25 @@ export class LobbyController {
 
   // 04 - api/lobby/get/:id
   @Get('access/:id')
-  GetGame(@Param('id') id: string, @Request() req) {
+  GetGame(@Param('id') id: string, @Req() req) {
     return this.lobbyService.accessGame(id, req.user.id);
   }
 
   // 04 - api/lobby/quit
   @Post('quit')
-  Quit(@Request() req) {
+  Quit(@Req() req) {
     return this.lobbyService.Quit(req.user.id);
   }
 
   // 05 - api/lobby/isingame
   @Get('isingame')
-  IsInGame(@Request() req) {
+  IsInGame(@Req() req) {
     return this.lobbyService.IsInGame(req.user.id);
   }
 
   // 06 - api/lobby/GetLeague
   @Get('getleague')
-  GetLeague(@Request() req) {
+  GetLeague(@Req() req) {
     // return this.lobbyService.GetLeague(req);
   }
 }

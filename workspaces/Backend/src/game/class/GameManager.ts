@@ -167,7 +167,7 @@ export class GameManager {
       throw new WsException('Game already exists');
     }
     try {
-      const game: Game = await this.gameService.getGameData(gameId);
+      const game: Game = await this.gameService.getGameById(gameId);
       pong = new Pong(this.server, gameId, game, this.gameService, this.logger);
       await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);

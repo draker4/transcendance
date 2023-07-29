@@ -26,7 +26,7 @@ export class GameService {
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
-  public async getGameData(gameId: string): Promise<any> {
+  public async getGameById(gameId: string): Promise<any> {
     try {
       const game = await this.GameRepository.findOne({
         where: { id: gameId },

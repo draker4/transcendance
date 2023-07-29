@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Request } from '@nestjs/common';
 
-import { MatchmakingService } from '../matchmaking-service/matchmaking.service';
+import { MatchmakingService } from '../service/matchmaking.service';
 
 @Controller('matchmaking')
 export class MatchmakingController {
