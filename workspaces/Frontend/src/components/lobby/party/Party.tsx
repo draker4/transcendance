@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "@/styles/lobby/party/Party.module.css";
 import Lobby_Service from "@/services/Lobby.service";
 import CreateParty from "@/components/lobby/party/CreateParty";
-import Game_List from "@/components/lobby/party/PartyList";
+import Game_List from "@/components/lobby/party/partyList/PartyList";
 import { useRef } from "react";
 
 type Props = {

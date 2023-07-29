@@ -1,6 +1,5 @@
 "use client";
 
-import React, { use } from "react";
 import styles from "@/styles/game/old/search.module.css";
 
 export default function Matchmaking_Search({

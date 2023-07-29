@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
 import styles from "@/styles/lobby/party/CreateParty.module.css";
 
 import Lobby_Service from "@/services/Lobby.service";
@@ -72,11 +72,19 @@ export default function CreateParty({
     setMaxPoint(3);
     setMaxRound(1);
     setHostSide("Left");
-    setBackground("Earth");
-    setBall("0");
+    setBackground("Classic");
+    setBall("Classic");
     setType("Classic");
     setCreateParty(false);
   };
+
+  // Function to reset Background and Ball when type changes to "Classic"
+  useEffect(() => {
+    if (type === "Classic") {
+      setBackground("Classic");
+      setBall("Classic");
+    }
+  }, [type]);
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
@@ -120,6 +128,7 @@ export default function CreateParty({
             setBackground={setBackground}
             ball={ball}
             setBall={setBall}
+            type={type}
           />
         </div>
       </div>

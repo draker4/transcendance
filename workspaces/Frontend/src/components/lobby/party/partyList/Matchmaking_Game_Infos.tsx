@@ -1,6 +1,5 @@
 "use client";
 
-import React, { use } from "react";
 import styles from "@/styles/game/old/game_infos.module.css";
 
 import Image from "next/image";

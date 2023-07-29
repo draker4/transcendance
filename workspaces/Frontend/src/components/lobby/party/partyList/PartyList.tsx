@@ -1,10 +1,9 @@
 "use client";
 
-import { useMemo } from "react";
-import One_Game from "@/components/lobby/noupdated/Matchmaking_Game_Infos";
+import One_Game from "@/components/lobby/party/partyList/Matchmaking_Game_Infos";
 import styles from "@/styles/lobby/party/PartyList.module.css";
 
-import Matchmaking_Search from "@/components/lobby/noupdated/Matchmaking_Search";
+import Matchmaking_Search from "./Matchmaking_Search";
 
 import LobbyService from "@/services/Lobby.service";
 
@@ -38,7 +37,7 @@ export default function PartyList({ token }: Props) {
   //Recupere la liste des games regulierement
   useEffect(() => {
     const interval = setInterval(() => {
-      Lobby.GetGameList().then((json) => {
+      Lobby.getGameList().then((json) => {
         setJsonGame(json);
       });
     }, 1000);

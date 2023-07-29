@@ -9,6 +9,7 @@ type Props = {
   setBackground: Function;
   ball: string;
   setBall: Function;
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
 };
 
 export default function DefineField({
@@ -16,13 +17,14 @@ export default function DefineField({
   setBackground,
   ball,
   setBall,
+  type,
 }: Props) {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
   // reset settings
   useEffect(() => {
-    setBackground("Earth");
-    setBall("0");
+    setBackground("Classic");
+    setBall("Classic");
   }, [setBackground, setBall]);
 
   return (
@@ -32,9 +34,19 @@ export default function DefineField({
         type={"background"}
         value={background}
         setValue={setBackground}
-        imgs={["Earth", "Football", "Island", "Rugby", "Tennis", "Winter"]}
+        imgs={[
+          "Classic",
+          "Earth",
+          "Football",
+          "Island",
+          "Rugby",
+          "Tennis",
+          "Winter",
+          "Random",
+        ]}
         width={135}
         height={80}
+        disabled={type === "Classic"}
       />
 
       {/* Ball */}
@@ -43,9 +55,24 @@ export default function DefineField({
         type={"ball"}
         value={ball}
         setValue={setBall}
-        imgs={["0", "1", "2", "3"]}
+        imgs={[
+          "Classic",
+          "Basket",
+          "Bowling1",
+          "Bowling2",
+          "Bowling3",
+          "Football",
+          "Soccer1",
+          "Soccer2",
+          "Soccer3",
+          "Soccer4",
+          "Volley1",
+          "Volley2",
+          "Random",
+        ]}
         width={30}
         height={30}
+        disabled={type === "Classic"}
       />
     </div>
   );

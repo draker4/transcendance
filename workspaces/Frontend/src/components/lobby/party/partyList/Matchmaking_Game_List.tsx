@@ -38,7 +38,7 @@ export default function Matchmaking_Game_List({ token }: Props) {
   //Recupere la liste des games regulierement
   useEffect(() => {
     const interval = setInterval(() => {
-      Lobby.GetGameList().then((json) => {
+      Lobby.getGameList().then((json) => {
         setJsonGame(json);
       });
     }, 1000);

@@ -15,6 +15,12 @@
   margin-bottom: 0px;
 }
 
+.disabled {
+  color: var(--secondary3);
+  background-color: var(--secondary3);
+  border: 3px solid var(--secondary3);
+}
+
 .activeButton {
   color: var(--primary1);
   background-color: var(--secondary1);

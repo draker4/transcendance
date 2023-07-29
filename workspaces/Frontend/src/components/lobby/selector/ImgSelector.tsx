@@ -1,3 +1,4 @@
+import React from "react";
 import styles from "@/styles/lobby/selector/ImgSelector.module.css";
 import Image from "next/image";
 
@@ -8,6 +9,7 @@ type Props = {
   imgs: string[];
   width: number;
   height: number;
+  disabled?: boolean;
 };
 
 export default function ImgSelector({
@@ -17,33 +19,48 @@ export default function ImgSelector({
   imgs,
   width,
   height,
+  disabled = false,
 }: Props) {
   const handleChange = (
     event: React.MouseEvent<HTMLButtonElement>,
     img: string
   ) => {
     event?.preventDefault();
-    setValue(img);
+    if (!disabled) {
+      setValue(img);
+    }
   };
 
   return (
     <div className={styles.imgList}>
-      {imgs.map((img: string, index: number) => (
-        <button
-          className={
-            value === img ? styles.activeButton : styles.inactiveButton
-          }
-          key={index}
-          onClick={(event) => handleChange(event, img)}
-        >
-          <Image
-            src={`/images/game/${type}/${img}.png`}
-            alt={img}
-            width={width}
-            height={height}
-          />
-        </button>
-      ))}
+      {imgs.map((img: string, index: number) => {
+        const isActive = value === img;
+        const isDisabled = disabled && value !== img;
+
+        // define button class
+        let buttonClass = styles.inactiveButton;
+        if (isActive) {
+          buttonClass = styles.activeButton;
+        } else if (isDisabled) {
+          buttonClass = styles.disabled;
+        }
+
+        return (
+          <button
+            className={buttonClass}
+            key={index}
+            onClick={(event) => handleChange(event, img)}
+            disabled={disabled}
+          >
+            <Image
+              src={`/images/${type}/${img}.png`}
+              alt={img}
+              width={width}
+              height={height}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }
