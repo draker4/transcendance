@@ -54,16 +54,34 @@ export type Timer = {
   end: Date;
 };
 
-export type RGB = {
+export type RGBA = {
   r: number;
   g: number;
   b: number;
+  a: number;
+};
+
+export type Color = {
+  menu: RGBA;
+  font: RGBA;
+  roundWon: RGBA;
+};
+
+type Avatar = {
+  image: string;
+  variant: string;
+  borderColor: string;
+  backgroundColor: string;
+  text: string;
+  empty: boolean;
+  decrypt: boolean;
 };
 
 export type Player = {
   id: number;
   name: string;
-  color: RGB;
+  color: RGBA;
+  avatar: Avatar;
   side: "Left" | "Right";
 };
 
@@ -76,11 +94,6 @@ export type PlayerDynamic = {
 };
 
 export type Ball = {
-  img: string | null;
-  color: RGB;
-};
-
-export type BallDynamic = {
   posX: number;
   posY: number;
   speed: number;
@@ -93,6 +106,7 @@ export type Draw = {
   canvas: HTMLCanvasElement;
   context: CanvasRenderingContext2D;
   backgroundImage: HTMLImageElement;
+  ballImage: HTMLImageElement;
 };
 
 export type GameData = {
@@ -100,7 +114,6 @@ export type GameData = {
   id: string;
   name: string;
   ball: Ball;
-  ballDynamic: BallDynamic;
   playerLeft: Player | null;
   playerRight: Player | null;
   playerLeftDynamic: PlayerDynamic;
@@ -118,13 +131,12 @@ export type GameData = {
     | "Paused"
     | "Disconnected";
   background: string;
+  ballImg: string;
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
   mode: "League" | "Party" | "Training";
   difficulty: 1 | 2 | 3 | 4 | 5;
   push: boolean;
-  fontColor: RGB;
-  roundColor: RGB;
-  roundWinColor: RGB;
+  color: Color;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
 
@@ -141,4 +153,17 @@ export type GameData = {
     | "Player1"
     | "Player2"
     | "Deleted";
+};
+
+export type InitData = {
+  id: string;
+  name: string;
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  mode: "League" | "Party" | "Training";
+  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxRound: 1 | 3 | 5 | 7 | 9;
+  difficulty: 1 | 2 | 3 | 4 | 5;
+  push: boolean;
+  background: string;
+  ball: string;
 };

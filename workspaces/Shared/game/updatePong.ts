@@ -8,7 +8,7 @@ import { GameData } from "@transcendence/shared/types/Game.types";
 import { AI_ID } from "@transcendence/shared/constants/Game.constants";
 
 function resetTurn(winner: "Left" | "Right", gameData: GameData) {
-  resetBall(gameData.ballDynamic, gameData);
+  resetBall(gameData.ball, gameData);
   gameData.playerServe = winner;
 
   const actualRound = gameData.actualRound > 0 ? gameData.actualRound - 1 : 0;
@@ -45,7 +45,7 @@ function handleRound(gameData: GameData) {
       gameData.actualRound++;
       gameData.playerLeftDynamic.speed++;
       gameData.playerRightDynamic.speed++;
-      gameData.ballDynamic.speed++;
+      gameData.ball.speed++;
     }
   }
 }
@@ -58,7 +58,7 @@ function handleMovement(gameData: GameData): void {
         gameData,
         gameData.playerRight,
         gameData.playerRightDynamic,
-        gameData.ballDynamic
+        gameData.ball
       );
       updatePlayer(gameData.playerRight, gameData.playerRightDynamic);
     } else if (gameData.playerLeft.id === AI_ID) {
@@ -66,7 +66,7 @@ function handleMovement(gameData: GameData): void {
         gameData,
         gameData.playerLeft,
         gameData.playerLeftDynamic,
-        gameData.ballDynamic
+        gameData.ball
       );
       updatePlayer(gameData.playerLeft, gameData.playerLeftDynamic);
     }
@@ -76,10 +76,10 @@ function handleMovement(gameData: GameData): void {
   }
 
   if (gameData.playerServe && gameData.status === "Playing") {
-    handleServe(gameData.ballDynamic, gameData);
+    handleServe(gameData.ball, gameData);
   }
 
-  const status = updateBall(gameData.ballDynamic, gameData);
+  const status = updateBall(gameData.ball, gameData);
   if (status === "reset Left") {
     resetTurn("Right", gameData);
   } else if (status === "reset Right") {

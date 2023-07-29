@@ -4,7 +4,7 @@ import {
   Player,
   Draw,
   PlayerDynamic,
-  RGB,
+  RGBA,
 } from "@transcendence/shared/types/Game.types";
 import {
   FONT_MENU,
@@ -29,8 +29,8 @@ function drawMenu(gameData: GameData, draw: Draw) {
   );
 
   // Draw the menu text;
-  const { r, g, b } = gameData.fontColor;
-  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+  const { r, g, b, a } = gameData.color.menu;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_MENU;
   draw.context.textAlign = "center";
   draw.context.fillText(
@@ -100,18 +100,12 @@ function drawPlayer(
 }
 
 function drawBall(gameData: GameData, draw: Draw) {
-  draw.context.beginPath();
-  draw.context.arc(
-    gameData.ballDynamic.posX + BALL_SIZE / 2,
-    gameData.ballDynamic.posY + BALL_SIZE / 2,
-    BALL_SIZE / 2,
-    0,
-    Math.PI * 2
+  // Draw the ball image at the calculated position.
+  draw.context.drawImage(
+    draw.ballImage,
+    gameData.ball.posX,
+    gameData.ball.posY
   );
-  const { r, g, b } = gameData.ball.color;
-  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
-  draw.context.fill();
-  draw.context.closePath();
 }
 
 function drawScore(draw: Draw, score: number, posX: number, posY: number) {
@@ -121,11 +115,11 @@ function drawScore(draw: Draw, score: number, posX: number, posY: number) {
 function drawRound(
   draw: Draw,
   roundDraw: number,
-  color: RGB,
+  color: RGBA,
   side: "left" | "Right"
 ) {
-  const { r, g, b } = color;
-  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+  const { r, g, b, a } = color;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   const sign = side === "left" ? -1 : 1;
   for (let i = 0; i < roundDraw; i++) {
     draw.context.beginPath();
@@ -143,8 +137,8 @@ function drawRound(
 
 function drawScoreTable(gameData: GameData, draw: Draw) {
   // Set font
-  const { r, g, b } = gameData.fontColor;
-  draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+  const { r, g, b, a } = gameData.color.font;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
 
@@ -173,10 +167,10 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   }
 
   // Draw player round won
-  drawRound(draw, gameData.maxRound / 2, gameData.roundColor, "left");
-  drawRound(draw, gameData.score.leftRound, gameData.roundWinColor, "left");
-  drawRound(draw, gameData.maxRound / 2, gameData.roundColor, "Right");
-  drawRound(draw, gameData.score.rightRound, gameData.roundWinColor, "Right");
+  drawRound(draw, gameData.maxRound / 2, gameData.color.font, "left");
+  drawRound(draw, gameData.score.leftRound, gameData.color.roundWon, "left");
+  drawRound(draw, gameData.maxRound / 2, gameData.color.font, "Right");
+  drawRound(draw, gameData.score.rightRound, gameData.color.roundWon, "Right");
 }
 
 // function drawTimer(gameData: GameData, draw: Draw) {

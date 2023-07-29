@@ -1,50 +1,70 @@
 .gameInfo {
   display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-around;
+  flex-flow: column nowrap;
   align-items: flex-start;
-  width: 100%;
-}
-
-.player {
-  display: flex;
-  flex-flow: column nowrap;
   justify-content: center;
-  align-items: center;
-  width: 80px;
-}
-
-.showPlayer {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  text-align: center;
 }
 
 .general {
   display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+}
+
+.showLeft,
+.showRight {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 30%;
+  margin: 5px auto;
+  text-align: center;
+}
+
+.showRight {
+  align-items: flex-end;
+}
+
+.avatar {
+  display: flex;
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  color: var(--primary1);
+  margin: 5px;
+}
+
+.leftPlayer,
+.rightPlayer {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rightPlayer {
+  flex-flow: row-reverse nowrap;
+  justify-content: flex-end;
+}
+
+.title {
+  display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  max-width: 40%;
+  min-width: 50px;
+  width: 30%;
 }
 
 .showScore {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   width: 100%;
   text-align: center;
-}
-
-.fullScore {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  align-items: center;
 }
 
 .displayRound {

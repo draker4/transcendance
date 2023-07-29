@@ -16,9 +16,10 @@ import InGame from "./InGame";
 type Props = {
   profile: Profile;
   token: string | undefined;
+  avatar: Avatar;
 };
 
-export default function Lobby({ profile, token }: Props) {
+export default function Lobby({ profile, token, avatar }: Props) {
   const lobby = new LobbyService(token);
   const matchmaking = new MatchmakingService(token);
 
@@ -54,7 +55,7 @@ export default function Lobby({ profile, token }: Props) {
       <div className={styles.content}>
         {menu == "League" && <League Matchmaking={matchmaking} token={token} />}
         {menu == "Party" && <Party lobby={lobby} profile={profile} />}
-        {menu == "Training" && <Training profile={profile} />}
+        {menu == "Training" && <Training profile={profile} avatar={avatar} />}
       </div>
     </div>
   );

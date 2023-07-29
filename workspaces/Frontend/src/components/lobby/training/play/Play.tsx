@@ -1,21 +1,14 @@
 "use client";
-import styles from "@/styles/lobby/training/play/Play.module.css";
+import styles from "@/styles/game/Pong.module.css";
 import { useRef, useEffect, useMemo } from "react";
-import {
-  pongKeyDown,
-  pongKeyUp,
-  handlePlayerUpdate,
-  handleStatusMessage,
-  handlePing,
-} from "@/lib/game/eventHandlers";
+import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
-import { Socket } from "socket.io-client";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import GameInfo from "./PlayInfo";
+import PlayInfo from "./PlayInfo";
 
 type Props = {
   userId: number;
@@ -23,7 +16,7 @@ type Props = {
   setGameData: Function;
 };
 
-export default function Pong({ userId, gameData, setGameData }: Props) {
+export default function Play({ userId, gameData, setGameData }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const isPlayer: "Left" | "Right" | "Spectator" =
@@ -35,9 +28,15 @@ export default function Pong({ userId, gameData, setGameData }: Props) {
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
-    image.src = `/images/game/background/${gameData.background}.png`;
+    image.src = `/images/background/${gameData.background}.png`;
     return image;
   }, [gameData.background]);
+
+  const ballImage = useMemo(() => {
+    const image = new Image();
+    image.src = `/images/ball/${gameData.ballImg}.png`;
+    return image;
+  }, [gameData.ballImg]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -46,6 +45,7 @@ export default function Pong({ userId, gameData, setGameData }: Props) {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
       backgroundImage: backgroundImage,
+      ballImage: ballImage,
     };
     draw.canvas.focus();
 
@@ -64,11 +64,11 @@ export default function Pong({ userId, gameData, setGameData }: Props) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, socket, userId, isPlayer);
+      pongKeyDown(event, gameData, null, userId, isPlayer);
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, socket, userId, isPlayer);
+      pongKeyUp(event, gameData, null, userId, isPlayer);
     }
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
@@ -77,29 +77,7 @@ export default function Pong({ userId, gameData, setGameData }: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [socket, userId, isPlayer, gameData]);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    socket.on("player", handlePlayerUpdate(setGameData, isMountedRef));
-    socket.on("status", handleStatusMessage(setGameData, isMountedRef));
-
-    return () => {
-      isMountedRef.current = false;
-      socket.off("player", handlePlayerUpdate(setGameData, isMountedRef));
-      socket.off("status", handleStatusMessage(setGameData, isMountedRef));
-    };
-  }, [socket, setGameData]);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    socket.on("ping", handlePing(socket, userId, isMountedRef));
-
-    return () => {
-      isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, userId, isMountedRef));
-    };
-  }, [socket, userId]);
+  }, [userId, isPlayer, gameData]);
 
   return (
     <div className={styles.pong}>
@@ -111,7 +89,7 @@ export default function Pong({ userId, gameData, setGameData }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      <GameInfo gameData={gameData}></GameInfo>
+      <PlayInfo gameData={gameData}></PlayInfo>
     </div>
   );
 }

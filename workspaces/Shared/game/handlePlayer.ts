@@ -1,7 +1,6 @@
 import {
   GameData,
   Ball,
-  BallDynamic,
   Player,
   PlayerDynamic,
   DirXValues,
@@ -53,10 +52,10 @@ export function moveAI(
   game: GameData,
   player: Player,
   playerDynamic: PlayerDynamic,
-  ballDynamic: BallDynamic
+  Ball: Ball
 ): void {
   // Calculate the target position for the paddle
-  const targetY = ballDynamic.posY - PLAYER_HEIGHT / 2;
+  const targetY = Ball.posY - PLAYER_HEIGHT / 2;
 
   // Define the movement speeds based on the player's side
   const moveSlow = playerDynamic.speed / 3;
@@ -65,8 +64,8 @@ export function moveAI(
   // Determine the movement direction and speed based on the ball's movement and the player's side
   let movementSpeed = moveSlow;
   if (
-    (player.side === "Left" && ballDynamic.moveX < DirXValues.Idle) ||
-    (player.side === "Right" && ballDynamic.moveX > DirXValues.Idle)
+    (player.side === "Left" && Ball.moveX < DirXValues.Idle) ||
+    (player.side === "Right" && Ball.moveX > DirXValues.Idle)
   ) {
     movementSpeed = moveFast;
   }
@@ -81,10 +80,10 @@ export function moveAI(
   // Handle Push
   if (game.push) {
     const ballNearPlayerPaddle =
-      ballDynamic.posX - BALL_SIZE <= playerDynamic.posX + PLAYER_WIDTH &&
-      ballDynamic.posX + BALL_SIZE * 2 >= playerDynamic.posX &&
-      ballDynamic.posY + BALL_SIZE >= playerDynamic.posY &&
-      ballDynamic.posY <= playerDynamic.posY + PLAYER_HEIGHT;
+      Ball.posX - BALL_SIZE <= playerDynamic.posX + PLAYER_WIDTH &&
+      Ball.posX + BALL_SIZE * 2 >= playerDynamic.posX &&
+      Ball.posY + BALL_SIZE >= playerDynamic.posY &&
+      Ball.posY <= playerDynamic.posY + PLAYER_HEIGHT;
     if (
       ballNearPlayerPaddle &&
       playerDynamic.push === 0 &&

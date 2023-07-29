@@ -1,53 +1,30 @@
 "use client";
 
 import { useState } from "react";
-import styles from "@/styles/lobby/training/Training.module.css";
-import StandardTraining from "./define/StandardTraining";
-import CustomTraining from "./define/CustomTraining";
-import GeneralSettings from "./define/GeneralSettings";
+import { GameData } from "@transcendence/shared/types/Game.types";
+import DefineTraining from "./define/DefineTraining";
+import Play from "./play/Play";
 
 type Props = {
   profile: Profile;
+  avatar: Avatar;
 };
 
-export default function Training({ profile }: Props) {
-  const [selected, setSelected] = useState<
-    "Classic" | "Best3" | "Best5" | "Random" | "Custom"
-  >("Classic");
-  const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
-  const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
-  const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
-  const [difficulty, setDifficulty] = useState<1 | 2 | 3 | 4 | 5>(3);
-  const [push, setPush] = useState<boolean>(false);
-  const [background, setBackground] = useState<string>("Classic");
-  const [ball, setBall] = useState<string>("Classic");
+export default function Training({ profile, avatar }: Props) {
+  const [gameData, setGameData] = useState<GameData | null>(null);
 
-  // -------------------------------------Traning-------------------------------------//
-
-  return (
-    <div className={styles.training}>
-      <StandardTraining selected={selected} setSelected={setSelected} />
-      <CustomTraining
-        selected={selected}
-        setSelected={setSelected}
-        maxPoint={maxPoint}
-        setMaxPoint={setMaxPoint}
-        maxRound={maxRound}
-        setMaxRound={setMaxRound}
-        push={push}
-        setPush={setPush}
-        background={background}
-        setBackground={setBackground}
-        ball={ball}
-        setBall={setBall}
+  // -----------------------------------  TRAINING  ----------------------------------- //
+  if (!gameData) {
+    return (
+      <DefineTraining
+        profile={profile}
+        avatar={avatar}
+        setGameData={setGameData}
       />
-      <GeneralSettings
-        hostSide={hostSide}
-        setHostSide={setHostSide}
-        difficulty={difficulty}
-        setDifficulty={setDifficulty}
-      />
-      <button className={styles.save}>Play</button>
-    </div>
-  );
+    );
+  } else {
+    return (
+      <Play userId={profile.id} gameData={gameData} setGameData={setGameData} />
+    );
+  }
 }

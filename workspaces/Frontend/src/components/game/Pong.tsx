@@ -7,7 +7,7 @@ import {
   handlePlayerUpdate,
   handleStatusMessage,
   handlePing,
-} from "@/lib/game/eventHandlers";
+} from "../../lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
 import { Socket } from "socket.io-client";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
@@ -36,9 +36,15 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
-    image.src = `/images/game/background/${gameData.background}.png`;
+    image.src = `/images/background/${gameData.background}.png`;
     return image;
   }, [gameData.background]);
+
+  const ballImage = useMemo(() => {
+    const image = new Image();
+    image.src = `/images/ball/${gameData.ballImg}.png`;
+    return image;
+  }, [gameData.ballImg]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -47,6 +53,7 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
       backgroundImage: backgroundImage,
+      ballImage: ballImage,
     };
     draw.canvas.focus();
 

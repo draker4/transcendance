@@ -3,35 +3,20 @@ import { Server } from 'socket.io';
 import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
-// import game types
+// import game engine logic
 import { ActionDTO } from '../dto/Action.dto';
 import {
   GameData,
-  Ball,
-  BallDynamic,
-  Score,
   Player,
-  PlayerDynamic,
   Timer,
   StatusMessage,
+  InitData,
 } from '@transcendence/shared/types/Game.types';
+import { initPong } from '@transcendence/shared/game/initPong';
 
-// import game classes
+// import classes and entities
 import { UserInfo } from './UserInfo';
-
-// import entities
 import { Game } from '@/utils/typeorm/Game.entity';
-
-// import constants
-import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  BALL_SIZE,
-  BALL_START_SPEED,
-  PLAYER_HEIGHT,
-  PLAYER_WIDTH,
-  PLAYER_START_SPEED,
-} from '@transcendence/shared/constants/Game.constants';
 
 // import services
 import { UsersService } from '@/users/users.service';
@@ -56,7 +41,21 @@ export class Pong {
     private readonly usersService: UsersService,
     private readonly logger: ColoredLogger,
   ) {
-    this.initGame();
+    if (this.gameDB) {
+      const initData: InitData = {
+        id: this.gameDB.uuid,
+        name: this.gameDB.name,
+        type: this.gameDB.type,
+        mode: this.gameDB.mode,
+        maxPoint: this.gameDB.maxPoint,
+        maxRound: this.gameDB.maxRound,
+        difficulty: this.gameDB.difficulty,
+        push: this.gameDB.push,
+        background: this.gameDB.background,
+        ball: this.gameDB.ball,
+      };
+      this.data = initPong(initData);
+    }
   }
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -201,86 +200,6 @@ export class Pong {
     data.success = true;
     data.message = 'User disconnected from game';
     return data;
-  }
-
-  // ---------------------------------  INIT METHODS  --------------------------------- //
-  private async initGame(): Promise<void> {
-    if (this.gameDB) {
-      this.data = {
-        id: this.gameDB.uuid,
-        name: this.gameDB.name,
-        ball: this.initBall(),
-        ballDynamic: this.initBallDynamic(),
-        playerLeft: null,
-        playerRight: null,
-        playerLeftDynamic: this.initPlayerDynamic('Left'),
-        playerRightDynamic: this.initPlayerDynamic('Right'),
-        playerLeftStatus: 'Unknown',
-        playerRightStatus: 'Unknown',
-        background: this.gameDB.background,
-        type: this.gameDB.type,
-        mode: this.gameDB.mode,
-        difficulty: this.gameDB.difficulty,
-        push: this.gameDB.push,
-        fontColor: { r: 255, g: 255, b: 255 },
-        roundColor: { r: 255, g: 255, b: 255 },
-        roundWinColor: { r: 255, g: 255, b: 255 },
-        playerServe: 'Left', // revoir pour faire un random
-        actualRound: 0,
-        maxPoint: this.gameDB.maxPoint,
-        maxRound: this.gameDB.maxRound,
-        score: this.initScore(),
-        timer: null,
-        status: 'Waiting',
-        result: 'Not Started',
-      };
-    }
-  }
-
-  private initPlayerDynamic(side: 'Left' | 'Right'): PlayerDynamic {
-    return {
-      posX: side === 'Left' ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
-      posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
-      speed: PLAYER_START_SPEED,
-      move: 'Idle',
-      push: 0,
-    };
-  }
-
-  private initBallDynamic(): BallDynamic {
-    return {
-      posX: GAME_WIDTH / 2 - BALL_SIZE / 2,
-      posY: GAME_HEIGHT / 2 - BALL_SIZE / 2,
-      speed: BALL_START_SPEED,
-      moveX: 0,
-      moveY: 0,
-      push: 0,
-    };
-  }
-
-  private initBall(): Ball {
-    return {
-      img: this.gameDB.ball,
-      color: { r: 255, g: 255, b: 255 },
-    };
-  }
-
-  private initScore(): Score {
-    return {
-      leftRound: 0,
-      rightRound: 0,
-      round: [
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-        { left: 0, right: 0 },
-      ],
-    };
   }
 
   // ---------------------------------  EMITS METHODS  -------------------------------- //

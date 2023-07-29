@@ -2,7 +2,7 @@ import {
   DirXValues,
   DirYValues,
   GameData,
-  BallDynamic,
+  Ball,
   PlayerDynamic,
 } from "@transcendence/shared/types/Game.types";
 import {
@@ -13,7 +13,7 @@ import {
   PLAYER_HEIGHT,
 } from "@transcendence/shared/constants/Game.constants";
 
-export function resetBall(ball: BallDynamic, game: GameData): void {
+export function resetBall(ball: Ball, game: GameData): void {
   ball.posX = GAME_WIDTH / 2;
   ball.posY = GAME_HEIGHT / 2;
   ball.moveX = DirXValues.Idle;
@@ -24,7 +24,7 @@ export function resetBall(ball: BallDynamic, game: GameData): void {
   }
 }
 
-export function handlePush(ball: BallDynamic, player: PlayerDynamic): void {
+export function handlePush(ball: Ball, player: PlayerDynamic): void {
   if (player.push > 0 && player.push <= 5) {
     ball.push++;
     ball.speed += 1;
@@ -35,7 +35,7 @@ export function handlePush(ball: BallDynamic, player: PlayerDynamic): void {
 }
 
 export function calculateBallAngle(
-  ball: BallDynamic,
+  ball: Ball,
   posY: number,
   height: number
 ): number {
@@ -46,7 +46,7 @@ export function calculateBallAngle(
 }
 
 export function handlePlayerCollision(
-  ball: BallDynamic,
+  ball: Ball,
   player: PlayerDynamic,
   playerSide: "Left" | "Right"
 ): void {
@@ -88,7 +88,7 @@ export function handlePlayerCollision(
   }
 }
 
-export function updateBall(ball: BallDynamic, game: GameData): string {
+export function updateBall(ball: Ball, game: GameData): string {
   // Handle Player collisions
   if (ball.moveX < DirXValues.Idle) {
     handlePlayerCollision(ball, game.playerLeftDynamic, "Left");
@@ -116,7 +116,7 @@ export function updateBall(ball: BallDynamic, game: GameData): string {
   return "Ball updated";
 }
 
-export function handleServe(ball: BallDynamic, game: GameData): void {
+export function handleServe(ball: Ball, game: GameData): void {
   ball.moveX = game.playerServe === "Left" ? DirXValues.Right : DirXValues.Left;
   if (Math.random() < 0.5) {
     ball.moveY = DirYValues.Up;

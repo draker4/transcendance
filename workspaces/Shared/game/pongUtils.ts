@@ -1,12 +1,14 @@
-export function generateRoundColor(actualColor: string): string {
-  const colors: string[] = ["#0000FF", "#000FFF", "#FFF000", "#000000"];
-  const newColor = colors[Math.floor(Math.random() * colors.length)];
-  if (newColor === actualColor) {
-    return generateRoundColor(actualColor);
-  }
-  return newColor;
-}
+import { RGBA } from "../types/Game.types";
 
 export function turnDelayIsOver(timer: number) {
   return new Date().getTime() - timer >= 1000;
+}
+
+export function convertColor(hexaColor: string): RGBA {
+  const r = parseInt(hexaColor.slice(1, 3), 16);
+  const g = parseInt(hexaColor.slice(3, 5), 16);
+  const b = parseInt(hexaColor.slice(5, 7), 16);
+
+  const rgb: RGBA = { r, g, b, a: 1 };
+  return rgb;
 }

@@ -23,10 +23,24 @@ import { UsersService } from '@/users/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { ColoredLogger } from './colored-logger';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
+import { Avatar } from '@/utils/typeorm/Avatar.entity';
+import { AvatarService } from '@/avatar/avatar.service';
+import { ChannelService } from '@/channels/channel.service';
+import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Game, Score, Stats, User, Channel, Token, BackupCode]),
+    TypeOrmModule.forFeature([
+      Game,
+      Score,
+      Stats,
+      User,
+      Channel,
+      Token,
+      BackupCode,
+      Avatar,
+      UserChannelRelation,
+    ]),
   ],
   providers: [
     GameGateway,
@@ -38,6 +52,8 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
     UsersService,
     CryptoService,
     ColoredLogger,
+    ChannelService,
+    AvatarService,
   ],
 })
 export class GameModule {}
