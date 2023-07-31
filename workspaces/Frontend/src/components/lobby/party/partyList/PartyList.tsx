@@ -1,7 +1,6 @@
-"use client";
-
+// PartyList.tsx
 import { useEffect, useState } from "react";
-import styles from "@/styles/lobby/party/PartyList.module.css";
+import styles from "@/styles/lobby/party/partyList/PartyList.module.css";
 
 import LobbyService from "@/services/Lobby.service";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
@@ -51,13 +50,29 @@ export default function PartyList({ lobbyService, token }: Props) {
 
   return (
     <div className={styles.partyList}>
-      {gameList.map((game: GameInfo) => (
-        <PartyInfo
-          lobbyService={lobbyService}
-          scoreService={scoreService}
-          gameInfo={game}
-        />
-      ))}
+      <h2>Party List</h2>
+      <table className={styles.list}>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Players</th>
+            <th>Details</th>
+            <th>Round</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gameList.map((game: GameInfo) => (
+            <PartyInfo
+              key={game.id}
+              lobbyService={lobbyService}
+              scoreService={scoreService}
+              gameInfo={game}
+            />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

@@ -56,12 +56,7 @@ export default async function HomePage() {
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
         <HomeProfile profile={profile} avatar={avatar} />
-        <Lobby
-          profile={profile}
-          token={token}
-          avatar={avatar}
-          gameId={gameId}
-        />
+        <Lobby profile={profile} token={token} avatar={avatar} />
       </Suspense>
     </main>
   );

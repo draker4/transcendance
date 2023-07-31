@@ -1,0 +1,22 @@
+/* PartyList.module.css */
+.partyList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.list th,
+.list td {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.list th {
+  background-color: #f0f0f0;
+}
