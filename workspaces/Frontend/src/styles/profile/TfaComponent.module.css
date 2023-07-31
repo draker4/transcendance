@@ -3,16 +3,16 @@
 }
 
 .button, .popup5 button {
+	letter-spacing: 1px;
 	appearance: none;
 	height: 30px;
 	border-radius: 4px;
-	font-size: 14px;
-	font-weight: bold;
-	color: var(--primary1);
-	background-color: var(--secondary1);
+	font-size: 0.8rem;
+	color: var(--tertiary1);
+	background-color: var(--primary1);
 	border: 3px solid var(--accent1);
 	transition: all 0.3s ease-in;
-	width: 80%;
+	width: 70%;
 }
 
 .button:hover {
@@ -116,4 +116,11 @@
 
 .popup5 {
 	padding-top: 10px;
+}
+
+
+.flexButtons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
 }

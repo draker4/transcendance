@@ -1,24 +1,20 @@
 import styles from "@/styles/profile/Profile.module.css";
 import AvatarCard from "./avatar/AvatarCard";
-import { cookies } from "next/dist/client/components/headers";
 
 type Props = {
-  profile: Profile;
+  login: string;
   isOwner: boolean;
   avatar: Avatar;
 };
 
-export default function ProfileFirstPart({ profile, isOwner, avatar }: Props) {
-  const token = cookies().get("crunchy-token")?.value;
-  const unwrappedToken: string = typeof token === "string" ? token : "";
+export default function ProfileFirstPart({ login, isOwner, avatar }: Props) {
 
   return (
     <div className={`${styles.both} ${styles.first}`}>
       <AvatarCard
-        profile={profile}
+        login={login}
         isOwner={isOwner}
         avatar={avatar}
-        token={unwrappedToken}
       />
     </div>
   );

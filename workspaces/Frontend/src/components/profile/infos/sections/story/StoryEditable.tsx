@@ -6,11 +6,10 @@ import Profile_Service from "@/services/Profile.service";
 
 type Props = {
   profile: Profile;
-  token: string;
 };
 
-export default function StoryEditable({ profile, token }: Props) {
-  const profileService = new Profile_Service(token);
+export default function StoryEditable({ profile }: Props) {
+  const profileService = new Profile_Service();
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [story, setStory] = useState<string>(

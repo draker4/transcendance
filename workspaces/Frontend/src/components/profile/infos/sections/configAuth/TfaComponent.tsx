@@ -213,15 +213,23 @@ export default function SectionCustom({ profile }: {
 				<PopupCodeEmail setCode={setCode} />
 			}
 
-			<button onClick={handleDoubleAuth} className={styles.button}>
+			<div className={styles.flexButtons}>
+				<button onClick={handleDoubleAuth} className={styles.button}>
+					{
+						popup1
+						? "Send code"
+						: tfa
+						? "Deactivate Double Authentification"
+						: "Activate Double Authentification"
+					}
+				</button>
 				{
-					popup1
-					? "Send code"
-					: tfa
-					? "Deactivate Double Authentification"
-					: "Activate Double Authentification"
+					popup1 &&
+					<button onClick={() => setPopup1(false)} className={styles.button}>
+						"Cancel"
+					</button>
 				}
-			</button>
+			</div>
 
 			{
 				notif1.length > 0 &&

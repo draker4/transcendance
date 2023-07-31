@@ -4,23 +4,23 @@ import fetchClientSide from "@/lib/fetch/fetchClientSide";
 const Crypto = new CryptoService();
 
 export default class Profile_Service {
-  private token: string;
+  private token?: string;
 
-  constructor(token: string) {
-    this.token = token;
+  constructor(token?: string) {
+    if (token)
+      this.token = token;
   }
 
   private async fetchData(
-    isServerSide: boolean,
     url: string,
     method: string,
     body: any = null
   ) {
-    const preUrl = isServerSide
+    const preUrl = this.token
       ? `http://backend:4000/api/users/`
       : `http://${process.env.HOST_IP}:4000/api/users/`;
 
-    if (isServerSide) {
+    if (this.token) {
       const response = await fetch(preUrl + url, {
         method: method,
         headers: {
@@ -49,7 +49,7 @@ export default class Profile_Service {
 
   public async getProfileByToken(): Promise<Profile> {
 
-	const profile = await this.fetchData(true, "me", "GET");
+	const profile = await this.fetchData("me", "GET");
 
     if (!profile.ok) {
       throw new Error("Profil cannot be found");
@@ -68,7 +68,7 @@ export default class Profile_Service {
 
   public async getProfileById(id: number): Promise<Profile> {
     
-	const profile = await this.fetchData(true, `profile/${id.toString()}`,"GET");
+	const profile = await this.fetchData(`profile/${id.toString()}`,"GET");
 	
     if (!profile.ok) {
       throw new Error("Profil cannot be found");
@@ -94,7 +94,7 @@ export default class Profile_Service {
 	try {
 
 		const body = JSON.stringify({properties : properties});
-		const response = await this.fetchData(false, "", "PUT", body);
+		const response = await this.fetchData("", "PUT", body);
 		
 		if (response.ok) {
 			rep.message = await response.json();
@@ -111,7 +111,7 @@ export default class Profile_Service {
 
   // GetProfilByToken() version fetching Avatar too
   public async getProfileAndAvatar(): Promise<Profile & { avatar: Avatar }> {
-    const profile = await this.fetchData(true, "myAvatar", "GET", null);
+    const profile = await this.fetchData("myAvatar", "GET", null);
 
     const data: Profile & { avatar: Avatar } = await profile.json();
 
