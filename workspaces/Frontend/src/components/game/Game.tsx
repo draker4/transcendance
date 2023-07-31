@@ -3,6 +3,7 @@
 //Import les composants react
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 //Import les services
 import LobbyService from "@/services/Lobby.service";
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export default function Game({ profile, token, gameId }: Props) {
+  const router = useRouter();
   const lobby = new LobbyService(token);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +59,7 @@ export default function Game({ profile, token, gameId }: Props) {
 
   const quit = () => {
     lobby.quitGame();
-    lobby.loadPage("/home");
+    router.push("/home");
   };
 
   //------------------------------------RENDU------------------------------------//
