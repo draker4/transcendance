@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {
   OnModuleInit,
+  Req,
   Request,
   UseGuards,
   ValidationPipe,
@@ -75,6 +76,16 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('newMsg')
   async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
     await this.chatService.receiveNewMsg(message, req.user.id, this.server);
+  }
+
+  @SubscribeMessage('notif')
+  async notif(@ConnectedSocket() socket) {
+    this.server.to(socket.id).emit('notif');
+  }
+
+  @SubscribeMessage('getLoginWithAvatar')
+  async getLoginWithAvatar(@Req() req) {
+    return await this.chatService.getLoginWithAvatar(req.user.id);
   }
 
   @SubscribeMessage('getChannels')

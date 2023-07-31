@@ -47,8 +47,13 @@ export default class ChatService {
 		});
 	
 		this.socket.on("exception", (exception: any) => {
-		  console.log("WsException:", exception);
-		  this.disconnect(true);
+		  	console.log("WsException:", exception);
+		  	if (exception.message === "invalid token")
+		  		this.disconnect(true);
+			else if (this.token) {
+				this.disconnect(false);
+				this.initializeSocket(this.token);
+			}
 		});
 	}
 

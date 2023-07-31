@@ -85,7 +85,7 @@ export default function LogEmail({
 
   const submit = async (data: FormInputs) => {
     try {
-      // await handleCaptcha();
+      await handleCaptcha();
 
       //if email only, first step of authentification
       const emailUser = data.email;

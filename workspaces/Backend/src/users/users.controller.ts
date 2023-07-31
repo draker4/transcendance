@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import {
   BadGatewayException,
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,6 +9,7 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
+  Post,
   Put,
   Query,
   Req,
@@ -180,5 +182,21 @@ export class UsersController {
       console.log(error.message);
       throw new BadGatewayException();
     }
+  }
+
+  @Post('checkPassword')
+  async checkPassword(
+    @Req() req,
+    @Body('password') password: string,
+  ) {
+    return await this.usersService.checkPassword(req.user.id, password);
+  }
+
+  @Put('updatePassword')
+  async updatePassword(
+    @Req() req,
+    @Body('password') password: string,
+  ) {
+    return await this.usersService.updatePassword(req.user.id, password);
   }
 }

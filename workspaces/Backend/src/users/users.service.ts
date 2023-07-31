@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { EditUserDto } from './dto/EditUser.dto';
 import { repDto } from './dto/rep.dto';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -220,5 +221,53 @@ export class UsersService {
 
     process.stdout.write(yellow + '[user service]  ' + stop);
     console.log(message);
+  }
+
+  async checkPassword(userId: number, passwordCrypted: string) {
+    try {
+      const user = await this.getUserById(userId);
+
+      if (!user)
+        throw new Error('no user');
+      
+      const password = await this.cryptoService.decrypt(passwordCrypted);
+
+      const isMatch = await bcrypt.compare(password, user.passwordHashed);
+  
+      if (!isMatch)
+        return {
+          success: false,
+          error: 'wrong',
+        };
+      
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
+  async updatePassword(userId: number, password: string) {
+    try {
+      const user = await this.getUserById(userId);
+
+      if (!user)
+        throw new Error('no user');
+      
+      await this.updateUser(user.id, {
+        passwordHashed: password,
+      })
+      
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
   }
 }

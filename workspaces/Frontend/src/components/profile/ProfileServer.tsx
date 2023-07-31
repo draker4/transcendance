@@ -9,6 +9,7 @@ import { verifyAuth } from "@/lib/auth/auth";
 export default async function ProfileServer({ id }: {
 	id: number;
 }) {
+	let	token: string = "";
 	let isProfilOwner: boolean = false;
 	let avatar: Avatar = {
 		image: "",
@@ -20,18 +21,6 @@ export default async function ProfileServer({ id }: {
 		isChannel: false,
 		decrypt: false,
 	};
-	// let myProfile: Profile = {
-	// 	id: -1,
-	// 	login: "",
-	// 	first_name: "",
-	// 	last_name: "",
-	// 	email: "",
-	// 	phone: "",
-	// 	image: "",
-	// 	provider: "",
-	// 	motto: "",
-	// 	story: "",
-	// };
 
 	let targetProfile: Profile = {
 		id: -1,
@@ -50,10 +39,12 @@ export default async function ProfileServer({ id }: {
 		if (!id)
 			throw new Error('no id');
 		
-		const	token = cookies().get('crunchy-token')?.value;
+		const	getToken = cookies().get('crunchy-token')?.value;
 
-		if (!token)
+		if (!getToken)
 			throw new Error('no token');
+		
+		token = getToken;
 
 		const	payload: any = await verifyAuth(token);
 
@@ -82,6 +73,7 @@ export default async function ProfileServer({ id }: {
 			  profile={targetProfile}
 			  avatar={avatar}
 			  isOwner={isProfilOwner}
+			  token={token}
 			/>
 		  </main>
 		);

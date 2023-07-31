@@ -4,7 +4,7 @@ export class EditUserDto {
   @IsOptional()
   @IsString()
   @Matches(/^(?!.*(?:'|\"|`))[!-~À-ÿ]+/)
-  @Length(4, 12)
+  @Length(4, 20)
   login?: string;
 
   @IsString()
