@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import NavbarProfilInfo from "./NavbarProfilInfo";
 import SectionPongStats from "./sections/SectionPongStats";
 import SectionCustom from "./sections/SectionCustom";
@@ -8,11 +8,11 @@ import styles from "@/styles/profile/InfoCard.module.css";
 
 type Props = {
   profile: Profile;
-  token: string;
   isOwner: boolean;
+  setLogin: Dispatch<SetStateAction<string>>;
 };
 
-export default function InfoCard({ profile, token, isOwner }: Props) {
+export default function InfoCard({ profile, isOwner, setLogin }: Props) {
   const [activeButton, setActiveButton] = useState(0);
 
   return (
@@ -35,7 +35,7 @@ export default function InfoCard({ profile, token, isOwner }: Props) {
               <div className={styles.sections}>contenu section3 : Channels</div>
             );
           case 3:
-            return <SectionCustom profile={profile} token={token} />;
+            return <SectionCustom profile={profile} setLogin={setLogin} />;
           default:
             return <SectionPongStats profile={profile} />;
         }

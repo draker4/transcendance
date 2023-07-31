@@ -9,13 +9,12 @@ import { Color } from "react-color";
 import Avatar_Service from "@/services/Avatar.service";
 
 type Props = {
-  profile: Profile;
+  login: string;
   isOwner: boolean;
   avatar: Avatar;
-  token: string;
 };
 
-export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
+export default function AvatarCard({ login, isOwner, avatar }: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
@@ -23,7 +22,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     "border"
   );
 
-  const avatarService = new Avatar_Service(token);
+  const avatarService = new Avatar_Service();
 
   const handleArea = (
     newArea: "border" | "background" | null
@@ -46,7 +45,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
     await avatarService.submitAvatarColors(
       topColor.toString(),
       botColor.toString(),
-	  0,
+	    0,
     );
 
     avatar.borderColor = topColor.toString();
@@ -87,7 +86,7 @@ export default function AvatarCard({ profile, isOwner, avatar, token }: Props) {
             previewBackground={botColor.toString()}
           />
         </div>
-        <ProfileLogin name={profile.login} isOwner={isOwner} />
+        <ProfileLogin name={login} isOwner={isOwner} />
       </div>
       {displaySettings && (
         <SettingsCard

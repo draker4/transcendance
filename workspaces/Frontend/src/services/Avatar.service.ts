@@ -4,25 +4,25 @@ import { CryptoService } from "./crypto/Crypto.service";
 const Crypto = new CryptoService();
 
 export default class Avatar_Service {
-  private token: string;
+  private token?: string;
 
-  constructor(token: string) {
-    this.token = token;
+  constructor(token?: string) {
+    if (token)
+      this.token = token;
   }
 
   // Fonction generique pour toutes les requettes http
   // [!] toujours appeller dans un try catch !
   private async fetchData(
-    isServerSide: boolean,
     url: string,
     method: string,
     body: any = null
   ) {
-    const preUrl = isServerSide
+    const preUrl = this.token
       ? `http://backend:4000/api/avatar/`
       : `http://${process.env.HOST_IP}:4000/api/avatar`;
 
-    if (isServerSide) {
+    if (this.token) {
       const response = await fetch(preUrl + url, {
         method: method,
         headers: {
@@ -50,7 +50,6 @@ export default class Avatar_Service {
   }
 
 
-
   private makeUrl(id: number, isChannel: boolean): string {
     const boolAsString: string = isChannel ? "true" : "false";
     return id.toString() + "/" + boolAsString;
@@ -60,7 +59,6 @@ export default class Avatar_Service {
 
   public async getAvatarbyUserId(id: number): Promise<Avatar> {
     const response: Response = await this.fetchData(
-      true,
       this.makeUrl(id, false),
       "GET"
     );
@@ -76,7 +74,6 @@ export default class Avatar_Service {
 
   public async getChannelAvatarById(id: number): Promise<Avatar> {
     const response: Response = await this.fetchData(
-      true,
       this.makeUrl(id, true),
       "GET"
     );
@@ -97,7 +94,7 @@ export default class Avatar_Service {
     isChannel: number
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-		const response = await this.fetchData(false, "", "PUT", body);
+		const response = await this.fetchData("", "PUT", body);
 		const data = await response.json();
   }
   

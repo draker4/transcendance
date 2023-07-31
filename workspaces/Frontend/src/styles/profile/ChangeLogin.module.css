@@ -1,0 +1,24 @@
+.main {
+	margin: 10px auto;
+}
+
+.main p {
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
+.main input {
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid var(--tertiary1);
+	margin-bottom: 10px;
+}
+
+.changePassword p {
+	color: var(--accent1);
+	margin-bottom: 10px;
+}
+
+.changePassword p span{
+	cursor: pointer;
+}

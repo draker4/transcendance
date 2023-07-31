@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Put,
   Query,
+  Req,
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -145,6 +146,39 @@ export class UsersController {
     }
     catch (error) {
       console.log(error.message);
+    }
+  }
+
+  @Put('changeLogin')
+  async changeLogin(
+    @Req() req,
+		@Body() { login } : EditUserDto,
+  ) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
+
+      if (!user)
+        throw new Error("no user found");
+
+      const userWithLogin = await this.usersService.getUserByLogin(login);
+      if (userWithLogin)
+        return {
+          success: false,
+          error: 'exists',
+        }
+      
+      this.usersService.updateUser(user.id, {
+        login: login,
+      });
+
+      return {
+        success: true
+      }
+      
+    }
+    catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
     }
   }
 }
