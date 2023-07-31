@@ -9,7 +9,7 @@ import {
 @Entity()
 export class Score {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @CreateDateColumn()
   createdtd: Date;
@@ -23,10 +23,10 @@ export class Score {
   @Column()
   mode: 'League' | 'Party' | 'Training';
 
-  @Column({})
+  @Column({ default: -1 })
   leftPlayerId: number;
 
-  @Column({})
+  @Column({ default: -1 })
   rightPlayerId: number;
 
   @Column({ default: 0 })

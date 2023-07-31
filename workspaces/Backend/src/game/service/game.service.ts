@@ -12,14 +12,20 @@ import { AvatarService } from '@/avatar/avatar.service';
 // import Pong game logic
 import { Player } from '@transcendence/shared/types/Game.types';
 import { convertColor } from '@transcendence/shared/game/pongUtils';
+import { CreateGameDTO } from '../dto/CreateGame.dto';
+import { Score } from '@/utils/typeorm/Score.entity';
+
+import { ScoreService } from '@/score/service/score.service';
+import { CreateScoreDTO } from '@/score/dto/CreateScore.dto';
 
 @Injectable()
 export class GameService {
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
   constructor(
     @InjectRepository(Game)
-    private readonly GameRepository: Repository<Game>,
+    private readonly gameRepository: Repository<Game>,
 
+    private readonly scoreService: ScoreService,
     private readonly usersService: UsersService,
     private readonly avatarService: AvatarService,
   ) {}
@@ -28,13 +34,49 @@ export class GameService {
 
   public async getGameById(gameId: string): Promise<any> {
     try {
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { id: gameId },
       });
       if (!game) {
         throw new Error('Game not found');
       }
       return game;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  async getGameByUserId(userId: number): Promise<any> {
+    try {
+      let game = await this.gameRepository.findOne({
+        where: {
+          host: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
+      });
+      if (game != null) {
+        return game.id;
+      }
+      game = await this.gameRepository.findOne({
+        where: {
+          opponent: userId,
+          status: 'Not Started' || 'Stopped' || 'Playing',
+        },
+      });
+      if (game != null) {
+        return game.id;
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async getCurrentGames(): Promise<Game[]> {
+    try {
+      const games = await this.gameRepository.find({
+        where: { status: 'Not Started' || 'Stopped' || 'Playing' },
+      });
+      return games;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -62,7 +104,7 @@ export class GameService {
 
   public async checkOpponent(gameId: string): Promise<number> {
     try {
-      const game = await this.GameRepository.findOne({
+      const game = await this.gameRepository.findOne({
         where: { id: gameId },
       });
       if (!game) {
@@ -74,5 +116,78 @@ export class GameService {
     }
   }
 
+  public async createGame(game: CreateGameDTO): Promise<any> {
+    try {
+      const newGame: Game = this.gameRepository.create(game);
+      newGame.createdAt = new Date();
+      await this.gameRepository.save(newGame);
+      const newScore: CreateScoreDTO = {
+        gameId: newGame.id,
+        mode: newGame.mode,
+        leftPlayerId:
+          newGame.hostSide == 'Left' ? newGame.host : newGame.opponent,
+        rightPlayerId:
+          newGame.hostSide == 'Right' ? newGame.host : newGame.opponent,
+      };
+      const score = await this.scoreService.createScore(newScore);
+      await this.updateGameScore(newGame, score);
+      return newGame.id;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async addOpponent(gameId: string, opponentId: number): Promise<any> {
+    try {
+      const game = await this.gameRepository.findOne({
+        where: { id: gameId },
+      });
+      if (!game) {
+        throw new Error('Game not found');
+      }
+      game.opponent = opponentId;
+      await this.gameRepository.save(game);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async quitGame(gameId: string, userId): Promise<any> {
+    try {
+      const game = await this.gameRepository.findOne({
+        where: { id: gameId },
+      });
+      if (!game) {
+        throw new Error('Game not found');
+      }
+      if (game.status === 'Playing' || game.status === 'Stopped') {
+        game.status = 'Deleted';
+        if (userId === game.host) {
+          game.result = 'Opponent';
+        } else if (userId === game.opponent) {
+          game.result = 'Host';
+        } else {
+          throw new Error('User not in game');
+        }
+      } else if (game.status === 'Not Started') {
+        game.status = 'Deleted';
+        game.result = 'Deleted';
+      } else {
+        throw new Error('Game already finnished');
+      }
+      await this.gameRepository.save(game);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   // --------------------------------  PRIVATE METHODS  ------------------------------- //
+
+  private async updateGameScore(game: Game, score: Score) {
+    await this.gameRepository
+      .createQueryBuilder()
+      .relation(Game, 'score')
+      .of(game.id)
+      .set(score);
+  }
 }

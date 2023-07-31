@@ -31,18 +31,22 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Avatar,
+      BackupCode,
+      Channel,
       Game,
       Score,
       Stats,
-      User,
-      Channel,
       Token,
-      BackupCode,
-      Avatar,
+      User,
       UserChannelRelation,
     ]),
   ],
   providers: [
+    AvatarService,
+    ChannelService,
+    ColoredLogger,
+    CryptoService,
     GameGateway,
     GameService,
     GameManager,
@@ -50,10 +54,6 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
     ScoreService,
     StatsService,
     UsersService,
-    CryptoService,
-    ColoredLogger,
-    ChannelService,
-    AvatarService,
   ],
 })
 export class GameModule {}

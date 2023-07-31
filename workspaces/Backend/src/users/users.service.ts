@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
-import { createUserDto } from './dto/CreateUser.dto';
+import { CreateUserDto } from './dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
@@ -27,8 +27,8 @@ export class UsersService {
     private cryptoService: CryptoService,
   ) {}
 
-  async addUser(createUserDto: createUserDto): Promise<User> {
-    return await this.userRepository.save(createUserDto);
+  async addUser(CreateUserDto: CreateUserDto): Promise<User> {
+    return await this.userRepository.save(CreateUserDto);
   }
 
   async saveUserEntity(user: User): Promise<User> {
@@ -127,7 +127,7 @@ export class UsersService {
 
   async getUserByCode(code: string) {
     return await this.userRepository.findOne({
-      where: { verifyCode: code, verified: false }
+      where: { verifyCode: code, verified: false },
     });
   }
 
@@ -219,7 +219,7 @@ export class UsersService {
     const yellow = '\x1b[33m';
     const stop = '\x1b[0m';
 
-	process.stdout.write(yellow + '[user service]  ' + stop);
+    process.stdout.write(yellow + '[user service]  ' + stop);
     console.log(message);
   }
 

@@ -82,6 +82,7 @@ Database
 
 /node_modules
 yarn.lock
+yarn-error.log
 install_docker.sh
 
 

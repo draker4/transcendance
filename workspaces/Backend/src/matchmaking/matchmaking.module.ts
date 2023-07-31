@@ -9,11 +9,48 @@ import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 import { LobbyUtils } from '@/lobby/service/lobbyUtils';
+import { GameService } from '@/game/service/game.service';
+import { ScoreService } from '@/score/service/score.service';
+import { Score } from '@/utils/typeorm/Score.entity';
+import { UsersService } from '@/users/users.service';
+import { AvatarService } from '@/avatar/avatar.service';
+import { Channel } from '@/utils/typeorm/Channel.entity';
+import { Token } from '@/utils/typeorm/Token.entity';
+import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
+import { CryptoService } from '@/utils/crypto/crypto';
+import { Avatar } from '@/utils/typeorm/Avatar.entity';
+import { ChannelService } from '@/channels/channel.service';
+import { Stats } from '@/utils/typeorm/Stats.entity';
+import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Game, Matchmaking, User])],
+  imports: [
+    TypeOrmModule.forFeature([
+      Avatar,
+      BackupCode,
+      Channel,
+      Game,
+      Matchmaking,
+      Score,
+      Stats,
+      Token,
+      User,
+      UserChannelRelation,
+    ]),
+  ],
   controllers: [MatchmakingController],
-  providers: [MatchmakingService, LobbyUtils],
+  providers: [
+    AvatarService,
+    ChannelService,
+    CryptoService,
+    GameService,
+    MatchmakingService,
+    LobbyUtils,
+    ScoreService,
+    StatsService,
+    UsersService,
+  ],
   exports: [MatchmakingService],
 })
 export class MatchmakingModule {}

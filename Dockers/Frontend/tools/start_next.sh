@@ -12,7 +12,7 @@ if [ -d "node_modules" ]; then
   # cd ../..
   echo "already installed"
   yarn cache clean
-  yarn install --check-files
+  yarn install
 else
   echo "Install required dependencies"
   yarn install
