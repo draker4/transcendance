@@ -1,13 +1,15 @@
-"use client";
-
+// PartyInfo.tsx
 import { useState } from "react";
-import styles from "@/styles/lobby/party/PartyList.module.css";
-
-import LobbyService from "@/services/Lobby.service";
-import { GameInfo } from "@transcendence/shared/types/Game.types";
-import { MdArrowForward } from "react-icons/md";
+import styles from "@/styles/lobby/party/partyList/PartyInfo.module.css";
+import {
+  MdArrowForward,
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+} from "react-icons/md";
 
 import ScoreService from "@/services/Score.service";
+import LobbyService from "@/services/Lobby.service";
+import { GameInfo } from "@transcendence/shared/types/Game.types";
 import PartyDetails from "./PartyDetails";
 
 type Props = {
@@ -24,24 +26,31 @@ export default function PartyInfo({
   const [showDetail, setShowDetail] = useState(false);
 
   return (
-    <div className={styles.partyInfo}>
-      <button
-        onClick={() => {
-          setShowDetail(!showDetail);
-        }}
-      >
-        <MdArrowForward />
-      </button>
-
-      <p>{gameInfo.name}</p>
-      <p>{gameInfo.type}</p>
-      <p>{gameInfo.leftPlayer}</p>
-      <p>{gameInfo.rightPlayer}</p>
+    <>
+      <tr className={styles.partyInfo}>
+        <td>
+          <button
+            className={styles.buttonScore}
+            onClick={() => {
+              setShowDetail(!showDetail);
+            }}
+          >
+            {!showDetail && <MdKeyboardArrowUp />}
+            {showDetail && <MdKeyboardArrowDown />}
+          </button>
+        </td>
+        <td>{gameInfo.name}</td>
+        <td>{gameInfo.type}</td>
+        <td>{gameInfo.leftPlayer}</td>
+        <td>{gameInfo.rightPlayer}</td>
+        <td>
+          {gameInfo.actualRound} / {gameInfo.maxRound}
+        </td>
+        <td>{gameInfo.status}</td>
+      </tr>
       {showDetail && (
-        <div>
-          {<PartyDetails scoreService={scoreService} gameInfo={gameInfo} />}
-        </div>
+        <PartyDetails scoreService={scoreService} gameInfo={gameInfo} />
       )}
-    </div>
+    </>
   );
 }

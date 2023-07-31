@@ -3,8 +3,10 @@ import "@/styles/globals.css";
 import Footer from "@/components/footer/Footer";
 import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 import Navbar from "@/components/navbar/Navbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Transcendence",
@@ -21,6 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
+        <ToastContainer />
         {children}
         <Footer />
         <ScrollBtn />

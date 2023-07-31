@@ -1,0 +1,13 @@
+/* PartyDetails.module.css */
+.roundRaw,
+.scoreRaw {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.roundItem,
+.scoreItem {
+  width: 40px;
+}

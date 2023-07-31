@@ -1,3 +1,5 @@
+import { ScoreInfo } from "@transcendence/shared/types/Score.types";
+
 class ScoreService {
   private static instance: ScoreService;
   private token: string;
@@ -30,9 +32,9 @@ class ScoreService {
   }
 
   //Recupere l'etat du joueur ( in game or not )
-  public async getScoreByGameId(gameId: string): Promise<ReturnData> {
+  public async getScoreByGameId(gameId: string): Promise<ScoreInfo> {
     const response = await this.fetchData(`game/${gameId}`, "GET");
-    const data: ReturnData = await response.json();
+    const data = await response.json();
     return data;
   }
 }

@@ -8,6 +8,7 @@ import { MdLogout, MdPlayArrow } from "react-icons/md";
 import LobbyService from "@/services/Lobby.service";
 import styles from "@/styles/lobby/InGame.module.css";
 import { set } from "react-hook-form";
+import { toast } from "react-toastify";
 
 type Props = {
   lobby: LobbyService;
@@ -23,7 +24,11 @@ export default function InGame({ lobby, gameId, setGameId }: Props) {
   }
 
   async function quitGame() {
-    await lobby.quitGame();
+    toast.promise(lobby.quitGame(), {
+      pending: "Quitting game...",
+      success: "Game quitted",
+      error: "Error quitting game",
+    });
     router.refresh();
     setGameId(undefined);
   }

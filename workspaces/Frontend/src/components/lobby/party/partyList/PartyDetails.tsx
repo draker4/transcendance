@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GameInfo } from "@transcendence/shared/types/Game.types";
+import styles from "@/styles/lobby/party/partyList/PartyDetails.module.css";
 
 import ScoreService from "@/services/Score.service";
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
+import { GameInfo } from "@transcendence/shared/types/Game.types";
 
 type Props = {
   scoreService: ScoreService;
@@ -18,14 +19,12 @@ export default function PartyDetails({ scoreService, gameInfo }: Props) {
   useEffect(() => {
     const getScore = async () => {
       try {
-        const ret: ReturnData = await scoreService.getScoreByGameId(
-          gameInfo.id
-        );
-        setScore(ret.data);
-        console.log("partyList Updated: ", ret.data);
+        const data = await scoreService.getScoreByGameId(gameInfo.id);
+        setScore(data);
+        console.log("score Details: ", data);
       } catch (error) {
         setScore(undefined);
-        console.error("Error fetching game list:", error);
+        console.log("Error fetching score: " + error);
       }
     };
 
@@ -33,15 +32,22 @@ export default function PartyDetails({ scoreService, gameInfo }: Props) {
     getScore();
 
     // Then fetch it every 10 seconds
-    const interval = setInterval(getScore, 5000);
+    const interval = setInterval(getScore, 10000);
 
     return () => clearInterval(interval);
   }, []);
 
-  if (!score) {
-    return <p>loading</p>;
+  function getScore() {
+    let scoreString: string = "";
+    if (!score) return (scoreString = "Loading...");
+    for (let i: number = 0; i < gameInfo.maxRound; i++) {
+      if (scoreString) scoreString += " | ";
+      scoreString += `R${i + 1}: ${score.round[i].left} - ${
+        score.round[i].right
+      }   `;
+    }
+    return scoreString;
   }
-  for (let i = 0; i < gameInfo.maxRound; i++) {
-    return <p>{`${score.round[i].left} / ${score.round[i].right}`}</p>;
-  }
+
+  return <tr className={styles.PartyDetails}>{getScore()}</tr>;
 }

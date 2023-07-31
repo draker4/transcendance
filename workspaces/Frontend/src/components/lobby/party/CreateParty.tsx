@@ -8,6 +8,7 @@ import DefineType from "@/components/lobby/party/DefineType";
 import DefineField from "@/components/lobby/party/DefineField";
 import DefineInvite from "@/components/lobby/party/DefineInvite";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 type Props = {
   lobbyService: LobbyService;
@@ -27,8 +28,8 @@ export default function CreateParty({
   const [name, setName] = useState<string>("");
   const [enterName, setEnterName] = useState<boolean>(false); //Si le nom est vide, on affiche un message d'erreur
   const [push, setPush] = useState<boolean>(false);
-  const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
-  const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
+  const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(9);
+  const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(1);
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
   const [background, setBackground] = useState<string>("Classic");
   const [ball, setBall] = useState<string>("Classic");
@@ -65,6 +66,14 @@ export default function CreateParty({
 
     //Creer la game
     const res = await lobbyService.createGame(settings);
+    await toast.promise(
+      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
+      {
+        pending: "Creating game...",
+        success: "Game created",
+        error: "Error creating game",
+      }
+    );
     if (!res.success) {
       console.log(res.message);
       return;
@@ -76,7 +85,7 @@ export default function CreateParty({
   const resetCreate = () => {
     setName("");
     setPush(false);
-    setMaxPoint(3);
+    setMaxPoint(9);
     setMaxRound(1);
     setHostSide("Left");
     setBackground("Classic");
