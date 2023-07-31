@@ -1,5 +1,5 @@
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
-import { CryptoService } from "./crypto/Crypto.service";
+import { CryptoService } from "./Crypto.service";
 
 const Crypto = new CryptoService();
 
@@ -7,17 +7,12 @@ export default class Avatar_Service {
   private token?: string;
 
   constructor(token?: string) {
-    if (token)
-      this.token = token;
+    if (token) this.token = token;
   }
 
   // Fonction generique pour toutes les requettes http
   // [!] toujours appeller dans un try catch !
-  private async fetchData(
-    url: string,
-    method: string,
-    body: any = null
-  ) {
+  private async fetchData(url: string, method: string, body: any = null) {
     const preUrl = this.token
       ? `http://backend:4000/api/avatar/`
       : `http://${process.env.HOST_IP}:4000/api/avatar`;
@@ -48,7 +43,6 @@ export default class Avatar_Service {
       return response;
     }
   }
-
 
   private makeUrl(id: number, isChannel: boolean): string {
     const boolAsString: string = isChannel ? "true" : "false";
@@ -94,8 +88,7 @@ export default class Avatar_Service {
     isChannel: number
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-		const response = await this.fetchData("", "PUT", body);
-		const data = await response.json();
+    const response = await this.fetchData("", "PUT", body);
+    const data = await response.json();
   }
-  
 }
