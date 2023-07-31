@@ -44,6 +44,15 @@ export class MailService {
 			html: `<p>Securise your Crunchy account!</p><p>In order to activate the double authentification,</p><p>Please enter this code to first verify your identity:</p><p>${codeFormated}</p><p>If you did not request this email, you can safely ignore it.</p>`,
 		});
 	}
+
+	async sendUserNewPassword(email: string, password: string) {
+		console.log(password);
+		return this.transporter.sendMail({
+			to: email,
+			subject: 'Crunchy Pong: here your new account access!',
+			html: `<p>Your account settings have been updated!</p><p>Here is your new password,</p><p>Do not loose it!</p><p>${password}</p><p>You can change it in your profile settings, please update it as soon as you can for security reasons!</p><p>If you did not request this email, please change your password immediately in your account settings!</p>`,
+		});
+	}
   
 	async sendMail(mailOptions: nodemailer.SendMailOptions) {
 		return this.transporter.sendMail(mailOptions);

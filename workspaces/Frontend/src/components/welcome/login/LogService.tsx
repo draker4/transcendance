@@ -24,22 +24,26 @@ export default function LogInComponent({ setTextButton }: Props) {
     <div className={styles.logService}>
       <p className={styles.description}>Connect or register in one click</p>
       <div className={styles.logImg}>
-        <Image
-          alt="42 school logo"
-          src="/images/auth/42_Logo.png"
-          width={width}
-          height={height}
-          onClick={open42}
-          className={styles.school}
-        />
-        <Image
-          alt="google logo"
-          src="/images/auth/google.png"
-          width={width}
-          height={height}
-          onClick={openGoogle}
-          className={styles.google}
-        />
+        <div className={styles.oneClick} style={{paddingRight: "4px"}}>
+          <Image
+            alt="42 school logo"
+            src="/images/auth/42_Logo.png"
+            width={width}
+            height={height}
+            onClick={open42}
+            className={styles.school}
+          />
+        </div>
+        <div className={styles.oneClick}>
+          <Image
+            alt="google logo"
+            src="/images/auth/google.png"
+            width={30}
+            height={30}
+            onClick={openGoogle}
+            className={styles.google}
+          />
+        </div>
       </div>
     </div>
   );

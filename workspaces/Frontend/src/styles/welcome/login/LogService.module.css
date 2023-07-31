@@ -18,12 +18,22 @@
   margin: 20px;
 }
 
-.google:hover,
-.school:hover {
-  scale: 1.15;
+.oneClick {
+  border: 2px solid var(--secondary1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  cursor: pointer;
+  background-color: var(--bubble);
 }
 
-.google:active,
-.school:active {
+.oneClick:hover {
+  scale: 1.05;
+}
+
+.oneClick:active {
   scale: 0.95;
 }

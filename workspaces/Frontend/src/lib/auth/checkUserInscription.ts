@@ -22,7 +22,7 @@ export function checkPassword(password: string): string {
 	if (password.length < 8
 		|| !/[A-Z]/.test(password)
 		|| !/[0-9]/.test(password)
-		|| !/[!@#$%^&*(),.?:{}|<>]/.test(password)
+		|| !/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)
 	)
 		return "The password must contain at least 8 characters, with one capital letter, one digit and one special character";
 	return "";

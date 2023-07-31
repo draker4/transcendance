@@ -29,6 +29,8 @@
   --accent2-light: rgb(47, 151, 220);
   --accent3-light: rgb(102, 174, 223);
 
+  --bubble-light: rgb(254, 254, 254);
+
   --notif-light: rgba(255, 85, 85, 1);
 
   /* COLOR DEFINES - DARK*/
@@ -48,6 +50,8 @@
   --accent1-dark: rgb(15 139 222);
   --accent2-dark: rgb(47, 151, 220);
   --accent3-dark: rgb(102, 174, 223);
+
+  --bubble-dark: rgb(71, 72, 85);
 
   --notif-dark: rgba(255, 85, 85, 1);
 
@@ -80,6 +84,8 @@
   --accent3: var(--accent3-light);
 
   --notif: var(--notif-light);
+
+  --bubble: var(--bubble-light);
 }
 
 [color-scheme="dark"] {
@@ -100,6 +106,8 @@
   --accent3: var(--accent3-dark);
 
   --notif: var(--notif-dark);
+
+  --bubble: var(--bubble-dark);
 }
 
 html,

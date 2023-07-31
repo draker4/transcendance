@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
@@ -11,6 +11,8 @@ import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
+import * as bcrypt from 'bcrypt';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { verify } from 'jsonwebtoken';
@@ -283,4 +285,67 @@ export class AuthService {
       throw new UnauthorizedException(error.message);
     }
   }
+
+  async sendPassword(userId: number) {
+    try {
+      const user = await this.usersService.getUserById(userId);
+
+      if (!user)
+        throw new Error('no user found');
+
+      const newPassword = this.generatePassword(20);
+      
+      const salt = await bcrypt.genSalt();
+      const passwordHashed = await bcrypt.hash(newPassword, salt);
+
+      await this.usersService.updateUser(user.id, {
+        passwordHashed: passwordHashed,
+      });
+      
+      const email = await this.cryptoService.decrypt(user.email);
+  
+      await this.mailService.sendUserNewPassword(email, newPassword);
+
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
+  private generatePassword(
+    length = 20,
+  ) {
+    
+    const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+    const digitChars = '0123456789';
+    const specialChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+
+    const allChars = uppercaseChars + lowercaseChars + digitChars + specialChars;
+
+    const passwordChars = [];
+
+    // Ensure at least one uppercase letter, one digit, and one special character
+    passwordChars.push(this.getRandomChar(uppercaseChars));
+    passwordChars.push(this.getRandomChar(digitChars));
+    passwordChars.push(this.getRandomChar(specialChars));
+
+    // Generate remaining characters for the password
+    for (let i = passwordChars.length; i < length; i++) {
+      passwordChars.push(this.getRandomChar(allChars));
+    }
+
+    // Shuffle the password characters
+    passwordChars.sort(() => Math.random() - 0.5);
+
+    return passwordChars.join('');
+  }
+
+    private getRandomChar(characters: string) {
+      return characters.charAt(crypto.randomInt(0, characters.length));
+    }
 }

@@ -229,7 +229,7 @@ export default function SectionCustom({ profile }: {
 				{
 					popup1 &&
 					<button onClick={() => setPopup1(false)} className={styles.button}>
-						"Cancel"
+						Cancel
 					</button>
 				}
 			</div>
