@@ -6,6 +6,7 @@ import SectionPongStats from "./sections/SectionPongStats";
 import SectionCustom from "./sections/SectionCustom";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { Socket } from "socket.io-client";
+import SectionPongies from "./sections/SectionPongies";
 
 type Props = {
   profile: Profile;
@@ -29,9 +30,7 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 0:
             return <SectionPongStats profile={profile} />;
           case 1:
-            return (
-              <div className={styles.sections}>contenu section2 : Pongies</div>
-            );
+            return <SectionPongies socket={socket} />
           case 2:
             return (
               <div className={styles.sections}>contenu section3 : Channels</div>

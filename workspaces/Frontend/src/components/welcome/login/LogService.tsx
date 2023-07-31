@@ -6,8 +6,7 @@ type Props = {
 };
 
 export default function LogInComponent({ setTextButton }: Props) {
-  const width = 40;
-  const height = 40;
+
   // -------------------------------------  FONCTIONS  ------------------------------------ //
   const open42 = () => {
     setTextButton("Loading...");
@@ -28,8 +27,8 @@ export default function LogInComponent({ setTextButton }: Props) {
           <Image
             alt="42 school logo"
             src="/images/auth/42_Logo.png"
-            width={width}
-            height={height}
+            width={30}
+            height={30}
             onClick={open42}
             className={styles.school}
           />
@@ -38,8 +37,8 @@ export default function LogInComponent({ setTextButton }: Props) {
           <Image
             alt="google logo"
             src="/images/auth/google.png"
-            width={30}
-            height={30}
+            width={25}
+            height={25}
             onClick={openGoogle}
             className={styles.google}
           />
