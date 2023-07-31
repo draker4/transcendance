@@ -214,7 +214,10 @@ export default function SectionCustom({ profile }: {
 			}
 
 			<div className={styles.flexButtons}>
-				<button onClick={handleDoubleAuth} className={styles.button}>
+				<button
+					onClick={handleDoubleAuth}
+					className={styles.button}
+				>
 					{
 						popup1
 						? "Send code"

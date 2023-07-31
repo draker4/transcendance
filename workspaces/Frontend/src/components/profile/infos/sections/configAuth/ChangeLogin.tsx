@@ -7,9 +7,11 @@ import fetchClientSide from "@/lib/fetch/fetchClientSide";
 export default function ChangeLogin({
 	setChangeLogin,
 	setLogin,
+	setSuccess,
 }: {
 	setChangeLogin: Dispatch<SetStateAction<boolean>>;
 	setLogin: Dispatch<SetStateAction<string>>;
+	setSuccess: Dispatch<SetStateAction<boolean>>;
 }) {
 
 	const	[loginText, setLoginText] = useState<string>("");
@@ -19,9 +21,16 @@ export default function ChangeLogin({
 
 	const	handleClick = async () => {
 		setTextButton("Loading...");
+		setNotif("");
 
 		if (loginText.length < 4 || loginText.length > 12) {
 			setNotif("The login must have between 4 and 12 characters");
+			setTextButton("Validate");
+			return ;
+		}
+
+		if (loginText.includes(' ')) {
+			setNotif("The login must not contain any space");
 			setTextButton("Validate");
 			return ;
 		}
@@ -62,6 +71,7 @@ export default function ChangeLogin({
 				setChangeLogin(false);
 				setTextButton("Validate");
 				setLogin(loginText);
+				setSuccess(true);
 				return ;
 			}
 
@@ -106,7 +116,7 @@ export default function ChangeLogin({
 					className={stylesButton.button}
 					onClick={() => setChangeLogin(false)}
 				>
-					"Cancel"
+					Cancel
 				</button>
 			</div>
 

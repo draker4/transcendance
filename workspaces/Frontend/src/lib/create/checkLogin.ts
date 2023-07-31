@@ -17,7 +17,7 @@ export async function getDoubleLogin(login: string): Promise<string> {
 export function checkLoginFormat(login: string): string {
 	if (/[ ]/.test(login))
 		return "The login must not contain any space";
-	if (/["']/.test(login))
+	if (/["'`]/.test(login))
 		return "The login must not contain any quote";
 	if (login.length < 4)
 		return "The login must contain at least 4 characters";

@@ -17,7 +17,7 @@ export async function getDoubleEmail(email: string) {
 export function checkPassword(password: string): string {
 	if (/[ ]/.test(password))
 		return "The password must not contain any space";
-	if (/["']/.test(password))
+	if (/["'`]/.test(password))
 		return "The password must not contain any quote";
 	if (password.length < 8
 		|| !/[A-Z]/.test(password)
