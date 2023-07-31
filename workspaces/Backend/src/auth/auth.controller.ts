@@ -191,6 +191,14 @@ export class AuthController {
 
   @Post('sendPassword')
   async sendPassword(@Req() req) {
-    return this.authService.sendPassword(req.user.id);
+    return await this.authService.sendPassword(req.user.id);
+  }
+
+  @Public()
+  @Post('forgotPassword')
+  async forgotPassword(
+    @Body('email') email: string,
+  ) {
+    return await this.authService.forgotPassword(email);
   }
 }

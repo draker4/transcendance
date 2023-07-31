@@ -316,6 +316,40 @@ export class AuthService {
     }
   }
 
+  async forgotPassword(email: string) {
+    try {
+
+      if (!email)
+        throw new Error('no email');
+      
+      const emailDecrypted = await this.cryptoService.decrypt(email);
+
+      const user = await this.usersService.getUserByEmail(email, 'email');
+
+      if (!user)
+        throw new Error('no user found');
+
+      const newPassword = this.generatePassword(20);
+      
+      const salt = await bcrypt.genSalt();
+      const passwordHashed = await bcrypt.hash(newPassword, salt);
+
+      await this.usersService.updateUser(user.id, {
+        passwordHashed: passwordHashed,
+      });
+  
+      await this.mailService.sendUserNewPassword(emailDecrypted, newPassword);
+
+      return {
+        success: true,
+      }
+    }
+    catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
+
   private generatePassword(
     length = 20,
   ) {
@@ -333,7 +367,7 @@ export class AuthService {
     passwordChars.push(this.getRandomChar(uppercaseChars));
     passwordChars.push(this.getRandomChar(digitChars));
     passwordChars.push(this.getRandomChar(specialChars));
-
+  
     // Generate remaining characters for the password
     for (let i = passwordChars.length; i < length; i++) {
       passwordChars.push(this.getRandomChar(allChars));

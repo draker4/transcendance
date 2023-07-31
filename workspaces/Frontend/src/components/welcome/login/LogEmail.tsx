@@ -9,10 +9,13 @@ import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import styles from "@/styles/welcome/login/LogEmail.module.css";
+import { CryptoService } from "@/services/Crypto.service";
+
+const Crypto = new CryptoService();
 
 type FormInputs = {
   [key: string]: string;
@@ -27,6 +30,7 @@ type Props = {
   setRegister: Function;
   login: string;
   setLogin: Function;
+  setSuccessNewPassword: Dispatch<SetStateAction<boolean>>
 };
 
 export default function LogEmail({
@@ -38,11 +42,13 @@ export default function LogEmail({
   setRegister,
   login,
   setLogin,
+  setSuccessNewPassword,
 }: Props) {
+  const initialTextForget = "Forgot your password?";
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<boolean>(false);
   const [passwordSecured, setPasswordSecured] = useState<string>("");
-  const [changeEmail, setChangeEmail] = useState<boolean>(false);
+  const [sendPassword, setSendPassword] = useState<string>(initialTextForget);
   const { executeRecaptcha } = useGoogleReCaptcha();
   const { handleSubmit, setValue } = useForm<FormInputs>();
   let exists = useRef<boolean>(false);
@@ -79,6 +85,7 @@ export default function LogEmail({
     setPasswordSecured("");
     setTextButton("Continue");
     setPassword(false);
+    setSendPassword(initialTextForget);
     exists.current = false;
     return;
   };
@@ -89,6 +96,37 @@ export default function LogEmail({
 
     try {
       await handleCaptcha();
+
+      // if user has forgotten his password
+      if (sendPassword !== initialTextForget) {
+        const emailCrypted = await Crypto.encrypt(email);
+
+        const	res = await fetch(
+					`http://${process.env.HOST_IP}:4000/api/auth/forgotPassword`, {
+						method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: emailCrypted,
+            }),
+					}
+				);
+
+				if (!res.ok)
+					throw new Error('fetch failed');
+				
+				const	data = await res.json();
+
+				if (data.success) {
+					setSendPassword(initialTextForget);
+          setTextButton('Continue');
+          setSuccessNewPassword(true);
+					return ;
+				}
+
+				throw new Error('no success');
+      }
 
       //if email only, first step of authentification
       const emailUser = data.email;
@@ -106,7 +144,6 @@ export default function LogEmail({
          }
 
         setPassword(true);
-        setChangeEmail(true);
 
         if (res.emailExists) exists.current = true;
 
@@ -115,6 +152,7 @@ export default function LogEmail({
       }
 
       const passwordUser = data.password;
+
       let res: {
         passwordSecured: string;
         register: boolean;
@@ -131,10 +169,27 @@ export default function LogEmail({
       setRegister(res.register);
       setLogin(res.login);
     } catch (error) {
-      setTextButton("Continue");
+      if (sendPassword !== initialTextForget)
+        setTextButton("Send new password by mail");
+      else
+        setTextButton("Continue");
       setNotif("Something went wrong, please try again!");
     }
   };
+
+  const handlePasswordForgotten = () => {
+    setNotif('');
+    setPasswordSecured('');
+
+    if (sendPassword === initialTextForget) {
+        setSendPassword("You can get a new password by email. Click again to cancel.");
+        setTextButton("Send new password by mail")
+    }
+    else {
+			setTextButton("Continue");
+			setSendPassword(initialTextForget);
+		}
+  }
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
@@ -155,32 +210,42 @@ export default function LogEmail({
           }
         />
       )}
-      {email.length > 0 && (
+
+      {
+        email.length > 0 &&
         <div className={styles.email}>
           {email}
-          {changeEmail && (
             <div className={styles.emailBtn} onClick={iconEmail}>
               <FontAwesomeIcon icon={faPenToSquare} />
             </div>
-          )}
         </div>
-      )}
+      }
 
       <div className={password ? styles.openPassword : styles.closePassword}>
         <input
           type="password"
-          autoComplete="Password"
+          autoComplete="current-password"
           placeholder="Password"
           name="password"
           className={styles.input}
-          required={password}
+          required={password && textButton !== "Send new password by mail"}
           onChange={(event) =>
             setValue("password", (event.target as HTMLInputElement).value)
           }
+          style={{width: "60%"}}
         />
-        {passwordSecured.length > 0 && (
-          <div className={styles.notif}>{passwordSecured}</div>
-        )}
+        {
+          passwordSecured.length > 0 &&
+            <div className={styles.notif}>{passwordSecured}</div>
+        }
+        
+        {
+          password && exists.current &&
+          <p><span onClick={handlePasswordForgotten}>
+            {sendPassword}
+          </span></p>
+        }
+
       </div>
 
       {notif.length > 0 && <div className={styles.notif}>{notif}</div>}

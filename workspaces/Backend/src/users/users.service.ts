@@ -225,6 +225,9 @@ export class UsersService {
 
   async checkPassword(userId: number, passwordCrypted: string) {
     try {
+      if (!passwordCrypted)
+        throw new Error('no password');
+
       const user = await this.getUserById(userId);
 
       if (!user)
@@ -252,6 +255,9 @@ export class UsersService {
 
   async updatePassword(userId: number, password: string) {
     try {
+      if (!password)
+        throw new Error('no password');
+      
       const user = await this.getUserById(userId);
 
       if (!user)

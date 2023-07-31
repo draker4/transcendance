@@ -12,14 +12,14 @@ export default function Welcome() {
     return (
       <div className={styles.main}>
         <DisconnectClient />
-        <p>Crunchy Pong !</p>
+        <p>Crunchy Pong!</p>
       </div>
     )
   }
 
   return (
     <div className={styles.main}>
-      <p>Crunchy Pong !</p>
+      <p>Crunchy Pong!</p>
     </div>
   );
 }

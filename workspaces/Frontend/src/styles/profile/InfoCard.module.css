@@ -38,7 +38,7 @@
 
 .sections {
   /* dimensions temporaires */
-  min-height: 500px;
+  min-height: 350px;
   min-width: 250px;
   /* padding: 0.8rem 0.5rem 0.5rem 0.5rem; */
   padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);

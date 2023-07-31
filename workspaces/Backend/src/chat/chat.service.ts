@@ -457,7 +457,7 @@ export class ChatService {
           channel: null,
         };
 
-      socket.join('channel:' + channelName);
+      socket.join('channel:' + channel.id);
       socket.emit('notif');
 
       if (!relationUser.joined) {

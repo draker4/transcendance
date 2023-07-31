@@ -5,8 +5,9 @@
   justify-content: flex-start;
   width: 90%;
   margin: 0 auto;
-  background-color: var(--secondary3);
+  background-color: var(--primary1);
   border-radius: 10px;
+  border: 3px solid var(--accent1);
   text-align: center;
 }
 
@@ -92,6 +93,7 @@
   color: var(--primary1);
   background-color: var(--secondary1);
   border: 3px solid var(--accent1);
+  cursor: pointer;
 }
 
 .confirmBtn:checked {
