@@ -68,7 +68,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
           <Link href={"/home/chat"} className={styles.chatBtn}>
             <ChatBtn token={token} />
           </Link>
-          <AvatarMenu avatar={avatar} profile={profile} />
+          <AvatarMenu avatar={avatar} profile={profile} token={token}/>
         </div>
       </nav>
     </header>

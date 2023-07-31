@@ -7,14 +7,16 @@ import { CSSProperties, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color } from "react-color";
 import Avatar_Service from "@/services/Avatar.service";
+import { Socket } from "socket.io-client";
 
 type Props = {
   login: string;
   isOwner: boolean;
   avatar: Avatar;
+  socket: Socket | undefined;
 };
 
-export default function AvatarCard({ login, isOwner, avatar }: Props) {
+export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
@@ -51,6 +53,8 @@ export default function AvatarCard({ login, isOwner, avatar }: Props) {
     avatar.borderColor = topColor.toString();
     avatar.backgroundColor = botColor.toString();
     setDisplaySettings(false);
+
+    socket?.emit('notif');
   };
 
   const colorAddedStyle: CSSProperties = {

@@ -4,10 +4,12 @@ import styles from "@/styles/profile/TfaComponent.module.css";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ChangeLogin from "./ChangeLogin";
 import ChangePassword from "./ChangePassword";
+import { Socket } from "socket.io-client";
 
-export default function SectionCustom({ profile, setLogin }: {
+export default function SectionCustom({ profile, setLogin, socket }: {
 	profile: Profile;
 	setLogin: Dispatch<SetStateAction<string>>;
+	socket: Socket | undefined;
 }) {
 
 	const	[changeLogin, setChangeLogin] = useState<boolean>(false);
@@ -46,6 +48,7 @@ export default function SectionCustom({ profile, setLogin }: {
 					setChangeLogin={setChangeLogin}
 					setLogin={setLogin}
 					setSuccess={setSuccess}
+					socket={socket}
 				/>
 			}
 

@@ -38,6 +38,24 @@ export class ChatService {
     private readonly cryptoService: CryptoService,
   ) {}
 
+  async getLoginWithAvatar(userId: number) {
+    try {
+      const user = await this.usersService.getUserAvatar(userId);
+
+      if (!user)
+        throw new Error('no user found');
+      
+      return {
+        login: user.login,
+        avatar: user.avatar,
+      }
+    }
+    catch (error) {
+      console.log(error.message);
+      throw new WsException(error.message);
+    }
+  }
+
   async getChannels(id: number) {
     try {
       const relations = await this.userChannelRelation.find({

@@ -3,15 +3,18 @@ import { Dispatch, SetStateAction, useState } from "react";
 import stylesButton from "@/styles/profile/TfaComponent.module.css";
 import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import { Socket } from "socket.io-client";
 
 export default function ChangeLogin({
 	setChangeLogin,
 	setLogin,
 	setSuccess,
+	socket,
 }: {
 	setChangeLogin: Dispatch<SetStateAction<boolean>>;
 	setLogin: Dispatch<SetStateAction<string>>;
 	setSuccess: Dispatch<SetStateAction<boolean>>;
+	socket: Socket | undefined;
 }) {
 
 	const	[loginText, setLoginText] = useState<string>("");
@@ -23,8 +26,8 @@ export default function ChangeLogin({
 		setTextButton("Loading...");
 		setNotif("");
 
-		if (loginText.length < 4 || loginText.length > 12) {
-			setNotif("The login must have between 4 and 12 characters");
+		if (loginText.length < 4 || loginText.length > 20) {
+			setNotif("The login must have between 4 and 20 characters");
 			setTextButton("Validate");
 			return ;
 		}
@@ -72,6 +75,10 @@ export default function ChangeLogin({
 				setTextButton("Validate");
 				setLogin(loginText);
 				setSuccess(true);
+
+				if (socket)
+					socket.emit('notif');
+
 				return ;
 			}
 
@@ -97,7 +104,7 @@ export default function ChangeLogin({
 			<input
 				type="text"
 				name="login"
-				maxLength={12}
+				maxLength={20}
 				minLength={4}
 				onChange={(e) => {
 					setLoginText(e.target.value);

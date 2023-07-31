@@ -8,7 +8,7 @@ import { MatchmakingController } from './controller/matchmaking.controller';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
-import { LobbyUtils } from '@/lobby/service/lobbyUtils';
+// import { LobbyUtils } from '@/lobby/service/lobbyUtils';
 import { GameService } from '@/game/service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { Score } from '@/utils/typeorm/Score.entity';
@@ -46,7 +46,7 @@ import { StatsService } from '@/stats/service/stats.service';
     CryptoService,
     GameService,
     MatchmakingService,
-    LobbyUtils,
+    // LobbyUtils,
     ScoreService,
     StatsService,
     UsersService,

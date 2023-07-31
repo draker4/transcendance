@@ -5,14 +5,16 @@ import NavbarProfilInfo from "./NavbarProfilInfo";
 import SectionPongStats from "./sections/SectionPongStats";
 import SectionCustom from "./sections/SectionCustom";
 import styles from "@/styles/profile/InfoCard.module.css";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
   isOwner: boolean;
   setLogin: Dispatch<SetStateAction<string>>;
+  socket: Socket | undefined;
 };
 
-export default function InfoCard({ profile, isOwner, setLogin }: Props) {
+export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) {
   const [activeButton, setActiveButton] = useState(0);
 
   return (
@@ -35,7 +37,7 @@ export default function InfoCard({ profile, isOwner, setLogin }: Props) {
               <div className={styles.sections}>contenu section3 : Channels</div>
             );
           case 3:
-            return <SectionCustom profile={profile} setLogin={setLogin} />;
+            return <SectionCustom profile={profile} setLogin={setLogin} socket={socket}/>;
           default:
             return <SectionPongStats profile={profile} />;
         }
