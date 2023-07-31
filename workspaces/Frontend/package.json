@@ -17,6 +17,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.13.5",
+    "@tanstack/react-table": "^8.9.3",
     "@transcendence/shared": "*",
     "@types/bcryptjs": "^2.4.2",
     "@types/crypto-js": "^4.1.1",

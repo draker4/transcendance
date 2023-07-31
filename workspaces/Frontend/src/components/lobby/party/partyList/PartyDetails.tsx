@@ -37,17 +37,27 @@ export default function PartyDetails({ scoreService, gameInfo }: Props) {
     return () => clearInterval(interval);
   }, []);
 
-  function getScore() {
-    let scoreString: string = "";
-    if (!score) return (scoreString = "Loading...");
-    for (let i: number = 0; i < gameInfo.maxRound; i++) {
-      if (scoreString) scoreString += " | ";
-      scoreString += `R${i + 1}: ${score.round[i].left} - ${
-        score.round[i].right
-      }   `;
-    }
-    return scoreString;
+  function displayRound(round: Round, index: number) {
+    return (
+      <div key={index} className={styles.displayRound}>
+        <p className={styles.round}>{`R${index + 1}: `}</p>
+        <p className={styles.score}>{`${round.left} / ${round.right}`}</p>
+      </div>
+    );
   }
 
-  return <tr className={styles.PartyDetails}>{getScore()}</tr>;
+  if (!score)
+    return (
+      <div className={styles.PartyDetails}>
+        <div> Loading...</div>
+      </div>
+    );
+
+  return (
+    <div className={styles.showScore}>
+      {score.round
+        .slice(0, gameInfo.maxRound)
+        .map((round, index) => displayRound(round, index))}
+    </div>
+  );
 }

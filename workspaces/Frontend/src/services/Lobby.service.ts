@@ -44,6 +44,13 @@ class LobbyService {
     return data;
   }
 
+  public async joinGame(gameId: string): Promise<any> {
+    const response = await this.fetchData(`join/${gameId}`, "PUT");
+    const data = await response.json();
+    return data;
+  }
+
+
   //Quit la partie en cours
   public async quitGame(): Promise<any> {
     await this.fetchData("quit", "POST");

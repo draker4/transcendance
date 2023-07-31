@@ -34,14 +34,18 @@ export class GameService {
 
   public async getGameById(gameId: string): Promise<any> {
     try {
+      console.log('getGameById: ', gameId);
       const game = await this.gameRepository.findOne({
         where: { id: gameId },
       });
       if (!game) {
+        console.log('getGameById: Game not found');
         throw new Error('Game not found');
       }
+      console.log('getGameById: ', game);
       return game;
     } catch (error) {
+      console.log('getGameById: ', error.message);
       throw new Error(error.message);
     }
   }
@@ -87,9 +91,33 @@ export class GameService {
     side: 'Left' | 'Right',
   ): Promise<Player> {
     try {
+      let player: Player = {
+        id: -1,
+        name: 'Searching Player',
+        color: { r: 0, g: 0, b: 0, a: 0 },
+        avatar: {
+          image: '',
+          text: '',
+          variant: 'circular',
+          borderColor: '#000000',
+          backgroundColor: '#ffffff',
+          empty: true,
+          decrypt: false,
+        },
+        side: side,
+      };
       const user = await this.usersService.getUserById(userId);
+      if (!user) {
+        return player;
+      }
       const avatar = await this.avatarService.getAvatarById(userId, false);
-      const player: Player = {
+      if (!avatar) {
+        player.id = user.id;
+        player.name = user.login;
+        player.side = side;
+        return player;
+      }
+      player = {
         id: userId,
         name: user.login,
         color: convertColor(avatar.borderColor),

@@ -11,6 +11,7 @@ import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 import { ScoreService } from '@/score/service/score.service';
 
 import { GameInfo } from '@transcendence/shared/types/Game.types';
+import { User } from '@/utils/typeorm/User.entity';
 
 @Injectable()
 export class LobbyService {
@@ -66,7 +67,8 @@ export class LobbyService {
         ret.message = 'User not found';
         return ret;
       }
-      const game = await this.gameService.getGameById(gameId);
+
+      const game: Game = await this.gameService.getGameById(gameId);
       if (!game) {
         ret.message = 'Game not found';
         return ret;
@@ -76,6 +78,7 @@ export class LobbyService {
       if (game.host === userId || game.opponent === userId) {
         ret.success = true;
         ret.message = 'You are already in this game';
+        return ret;
       }
 
       //Si deja un oposant et qu'il join en opponent (2 joueurs max)
@@ -83,14 +86,15 @@ export class LobbyService {
         ret.message = 'Game is full';
         return ret;
       }
-
       //Ajoute le joueur dans la game en opponent
       await this.gameService.addOpponent(gameId, userId);
       ret.success = true;
       ret.message = 'You joined the game as an opponent';
+      ret.data = gameId;
       return ret;
     } catch (error) {
       ret.error = error;
+      return ret;
     }
   }
 
@@ -106,20 +110,38 @@ export class LobbyService {
         return ret;
       }
       const gamesInfos: GameInfo[] = [];
-      games.forEach(async (game) => {
+      for (const game of games) {
+        let leftPlayer: User | null;
+        let rightPlayer: User | null;
+        if (game.hostSide === 'Left') {
+          leftPlayer = await this.userService.getUserById(game.host);
+          if (game.opponent !== -1) {
+            rightPlayer = await this.userService.getUserById(game.opponent);
+          }
+        } else {
+          rightPlayer = await this.userService.getUserById(game.host);
+          if (game.opponent !== -1) {
+            leftPlayer = await this.userService.getUserById(game.opponent);
+          }
+        }
+
         const gameInfo: GameInfo = {
           id: game.id,
           name: game.name,
           type: game.type,
           mode: game.mode,
-          leftPlayer: game.hostSide === 'Left' ? game.host : game.opponent,
-          rightPlayer: game.hostSide === 'Right' ? game.host : game.opponent,
+          leftPlayerId: leftPlayer ? leftPlayer.id : -1,
+          leftPlayerLogin: leftPlayer ? leftPlayer.login : '...',
+          rightPlayerId: rightPlayer ? rightPlayer.id : -1,
+          rightPlayerLogin: rightPlayer ? rightPlayer.login : '...',
           actualRound: game.actualRound,
           maxRound: game.maxRound,
           status: game.status,
         };
+        console.log(gameInfo);
+
         gamesInfos.push(gameInfo);
-      });
+      }
       ret.success = true;
       ret.message = 'Games found';
       ret.data = gamesInfos;

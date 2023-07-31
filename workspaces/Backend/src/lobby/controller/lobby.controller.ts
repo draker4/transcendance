@@ -6,6 +6,8 @@ import {
   UsePipes,
   ValidationPipe,
   Body,
+  Param,
+  Put,
 } from '@nestjs/common';
 import { LobbyService } from '../service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -30,8 +32,8 @@ export class LobbyController {
   }
 
   // 02 - api/lobby/join
-  @Post('join')
-  JoinGame(@Req() req, @Body() gameId: string) {
+  @Put('join/:gameId')
+  JoinGame(@Req() req, @Param('gameId') gameId: string) {
     return this.lobbyService.JoinGame(req.user.id, gameId);
   }
 

@@ -51,18 +51,17 @@ export default function PartyList({ lobbyService, token }: Props) {
   return (
     <div className={styles.partyList}>
       <h2>Party List</h2>
-      <table className={styles.list}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Players</th>
-            <th>Details</th>
-            <th>Round</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div className={styles.list}>
+        <div className={styles.listHead}>
+          <p className={styles.detailTitle}>Detail</p>
+          <p className={styles.nameTitle}>Name</p>
+          <p className={styles.typeTitle}>Type</p>
+          <p className={styles.playersTitle}>Players</p>
+          <p className={styles.roundTitle}>Round</p>
+          <p className={styles.statusTitle}>Status</p>
+          <p className={styles.actionTitle}>Action</p>
+        </div>
+        <div className={styles.listBody}>
           {gameList.map((game: GameInfo) => (
             <PartyInfo
               key={game.id}
@@ -71,8 +70,8 @@ export default function PartyList({ lobbyService, token }: Props) {
               gameInfo={game}
             />
           ))}
-        </tbody>
-      </table>
+        </div>
+      </div>
     </div>
   );
 }

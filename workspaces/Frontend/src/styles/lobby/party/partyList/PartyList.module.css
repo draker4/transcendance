@@ -1,22 +1,76 @@
-/* PartyList.module.css */
 .partyList {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  padding: 1rem;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px 10px;
 }
 
 .list {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
   width: 100%;
-  border-collapse: collapse;
+  background-color: var(--primary1);
+  border: 3px solid var(--primary3);
+  border-radius: 8px;
+  overflow-x: auto; /* Horizontal Scrollbar */
 }
 
-.list th,
-.list td {
-  padding: 0.5rem;
+.listHead {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  min-width: fit-content;
+  width: 100%;
+  background-color: var(--primary3);
+  border-bottom: 3px solid var(--primary1);
+}
+
+.listHead > * {
+  display: flex;
+  justify-content: center;
   text-align: center;
+  padding: 10px 5px;
+  min-width: fit-content;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: var(--title-font);
 }
 
-.list th {
-  background-color: #f0f0f0;
+.detailTitle {
+  width: 60px;
+}
+
+.nameTitle {
+  width: 150px;
+}
+
+.typeTitle {
+  width: 70px;
+}
+
+.playersTitle {
+  width: 200px;
+}
+
+.roundTitle {
+  width: 60px;
+}
+
+.statusTitle {
+  width: 90px;
+}
+
+.actionTitle {
+  width: 100px;
+}
+
+.listBody {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  min-width: fit-content;
+  width: 100%;
 }

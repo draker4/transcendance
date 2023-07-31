@@ -1,8 +1,4 @@
-import {
-  GameData,
-  Round,
-  Player,
-} from "@transcendence/shared/types/Game.types";
+import { GameData, Player } from "@transcendence/shared/types/Game.types";
 
 import styles from "@/styles/game/Info.module.css";
 import AvatarUser from "../avatarUser/AvatarUser";
