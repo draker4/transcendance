@@ -1,4 +1,3 @@
-import { setCookie } from "cookies-next";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -13,6 +12,7 @@ export default function LogInComponent() {
   const [register, setRegister] = useState<boolean>(false);
   const [login, setLogin] = useState<string>("");
   const [notif, setNotif] = useState<string>("");
+  const [successNewPassword, setSuccessNewPassword] = useState<boolean>(false);
 
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
@@ -35,7 +35,6 @@ export default function LogInComponent() {
         const data = await res.json();
 
         if (data.message === "Loading...") {
-          setTextButton(data.message);
           router.push("/home");
         }
         
@@ -45,6 +44,7 @@ export default function LogInComponent() {
       catch (error) {
         console.log(error);
         setNotif("Something went wrong, please try again!");
+        setTextButton("Continue");
       }
     }
 
@@ -55,8 +55,10 @@ export default function LogInComponent() {
         setCookies(tokens[0], "");
       else if (tokens.length === 2)
         setCookies(tokens[0], tokens[1]);
-      else
+      else {
         setNotif("Something went wrong, please try again!");
+        setTextButton("Continue");
+      }
     }
 
     if (register) router.push("/welcome/confirm");
@@ -65,10 +67,25 @@ export default function LogInComponent() {
       setNotif("Something went wrong, please try again!");
   }, [register, login, router, test]);
 
+  useEffect(() => {
+    if (successNewPassword)
+      setTimeout(() => {
+        setSuccessNewPassword(false);
+      }, 5000);
+  }, [successNewPassword]);
+
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <div className={styles.logIn}>
       <h1 className={styles.title}>Connection / Inscription</h1>
+
+      {
+        successNewPassword &&
+          <p className={styles.success}>
+            Your password has been updated! Check your email address 📧
+          </p>
+      }
+
       <LogEmail
         notif={notif}
         setNotif={setNotif}
@@ -78,6 +95,7 @@ export default function LogInComponent() {
         setRegister={setRegister}
         login={login}
         setLogin={setLogin}
+        setSuccessNewPassword={setSuccessNewPassword}
       />
       <div className={styles.separator}>
         <span>Or</span>

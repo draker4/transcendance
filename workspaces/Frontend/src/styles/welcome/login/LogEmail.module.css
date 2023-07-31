@@ -1,8 +1,9 @@
-.LogEmail {
+.logEmail {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  width: 95%;
 }
 
 .description {
@@ -45,26 +46,28 @@
   font-size: 18px;
   font-weight: bold;
   color: var(--tertiary1);
+  word-break: break-all;
 }
 
 .emailBtn {
-  padding-inline: 10px;
+  cursor: pointer;
+  margin: auto 10px;
 }
 
 .notif {
-  padding-bottom: clamp(10px, 2vh, 30px);
+  padding-top: 10px;
   color: var(--notif);
   font-size: clamp(0.8rem, 1vh, 1.2rem);
 }
 
 .continueBtn {
   appearance: none;
-  padding: 6px 20px;
+  padding: 5px 20px;
   border-radius: 4px;
   font-size: 18px;
   font-weight: bold;
   /* transition: all 0.3s ease-in; */
-  margin-block: 20px;
+  margin-top: 20px;
   margin-inline: 10px;
   color: var(--tertiary1);
   background-color: inherit;
@@ -83,6 +86,7 @@
 
 .openPassword {
   height: auto;
+  width: 100%;
   opacity: 1;
   transition: height 1s ease, opacity 0.5s ease;
 }
@@ -91,4 +95,17 @@
   height: 0;
   opacity: 0;
   visibility: hidden;
+}
+
+.openPassword p {
+  padding-top: 10px;
+  color: var(--accent1);
+  font-size: 0.9rem;
+  font-family: var(--text-font);
+  max-width: 70%;
+  margin: 0 auto;
+}
+
+.openPassword p span {
+  cursor: pointer;
 }

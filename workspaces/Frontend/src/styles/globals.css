@@ -35,8 +35,10 @@
 
   /* COLOR DEFINES - DARK*/
 
-  --primary1-dark: rgb(17, 19, 31);
-  --primary2-dark: rgb(38, 41, 58);
+  /* --primary1-dark: rgb(17, 19, 31); */
+  /* --primary2-dark: rgb(38, 41, 58); */
+  --primary1-dark: rgb(40, 44, 52);
+  --primary2-dark: rgb(59, 65, 75);
   --primary3-dark: rgb(69, 70, 92);
 
   --secondary1-dark: rgb(131, 135, 162);

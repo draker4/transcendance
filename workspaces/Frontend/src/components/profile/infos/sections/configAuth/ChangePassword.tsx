@@ -178,9 +178,9 @@ export default function ChangePassword({
 	}
 
 	const	handleEmailPassword = () => {
+		setNotif('');
 
 		if (emailPassword === initalEmailPasswordText) {
-			setNotif('');
 			setTextButton("Send new password by mail");
 			setEmailPassword("You can get a new password by email. Click again to cancel.");
 		}
