@@ -17,6 +17,8 @@ import {
 // import services
 import { GameService } from '../service/game.service';
 import { ColoredLogger } from '../colored-logger';
+import { ScoreService } from '@/score/service/score.service';
+import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 
 @Injectable()
 export class GameManager {
@@ -29,6 +31,7 @@ export class GameManager {
 
   constructor(
     private readonly gameService: GameService,
+    private readonly scoreService: ScoreService,
     private readonly logger: ColoredLogger,
   ) {
     this.logger = new ColoredLogger(GameManager.name); // Set the module name for the logger
@@ -168,7 +171,17 @@ export class GameManager {
     }
     try {
       const game: Game = await this.gameService.getGameById(gameId);
-      pong = new Pong(this.server, gameId, game, this.gameService, this.logger);
+      const score: ScoreInfo = await this.scoreService.getScoreByGameId(
+        game.id,
+      );
+      pong = new Pong(
+        this.server,
+        gameId,
+        game,
+        this.gameService,
+        this.logger,
+        score,
+      );
       await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);
       return this.joinGame(gameId, userId, socket);

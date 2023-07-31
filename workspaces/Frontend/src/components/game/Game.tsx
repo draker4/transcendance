@@ -6,7 +6,7 @@ import Link from "next/link";
 
 //Import les services
 import LobbyService from "@/services/Lobby.service";
-import GameService from "@/services/game/Game.service";
+import GameService from "@/services/Game.service";
 
 //Import les composants
 import styles from "@/styles/game/Game.module.css";

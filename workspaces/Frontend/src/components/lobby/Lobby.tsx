@@ -1,7 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -20,41 +20,34 @@ type Props = {
 };
 
 export default function Lobby({ profile, token, avatar }: Props) {
-  const lobby = new LobbyService(token);
+  const lobbyService = new LobbyService(token);
   const matchmaking = new MatchmakingService(token);
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [gameId, setGameId] = useState<string>("");
   const [menu, setMenu] = useState<string>("League");
+  const [gameId, setGameId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    lobby
-      .isInGame()
-      .then((gameId) => {
-        setIsLoading(false);
-        setGameId(gameId);
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoading(false);
-      });
+    lobbyService.isInGame().then((ret: ReturnData) => {
+      if (ret.success) {
+        setGameId(ret.data);
+      } else {
+        console.log(ret.message);
+      }
+    });
   }, []);
 
-  if (isLoading) {
+  if (gameId) {
     return (
-      <div className={styles.loading}>
-        <h1>Loading...</h1>
-      </div>
+      <InGame lobby={lobbyService} gameId={gameId} setGameId={setGameId} />
     );
-  } else if (gameId) {
-    return <InGame lobby={lobby} gameId={gameId} />;
   }
   return (
     <div className={styles.lobby}>
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
         {menu == "League" && <League Matchmaking={matchmaking} token={token} />}
-        {menu == "Party" && <Party lobby={lobby} profile={profile} />}
+        {menu == "Party" && (
+          <Party lobbyService={lobbyService} profile={profile} token={token} />
+        )}
         {menu == "Training" && <Training profile={profile} avatar={avatar} />}
       </div>
     </div>

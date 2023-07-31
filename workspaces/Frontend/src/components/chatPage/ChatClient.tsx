@@ -1,109 +1,111 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import stylesError from "@/styles/chatPage/ChatPage.module.css";
 import styles from "@/styles/chatPage/ChatClient.module.css";
 import Conversations from "./Conversations";
 import ChatDisplay from "./ChatDisplay";
-import ChatService from "@/services/chat/Chat.service";
+import ChatService from "@/services/Chat.service";
 import Link from "next/link";
 
-export default function ChatClient({ token, myself }: {
-	token: string;
-	myself: Profile & { avatar: Avatar };
+export default function ChatClient({
+  token,
+  myself,
+}: {
+  token: string;
+  myself: Profile & { avatar: Avatar };
 }) {
-	const	[littleScreen, setLittleScreen] = useState<boolean>(true);
-	const	[open, setOpen] = useState<boolean>(false);
-	const	[display, setDisplay] = useState<Display>();
-	const	[error, setError] = useState<boolean>(false);
-	const	chatService = new ChatService(token);
+  const [littleScreen, setLittleScreen] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
+  const [display, setDisplay] = useState<Display>();
+  const [error, setError] = useState<boolean>(false);
+  const chatService = new ChatService(token);
 
-	const	openDisplay = (display: Display) => {
-		setOpen(true);
-		setDisplay(display);
-	}
+  const openDisplay = (display: Display) => {
+    setOpen(true);
+    setDisplay(display);
+  };
 
-	const	closeDisplay = () => {
-		setOpen(false);
-	}
+  const closeDisplay = () => {
+    setOpen(false);
+  };
 
-	useEffect(() => {
-		const handleResize = () => {
-		  const screenWidth = window.innerWidth;
-		  setLittleScreen(screenWidth < 800);
-		};
-	
-		handleResize();
-	
-		window.addEventListener("resize", handleResize);
-	
-		return () => {
-		  window.removeEventListener("resize", handleResize);
-		};
-	}, []);
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      setLittleScreen(screenWidth < 800);
+    };
 
-	// WsException Managing
-	useEffect(() => {
-		chatService.socket?.on('exception', () => {
-			setError(true);
-		});
-	}, [chatService.socket]);
+    handleResize();
 
+    window.addEventListener("resize", handleResize);
 
-	if (!chatService.socket || error) {
-		return (
-			<div className={stylesError.error}>
-				<h2>Oops... Something went wrong!</h2>
-				<Link href={"/home"} className={stylesError.errorLink}>
-					<p>Return to Home Page!</p>
-				</Link>
-			</div>
-		)
-	}
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
-	// narrow screen width, display not opened
-	if (littleScreen && !open)
-		return (
-			<div className={styles.main}>
-				<Conversations
-					socket={chatService.socket}
-					maxWidth="100%"
-					openDisplay={openDisplay}
-				/>
-			</div>
-		);
+  // WsException Managing
+  useEffect(() => {
+    chatService.socket?.on("exception", () => {
+      setError(true);
+    });
+  }, [chatService.socket]);
 
-	// narrow screen width, display opened
-	if (littleScreen && open)
-		return (
-			<div className={styles.main}>
-				<ChatDisplay
-					socket={chatService.socket}
-					display={display}
-					littleScreen={littleScreen}
-					closeDisplay={closeDisplay}
-					myself={myself}
-					openDisplay={openDisplay}
-				/>
-			</div>
-		);
+  if (!chatService.socket || error) {
+    return (
+      <div className={stylesError.error}>
+        <h2>Oops... Something went wrong!</h2>
+        <Link href={"/home"} className={stylesError.errorLink}>
+          <p>Return to Home Page!</p>
+        </Link>
+      </div>
+    );
+  }
 
-	// wide screen width, open both
-	return (
-		<div className={styles.main}>
-			<Conversations
-				socket={chatService.socket}
-				maxWidth="400px"
-				openDisplay={openDisplay}
-			/>
-			<ChatDisplay
-				socket={chatService.socket}
-				display={display}
-				littleScreen={littleScreen}
-				closeDisplay={closeDisplay}
-				myself={myself}
-				openDisplay={openDisplay}
-			/>
-		</div>
-	)
+  // narrow screen width, display not opened
+  if (littleScreen && !open)
+    return (
+      <div className={styles.main}>
+        <Conversations
+          socket={chatService.socket}
+          maxWidth="100%"
+          openDisplay={openDisplay}
+        />
+      </div>
+    );
+
+  // narrow screen width, display opened
+  if (littleScreen && open)
+    return (
+      <div className={styles.main}>
+        <ChatDisplay
+          socket={chatService.socket}
+          display={display}
+          littleScreen={littleScreen}
+          closeDisplay={closeDisplay}
+          myself={myself}
+          openDisplay={openDisplay}
+        />
+      </div>
+    );
+
+  // wide screen width, open both
+  return (
+    <div className={styles.main}>
+      <Conversations
+        socket={chatService.socket}
+        maxWidth="400px"
+        openDisplay={openDisplay}
+      />
+      <ChatDisplay
+        socket={chatService.socket}
+        display={display}
+        littleScreen={littleScreen}
+        closeDisplay={closeDisplay}
+        myself={myself}
+        openDisplay={openDisplay}
+      />
+    </div>
+  );
 }

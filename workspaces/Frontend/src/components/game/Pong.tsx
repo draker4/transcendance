@@ -59,13 +59,14 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
 
     if (animationFrameId === undefined) {
       animationFrameId = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, draw)
+        gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
     return () => {
       isMountedRef.current = false;
       if (animationFrameId !== undefined) {
         cancelAnimationFrame(animationFrameId);
+        animationFrameId = undefined;
       }
     };
   }, []);

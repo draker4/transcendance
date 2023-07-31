@@ -36,6 +36,7 @@ export default async function HomePage() {
     motto: "",
     story: "",
   };
+  let gameId: string | undefined;
 
   try {
     token = cookies().get("crunchy-token")?.value;
@@ -46,14 +47,21 @@ export default async function HomePage() {
 
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarbyUserId(profile.id);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 
   return (
     <main className={styles.home}>
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
         <HomeProfile profile={profile} avatar={avatar} />
-        <Lobby profile={profile} token={token} avatar={avatar} />
+        <Lobby
+          profile={profile}
+          token={token}
+          avatar={avatar}
+          gameId={gameId}
+        />
       </Suspense>
     </main>
   );

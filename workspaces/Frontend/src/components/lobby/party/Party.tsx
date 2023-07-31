@@ -8,11 +8,12 @@ import PartyList from "@/components/lobby/party/partyList/PartyList";
 import { useRef } from "react";
 
 type Props = {
-  lobby: LobbyService;
+  lobbyService: LobbyService;
   profile: Profile;
+  token: string | undefined;
 };
 
-export default function Party({ lobby, profile }: Props) {
+export default function Party({ lobbyService, profile, token }: Props) {
   const [createParty, setCreateParty] = useState<boolean>(false);
   const createBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -28,13 +29,13 @@ export default function Party({ lobby, profile }: Props) {
 
       {createParty && (
         <CreateParty
-          lobby={lobby}
+          lobbyService={lobbyService}
           setCreateParty={setCreateParty}
           userId={profile.id}
           createBtnRef={createBtnRef}
         />
       )}
-      {/* {!createParty && <PartyList token={token} />} */}
+      {!createParty && <PartyList lobbyService={lobbyService} token={token} />}
     </div>
   );
 }

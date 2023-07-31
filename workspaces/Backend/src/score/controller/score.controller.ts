@@ -15,9 +15,9 @@ import { UpdateScoreDTO } from '../dto/UpdateScore.dto';
 export class ScoreController {
   constructor(private readonly scoreService: ScoreService) {}
 
-  @Get(':gameId')
-  async getScoreByGameId(@Param('gameId') gameId: string, @Req() req) {
-    //return this.scoreService.getScoreByGameId(gameId, req.user.id);
+  @Get('game/:gameId')
+  async getScoreByGameId(@Param('gameId') gameId: string) {
+    return this.scoreService.getScoreByGameId(gameId);
   }
 
   @Put('update')

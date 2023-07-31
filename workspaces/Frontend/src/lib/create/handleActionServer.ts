@@ -1,6 +1,6 @@
 "use client";
 
-import { CryptoService } from "@/services/crypto/Crypto.service";
+import { CryptoService } from "@/services/Crypto.service";
 import { getDoubleLogin } from "./checkLogin";
 import fetchClientSide from "../fetch/fetchClientSide";
 
