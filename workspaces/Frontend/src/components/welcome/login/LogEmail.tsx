@@ -84,6 +84,9 @@ export default function LogEmail({
   };
 
   const submit = async (data: FormInputs) => {
+    setTextButton("Loading...");
+    setNotif("");
+
     try {
       await handleCaptcha();
 
@@ -107,6 +110,7 @@ export default function LogEmail({
 
         if (res.emailExists) exists.current = true;
 
+        setTextButton("Continue");
         return;
       }
 
@@ -123,10 +127,11 @@ export default function LogEmail({
 
       setPasswordSecured(res.passwordSecured);
 
-      if (register || login) setTextButton("Loading...");
+      if (!register && !login) setTextButton("Continue");
       setRegister(res.register);
       setLogin(res.login);
     } catch (error) {
+      setTextButton("Continue");
       setNotif("Something went wrong, please try again!");
     }
   };

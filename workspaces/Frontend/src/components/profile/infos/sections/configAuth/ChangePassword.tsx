@@ -11,9 +11,11 @@ const	Crypto = new CryptoService();
 export default function ChangePassword({
 	setChangePassword,
 	setSuccess,
+	setSendEmail,
 }: {
 	setChangePassword: Dispatch<SetStateAction<boolean>>;
 	setSuccess: Dispatch<SetStateAction<boolean>>;
+	setSendEmail: Dispatch<SetStateAction<boolean>>;
 }) {
 
 	const	initalEmailPasswordText = "Forgot my password?";
@@ -29,38 +31,63 @@ export default function ChangePassword({
 		e.preventDefault();
 	
 		setNotif('');
-		setTextButton("Loading...");
-
-		if (!newPassword && password.length === 0) {
-			setNotif('Please enter your current password.');
-			setTextButton("Validate");
-			return ;
-		}
-
-		if (newPassword && /[ ]/.test(password)) {
-			setNotif("The password must not contain any space");
-			setTextButton("Validate");
-			return ;
-		}
-		
-		if (newPassword && /["'`]/.test(password)) {
-			setNotif("The password must not contain any quote");
-			setTextButton("Validate");
-			return ;
-		}
-		
-		if (newPassword &&
-			(password.length < 8
-			|| !/[A-Z]/.test(password)
-			|| !/[0-9]/.test(password)
-			|| !/[!@#$%^&*(),.?:{}|<>]/.test(password))
-		) {
-			setNotif("The password must contain at least 8 characters, with one capital letter, one digit and one special character");
-			setTextButton("Validate");
-			return ;
-		}
 
 		try {
+			setTextButton("Loading...");
+
+			if (emailPassword !== initalEmailPasswordText) {
+
+				const	res = await fetchClientSide(
+					`http://${process.env.HOST_IP}:4000/api/auth/sendPassword`, {
+						method: "POST",
+					}
+				);
+
+				if (!res.ok)
+					throw new Error('fetch failed');
+				
+				const	data = await res.json();
+
+				if (data.success) {
+					setChangePassword(false);
+					setSendEmail(true);
+					setTextButton("Validate");
+					return ;
+				}
+
+				throw new Error('no success');
+			}
+
+
+			if (!newPassword && password.length === 0) {
+				setNotif('Please enter your current password.');
+				setTextButton("Validate");
+				return ;
+			}
+
+			if (newPassword && /[ ]/.test(password)) {
+				setNotif("The password must not contain any space");
+				setTextButton("Validate");
+				return ;
+			}
+			
+			if (newPassword && /["'`]/.test(password)) {
+				setNotif("The password must not contain any quote");
+				setTextButton("Validate");
+				return ;
+			}
+			
+			if (newPassword &&
+				(password.length < 8
+				|| !/[A-Z]/.test(password)
+				|| !/[0-9]/.test(password)
+				|| !/[!@#$%^&*(),.?:{}|<>]/.test(password))
+			) {
+				setNotif("The password must contain at least 8 characters, with one capital letter, one digit and one special character");
+				setTextButton("Validate");
+				return ;
+			}
+
 			if (!newPassword) {
 				const	passwordCrypted = await Crypto.encrypt(password);
 
@@ -143,7 +170,10 @@ export default function ChangePassword({
 				router.refresh();
 			}
 			setNotif('Something went wrong, please try again!');
-			setTextButton("Validate");
+			if (emailPassword !== initalEmailPasswordText)
+				setTextButton("Send new password by mail");
+			else
+				setTextButton("Validate");
 		}
 	}
 
@@ -240,6 +270,7 @@ export default function ChangePassword({
 					onClick={() => {
 						setChangePassword(false);
 					}}
+					type="button"
 				>
 					Cancel
 				</button>
