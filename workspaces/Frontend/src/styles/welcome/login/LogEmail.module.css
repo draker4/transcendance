@@ -17,7 +17,7 @@
   font-size: 16px;
   font-weight: bold;
   color: var(--secondary1);
-  background-color: var(--primary2);
+  background-color: inherit;
   border: 3px solid var(--secondary1);
   padding: 6px;
   width: 90%;
@@ -63,17 +63,18 @@
   border-radius: 4px;
   font-size: 18px;
   font-weight: bold;
-  transition: all 0.3s ease-in;
+  /* transition: all 0.3s ease-in; */
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary1);
-  background-color: var(--secondary1);
+  color: var(--tertiary1);
+  background-color: inherit;
   border: 3px solid var(--accent1);
+  cursor: pointer;
 }
 
-.continueBtn:checked {
+/* .continueBtn:checked {
   transition: all 0.3s ease-out;
-}
+} */
 
 .continueBtn:hover {
   color: var(--accent1);

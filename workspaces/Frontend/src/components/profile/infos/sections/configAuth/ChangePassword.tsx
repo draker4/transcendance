@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import stylesButton from "@/styles/profile/TfaComponent.module.css";
 import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
-import { CryptoService } from "@/services/crypto/Crypto.service";
 import hash from "@/lib/bcrypt/hash";
+import { CryptoService } from "@/services/Crypto.service";
 
 const	Crypto = new CryptoService();
 

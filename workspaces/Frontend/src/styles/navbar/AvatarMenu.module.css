@@ -20,7 +20,6 @@
 }
 
 .dropdown {
-  /* width: 40vw; */
   position: absolute;
   top: clamp(50px, 3vh, 60px);
   right: 5%;
@@ -34,15 +33,17 @@
   flex-flow: column nowrap;
   justify-content: center;
   text-align: center;
-  padding: 0;
-  border: 4px solid var(--secondary2);
+  padding: 5px 10px;
+  border: 2px solid var(--accent1);
   font-family: var(--title-font);
+  background-color: var(--primary1);
   font-weight: 500;
   font-size: 16px;
+  border-radius: 5px;
 }
 
 .profile {
-  text-transform: uppercase;
+  /* text-transform: uppercase; */
 }
 
 .list a,
@@ -56,11 +57,12 @@
   min-width: 100px;
   height: 30px;
   padding: 5px;
-  background-color: var(--primary2);
+  background-color: var(--primary1);
+  border-radius: 5px;
 }
 
 .list li:hover {
   color: var(--accent2);
-  background-color: var(--secondary2);
+  background-color: var(--primary2);
   cursor: pointer;
 }
