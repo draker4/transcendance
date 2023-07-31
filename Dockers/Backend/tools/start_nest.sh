@@ -1,20 +1,27 @@
 #!/bin/bash
 echo "Begin NestJS configuration"
 
-echo "Install required depedencies"
 cd home
 yarn global add node-gyp
-yarn cache clean
-yarn install --check-files
+# Check if node_modules folder exists
+if [ -d "node_modules" ]; then
+  # echo "Update dependencies"
+  # cd workspaces/Backend
+  # yarn cache clean
+  # yarn upgrade --latest --exact
+  # cd ../..
+  echo "already installed"
+  yarn cache clean
+  yarn install --check-files
+else
+  echo "Install required dependencies"
+  yarn install
+fi
 
-echo "Update depedencies"
-yarn upgrade
-
-#Start dev env
+# Start dev env
 echo "Starting dev frontend environment"
 yarn run start:dev:backend
 
-#Start prod env
+# Start prod env
 #echo "Starting prod frontend environment"
 #yarn run start:prod:backend
-

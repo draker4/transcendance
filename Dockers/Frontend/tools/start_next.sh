@@ -1,14 +1,22 @@
 #!/bin/bash
 echo "Begin Next configuration"
 
-echo "Install required depedencies"
 cd home
 yarn global add node-gyp
-yarn cache clean
-yarn install --check-files
-
-echo "Update depedencies"
-yarn upgrade
+# Check if node_modules folder exists
+if [ -d "node_modules" ]; then
+  # echo "Update dependencies"
+  # cd workspaces/Frontend
+  # yarn cache clean
+  # yarn upgrade --latest --exact
+  # cd ../..
+  echo "already installed"
+  yarn cache clean
+  yarn install --check-files
+else
+  echo "Install required dependencies"
+  yarn install
+fi
 
 #Start dev env
 echo "Starting dev frontend environment"
