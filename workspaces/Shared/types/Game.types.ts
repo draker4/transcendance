@@ -1,3 +1,5 @@
+import { ScoreInfo } from "./Score.types";
+
 export type Action =
   | "Idle"
   | "Up"
@@ -21,17 +23,6 @@ export const DirYValues: { [key: string]: DirY } = {
   Up: -1,
   Idle: 0,
   Down: 1,
-};
-
-export type Round = {
-  left: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  right: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-};
-
-export type Score = {
-  leftRound: 0 | 1 | 2 | 3 | 4 | 5;
-  rightRound: 0 | 1 | 2 | 3 | 4 | 5;
-  round: Round[];
 };
 
 export type StatusMessage = {
@@ -137,7 +128,7 @@ export type GameData = {
   // Dynamic Data
   playerServe: "Left" | "Right" | null;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  score: Score;
+  score: ScoreInfo;
   timer: Timer | null;
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
   result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
@@ -154,4 +145,17 @@ export type InitData = {
   push: boolean;
   background: string;
   ball: string;
+  score: ScoreInfo;
+};
+
+export type GameInfo = {
+  id: string;
+  name: string;
+  type: "Classic" | "Best3" | "Best5" | "Custom";
+  mode: "League" | "Party";
+  leftPlayer: number;
+  rightPlayer: number;
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxRound: 1 | 3 | 5 | 7 | 9;
+  status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
 };

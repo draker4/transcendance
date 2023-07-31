@@ -8,10 +8,16 @@ const frameCountRef = { current: 0 };
 const fpsRef = { current: 0 };
 const showFpsRef = true;
 
-export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
+export const gameLoop = (
+  timestamp: number,
+  game: GameData,
+  draw: Draw,
+  isMountedRef: React.MutableRefObject<boolean>
+) => {
   const elapsedTime = timestamp - lastTimestampRef.current;
   frameCountRef.current++;
 
+  if (!isMountedRef.current) return;
   if (elapsedTime >= 16.67) {
     if (game.status === "Playing") {
       updatePong(game);
@@ -43,6 +49,8 @@ export const gameLoop = (timestamp: number, game: GameData, draw: Draw) => {
     0
   );
   setTimeout(() => {
-    requestAnimationFrame((timestamp) => gameLoop(timestamp, game, draw));
+    requestAnimationFrame((timestamp) =>
+      gameLoop(timestamp, game, draw, isMountedRef)
+    );
   }, remainingDelay);
 };

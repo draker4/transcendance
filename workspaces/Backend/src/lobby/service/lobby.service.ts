@@ -8,6 +8,9 @@ import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 import { GameService } from '@/game/service/game.service';
 import { UsersService } from '@/users/users.service';
 import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { ScoreService } from '@/score/service/score.service';
+
+import { GameInfo } from '@transcendence/shared/types/Game.types';
 
 @Injectable()
 export class LobbyService {
@@ -18,6 +21,7 @@ export class LobbyService {
     public readonly gameService: GameService,
     public readonly userService: UsersService,
     public readonly matchmakingService: MatchmakingService,
+    public readonly scoreService: ScoreService,
   ) {}
   async CreateGame(userId: number, newGame: CreateGameDTO): Promise<any> {
     const ret: ReturnData = {
@@ -33,8 +37,9 @@ export class LobbyService {
       }
 
       //Si le joueur recherche deja une partie
-
-      if (await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)) {
+      else if (
+        await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)
+      ) {
         ret.message = 'You are already in matchmaking';
         return ret;
       }
@@ -43,13 +48,10 @@ export class LobbyService {
       ret.success = true;
       ret.message = 'Game created';
       ret.data = newGameId;
+      return ret;
     } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
+      ret.error = error;
+      return ret;
     }
   }
 
@@ -99,9 +101,28 @@ export class LobbyService {
     };
     try {
       const games = await this.gameService.getCurrentGames();
+      if (!games) {
+        ret.message = 'No games found';
+        return ret;
+      }
+      const gamesInfos: GameInfo[] = [];
+      games.forEach(async (game) => {
+        const gameInfo: GameInfo = {
+          id: game.id,
+          name: game.name,
+          type: game.type,
+          mode: game.mode,
+          leftPlayer: game.hostSide === 'Left' ? game.host : game.opponent,
+          rightPlayer: game.hostSide === 'Right' ? game.host : game.opponent,
+          actualRound: game.actualRound,
+          maxRound: game.maxRound,
+          status: game.status,
+        };
+        gamesInfos.push(gameInfo);
+      });
       ret.success = true;
       ret.message = 'Games found';
-      ret.data = games;
+      ret.data = gamesInfos;
       return ret;
     } catch (error) {
       ret.error = error;

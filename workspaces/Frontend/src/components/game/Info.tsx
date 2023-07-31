@@ -6,7 +6,7 @@ import {
 
 import styles from "@/styles/game/Info.module.css";
 import AvatarUser from "../avatarUser/AvatarUser";
-import { CryptoService } from "@/services/crypto/Crypto.service";
+import { CryptoService } from "@/services/Crypto.service";
 
 import { useEffect } from "react";
 

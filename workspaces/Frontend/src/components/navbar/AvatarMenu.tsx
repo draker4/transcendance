@@ -5,7 +5,7 @@ import styles from "@/styles/navbar/AvatarMenu.module.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
-import ChatService from "@/services/chat/Chat.service";
+import ChatService from "@/services/Chat.service";
 
 type Props = {
   avatar: Avatar;
@@ -17,7 +17,7 @@ export default function AvatarMenu({ avatar, profile, token }: Props) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-	const chatService = new ChatService(token as string);
+  const chatService = new ChatService(token as string);
   const [avatarUpdated, setAvatarUpdated] = useState<Avatar>(avatar);
   const [login, setLogin] = useState<string>(profile.login);
 
@@ -38,7 +38,6 @@ export default function AvatarMenu({ avatar, profile, token }: Props) {
   }, [avatar]);
 
   useEffect(() => {
-
     const handleOutsideClick = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
@@ -54,21 +53,20 @@ export default function AvatarMenu({ avatar, profile, token }: Props) {
 
   useEffect(() => {
     const updateProfile = () => {
-      chatService.socket?.emit('getLoginWithAvatar', (payload: {
-        login: string;
-        avatar: Avatar;
-      }) => {
-        setAvatarUpdated(payload.avatar);
-        setLogin(payload.login);
-      });
-    }
-  
-    chatService.socket?.on('notif', updateProfile);
+      chatService.socket?.emit(
+        "getLoginWithAvatar",
+        (payload: { login: string; avatar: Avatar }) => {
+          setAvatarUpdated(payload.avatar);
+          setLogin(payload.login);
+        }
+      );
+    };
+
+    chatService.socket?.on("notif", updateProfile);
 
     return () => {
-      chatService.socket?.off('notif', updateProfile);
-    }
-
+      chatService.socket?.off("notif", updateProfile);
+    };
   }, [chatService.socket]);
 
   return (

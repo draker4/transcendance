@@ -1,80 +1,63 @@
 "use client";
 
-import One_Game from "@/components/lobby/party/partyList/Matchmaking_Game_Infos";
+import { useEffect, useState } from "react";
 import styles from "@/styles/lobby/party/PartyList.module.css";
 
-import Matchmaking_Search from "./Matchmaking_Search";
-
 import LobbyService from "@/services/Lobby.service";
-
-import { useEffect, useState } from "react";
+import { GameInfo } from "@transcendence/shared/types/Game.types";
+import PartyInfo from "./PartyInfo";
+import ScoreService from "@/services/Score.service";
 
 type Props = {
-  token: String | undefined;
+  lobbyService: LobbyService;
+  token: string | undefined;
 };
 
-interface Game {
-  id: string;
-  Name: string;
-  Host: number;
-  Opponent: number;
-  Viewers_List: number;
-  Score_Host: number;
-  Score_Opponent: number;
-  Status: string;
-  CreatedAt: string;
-  Winner: number;
-  Loser: number;
-}
-
-export default function PartyList({ token }: Props) {
-  //Import le service pour les games
-  const Lobby = new LobbyService(token);
-  const [jsonGame, setJsonGame] = useState([] as Game[]);
-  const [filteredGames, setFilteredGames] = useState([] as Game[]);
-  const [LastSearch, setLastSearch] = useState("");
+export default function PartyList({ lobbyService, token }: Props) {
+  const scoreService = new ScoreService(token);
+  const [gameList, setGameList] = useState<GameInfo[] | undefined>(undefined);
 
   //Recupere la liste des games regulierement
   useEffect(() => {
-    const interval = setInterval(() => {
-      Lobby.getGameList().then((json) => {
-        setJsonGame(json);
-      });
-    }, 1000);
+    // Function to fetch the game list
+    const getList = async () => {
+      try {
+        const ret = await lobbyService.getGameList();
+        setGameList(ret.data);
+        console.log("partyList Updated: ", ret.data);
+      } catch (error) {
+        console.error("Error fetching game list:", error);
+      }
+    };
+
+    // Fetch game list initially
+    getList();
+
+    // Then fetch it every 10 seconds
+    const interval = setInterval(getList, 10000);
+
     return () => clearInterval(interval);
   }, []);
 
-  //Filter les games en fonction de la recherche
-  useEffect(() => {
-    // Parcours le JSON et ne garde que les game qui match avec la recherche
-    if (LastSearch !== "" && jsonGame[0].id != "Loading") {
-      const filteredGames = jsonGame.filter((item: Game) =>
-        item.Name.toLowerCase().includes(LastSearch.toLowerCase())
-      );
-      setFilteredGames(filteredGames);
-      console.log(filteredGames);
-    } else {
-      setFilteredGames(jsonGame);
-    }
-  }, [LastSearch, jsonGame]);
-
-  // Fonction qui update larecherche
-  const Update_Search = (searchTerm: string) => {
-    setLastSearch(searchTerm);
-  };
+  if (!gameList) {
+    return (
+      <div className={styles.partyList}>
+        There was an issue loading the party list
+      </div>
+    );
+  } else if (gameList.length === 0) {
+    return <div className={styles.partyList}>No Party Available</div>;
+  }
 
   return (
-    <div className={styles.game_list_main}>
-      <Matchmaking_Search onChangeFct={Update_Search} />
-      <div className={styles.game_list}>
-        {filteredGames.length === 0 && (
-          <p className={styles.loading}>Recherche en cours...</p>
-        )}
-        {filteredGames.length > 0 &&
-          filteredGames.map((game: any, index: number) => (
-            <One_Game game={game} key={index} />
-          ))}
-      </div>
+    <div className={styles.partyList}>
+      {gameList.map((game: GameInfo) => (
+        <PartyInfo
+          lobbyService={lobbyService}
+          scoreService={scoreService}
+          gameInfo={game}
+        />
+      ))}
     </div>
   );
 }

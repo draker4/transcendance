@@ -3,20 +3,21 @@
 import { useState, useEffect } from "react";
 import styles from "@/styles/lobby/party/CreateParty.module.css";
 
-import Lobby_Service from "@/services/Lobby.service";
+import LobbyService from "@/services/Lobby.service";
 import DefineType from "@/components/lobby/party/DefineType";
 import DefineField from "@/components/lobby/party/DefineField";
 import DefineInvite from "@/components/lobby/party/DefineInvite";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  lobby: Lobby_Service;
+  lobbyService: LobbyService;
   setCreateParty: Function;
   userId: number;
   createBtnRef: React.RefObject<HTMLButtonElement>;
 };
 
 export default function CreateParty({
-  lobby,
+  lobbyService,
   setCreateParty,
   userId,
   createBtnRef,
@@ -34,10 +35,11 @@ export default function CreateParty({
   const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
     "Classic"
   );
+  const router = useRouter();
   const difficulty: 1 | 2 | 3 | 4 | 5 = 3;
 
   //Fonction pour rejoindre une game
-  const Create_Game = async () => {
+  async function createGame() {
     if (name.trim() === "") {
       // if name is empty
       setName("");
@@ -60,11 +62,16 @@ export default function CreateParty({
       background: background,
       ball: ball,
     };
-    console.log("Create: " + JSON.stringify(settings));
 
     //Creer la game
-    const res = await lobby.createGame(settings);
-  };
+    const res = await lobbyService.createGame(settings);
+    if (!res.success) {
+      console.log(res.message);
+      return;
+    }
+    const url = "home/game/" + res.data;
+    router.push(url);
+  }
 
   const resetCreate = () => {
     setName("");
@@ -137,7 +144,7 @@ export default function CreateParty({
         <DefineInvite />
       </div>
       <div className={styles.confirm}>
-        <button className={styles.save} type="button" onClick={Create_Game}>
+        <button className={styles.save} type="button" onClick={createGame}>
           Create Game
         </button>
         <button className={styles.cancel} type="button" onClick={resetCreate}>

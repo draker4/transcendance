@@ -22,6 +22,8 @@ import { Game } from '@/utils/typeorm/Game.entity';
 import { GameService } from '../service/game.service';
 import { ColoredLogger } from '../colored-logger';
 
+import { ScoreInfo } from '@transcendence/shared/types/Score.types';
+
 Injectable();
 export class Pong {
   // -----------------------------------  VARIABLE  ----------------------------------- //
@@ -38,6 +40,7 @@ export class Pong {
     private readonly gameDB: Game,
     private readonly gameService: GameService,
     private readonly logger: ColoredLogger,
+    score: ScoreInfo,
   ) {
     if (this.gameDB) {
       const initData: InitData = {
@@ -51,6 +54,7 @@ export class Pong {
         push: this.gameDB.push,
         background: this.gameDB.background,
         ball: this.gameDB.ball,
+        score: score,
       };
       this.data = initPong(initData);
     }

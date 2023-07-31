@@ -3,9 +3,10 @@ import {
   GameData,
   Ball,
   Color,
-  Score,
   PlayerDynamic,
 } from "@transcendence/shared/types/Game.types";
+
+import { ScoreInfo } from "@transcendence/shared/types/Score.types";
 
 // import constants
 import {
@@ -39,24 +40,6 @@ export function initBall(): Ball {
   };
 }
 
-export function initScore(): Score {
-  return {
-    leftRound: 0,
-    rightRound: 0,
-    round: [
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-      { left: 0, right: 0 },
-    ],
-  };
-}
-
 export function initColor(background: string): Color {
   return {
     menu: { r: 0, g: 0, b: 0, a: 0.5 },
@@ -87,7 +70,7 @@ export function initPong(initData: InitData): GameData {
     actualRound: 0,
     maxPoint: initData.maxPoint,
     maxRound: initData.maxRound,
-    score: initScore(),
+    score: initData.score,
     timer: null,
     status: "Not Started",
     result: "Not Finished",
