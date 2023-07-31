@@ -79,14 +79,6 @@ class LobbyService {
     this.router.push(url);
   }
 
-  //Recupere les infos de la game
-  public async accessGame(gameID: String | undefined): Promise<any> {
-    if (gameID === undefined) return false;
-    const response = await this.fetchData(`access/${gameID}`, "GET");
-    const data = await response.json();
-    return data;
-  }
-
   //Get league data
   public async getLeague(): Promise<any> {
     const response = await this.fetchData("getleague", "GET");

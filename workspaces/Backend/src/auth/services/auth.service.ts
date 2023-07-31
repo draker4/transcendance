@@ -1,14 +1,11 @@
 /* eslint-disable prettier/prettier */
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes } from 'crypto';
 import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
 import { MailService } from 'src/mail/mail.service';
 import { User } from 'src/utils/typeorm/User.entity';
-import { createUserDto } from 'src/users/dto/CreateUser.dto';
+import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/avatar.service';
@@ -17,7 +14,6 @@ import * as argon2 from 'argon2';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { verify } from 'jsonwebtoken';
-import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -60,7 +56,7 @@ export class AuthService {
 
       const content = await response.json();
 
-      const user: createUserDto = {
+      const user: CreateUserDto = {
         email: await this.cryptoService.encrypt(content?.email),
         first_name: await this.cryptoService.encrypt(content?.first_name),
         last_name: await this.cryptoService.encrypt(content?.last_name),
@@ -85,10 +81,18 @@ export class AuthService {
     }
   }
 
-  async login(user: User, nbOfRefreshes: number, isTwoFactorAuthenticationEnabled: boolean) {
-    const payload = { sub: user.id, login: user.login, twoFactorAuth: isTwoFactorAuthenticationEnabled };
-    let   access_token = "";
-    let   refresh_token = "";
+  async login(
+    user: User,
+    nbOfRefreshes: number,
+    isTwoFactorAuthenticationEnabled: boolean,
+  ) {
+    const payload = {
+      sub: user.id,
+      login: user.login,
+      twoFactorAuth: isTwoFactorAuthenticationEnabled,
+    };
+    let access_token = '';
+    let refresh_token = '';
 
     if (!isTwoFactorAuthenticationEnabled) {
       [access_token, refresh_token] = await Promise.all([
@@ -107,9 +111,7 @@ export class AuthService {
       } catch (error) {
         console.log(error);
       }
-    }
-
-    else
+    } else
       access_token = await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
         expiresIn: '15m',
@@ -127,19 +129,19 @@ export class AuthService {
     return Array.from(bytes, (byte) => chars[byte % chars.length]).join('');
   }
 
-  async addUser(createUserDto: createUserDto) {
-    createUserDto.expirationCode = Date.now() + 5 * 60 * 1000;
-    createUserDto.verifyCode = this.generateSecureCode(8);
-    createUserDto.verified = false;
+  async addUser(CreateUserDto: CreateUserDto) {
+    CreateUserDto.expirationCode = Date.now() + 5 * 60 * 1000;
+    CreateUserDto.verifyCode = this.generateSecureCode(8);
+    CreateUserDto.verified = false;
 
-    const email = await this.cryptoService.decrypt(createUserDto.email);
+    const email = await this.cryptoService.decrypt(CreateUserDto.email);
 
     await this.mailService.sendUserConfirmation(
       email,
-      createUserDto.verifyCode,
+      CreateUserDto.verifyCode,
     );
 
-    return await this.usersService.addUser(createUserDto);
+    return await this.usersService.addUser(CreateUserDto);
   }
 
   async verifyCode(code: string) {
@@ -158,32 +160,30 @@ export class AuthService {
     });
   }
 
-  async loginWithGoogle(createUserDto: createUserDto, res: Response) {
+  async loginWithGoogle(CreateUserDto: CreateUserDto) {
     try {
-      if (!createUserDto) throw new Error('Unauthenticated');
+      if (!CreateUserDto) throw new Error('Unauthenticated');
 
       const encryptedValues = await Promise.all([
-        this.cryptoService.encrypt(createUserDto.email),
-        this.cryptoService.encrypt(createUserDto.first_name),
-        this.cryptoService.encrypt(createUserDto.last_name),
-        this.cryptoService.encrypt(createUserDto.image),
+        this.cryptoService.encrypt(CreateUserDto.email),
+        this.cryptoService.encrypt(CreateUserDto.first_name),
+        this.cryptoService.encrypt(CreateUserDto.last_name),
+        this.cryptoService.encrypt(CreateUserDto.image),
       ]);
 
-      createUserDto.email = encryptedValues[0];
-      createUserDto.first_name = encryptedValues[1];
-      createUserDto.last_name = encryptedValues[2];
-      createUserDto.image = encryptedValues[3];
+      CreateUserDto.email = encryptedValues[0];
+      CreateUserDto.first_name = encryptedValues[1];
+      CreateUserDto.last_name = encryptedValues[2];
+      CreateUserDto.image = encryptedValues[3];
 
       let user = await this.usersService.getUserByEmail(
-        createUserDto.email,
+        CreateUserDto.email,
         'google',
       );
 
-      if (!user)
-        user = await this.usersService.addUser(createUserDto);
-      else
-        await this.usersService.updateUser(user.id, createUserDto);
-      
+      if (!user) user = await this.usersService.addUser(CreateUserDto);
+      else await this.usersService.updateUser(user.id, CreateUserDto);
+
       return user;
     } catch (error) {
       throw new UnauthorizedException('Unauthenticated');
@@ -249,11 +249,14 @@ export class AuthService {
 
       if (!user) throw new Error('no user found');
 
-      const payload = verify(refreshToken, process.env.JWT_REFRESH_SECRET) as any;
+      const payload = verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET,
+      ) as any;
 
       if (!payload || payload.sub !== userId) {
         // send mail refresh password [!]
-        throw new Error("cannot verify token");
+        throw new Error('cannot verify token');
       }
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);

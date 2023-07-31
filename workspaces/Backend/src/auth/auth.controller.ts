@@ -13,7 +13,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Public } from 'src/utils/decorators/public.decorator';
-import { createUserDto } from 'src/users/dto/CreateUser.dto';
+import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
@@ -28,31 +28,30 @@ export class AuthController {
   @Public()
   @Get('42/:code')
   async logIn42(@Param('code') code: string) {
-
     const dataToken = await this.authService.getToken42(code);
-    if (!dataToken)
-      throw new UnauthorizedException();
+    if (!dataToken) throw new UnauthorizedException();
 
     const user42logged = await this.authService.logUser(dataToken);
-    if (!user42logged)
-      throw new UnauthorizedException();
+    if (!user42logged) throw new UnauthorizedException();
 
-    return this.authService.login(user42logged, 0, user42logged.isTwoFactorAuthenticationEnabled);
+    return this.authService.login(
+      user42logged,
+      0,
+      user42logged.isTwoFactorAuthenticationEnabled,
+    );
   }
 
   @Public()
   @Post('register')
-  async registerUser(@Body() createUserDto: createUserDto) {
+  async registerUser(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.authService.addUser(createUserDto);
-      if (!user)
-        throw new BadRequestException();
+      if (!user) throw new BadRequestException();
 
       return {
         message: 'ok',
       };
-    }
-    catch (error) {
+    } catch (error) {
       throw new BadRequestException();
     }
   }
@@ -70,25 +69,27 @@ export class AuthController {
         await this.authService.sendNewCode(user);
         return {
           message:
-          'This code has expired. A new one has been sent to your email address',
+            'This code has expired. A new one has been sent to your email address',
         };
       }
-      
+
       await this.authService.updateUser(user.id, {
         verified: true,
       });
 
-      const { access_token, refresh_token } = await this.authService.login(user, 0, user.isTwoFactorAuthenticationEnabled);
+      const { access_token, refresh_token } = await this.authService.login(
+        user,
+        0,
+        user.isTwoFactorAuthenticationEnabled,
+      );
       return {
         message: 'Loading...',
         access_token,
         refresh_token,
       };
-    }
-    catch(error) {
+    } catch (error) {
       return {
-        message:
-        'Something went wrong, please try again !',
+        message: 'Something went wrong, please try again !',
       };
     }
   }
@@ -101,24 +102,27 @@ export class AuthController {
   @Public()
   @UseGuards(GoogleOauthGuard)
   @Get('google/callback')
-  async googleOauthCallback(@Req() req, @Res() res: Response) {    
-    
-    const user= await this.authService.loginWithGoogle(req.user, res);
+  async googleOauthCallback(@Req() req, @Res() res: Response) {
+    const user = await this.authService.loginWithGoogle(req.user);
 
-    const { access_token, refresh_token } = await this.authService.login(user, 0, user.isTwoFactorAuthenticationEnabled);
-    
+    const { access_token, refresh_token } = await this.authService.login(
+      user,
+      0,
+      user.isTwoFactorAuthenticationEnabled,
+    );
+
     res.cookie('crunchy-token', access_token, {
-      path: "/",
+      path: '/',
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: 'lax',
     });
 
     res.cookie('refresh-token', refresh_token, {
-      path: "/",
+      path: '/',
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: 'lax',
     });
-    
+
     return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
     // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
   }
@@ -130,14 +134,21 @@ export class AuthController {
     @Body('avatarChosen') avatar: AvatarDto,
   ) {
     try {
-      if (login.length < 4)
-        throw new Error('Login too short');
+      if (login.length < 4) throw new Error('Login too short');
 
       const avatarCreated = await this.authService.createAvatar(avatar);
 
-      const user = await this.authService.updateAvatarLogin(req.user.id, login, avatarCreated);
+      const user = await this.authService.updateAvatarLogin(
+        req.user.id,
+        login,
+        avatarCreated,
+      );
 
-      const { access_token, refresh_token } = await this.authService.login(user, 0, false);
+      const { access_token, refresh_token } = await this.authService.login(
+        user,
+        0,
+        false,
+      );
 
       return {
         error: false,
@@ -156,25 +167,24 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   loginEmail(@Request() req) {
-    return this.authService.login(req.user, 0, req.user.isTwoFactorAuthenticationEnabled);
+    return this.authService.login(
+      req.user,
+      0,
+      req.user.isTwoFactorAuthenticationEnabled,
+    );
   }
 
   @Public()
   @UseGuards(JwtNoExpirationGuard)
   @Post('refresh')
-  async refresh(
-    @Request() req,
-    @Body('refreshToken') refreshToken: string,
-  ) {
+  async refresh(@Request() req, @Body('refreshToken') refreshToken: string) {
     return this.authService.refreshToken(req.user.id, refreshToken);
   }
 
   @Public()
   @UseGuards(JwtNoExpirationGuard)
   @Post('refreshToken')
-  async refreshToken(
-    @Request() req,
-  ) {
+  async refreshToken(@Request() req) {
     const refreshToken = req.cookies['refresh-token'];
     return this.authService.refreshToken(req.user.id, refreshToken);
   }

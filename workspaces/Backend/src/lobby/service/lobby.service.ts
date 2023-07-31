@@ -1,265 +1,159 @@
 import { Injectable } from '@nestjs/common';
-import { LobbyUtils } from './lobbyUtils';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
+import { GameService } from '@/game/service/game.service';
+import { UsersService } from '@/users/users.service';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+
 @Injectable()
-export class LobbyService extends LobbyUtils {
-  @InjectRepository(Game)
-  public readonly gameRepository: Repository<Game>;
+export class LobbyService {
+  constructor(
+    @InjectRepository(Game)
+    public readonly gameRepository: Repository<Game>,
 
-  async CreateGame(userId: number, game: CreateGameDTO): Promise<any> {
-    try {
-      //Si le joueur est déjà dans une partie
-      if (await this.checkIfAlreadyInGame(userId)) {
-        const Data = {
-          success: false,
-          message: 'You are already in a game',
-        };
-        return Data;
-      }
-
-      //Si le joueur recherche deja une partie
-      if (await this.CheckIfAlreadyInMatchmaking(userId)) {
-        const Data = {
-          success: false,
-          message: 'You are already in matchmaking',
-        };
-        return Data;
-      }
-
-      const newGame: Game = this.gameRepository.create(game);
-      newGame.createdAt = new Date();
-      await this.gameRepository.save(newGame);
-
-      const Data = {
-        success: true,
-        message: 'Game created',
-        data: {
-          id: newGame.id,
-        },
-      };
-
-      return Data;
-    } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
-    }
-  }
-
-  async JoinGame(req: any): Promise<any> {
-    try {
-      //Si il manque des datas
-      if (req.body.join_as == null || req.body.game_id == null) {
-        const Data = {
-          success: false,
-          message: 'Not enough parameters',
-        };
-        return Data;
-      }
-
-      //Si la partie existe pas
-      if (!(await this.CheckIfGameExist(req.body.game_id))) {
-        const Data = {
-          success: false,
-          message: "Game doesn't exist",
-        };
-        return Data;
-      }
-
-      //Si le joueur est deja dans cette partie
-      if (
-        await this.CheckIfPlayerIsAlreadyInThisGame(
-          req.body.game_id,
-          req.user.id,
-        )
-      ) {
-        const Data = {
-          success: true,
-          message: 'You are already in this game',
-        };
-        return Data;
-      }
-
-      //Si deja un oposant et qu'il join en opponent (2 joueurs max)
-      if (
-        req.body.join_as == 'opponent' &&
-        (await this.CheckIfGameHasOpponent(req.body.game_id))
-      ) {
-        const Data = {
-          success: false,
-          message: 'Game already has an opponent',
-        };
-        return Data;
-      }
-
-      //Ajoute le joueur dans la game en opponent
-      if (
-        req.body.join_as == 'opponent' &&
-        (await this.AddPlayerToGame(req.body.game_id, req.user.id))
-      ) {
-        const Data = {
-          success: true,
-          message: 'You joined the game as an opponent',
-        };
-        return Data;
-      }
-    } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
-    }
-
-    const Data = {
-      success: false,
-      message: 'Case not handled',
-    };
-    return Data;
-  }
-
-  async GetAll(): Promise<any> {
-    try {
-      //Renvoi toutes les games Waiting ou Playing
-      const games = await this.gameRepository.find({
-        where: { status: 'Not Started' || 'Stopped' || 'Playing' },
-      });
-      //Clean les infos
-      // const gamesInfos: GameData[] = [];
-      // for (let i = 0; i < games.length; i++) {
-      //   const hostLogin = await this.GetPlayerName(games[i].host);
-      //   const opponentLogin = await this.GetPlayerName(games[i].opponent);
-      //   const gameInfo: GameData = {
-      //     id: games[i].id,
-      //     name: games[i].name,
-      //     host: games[i].host,
-      //     hostName: hostLogin,
-      //     opponent: games[i].opponent,
-      //     opponentName: opponentLogin,
-      //     status: games[i].status,
-      //     result: games[i].result,
-      //     actualRound: games[i].actualRound,
-      //     maxPoint: games[i].maxPoint,
-      //     maxRound: games[i].maxRound,
-      //     hostSide: games[i].hostSide,
-      //     difficulty: games[i].difficulty,
-      //     push: games[i].push,
-      //     background: games[i].background,
-      //     ball: games[i].ball,
-      //     type: games[i].type,
-      //   };
-      //   gamesInfos.push(gameInfo);
-      // }
-
-      // const Data = {
-      //   success: true,
-      //   message: 'Request successfulld',
-      //   data: gamesInfos,
-      // };
-      // return Data;
-    } catch (error) {
-      const Data = {
-        success: false,
-        message: 'Catched an error',
-        error: error,
-      };
-      return Data;
-    }
-  }
-
-  async accessGame(gameId: string, userId: number): Promise<ReturnData> {
-    const data: ReturnData = {
+    public readonly gameService: GameService,
+    public readonly userService: UsersService,
+    public readonly matchmakingService: MatchmakingService,
+  ) {}
+  async CreateGame(userId: number, newGame: CreateGameDTO): Promise<any> {
+    const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
     };
     try {
-      //Si il manque des datas
-      if (gameId == null || userId == null) {
-        data.message = 'Not enough parameters';
-        return data;
+      const gameId = await this.gameService.getGameByUserId(userId);
+      if (gameId) {
+        ret.message = 'You are already in a game';
+        ret.data = gameId;
+        return ret;
       }
-      //Retrouver la partie et confirmer si player ou spectator
-      const game: Game = await this.gameRepository.findOne({
-        where: { id: gameId },
-      });
-      if (!game) {
-        data.message = 'Game not found';
-        return data;
+
+      //Si le joueur recherche deja une partie
+
+      if (await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)) {
+        ret.message = 'You are already in matchmaking';
+        return ret;
       }
-      data.success = true;
-      if (game.host == userId || game.opponent == userId) {
-        data.message = 'User will join as player';
-      } else {
-        data.message = 'User will join as spectator';
-      }
-      return data;
+
+      const newGameId = await this.gameService.createGame(newGame);
+      ret.success = true;
+      ret.message = 'Game created';
+      ret.data = newGameId;
     } catch (error) {
-      data.error = error;
-      return data;
+      const Data = {
+        success: false,
+        message: 'Catched an error',
+        error: error,
+      };
+      return Data;
+    }
+  }
+
+  async JoinGame(userId: number, gameId: string): Promise<any> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const user = await this.userService.getUserById(userId);
+      if (!user) {
+        ret.message = 'User not found';
+        return ret;
+      }
+      const game = await this.gameService.getGameById(gameId);
+      if (!game) {
+        ret.message = 'Game not found';
+        return ret;
+      }
+
+      //Si le joueur est deja dans cette partie
+      if (game.host === userId || game.opponent === userId) {
+        ret.success = true;
+        ret.message = 'You are already in this game';
+      }
+
+      //Si deja un oposant et qu'il join en opponent (2 joueurs max)
+      if (game.opponent !== -1) {
+        ret.message = 'Game is full';
+        return ret;
+      }
+
+      //Ajoute le joueur dans la game en opponent
+      await this.gameService.addOpponent(gameId, userId);
+      ret.success = true;
+      ret.message = 'You joined the game as an opponent';
+      return ret;
+    } catch (error) {
+      ret.error = error;
+    }
+  }
+
+  async GetAll(): Promise<any> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const games = await this.gameService.getCurrentGames();
+      ret.success = true;
+      ret.message = 'Games found';
+      ret.data = games;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
     }
   }
 
   async Quit(userId: number): Promise<any> {
-    const data: ReturnData = {
+    const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
     };
-    if (userId == null) {
-      data.message = 'Not enough parameters';
-      return data;
-    }
     try {
-      //Regarde is le joueur est dans une game
-      if (!(await this.checkIfAlreadyInGame(userId))) {
-        data.message = 'You are not in a game';
-        return data;
+      const gameId = await this.gameService.getGameByUserId(userId);
+      if (!gameId) {
+        ret.message = 'You are already not in a game';
+        return ret;
       }
-      //Retire le joueur de toutes les game ou il est ( si game en Waiting ou Playing )
-      if (await this.RemovePlayerFromAllGames(userId)) {
-        data.success = true;
-        data.message = 'You have been removed from all game';
-      }
-      return data;
+      await this.gameService.quitGame(gameId, userId);
+      ret.success = true;
+      ret.message = 'You quit the game';
+      return ret;
     } catch (error) {
-      return data;
+      return ret;
     }
   }
 
-  //Si le joueur est en game renvoi "In game" et l'id de la game, si le joueur en Matchmaking le retire de la liste
+  //Si le joueur est en game renvoie l'id, si le joueur en Matchmaking le retire de la liste
   async IsInGame(userId: number): Promise<any> {
-    const data: ReturnData = {
+    const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
     };
     try {
       //Si le joueur est en matchmaking le retire de la liste
-      if (await this.CheckIfAlreadyInMatchmaking(userId)) {
-        await this.RemovePlayerFromMatchmaking(userId);
+      if (await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)) {
+        await this.matchmakingService.RemovePlayerFromMatchmaking(userId);
       }
 
       //Si il est dans une game recupere son id
-      data.data = await this.getGameId(userId);
-      if (data.data) {
-        data.success = true;
-        data.message = 'You are in a game';
-        return data;
-      } else {
-        data.success = false;
-        data.message = 'You are not in a game';
-        return data;
+      const gameId = await this.gameService.getGameByUserId(userId);
+      if (!gameId) {
+        ret.message = 'You are not in a game';
+        return ret;
       }
+      ret.success = true;
+      ret.message = 'You are in a game';
+      ret.data = gameId;
+      return ret;
     } catch (error) {
-      data.error = error;
-      return data;
+      ret.error = error;
+      return ret;
     }
   }
 }

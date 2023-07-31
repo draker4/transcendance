@@ -3,7 +3,6 @@ import {
   Post,
   Get,
   Req,
-  Param,
   UsePipes,
   ValidationPipe,
   Body,
@@ -32,20 +31,14 @@ export class LobbyController {
 
   // 02 - api/lobby/join
   @Post('join')
-  JoinGame(@Req() req) {
-    return this.lobbyService.JoinGame(req);
+  JoinGame(@Req() req, @Body() gameId: string) {
+    return this.lobbyService.JoinGame(req.user.id, gameId);
   }
 
   // 03 - api/lobby/getall
   @Get('getall')
   GetAllGames() {
     return this.lobbyService.GetAll();
-  }
-
-  // 04 - api/lobby/get/:id
-  @Get('access/:id')
-  GetGame(@Param('id') id: string, @Req() req) {
-    return this.lobbyService.accessGame(id, req.user.id);
   }
 
   // 04 - api/lobby/quit
@@ -62,7 +55,7 @@ export class LobbyController {
 
   // 06 - api/lobby/GetLeague
   @Get('getleague')
-  GetLeague(@Req() req) {
+  GetLeague() {
     // return this.lobbyService.GetLeague(req);
   }
 }

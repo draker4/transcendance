@@ -10,21 +10,20 @@ import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 
 import { User } from 'src/utils/typeorm/User.entity';
 
-import { LobbyUtils } from '@/lobby/service/lobbyUtils';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
+import { GameService } from '@/game/service/game.service';
 
 @Injectable()
 export class MatchmakingService {
   constructor(
     @InjectRepository(Game)
     private readonly gameRepository: Repository<Game>,
-
     @InjectRepository(Matchmaking)
     private readonly MatchMakeRepository: Repository<Matchmaking>,
-
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
-    private readonly lobbyUtils: LobbyUtils,
+
+    private readonly gameService: GameService,
   ) {}
 
   async MatchmakeStart(req: any): Promise<any> {
@@ -191,13 +190,15 @@ export class MatchmakingService {
           maxRound: 1,
           difficulty: 2,
           push: false,
-          background: 'football',
-          ball: 'football',
+          background: 'classic',
+          ball: 'classic',
         };
-        const newGame: Game = this.gameRepository.create(createGameDTO);
-        newGame.createdAt = new Date();
-        await this.gameRepository.save(newGame);
-        return newGame.id;
+        try {
+          const gameId = await this.gameService.createGame(createGameDTO);
+          return gameId;
+        } catch (error) {
+          return false;
+        }
       }
     }
     return false;

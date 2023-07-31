@@ -2,19 +2,29 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Game } from 'src/utils/typeorm/Game.entity';
+import { GameService } from '@/game/service/game.service';
+import { Score } from '@/utils/typeorm/Score.entity';
+
 import { Matchmaking } from 'src/utils/typeorm/Matchmaking.entity';
 import { User } from 'src/utils/typeorm/User.entity';
+import { UsersService } from '@/users/users.service';
 
 export class LobbyUtils {
   constructor(
     @InjectRepository(Game)
     public readonly gameRepository: Repository<Game>,
 
+    @InjectRepository(Score)
+    public readonly scoreRepository: Repository<Score>,
+
     @InjectRepository(Matchmaking)
     private readonly MatchMakeRepository: Repository<Matchmaking>,
 
     @InjectRepository(User)
     private readonly UserRepository: Repository<User>,
+
+    public readonly gameService: GameService,
+    public readonly userService: UsersService,
   ) {}
 
   // Retire un joueur de la liste de matchmaking
@@ -26,56 +36,6 @@ export class LobbyUtils {
       if (user != null) {
         await this.MatchMakeRepository.remove(user);
         return true;
-      }
-    }
-    return false;
-  }
-
-  // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou Playing"
-  async checkIfAlreadyInGame(userId: number): Promise<any> {
-    if (userId != null) {
-      const host = await this.gameRepository.findOne({
-        where: {
-          host: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
-        },
-      });
-      if (host != null) {
-        return true;
-      }
-      const opponent = await this.gameRepository.findOne({
-        where: {
-          opponent: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
-        },
-      });
-      if (opponent != null) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // Check si le joueur est déjà dans une partie et que la partie est en "Waiting ou Playing" et renvoi son id de game
-  async getGameId(userId: number): Promise<any> {
-    if (userId != null) {
-      let game = await this.gameRepository.findOne({
-        where: {
-          host: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
-        },
-      });
-      if (game != null) {
-        return game.id;
-      }
-      game = await this.gameRepository.findOne({
-        where: {
-          opponent: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
-        },
-      });
-      if (game != null) {
-        return game.id;
       }
     }
     return false;
@@ -128,52 +88,6 @@ export class LobbyUtils {
         if (game.opponent != -1) {
           return true;
         }
-      }
-    }
-    return false;
-  }
-
-  //Check si le joueur est deja dans la game
-  async CheckIfPlayerIsAlreadyInThisGame(
-    game_id: string,
-    user_id: number,
-  ): Promise<any> {
-    if (game_id != null) {
-      //Check si c'est un id
-      if (game_id.length != 36) {
-        return false;
-      }
-
-      const game = await this.gameRepository.findOne({
-        where: { id: game_id },
-      });
-      if (game != null) {
-        if (game.host == user_id) {
-          return true;
-        }
-        if (game.opponent == user_id) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  //Ajoute le joueur dans la game en temps qu'opponent
-  async AddPlayerToGame(game_id: string, user_id: number): Promise<any> {
-    if (game_id != null) {
-      //Check si c'est un id
-      if (game_id.length != 36) {
-        return false;
-      }
-
-      const game = await this.gameRepository.findOne({
-        where: { id: game_id },
-      });
-      if (game != null) {
-        game.opponent = user_id;
-        await this.gameRepository.save(game);
-        return true;
       }
     }
     return false;
