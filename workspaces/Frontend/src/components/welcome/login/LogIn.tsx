@@ -6,7 +6,7 @@ import LogEmail from "./LogEmail";
 import LogService from "./LogService";
 
 export default function LogInComponent() {
-  const test = useParams().notif;
+  const notifParam = useParams().notif;
   const router = useRouter();
   const [textButton, setTextButton] = useState<string>("Continue");
   const [register, setRegister] = useState<boolean>(false);
@@ -63,9 +63,10 @@ export default function LogInComponent() {
 
     if (register) router.push("/welcome/confirm");
 
-    if (test === "wrong")
+    console.log(notifParam);
+    if (notifParam && notifParam[0] === "wrong")
       setNotif("Something went wrong, please try again!");
-  }, [register, login, router, test]);
+  }, [register, login, router, notifParam]);
 
   useEffect(() => {
     if (successNewPassword)

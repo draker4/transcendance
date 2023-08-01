@@ -1,21 +1,20 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState } from "react";
 import styles from "@/styles/lobby/league/League.module.css";
 import Image from "next/image";
 import LobbyService from "@/services/Lobby.service";
+import MatchmakingService from "@/services/Matchmaking.service";
 import DefineType from "@/components/lobby/league/DefineType";
 import Leaderboard from "@/components/lobby/league/Leaderboard";
 import StreamGame from "@/components/lobby/league/StreamGame";
 
 type Props = {
-  Matchmaking: any;
-  token: string | undefined;
+  matchmakingService: MatchmakingService;
+  lobbyService: LobbyService;
 };
 
-export default function League({ Matchmaking, token }: Props) {
-  //Creer l'objet lobby
-  const Lobby = new LobbyService(token);
+export default function League({ matchmakingService, lobbyService }: Props) {
   const [json, setJson] = useState<League>({
     Top10: [],
     AllRanked: [],
@@ -32,13 +31,13 @@ export default function League({ Matchmaking, token }: Props) {
   //Fonction pour rejoindre une game
   const Start_Matchmake = async () => {
     //Lance la recherche de game
-    const res = await Matchmaking.Start_Matchmaking(type);
+    const res = await matchmakingService.Start_Matchmaking(type);
     setinMatchMake(res);
   };
 
   //Fonction pour commencer la recherche une game
   const Stop_Matchmake = async () => {
-    await Matchmaking.Stop_Matchmaking();
+    await matchmakingService.Stop_Matchmaking();
     setinMatchMake(false);
   };
 
@@ -78,7 +77,7 @@ export default function League({ Matchmaking, token }: Props) {
       )}
 
       <Leaderboard json={json.Top10} />
-      <StreamGame Lobby={Lobby} json={json.AllRanked} />
+      <StreamGame lobbyService={lobbyService} json={json.AllRanked} />
     </div>
   );
 }

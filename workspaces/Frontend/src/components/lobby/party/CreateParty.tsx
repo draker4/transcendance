@@ -78,8 +78,7 @@ export default function CreateParty({
       console.log(res.message);
       return;
     }
-    const url = "home/game/" + res.data;
-    router.push(url);
+    router.push("/home/game/" + res.data);
   }
 
   const resetCreate = () => {

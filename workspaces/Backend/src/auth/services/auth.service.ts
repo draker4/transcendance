@@ -36,19 +36,16 @@ export class AuthService {
         client_id: process.env.CLIENT_ID_42,
         client_secret: process.env.SECRET_42,
         code: code,
-        redirect_uri: `http://localhost:3000/api/auth/42`,
+        redirect_uri: `http://${process.env.HOST_IP}:4000/api/auth/42`,
       }),
     });
 
-    console.log(response.status);
-
-    if (!response.ok) throw new UnauthorizedException();
+    if (!response.ok) throw new Error('fetch failed');
 
     return await response.json();
   }
 
   async logUser(dataToken: dataAPI42): Promise<User> {
-    try {
       const response = await fetch('https://api.intra.42.fr/v2/me', {
         method: 'GET',
         headers: { Authorization: 'Bearer ' + dataToken.access_token },
@@ -78,9 +75,6 @@ export class AuthService {
         image: user.image,
       });
       return user_old;
-    } catch (error) {
-      throw new UnauthorizedException();
-    }
   }
 
   async login(
@@ -163,7 +157,6 @@ export class AuthService {
   }
 
   async loginWithGoogle(CreateUserDto: CreateUserDto) {
-    try {
       if (!CreateUserDto) throw new Error('Unauthenticated');
 
       const encryptedValues = await Promise.all([
@@ -187,9 +180,6 @@ export class AuthService {
       else await this.usersService.updateUser(user.id, CreateUserDto);
 
       return user;
-    } catch (error) {
-      throw new UnauthorizedException('Unauthenticated');
-    }
   }
 
   async updateUser(id: number, properties: Partial<User>) {

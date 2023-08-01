@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
-import styles from "@/styles/profile/InfoCard.module.css";
+import stylesInfoCard from "@/styles/profile/InfoCard.module.css";
 import { useEffect, useState } from "react";
-import SearchBar from "@/components/chatPage/searchBar/SearchBar";
+import SearchBarPongies from "@/components/chatPage/searchBar/SearchBarPongies";
 
 export default function SectionPongies({ socket }: {
 	socket: Socket | undefined;
@@ -15,18 +15,20 @@ export default function SectionPongies({ socket }: {
 			console.log(payload);
 		}
 
-		console.log("laaa");
 		socket?.emit('getPongies', getPongies);
 
 	}, [socket]);
 
-	const	openProfile = (display: Display) => {
-		
+	const	displayPongie = (display: Display) => {
+		console.log(display);
 	}
 
 	return (
-		<div className={styles.sections}>
-			<SearchBar socket={socket as Socket} openDisplay={openProfile}/>
+		<div className={stylesInfoCard.sections}>
+			<SearchBarPongies
+				socket={socket as Socket}
+				displayPongie={displayPongie}
+			/>
 			My Pongies
 		</div>
 	);

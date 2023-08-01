@@ -11,7 +11,6 @@ import Party from "@/components/lobby/party/Party";
 import Training from "@/components/lobby/training/Training";
 import NavLobby from "./NavLobby";
 import MatchmakingService from "@/services/Matchmaking.service";
-import InGame from "./InGame";
 
 type Props = {
   profile: Profile;
@@ -20,33 +19,23 @@ type Props = {
 };
 
 export default function Lobby({ profile, token, avatar }: Props) {
-  const lobbyService = new LobbyService(token);
-  const matchmaking = new MatchmakingService(token);
+  const lobbyService = new LobbyService();
+  const matchmakingService = new MatchmakingService();
   const [menu, setMenu] = useState<string>("League");
   const [gameId, setGameId] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
-    lobbyService.isInGame().then((ret: ReturnData) => {
-      if (ret.success) {
-        setGameId(ret.data);
-      } else {
-        console.log(ret.message);
-      }
-    });
-  }, []);
-
-  if (gameId) {
-    return (
-      <InGame lobby={lobbyService} gameId={gameId} setGameId={setGameId} />
-    );
-  }
   return (
     <div className={styles.lobby}>
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
-        {menu == "League" && <League Matchmaking={matchmaking} token={token} />}
+        {menu == "League" && (
+          <League
+            matchmakingService={matchmakingService}
+            lobbyService={lobbyService}
+          />
+        )}
         {menu == "Party" && (
-          <Party lobbyService={lobbyService} profile={profile} token={token} />
+          <Party lobbyService={lobbyService} profile={profile} />
         )}
         {menu == "Training" && <Training profile={profile} avatar={avatar} />}
       </div>

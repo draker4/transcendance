@@ -1,8 +1,9 @@
 .logService {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
+  justify-content: flex;
   align-items: center;
+  margin: 0 auto;
 }
 
 .description {

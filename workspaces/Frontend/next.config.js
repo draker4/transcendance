@@ -7,7 +7,7 @@ const nextConfig = {
   reactStrictMode: false,
 
   // Set the output directory for the production build (default is ".next")
-  distDir: "build",
+  distDir: ".next",
 
   // Custom rewrite rules for the Next.js server
   async rewrites() {

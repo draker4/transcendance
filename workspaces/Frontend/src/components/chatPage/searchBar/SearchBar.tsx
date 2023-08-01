@@ -11,9 +11,10 @@ export default function SearchBar({ socket, openDisplay }: {
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
 	const	[error, setError] = useState<ListError | null>(null);
 	const	[text, setText] = useState<string>("");
+	const	[isDropdownVisible, setDropdownVisible] = useState(false);
 
 	const	verifyChannel = (text: string) => {
-		if (text.includes("'") || text.includes('"'))
+		if (text.includes("'") || text.includes('"') || text.includes('`'))
 			return {
 				id: -1,
 				error: true,
@@ -96,14 +97,67 @@ export default function SearchBar({ socket, openDisplay }: {
 		createList(text);
 	}, [channels, pongies, text]);
 
+	const handleClick = (item: Display) => {
+		setDropdownVisible(false);
+		setList([]);
+		setError(null);
+  
+		const name =
+		  "joined" in item
+			? item.name
+			: "login" in item
+			? item.login
+			: item.name.slice(15, item.name.length);
+  
+		const type =
+		  "joined" in item
+			? item.type
+			: "login" in item
+			? "privateMsg"
+			: "public";
+  
+		socket.emit(
+		  "join",
+		  {
+			id: item.id,
+			channelName: name,
+			channelType: type,
+		  },
+		  (payload: {
+			success: boolean;
+			exists: boolean;
+			banned: boolean;
+			channel: boolean;
+		  }) => {
+			if (payload.success) {
+			  openDisplay(payload.channel);
+			} else if (payload.exists) {
+			  setError({
+				id: -1,
+				error: true,
+				msg: `${name} is private, please choose an other name`,
+			  });
+			  setDropdownVisible(true);
+			} else if (payload.banned) {
+			  setError({
+				id: -1,
+				error: true,
+				msg: `You are banned from ${name}`,
+			  });
+			  setDropdownVisible(true);
+			}
+		  }
+		);
+	  };
+
 	return <Search
 				list={list}
 				error={error}
 				getData={getData}
 				setText={setText}
-				openDisplay={openDisplay}
-				socket={socket}
-				setList={setList}
-				setError={setError}
+				placeholder="Channels, pongies..."
+				handleClick={handleClick}
+				isDropdownVisible={isDropdownVisible}
+				setDropdownVisible={setDropdownVisible}
 			/>
 }
