@@ -6,9 +6,10 @@ type Props = {
   relations: UserRelation[];
   role: ChannelRoles;
   myRelation: UserRelation;
+  lists:ChannelLists;
 };
 
-export default function RolesList({ relations, role, myRelation }: Props) {
+export default function RolesList({ relations, role, myRelation, lists }: Props) {
   return (
     <div className={styles.rolesList}>
       <p className={styles.tinyTitle}>{role}</p>
@@ -23,6 +24,7 @@ export default function RolesList({ relations, role, myRelation }: Props) {
               onFocusOff={() => {/* console.log("Blurred") */}}
               onHover={() => {/* console.log("Hoover") */}}
               onLeave={() => {/* console.log("Leave") */}}
+			  lists={lists}
             />
           </li>
         ))}
