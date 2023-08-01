@@ -56,7 +56,7 @@ fclean : clean
 	rm -rf workspaces/Backend/logs
 	rm -rf workspaces/Backend/node_modules
 	rm -rf workspaces/Frontend/node_modules
-	rm -rf workspaces/Frontend/build
+	rm -rf workspaces/Frontend/.next
 	@volumes=$$(docker volume ls -q); \
 	if [ -n "$$volumes" ]; then \
 		docker volume rm $$volumes; \

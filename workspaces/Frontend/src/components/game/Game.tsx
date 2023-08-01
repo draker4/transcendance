@@ -25,7 +25,7 @@ type Props = {
 
 export default function Game({ profile, token, gameId }: Props) {
   const router = useRouter();
-  const lobby = new LobbyService(token);
+  const lobby = new LobbyService();
 
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
@@ -57,10 +57,12 @@ export default function Game({ profile, token, gameId }: Props) {
     };
   }, [gameId, gameService.socket, profile, joinEmitter]);
 
-  const quit = () => {
-    lobby.quitGame();
-    router.push("/home");
-  };
+  async function quit() {
+    await lobby.quitGame().then(() => {
+      gameService.socket?.emit("quit");
+      router.push("/home");
+    });
+  }
 
   //------------------------------------RENDU------------------------------------//
 

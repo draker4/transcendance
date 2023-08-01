@@ -17,6 +17,7 @@ import { Score } from '@/utils/typeorm/Score.entity';
 
 import { ScoreService } from '@/score/service/score.service';
 import { CreateScoreDTO } from '@/score/dto/CreateScore.dto';
+import { CryptoService } from 'src/utils/crypto/crypto';
 
 @Injectable()
 export class GameService {
@@ -28,6 +29,7 @@ export class GameService {
     private readonly scoreService: ScoreService,
     private readonly usersService: UsersService,
     private readonly avatarService: AvatarService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -116,6 +118,10 @@ export class GameService {
         player.name = user.login;
         player.side = side;
         return player;
+      }
+      if (avatar?.decrypt && avatar?.image.length > 0) {
+        avatar.image = await this.cryptoService.decrypt(avatar.image);
+        avatar.decrypt = false;
       }
       player = {
         id: userId,

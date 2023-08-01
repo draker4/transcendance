@@ -3,6 +3,7 @@
   align-items: center;
   justify-content: center;
   width: 90%;
+  min-height: 75vh;
   margin: 0 auto;
   font-size: 28px;
 }

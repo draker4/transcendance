@@ -1,7 +1,7 @@
 /* Home page layout */
 .home {
   width: 90%;
-  min-height: 70vh;
+  min-height: 80vh;
   margin: 0 auto;
   display: flex;
   flex-flow: column nowrap;

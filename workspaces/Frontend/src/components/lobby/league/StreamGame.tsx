@@ -1,18 +1,19 @@
+import LobbyService from "@/services/Lobby.service";
 import styles from "@/styles/lobby/league/StreamGame.module.css";
+import { useRouter } from "next/navigation";
 
 type Props = {
-  Lobby: any;
+  lobbyService: LobbyService;
   json: GameRanked[];
 };
 
-export default function StreamGame({ Lobby, json }: Props) {
+export default function StreamGame({ lobbyService, json }: Props) {
+  const router = useRouter();
   return (
     <div className={styles.StreamGame}>
       <div className={styles.gamelist}>
         <h1>Game list</h1>
-        {json.length === 0 && (
-          <p className={styles.loading}>Recherche en cours...</p>
-        )}
+        {json.length === 0 && <p className={styles.loading}>Loading...</p>}
         {json.length > 0 &&
           json.map((game: any, index: number) => (
             <div className={styles.game} key={index}>
@@ -27,7 +28,7 @@ export default function StreamGame({ Lobby, json }: Props) {
               <p>{game.Mode}</p>
               <button
                 className={styles.watchbutton}
-                onClick={() => Lobby.Load_Page("home/game/" + game.id)}
+                onClick={() => router.push("/home/game/" + game.id)}
               >
                 Watch
               </button>

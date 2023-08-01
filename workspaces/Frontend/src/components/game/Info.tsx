@@ -34,28 +34,6 @@ async function showPlayer(
     decrypt: player.avatar.decrypt,
   };
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadAvatarImage = async () => {
-      if (avatar?.decrypt && avatar?.image.length > 0) {
-        avatar.image = await Crypto.decrypt(avatar.image);
-        avatar.decrypt = false;
-      }
-
-      loadAvatarImage();
-
-      return () => {
-        isMounted = false;
-      };
-    };
-  }, [avatar]);
-
-  if (avatar?.decrypt && avatar?.image.length > 0) {
-    avatar.image = await Crypto.decrypt(avatar.image);
-    avatar.decrypt = false;
-  }
-
   return (
     <div className={side === "Left" ? styles.showLeft : styles.showRight}>
       <div className={side === "Left" ? styles.leftPlayer : styles.rightPlayer}>
