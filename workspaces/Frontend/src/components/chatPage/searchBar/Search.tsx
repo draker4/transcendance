@@ -7,35 +7,30 @@ import {
   faMagnifyingGlass,
   faPlus,
   faSmile,
-  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 import React from "react";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { Socket } from "socket.io-client";
 
 export default function Search({
   list,
   error,
   getData,
-  openDisplay,
-  socket,
-  setList,
-  setError,
   setText,
+  placeholder,
+  handleClick,
+  setDropdownVisible,
+  isDropdownVisible,
 }: {
   list: (Channel | Pongie | CreateOne)[];
   error: ListError | null;
   getData: (event: React.MouseEvent<HTMLInputElement>) => void;
-  openDisplay: (display: Display) => void;
-  socket: Socket;
-  setList: React.Dispatch<
-    React.SetStateAction<(CreateOne | Channel | Pongie)[]>
-  >;
-  setError: React.Dispatch<React.SetStateAction<ListError | null>>;
   setText: React.Dispatch<React.SetStateAction<string>>;
+  placeholder: string;
+  handleClick: (item: Display) => void;
+  setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  isDropdownVisible: boolean;
 }) {
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
   const errorRef = useRef<HTMLDivElement>(null);
@@ -71,57 +66,6 @@ export default function Search({
     if ("name" in item) key = key.concat(".channel");
     else key = key.concat(".pongie");
 
-    const handleClick = () => {
-      setDropdownVisible(false);
-      setList([]);
-      setError(null);
-
-      const name =
-        "joined" in item
-          ? item.name
-          : "login" in item
-          ? item.login
-          : item.name.slice(15, item.name.length);
-
-      const type =
-        "joined" in item
-          ? item.type
-          : "login" in item
-          ? "privateMsg"
-          : "public";
-
-      socket.emit(
-        "join",
-        {
-          id: item.id,
-          channelName: name,
-          channelType: type,
-        },
-        (payload: {
-          success: boolean;
-          exists: boolean;
-          banned: boolean;
-          channel: boolean;
-        }) => {
-          if (payload.success) {
-            openDisplay(payload.channel);
-          } else if (payload.exists) {
-            setError({
-              error: true,
-              msg: `${name} is private, please choose an other name`,
-            });
-            setDropdownVisible(true);
-          } else if (payload.banned) {
-            setError({
-              error: true,
-              msg: `You are banned from ${name}`,
-            });
-            setDropdownVisible(true);
-          }
-        }
-      );
-    };
-
     const color =
       "isFriend" in item
         ? item.isFriend
@@ -135,7 +79,7 @@ export default function Search({
 
     return (
       <React.Fragment key={key}>
-        <li onClick={handleClick}>
+        <li onClick={() => handleClick(item)}>
           <div className={styles.flex}>
             <div className={styles.avatar}>
               <AvatarUser
@@ -188,7 +132,7 @@ export default function Search({
         <input
           type="text"
           maxLength={100}
-          placeholder="Channels, pongies..."
+          placeholder={placeholder}
           onClick={(e) => {
             getData(e);
             setDropdownVisible(true);

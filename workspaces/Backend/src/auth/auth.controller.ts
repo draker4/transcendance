@@ -10,7 +10,8 @@ import {
   Res,
   Request,
   BadRequestException,
-  UnauthorizedException,
+  Query,
+  UseFilters,
 } from '@nestjs/common';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
@@ -20,25 +21,59 @@ import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtNoExpirationGuard } from './guards/jwtNoExpiration.guard';
 import { AuthService } from './services/auth.service';
+import { HttpExceptionFilter } from '@/utils/filter/http-exception.filter';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Get('42/:code')
-  async logIn42(@Param('code') code: string) {
-    const dataToken = await this.authService.getToken42(code);
-    if (!dataToken) throw new UnauthorizedException();
+  @Get('42')
+  async logIn42(
+    @Query('code') code: string,
+    @Res() res: Response,
+  ) {
+    try {
+      if (!code)
+        throw new Error('no code');
+          
+      const dataToken = await this.authService.getToken42(code);
+      if (!dataToken)
+        throw new Error('no 42 token');
 
-    const user42logged = await this.authService.logUser(dataToken);
-    if (!user42logged) throw new UnauthorizedException();
+      const user42logged = await this.authService.logUser(dataToken);
+      if (!user42logged)
+        throw new Error('no 42 user');
 
-    return this.authService.login(
-      user42logged,
-      0,
-      user42logged.isTwoFactorAuthenticationEnabled,
-    );
+      const { access_token, refresh_token } = await this.authService.login(
+        user42logged,
+        0,
+        user42logged.isTwoFactorAuthenticationEnabled,
+      );
+
+      res.cookie('crunchy-token', access_token, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+
+      res.cookie('refresh-token', refresh_token, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax',
+      });
+
+      return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
+    }
+    catch (error) {
+      console.log(error);
+      return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
+    }
+    // return this.authService.login(
+    //   user42logged,
+    //   0,
+    //   user42logged.isTwoFactorAuthenticationEnabled,
+    // );
   }
 
   @Public()
@@ -96,35 +131,42 @@ export class AuthController {
 
   @Public()
   @UseGuards(GoogleOauthGuard)
+  @UseFilters(HttpExceptionFilter)
   @Get('google')
   async googleAuth() {}
 
   @Public()
   @UseGuards(GoogleOauthGuard)
+  @UseFilters(HttpExceptionFilter)
   @Get('google/callback')
   async googleOauthCallback(@Req() req, @Res() res: Response) {
-    const user = await this.authService.loginWithGoogle(req.user);
+    try {
+      const user = await this.authService.loginWithGoogle(req.user);
 
-    const { access_token, refresh_token } = await this.authService.login(
-      user,
-      0,
-      user.isTwoFactorAuthenticationEnabled,
-    );
+      const { access_token, refresh_token } = await this.authService.login(
+        user,
+        0,
+        user.isTwoFactorAuthenticationEnabled,
+      );
 
-    res.cookie('crunchy-token', access_token, {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax',
-    });
+      res.cookie('crunchy-token', access_token, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax',
+      });
 
-    res.cookie('refresh-token', refresh_token, {
-      path: '/',
-      httpOnly: true,
-      sameSite: 'lax',
-    });
+      res.cookie('refresh-token', refresh_token, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'lax',
+      });
 
-    return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/google`);
+      return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
     // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
+    } catch (error) {
+      console.log(error);
+      return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
+    }
   }
 
   @Post('firstLogin')

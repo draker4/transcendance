@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';
@@ -18,7 +19,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     _accessToken: string,
     _refreshToken: string,
     profile: any,
-    done: VerifyCallback,
   ): Promise<any> {
     const { name, emails, photos } = profile;
 
@@ -31,6 +31,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
       verified: true,
     };
 
-    done(null, user);
+    return user;
   }
 }

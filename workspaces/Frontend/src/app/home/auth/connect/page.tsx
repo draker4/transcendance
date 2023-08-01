@@ -7,7 +7,7 @@ import LoadingComponent from "@/components/loading/Loading";
 import { useEffect, useState } from "react";
 // import { cookies } from "next/headers";
 
-export default async function GooglePage() {
+export default async function ConnectPage() {
 
   const [error, setError] = useState<boolean>(false);
 
