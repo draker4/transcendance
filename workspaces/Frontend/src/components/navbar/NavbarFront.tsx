@@ -47,7 +47,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
     );
   }
 
-  if (!profile || !profile.login || !avatar || pathName === "/home/auth/google")
+  if (!profile || !profile.login || !avatar || pathName === "/home/auth/connect")
     return (
       <header>
         <nav className={styles.nav}>
