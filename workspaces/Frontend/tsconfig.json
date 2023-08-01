@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,9 +24,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@images/*": ["./public/images/*"],
-      "@transcendence/shared/*": ["../Shared/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@images/*": [
+        "./public/images/*"
+      ],
+      "@transcendence/shared/*": [
+        "../Shared/*"
+      ]
     }
   },
   "include": [
@@ -32,7 +42,11 @@
     "@transcendence/shared/**/*.ts",
     "@transcendence/shared/**/*.tsx",
     ".next/types/**/*.ts",
-    "build/types/**/*.ts"
+    "build/types/**/*.ts",
+    "next/types/**/*.ts",
+    "_next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

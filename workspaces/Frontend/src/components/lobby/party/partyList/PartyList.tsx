@@ -9,11 +9,10 @@ import ScoreService from "@/services/Score.service";
 
 type Props = {
   lobbyService: LobbyService;
-  token: string | undefined;
 };
 
-export default function PartyList({ lobbyService, token }: Props) {
-  const scoreService = new ScoreService(token);
+export default function PartyList({ lobbyService }: Props) {
+  const scoreService = new ScoreService();
   const [gameList, setGameList] = useState<GameInfo[] | undefined>(undefined);
 
   //Recupere la liste des games regulierement

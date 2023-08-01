@@ -90,9 +90,9 @@ export class GameGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async joinGame(
-    @MessageBody() gameId: string,
-    @Req() req,
     @ConnectedSocket() socket: Socket,
+    @Req() req,
+    @MessageBody() gameId: string,
   ) {
     console.log('join');
     return await this.gameManager.joinGame(gameId, req.user.id, socket);
@@ -104,5 +104,10 @@ export class GameGateway implements OnModuleInit {
     @ConnectedSocket() socket: Socket,
   ): void {
     this.gameManager.updatePong(userId, socket);
+  }
+
+  @SubscribeMessage('quit')
+  quitGame(@ConnectedSocket() socket: Socket, @Req() req): void {
+    this.gameManager.disconnect(req.user.id, socket);
   }
 }

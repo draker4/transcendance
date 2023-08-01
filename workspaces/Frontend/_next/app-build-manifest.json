@@ -1,0 +1,22 @@
+{
+  "pages": {
+    "/welcome/login/[[...notif]]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/welcome/login/[[...notif]]/page.css",
+      "static/chunks/app/welcome/login/[[...notif]]/page.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/not-found": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/not-found.css",
+      "static/chunks/app/not-found.js"
+    ]
+  }
+}
