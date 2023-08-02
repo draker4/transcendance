@@ -16,12 +16,12 @@ import { AvatarService } from 'src/avatar/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
-import { JwtNoExpirationTimeStrategy } from './strategies/jwtNoExpirationTime.strategy';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { ChannelService } from 'src/channels/channel.service';
 import { AuthService } from './services/auth.service';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
 
 @Module({
   imports: [
@@ -45,7 +45,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
     AvatarService,
     ChannelService,
     JwtStrategy,
-    JwtNoExpirationTimeStrategy,
+    JwtRefreshStrategy,
     GoogleStrategy,
     LocalStrategy,
     CryptoService,
