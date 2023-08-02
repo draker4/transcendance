@@ -12,7 +12,7 @@ import {
 } from "@transcendence/shared/types/Game.types";
 import { initPong } from "@transcendence/shared/game/initPong";
 import { v4 as idv4 } from "uuid";
-import { convertColor } from "@transcendence/shared/game/pongUtils";
+import { colorHexToRgb } from "@transcendence/shared/game/pongUtils";
 
 type Props = {
   profile: Profile;
@@ -56,7 +56,7 @@ export default function DefineTraining({
     const player: Player = {
       id: profile.id,
       name: profile.login,
-      color: convertColor(avatar.borderColor),
+      color: colorHexToRgb(avatar.borderColor),
       avatar: avatar,
       side: hostSide,
     };

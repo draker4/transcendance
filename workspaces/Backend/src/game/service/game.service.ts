@@ -11,7 +11,7 @@ import { AvatarService } from '@/avatar/avatar.service';
 
 // import Pong game logic
 import { Player } from '@transcendence/shared/types/Game.types';
-import { convertColor } from '@transcendence/shared/game/pongUtils';
+import { colorHexToRgb } from '@transcendence/shared/game/pongUtils';
 import { CreateGameDTO } from '../dto/CreateGame.dto';
 import { Score } from '@/utils/typeorm/Score.entity';
 
@@ -121,7 +121,7 @@ export class GameService {
         avatar.image = await this.cryptoService.decrypt(avatar.image);
         avatar.decrypt = false;
       }
-      player.color = convertColor(avatar.borderColor);
+      player.color = colorHexToRgb(avatar.borderColor);
       player.avatar = avatar;
       return player;
     } catch (error) {
