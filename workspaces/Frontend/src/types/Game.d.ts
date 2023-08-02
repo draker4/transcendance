@@ -27,6 +27,6 @@ type GameDTO = {
 type ActionDTO = {
   userId: number;
   gameId: string;
-  action: Action;
+  move: Action;
   playerSide: "Left" | "Right";
 };

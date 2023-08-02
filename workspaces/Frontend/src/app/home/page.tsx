@@ -36,7 +36,6 @@ export default async function HomePage() {
     motto: "",
     story: "",
   };
-  let gameId: string | undefined;
 
   try {
     token = cookies().get("crunchy-token")?.value;
@@ -56,7 +55,7 @@ export default async function HomePage() {
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
         <HomeProfile profile={profile} avatar={avatar} />
-        <Lobby profile={profile} token={token} avatar={avatar} />
+        <Lobby profile={profile} avatar={avatar} />
       </Suspense>
     </main>
   );

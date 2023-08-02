@@ -14,11 +14,10 @@ import MatchmakingService from "@/services/Matchmaking.service";
 
 type Props = {
   profile: Profile;
-  token: string | undefined;
   avatar: Avatar;
 };
 
-export default function Lobby({ profile, token, avatar }: Props) {
+export default function Lobby({ profile, avatar }: Props) {
   const lobbyService = new LobbyService();
   const matchmakingService = new MatchmakingService();
   const [menu, setMenu] = useState<string>("League");

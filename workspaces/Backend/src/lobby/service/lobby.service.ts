@@ -10,8 +10,7 @@ import { UsersService } from '@/users/users.service';
 import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 import { ScoreService } from '@/score/service/score.service';
 
-import { GameInfo } from '@transcendence/shared/types/Game.types';
-import { User } from '@/utils/typeorm/User.entity';
+import { GameInfo, Player } from '@transcendence/shared/types/Game.types';
 
 @Injectable()
 export class LobbyService {
@@ -98,7 +97,7 @@ export class LobbyService {
     }
   }
 
-  async GetAll(): Promise<any> {
+  async GetAll(mode?: 'League' | 'Party'): Promise<any> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -111,35 +110,28 @@ export class LobbyService {
       }
       const gamesInfos: GameInfo[] = [];
       for (const game of games) {
-        let leftPlayer: User | null;
-        let rightPlayer: User | null;
-        if (game.hostSide === 'Left') {
-          leftPlayer = await this.userService.getUserById(game.host);
-          if (game.opponent !== -1) {
-            rightPlayer = await this.userService.getUserById(game.opponent);
-          }
-        } else {
-          rightPlayer = await this.userService.getUserById(game.host);
-          if (game.opponent !== -1) {
-            leftPlayer = await this.userService.getUserById(game.opponent);
-          }
-        }
-
+        if (mode && game.mode !== mode) continue;
+        const leftPlayer: Player = await this.gameService.definePlayer(
+          game.hostSide === 'Left' ? game.host : game.opponent,
+          'Left',
+          game.hostSide === 'Left',
+        );
+        const rightPlayer: Player = await this.gameService.definePlayer(
+          game.hostSide === 'Right' ? game.host : game.opponent,
+          'Right',
+          game.hostSide === 'Right',
+        );
         const gameInfo: GameInfo = {
           id: game.id,
           name: game.name,
           type: game.type,
           mode: game.mode,
-          leftPlayerId: leftPlayer ? leftPlayer.id : -1,
-          leftPlayerLogin: leftPlayer ? leftPlayer.login : '...',
-          rightPlayerId: rightPlayer ? rightPlayer.id : -1,
-          rightPlayerLogin: rightPlayer ? rightPlayer.login : '...',
+          leftPlayer: leftPlayer,
+          rightPlayer: rightPlayer,
           actualRound: game.actualRound,
           maxRound: game.maxRound,
           status: game.status,
         };
-        console.log(gameInfo);
-
         gamesInfos.push(gameInfo);
       }
       ret.success = true;

@@ -10,9 +10,7 @@ import {
   FONT_MENU,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
-  BALL_SIZE,
   FONT_SCORE,
-  FONT_TIMER,
   MENU_COLOR,
   GAME_WIDTH,
   GAME_HEIGHT,
@@ -100,7 +98,6 @@ function drawPlayer(
 }
 
 function drawBall(gameData: GameData, draw: Draw) {
-  // Draw the ball image at the calculated position.
   draw.context.drawImage(
     draw.ballImage,
     gameData.ball.posX,
@@ -215,16 +212,7 @@ export function drawPong(gameData: GameData, draw: Draw) {
 
   // Draw the Score
   drawScoreTable(gameData, draw);
-  // if (gameData.status === "Finished") {
-  //   drawEndMenu(gameData, draw);
-  // } else if (gameData.timer > 0) {
-  //   drawTimer(gameData, draw);
-  // } else
 
-  // if (gameData.status != "Playing") {
-  //   drawMenu(gameData, draw);
-  // }
-  // else if (turnDelayIsOver(gameData.timer)) {
+  // draw the ball
   drawBall(gameData, draw);
-  // }
 }

@@ -8,6 +8,7 @@ import MatchmakingService from "@/services/Matchmaking.service";
 import DefineType from "@/components/lobby/league/DefineType";
 import Leaderboard from "@/components/lobby/league/Leaderboard";
 import StreamGame from "@/components/lobby/league/StreamGame";
+import LobbyList from "../lobbyList/LobbyList";
 
 type Props = {
   matchmakingService: MatchmakingService;
@@ -77,7 +78,7 @@ export default function League({ matchmakingService, lobbyService }: Props) {
       )}
 
       <Leaderboard json={json.Top10} />
-      <StreamGame lobbyService={lobbyService} json={json.AllRanked} />
+      <LobbyList lobbyService={lobbyService} mode={"League"} />
     </div>
   );
 }

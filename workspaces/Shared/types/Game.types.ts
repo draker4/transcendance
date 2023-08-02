@@ -1,13 +1,14 @@
 import { ScoreInfo } from "./Score.types";
 
-export type Action =
-  | "Idle"
-  | "Up"
-  | "Down"
-  | "Left"
-  | "Right"
-  | "Push"
-  | "Stop";
+export enum Action {
+  Idle = "Idle",
+  Up = "Up",
+  Down = "Down",
+  Left = "Left",
+  Right = "Right",
+  Push = "Push",
+  Stop = "Stop",
+}
 
 // Instead of enums, use type aliases and constants for DirX and DirY
 export type DirX = -1 | 0 | 1;
@@ -31,6 +32,13 @@ export type StatusMessage = {
   playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   timer: Timer | null;
+};
+
+export type UpdateData = {
+  playerLeftDynamic: PlayerDynamic;
+  playerRightDynamic: PlayerDynamic;
+  ball: Ball;
+  score: ScoreInfo;
 };
 
 export type Timer = {
@@ -68,6 +76,7 @@ export type Player = {
   color: RGBA;
   avatar: Avatar;
   side: "Left" | "Right";
+  host: boolean;
 };
 
 export type PlayerDynamic = {
@@ -153,10 +162,8 @@ export type GameInfo = {
   name: string;
   type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party";
-  leftPlayerId: number;
-  leftPlayerLogin: string;
-  rightPlayerId: number;
-  rightPlayerLogin: string;
+  leftPlayer: Player;
+  rightPlayer: Player;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";

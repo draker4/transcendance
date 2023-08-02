@@ -20,3 +20,6 @@ export const MENU_COLOR = "#FFFFFF";
 export const PLAYER_PING = 2;
 export const SPECTATOR_PING = 1;
 export const CHECK_INTERVAL = 5000; // 5 seconds
+
+export const FRONT_FPS = 1000 / 60;
+export const BACK_FPS = 1000 / 30;

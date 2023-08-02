@@ -1,12 +1,68 @@
-import { updatePong } from "@transcendence/shared/game/updatePong";
 import { drawPong } from "./drawPong";
-import { GameData, Draw } from "@transcendence/shared/types/Game.types";
+import {
+  GameData,
+  Draw,
+  UpdateData,
+  Player,
+  StatusMessage,
+} from "@transcendence/shared/types/Game.types";
+
+import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
 
 const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };
 const frameCountRef = { current: 0 };
 const fpsRef = { current: 0 };
-const showFpsRef = true;
+const showFpsRef = false;
+
+const updateMessage: UpdateData[] = [];
+const playerMessage: Player[] = [];
+const statusMessage: StatusMessage[] = [];
+
+export const addUpdateMessage = (updateData: UpdateData) => {
+  updateMessage.push(updateData);
+};
+
+export const addPlayerMessage = (playerData: Player) => {
+  playerMessage.push(playerData);
+};
+
+export const addStatusMessage = (statusData: StatusMessage) => {
+  statusMessage.push(statusData);
+};
+
+const updateGame = (game: GameData) => {
+  if (updateMessage.length > 0) {
+    const updateData = updateMessage.shift()!;
+    const newGameData = { ...game };
+    newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
+    newGameData.playerRightDynamic = updateData.playerRightDynamic;
+    newGameData.ball = updateData.ball;
+    newGameData.score = updateData.score;
+    game = newGameData;
+  }
+  if (playerMessage.length > 0) {
+    const playerData = playerMessage.shift()!;
+    const newGameData = { ...game };
+    if (playerData.side === "Left") {
+      newGameData.playerLeft = playerData;
+    } else if (playerData.side === "Right") {
+      newGameData.playerRight = playerData;
+    }
+    game = newGameData;
+  }
+  if (statusMessage.length > 0) {
+    const statusData = statusMessage.shift()!;
+    const newGameData = { ...game };
+    newGameData.status = statusData.status;
+    newGameData.result = statusData.result;
+    newGameData.playerLeftStatus = statusData.playerLeft;
+    newGameData.playerRightStatus = statusData.playerRight;
+    newGameData.timer = statusData.timer;
+    game = newGameData;
+  }
+  return game;
+};
 
 export const gameLoop = (
   timestamp: number,
@@ -14,14 +70,13 @@ export const gameLoop = (
   draw: Draw,
   isMountedRef: React.MutableRefObject<boolean>
 ) => {
+  if (!isMountedRef.current) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
   frameCountRef.current++;
-
-  if (!isMountedRef.current) return;
   if (elapsedTime >= 16.67) {
-    if (game.status === "Playing") {
-      updatePong(game);
-    }
+    //updatePong(game);
+    // Process the oldest update in the queue
+    game = updateGame(game);
     drawPong(game, draw);
 
     lastTimestampRef.current = timestamp;
@@ -43,9 +98,8 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  const targetDelay = 1000 / 60; // 60 FPS
   const remainingDelay = Math.max(
-    targetDelay - (performance.now() - timestamp),
+    FRONT_FPS - (performance.now() - timestamp),
     0
   );
   setTimeout(() => {

@@ -102,7 +102,7 @@ export class GameManager {
     }
     user.pingSend = 0;
     this.logger.log(
-      `User with ID ${action.userId} performed action ${action.action}`,
+      `User with ID ${action.userId} performed action ${action.move}`,
       'playerAction',
     );
     return pong.playerAction(action);
@@ -118,7 +118,7 @@ export class GameManager {
       throw new WsException('User not found');
     }
     user.pingSend = 0;
-    this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
+    //this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
   }
 
   // Method to handle user disconnection from a game
@@ -210,10 +210,10 @@ export class GameManager {
           );
         });
       } else {
-        this.logger.log(
-          `Ping sent to user: ${user.id} and socket id: ${user.socket.id}`,
-          'checkConnexion',
-        );
+        // this.logger.log(
+        //   `Ping sent to user: ${user.id} and socket id: ${user.socket.id}`,
+        //   'checkConnexion',
+        // );
         user.sendPing();
       }
     });

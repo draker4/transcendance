@@ -1,6 +1,5 @@
 // import standard nest packages
 import { Server } from 'socket.io';
-import { Injectable } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 
 // import game engine logic
@@ -11,6 +10,7 @@ import {
   Timer,
   StatusMessage,
   InitData,
+  UpdateData,
 } from '@transcendence/shared/types/Game.types';
 import { initPong } from '@transcendence/shared/game/initPong';
 
@@ -24,15 +24,26 @@ import { ColoredLogger } from '../colored-logger';
 
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 
-Injectable();
+import { updatePong } from '@transcendence/shared/game/updatePong';
+
+import { BACK_FPS } from '@transcendence/shared/constants/Game.constants';
+
 export class Pong {
-  // -----------------------------------  VARIABLE  ----------------------------------- //
+  // Game Loop variables
+  private lastTimestamp: number = 0;
+  private isGameLoopRunning: boolean = false;
+  private framesThisSecond = 0;
+  private lastFpsUpdate = 0;
+  private currentFps = 0;
+
+  // Game data
   private playerLeft: UserInfo | null = null;
   private playerRight: UserInfo | null = null;
   private spectators: UserInfo[] = [];
   private data: GameData;
 
-  // ----------------------------------  CONSTRUCTOR  --------------------------------- //
+  // Game loop interval
+  private updateGameInterval: NodeJS.Timeout | null = null;
 
   constructor(
     private readonly server: Server,
@@ -64,33 +75,22 @@ export class Pong {
 
   public async initPlayer(): Promise<void> {
     try {
-      if (this.gameDB.hostSide === 'Left') {
-        this.data.playerLeft = await this.gameService.definePlayer(
-          this.gameDB.host,
-          'Left',
-        );
-        this.data.playerLeftStatus = 'Disconnected';
-        if (this.gameDB.opponent !== -1) {
-          this.data.playerRight = await this.gameService.definePlayer(
-            this.gameDB.opponent,
-            'Right',
-          );
-          this.data.playerRightStatus = 'Disconnected';
-        }
-      } else if (this.gameDB.hostSide === 'Right') {
-        this.data.playerRight = await this.gameService.definePlayer(
-          this.gameDB.host,
-          'Right',
-        );
-        this.data.playerRightStatus = 'Disconnected';
-        if (this.gameDB.opponent !== -1) {
-          this.data.playerLeft = await this.gameService.definePlayer(
-            this.gameDB.opponent,
-            'Left',
-          );
-          this.data.playerLeftStatus = 'Disconnected';
-        }
-      }
+      this.data.playerLeft = await this.gameService.definePlayer(
+        this.gameDB.hostSide === 'Left'
+          ? this.gameDB.host
+          : this.gameDB.opponent,
+        'Left',
+        this.gameDB.hostSide === 'Left',
+      );
+      this.data.playerLeftStatus = 'Disconnected';
+      this.data.playerRight = await this.gameService.definePlayer(
+        this.gameDB.hostSide === 'Right'
+          ? this.gameDB.host
+          : this.gameDB.opponent,
+        'Right',
+        this.gameDB.hostSide === 'Right',
+      );
+      this.data.playerRightStatus = 'Disconnected';
     } catch (error) {
       this.logger.error(
         `Error Initializing Players: ${error.message}`,
@@ -113,6 +113,7 @@ export class Pong {
         this.gameDB.opponent = await this.gameService.checkOpponent(
           this.gameDB.id,
         );
+        console.log(this.gameDB.opponent);
       } catch (error) {
         this.logger.error(
           `Error Updating game opponent: ${error.message}`,
@@ -155,20 +156,16 @@ export class Pong {
   }
 
   public async playerAction(action: ActionDTO): Promise<any> {
+    this.logger.log(
+      `User ${action.userId} performed action ${action.move}`,
+      'Pong - playerAction',
+    );
     if (this.playerLeft && this.playerLeft.id === action.userId) {
-      this.server
-        .to(this.gameId)
-        .emit(
-          'update',
-          `Action ${action.action} has been performed by left player with id: ${action.userId}`,
-        );
+      this.logger.log('Player Left performed action', 'Pong - playerAction');
+      this.data.playerLeftDynamic.move = action.move;
     } else if (this.playerRight && this.playerRight.id === action.userId) {
-      this.server
-        .to(this.gameId)
-        .emit(
-          'update',
-          `Action ${action.action} has been performed by right player with id: ${action.userId}`,
-        );
+      this.logger.log('Player Right performed action', 'Pong - playerAction');
+      this.data.playerRightDynamic.move = action.move;
     } else {
       throw new WsException('Action not performed by player');
     }
@@ -182,9 +179,11 @@ export class Pong {
     if (this.playerLeft && this.playerLeft === user) {
       this.playerLeft = null;
       this.disconnectPlayer('Left');
+      this.stopGameLoop();
     } else if (this.playerRight && this.playerRight === user) {
       this.playerRight = null;
       this.disconnectPlayer('Right');
+      this.stopGameLoop();
     } else {
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';
@@ -216,7 +215,55 @@ export class Pong {
       timer: this.data.timer,
     };
     this.server.to(this.gameId).emit('status', status);
-    this.logger.log('Status sent', 'Pong - sendStatus');
+  }
+
+  private sendUpdate() {
+    const update: UpdateData = {
+      playerLeftDynamic: this.data.playerLeftDynamic,
+      playerRightDynamic: this.data.playerRightDynamic,
+      ball: this.data.ball,
+      score: this.data.score,
+    };
+    this.server.to(this.gameId).emit('update', update);
+  }
+
+  // ---------------------------------  LOOP METHODS  --------------------------------- //
+
+  private startGameLoop() {
+    if (!this.isGameLoopRunning) {
+      this.isGameLoopRunning = true;
+      this.lastTimestamp = performance.now();
+      this.updateGameInterval = setInterval(() => this.gameLoop(), BACK_FPS);
+    }
+  }
+
+  private gameLoop() {
+    const timestamp = performance.now();
+    this.lastTimestamp = timestamp;
+
+    if (this.data.status === 'Playing') {
+      updatePong(this.data);
+      this.sendUpdate();
+    }
+
+    this.sendStatus();
+
+    // Calculate FPS
+    this.framesThisSecond++;
+    if (timestamp > this.lastFpsUpdate + 1000) {
+      this.currentFps = this.framesThisSecond;
+      this.framesThisSecond = 0;
+      this.lastFpsUpdate = timestamp;
+      console.log('FPS:', this.currentFps);
+    }
+  }
+
+  private stopGameLoop() {
+    this.isGameLoopRunning = false;
+    if (this.updateGameInterval) {
+      clearTimeout(this.updateGameInterval);
+      this.updateGameInterval = null;
+    }
   }
 
   // ---------------------------------  OTHER METHODS  -------------------------------- //
@@ -255,20 +302,22 @@ export class Pong {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
       this.playerRight = user;
-      if (!this.data.playerRight) {
+      if (this.data.playerRight.id === -1) {
         this.data.playerRight = await this.gameService.definePlayer(
           user.id,
           'Right',
+          false,
         );
         this.sendPlayerData(this.data.playerRight);
       }
       this.data.playerRightStatus = 'Connected';
     } else if (this.gameDB.hostSide === 'Right') {
       this.playerLeft = user;
-      if (!this.data.playerLeft) {
+      if (this.data.playerLeft.id === -1) {
         this.data.playerLeft = await this.gameService.definePlayer(
           user.id,
           'Left',
+          false,
         );
         this.sendPlayerData(this.data.playerLeft);
       }
@@ -285,9 +334,11 @@ export class Pong {
     ) {
       if (this.data.status === 'Not Started') {
         this.data.status = 'Playing';
+        this.startGameLoop();
         this.data.timer = this.defineTimer(10, 'Start');
       } else if (this.data.status === 'Stopped') {
         this.data.status = 'Playing';
+        this.startGameLoop();
         this.data.timer = this.defineTimer(10, 'ReStart');
       }
     }
