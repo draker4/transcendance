@@ -54,19 +54,21 @@ export default function ProfileMainFrame({
     return <LoadingSuspense />
 
   return (
-    <div className={styles.profileMainFrame}>
-      <ProfileFirstPart
-        login={login}
-        isOwner={isOwner}
-        avatar={avatar}
-        socket={socket}
-      />
-      <ProfileSecondPart
-        profile={profile}
-        isOwner={isOwner}
-        setLogin={setLogin}
-        socket={socket}
-      />
-    </div>
+		<main className={styles.main}>
+      <div className={styles.profileMainFrame}>
+        <ProfileFirstPart
+          login={login}
+          isOwner={isOwner}
+          avatar={avatar}
+          socket={socket}
+        />
+        <ProfileSecondPart
+          profile={profile}
+          isOwner={isOwner}
+          setLogin={setLogin}
+          socket={socket}
+        />
+      </div>
+    </main>
   );
 }

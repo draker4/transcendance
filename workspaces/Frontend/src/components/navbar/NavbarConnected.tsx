@@ -21,6 +21,7 @@ export default function NavbarConnected({
 	const [socket, setSocket] = useState<Socket | undefined>(undefined);
 
 	useEffect(() => {
+		console.log("useeffect navbarconnected id=", socket?.id);
 
 		const handleError = () => {
 			toast.info("Connection closed! Reconnecting...");

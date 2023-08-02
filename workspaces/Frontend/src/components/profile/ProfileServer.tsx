@@ -66,18 +66,15 @@ export default async function ProfileServer({ id }: {
 		return <ErrorProfile params={{id}}/>;
 	}
 
-	if (targetProfile.id !== -1) {
+	if (targetProfile.id !== -1)
 		return (
-		  <main className={styles.main}>
-			<ProfileMainFrame
-			  profile={targetProfile}
-			  avatar={avatar}
-			  isOwner={isProfilOwner}
-			  token={token}
-			/>
-		  </main>
+				<ProfileMainFrame
+					profile={targetProfile}
+					avatar={avatar}
+					isOwner={isProfilOwner}
+					token={token}
+				/>
 		);
-	} else {
+	else
 		return <ErrorProfile params={{id}}/>;
-	}
 }

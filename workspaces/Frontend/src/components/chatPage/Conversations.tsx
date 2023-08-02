@@ -89,12 +89,12 @@ export default function Conversations({
       });
     }
 
-    socket?.on("notif", () => getData());
+    socket?.on("notif", getData);
 
     getData();
     
     return () => {
-      socket?.off("notif");
+      socket?.off("notif", getData);
     }
   }, [socket]);
 
