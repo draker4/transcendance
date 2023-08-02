@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,6 +17,7 @@ import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
 import { newMsgDto } from './dto/newMsg.dto';
 import { MessagesService } from 'src/messages/messages.service';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Injectable()
 export class ChatService {
@@ -32,11 +34,27 @@ export class ChatService {
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
 
+    @InjectRepository(SocketToken)
+    private readonly socketTokenRepository: Repository<SocketToken>,
+
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
     private readonly messageService: MessagesService,
     private readonly cryptoService: CryptoService,
   ) {}
+
+  async saveToken(token: string, userId: number) {
+    try {
+      const value = await this.cryptoService.encrypt(token);
+      const tokenEntity = new SocketToken();
+      tokenEntity.value = value;
+      tokenEntity.userId = userId;
+
+      await this.socketTokenRepository.save(tokenEntity);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async getLoginWithAvatar(userId: number) {
     try {

@@ -7,8 +7,6 @@ import {
   Action,
 } from "@transcendence/shared/types/Game.types";
 
-import { ScoreInfo } from "@transcendence/shared/types/Score.types";
-
 // import constants
 import {
   GAME_HEIGHT,

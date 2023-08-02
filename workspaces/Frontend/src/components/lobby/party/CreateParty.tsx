@@ -9,6 +9,7 @@ import DefineField from "@/components/lobby/party/DefineField";
 import DefineInvite from "@/components/lobby/party/DefineInvite";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { confirmBackground, confirmBall } from "@/lib/game/random";
 
 type Props = {
   lobbyService: LobbyService;
@@ -39,15 +40,15 @@ export default function CreateParty({
   const router = useRouter();
   const difficulty: 1 | 2 | 3 | 4 | 5 = 3;
 
-  //Fonction pour rejoindre une game
   async function createGame() {
+    // if name is empty, show error message
     if (name.trim() === "") {
-      // if name is empty
       setName("");
       setEnterName(true);
       createBtnRef.current!.scrollIntoView({ behavior: "smooth" });
       return;
     }
+
     //Creer un objet avec les settings
     const settings: GameDTO = {
       name: name,
@@ -60,8 +61,8 @@ export default function CreateParty({
       maxRound: maxRound,
       difficulty: difficulty,
       push: push,
-      background: background,
-      ball: ball,
+      background: confirmBackground(background),
+      ball: confirmBall(ball),
     };
 
     //Creer la game

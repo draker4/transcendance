@@ -2,6 +2,7 @@
 import styles from "@/styles/theme/Theme.module.css";
 import { MdWbSunny, MdNightsStay } from "react-icons/md";
 import { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 const Theme = () => {
   const [theme, setTheme] = useState<string>("light");
@@ -65,6 +66,12 @@ const Theme = () => {
       >
         {theme === "light" ? <MdWbSunny /> : <MdNightsStay />}
       </button>
+      <ToastContainer
+        autoClose={2000}
+        newestOnTop={true}
+        pauseOnFocusLoss={false}
+        theme={theme === "light" ? "light" : "dark"}
+      />
     </div>
   );
 };

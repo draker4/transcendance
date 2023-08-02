@@ -32,6 +32,7 @@ import { Stats } from './utils/typeorm/Stats.entity';
 import { ScoreModule } from './score/score.module';
 import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
 import { BackupCode } from './utils/typeorm/BackupCode.entity';
+import { SocketToken } from './utils/typeorm/SocketToken.entity';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { BackupCode } from './utils/typeorm/BackupCode.entity';
         UserPongieRelation,
         Token,
         BackupCode,
+        SocketToken,
       ],
       synchronize: false,
     }),

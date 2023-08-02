@@ -12,6 +12,7 @@ import { repDto } from './dto/rep.dto';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import * as bcrypt from 'bcrypt';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +25,8 @@ export class UsersService {
     private readonly tokenRepository: Repository<Token>,
     @InjectRepository(BackupCode)
     private readonly backupCodeRepository: Repository<BackupCode>,
+    @InjectRepository(SocketToken)
+    private readonly socketTokenRepository: Repository<SocketToken>,
     private cryptoService: CryptoService,
   ) {}
 
@@ -119,6 +122,10 @@ export class UsersService {
 
   async deleteAllUserTokens(user: User) {
     await this.tokenRepository.remove(user.tokens);
+    const socketTokens: SocketToken[] = await this.socketTokenRepository.find({
+      where: { userId: user.id }
+    });
+    await this.socketTokenRepository.remove(socketTokens);
   }
 
   async deleteBackupCodes(user: User) {

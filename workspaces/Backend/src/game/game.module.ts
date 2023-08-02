@@ -27,6 +27,7 @@ import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { AvatarService } from '@/avatar/avatar.service';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
       Token,
       User,
       UserChannelRelation,
+      SocketToken,
     ]),
   ],
   providers: [
