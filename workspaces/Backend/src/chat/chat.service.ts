@@ -63,6 +63,9 @@ export class ChatService {
       if (!user)
         throw new Error('no user found');
       
+      if (user.avatar.decrypt)
+        user.avatar.image = await this.cryptoService.decrypt(user.avatar.image);
+      
       return {
         login: user.login,
         avatar: user.avatar,
