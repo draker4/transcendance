@@ -28,7 +28,7 @@ export default async function GamePage({ params }: any) {
   };
   let token: string | undefined;
   let gameId = params.id;
-  const gameData: GameData; //;
+  // const gameData: GameData; //;
 
   try {
     token = cookies().get("crunchy-token")?.value;
@@ -44,7 +44,7 @@ export default async function GamePage({ params }: any) {
     <main className={styles.gamePage}>
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
-        <GameSolo profile={profile} gameData={gameData} />
+        {/* <GameSolo profile={profile} gameData={gameData} /> */}
       </Suspense>
     </main>
   );

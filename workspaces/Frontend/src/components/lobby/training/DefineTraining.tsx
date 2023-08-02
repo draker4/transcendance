@@ -51,6 +51,14 @@ export default function DefineTraining({
       push: push,
       background: background,
       ball: ball,
+      score: {
+        id: "",
+        leftRound: 0,
+        rightRound: 0,
+        round: [{left: 0,
+          right: 0,
+        }], 
+      }
     };
     const gameData: GameData = initPong(initData);
     const player: Player = {
@@ -59,6 +67,7 @@ export default function DefineTraining({
       color: colorHexToRgb(avatar.borderColor),
       avatar: avatar,
       side: hostSide,
+      host: true,
     };
     const AI: Player = {
       id: -2,
@@ -75,6 +84,7 @@ export default function DefineTraining({
         decrypt: false,
       },
       side: hostSide === "Left" ? "Right" : "Left",
+      host: false,
     };
     gameData.playerLeft = hostSide === "Left" ? player : AI;
     gameData.playerRight = hostSide === "Right" ? player : AI;

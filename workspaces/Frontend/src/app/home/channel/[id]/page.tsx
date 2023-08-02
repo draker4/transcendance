@@ -45,6 +45,29 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     isChanOp: false,
     isBanned: false,
     joined: false,
+    invited: false,
+    user: {
+      id: 0,
+      login: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      image: "",
+      provider: "",
+      motto: "",
+      story: "",
+      avatar: {
+        image: "",
+        variant: "",
+        borderColor: "",
+        backgroundColor: "",
+        text: "",
+        empty: true,
+        isChannel: false,
+        decrypt: false,
+      },
+    }
   };
 
   // [+] Recup l'info du statut user par rapport a channel

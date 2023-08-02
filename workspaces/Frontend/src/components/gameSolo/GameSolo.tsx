@@ -50,7 +50,7 @@ export default function GameSolo({ profile, gameData }: Props) {
 
     if (animationFrameId === undefined) {
       animationFrameId = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, draw)
+        gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
     return () => {
@@ -88,7 +88,7 @@ export default function GameSolo({ profile, gameData }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      <Info gameData={gameData}></Info>
+      {/* <Info gameData={gameData}></Info> */}
     </div>
   );
 }
