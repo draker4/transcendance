@@ -1,11 +1,8 @@
-"use client";
-
 import { useState, useRef, useEffect } from "react";
 import styles from "@/styles/navbar/AvatarMenu.module.css";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
-import ChatService from "@/services/Chat.service";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -26,7 +23,7 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
       await fetch(
         `http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`
       );
-      router.push("/welcome");
+      router.refresh();
     } catch (error) {
       console.log(error);
     }

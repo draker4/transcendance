@@ -106,7 +106,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllPongies')
   async getAllPongies(@Request() req) {
-    throw new WsException('test');
     return await this.chatService.getAllPongies(req.user.id);
   }
 
@@ -131,11 +130,8 @@ export class ChatGateway implements OnModuleInit {
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
-    if (payload.channelType === 'privateMsg') {
-      
-      throw new WsException('test');
+    if (payload.channelType === 'privateMsg')
       return await this.chatService.joinPongie(req.user.id, payload.id, socket);
-    }
     else
       return await this.chatService.joinChannel(
         req.user.id,

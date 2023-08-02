@@ -16,13 +16,12 @@ export async function middleware(req: NextRequest) {
   // console.log(verifiedToken, url);
 
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-    // console.log("do nothing go to google");
+    // console.log("do nothing go to auth");
     return;
   }
 
   if (
-    verifiedToken &&
-    verifiedToken.twoFactorAuth &&
+    verifiedToken && verifiedToken.twoFactorAuth &&
     req.nextUrl.pathname !== "/home/auth/2fa"
   ) {
     return NextResponse.redirect(new URL("/home/auth/2fa", req.url));
@@ -40,15 +39,12 @@ export async function middleware(req: NextRequest) {
         const res = await fetch(`http://backend:4000/api/auth/refresh`, {
           method: "POST",
           headers: {
-            Authorization: "Bearer " + crunchyToken,
-            "Content-Type": "application/json",
+            Authorization: "Bearer " + refreshToken,
           },
-          body: JSON.stringify({
-            refreshToken: refreshToken,
-          }),
         });
 
-        if (!res.ok) throw new Error("error fetch refresh token");
+        if (!res.ok)
+          throw new Error("error fetch refresh token");
 
         const data = await res.json();
         crunchyToken = data.access_token;

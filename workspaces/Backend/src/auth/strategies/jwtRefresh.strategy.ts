@@ -5,28 +5,28 @@ import { Strategy, ExtractJwt } from 'passport-jwt';
 import { Request } from "express";
 
 @Injectable()
-export class JwtNoExpirationTimeStrategy extends PassportStrategy(
+export class JwtRefreshStrategy extends PassportStrategy(
 	Strategy,
-	"jwtNoExpirationTime",
+	"jwtRefresh",
 ) {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        JwtNoExpirationTimeStrategy.extractJWT,
+        JwtRefreshStrategy.extractJWT,
         ExtractJwt.fromAuthHeaderAsBearerToken(),
       ]),
-      ignoreExpiration: true,
-      secretOrKey: process.env.JWT_SECRET,
+      ignoreExpiration: false,
+      secretOrKey: process.env.JWT_REFRESH_SECRET,
     });
   }
 
   private static extractJWT(req: Request): string | null {
     if (
       req.cookies &&
-      'crunchy-token' in req.cookies &&
-      req.cookies['crunchy-token'].length > 0
+      'refresh-token' in req.cookies &&
+      req.cookies['refresh-token'].length > 0
     ) {
-      return req.cookies['crunchy-token'];
+      return req.cookies['refresh-token'];
     }
     return null;
   }

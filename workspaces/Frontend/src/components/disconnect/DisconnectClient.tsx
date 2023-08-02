@@ -1,14 +1,8 @@
 "use client"
-import styles from "@/styles/disconnect/Disconnect.module.css";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function DisconnectClient() {
-
-	const	[draw, setDraw] = useState<boolean>(true);
-
-	setTimeout(() => {
-		setDraw(false);
-	}, 5000);
 
 	const	signoff = async () => {
 		try {
@@ -20,26 +14,10 @@ export default function DisconnectClient() {
 	}
 
 	useEffect(() => {
-
-		const	handleClick = () => {
-			setDraw(false);
-		}
-
-		window.addEventListener('click', handleClick);
-
-		return () => {
-			window.removeEventListener('click', handleClick);
-		}
-	})
+		toast.info("You have been disconnected...");
+	}, []);
 
 	signoff();
-
-	if (draw)
-		return (
-			<div className={styles.main}>
-				<h4>Oh no! You just have been disconnected!❤️ Please sign in again!👍🚀</h4>
-			</div>
-		)
 
 	return <></>;
 }

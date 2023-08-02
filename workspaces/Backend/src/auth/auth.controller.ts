@@ -12,6 +12,7 @@ import {
   BadRequestException,
   Query,
   UseFilters,
+  Headers,
 } from '@nestjs/common';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
@@ -19,9 +20,9 @@ import { GoogleOauthGuard } from './guards/google-oauth.guard';
 import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { JwtNoExpirationGuard } from './guards/jwtNoExpiration.guard';
 import { AuthService } from './services/auth.service';
 import { HttpExceptionFilter } from '@/utils/filter/http-exception.filter';
+import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -217,14 +218,18 @@ export class AuthController {
   }
 
   @Public()
-  @UseGuards(JwtNoExpirationGuard)
+  @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  async refresh(@Request() req, @Body('refreshToken') refreshToken: string) {
+  async refresh(
+    @Request() req,
+    @Headers('authorization') header: string
+  ) {
+    const [, refreshToken] = header.split(' ');
     return this.authService.refreshToken(req.user.id, refreshToken);
   }
 
   @Public()
-  @UseGuards(JwtNoExpirationGuard)
+  @UseGuards(JwtRefreshGuard)
   @Post('refreshToken')
   async refreshToken(@Request() req) {
     const refreshToken = req.cookies['refresh-token'];
