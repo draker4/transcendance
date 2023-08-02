@@ -40,7 +40,6 @@ export class LobbyController {
   // 03 - api/lobby/getall
   @Get('getall/:mode?')
   GetAllGames(@Param('mode') mode?: 'League' | 'Party') {
-    console.log('mode:', mode);
     return this.lobbyService.GetAll(mode);
   }
 

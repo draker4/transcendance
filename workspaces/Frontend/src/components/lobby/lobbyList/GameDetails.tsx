@@ -21,7 +21,6 @@ export default function GameDetails({ scoreService, gameInfo }: Props) {
       try {
         const data = await scoreService.getScoreByGameId(gameInfo.id);
         setScore(data);
-        console.log("score Details: ", data);
       } catch (error) {
         setScore(undefined);
         console.log("Error fetching score: " + error);

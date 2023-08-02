@@ -4,8 +4,9 @@ import { useRef, useEffect, useMemo } from "react";
 import {
   pongKeyDown,
   pongKeyUp,
-  handlePlayerUpdate,
+  handlePlayerMessage,
   handleStatusMessage,
+  handleUpdateMessage,
   handlePing,
 } from "../../lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
@@ -16,8 +17,6 @@ import {
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
 import Info from "./Info";
-
-import { addToUpdateQueue } from "@/lib/game/gameLoop";
 
 type Props = {
   userId: number;
@@ -95,22 +94,15 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
 
   useEffect(() => {
     isMountedRef.current = true;
-    socket.on("player", handlePlayerUpdate(setGameData, isMountedRef));
+    socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
     socket.on("status", handleStatusMessage(setGameData, isMountedRef));
-    socket.on("update", (updatedGameData: GameData) => {
-      // Add the received update to the queue
-      addToUpdateQueue(updatedGameData);
-    });
+    socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("player", handlePlayerUpdate(setGameData, isMountedRef));
+      socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
       socket.off("status", handleStatusMessage(setGameData, isMountedRef));
-      socket.off("update", (updatedGameData: GameData) => {
-        // Add the received update to the queue
-        console.log("update received");
-        addToUpdateQueue(updatedGameData);
-      });
+      socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
     };
   }, [socket, setGameData]);
 

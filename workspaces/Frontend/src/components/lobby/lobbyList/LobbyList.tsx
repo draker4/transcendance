@@ -25,7 +25,6 @@ export default function LobbyList({ lobbyService, mode }: Props) {
       try {
         const ret = await lobbyService.getGameList(mode);
         setGameList(ret.data);
-        console.log("partyList Updated: ", ret.data);
       } catch (error) {
         console.error("Error fetching game list:", error);
       }

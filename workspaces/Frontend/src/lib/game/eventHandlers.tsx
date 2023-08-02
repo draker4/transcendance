@@ -3,9 +3,15 @@ import {
   GameData,
   StatusMessage,
   UpdateData,
+  Player,
 } from "@transcendence/shared/types/Game.types";
 
 import { Socket } from "socket.io-client";
+import {
+  addUpdateMessage,
+  addPlayerMessage,
+  addStatusMessage,
+} from "@/lib/game/gameLoop";
 
 export const pongKeyDown = (
   event: KeyboardEvent,
@@ -28,13 +34,11 @@ export const pongKeyDown = (
         game.playerRightDynamic.move = Action.Up;
         if (socket) {
           socket.emit("action", action);
-          console.log("Up Right", action);
         }
       } else if (isPlayer === "Left" && game.playerLeftDynamic.move !== "Up") {
         game.playerLeftDynamic.move = Action.Up;
         if (socket) {
           socket.emit("action", action);
-          console.log("Up Left", action);
         }
       }
 
@@ -54,7 +58,6 @@ export const pongKeyDown = (
         game.playerRightDynamic.move = Action.Down;
         if (socket) {
           socket.emit("action", action);
-          console.log("Down Right", action);
         }
       } else if (
         isPlayer === "Left" &&
@@ -63,7 +66,6 @@ export const pongKeyDown = (
         game.playerLeftDynamic.move = Action.Down;
         if (socket) {
           socket.emit("action", action);
-          console.log("Down Left", action);
         }
       }
 
@@ -144,7 +146,6 @@ export const pongKeyUp = (
     game.playerLeftDynamic.move = Action.Idle;
     if (socket) {
       socket.emit("action", action);
-      console.log("Idle Left", action);
     }
   } else if (
     isPlayer === "Right" &&
@@ -153,22 +154,23 @@ export const pongKeyUp = (
     game.playerRightDynamic.move = Action.Idle;
     if (socket) {
       socket.emit("action", action);
-      console.log("Idle Right", action);
     }
   }
 };
 
 // Handler for "player" event
-export const handlePlayerUpdate =
+export const handlePlayerMessage =
   (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
-  (updateData: UpdateData) => {
+  (player: Player) => {
     if (!isMountedRef.current) return;
+    addPlayerMessage(player);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
-      newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
-      newGameData.playerRightDynamic = updateData.playerRightDynamic;
-      newGameData.ball = updateData.ball;
-      newGameData.score = updateData.score;
+      if (player.side === "Left") {
+        newGameData.playerLeft = player;
+      } else if (player.side === "Right") {
+        newGameData.playerRight = player;
+      }
       return newGameData;
     });
   };
@@ -178,6 +180,7 @@ export const handleStatusMessage =
   (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
   (fullStatus: StatusMessage) => {
     if (!isMountedRef.current) return;
+    addStatusMessage(fullStatus);
     setGameData((prevGameData: GameData) => ({
       ...prevGameData,
       status: fullStatus.status,
@@ -186,6 +189,21 @@ export const handleStatusMessage =
       playerRightStatus: fullStatus.playerRight,
       timer: fullStatus.timer,
     }));
+  };
+
+export const handleUpdateMessage =
+  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (updateData: UpdateData) => {
+    if (!isMountedRef.current) return;
+    addUpdateMessage(updateData);
+    setGameData((prevGameData: GameData) => {
+      const newGameData = { ...prevGameData };
+      newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
+      newGameData.playerRightDynamic = updateData.playerRightDynamic;
+      newGameData.ball = updateData.ball;
+      newGameData.score = updateData.score;
+      return newGameData;
+    });
   };
 
 // Handler for "ping" event

@@ -26,9 +26,10 @@ import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 
 import { updatePong } from '@transcendence/shared/game/updatePong';
 
+import { BACK_FPS } from '@transcendence/shared/constants/Game.constants';
+
 export class Pong {
   // Game Loop variables
-  private readonly targetDelay: number = 1000 / 30; // 30 FPS
   private lastTimestamp: number = 0;
   private isGameLoopRunning: boolean = false;
   private framesThisSecond = 0;
@@ -232,10 +233,7 @@ export class Pong {
     if (!this.isGameLoopRunning) {
       this.isGameLoopRunning = true;
       this.lastTimestamp = performance.now();
-      this.updateGameInterval = setInterval(
-        () => this.gameLoop(),
-        this.targetDelay,
-      );
+      this.updateGameInterval = setInterval(() => this.gameLoop(), BACK_FPS);
     }
   }
 

@@ -28,9 +28,7 @@ export default function GameLine({
   const [showDetail, setShowDetail] = useState(false);
 
   async function joinGame() {
-    console.log("Joining game: ", gameInfo.id);
     const res: ReturnData = await lobbyService.joinGame(gameInfo.id);
-    console.log("Join game response: ", res);
     await toast.promise(
       new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
       {
