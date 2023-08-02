@@ -1,4 +1,5 @@
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
+import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCertificate, faSkull, faHand, faHandPeace } from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +8,7 @@ import { useState } from "react";
 import ConfirmationPannel from "./ConfirmationPannel";
 
 type Props = {
+	channelId:number;
 	relation: UserRelation;
 	myRelation: UserRelation;
 	role: ChannelRoles;
@@ -21,16 +23,19 @@ type ButtonData = {
 	colorDep: boolean;
   };
 
-export default function ChanOpControlPannel({relation, myRelation, role, lists}:Props) {
+export default function ChanOpControlPannel({channelId, relation, myRelation, role, lists}:Props) {
+
+	const channelService = new Channel_Service();
 
 	const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
 	const [confirmationList, setConfirmationList] = useState<ConfirmationList>("nothing");
 
 	const handleChanOp = () => {
 	  if (relation.isChanOp) {
-		  console.log(`[+] giving chanOp to user ${relation.user.login}`); //checking
+		  console.log(`[+] removing chanOp to user ${relation.user.login}`); //checking
 		  // [+] enclencher ici le chgt vers backend
-		 // setPongies((prev) => prev - Pongie);
+		  const rep = channelService.editRelation(channelId, relation.userId, {isChanOp:false});
+
 		 relation.isChanOp = false;
 		 lists.setOperators((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
 		 lists.setPongers((prev: UserRelation[]) => [...prev, relation]);
@@ -38,9 +43,10 @@ export default function ChanOpControlPannel({relation, myRelation, role, lists}:
 	  } else {
 		  console.log(`[+] giving chanOp to user ${relation.user.login}`); //checking
 		  // [+] enclencher ici le chgt vers backend
-		  lists.setOperators((prev: UserRelation[]) => [...prev, relation]);
+		  const rep = channelService.editRelation(channelId, relation.userId, {isChanOp:true});
 
 		  relation.isChanOp = true;
+		  lists.setOperators((prev: UserRelation[]) => [...prev, relation]);
 		  lists.setPongers((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
 
 	  }

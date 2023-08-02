@@ -17,7 +17,7 @@ export default function DisplayInfos({
   littleScreen,
 }: {
   icon: ReactNode;
-  socket: Socket;
+  socket: Socket | undefined;
   openDisplay: (display: Display) => void;
   confirm: Pongie | Channel | null;
   cancel: (event: React.MouseEvent) => void;
@@ -29,7 +29,7 @@ export default function DisplayInfos({
   const	deleteItem = (channel: Channel, event: React.MouseEvent) => {
 	event.stopPropagation();
 
-	socket.emit("leave", channel.id);
+	socket?.emit("leave", channel.id);
 
 	const updatedChannels = channels.filter((item) => item !== channel);
 	setChannels(updatedChannels);
@@ -81,7 +81,7 @@ export default function DisplayInfos({
 	});
 	
 	useEffect(() => {
-		socket.emit("getChannels", (channels: Channel []) => {
+		socket?.emit("getChannels", (channels: Channel []) => {
 			channels = channels.filter(channel => channel.type !== 'privateMsg');
 			setChannels(channels);
 		});

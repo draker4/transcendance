@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import stylesError from "@/styles/chatPage/ChatPage.module.css";
 import styles from "@/styles/chatPage/ChatClient.module.css";
 import Conversations from "./Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
-import Link from "next/link";
+import LoadingSuspense from "../loading/LoadingSuspense";
+import { Socket } from "socket.io-client";
 
 export default function ChatClient({
   token,
@@ -18,8 +18,7 @@ export default function ChatClient({
   const [littleScreen, setLittleScreen] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
   const [display, setDisplay] = useState<Display>();
-  const [error, setError] = useState<boolean>(false);
-  const chatService = new ChatService(token);
+  const [socket, setSocket] = useState<Socket | undefined>(undefined);
 
   const openDisplay = (display: Display) => {
     setOpen(true);
@@ -47,28 +46,39 @@ export default function ChatClient({
 
   // WsException Managing
   useEffect(() => {
-    chatService.socket?.on("exception", () => {
-      setError(true);
-    });
-  }, [chatService.socket]);
 
-  if (!chatService.socket || error) {
-    return (
-      <div className={stylesError.error}>
-        <h2>Oops... Something went wrong!</h2>
-        <Link href={"/home"} className={stylesError.errorLink}>
-          <p>Return to Home Page!</p>
-        </Link>
-      </div>
-    );
-  }
+    const handleError = () => {
+      setSocket(undefined);
+    }
+
+    if (!socket) {
+
+      const intervalId = setInterval(() => {
+        const chatService = new ChatService(token);
+        if (chatService.socket) {
+          setSocket(chatService.socket);
+          clearInterval(intervalId);
+        }
+        console.log("chatservice reload here", chatService.socket?.id);
+      }, 500);
+    }
+
+    socket?.on("disconnect", handleError);
+
+    return () => {
+      socket?.off("disconnect", handleError);
+    }
+  }, [socket]);
+
+  if (!socket)
+    return <LoadingSuspense />;
 
   // narrow screen width, display not opened
   if (littleScreen && !open)
     return (
       <div className={styles.main}>
         <Conversations
-          socket={chatService.socket}
+          socket={socket}
           maxWidth="100%"
           openDisplay={openDisplay}
         />
@@ -80,7 +90,7 @@ export default function ChatClient({
     return (
       <div className={styles.main}>
         <ChatDisplay
-          socket={chatService.socket}
+          socket={socket}
           display={display}
           littleScreen={littleScreen}
           closeDisplay={closeDisplay}
@@ -94,12 +104,12 @@ export default function ChatClient({
   return (
     <div className={styles.main}>
       <Conversations
-        socket={chatService.socket}
+        socket={socket}
         maxWidth="400px"
         openDisplay={openDisplay}
       />
       <ChatDisplay
-        socket={chatService.socket}
+        socket={socket}
         display={display}
         littleScreen={littleScreen}
         closeDisplay={closeDisplay}

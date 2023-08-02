@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Search from "./Search";
 
 export default function SearchBar({ socket, openDisplay }: {
-	socket: Socket;
+	socket: Socket | undefined;
 	openDisplay: (display: Display) => void;
 }) {
 	const	[channels, setChannels] = useState<Channel []>([]);
@@ -29,10 +29,10 @@ export default function SearchBar({ socket, openDisplay }: {
 	}
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
-		socket.emit('getAllChannels', (channels: Channel[]) => {
+		socket?.emit('getAllChannels', (channels: Channel[]) => {
 			setChannels(channels);
 		});
-		socket.emit('getAllPongies', (pongies: Pongie[]) => {
+		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
 			setPongies(pongies);
 		});
 
@@ -116,7 +116,7 @@ export default function SearchBar({ socket, openDisplay }: {
 			? "privateMsg"
 			: "public";
   
-		socket.emit(
+		socket?.emit(
 		  "join",
 		  {
 			id: item.id,

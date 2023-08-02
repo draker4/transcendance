@@ -17,7 +17,7 @@ export default function DisplayInfos({
   littleScreen,
 }: {
   icon: ReactNode;
-  socket: Socket;
+  socket: Socket | undefined;
   openDisplay: (display: Display) => void;
   confirm: Pongie | Channel | null;
   cancel: (event: React.MouseEvent) => void;
@@ -30,7 +30,7 @@ export default function DisplayInfos({
 	event.stopPropagation();
 
 	// socket.emit("addPongie", 1);
-	socket.emit("deletePongie", pongie.id);
+	socket?.emit("deletePongie", pongie.id);
 
 	const updatedPongies = pongies.filter((item) => item !== pongie);
 	setPongies(updatedPongies);
@@ -78,7 +78,7 @@ export default function DisplayInfos({
 	});
 	
 	useEffect(() => {
-		socket.emit("getPongies", (pongies: Pongie []) => {
+		socket?.emit("getPongies", (pongies: Pongie []) => {
 			setPongies(pongies);
 		});
 	}, [socket]);

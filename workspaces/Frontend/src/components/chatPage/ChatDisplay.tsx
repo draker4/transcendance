@@ -18,7 +18,7 @@ export default function ChatDisplay({
   myself,
   openDisplay,
 }: {
-  socket: Socket;
+  socket: Socket | undefined;
   display: Display;
   littleScreen: boolean;
   closeDisplay: () => void;

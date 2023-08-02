@@ -16,7 +16,7 @@ export default function Conversations({
   maxWidth,
   openDisplay,
 }: {
-  socket: Socket;
+  socket: Socket | undefined;
   maxWidth: string;
   openDisplay: (display: Display) => void;
 }) {
@@ -89,12 +89,12 @@ export default function Conversations({
       });
     }
 
-    socket.on("notif", () => getData());
+    socket?.on("notif", () => getData());
 
     getData();
     
     return () => {
-      socket.off("notif");
+      socket?.off("notif");
     }
   }, [socket]);
 

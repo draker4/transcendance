@@ -6,6 +6,7 @@ import ChanOpControlPannel from "./ChanOpControlPannel";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 
 type Props = {
+  channelId:number;
   relation: UserRelation;
   myRelation: UserRelation;
   role: ChannelRoles;
@@ -16,7 +17,7 @@ type Props = {
   lists:ChannelLists;
 };
 
-export default function RolesItem({ relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists }: Props) {
+export default function RolesItem({ channelId, relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocusOn = () => {
@@ -64,7 +65,7 @@ export default function RolesItem({ relation, myRelation, role, onFocusOn, onFoc
         {relation.user.login}
       </Link>
 
-      { isFocused && myRelation.isChanOp && <ChanOpControlPannel role={role} relation={relation} myRelation={myRelation} lists={lists} />}
+      { isFocused && myRelation.isChanOp && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} />}
     </article>
   );
 }
