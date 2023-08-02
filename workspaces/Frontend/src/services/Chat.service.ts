@@ -51,6 +51,8 @@ export default class ChatService {
 		  
 		this.socket.on('disconnect', () => {
 			console.log('WebSocket disconnected id=', this.socket?.id);
+			this.refreshSocket("refresh");
+			// this.disconnect();
 		});
 	
 		// Catching error or exception will force disconnect then reconnect
@@ -69,11 +71,11 @@ export default class ChatService {
 			this.disconnect();
 		});
 
-		this.socket.on('refresh', () => {
-			console.log('refresh event for socket id=', this.socket?.id);
-			this.refreshSocket("refresh");
-			// this.disconnect();
-		});
+		// this.socket.on('refresh', () => {
+		// 	console.log('refresh event for socket id=', this.socket?.id);
+		// 	this.refreshSocket("refresh");
+		// 	this.disconnect();
+		// });
 
 	}
 
@@ -84,6 +86,7 @@ export default class ChatService {
 			this.socket.off("error");
 			this.socket.off("exception");
 			this.socket.off("refresh");
+			console.log("disconnect ok");
 			this.socket.disconnect();
 			this.socket = undefined;
 		}
@@ -118,10 +121,7 @@ export default class ChatService {
 		  if (!resApi.ok)
 			throw new Error("fetch api failed");
 		  
-		  this.disconnect();
-		  this.token = data.access_token;
 		  this.initializeSocket(data.access_token);
-		  this.socket?.emit('notif');
 		}
 		catch (error) {
 		  await fetch(

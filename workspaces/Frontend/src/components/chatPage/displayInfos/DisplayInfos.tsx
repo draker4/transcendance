@@ -13,7 +13,7 @@ export default function DisplayInfos({
 	littleScreen,
 }: {
 	icon: ReactNode;
-	socket: Socket;
+	socket: Socket | undefined;
 	display: { button: string };
 	openDisplay: (display: Display) => void;
 	littleScreen: boolean,

@@ -11,7 +11,7 @@ type Props = {
   icon: ReactNode;
   channel: Channel;
   myself: Profile & { avatar: Avatar };
-  socket: Socket;
+  socket: Socket | undefined;
 };
 
 // Fresh Messages listened by websocket
@@ -37,7 +37,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [codeName, setCodename] = useState<string>("");
 
   useEffect(() => {
-    socket.emit( "getMessages", {id : channel.id},
+    socket?.emit( "getMessages", {id : channel.id},
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
 
@@ -51,7 +51,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         });
 
 		if (channel.type === "privateMsg") {
-			socket.emit("getChannelName", {id : channel.id}, (response: Rep) => {
+			socket?.emit("getChannelName", {id : channel.id}, (response: Rep) => {
 				if (response.success) {
 					setCodename(response.message);
 				}
@@ -78,10 +78,10 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
       setMessages((previous) => [...previous, msg]);
     };
 
-    socket.on("sendMsg", handleReceivedMsg);
+    socket?.on("sendMsg", handleReceivedMsg);
 
     return () => {
-      socket.off("sendMsg", handleReceivedMsg);
+      socket?.off("sendMsg", handleReceivedMsg);
     };
     
 
@@ -90,7 +90,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   const addMsg = (msg: Message) => {
     console.log("laaaa", msg);
-    socket.emit("newMsg", {
+    socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,
     });
