@@ -16,6 +16,7 @@ import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([
@@ -25,6 +26,7 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
     Avatar,
     UserChannelRelation,
     BackupCode,
+    SocketToken,
   ])],
   providers: [
     TwoFactorAuthenticationService,

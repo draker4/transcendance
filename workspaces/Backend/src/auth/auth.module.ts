@@ -21,6 +21,7 @@ import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { ChannelService } from 'src/channels/channel.service';
 import { AuthService } from './services/auth.service';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
       Token,
       UserChannelRelation,
       BackupCode,
+      SocketToken,
     ]),
     JwtModule,
     MailModule,

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Search from "./Search";
 
 export default function SearchBarPongies({ socket, displayPongie }: {
-	socket: Socket;
+	socket: Socket | undefined;
 	displayPongie: (display: Display) => void;
 }) {
 	const	[pongies, setPongies] = useState<Pongie []>([]);
@@ -37,7 +37,7 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 	}
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
-		socket.emit('getAllPongies', (pongies: Pongie[]) => {
+		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
 			setPongies(pongies);
 		});
 
