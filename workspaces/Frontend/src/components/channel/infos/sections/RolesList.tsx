@@ -3,13 +3,14 @@ import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import RolesItem from "./RolesItem";
 
 type Props = {
+  channelId: number;
   relations: UserRelation[];
   role: ChannelRoles;
   myRelation: UserRelation;
   lists:ChannelLists;
 };
 
-export default function RolesList({ relations, role, myRelation, lists }: Props) {
+export default function RolesList({ channelId, relations, role, myRelation, lists }: Props) {
   return (
     <div className={styles.rolesList}>
       <p className={styles.tinyTitle}>{role}</p>
@@ -17,6 +18,7 @@ export default function RolesList({ relations, role, myRelation, lists }: Props)
         {relations.map((relation) => (
           <li key={relation.userId}>
             <RolesItem
+			  channelId={channelId}
               relation={relation}
 			  myRelation={myRelation}
 			  role={role}

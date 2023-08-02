@@ -36,7 +36,6 @@ export default function ConfirmationPannel({
 
 		default:
 		return "";
-
 	}
  }
 
