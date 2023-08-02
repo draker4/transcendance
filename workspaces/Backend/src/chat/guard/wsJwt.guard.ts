@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { CanActivate, Injectable } from "@nestjs/common";
 import { verify } from "jsonwebtoken";
@@ -26,33 +25,15 @@ export class WsJwtGuard implements CanActivate {
                 ignoreExpiration: false,
             }) as any;
 
-            console.log(payload.exp - Date.now() / 1000);
+            // if (payload.exp + 2700 < Date.now()) {
+                // const   socketTokens = await this.socketTokenRepository.find({
+                //     where: { userId: payload.sub },
+                // });
+                // const   socketToken = await this.findSocketTokenByBearerToken(socketTokens, bearerToken);
 
-            if (payload.exp - Date.now() / 1000 < 900) {
-                const   socketTokens = await this.socketTokenRepository.find({
-                    where: { userId: payload.sub },
-                });
-                const   socketToken = await this.findSocketTokenByBearerToken(socketTokens, bearerToken);
-
-                if (!socketToken)
-                    throw new Error('token already expired');
-
-                if (!socketToken.deleted) {
-                    const   expirationTime = Date.now() + 60 * 1000;
-                    socketToken.deleted = new Date(expirationTime);
-                    await this.socketTokenRepository.save(socketToken);
-                    client.user = { id: payload.sub, login: payload.login };
-                    client.emit('refresh');
-                    console.log("emit here id=", client.id);
-                    setTimeout(() => {
-                        this.socketTokenRepository.remove(socketToken);
-                    }, 10000);
-                    return true;
-                }
-
-                if (socketToken.deleted.getDate() > Date.now())
-                    throw new Error("token deletion expired");
-            }
+                // if (!socketToken)
+                //     throw new Error('token already expired');
+            // }
 
             client.user = { id: payload.sub, login: payload.login };
             return true;

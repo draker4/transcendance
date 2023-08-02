@@ -10,9 +10,6 @@ export class SocketToken {
 	@Column()
 	value: string;
 
-	@Column({nullable: true})
-	deleted: Date;
-
 	@Column()
 	userId: number;
 }
