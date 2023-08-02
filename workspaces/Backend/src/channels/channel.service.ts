@@ -8,6 +8,7 @@ import { Channel } from "src/utils/typeorm/Channel.entity";
 import { User } from "src/utils/typeorm/User.entity";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { Message } from "@/utils/typeorm/Message.entity";
+import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
 
 type ChannelAndUsers = {
 	channel: Channel;
@@ -171,6 +172,53 @@ export class ChannelService {
 		});
 		
 		return relation ? true : false;
+	}
+
+	// [!] to be called within a try-catch block
+	public async editRelation(chanOpId: number, channelInfos:EditChannelRelationDto) {
+		const rep:ReturnData = {
+			success: false,
+			message: ""
+		}
+
+		if (channelInfos.newRelation.joined === undefined 
+			&& channelInfos.newRelation.invited === undefined 
+			&& channelInfos.newRelation.isChanOp === undefined 
+			&& channelInfos.newRelation.isBanned === undefined)
+		throw new Error("need at least one property to edit channel relation");
+
+		const	relation = await this.userChannelRelation.findOne({
+			where: { userId:channelInfos.userId, channelId:channelInfos.channelId }
+		});
+
+		if (!relation)
+			throw new Error("can't find the user or the channel requested");
+
+		// [+] to extract
+		if (channelInfos.newRelation.joined !== undefined) {
+			relation.joined = channelInfos.newRelation.joined;
+			rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+		}
+
+		if (channelInfos.newRelation.isChanOp !== undefined) {
+			relation.isChanOp = channelInfos.newRelation.isChanOp;
+			rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+		}
+
+		if (channelInfos.newRelation.invited !== undefined) {
+			relation.invited = channelInfos.newRelation.invited;
+			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+		}
+
+		if (channelInfos.newRelation.isBanned !== undefined) {
+			relation.isBanned = channelInfos.newRelation.isBanned;
+			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+		}
+
+		// [+] save relation dans la db maintenant
+
+		rep.success = true;
+		return rep;
 	}
 	
 

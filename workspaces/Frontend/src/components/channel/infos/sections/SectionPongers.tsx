@@ -33,7 +33,7 @@ const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.u
       return <></>
     } else {
       return (
-        <RolesList relations={relations} myRelation={myRelation} role={role} lists={lists}/>
+        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} lists={lists}/>
       );
     }
   };

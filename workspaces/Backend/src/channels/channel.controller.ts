@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Controller, Get, Param, ParseIntPipe, Request } from "@nestjs/common";
+import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe, Put, Request } from "@nestjs/common";
 import { ChannelService } from "./channel.service";
+import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
 
 @Controller('channel')
 export class ChannelController {
@@ -19,5 +21,31 @@ export class ChannelController {
 		// console.log("[channel controller] data :", data); // checking
 
 		return data;
+	}
+
+
+	// [+] Un guard verifiant que l'user est chanOp ? (verifie si il est dans la channel aussi avant)
+	@Put('editRelation')
+	async editRelation(@Request() req, @Body() newRelation: EditChannelRelationDto ) {
+		console.log("NEW RELATION = ", newRelation); // checking
+
+		let rep:ReturnData = {
+			success: false,
+			message: ""
+		}
+
+		try {
+		const check = await this.channelService.checkChanOpPrivilege(req.user.id, newRelation.channelId);
+		if (!check.isChanOp)
+			throw new Error(check.error);
+
+		rep = await this.channelService.editRelation(req.user.id, newRelation);
+
+	   } catch (error) {
+		 rep.success = false;
+		 rep.message = error.message;
+	   }
+
+	   return rep;
 	}
 }
