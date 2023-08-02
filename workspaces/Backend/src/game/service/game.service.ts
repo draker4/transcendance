@@ -11,7 +11,7 @@ import { AvatarService } from '@/avatar/avatar.service';
 
 // import Pong game logic
 import { Player } from '@transcendence/shared/types/Game.types';
-import { convertColor } from '@transcendence/shared/game/pongUtils';
+import { colorHexToRgb } from '@transcendence/shared/game/pongUtils';
 import { CreateGameDTO } from '../dto/CreateGame.dto';
 import { Score } from '@/utils/typeorm/Score.entity';
 
@@ -36,18 +36,14 @@ export class GameService {
 
   public async getGameById(gameId: string): Promise<any> {
     try {
-      console.log('getGameById: ', gameId);
       const game = await this.gameRepository.findOne({
         where: { id: gameId },
       });
       if (!game) {
-        console.log('getGameById: Game not found');
         throw new Error('Game not found');
       }
-      console.log('getGameById: ', game);
       return game;
     } catch (error) {
-      console.log('getGameById: ', error.message);
       throw new Error(error.message);
     }
   }
@@ -91,45 +87,42 @@ export class GameService {
   public async definePlayer(
     userId: number,
     side: 'Left' | 'Right',
+    host: boolean,
   ): Promise<Player> {
     try {
-      let player: Player = {
+      const player: Player = {
         id: -1,
-        name: 'Searching Player',
+        name: 'Searching',
         color: { r: 0, g: 0, b: 0, a: 0 },
         avatar: {
           image: '',
-          text: '',
+          text: '...',
           variant: 'circular',
           borderColor: '#000000',
-          backgroundColor: '#ffffff',
-          empty: true,
+          backgroundColor: '#ff253a',
+          empty: false,
           decrypt: false,
         },
         side: side,
+        host: host,
       };
       const user = await this.usersService.getUserById(userId);
       if (!user) {
         return player;
       }
       const avatar = await this.avatarService.getAvatarById(userId, false);
+      player.id = user.id;
+      player.name = user.login;
+      player.side = side;
       if (!avatar) {
-        player.id = user.id;
-        player.name = user.login;
-        player.side = side;
         return player;
       }
       if (avatar?.decrypt && avatar?.image.length > 0) {
         avatar.image = await this.cryptoService.decrypt(avatar.image);
         avatar.decrypt = false;
       }
-      player = {
-        id: userId,
-        name: user.login,
-        color: convertColor(avatar.borderColor),
-        avatar: avatar,
-        side: side,
-      };
+      player.color = colorHexToRgb(avatar.borderColor);
+      player.avatar = avatar;
       return player;
     } catch (error) {
       throw new WsException(error.message);

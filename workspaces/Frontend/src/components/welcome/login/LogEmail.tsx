@@ -30,7 +30,7 @@ type Props = {
   setRegister: Function;
   login: string;
   setLogin: Function;
-  setSuccessNewPassword: Dispatch<SetStateAction<boolean>>
+  setSuccessNewPassword: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function LogEmail({
@@ -95,37 +95,37 @@ export default function LogEmail({
     setNotif("");
 
     try {
-      await handleCaptcha();
+      //await handleCaptcha();
 
       // if user has forgotten his password
       if (sendPassword !== initialTextForget) {
         const emailCrypted = await Crypto.encrypt(email);
 
-        const	res = await fetch(
-					`http://${process.env.HOST_IP}:4000/api/auth/forgotPassword`, {
-						method: "POST",
+        const res = await fetch(
+          `http://${process.env.HOST_IP}:4000/api/auth/forgotPassword`,
+          {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               email: emailCrypted,
             }),
-					}
-				);
+          }
+        );
 
-				if (!res.ok)
-					throw new Error('fetch failed');
-				
-				const	data = await res.json();
+        if (!res.ok) throw new Error("fetch failed");
 
-				if (data.success) {
-					setSendPassword(initialTextForget);
-          setTextButton('Continue');
+        const data = await res.json();
+
+        if (data.success) {
+          setSendPassword(initialTextForget);
+          setTextButton("Continue");
           setSuccessNewPassword(true);
-					return ;
-				}
+          return;
+        }
 
-				throw new Error('no success');
+        throw new Error("no success");
       }
 
       //if email only, first step of authentification
@@ -141,7 +141,7 @@ export default function LogEmail({
         if (res.notif) {
           setEmail("");
           throw new Error();
-         }
+        }
 
         setPassword(true);
 
@@ -171,25 +171,25 @@ export default function LogEmail({
     } catch (error) {
       if (sendPassword !== initialTextForget)
         setTextButton("Send new password by mail");
-      else
-        setTextButton("Continue");
+      else setTextButton("Continue");
       setNotif("Something went wrong, please try again!");
     }
   };
 
   const handlePasswordForgotten = () => {
-    setNotif('');
-    setPasswordSecured('');
+    setNotif("");
+    setPasswordSecured("");
 
     if (sendPassword === initialTextForget) {
-        setSendPassword("You can get a new password by email. Click again to cancel.");
-        setTextButton("Send new password by mail")
+      setSendPassword(
+        "You can get a new password by email. Click again to cancel."
+      );
+      setTextButton("Send new password by mail");
+    } else {
+      setTextButton("Continue");
+      setSendPassword(initialTextForget);
     }
-    else {
-			setTextButton("Continue");
-			setSendPassword(initialTextForget);
-		}
-  }
+  };
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
@@ -211,15 +211,14 @@ export default function LogEmail({
         />
       )}
 
-      {
-        email.length > 0 &&
+      {email.length > 0 && (
         <div className={styles.email}>
           {email}
-            <div className={styles.emailBtn} onClick={iconEmail}>
-              <FontAwesomeIcon icon={faPenToSquare} />
-            </div>
+          <div className={styles.emailBtn} onClick={iconEmail}>
+            <FontAwesomeIcon icon={faPenToSquare} />
+          </div>
         </div>
-      }
+      )}
 
       <div className={password ? styles.openPassword : styles.closePassword}>
         <input
@@ -232,20 +231,17 @@ export default function LogEmail({
           onChange={(event) =>
             setValue("password", (event.target as HTMLInputElement).value)
           }
-          style={{width: "60%"}}
+          style={{ width: "60%" }}
         />
-        {
-          passwordSecured.length > 0 &&
-            <div className={styles.notif}>{passwordSecured}</div>
-        }
-        
-        {
-          password && exists.current &&
-          <p><span onClick={handlePasswordForgotten}>
-            {sendPassword}
-          </span></p>
-        }
+        {passwordSecured.length > 0 && (
+          <div className={styles.notif}>{passwordSecured}</div>
+        )}
 
+        {password && exists.current && (
+          <p>
+            <span onClick={handlePasswordForgotten}>{sendPassword}</span>
+          </p>
+        )}
       </div>
 
       {notif.length > 0 && <div className={styles.notif}>{notif}</div>}

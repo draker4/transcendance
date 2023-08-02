@@ -38,9 +38,9 @@ export class LobbyController {
   }
 
   // 03 - api/lobby/getall
-  @Get('getall')
-  GetAllGames() {
-    return this.lobbyService.GetAll();
+  @Get('getall/:mode?')
+  GetAllGames(@Param('mode') mode?: 'League' | 'Party') {
+    return this.lobbyService.GetAll(mode);
   }
 
   // 04 - api/lobby/quit

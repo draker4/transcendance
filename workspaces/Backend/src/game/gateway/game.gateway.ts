@@ -1,5 +1,12 @@
 //standard imports
-import { OnModuleInit, UseGuards, Req, Injectable } from '@nestjs/common';
+import {
+  OnModuleInit,
+  UseGuards,
+  Req,
+  Injectable,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 
 // websockets imports
 import {
@@ -19,6 +26,7 @@ import { verify } from 'jsonwebtoken';
 import { GameService } from '../service/game.service';
 import { GameManager } from '../class/GameManager';
 import { ColoredLogger } from '../colored-logger';
+import { ActionDTO } from '../dto/Action.dto';
 
 // Decorator to define WebSocketGateway settings
 
@@ -104,6 +112,16 @@ export class GameGateway implements OnModuleInit {
     @ConnectedSocket() socket: Socket,
   ): void {
     this.gameManager.updatePong(userId, socket);
+  }
+
+  @SubscribeMessage('action')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  handleAction(
+    @MessageBody() action: ActionDTO,
+    @ConnectedSocket() socket: Socket,
+  ): void {
+    console.log('action: ' + action);
+    this.gameManager.playerAction(action, socket);
   }
 
   @SubscribeMessage('quit')

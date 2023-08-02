@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "@/styles/lobby/party/Party.module.css";
 import LobbyService from "@/services/Lobby.service";
 import CreateParty from "@/components/lobby/party/CreateParty";
-import PartyList from "@/components/lobby/party/partyList/PartyList";
+import PartyList from "@/components/lobby/lobbyList/LobbyList";
 import { useRef } from "react";
 
 type Props = {
@@ -34,7 +34,7 @@ export default function Party({ lobbyService, profile }: Props) {
           createBtnRef={createBtnRef}
         />
       )}
-      {!createParty && <PartyList lobbyService={lobbyService} />}
+      {!createParty && <PartyList lobbyService={lobbyService} mode={"Party"} />}
     </div>
   );
 }

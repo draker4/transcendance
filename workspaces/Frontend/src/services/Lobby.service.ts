@@ -44,8 +44,13 @@ class LobbyService {
   }
 
   //Recupere la liste des game en cours
-  public async getGameList(): Promise<ReturnData> {
-    const response = await fetchData(this.token, "lobby", "getall", "GET");
+  public async getGameList(mode?: "League" | "Party"): Promise<ReturnData> {
+    const response = await fetchData(
+      this.token,
+      "lobby",
+      mode ? `getall/${mode}` : "getall",
+      "GET"
+    );
     const data: ReturnData = await response.json();
     return data;
   }

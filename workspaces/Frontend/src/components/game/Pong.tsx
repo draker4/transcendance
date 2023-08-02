@@ -4,8 +4,9 @@ import { useRef, useEffect, useMemo } from "react";
 import {
   pongKeyDown,
   pongKeyUp,
-  handlePlayerUpdate,
+  handlePlayerMessage,
   handleStatusMessage,
+  handleUpdateMessage,
   handlePing,
 } from "../../lib/game/eventHandlers";
 import { gameLoop } from "@/lib/game/gameLoop";
@@ -27,6 +28,7 @@ type Props = {
 export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
+  const animationFrameIdRef = useRef<number | undefined>(undefined);
   const isPlayer: "Left" | "Right" | "Spectator" =
     gameData.playerLeft?.id === userId
       ? "Left"
@@ -47,8 +49,6 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   }, [gameData.ballImg]);
 
   useEffect(() => {
-    isMountedRef.current = true;
-    let animationFrameId: number | undefined;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -57,16 +57,18 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     };
     draw.canvas.focus();
 
-    if (animationFrameId === undefined) {
-      animationFrameId = requestAnimationFrame((timestamp) =>
+    isMountedRef.current = true;
+
+    if (animationFrameIdRef.current === undefined) {
+      animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
     return () => {
       isMountedRef.current = false;
-      if (animationFrameId !== undefined) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = undefined;
+      if (animationFrameIdRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = undefined;
       }
     };
   }, []);
@@ -79,24 +81,28 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     function handleKeyUp(event: KeyboardEvent) {
       pongKeyUp(event, gameData, socket, userId, isPlayer);
     }
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
+    // Add key event listeners when the component mounts
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
+    // Remove key event listeners when the component unmounts
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, [socket, userId, isPlayer, gameData]);
 
   useEffect(() => {
     isMountedRef.current = true;
-    socket.on("player", handlePlayerUpdate(setGameData, isMountedRef));
+    socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
     socket.on("status", handleStatusMessage(setGameData, isMountedRef));
+    socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("player", handlePlayerUpdate(setGameData, isMountedRef));
+      socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
       socket.off("status", handleStatusMessage(setGameData, isMountedRef));
+      socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
     };
   }, [socket, setGameData]);
 

@@ -2,6 +2,7 @@
 
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./docker-compose.yml
+ENV_FILE = .env
 
 .phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
 
@@ -90,22 +91,31 @@ ipAddress:
 	@echo "Host IP: $(HOST_IP)"
 
 write-env-ip:
-	@if [ -f ./Dockers/.env ] && grep -q "HOST_IP=" ./Dockers/.env; then \
-		sed -i 's/HOST_IP=.*/HOST_IP=$(HOST_IP)/' ./Dockers/.env; \
-		echo "Updated IP address in ./Dockers/.env file"; \
+	@if [ -f $(ENV_FILE) ]; then \
+		if grep -q "HOST_IP=" $(ENV_FILE); then \
+			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
+			mv $(ENV_FILE).tmp $(ENV_FILE); \
+		fi; \
+		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "Updated IP address in $(ENV_FILE) file"; \
 	else \
-		echo "HOST_IP=$(HOST_IP)" >> ./Dockers/.env; \
-		echo "Created IP address in ./Dockers/.env file"; \
+		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 
 write-env-localhost:
-	@if [ -f ./Dockers/.env ] && grep -q "HOST_IP=" ./Dockers/.env; then \
-		sed -i 's/HOST_IP=.*/HOST_IP=localhost/' ./Dockers/.env; \
-		echo "Updated IP address in ./Dockers/.env file"; \
+	@if [ -f $(ENV_FILE) ]; then \
+		if grep -q "HOST_IP=" $(ENV_FILE); then \
+			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
+			mv $(ENV_FILE).tmp $(ENV_FILE); \
+		fi; \
+		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "Updated IP address to localhost in $(ENV_FILE) file"; \
 	else \
-		echo "HOST_IP=localhost" >> ./Dockers/.env; \
-		echo "Created IP address in ./Dockers/.env file"; \
+		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
+
 
 install-deps:
 	@echo "----Downloading Project Dependencies----"
