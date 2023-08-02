@@ -162,10 +162,36 @@ export class Pong {
     );
     if (this.playerLeft && this.playerLeft.id === action.userId) {
       this.logger.log('Player Left performed action', 'Pong - playerAction');
-      this.data.playerLeftDynamic.move = action.move;
+      if (action.move === 'Stop') {
+        if (this.data.status === 'Playing') {
+          this.data.status = 'Stopped';
+          this.data.timer = this.defineTimer(60, 'Pause');
+        } else if (this.data.status === 'Stopped') {
+          this.data.status = 'Playing';
+          this.data.timer = this.defineTimer(5, 'ReStart');
+        }
+      } else if (action.move === 'Push') {
+        if (!this.data.playerLeftDynamic.push)
+          this.data.playerLeftDynamic.push = 1;
+      } else {
+        this.data.playerLeftDynamic.move = action.move;
+      }
     } else if (this.playerRight && this.playerRight.id === action.userId) {
       this.logger.log('Player Right performed action', 'Pong - playerAction');
-      this.data.playerRightDynamic.move = action.move;
+      if (action.move === 'Stop') {
+        if (this.data.status === 'Playing') {
+          this.data.status = 'Stopped';
+          this.data.timer = this.defineTimer(60, 'Pause');
+        } else if (this.data.status === 'Stopped') {
+          this.data.status = 'Playing';
+          this.data.timer = this.defineTimer(5, 'ReStart');
+        }
+      } else if (action.move === 'Push') {
+        if (!this.data.playerRightDynamic.push)
+          this.data.playerRightDynamic.push = 1;
+      } else {
+        this.data.playerRightDynamic.move = action.move;
+      }
     } else {
       throw new WsException('Action not performed by player');
     }

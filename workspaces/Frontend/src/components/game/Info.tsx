@@ -4,16 +4,14 @@ import { Round } from "@transcendence/shared/types/Score.types";
 import styles from "@/styles/game/Info.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { PLAYER_COLOR } from "@transcendence/shared/constants/Asset.constants";
-import {
-  colorHexToRgb,
-  colorRgbToHex,
-} from "@transcendence/shared/game/pongUtils";
+import { colorHexToRgb } from "@transcendence/shared/game/pongUtils";
+import { addPlayerMessage } from "@/lib/game/gameLoop";
 
 function showPlayer(
   player: Player | null,
   status: string,
   side: "Left" | "Right",
-  setPlayer: Function
+  setGameData: Function
 ) {
   const nameStyle = {
     color: `rgb(${player?.color.r}, ${player?.color.g}, ${player?.color.b})`,
@@ -36,40 +34,34 @@ function showPlayer(
     decrypt: player.avatar.decrypt,
   };
 
-  function changePlayerColor(player: Player, setPlayer: Function) {
-    // find the next color
+  function changePlayerColor(player: Player, setGameData: Function) {
+    // Get the next color
     const actualColor = player.avatar.borderColor;
-
-    // find where actualcolor is in PLAYER_COLOR
     const index = PLAYER_COLOR.findIndex(
       (colorObj) => colorObj.color === actualColor
     );
-
-    // Find the next color index
     let nextIndex = index + 1;
     if (nextIndex >= PLAYER_COLOR.length) nextIndex = 0;
-
-    // Get the new color in hex format
     const newHexColor = PLAYER_COLOR[nextIndex].color;
-
-    // Convert new hex color to RGB format
     const newRgbColor = colorHexToRgb(newHexColor);
 
     // Update the player's color and avatar's border color
-    setPlayer((prevPlayer: Player) => ({
-      ...prevPlayer,
-      color: newRgbColor,
-      avatar: {
-        ...prevPlayer.avatar,
-        borderColor: newHexColor,
-      },
-    }));
+    setGameData((gameData: GameData) => {
+      if (side === "Left" && gameData.playerLeft) {
+        gameData.playerLeft.avatar.borderColor = newHexColor;
+        gameData.playerLeft.color = newRgbColor;
+      } else if (side === "Right" && gameData.playerRight) {
+        gameData.playerRight.avatar.borderColor = newHexColor;
+        gameData.playerRight.color = newRgbColor;
+      }
+      return gameData;
+    });
   }
 
   return (
     <button
       className={side === "Left" ? styles.leftPlayer : styles.rightPlayer}
-      onClick={() => changePlayerColor(player, setPlayer)}
+      onClick={() => changePlayerColor(player, setGameData)}
     >
       <div className={styles.avatar}>
         <AvatarUser
@@ -114,35 +106,36 @@ function showScore(gameData: GameData) {
   );
 }
 
-type Props = {
+type InfoProps = {
   gameData: GameData;
+  setGameData: Function;
 };
 
-export default function Info({ gameData }: Props) {
-  const [leftPlayer, setLeftPlayer] = useState(gameData.playerLeft);
-  const [rightPlayer, setRightPlayer] = useState(gameData.playerRight);
-
+export default function Info({ gameData, setGameData }: InfoProps) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div className={styles.info}>
       <div className={styles.general}>
         {/* LEFT PLAYER */}
         {showPlayer(
-          leftPlayer,
+          gameData.playerLeft,
           gameData.playerLeftStatus,
           "Left",
-          setLeftPlayer
+          setGameData
         )}
 
         {/* GENERAL */}
-        {/* ... Rest of your component ... */}
+        <div className={styles.title}>
+          <h2>{gameData.name}</h2>
+          <p>{gameData.type}</p>
+        </div>
 
         {/* RIGHT PLAYER */}
         {showPlayer(
-          rightPlayer,
+          gameData.playerRight,
           gameData.playerRightStatus,
           "Right",
-          setRightPlayer
+          setGameData
         )}
       </div>
       {gameData.score && showScore(gameData)}
