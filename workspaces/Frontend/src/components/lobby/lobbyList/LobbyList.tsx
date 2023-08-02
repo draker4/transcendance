@@ -51,8 +51,10 @@ export default function LobbyList({ lobbyService, mode }: Props) {
           <p className={styles.statusTitle}>Status</p>
           <p className={styles.actionTitle}>Action</p>
         </div>
-        {!gameList && <p>Loading...</p>}
-        {gameList && gameList.length === 0 && <p>No games available</p>}
+        {!gameList && <p className={styles.loading}>Loading...</p>}
+        {gameList && gameList.length === 0 && (
+          <p className={styles.noGames}>No games being played</p>
+        )}
         {gameList && gameList.length > 0 && (
           <div className={styles.listBody}>
             {gameList.map((game: GameInfo) => (
