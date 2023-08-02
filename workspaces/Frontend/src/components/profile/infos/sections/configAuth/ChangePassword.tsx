@@ -5,17 +5,14 @@ import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import hash from "@/lib/bcrypt/hash";
 import { CryptoService } from "@/services/Crypto.service";
+import { toast } from "react-toastify";
 
 const	Crypto = new CryptoService();
 
 export default function ChangePassword({
 	setChangePassword,
-	setSuccess,
-	setSendEmail,
 }: {
 	setChangePassword: Dispatch<SetStateAction<boolean>>;
-	setSuccess: Dispatch<SetStateAction<boolean>>;
-	setSendEmail: Dispatch<SetStateAction<boolean>>;
 }) {
 
 	const	initalEmailPasswordText = "Forgot my password?";
@@ -50,7 +47,7 @@ export default function ChangePassword({
 
 				if (data.success) {
 					setChangePassword(false);
-					setSendEmail(true);
+					toast.info("A new password has been sent to your email address!");
 					setTextButton("Validate");
 					return ;
 				}
@@ -154,7 +151,7 @@ export default function ChangePassword({
 			if (data.success) {
 				setChangePassword(false);
 				setTextButton("Validate");
-				setSuccess(true);
+				toast.info("Your password has been successfully updated!");
 				return ;
 			}
 

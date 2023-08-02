@@ -11,7 +11,6 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from './guard/wsJwt.guard';

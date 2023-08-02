@@ -4,16 +4,15 @@ import stylesButton from "@/styles/profile/TfaComponent.module.css";
 import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { Socket } from "socket.io-client";
+import { toast } from "react-toastify";
 
 export default function ChangeLogin({
 	setChangeLogin,
 	setLogin,
-	setSuccess,
 	socket,
 }: {
 	setChangeLogin: Dispatch<SetStateAction<boolean>>;
 	setLogin: Dispatch<SetStateAction<string>>;
-	setSuccess: Dispatch<SetStateAction<boolean>>;
 	socket: Socket | undefined;
 }) {
 
@@ -74,7 +73,7 @@ export default function ChangeLogin({
 				setChangeLogin(false);
 				setTextButton("Validate");
 				setLogin(loginText);
-				setSuccess(true);
+				toast.info("Login successfully changed");
 
 				if (socket)
 					socket.emit('notif');

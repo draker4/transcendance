@@ -1,5 +1,3 @@
-"use client";
-
 import styles from "@/styles/profile/AvatarCard.module.css";
 import Avatar from "./Avatar";
 import ProfileLogin from "./ProfileLogin";
