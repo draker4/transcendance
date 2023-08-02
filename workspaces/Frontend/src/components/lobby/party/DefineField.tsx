@@ -3,6 +3,10 @@
 import React, { useEffect } from "react";
 import styles from "@/styles/lobby/party/DefineField.module.css";
 import ImgSelector from "@/components/lobby/selector/ImgSelector";
+import {
+  BACKGROUND,
+  BALL,
+} from "@transcendence/shared/constants/Asset.constants";
 
 type Props = {
   background: string;
@@ -34,16 +38,7 @@ export default function DefineField({
         type={"background"}
         value={background}
         setValue={setBackground}
-        imgs={[
-          "Classic",
-          "Earth",
-          "Football",
-          "Island",
-          "Rugby",
-          "Tennis",
-          "Winter",
-          "Random",
-        ]}
+        imgs={BACKGROUND}
         width={135}
         height={80}
         disabled={type === "Classic"}
@@ -55,21 +50,7 @@ export default function DefineField({
         type={"ball"}
         value={ball}
         setValue={setBall}
-        imgs={[
-          "Classic",
-          "Basket",
-          "Bowling1",
-          "Bowling2",
-          "Bowling3",
-          "Football",
-          "Soccer1",
-          "Soccer2",
-          "Soccer3",
-          "Soccer4",
-          "Volley1",
-          "Volley2",
-          "Random",
-        ]}
+        imgs={BALL}
         width={30}
         height={30}
         disabled={type === "Classic"}
