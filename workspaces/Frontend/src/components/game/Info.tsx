@@ -11,7 +11,7 @@ function showPlayer(
   player: Player | null,
   status: string,
   side: "Left" | "Right",
-  setPlayer: Function
+  setGameData: Function
 ) {
   const nameStyle = {
     color: `rgb(${player?.color.r}, ${player?.color.g}, ${player?.color.b})`,
@@ -34,7 +34,7 @@ function showPlayer(
     decrypt: player.avatar.decrypt,
   };
 
-  function changePlayerColor(player: Player, setPlayer: Function) {
+  function changePlayerColor(player: Player, setGameData: Function) {
     // Get the next color
     const actualColor = player.avatar.borderColor;
     const index = PLAYER_COLOR.findIndex(
@@ -46,19 +46,22 @@ function showPlayer(
     const newRgbColor = colorHexToRgb(newHexColor);
 
     // Update the player's color and avatar's border color
-    setPlayer((prevPlayer: Player) => {
-      const newPlayer = { ...prevPlayer };
-      newPlayer.color = newRgbColor;
-      newPlayer.avatar.borderColor = newHexColor;
-      addPlayerMessage(newPlayer);
-      return newPlayer;
+    setGameData((gameData: GameData) => {
+      if (side === "Left" && gameData.playerLeft) {
+        gameData.playerLeft.avatar.borderColor = newHexColor;
+        gameData.playerLeft.color = newRgbColor;
+      } else if (side === "Right" && gameData.playerRight) {
+        gameData.playerRight.avatar.borderColor = newHexColor;
+        gameData.playerRight.color = newRgbColor;
+      }
+      return gameData;
     });
   }
 
   return (
     <button
       className={side === "Left" ? styles.leftPlayer : styles.rightPlayer}
-      onClick={() => changePlayerColor(player, setPlayer)}
+      onClick={() => changePlayerColor(player, setGameData)}
     >
       <div className={styles.avatar}>
         <AvatarUser
@@ -103,24 +106,22 @@ function showScore(gameData: GameData) {
   );
 }
 
-type Props = {
+type InfoProps = {
   gameData: GameData;
+  setGameData: Function;
 };
 
-export default function Info({ gameData }: Props) {
-  const [leftPlayer, setLeftPlayer] = useState(gameData.playerLeft);
-  const [rightPlayer, setRightPlayer] = useState(gameData.playerRight);
-
+export default function Info({ gameData, setGameData }: InfoProps) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div className={styles.info}>
       <div className={styles.general}>
         {/* LEFT PLAYER */}
         {showPlayer(
-          leftPlayer,
+          gameData.playerLeft,
           gameData.playerLeftStatus,
           "Left",
-          setLeftPlayer
+          setGameData
         )}
 
         {/* GENERAL */}
@@ -131,10 +132,10 @@ export default function Info({ gameData }: Props) {
 
         {/* RIGHT PLAYER */}
         {showPlayer(
-          rightPlayer,
+          gameData.playerRight,
           gameData.playerRightStatus,
           "Right",
-          setRightPlayer
+          setGameData
         )}
       </div>
       {gameData.score && showScore(gameData)}

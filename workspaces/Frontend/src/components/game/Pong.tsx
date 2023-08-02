@@ -126,7 +126,7 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      <Info gameData={gameData} />
+      <Info gameData={gameData} setGameData={setGameData} />
     </div>
   );
 }
