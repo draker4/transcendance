@@ -6,18 +6,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
 import ChatService from "@/services/Chat.service";
+import { Socket } from "socket.io-client";
 
 type Props = {
   avatar: Avatar;
   profile: Profile;
-  token: string | undefined;
+  socket: Socket | undefined;
 };
 
-export default function AvatarMenu({ avatar, profile, token }: Props) {
+export default function AvatarMenu({ avatar, profile, socket }: Props) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const chatService = new ChatService(token as string);
   const [avatarUpdated, setAvatarUpdated] = useState<Avatar>(avatar);
   const [login, setLogin] = useState<string>(profile.login);
 
@@ -53,7 +53,7 @@ export default function AvatarMenu({ avatar, profile, token }: Props) {
 
   useEffect(() => {
     const updateProfile = () => {
-      chatService.socket?.emit(
+      socket?.emit(
         "getLoginWithAvatar",
         (payload: { login: string; avatar: Avatar }) => {
           setAvatarUpdated(payload.avatar);
@@ -62,12 +62,12 @@ export default function AvatarMenu({ avatar, profile, token }: Props) {
       );
     };
 
-    chatService.socket?.on("notif", updateProfile);
+    socket?.on("notif", updateProfile);
 
     return () => {
-      chatService.socket?.off("notif", updateProfile);
+      socket?.off("notif", updateProfile);
     };
-  }, [chatService.socket]);
+  }, [socket]);
 
   return (
     <div className={styles.menu} onClick={() => setMenuOpen(!menuOpen)}>

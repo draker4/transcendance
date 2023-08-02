@@ -4,10 +4,8 @@ import styles from "@/styles/navbar/Navbar.module.css";
 import Theme from "../theme/Theme";
 import NavbarLogo from "./NavbarLogo";
 import NavbarLogInBtn from "./NavbarLogInBtn";
-import AvatarMenu from "./AvatarMenu";
-import Link from "next/link";
-import ChatBtn from "./ChatBtn";
 import NavbarLogOutBtn from "./NavbarLogOutBtn";
+import NavbarConnected from "./NavbarConnected";
 
 type Props = {
   avatar: Avatar | undefined;
@@ -47,7 +45,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
     );
   }
 
-  if (!profile || !profile.login || !avatar || pathName === "/home/auth/connect")
+  if (!token || !profile || !profile.login || !avatar || pathName === "/home/auth/connect")
     return (
       <header>
         <nav className={styles.nav}>
@@ -59,18 +57,9 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
       </header>
     );
 
-  return (
-    <header>
-      <nav className={styles.nav}>
-        <NavbarLogo link="/home" />
-        <div className={styles.right}>
-          <Theme />
-          <Link href={"/home/chat"} className={styles.chatBtn}>
-            <ChatBtn token={token} />
-          </Link>
-          <AvatarMenu avatar={avatar} profile={profile} token={token}/>
-        </div>
-      </nav>
-    </header>
-  );
+  return <NavbarConnected
+            avatar={avatar}
+            token={token}
+            profile={profile}
+          />;
 }

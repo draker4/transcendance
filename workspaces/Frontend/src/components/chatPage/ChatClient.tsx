@@ -1,16 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import stylesError from "@/styles/chatPage/ChatPage.module.css";
 import styles from "@/styles/chatPage/ChatClient.module.css";
 import Conversations from "./Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
-import Link from "next/link";
-import LoadingComponent from "../loading/Loading";
 import LoadingSuspense from "../loading/LoadingSuspense";
 import { Socket } from "socket.io-client";
-import { toast } from "react-toastify";
 
 export default function ChatClient({
   token,
@@ -19,12 +15,10 @@ export default function ChatClient({
   token: string;
   myself: Profile & { avatar: Avatar };
 }) {
-  let   chatService = new ChatService(token);
   const [littleScreen, setLittleScreen] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
   const [display, setDisplay] = useState<Display>();
-  const [error, setError] = useState<boolean>(false);
-  const [socket, setSocket] = useState<Socket | undefined>(chatService.socket);
+  const [socket, setSocket] = useState<Socket | undefined>(undefined);
 
   const openDisplay = (display: Display) => {
     setOpen(true);
@@ -54,7 +48,19 @@ export default function ChatClient({
   useEffect(() => {
 
     const handleError = () => {
-      setError(true);
+      setSocket(undefined);
+    }
+
+    if (!socket) {
+
+      const intervalId = setInterval(() => {
+        const chatService = new ChatService(token);
+        if (chatService.socket) {
+          setSocket(chatService.socket);
+          clearInterval(intervalId);
+        }
+        console.log("chatservice reload here", chatService.socket?.id);
+      }, 500);
     }
 
     socket?.on("disconnect", handleError);
@@ -64,28 +70,15 @@ export default function ChatClient({
     }
   }, [socket]);
 
-  if (!socket || error) {
-
-    const intervalId = setInterval(() => {
-      const chatService = new ChatService();
-      if (chatService.socket) {
-        setSocket(chatService.socket);
-        setError(false);
-        clearInterval(intervalId);
-        toast.info("Connection closed! Reconnecting...");
-      }
-      console.log("chatservice reload here", chatService.socket?.id);
-    }, 500);
-    
+  if (!socket)
     return <LoadingSuspense />;
-  }
 
   // narrow screen width, display not opened
   if (littleScreen && !open)
     return (
       <div className={styles.main}>
         <Conversations
-          socket={chatService.socket}
+          socket={socket}
           maxWidth="100%"
           openDisplay={openDisplay}
         />

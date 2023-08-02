@@ -3,10 +3,6 @@ import { Socket, io } from "socket.io-client";
 export default class ChatService {
 	private static instance: ChatService | null = null;
 
-//   public socket: Socket | undefined = undefined;
-//   public reconnect: boolean = false;
-//   public token: string | undefined;
-
 	public	socket: Socket | undefined = undefined;
 	public	token: string | undefined;
 
@@ -14,7 +10,7 @@ export default class ChatService {
     constructor(token?: string) {
 		// console.log("constructor");
         if (ChatService.instance) {
-			// console.log("instance returned");
+			console.log("instance returned");
 			return ChatService.instance;
 		}
 		
@@ -32,7 +28,7 @@ export default class ChatService {
 	// Create socket + listen errors & exceptions
 	public initializeSocket(token: string) {
 
-		console.log("initialization with token = ", token);
+		// console.log("initialization with token = ", token);
 		if (this.socket)
 			this.disconnect();
 		
@@ -46,11 +42,11 @@ export default class ChatService {
 		});
 
 		this.socket.on('connect', () => {
-			console.log('WebSocket connected id=', this.socket?.id);
+			// console.log('WebSocket connected id=', this.socket?.id);
 		});
 		  
 		this.socket.on('disconnect', () => {
-			console.log('WebSocket disconnected id=', this.socket?.id);
+			// console.log('WebSocket disconnected id=', this.socket?.id);
 			this.refreshSocket("refresh");
 			// this.disconnect();
 		});
@@ -86,7 +82,6 @@ export default class ChatService {
 			this.socket.off("error");
 			this.socket.off("exception");
 			this.socket.off("refresh");
-			console.log("disconnect ok");
 			this.socket.disconnect();
 			this.socket = undefined;
 		}
@@ -94,7 +89,7 @@ export default class ChatService {
 
 	private async refreshSocket(text: string) {
 		try {
-		  console.log("trying to refresh token from ", text);
+		//   console.log("trying to refresh token from ", text);
 		  const res = await fetch(
 			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
 			  method: "POST",
@@ -128,70 +123,5 @@ export default class ChatService {
 			`http://${process.env.HOST_IP}:3000/api/signoff`
 		  );
 		}
-	  }
-  // Singleton
-//   constructor(token: string) {
-//     if (
-//       ChatService.instance &&
-//       !ChatService.instance.reconnect &&
-//       ChatService.instance.token === token
-//     ) {
-//       return ChatService.instance;
-//     }
-
-//     this.initializeSocket(token);
-//     ChatService.instance = this;
-//   }
-
-//   // Create socket + listen errors & exceptions
-//   private initializeSocket(token: string) {
-//     if (this.socket) this.disconnect(false);
-
-//     this.token = token;
-
-//     this.socket = io(`ws://${process.env.HOST_IP}:4000/chat`, {
-//       extraHeaders: {
-//         Authorization: "Bearer " + token,
-//       },
-//       path: "/chat/socket.io",
-//     });
-
-//     // Catching error or exception will force disconnect then reconnect
-//     this.socket.on("connect_error", (error: any) => {
-//       //   console.log("Socket connection error:", error);
-//       this.disconnect(true);
-//     });
-
-//     this.socket.on("error", (error: any) => {
-//       console.log("Socket error:", error);
-//       this.disconnect(true);
-//     });
-
-//     this.socket.on("exception", (exception: any) => {
-//       console.log("WsException:", exception);
-//       if (exception.message === "invalid token") this.disconnect(true);
-//       else if (this.token) {
-//         this.disconnect(false);
-//         this.initializeSocket(this.token);
-//       }
-//     });
-//     this.socket.on("connect", () => {
-//       console.log("Socket connected");
-//     });
-//     this.socket.on("disconnect", () => {
-//       console.log("Socket disconnected");
-//     });
-//   }
-
-//   // Disconnect socket + stop listen errors & exceptions
-//   public disconnect(reconnect: boolean) {
-//     if (this.socket) {
-//       this.socket.off("connect_error");
-//       this.socket.off("error");
-//       this.socket.off("exception");
-//       this.socket.disconnect();
-//       this.socket = undefined;
-//     }
-//     this.reconnect = reconnect;
-//   }
+	}
 }

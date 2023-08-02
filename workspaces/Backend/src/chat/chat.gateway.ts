@@ -106,6 +106,7 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllPongies')
   async getAllPongies(@Request() req) {
+    throw new WsException('test');
     return await this.chatService.getAllPongies(req.user.id);
   }
 

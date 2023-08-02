@@ -8,10 +8,10 @@ import ChatService from "@/services/Chat.service";
 
 export default function SectionPongies() {
 
+	const	chatService = new ChatService();
 	const	[pongies, setPongies] = useState<Pongie[]>([]);
 	const	[pongieSearched, setPongieSearched] = useState<Pongie>();
 	const	router = useRouter();
-	const	chatService = new ChatService();
 
 	useEffect(() => {
 
