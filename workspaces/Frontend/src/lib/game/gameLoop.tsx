@@ -39,6 +39,7 @@ const updateGame = (game: GameData) => {
     newGameData.playerRightDynamic = updateData.playerRightDynamic;
     newGameData.ball = updateData.ball;
     newGameData.score = updateData.score;
+    newGameData.actualRound = updateData.actualRound;
     game = newGameData;
   }
   if (playerMessage.length > 0) {

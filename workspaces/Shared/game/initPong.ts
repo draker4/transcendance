@@ -2,6 +2,7 @@ import {
   InitData,
   GameData,
   Ball,
+  Player,
   Color,
   PlayerDynamic,
   Action,
@@ -47,13 +48,32 @@ export function initColor(background: string): Color {
   };
 }
 
+export function initPlayer(side: "Left" | "Right"): Player {
+  return {
+    id: -1,
+    name: "Searching",
+    color: { r: 0, g: 0, b: 0, a: 0 },
+    avatar: {
+      image: "",
+      variant: "",
+      borderColor: "",
+      backgroundColor: "",
+      text: "",
+      empty: true,
+      decrypt: false,
+    },
+    side,
+    host: false,
+  };
+}
+
 export function initPong(initData: InitData): GameData {
   return {
     id: initData.id,
     name: initData.name,
     ball: initBall(),
-    playerLeft: null,
-    playerRight: null,
+    playerLeft: initPlayer("Left"),
+    playerRight: initPlayer("Right"),
     playerLeftDynamic: initPlayerDynamic("Left"),
     playerRightDynamic: initPlayerDynamic("Right"),
     playerLeftStatus: "Unknown",

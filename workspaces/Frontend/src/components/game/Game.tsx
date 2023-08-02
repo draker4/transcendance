@@ -16,6 +16,7 @@ import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
 
 import { GameData } from "@transcendence/shared/types/Game.types";
+import { toast } from "react-toastify";
 
 type Props = {
   profile: Profile;
@@ -32,6 +33,7 @@ export default function Game({ profile, token, gameId }: Props) {
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
   const [joinEmitter, setJoinEmitter] = useState<boolean>(false);
+  const [quitStatus, setQuitStatus] = useState<boolean>(false);
 
   //------------------------------------Chargement------------------------------------//
 
@@ -58,10 +60,20 @@ export default function Game({ profile, token, gameId }: Props) {
   }, [gameId, gameService.socket, profile, joinEmitter]);
 
   async function quit() {
-    await lobby.quitGame().then(() => {
+    if (quitStatus) return;
+    setQuitStatus(true);
+    const res = await lobby.quitGame().then(() => {
       gameService.socket?.emit("quit");
       router.push("/home");
     });
+    await toast.promise(
+      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
+      {
+        pending: "Leaving game...",
+        success: "You have left the game",
+        error: "Error leaving game",
+      }
+    );
   }
 
   //------------------------------------RENDU------------------------------------//

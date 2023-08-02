@@ -11,7 +11,7 @@ function resetTurn(winner: "Left" | "Right", gameData: GameData) {
   resetBall(gameData.ball, gameData);
   gameData.playerServe = winner;
 
-  const actualRound = gameData.actualRound > 0 ? gameData.actualRound - 1 : 0;
+  const actualRound = gameData.actualRound;
   if (winner === "Left") {
     gameData.score.round[actualRound].left++;
   } else if (winner === "Right") {
@@ -20,7 +20,7 @@ function resetTurn(winner: "Left" | "Right", gameData: GameData) {
 }
 
 function handleRound(gameData: GameData) {
-  const actualRound = gameData.actualRound > 0 ? gameData.actualRound - 1 : 0;
+  const actualRound = gameData.actualRound;
   const leftScore = gameData.score.round[actualRound].left;
   const rightScore = gameData.score.round[actualRound].right;
   //check if round is over
@@ -36,6 +36,7 @@ function handleRound(gameData: GameData) {
       gameData.score.rightRound > gameData.maxRound / 2
     ) {
       gameData.status = "Finished";
+      gameData.actualRound++;
       if (gameData.score.leftRound > gameData.score.rightRound) {
         if (gameData.playerLeft.host) gameData.result = "Host";
         else gameData.result = "Opponent";
@@ -48,6 +49,8 @@ function handleRound(gameData: GameData) {
       gameData.playerLeftDynamic.speed++;
       gameData.playerRightDynamic.speed++;
       gameData.ball.speed++;
+
+      console.log("new round: ", gameData.actualRound);
     }
   }
 }

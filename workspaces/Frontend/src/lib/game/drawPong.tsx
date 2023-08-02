@@ -16,27 +16,27 @@ import {
   GAME_HEIGHT,
 } from "@transcendence/shared/constants/Game.constants";
 
-function drawMenu(gameData: GameData, draw: Draw) {
-  // Draw the menu background
-  draw.context.fillStyle = MENU_COLOR;
-  draw.context.fillRect(
-    draw.canvas.width / 2 - 100,
-    draw.canvas.height / 2 - 40,
-    200,
-    80
-  );
+// function drawMenu(gameData: GameData, draw: Draw) {
+//   // Draw the menu background
+//   draw.context.fillStyle = MENU_COLOR;
+//   draw.context.fillRect(
+//     draw.canvas.width / 2 - 100,
+//     draw.canvas.height / 2 - 40,
+//     200,
+//     80
+//   );
 
-  // Draw the menu text;
-  const { r, g, b, a } = gameData.color.menu;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  draw.context.fillText(
-    "Press Enter to start / stop",
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 10
-  );
-}
+//   // Draw the menu text;
+//   const { r, g, b, a } = gameData.color.menu;
+//   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+//   draw.context.font = FONT_MENU;
+//   draw.context.textAlign = "center";
+//   draw.context.fillText(
+//     "Press Enter to start / stop",
+//     draw.canvas.width / 2,
+//     draw.canvas.height / 2 + 10
+//   );
+// }
 
 function drawPlayer(
   draw: Draw,

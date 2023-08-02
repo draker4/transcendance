@@ -85,7 +85,7 @@
 }
 
 .currentRound {
-  border: 3px solid var(--accent1);
+  border: 3px solid var(--secondary1);
 }
 
 .roundFinished {

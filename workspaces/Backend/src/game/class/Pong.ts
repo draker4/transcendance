@@ -113,7 +113,6 @@ export class Pong {
         this.gameDB.opponent = await this.gameService.checkOpponent(
           this.gameDB.id,
         );
-        console.log(this.gameDB.opponent);
       } catch (error) {
         this.logger.error(
           `Error Updating game opponent: ${error.message}`,
@@ -249,6 +248,7 @@ export class Pong {
       playerRightDynamic: this.data.playerRightDynamic,
       ball: this.data.ball,
       score: this.data.score,
+      actualRound: this.data.actualRound,
     };
     this.server.to(this.gameId).emit('update', update);
   }
@@ -280,7 +280,6 @@ export class Pong {
       this.currentFps = this.framesThisSecond;
       this.framesThisSecond = 0;
       this.lastFpsUpdate = timestamp;
-      console.log('FPS:', this.currentFps);
     }
   }
 
