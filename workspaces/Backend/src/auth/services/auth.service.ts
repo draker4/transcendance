@@ -272,7 +272,7 @@ export class AuthService {
       return this.login(user, isMatch.NbOfRefreshes + 1, false);
     } catch (error) {
       console.log(error.message);
-      throw new UnauthorizedException(error.message);
+      throw new BadRequestException(error.message);
     }
   }
 

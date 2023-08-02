@@ -22,6 +22,7 @@ import { ChannelService } from '@/channels/channel.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { StatsService } from '@/stats/service/stats.service';
+import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { StatsService } from '@/stats/service/stats.service';
       Token,
       User,
       UserChannelRelation,
+      SocketToken,
     ]),
   ],
   controllers: [MatchmakingController],

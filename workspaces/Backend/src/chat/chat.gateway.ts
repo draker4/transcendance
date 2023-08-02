@@ -4,7 +4,6 @@ import {
   Req,
   Request,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -57,6 +56,7 @@ export class ChatGateway implements OnModuleInit {
 
         this.connectedUsers.set(payload.sub, socket.id);
         this.chatService.joinAllMyChannels(socket, payload.sub);
+        this.chatService.saveToken(token, payload.sub);
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(payload.sub);
