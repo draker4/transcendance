@@ -1,7 +1,7 @@
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import styles from "@/styles/profile/InfoCard.module.css";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faCertificate, faSkull, faRectangleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCertificate, faSkull, faHand, faHandPeace } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import ConfirmationPannel from "./ConfirmationPannel";
@@ -13,12 +13,6 @@ type Props = {
 	lists:ChannelLists;
 }
 
-// export enum RolesIcons {
-//     giveRmChanOp = "faCertificate",
-// 	cancelInvite = "faSkull",
-//     giveRmBan = "faRectangleXmark",
-// }
-
 type ButtonData = {
 	id: number;
 	name: string;
@@ -29,31 +23,20 @@ type ButtonData = {
 
 export default function ChanOpControlPannel({relation, myRelation, role, lists}:Props) {
 
-	// const [myState, setMyState] = useState(() => {
-	// 	const stored = localStorage.getItem('myState');
-	// 	if (stored)
-	// 		console.log("STORED = ", stored);
-	// 	return stored ? JSON.parse(stored) : relation.isChanOp;
-	// });
-
-	// const [isChanOp, setIsChanOp] = useState<boolean>(relation.isChanOp);
-
 	const [waitingConfirmation, setWaitingConfirmation] = useState<boolean>(false);
 	const [confirmationList, setConfirmationList] = useState<ConfirmationList>("nothing");
 
-
-	// [+] remplacer par un go-validation-msg
 	const handleChanOp = () => {
 	  if (relation.isChanOp) {
-		  console.log(`[+] removing chanOp to user ${relation.user.login}`)
+		  console.log(`[+] giving chanOp to user ${relation.user.login}`); //checking
 		  // [+] enclencher ici le chgt vers backend
 		 // setPongies((prev) => prev - Pongie);
-		 lists.setOperators((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
 		 relation.isChanOp = false;
+		 lists.setOperators((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
 		 lists.setPongers((prev: UserRelation[]) => [...prev, relation]);
 		  
 	  } else {
-		  console.log(`[+] giving chanOp to user ${relation.user.login}`)
+		  console.log(`[+] giving chanOp to user ${relation.user.login}`); //checking
 		  // [+] enclencher ici le chgt vers backend
 		  lists.setOperators((prev: UserRelation[]) => [...prev, relation]);
 
@@ -64,22 +47,57 @@ export default function ChanOpControlPannel({relation, myRelation, role, lists}:
 	};
 
 	const handleKick = () => {
-		// if (invited) {
-			// console.log(`[+] removing chanOp to user ${relation.user.login}`)
+		if (relation.invited) {
+			console.log(`[+] removing channel invite to user ${relation.user.login}`); //checking
 			// [+] enclencher ici le chgt vers backend
-			
-
-		// }
-
-		
+			relation.invited = false;
+			lists.setLeavers((prev: UserRelation[]) => [...prev, relation]);
+			lists.setInvited((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
+		 }
+		 if (relation.joined) {
+			console.log(`[+] removing channel join (kicking) to user ${relation.user.login}`); //checking
+			// [+] enclencher ici le chgt vers backend
+			relation.joined = false;
+			lists.setPongers((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
+			lists.setLeavers((prev: UserRelation[]) => [...prev, relation]);
+		 }
 	};
+
+	const handleBan = () => {
+		if (relation.isBanned) {
+			console.log(`[+] Removing ban penalty to user ${relation.user.login}`); //checking
+			// [+] enclencher ici le chgt vers backend
+			relation.isBanned = false;
+			lists.setBanned((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
+			lists.setPongers((prev: UserRelation[]) => [...prev, relation]);
+		} else {
+			console.log(`[+] Giving ban penalty to user ${relation.user.login}`); //checking
+			// [+] enclencher ici le chgt vers backend
+			relation.isBanned = true;
+			lists.setBanned((prev: UserRelation[]) => [...prev, relation]);
+			lists.setPongers((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
+		}
+	};
+
+	const handleInvite = () => {
+		if (!relation.invited) {
+			console.log(`[+] Sending invitation to user ${relation.user.login}`); //checking
+			// [+] enclencher ici le chgt vers backend
+			relation.invited = true;
+			lists.setInvited((prev: UserRelation[]) => [...prev, relation]);
+			lists.setLeavers((prev: UserRelation[]) => prev.filter((user:UserRelation) => user.userId !== relation.userId));
+		}
+	}
 
 	const handleValidate = () => {
 		if (confirmationList === "chanOp")
 			handleChanOp();
 		else if (confirmationList === "kick")
 			handleKick();
-
+		else if (confirmationList === "ban")
+			handleBan();
+		else if (confirmationList === "invite")
+			handleInvite();
 		handleCancel();
 	};
 
@@ -98,27 +116,53 @@ export default function ChanOpControlPannel({relation, myRelation, role, lists}:
 		setWaitingConfirmation(true);
 	}
 
+	const banConfirmation = () => {
+		setConfirmationList("ban");
+		setWaitingConfirmation(true);
+	}
+
+	const inviteConfirmation = () => {
+		setConfirmationList("invite");
+		setWaitingConfirmation(true);
+	}
+
 
 	// [+] switch en fonction du role 
   const buttonData : ButtonData[] = (() => {
 	switch(role) {
 
 		case ChannelRoles.operator:
-
-			if (relation.userId !== myRelation.userId) {
-				return [
-				  {id: 0, name: "chanOp", icon:faCertificate, onClick: chanOpConfirmation, colorDep:relation.isChanOp},
-				];
-			} else return [];
+		if (relation.userId !== myRelation.userId) {
+			return [
+				{id: 0, name: "chanOp", icon:faCertificate, onClick: chanOpConfirmation, colorDep:relation.isChanOp},
+			];
+		} else return [];
 
 		case ChannelRoles.ponger:
 		return	[
 				{id: 0, name: "chanOp", icon:faCertificate, onClick: chanOpConfirmation, colorDep:relation.isChanOp},
-				{id: 1, name: "kick", icon:faRectangleXmark, onClick: kickConfirmation, colorDep: true},
-				// ... 
+				{id: 1, name: "kick", icon:faHand, onClick: kickConfirmation, colorDep: true},
+				{id: 2, name: "ban", icon:faSkull, onClick: banConfirmation, colorDep: !relation.isBanned},
 			  ];
+
+		case ChannelRoles.invited:
+		return [
+				{id: 0, name: "kick", icon:faHand, onClick: kickConfirmation, colorDep: true},
+			]
+
+		case ChannelRoles.banned:
+		return [
+				{id: 0, name: "ban", icon:faSkull, onClick: banConfirmation, colorDep: !relation.isBanned},
+			]
+
+		case ChannelRoles.leaver:
+		return [
+			{id: 0, name: "invite", icon:faHandPeace, onClick: inviteConfirmation, colorDep: relation.joined},
+			{id: 1, name: "ban", icon:faSkull, onClick: banConfirmation, colorDep: !relation.isBanned},
+		]
+
 		default:
-			return[];	  
+		return[];	  
 	}
 })();
 

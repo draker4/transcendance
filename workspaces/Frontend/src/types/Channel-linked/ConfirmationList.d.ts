@@ -1,1 +1,1 @@
-type ConfirmationList = "nothing" | "chanOp" | "kick";
+type ConfirmationList = "nothing" | "chanOp" | "kick" | "ban" | "invite";

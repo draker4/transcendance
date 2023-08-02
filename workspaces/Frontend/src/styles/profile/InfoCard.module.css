@@ -56,6 +56,15 @@
   /* border: dashed 1px var(--tertiary1); */
 }
 
+.sections .spliter {
+	width:100%;
+	height: 2px;
+	background-color: var(--primary2);
+	margin-top: 4px;
+	margin-bottom: 14px;
+	opacity: 0.5;
+}
+
 .sections p.story,
 .sections p.story.placeholder,
 .sections p {

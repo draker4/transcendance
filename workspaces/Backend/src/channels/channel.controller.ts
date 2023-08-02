@@ -16,7 +16,7 @@ export class ChannelController {
 		// console.log("[channel controller] Get channel of id :" + id); // checking
 		const data = await this.channelService.getChannelUsersRelations(id);
 		
-		console.log("[channel controller] data :", data); // checking
+		// console.log("[channel controller] data :", data); // checking
 
 		return data;
 	}
