@@ -37,9 +37,11 @@ function handleRound(gameData: GameData) {
     ) {
       gameData.status = "Finished";
       if (gameData.score.leftRound > gameData.score.rightRound) {
-        gameData.result = "Player1";
+        if (gameData.playerLeft.host) gameData.result = "Host";
+        else gameData.result = "Opponent";
       } else if (gameData.score.leftRound < gameData.score.rightRound) {
-        gameData.result = "Player2";
+        if (gameData.playerLeft.host) gameData.result = "Opponent";
+        else gameData.result = "Host";
       }
     } else {
       gameData.actualRound++;
@@ -52,7 +54,7 @@ function handleRound(gameData: GameData) {
 
 function handleMovement(gameData: GameData): void {
   if (!gameData.playerLeft || !gameData.playerRight) return;
-  if (gameData.type === "Training") {
+  if (gameData.mode === "Training") {
     if (gameData.playerLeft.id === AI_ID) {
       moveAI(
         gameData,

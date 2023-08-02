@@ -1,5 +1,5 @@
 /* PartyInfo.module.css */
-.partyInfo {
+.gameLine {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -9,15 +9,18 @@
   margin-block: 10px;
 }
 
-.detailBtn {
+.nameBtn {
   border: none;
   background-color: transparent;
   cursor: pointer;
-  width: 60px;
+  width: 150px;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--tertiary1);
 }
 
-.nameInfo {
-  width: 150px;
+.nameBtn:hover {
+  color: var(--accent1);
 }
 
 .typeInfo {

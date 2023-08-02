@@ -4,6 +4,7 @@ import {
   Ball,
   Color,
   PlayerDynamic,
+  Action,
 } from "@transcendence/shared/types/Game.types";
 
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
@@ -24,7 +25,7 @@ export function initPlayerDynamic(side: "Left" | "Right"): PlayerDynamic {
     posX: side === "Left" ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
     posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
     speed: PLAYER_START_SPEED,
-    move: "Idle",
+    move: Action.Idle,
     push: 0,
   };
 }

@@ -17,6 +17,8 @@ import {
 } from "@transcendence/shared/constants/Game.constants";
 import Info from "./Info";
 
+import { addToUpdateQueue } from "@/lib/game/gameLoop";
+
 type Props = {
   userId: number;
   gameData: GameData;
@@ -27,6 +29,7 @@ type Props = {
 export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
+  const animationFrameIdRef = useRef<number | undefined>(undefined);
   const isPlayer: "Left" | "Right" | "Spectator" =
     gameData.playerLeft?.id === userId
       ? "Left"
@@ -47,8 +50,6 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
   }, [gameData.ballImg]);
 
   useEffect(() => {
-    isMountedRef.current = true;
-    let animationFrameId: number | undefined;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -57,16 +58,18 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     };
     draw.canvas.focus();
 
-    if (animationFrameId === undefined) {
-      animationFrameId = requestAnimationFrame((timestamp) =>
+    isMountedRef.current = true;
+
+    if (animationFrameIdRef.current === undefined) {
+      animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
     return () => {
       isMountedRef.current = false;
-      if (animationFrameId !== undefined) {
-        cancelAnimationFrame(animationFrameId);
-        animationFrameId = undefined;
+      if (animationFrameIdRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = undefined;
       }
     };
   }, []);
@@ -79,12 +82,14 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     function handleKeyUp(event: KeyboardEvent) {
       pongKeyUp(event, gameData, socket, userId, isPlayer);
     }
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
+    // Add key event listeners when the component mounts
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
+    // Remove key event listeners when the component unmounts
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
   }, [socket, userId, isPlayer, gameData]);
 
@@ -92,11 +97,20 @@ export default function Pong({ userId, gameData, setGameData, socket }: Props) {
     isMountedRef.current = true;
     socket.on("player", handlePlayerUpdate(setGameData, isMountedRef));
     socket.on("status", handleStatusMessage(setGameData, isMountedRef));
+    socket.on("update", (updatedGameData: GameData) => {
+      // Add the received update to the queue
+      addToUpdateQueue(updatedGameData);
+    });
 
     return () => {
       isMountedRef.current = false;
       socket.off("player", handlePlayerUpdate(setGameData, isMountedRef));
       socket.off("status", handleStatusMessage(setGameData, isMountedRef));
+      socket.off("update", (updatedGameData: GameData) => {
+        // Add the received update to the queue
+        console.log("update received");
+        addToUpdateQueue(updatedGameData);
+      });
     };
   }, [socket, setGameData]);
 

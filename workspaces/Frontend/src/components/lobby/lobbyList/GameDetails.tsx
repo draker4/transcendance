@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "@/styles/lobby/party/partyList/PartyDetails.module.css";
+import styles from "@/styles/lobby/lobbyList/GameDetails.module.css";
 
 import ScoreService from "@/services/Score.service";
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
@@ -12,7 +12,7 @@ type Props = {
   gameInfo: GameInfo;
 };
 
-export default function PartyDetails({ scoreService, gameInfo }: Props) {
+export default function GameDetails({ scoreService, gameInfo }: Props) {
   const [score, setScore] = useState<ScoreInfo | undefined>(undefined);
 
   //Recupere le score de la game regulierement

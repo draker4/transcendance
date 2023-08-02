@@ -6,7 +6,8 @@
   align-items: center;
   width: 100%;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
+  margin-top: -9px;
 }
 
 .displayRound {
@@ -15,6 +16,7 @@
   justify-content: center;
   align-items: center;
   padding: 4px 12px;
+  margin: 4px;
   border: 3px solid var(--secondary1);
   border-radius: 5px;
 }

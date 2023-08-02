@@ -10,9 +10,8 @@ export class ActionDTO {
   @IsNotEmpty()
   gameId: string;
 
-  @IsNumber()
   @IsNotEmpty()
-  action: Action;
+  move: Action;
 
   @IsString()
   @IsNotEmpty()

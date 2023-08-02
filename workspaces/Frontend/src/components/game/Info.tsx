@@ -1,14 +1,9 @@
 import { GameData, Player } from "@transcendence/shared/types/Game.types";
 
 import styles from "@/styles/game/Info.module.css";
-import AvatarUser from "../avatarUser/AvatarUser";
-import { CryptoService } from "@/services/Crypto.service";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 
-import { useEffect } from "react";
-
-const Crypto = new CryptoService();
-
-async function showPlayer(
+function showPlayer(
   player: Player | null,
   status: string,
   side: "Left" | "Right"
@@ -57,7 +52,7 @@ function showScore(gameData: GameData) {
     return (
       <div key={index} className={styles.displayRound}>
         <p className={styles.round}>{`R${index + 1}`}</p>
-        <p className={styles.score}>{`${round.left} / ${round.right}`}</p>
+        <p className={styles.score}>{`${round.left} - ${round.right}`}</p>
       </div>
     );
   }
@@ -93,7 +88,7 @@ export default function Info({ gameData }: Props) {
         {/* RIGHT PLAYER */}
         {showPlayer(gameData.playerRight, gameData.playerRightStatus, "Right")}
       </div>
-      {showScore(gameData)}
+      {gameData.score && showScore(gameData)}
     </div>
   );
 }

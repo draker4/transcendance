@@ -7,6 +7,10 @@
   padding: 10px 10px;
 }
 
+.listTitle {
+  margin-bottom: 12px;
+}
+
 .list {
   display: flex;
   flex-flow: column nowrap;
@@ -52,7 +56,7 @@
 }
 
 .playersTitle {
-  width: 200px;
+  width: 250px;
 }
 
 .roundTitle {

@@ -1,14 +1,17 @@
+"use client";
+
 // PartyInfo.tsx
 import { useState } from "react";
-import styles from "@/styles/lobby/party/partyList/PartyInfo.module.css";
+import styles from "@/styles/lobby/lobbyList/GameLine.module.css";
 import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 
 import ScoreService from "@/services/Score.service";
 import LobbyService from "@/services/Lobby.service";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
-import PartyDetails from "./PartyDetails";
+import GameDetails from "./GameDetails";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import PlayerInfo from "./PlayerInfo";
 
 type Props = {
   lobbyService: LobbyService;
@@ -16,7 +19,7 @@ type Props = {
   gameInfo: GameInfo;
 };
 
-export default function PartyInfo({
+export default function GameLine({
   lobbyService,
   scoreService,
   gameInfo,
@@ -51,34 +54,33 @@ export default function PartyInfo({
 
   return (
     <>
-      <div className={styles.partyInfo}>
+      <div className={styles.gameLine}>
         <button
-          className={styles.detailBtn}
+          className={styles.nameBtn}
           onClick={() => {
             setShowDetail(!showDetail);
           }}
         >
-          {!showDetail && <MdKeyboardArrowRight />}
-          {showDetail && <MdKeyboardArrowDown />}
+          {gameInfo.name}
         </button>
-        <p className={styles.nameInfo}>{gameInfo.name}</p>
         <p className={styles.typeInfo}>{gameInfo.type}</p>
-        <div className={styles.playersInfo}>
-          <div>{gameInfo.leftPlayerLogin}</div>
-          <p>VS</p>
-          <div>{gameInfo.rightPlayerLogin}</div>
-        </div>
+        <PlayerInfo
+          playerLeft={gameInfo.leftPlayer}
+          playerRight={gameInfo.rightPlayer}
+          showDetail={showDetail}
+        />
         <p className={styles.roundInfo}>
           {gameInfo.actualRound} on {gameInfo.maxRound}
         </p>
         <p className={styles.statusInfo}>{gameInfo.status}</p>
         <div className={styles.actionInfo}>
-          {(gameInfo.leftPlayerId === -1 || gameInfo.rightPlayerId === -1) && (
+          {(gameInfo.leftPlayer.id === -1 ||
+            gameInfo.rightPlayer.id === -1) && (
             <button className={styles.actionBtn} onClick={joinGame}>
               Join
             </button>
           )}
-          {gameInfo.leftPlayerId !== -1 && gameInfo.rightPlayerId !== -1 && (
+          {gameInfo.leftPlayer.id !== -1 && gameInfo.rightPlayer.id !== -1 && (
             <button className={styles.actionBtn} onClick={watchGame}>
               Watch
             </button>
@@ -86,7 +88,7 @@ export default function PartyInfo({
         </div>
       </div>
       {showDetail && (
-        <PartyDetails scoreService={scoreService} gameInfo={gameInfo} />
+        <GameDetails scoreService={scoreService} gameInfo={gameInfo} />
       )}
     </>
   );
