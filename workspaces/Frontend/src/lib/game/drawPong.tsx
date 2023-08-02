@@ -5,6 +5,7 @@ import {
   Draw,
   PlayerDynamic,
   RGBA,
+  Timer,
 } from "@transcendence/shared/types/Game.types";
 import {
   FONT_MENU,
@@ -14,29 +15,9 @@ import {
   MENU_COLOR,
   GAME_WIDTH,
   GAME_HEIGHT,
+  FONT_TIMER,
+  BLUR_INTENSITY,
 } from "@transcendence/shared/constants/Game.constants";
-
-function drawMenu(gameData: GameData, draw: Draw) {
-  // Draw the menu background
-  draw.context.fillStyle = MENU_COLOR;
-  draw.context.fillRect(
-    draw.canvas.width / 2 - 100,
-    draw.canvas.height / 2 - 40,
-    200,
-    80
-  );
-
-  // Draw the menu text;
-  const { r, g, b, a } = gameData.color.menu;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  draw.context.fillText(
-    "Press Enter to start / stop",
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 10
-  );
-}
 
 function drawPlayer(
   draw: Draw,
@@ -170,35 +151,100 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   drawRound(draw, gameData.score.rightRound, gameData.color.roundWon, "Right");
 }
 
-// function drawTimer(gameData: GameData, draw: Draw) {
-//   // Draw the menu background
-//   draw.context.fillStyle = gameData.color;
-//   draw.context.fillRect(
-//     draw.canvas.width / 2 - 100,
-//     draw.canvas.height / 2 - 50,
-//     200,
-//     100
-//   );
+function drawMenu(gameData: GameData, draw: Draw) {
+  // Draw the menu background
+  draw.context.fillStyle = MENU_COLOR;
+  draw.context.fillRect(
+    draw.canvas.width / 2 - 100,
+    draw.canvas.height / 2 - 40,
+    200,
+    80
+  );
 
-//   // Draw the menu text;
-//   draw.context.fillStyle = gameData.fontColor;
-//   draw.context.font = FONT_TIMER;
-//   draw.context.textAlign = "center";
-//   if (gameData.timer > 1) {
-//     const timer = gameData.timer - 1;
-//     draw.context.fillText(
-//       timer.toString(),
-//       draw.canvas.width / 2,
-//       draw.canvas.height / 2 + 40
-//     );
-//   } else {
-//     draw.context.fillText(
-//       "GO!",
-//       draw.canvas.width / 2,
-//       draw.canvas.height / 2 + 30
-//     );
-//   }
-// }
+  // Draw the menu text;
+  const { r, g, b, a } = gameData.color.menu;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+  draw.context.font = FONT_MENU;
+  draw.context.textAlign = "center";
+  draw.context.fillText(
+    "Press Enter to start / stop",
+    draw.canvas.width / 2,
+    draw.canvas.height / 2 + 10
+  );
+}
+
+function applyBlurEffect(draw: Draw) {
+  const overlayColor = "rgba(0, 0, 0, 0.5)"; // Adjust the color and opacity as needed
+  draw.context.fillStyle = overlayColor;
+  draw.context.fillRect(0, 0, draw.canvas.width, draw.canvas.height);
+}
+
+function startingMenu(gameData: GameData, draw: Draw) {
+  applyBlurEffect(draw);
+  const { r, g, b, a } = gameData.color.font;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+  draw.context.font = FONT_MENU;
+  draw.context.textAlign = "center";
+  draw.context.fillText(
+    "Waiting for Player",
+    draw.canvas.width / 2,
+    draw.canvas.height / 2 + 10
+  );
+}
+
+function finishedMenu(gameData: GameData, draw: Draw) {
+  applyBlurEffect(draw);
+  const { r, g, b, a } = gameData.color.font;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+  draw.context.font = FONT_MENU;
+  draw.context.textAlign = "center";
+  const winner =
+    gameData.score.leftRound > gameData.score.rightRound
+      ? gameData.playerLeft.name
+      : gameData.playerRight.name;
+  draw.context.fillText(
+    `${winner} has won!`,
+    draw.canvas.width / 2,
+    draw.canvas.height / 2 + 10
+  );
+}
+
+function drawTimer(timer: Timer, color: RGBA, draw: Draw) {
+  const { r, g, b, a } = color;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+  draw.context.font = FONT_TIMER;
+  draw.context.textAlign = "center";
+
+  const actualTime = new Date();
+
+  if (actualTime <= timer.end) {
+    //define the time difference between both dates
+    const timerDif = timer.end.getTime() - actualTime.getTime();
+    const showTimer = Math.floor(timerDif / 1000);
+
+    // Draw timer reason
+    draw.context.fillText(
+      timer.reason,
+      draw.canvas.width / 2,
+      draw.canvas.height / 2 + 10
+    );
+
+    // Draw timer
+    if (showTimer > 0) {
+      draw.context.fillText(
+        showTimer.toString() + "s",
+        draw.canvas.width / 2,
+        draw.canvas.height / 2 + 40
+      );
+    } else if (showTimer === 0) {
+      draw.context.fillText(
+        "GO!",
+        draw.canvas.width / 2,
+        draw.canvas.height / 2 + 30
+      );
+    }
+  }
+}
 
 export function drawPong(gameData: GameData, draw: Draw) {
   // Clear the Canvas
@@ -213,6 +259,13 @@ export function drawPong(gameData: GameData, draw: Draw) {
   // Draw the Score
   drawScoreTable(gameData, draw);
 
-  // draw the ball
-  drawBall(gameData, draw);
+  // Draw the Timer
+  if (gameData.timer) drawTimer(gameData.timer, gameData.color.font, draw);
+
+  // Draw the ball
+  if (gameData.status === "Playing") drawBall(gameData, draw);
+
+  // Draw the menu
+  if (gameData.status === "Not Started") startingMenu(gameData, draw);
+  if (gameData.status === "Finished") finishedMenu(gameData, draw);
 }

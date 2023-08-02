@@ -39,6 +39,7 @@ export type UpdateData = {
   playerRightDynamic: PlayerDynamic;
   ball: Ball;
   score: ScoreInfo;
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 };
 
 export type Timer = {
@@ -108,8 +109,8 @@ export type GameData = {
   id: string;
   name: string;
   ball: Ball;
-  playerLeft: Player | null;
-  playerRight: Player | null;
+  playerLeft: Player;
+  playerRight: Player;
   playerLeftDynamic: PlayerDynamic;
   playerRightDynamic: PlayerDynamic;
   playerLeftStatus:

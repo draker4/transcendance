@@ -202,6 +202,7 @@ export const handleUpdateMessage =
       newGameData.playerRightDynamic = updateData.playerRightDynamic;
       newGameData.ball = updateData.ball;
       newGameData.score = updateData.score;
+      newGameData.actualRound = updateData.actualRound;
       return newGameData;
     });
   };

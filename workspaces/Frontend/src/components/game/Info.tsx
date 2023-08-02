@@ -78,19 +78,35 @@ function showPlayer(
 
 function showScore(gameData: GameData) {
   function displayRound(round: Round, index: number) {
-    // Determine the className based on the comparison with currentRound
+    // Determine the className and border color based on the comparison with currentRound
     let roundClassName = styles.round;
+    let borderColor = "";
 
     if (index < gameData.actualRound) {
       roundClassName = styles.roundFinished;
+      if (gameData.score.round[index].left > gameData.score.round[index].right)
+        borderColor = gameData.playerLeft.avatar.borderColor;
+      else if (
+        gameData.score.round[index].left < gameData.score.round[index].right
+      )
+        borderColor = gameData.playerRight.avatar.borderColor;
     } else if (index === gameData.actualRound) {
       roundClassName = styles.currentRound;
     } else if (index > gameData.actualRound) {
       roundClassName = styles.roundRemaining;
     }
 
+    // Define a style object to apply the border color
+    const roundStyle = {
+      borderColor: borderColor,
+    };
+
     return (
-      <div key={index} className={`${styles.displayRound} ${roundClassName}`}>
+      <div
+        key={index}
+        className={`${styles.displayRound} ${roundClassName}`}
+        style={roundStyle}
+      >
         <p className={styles.roundLabel}>{`R${index + 1}`}</p>
         <p className={styles.score}>{`${round.left} - ${round.right}`}</p>
       </div>
