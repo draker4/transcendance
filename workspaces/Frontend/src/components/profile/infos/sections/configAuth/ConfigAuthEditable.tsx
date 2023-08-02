@@ -14,37 +14,10 @@ export default function SectionCustom({ profile, setLogin, socket }: {
 
 	const	[changeLogin, setChangeLogin] = useState<boolean>(false);
 	const	[changePassword, setChangePassword] = useState<boolean>(false);
-	const	[success, setSuccess] = useState<boolean>(false);
-	const	[sendEmail, setSendEmail] = useState<boolean>(false);
-
-
-	useEffect(() => {
-
-		if (success)
-			setTimeout(() => {
-				setSuccess(false);
-			}, 3000);
-
-		if (sendEmail)
-			setTimeout(() => {
-				setSendEmail(false);
-			}, 10000);
-
-	}, [success, sendEmail]);
 
 	return (
 		<div>
 			<p className={stylesInfoCard.tinyTitle}>Account Settings</p>
-
-			{
-				success &&
-				<p className={styles.success}>Profile successfully updated!</p>
-			}
-
-			{
-				sendEmail &&
-				<p className={styles.success}>A new password has been sent to your email address!</p>
-			}
 			
 			{
 				!changeLogin &&
@@ -60,7 +33,6 @@ export default function SectionCustom({ profile, setLogin, socket }: {
 				<ChangeLogin
 					setChangeLogin={setChangeLogin}
 					setLogin={setLogin}
-					setSuccess={setSuccess}
 					socket={socket}
 				/>
 			}
@@ -78,8 +50,6 @@ export default function SectionCustom({ profile, setLogin, socket }: {
 				changePassword &&
 				<ChangePassword
 					setChangePassword={setChangePassword}
-					setSuccess={setSuccess}
-					setSendEmail={setSendEmail}
 				/>
 			}
 
