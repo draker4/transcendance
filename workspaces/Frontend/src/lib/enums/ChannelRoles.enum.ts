@@ -3,4 +3,5 @@ export enum ChannelRoles {
     ponger = "Ponger",
     invited = "Invited",
     banned = "Banned",
+	leaver = "Leaver",
 }

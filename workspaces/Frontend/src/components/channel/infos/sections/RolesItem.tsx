@@ -13,9 +13,10 @@ type Props = {
   onFocusOff: () => void;
   onHover: () => void;
   onLeave: () => void;
+  lists:ChannelLists;
 };
 
-export default function RolesItem({ relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave }: Props) {
+export default function RolesItem({ relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocusOn = () => {
@@ -63,7 +64,7 @@ export default function RolesItem({ relation, myRelation, role, onFocusOn, onFoc
         {relation.user.login}
       </Link>
 
-      { isFocused && myRelation.isChanOp && <ChanOpControlPannel role={role} relation={relation} myRelation={myRelation} />}
+      { isFocused && myRelation.isChanOp && <ChanOpControlPannel role={role} relation={relation} myRelation={myRelation} lists={lists} />}
     </article>
   );
 }

@@ -60,7 +60,7 @@ import { BackupCode } from './utils/typeorm/BackupCode.entity';
         Token,
         BackupCode,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     AvatarModule,
