@@ -7,11 +7,13 @@ import { ActionDTO } from '../dto/Action.dto';
 import {
   GameData,
   Player,
-  Timer,
-  StatusMessage,
   InitData,
-  UpdateData,
 } from '@transcendence/shared/types/Game.types';
+import {
+  StatusMessage,
+  UpdateData,
+} from '@transcendence/shared/types/Message.types';
+import { defineTimer } from '@transcendence/shared/game/pongUtils';
 import { initPong } from '@transcendence/shared/game/initPong';
 
 // import classes and entities
@@ -26,7 +28,13 @@ import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 
 import { updatePong } from '@transcendence/shared/game/updatePong';
 
-import { BACK_FPS } from '@transcendence/shared/constants/Game.constants';
+import {
+  BACK_FPS,
+  TIMER_DECONNECTION,
+  TIMER_PAUSE,
+  TIMER_RESTART,
+  TIMER_START,
+} from '@transcendence/shared/constants/Game.constants';
 
 export class Pong {
   // Game Loop variables
@@ -35,15 +43,13 @@ export class Pong {
   private framesThisSecond = 0;
   private lastFpsUpdate = 0;
   private currentFps = 0;
+  private updateGameInterval: NodeJS.Timeout | null = null;
 
   // Game data
   private playerLeft: UserInfo | null = null;
   private playerRight: UserInfo | null = null;
   private spectators: UserInfo[] = [];
   private data: GameData;
-
-  // Game loop interval
-  private updateGameInterval: NodeJS.Timeout | null = null;
 
   constructor(
     private readonly server: Server,
@@ -159,37 +165,47 @@ export class Pong {
       `User ${action.userId} performed action ${action.move}`,
       'Pong - playerAction',
     );
-    if (this.playerLeft && this.playerLeft.id === action.userId) {
-      this.logger.log('Player Left performed action', 'Pong - playerAction');
+    if (
+      this.playerLeft.id === action.userId ||
+      this.playerRight.id === action.userId
+    ) {
       if (action.move === 'Stop') {
         if (this.data.status === 'Playing') {
           this.data.status = 'Stopped';
-          this.data.timer = this.defineTimer(60, 'Pause');
+          this.data.timer = defineTimer(
+            TIMER_PAUSE,
+            'Pause',
+            this.playerLeft.id === action.userId
+              ? this.data.playerLeft.name
+              : this.data.playerRight.name,
+          );
         } else if (this.data.status === 'Stopped') {
           this.data.status = 'Playing';
-          this.data.timer = this.defineTimer(5, 'ReStart');
+          this.data.timer = defineTimer(
+            TIMER_RESTART,
+            'ReStart',
+            this.playerLeft.id === action.userId
+              ? this.data.playerLeft.name
+              : this.data.playerRight.name,
+          );
         }
+        this.sendStatus();
       } else if (action.move === 'Push') {
-        if (!this.data.playerLeftDynamic.push)
+        if (
+          this.playerLeft.id === action.userId &&
+          !this.data.playerLeftDynamic.push
+        )
           this.data.playerLeftDynamic.push = 1;
-      } else {
-        this.data.playerLeftDynamic.move = action.move;
-      }
-    } else if (this.playerRight && this.playerRight.id === action.userId) {
-      this.logger.log('Player Right performed action', 'Pong - playerAction');
-      if (action.move === 'Stop') {
-        if (this.data.status === 'Playing') {
-          this.data.status = 'Stopped';
-          this.data.timer = this.defineTimer(60, 'Pause');
-        } else if (this.data.status === 'Stopped') {
-          this.data.status = 'Playing';
-          this.data.timer = this.defineTimer(5, 'ReStart');
-        }
-      } else if (action.move === 'Push') {
-        if (!this.data.playerRightDynamic.push)
+        else if (
+          this.playerRight.id === action.userId &&
+          !this.data.playerRightDynamic.push
+        )
           this.data.playerRightDynamic.push = 1;
       } else {
-        this.data.playerRightDynamic.move = action.move;
+        if (this.playerLeft.id === action.userId)
+          this.data.playerLeftDynamic.move = action.move;
+        else if (this.playerRight.id === action.userId)
+          this.data.playerRightDynamic.move = action.move;
       }
     } else {
       throw new WsException('Action not performed by player');
@@ -270,9 +286,15 @@ export class Pong {
     if (this.data.status === 'Playing') {
       updatePong(this.data);
       this.sendUpdate();
+      if (this.data.sendStatus) {
+        this.sendStatus();
+        this.data.sendStatus = false;
+      }
+      if (this.data.updateScore) {
+        //this.updateScore();
+        this.data.updateScore = false;
+      }
     }
-
-    this.sendStatus();
 
     // Calculate FPS
     this.framesThisSecond++;
@@ -309,7 +331,6 @@ export class Pong {
       }
     }
     this.updateStatus();
-    this.sendStatus();
   }
 
   private joinAsHost(user: UserInfo) {
@@ -360,24 +381,14 @@ export class Pong {
       if (this.data.status === 'Not Started') {
         this.data.status = 'Playing';
         this.startGameLoop();
-        this.data.timer = this.defineTimer(10, 'Start');
+        this.data.timer = defineTimer(TIMER_START, 'Start');
       } else if (this.data.status === 'Stopped') {
         this.data.status = 'Playing';
         this.startGameLoop();
-        this.data.timer = this.defineTimer(10, 'ReStart');
+        this.data.timer = defineTimer(TIMER_RESTART, 'ReStart');
       }
     }
-  }
-
-  private defineTimer(
-    second: number,
-    reason: 'Start' | 'ReStart' | 'Round' | 'Pause' | 'Deconnection',
-  ): Timer {
-    return {
-      start: new Date(),
-      end: new Date(new Date().getTime() + second * 1000),
-      reason: reason,
-    };
+    this.sendStatus();
   }
 
   private disconnectPlayer(side: 'Left' | 'Right') {
@@ -385,13 +396,21 @@ export class Pong {
       this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
-        this.data.timer = this.defineTimer(60, 'Deconnection');
+        this.data.timer = defineTimer(
+          TIMER_DECONNECTION,
+          'Deconnection',
+          this.data.playerLeft.name,
+        );
       }
     } else if (side === 'Right') {
       this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
-        this.data.timer = this.defineTimer(60, 'Deconnection');
+        this.data.timer = defineTimer(
+          TIMER_DECONNECTION,
+          'Deconnection',
+          this.data.playerRight.name,
+        );
       }
     }
     this.sendStatus();

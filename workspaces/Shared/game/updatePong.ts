@@ -5,7 +5,11 @@ import {
   handleServe,
 } from "@transcendence/shared/game/handleBall";
 import { GameData } from "@transcendence/shared/types/Game.types";
-import { AI_ID } from "@transcendence/shared/constants/Game.constants";
+import {
+  AI_ID,
+  TIMER_ROUND,
+} from "@transcendence/shared/constants/Game.constants";
+import { defineTimer } from "./pongUtils";
 
 function resetTurn(winner: "Left" | "Right", gameData: GameData) {
   resetBall(gameData.ball, gameData);
@@ -17,6 +21,7 @@ function resetTurn(winner: "Left" | "Right", gameData: GameData) {
   } else if (winner === "Right") {
     gameData.score.round[actualRound].right++;
   }
+  gameData.updateScore = true;
 }
 
 function handleRound(gameData: GameData) {
@@ -49,9 +54,10 @@ function handleRound(gameData: GameData) {
       gameData.playerLeftDynamic.speed++;
       gameData.playerRightDynamic.speed++;
       gameData.ball.speed++;
-
-      console.log("new round: ", gameData.actualRound);
+      gameData.timer = defineTimer(TIMER_ROUND, "Round");
     }
+    gameData.updateScore = true;
+    gameData.sendStatus = true;
   }
 }
 
@@ -84,11 +90,13 @@ function handleMovement(gameData: GameData): void {
     handleServe(gameData.ball, gameData);
   }
 
-  const status = updateBall(gameData.ball, gameData);
-  if (status === "reset Left") {
-    resetTurn("Right", gameData);
-  } else if (status === "reset Right") {
-    resetTurn("Left", gameData);
+  if (gameData.timer.end < new Date().getTime()) {
+    const status = updateBall(gameData.ball, gameData);
+    if (status === "reset Left") {
+      resetTurn("Right", gameData);
+    } else if (status === "reset Right") {
+      resetTurn("Left", gameData);
+    }
   }
 }
 

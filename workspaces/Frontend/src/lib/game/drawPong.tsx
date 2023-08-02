@@ -16,7 +16,6 @@ import {
   GAME_WIDTH,
   GAME_HEIGHT,
   FONT_TIMER,
-  BLUR_INTENSITY,
 } from "@transcendence/shared/constants/Game.constants";
 
 function drawPlayer(
@@ -136,7 +135,7 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
 
   // Draw actual round
   if (gameData.maxRound > 1) {
-    draw.context.font = FONT_MENU;
+    draw.context.font = FONT_SCORE;
     draw.context.fillText(
       "Round " + gameData.actualRound,
       draw.canvas.width / 2,
@@ -209,24 +208,37 @@ function finishedMenu(gameData: GameData, draw: Draw) {
   );
 }
 
-function drawTimer(timer: Timer, color: RGBA, draw: Draw) {
-  const { r, g, b, a } = color;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_TIMER;
-  draw.context.textAlign = "center";
-
-  const actualTime = new Date();
+function drawTimer(timer: Timer, color: RGBA, draw: Draw, round: number) {
+  // remove 2h from the timer
+  const actualTime = new Date().getTime();
 
   if (actualTime <= timer.end) {
+    applyBlurEffect(draw);
+    const { r, g, b, a } = color;
+    draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+    draw.context.font = FONT_TIMER;
+    draw.context.textAlign = "center";
     //define the time difference between both dates
-    const timerDif = timer.end.getTime() - actualTime.getTime();
+    const timerDif = timer.end - actualTime;
     const showTimer = Math.floor(timerDif / 1000);
 
     // Draw timer reason
+    let reason: string = timer.reason;
+    if (timer.reason === "Pause") {
+      reason = `${timer.playerName} as requested a Break`;
+    } else if (timer.reason === "Deconnection") {
+      reason = `${timer.playerName} has been deconnected`;
+    } else if (timer.reason === "Round") {
+      reason = `Round ${round} is starting`;
+    } else if (timer.reason === "Start") {
+      reason = `Game is starting`;
+    } else if (timer.reason === "ReStart") {
+      reason = `Prepare for Restart`;
+    }
     draw.context.fillText(
-      timer.reason,
+      reason,
       draw.canvas.width / 2,
-      draw.canvas.height / 2 + 10
+      draw.canvas.height / 2 - 20
     );
 
     // Draw timer
@@ -234,13 +246,13 @@ function drawTimer(timer: Timer, color: RGBA, draw: Draw) {
       draw.context.fillText(
         showTimer.toString() + "s",
         draw.canvas.width / 2,
-        draw.canvas.height / 2 + 40
+        draw.canvas.height / 2 + 50
       );
     } else if (showTimer === 0) {
       draw.context.fillText(
         "GO!",
         draw.canvas.width / 2,
-        draw.canvas.height / 2 + 30
+        draw.canvas.height / 2 + 50
       );
     }
   }
@@ -260,7 +272,13 @@ export function drawPong(gameData: GameData, draw: Draw) {
   drawScoreTable(gameData, draw);
 
   // Draw the Timer
-  if (gameData.timer) drawTimer(gameData.timer, gameData.color.font, draw);
+  if (gameData.timer)
+    drawTimer(
+      gameData.timer,
+      gameData.color.font,
+      draw,
+      gameData.actualRound + 1
+    );
 
   // Draw the ball
   if (gameData.status === "Playing") drawBall(gameData, draw);

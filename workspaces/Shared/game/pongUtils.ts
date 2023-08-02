@@ -1,4 +1,4 @@
-import { RGBA } from "../types/Game.types";
+import { RGBA, Timer } from "../types/Game.types";
 
 export function turnDelayIsOver(timer: number) {
   return new Date().getTime() - timer >= 1000;
@@ -17,4 +17,16 @@ export function colorRgbToHex(rgbColor: RGBA): string {
   const { r, g, b } = rgbColor;
   const hexaColor = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
   return hexaColor;
+}
+
+export function defineTimer(
+  second: number,
+  reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection",
+  playerName?: string
+): Timer {
+  return {
+    end: new Date().getTime() + second * 1000,
+    reason: reason,
+    playerName: playerName,
+  };
 }

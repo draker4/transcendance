@@ -93,5 +93,7 @@ export function initPong(initData: InitData): GameData {
     timer: null,
     status: "Not Started",
     result: "Not Finished",
+    sendStatus: false,
+    updateScore: false,
   };
 }

@@ -14,7 +14,7 @@ export const AI_ID = -2;
 
 export const FONT_MENU = "60px Arial";
 export const FONT_SCORE = "50px Arial";
-export const FONT_TIMER = "100px Arial";
+export const FONT_TIMER = "60px Arial";
 export const MENU_COLOR = "#FFFFFF";
 
 export const PLAYER_PING = 2;
@@ -25,3 +25,9 @@ export const FRONT_FPS = 1000 / 60;
 export const BACK_FPS = 1000 / 30;
 
 export const BLUR_INTENSITY = 100;
+
+export const TIMER_ROUND = 3;
+export const TIMER_START = 5;
+export const TIMER_RESTART = 5;
+export const TIMER_PAUSE = 15;
+export const TIMER_DECONNECTION = 30;
