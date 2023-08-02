@@ -16,6 +16,7 @@ import {
   GAME_WIDTH,
   GAME_HEIGHT,
   FONT_TIMER,
+  FONT_ROUND,
 } from "@transcendence/shared/constants/Game.constants";
 
 function drawPlayer(
@@ -101,7 +102,7 @@ function drawRound(
   for (let i = 0; i < roundDraw; i++) {
     draw.context.beginPath();
     draw.context.arc(
-      draw.canvas.width / 2 + 65 * sign + i * 35 * sign,
+      draw.canvas.width / 2 + 140 * sign + i * 35 * sign,
       32,
       10,
       0,
@@ -135,11 +136,11 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
 
   // Draw actual round
   if (gameData.maxRound > 1) {
-    draw.context.font = FONT_SCORE;
+    draw.context.font = FONT_ROUND;
     draw.context.fillText(
       "Round " + gameData.actualRound,
       draw.canvas.width / 2,
-      40
+      45
     );
   }
 
@@ -148,28 +149,6 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   drawRound(draw, gameData.score.leftRound, gameData.color.roundWon, "left");
   drawRound(draw, gameData.maxRound / 2, gameData.color.font, "Right");
   drawRound(draw, gameData.score.rightRound, gameData.color.roundWon, "Right");
-}
-
-function drawMenu(gameData: GameData, draw: Draw) {
-  // Draw the menu background
-  draw.context.fillStyle = MENU_COLOR;
-  draw.context.fillRect(
-    draw.canvas.width / 2 - 100,
-    draw.canvas.height / 2 - 40,
-    200,
-    80
-  );
-
-  // Draw the menu text;
-  const { r, g, b, a } = gameData.color.menu;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  draw.context.fillText(
-    "Press Enter to start / stop",
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 10
-  );
 }
 
 function applyBlurEffect(draw: Draw) {

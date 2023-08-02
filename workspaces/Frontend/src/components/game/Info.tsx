@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { GameData, Player } from "@transcendence/shared/types/Game.types";
 import { Round } from "@transcendence/shared/types/Score.types";
 import styles from "@/styles/game/Info.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { PLAYER_COLOR } from "@transcendence/shared/constants/Asset.constants";
 import { colorHexToRgb } from "@transcendence/shared/game/pongUtils";
-import { addPlayerMessage } from "@/lib/game/gameLoop";
 
 function showPlayer(
   player: Player | null,

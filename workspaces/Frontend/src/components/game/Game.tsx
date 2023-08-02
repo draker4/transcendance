@@ -34,6 +34,9 @@ export default function Game({ profile, token, gameId }: Props) {
   const gameService = new GameService(token as string);
   const [joinEmitter, setJoinEmitter] = useState<boolean>(false);
   const [quitStatus, setQuitStatus] = useState<boolean>(false);
+  const [isPlayer, setIsPlayer] = useState<"Left" | "Right" | "Spectator">(
+    "Spectator"
+  );
 
   //------------------------------------Chargement------------------------------------//
 
@@ -46,7 +49,13 @@ export default function Game({ profile, token, gameId }: Props) {
         } else {
           setGameData(gameData.data);
           setIsLoading(false);
-          console.log(gameData.data);
+          setIsPlayer(
+            gameData.playerLeft?.id === profile.id
+              ? "Left"
+              : gameData.playerRight?.id === profile.id
+              ? "Right"
+              : "Spectator"
+          );
         }
       });
     }
@@ -62,6 +71,10 @@ export default function Game({ profile, token, gameId }: Props) {
   async function quit() {
     if (quitStatus) return;
     setQuitStatus(true);
+    if (isPlayer === "Spectator") {
+      router.push("/home");
+      return;
+    }
     const res = await lobby.quitGame().then(() => {
       gameService.socket?.emit("quit");
       router.push("/home");
@@ -107,6 +120,7 @@ export default function Game({ profile, token, gameId }: Props) {
           gameData={gameData}
           setGameData={setGameData}
           socket={gameService.socket}
+          isPlayer={isPlayer}
         ></Pong>
         <button onClick={quit} className={styles.quitBtn}>
           <MdLogout />

@@ -23,18 +23,19 @@ type Props = {
   gameData: GameData;
   setGameData: Function;
   socket: Socket;
+  isPlayer: "Left" | "Right" | "Spectator";
 };
 
-export default function Pong({ userId, gameData, setGameData, socket }: Props) {
+export default function Pong({
+  userId,
+  gameData,
+  setGameData,
+  socket,
+  isPlayer,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
-  const isPlayer: "Left" | "Right" | "Spectator" =
-    gameData.playerLeft?.id === userId
-      ? "Left"
-      : gameData.playerRight?.id === userId
-      ? "Right"
-      : "Spectator";
 
   const backgroundImage = useMemo(() => {
     const image = new Image();

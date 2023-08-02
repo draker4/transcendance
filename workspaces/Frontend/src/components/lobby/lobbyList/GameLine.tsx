@@ -3,7 +3,6 @@
 // PartyInfo.tsx
 import { useState } from "react";
 import styles from "@/styles/lobby/lobbyList/GameLine.module.css";
-import { MdKeyboardArrowDown, MdKeyboardArrowRight } from "react-icons/md";
 
 import ScoreService from "@/services/Score.service";
 import LobbyService from "@/services/Lobby.service";
@@ -68,7 +67,7 @@ export default function GameLine({
           showDetail={showDetail}
         />
         <p className={styles.roundInfo}>
-          {gameInfo.actualRound} on {gameInfo.maxRound}
+          {gameInfo.actualRound + 1} / {gameInfo.maxRound}
         </p>
         <p className={styles.statusInfo}>{gameInfo.status}</p>
         <div className={styles.actionInfo}>

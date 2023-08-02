@@ -41,7 +41,7 @@ export default function LobbyList({ lobbyService, mode }: Props) {
 
   return (
     <div className={styles.partyList}>
-      <h2 className={styles.listTitle}>{`${mode} List`}</h2>
+      <h2 className={styles.listTitle}>{`Current ${mode} Game`}</h2>
       <div className={styles.list}>
         <div className={styles.listHead}>
           <p className={styles.nameTitle}>Name</p>

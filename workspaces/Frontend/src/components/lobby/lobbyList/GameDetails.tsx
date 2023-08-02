@@ -37,8 +37,35 @@ export default function GameDetails({ scoreService, gameInfo }: Props) {
   }, []);
 
   function displayRound(round: Round, index: number) {
+    // Determine the className and border color based on the comparison with currentRound
+    let roundClassName = styles.round;
+    let borderColor = "";
+
+    if (score) {
+      if (index < gameInfo.actualRound) {
+        roundClassName = styles.roundFinished;
+        if (score.round[index].left > score.round[index].right)
+          borderColor = gameInfo.leftPlayer.avatar.borderColor;
+        else if (score.round[index].left < score.round[index].right)
+          borderColor = gameInfo.rightPlayer.avatar.borderColor;
+      } else if (index === gameInfo.actualRound) {
+        roundClassName = styles.currentRound;
+      } else if (index > gameInfo.actualRound) {
+        roundClassName = styles.roundRemaining;
+      }
+    }
+
+    // Define a style object to apply the border color
+    const roundStyle = {
+      borderColor: borderColor,
+    };
+
     return (
-      <div key={index} className={styles.displayRound}>
+      <div
+        key={index}
+        className={`${styles.displayRound} ${roundClassName}`}
+        style={roundStyle}
+      >
         <p className={styles.round}>{`R${index + 1}: `}</p>
         <p className={styles.score}>{`${round.left} / ${round.right}`}</p>
       </div>
