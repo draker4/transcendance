@@ -4,7 +4,7 @@ type	Channel = {
 	avatar: Avatar,
 	type: 'public' | 'protected' | 'private' | 'privateMsg',
 	joined: boolean;
-	lastMessage: {
+	lastMessage?: {
 		user: User;
 		content: string;
 		createdAt: Date;

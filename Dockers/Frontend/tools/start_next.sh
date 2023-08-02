@@ -23,5 +23,5 @@ echo "Starting dev frontend environment"
 yarn run start:dev:frontend
 
 #Start prod env
-#echo "Starting prod frontend environment"
-#yarn run start:prod:frontend
+# echo "Starting prod frontend environment"
+# yarn run start:prod:frontend

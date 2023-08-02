@@ -10,7 +10,7 @@
   "scripts": {
     "start:dev:backend": "yarn workspace @transcendence/backend start:dev",
     "start:dev:frontend": "yarn workspace @transcendence/frontend start:dev",
-    "start:prod:backend": "yarn workspace @transcendence/backend start:prod",
+    "start:prod:backend": "yarn workspace @transcendence/backend start",
     "start:prod:frontend": "yarn workspace @transcendence/frontend start:prod"
   }
 }
