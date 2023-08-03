@@ -1,4 +1,5 @@
 import disconnect from "@/lib/disconnect/disconnect";
+import { log } from "console";
 import { Socket, io } from "socket.io-client";
 
 export default class ChatService {
@@ -6,12 +7,14 @@ export default class ChatService {
 
 	public	socket: Socket | undefined = undefined;
 	public	token: string | undefined;
+	public	disconnectClient: boolean = false;
+	public	loading: boolean = false;
 
 	// Singleton
     constructor(token?: string) {
 		// console.log("constructor");
         if (ChatService.instance) {
-			console.log("instance returned");
+			// console.log("instance returned");
 			return ChatService.instance;
 		}
 		
@@ -22,16 +25,23 @@ export default class ChatService {
 		}
 		else {
 			// console.log("socket disconnected");
-			this.socket?.disconnect();
+			this.disconnect();
 		}
     }
 
 	// Create socket + listen errors & exceptions
 	public initializeSocket(token: string) {
 
-		// console.log("initialization with token = ", token);
-		if (this.socket)
-			this.disconnect();
+		console.log("initialization with token = ", token);
+
+		// const	lastSocket = this.socket;
+		// if (this.socket) {
+		// 	this.disconnect();
+		// }
+
+		while (this.loading) {}
+
+		this.loading = true;
 		
 		this.token = token;
 
@@ -46,9 +56,9 @@ export default class ChatService {
 			// console.log('WebSocket connected id=', this.socket?.id);
 		});
 		  
-		this.socket.on('disconnect', () => {
-			// console.log('WebSocket disconnected id=', this.socket?.id);
-			this.refreshSocket();
+		this.socket.on('disconnect', async () => {
+			console.log('WebSocket disconnected id=', this.socket?.id);
+			await this.refreshSocket();
 			// this.disconnect();
 		});
 	
@@ -68,12 +78,7 @@ export default class ChatService {
 			this.disconnect();
 		});
 
-		// this.socket.on('refresh', () => {
-		// 	console.log('refresh event for socket id=', this.socket?.id);
-		// 	this.refreshSocket("refresh");
-		// 	this.disconnect();
-		// });
-
+		this.loading = false;
 	}
 
 	// Disconnect socket + stop listen errors & exceptions
@@ -90,7 +95,8 @@ export default class ChatService {
 
 	private async refreshSocket() {
 		try {
-		//   console.log("trying to refresh token from ", text);
+		  console.log("trying to refresh token");
+
 		  const res = await fetch(
 			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
 			  method: "POST",
@@ -98,9 +104,9 @@ export default class ChatService {
 			}
 		  );
 	
-		  if (!res)
+		  if (!res.ok)
 			throw new Error("fetch failed");
-		  
+				  
 		  const data = await res.json()
 	
 		  const resApi = await fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
@@ -119,8 +125,8 @@ export default class ChatService {
 		  
 		  this.initializeSocket(data.access_token);
 		}
-		catch (error) {
-		  await disconnect();
+		catch (error: any) {
+		  	this.disconnectClient = true;
 		}
 	}
 }

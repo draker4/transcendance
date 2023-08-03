@@ -51,9 +51,6 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-        //     socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
-        // socket.join('channel:2'); // [!] ouh c'est moche
-
         this.connectedUsers.set(payload.sub, socket.id);
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
@@ -95,7 +92,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllChannels')
   async getAllChannels(@Request() req) {
-    throw new Error('test');
     return await this.chatService.getAllChannels(req.user.id);
   }
 
