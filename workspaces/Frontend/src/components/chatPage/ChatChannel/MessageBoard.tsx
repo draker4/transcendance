@@ -17,11 +17,8 @@ export default function MessageBoard({ messages }: Props) {
     GroupedMsgType[]
   >([]);
 
-  // [!] peu etre un peu lourd de join tous les messages à chaque new message ?
   useEffect(() => {
     joiningMessages();
-    // joiningMessages() won't change, no need to put in dependencies :
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   const isSameSender = (senderA: User, senderB: User) => {
@@ -70,9 +67,10 @@ export default function MessageBoard({ messages }: Props) {
 
   return (
     <div className={styles.msgBoard}>
-      {groupedMessages.map((group, index) => (
+      {messages.length > 0 && groupedMessages.map((group, index) => (
         <MessageItem key={index} groupedMessages={group} />
       ))}
+	  {messages.length === 0 && <p>P L A C E H O L D E R</p>}
     </div>
   );
 }
