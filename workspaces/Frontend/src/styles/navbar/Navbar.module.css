@@ -57,9 +57,12 @@
 .logInBtn {
   appearance: none;
   min-width: 80px;
+  max-width: 130px;
   min-height: 30px;
+  max-height: 50px;
   border-radius: 4px;
-  font-size: clamp(14px, 2vw, 30px);
+  font-size: clamp(14px, 2vw, 18px);
+  padding: 10px auto;
   font-weight: bold;
   color: var(--tertiary1);
   background-color: var(--primary1);
@@ -116,7 +119,6 @@
   }
 }
 @media screen and (min-width: 1500px) {
-
   .logInBtn {
     padding: 5px 30px;
   }

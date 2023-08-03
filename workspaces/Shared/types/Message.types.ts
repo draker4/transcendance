@@ -1,13 +1,13 @@
 import { ScoreInfo } from "./Score.types";
-import { Timer, PlayerDynamic, Ball } from "./Game.types";
-
+import { Timer, PlayerDynamic, Ball, Pause } from "./Game.types";
 
 export type StatusMessage = {
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
   result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
   playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
-  timer: Timer | null;
+  timer: Timer;
+  pause: Pause;
 };
 
 export type UpdateData = {

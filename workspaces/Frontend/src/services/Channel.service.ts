@@ -1,56 +1,19 @@
-// [!] voir si ce service est necessaire, pour le moment juste une fonction bebette
-
-import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import fetchData from "@/lib/fetch/fetchData";
 
 export default class Channel_Service {
-  private token: string;
+  private token?: string;
 
-  // default value, in case of using bottom func
-  constructor(token: string = "") {
-    this.token = token;
-  }
-
-  // Fonction generique pour toutes les requettes http
-  private async fetchData(
-    isServerSide: boolean,
-    url: string,
-    method: string,
-    body: any = null
-  ) {
-    const preUrl: string = isServerSide
-      ? `http://backend:4000/api/channel/`
-      : `http://${process.env.HOST_IP}:4000/api/channel/`;
-
-    if (isServerSide) {
-      const response = await fetch(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.token,
-        },
-        body: body,
-      });
-
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
-
-      return response;
-    } else {
-      const response = await fetchClientSide(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
-
-      return response;
-    }
+  constructor(token?: string) {
+    if (token) this.token = token;
   }
 
   public async getChannelAndUsers(id: number): Promise<ChannelUsersRelation> {
-    const response: Response = await this.fetchData(true, id.toString(), "GET");
+    const response: Response = await fetchData(
+      this.token,
+      "channel",
+      id.toString(),
+      "GET"
+    );
     const data: ChannelUsersRelation = await response.json();
 
     return data;
@@ -80,15 +43,24 @@ export default class Channel_Service {
         channelId: channelId,
         userId: userId,
         newRelation: {
-          ...(newRelation.isChanOp !== undefined && {isChanOp: newRelation.isChanOp}),
-          ...(newRelation.isBanned !== undefined && {isBanned: newRelation.isBanned}),
-          ...(newRelation.joined !== undefined && {joined: newRelation.joined}),
-          ...(newRelation.invited !== undefined && {invited: newRelation.invited}),
+          ...(newRelation.isChanOp !== undefined && {
+            isChanOp: newRelation.isChanOp,
+          }),
+          ...(newRelation.isBanned !== undefined && {
+            isBanned: newRelation.isBanned,
+          }),
+          ...(newRelation.joined !== undefined && {
+            joined: newRelation.joined,
+          }),
+          ...(newRelation.invited !== undefined && {
+            invited: newRelation.invited,
+          }),
         },
       });
 
-      const response: Response = await this.fetchData(
-        false,
+      const response: Response = await fetchData(
+        this.token,
+        "channel",
         "editRelation",
         "PUT",
         body

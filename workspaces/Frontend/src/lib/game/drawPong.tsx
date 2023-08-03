@@ -1,4 +1,3 @@
-import { turnDelayIsOver } from "@transcendence/shared/game/pongUtils";
 import {
   GameData,
   Player,
@@ -12,7 +11,6 @@ import {
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
   FONT_SCORE,
-  MENU_COLOR,
   GAME_WIDTH,
   GAME_HEIGHT,
   FONT_TIMER,

@@ -79,7 +79,7 @@ export class GameGateway implements OnModuleInit {
           );
           // Perform necessary clean-up operations
           try {
-            this.gameManager.disconnect(payload.sub, socket);
+            this.gameManager.disconnect(payload.sub, socket, false);
           } catch (error) {
             this.logger.error(
               `Error while disconnecting user: ${error.message}`,
@@ -102,7 +102,6 @@ export class GameGateway implements OnModuleInit {
     @Req() req,
     @MessageBody() gameId: string,
   ) {
-    console.log('join');
     return await this.gameManager.joinGame(gameId, req.user.id, socket);
   }
 
@@ -120,12 +119,11 @@ export class GameGateway implements OnModuleInit {
     @MessageBody() action: ActionDTO,
     @ConnectedSocket() socket: Socket,
   ): void {
-    console.log('action: ' + action);
     this.gameManager.playerAction(action, socket);
   }
 
   @SubscribeMessage('quit')
   quitGame(@ConnectedSocket() socket: Socket, @Req() req): void {
-    this.gameManager.disconnect(req.user.id, socket);
+    this.gameManager.disconnect(req.user.id, socket, true);
   }
 }

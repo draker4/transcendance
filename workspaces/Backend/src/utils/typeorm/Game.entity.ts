@@ -65,6 +65,9 @@ export class Game {
   push: boolean;
 
   @Column()
+  pause: boolean;
+
+  @Column()
   background: string;
 
   @Column()

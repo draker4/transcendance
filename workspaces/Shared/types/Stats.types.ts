@@ -11,6 +11,10 @@ export type Stats = {
   leagueBest3Lost: number;
   leagueBest5Won: number;
   leagueBest5Lost: number;
+  leagueRageQuitWin: number;
+  leagueRageQuitLost: number;
+  leagueDisconnectWin: number;
+  leagueDisconnectLost: number;
   leagueRoundWon: number;
   leagueRoundLost: number;
   leaguePointWon: number;
@@ -25,6 +29,10 @@ export type Stats = {
   partyBest5Lost: number;
   partyCustomWon: number;
   partyCustomLost: number;
+  partyRageQuitWin: number;
+  partyRageQuitLost: number;
+  partyDisconnectWin: number;
+  partyDisconnectLost: number;
   partyRoundWon: number;
   partyRoundLost: number;
   partyPointWon: number;
@@ -55,6 +63,10 @@ export type StatsImproved = {
   best5Lost: number;
   customWon: number;
   customLost: number;
+  rageQuitWin: number;
+  rageQuitLost: number;
+  disconnectWin: number;
+  disconnectLost: number;
   roundWon: number;
   roundLost: number;
   pointWon: number;

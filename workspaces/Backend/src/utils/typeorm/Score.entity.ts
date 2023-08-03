@@ -88,4 +88,7 @@ export class Score {
 
   @Column({ default: 0 })
   rightPlayerRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+
+  @Column({ default: 'None' })
+  rageQuit: 'Left' | 'Right' | '';
 }

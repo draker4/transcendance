@@ -91,7 +91,16 @@ export function initPong(initData: InitData): GameData {
     maxPoint: initData.maxPoint,
     maxRound: initData.maxRound,
     score: initData.score,
-    timer: null,
+    timer: {
+      end: 0,
+      reason: "Start",
+    },
+    pause: {
+      active: initData.pause,
+      left: 3,
+      right: 3,
+      status: "None",
+    },
     status: "Not Started",
     result: "Not Finished",
     sendStatus: false,

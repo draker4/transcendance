@@ -1,7 +1,7 @@
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
 import fetchData from "@/lib/fetch/fetchData";
 
-class ScoreService {
+export default class ScoreService {
   private token?: string;
 
   constructor(token?: string) {
@@ -20,5 +20,3 @@ class ScoreService {
     return data;
   }
 }
-
-export default ScoreService;

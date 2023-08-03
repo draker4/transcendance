@@ -28,10 +28,11 @@ export default function CreateParty({
   //Pong Settings
   const [name, setName] = useState<string>("");
   const [enterName, setEnterName] = useState<boolean>(false); //Si le nom est vide, on affiche un message d'erreur
-  const [push, setPush] = useState<boolean>(false);
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(9);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(1);
   const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
+  const [push, setPush] = useState<boolean>(false);
+  const [pause, setPause] = useState<boolean>(false);
   const [background, setBackground] = useState<string>("Classic");
   const [ball, setBall] = useState<string>("Classic");
   const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
@@ -60,6 +61,7 @@ export default function CreateParty({
       maxPoint: maxPoint,
       maxRound: maxRound,
       difficulty: difficulty,
+      pause: pause,
       push: push,
       background: confirmBackground(background),
       ball: confirmBall(ball),
@@ -84,10 +86,11 @@ export default function CreateParty({
 
   const resetCreate = () => {
     setName("");
-    setPush(false);
     setMaxPoint(9);
     setMaxRound(1);
     setHostSide("Left");
+    setPush(false);
+    setPause(false);
     setBackground("Classic");
     setBall("Classic");
     setType("Classic");
@@ -125,8 +128,6 @@ export default function CreateParty({
         <div className={styles.settings}>
           <label className={styles.section}>Define Party Settings</label>
           <DefineType
-            push={push}
-            setPush={setPush}
             maxPoint={maxPoint}
             setMaxPoint={setMaxPoint}
             maxRound={maxRound}
@@ -135,6 +136,10 @@ export default function CreateParty({
             setType={setType}
             hostSide={hostSide}
             setHostSide={setHostSide}
+            push={push}
+            setPush={setPush}
+            pause={pause}
+            setPause={setPause}
           />
         </div>
         <div className={styles.field}>

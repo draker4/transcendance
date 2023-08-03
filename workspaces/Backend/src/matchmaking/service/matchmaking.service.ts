@@ -190,6 +190,7 @@ export class MatchmakingService {
           maxRound: 1,
           difficulty: 2,
           push: false,
+          pause: false,
           background: 'classic',
           ball: 'classic',
         };

@@ -1,4 +1,4 @@
-import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import fetchData from "@/lib/fetch/fetchData";
 import { CryptoService } from "./Crypto.service";
 
 const Crypto = new CryptoService();
@@ -10,40 +10,6 @@ export default class Avatar_Service {
     if (token) this.token = token;
   }
 
-  // Fonction generique pour toutes les requettes http
-  // [!] toujours appeller dans un try catch !
-  private async fetchData(url: string, method: string, body: any = null) {
-    const preUrl = this.token
-      ? `http://backend:4000/api/avatar/`
-      : `http://${process.env.HOST_IP}:4000/api/avatar`;
-
-    if (this.token) {
-      const response = await fetch(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.token,
-        },
-        body: body,
-      });
-
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
-      return response;
-    } else {
-      const response = await fetchClientSide(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
-
-      return response;
-    }
-  }
-
   private makeUrl(id: number, isChannel: boolean): string {
     const boolAsString: string = isChannel ? "true" : "false";
     return id.toString() + "/" + boolAsString;
@@ -52,7 +18,9 @@ export default class Avatar_Service {
   /* ----------------------------- PUBLIC METHODS ---------------------------- */
 
   public async getAvatarbyUserId(id: number): Promise<Avatar> {
-    const response: Response = await this.fetchData(
+    const response: Response = await fetchData(
+      this.token,
+      "avatar",
       this.makeUrl(id, false),
       "GET"
     );
@@ -67,8 +35,10 @@ export default class Avatar_Service {
   }
 
   public async getChannelAvatarById(id: number): Promise<Avatar> {
-    const response: Response = await this.fetchData(
-      this.makeUrl(id, true),
+    const response: Response = await fetchData(
+      this.token,
+      "avatar",
+      this.makeUrl(id, false),
       "GET"
     );
     const avatar: Avatar = await response.json();
@@ -88,7 +58,7 @@ export default class Avatar_Service {
     isChannel: number
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-    const response = await this.fetchData("", "PUT", body);
+    const response = await fetchData(this.token, "avatar", "", "PUT", body);
     const data = await response.json();
   }
 }
