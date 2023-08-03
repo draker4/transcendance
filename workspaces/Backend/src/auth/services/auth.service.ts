@@ -36,7 +36,7 @@ export class AuthService {
         client_id: process.env.CLIENT_ID_42,
         client_secret: process.env.SECRET_42,
         code: code,
-        redirect_uri: `http://${process.env.HOST_IP}:4000/api/auth/42`,
+        redirect_uri: process.env.REDIRECT_42,
       }),
     });
 

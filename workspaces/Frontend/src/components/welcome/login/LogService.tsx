@@ -27,8 +27,9 @@ export default function LogInComponent({ setTextButton }: Props) {
           <Image
             alt="42 school logo"
             src="/images/auth/42_Logo.png"
-            width={30}
-            height={30}
+            width={25}
+            height={25}
+            layout="responsive"
             onClick={open42}
             className={styles.school}
           />
@@ -39,6 +40,7 @@ export default function LogInComponent({ setTextButton }: Props) {
             src="/images/auth/google.png"
             width={25}
             height={25}
+            layout="responsive"
             onClick={openGoogle}
             className={styles.google}
           />

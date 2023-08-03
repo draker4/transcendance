@@ -42,7 +42,7 @@
 .login {
   appearance: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: clamp(16px, 1vw, 30px);
   font-weight: bold;
   color: var(--secondary1);
   background-color: var(--primary2);
@@ -85,19 +85,14 @@
   appearance: none;
   padding: 6px 20px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: clamp(18px, 2vw, 30px);
   font-weight: bold;
-  transition: all 0.3s ease-in;
   margin-block: 20px;
   margin-inline: 10px;
-  color: var(--primary1);
-  background-color: var(--secondary1);
+  color: var(--tertiary1);
+  background-color: inherit;
   border: 3px solid var(--accent1);
   cursor: pointer;
-}
-
-.confirmBtn:checked {
-  transition: all 0.3s ease-out;
 }
 
 .confirmBtn:hover {
@@ -112,5 +107,17 @@
 
   .avatars {
     padding-bottom: clamp(0px, 3vh, 100px);
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .login {
+    max-width: 800px;
+  }
+}
+
+@media screen and (min-height: 1500px) {
+  .confirmBtn {
+    margin-top: 80px;
   }
 }

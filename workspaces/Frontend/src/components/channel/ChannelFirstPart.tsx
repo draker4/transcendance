@@ -16,7 +16,7 @@ export default function ChannelFirstPart({ channelAndUsersRelation, myRelation }
     <div className={`${styles.both} ${styles.first}`}>
       <ChannelAvatarCard
         channelAndUsersRelation={channelAndUsersRelation}
-		myRelation={myRelation}
+		    myRelation={myRelation}
         token={unwrappedToken}
       />
     </div>
