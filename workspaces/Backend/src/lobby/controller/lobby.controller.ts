@@ -13,7 +13,7 @@ import { LobbyService } from '../service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
-@Controller('lobby/')
+@Controller('lobby')
 export class LobbyController {
   constructor(private readonly lobbyService: LobbyService) {}
 

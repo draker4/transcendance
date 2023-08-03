@@ -23,7 +23,10 @@ export class LobbyService {
     public readonly matchmakingService: MatchmakingService,
     public readonly scoreService: ScoreService,
   ) {}
-  async CreateGame(userId: number, newGame: CreateGameDTO): Promise<any> {
+  async CreateGame(
+    userId: number,
+    newGame: CreateGameDTO,
+  ): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -55,7 +58,7 @@ export class LobbyService {
     }
   }
 
-  async JoinGame(userId: number, gameId: string): Promise<any> {
+  async JoinGame(userId: number, gameId: string): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -97,7 +100,7 @@ export class LobbyService {
     }
   }
 
-  async GetAll(mode?: 'League' | 'Party'): Promise<any> {
+  async GetAll(mode?: 'League' | 'Party'): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -144,7 +147,7 @@ export class LobbyService {
     }
   }
 
-  async Quit(userId: number): Promise<any> {
+  async Quit(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -165,7 +168,7 @@ export class LobbyService {
   }
 
   //Si le joueur est en game renvoie l'id, si le joueur en Matchmaking le retire de la liste
-  async IsInGame(userId: number): Promise<any> {
+  async IsInGame(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',

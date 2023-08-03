@@ -1,5 +1,8 @@
-import styles from "@/styles/lobby/HomeProfile.module.css";
-import AvatarUser from "../avatarUser/AvatarUser";
+"use client";
+
+import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
+import AvatarUser from "../../avatarUser/AvatarUser";
+import GameStats from "./GameStats";
 
 type Props = {
   profile: Profile;
@@ -21,6 +24,7 @@ export default function HomeProfile({ profile, avatar }: Props) {
         <p>{profile.login}</p>
         <p>{profile.story}</p>
       </div>
+      <GameStats profile={profile} />
     </div>
   );
 }

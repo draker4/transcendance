@@ -19,6 +19,7 @@ import { GameService } from '../service/game.service';
 import { ColoredLogger } from '../colored-logger';
 import { ScoreService } from '@/score/service/score.service';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Injectable()
 export class GameManager {
@@ -32,6 +33,7 @@ export class GameManager {
   constructor(
     private readonly gameService: GameService,
     private readonly scoreService: ScoreService,
+    private readonly statsService: StatsService,
     private readonly logger: ColoredLogger,
   ) {
     this.logger = new ColoredLogger(GameManager.name); // Set the module name for the logger
@@ -179,6 +181,8 @@ export class GameManager {
         gameId,
         game,
         this.gameService,
+        this.scoreService,
+        this.statsService,
         this.logger,
         score,
       );
