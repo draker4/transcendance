@@ -36,7 +36,7 @@ export class AuthService {
         client_id: process.env.CLIENT_ID_42,
         client_secret: process.env.SECRET_42,
         code: code,
-        redirect_uri: `http://${process.env.HOST_IP}:4000/api/auth/42`,
+        redirect_uri: process.env.REDIRECT_42,
       }),
     });
 
@@ -157,7 +157,8 @@ export class AuthService {
   }
 
   async loginWithGoogle(CreateUserDto: CreateUserDto) {
-      if (!CreateUserDto) throw new Error('Unauthenticated');
+      if (!CreateUserDto)
+        throw new Error('Unauthenticated');
 
       const encryptedValues = await Promise.all([
         this.cryptoService.encrypt(CreateUserDto.email),
@@ -176,8 +177,10 @@ export class AuthService {
         'google',
       );
 
-      if (!user) user = await this.usersService.addUser(CreateUserDto);
-      else await this.usersService.updateUser(user.id, CreateUserDto);
+      if (!user)
+        user = await this.usersService.addUser(CreateUserDto);
+      else
+        await this.usersService.updateUser(user.id, CreateUserDto);
 
       return user;
   }

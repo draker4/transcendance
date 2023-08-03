@@ -1,23 +1,24 @@
 .theme {
   display: flex;
-  width: clamp(40px, 3vh, 50px);
-  height: clamp(40px, 3vh, 50px);
+  width: clamp(40px, 3vh, 90px);
+  height: clamp(40px, 3vh, 90px);
 }
 
 .themeBtn {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: clamp(40px, 3vh, 50px);
-  height: clamp(40px, 3vh, 50px);
+  width: clamp(40px, 3vh, 70px);
+  height: clamp(40px, 3vh, 70px);
   border-radius: 100%;
   color: var(--secondary1);
   border: 3px solid var(--accent1);
   background-color: var(--primary1);
   font-size: 22px;
+  cursor: pointer;
 }
 
-.theme button:hover {
-  border: 3px solid var(--accent1);
-  cursor: pointer;
+.icon {
+  width: 70%;
+  height: 70%;
 }

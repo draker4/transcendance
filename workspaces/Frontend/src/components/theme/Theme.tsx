@@ -64,7 +64,7 @@ const Theme = () => {
         className={styles.themeBtn}
         onClick={handleMode}
       >
-        {theme === "light" ? <MdWbSunny /> : <MdNightsStay />}
+        {theme === "light" ? <MdWbSunny className={styles.icon} /> : <MdNightsStay className={styles.icon} />}
       </button>
       <ToastContainer
         autoClose={2000}

@@ -7,8 +7,8 @@
 .avatar {
   display: flex;
   border-radius: 100%;
-  width: clamp(40px, 3vh, 50px);
-  height: clamp(40px, 3vh, 50px);
+  width: clamp(40px, 3vh, 70px);
+  height: clamp(40px, 3vh, 70px);
   color: var(--primary1);
   margin: 0;
   padding: 0;
@@ -23,7 +23,7 @@
   position: absolute;
   top: clamp(50px, 3vh, 60px);
   right: 5%;
-  margin-top: 16px;
+  margin-top: clamp(10px, 2vh, 30px);
   z-index: 1;
 }
 
@@ -38,7 +38,7 @@
   font-family: var(--title-font);
   background-color: var(--primary1);
   font-weight: 500;
-  font-size: 16px;
+  font-size: clamp(16px, 2vh, 30px);
   border-radius: 5px;
 }
 
@@ -55,7 +55,7 @@
   color: var(--tertiary1);
   width: 100%;
   min-width: 100px;
-  height: 30px;
+  min-height: 30px;
   padding: 5px;
   background-color: var(--primary1);
   border-radius: 5px;
@@ -65,4 +65,10 @@
   color: var(--accent2);
   background-color: var(--primary2);
   cursor: pointer;
+}
+
+@media screen and (min-width: 2000px) {
+  .list {
+    padding: 10px 30px;
+  }
 }

@@ -96,10 +96,13 @@ write-env-ip:
 			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
 			mv $(ENV_FILE).tmp $(ENV_FILE); \
 		fi; \
-		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "HOST_IP=$(HOST_IP)" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		sed -i 's|^REDIRECT_42=.*$$|REDIRECT_42=http://$(HOST_IP):4000/api/auth/42|' $(ENV_FILE); \
 		echo "Updated IP address in $(ENV_FILE) file"; \
 	else \
 		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "REDIRECT_42=http://$(HOST_IP):4000/api/auth/42" >> $(ENV_FILE); \
 		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 
@@ -109,10 +112,13 @@ write-env-localhost:
 			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
 			mv $(ENV_FILE).tmp $(ENV_FILE); \
 		fi; \
-		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "HOST_IP=localhost" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		sed -i 's|^REDIRECT_42=.*$$|REDIRECT_42=http://localhost:4000/api/auth/42|' $(ENV_FILE); \
 		echo "Updated IP address to localhost in $(ENV_FILE) file"; \
 	else \
 		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "REDIRECT_42=http://localhost:4000/api/auth/42" >> $(ENV_FILE); \
 		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 
