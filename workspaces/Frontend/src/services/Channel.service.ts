@@ -1,5 +1,3 @@
-// [!] voir si ce service est necessaire, pour le moment juste une fonction bebette
-
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 
 export default class Channel_Service {
@@ -43,7 +41,7 @@ export default class Channel_Service {
         body: body,
       });
 
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
+      if (!response || !response.ok) throw new Error("fetched failed at " + preUrl + url);
 
       return response;
     }

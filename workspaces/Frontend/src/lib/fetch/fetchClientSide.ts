@@ -42,7 +42,8 @@ export default async function fetchClientSide(
         }
       );
 
-      if (!res.ok) throw new Error("disconnect");
+	  // [!][!][!] Use "disconnect" for build versions
+      if (!res.ok) throw new Error("FAKE_disconnect");
 
       const data = await res.json();
       const token = data.access_token;

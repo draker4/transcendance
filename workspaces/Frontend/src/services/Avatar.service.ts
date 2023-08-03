@@ -38,7 +38,7 @@ export default class Avatar_Service {
         body: body,
       });
 
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
+      if (!response || !response.ok) throw new Error("fetched failed at " + preUrl + url);
 
       return response;
     }
