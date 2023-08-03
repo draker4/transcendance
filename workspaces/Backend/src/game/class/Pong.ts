@@ -46,6 +46,7 @@ export class Pong {
   private lastFpsUpdate = 0;
   private currentFps = 0;
   private updateGameInterval: NodeJS.Timeout | null = null;
+  private disconnectLoopRunning: 'Left' | 'Right' | null = null;
 
   // Game data
   private playerLeft: UserInfo | null = null;
@@ -81,7 +82,7 @@ export class Pong {
     }
   }
 
-  // --------------------------------  PUBLIC METHODS  -------------------------------- //
+  // ---------------------------------  INIT METHODS  --------------------------------- //
 
   public async initPlayer(): Promise<void> {
     try {
@@ -110,6 +111,8 @@ export class Pong {
       throw new WsException('Error while initializing players');
     }
   }
+
+  // --------------------------------  JOIN METHODS  --------------------------------- //
 
   public async join(user: UserInfo): Promise<any> {
     const data: ReturnData = {
@@ -164,6 +167,8 @@ export class Pong {
     return data;
   }
 
+  // --------------------------------  ACTION METHODS  -------------------------------- //
+
   public async playerAction(action: ActionDTO): Promise<any> {
     if (
       this.playerLeft.id === action.userId ||
@@ -211,34 +216,6 @@ export class Pong {
     } else {
       throw new WsException('Action not performed by player');
     }
-  }
-
-  public async disconnect(user: UserInfo): Promise<any> {
-    const data: ReturnData = {
-      success: false,
-      message: '',
-    };
-    if (this.playerLeft && this.playerLeft === user) {
-      this.playerLeft = null;
-      this.disconnectPlayer('Left');
-      this.stopGameLoop();
-    } else if (this.playerRight && this.playerRight === user) {
-      this.playerRight = null;
-      this.disconnectPlayer('Right');
-      this.stopGameLoop();
-    } else {
-      if (this.spectators.length === 0) {
-        data.message = 'No spectators in the game';
-        return data;
-      }
-      this.spectators = this.spectators.filter(
-        (spectator) => spectator !== user,
-      );
-    }
-    user.socket.leave(this.gameId);
-    data.success = true;
-    data.message = 'User disconnected from game';
-    return data;
   }
 
   // ---------------------------------  EMITS METHODS  -------------------------------- //
@@ -393,7 +370,7 @@ export class Pong {
     }
   }
 
-  // ---------------------------------  OTHER METHODS  -------------------------------- //
+  // ---------------------------------  JOIN METHODS  --------------------------------- //
 
   private async joinAsPlayer(user: UserInfo) {
     if (user.id === this.gameDB.host) {
@@ -410,48 +387,7 @@ export class Pong {
         throw new WsException('Error while joining as opponent');
       }
     }
-    this.updateStatus();
-  }
-
-  private joinAsHost(user: UserInfo) {
-    user.isPlayer = true;
-    if (this.gameDB.hostSide === 'Left') {
-      this.playerLeft = user;
-      this.data.playerLeftStatus = 'Connected';
-    } else if (this.gameDB.hostSide === 'Right') {
-      this.playerRight = user;
-      this.data.playerRightStatus = 'Connected';
-    }
-  }
-
-  private async joinAsOpponent(user: UserInfo) {
-    user.isPlayer = true;
-    if (this.gameDB.hostSide === 'Left') {
-      this.playerRight = user;
-      if (this.data.playerRight.id === -1) {
-        this.data.playerRight = await this.gameService.definePlayer(
-          user.id,
-          'Right',
-          false,
-        );
-        this.sendPlayerData(this.data.playerRight);
-      }
-      this.data.playerRightStatus = 'Connected';
-    } else if (this.gameDB.hostSide === 'Right') {
-      this.playerLeft = user;
-      if (this.data.playerLeft.id === -1) {
-        this.data.playerLeft = await this.gameService.definePlayer(
-          user.id,
-          'Left',
-          false,
-        );
-        this.sendPlayerData(this.data.playerLeft);
-      }
-      this.data.playerLeftStatus = 'Connected';
-    }
-  }
-
-  private updateStatus() {
+    // Update status if ready to play
     if (
       this.playerLeft &&
       this.data.playerLeftStatus === 'Connected' &&
@@ -472,6 +408,115 @@ export class Pong {
     }
   }
 
+  private joinAsHost(user: UserInfo) {
+    user.isPlayer = true;
+    if (this.gameDB.hostSide === 'Left') {
+      this.playerLeft = user;
+      this.data.playerLeftStatus = 'Connected';
+      if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
+    } else if (this.gameDB.hostSide === 'Right') {
+      this.playerRight = user;
+      this.data.playerRightStatus = 'Connected';
+      if (this.disconnectLoopRunning === 'Right') this.stopDisconnectLoop();
+    }
+  }
+
+  private async joinAsOpponent(user: UserInfo) {
+    user.isPlayer = true;
+    if (this.gameDB.hostSide === 'Left') {
+      this.playerRight = user;
+      if (this.data.playerRight.id === -1) {
+        this.data.playerRight = await this.gameService.definePlayer(
+          user.id,
+          'Right',
+          false,
+        );
+        this.sendPlayerData(this.data.playerRight);
+      }
+      this.data.playerRightStatus = 'Connected';
+      if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
+    } else if (this.gameDB.hostSide === 'Right') {
+      this.playerLeft = user;
+      if (this.data.playerLeft.id === -1) {
+        this.data.playerLeft = await this.gameService.definePlayer(
+          user.id,
+          'Left',
+          false,
+        );
+        this.sendPlayerData(this.data.playerLeft);
+      }
+      this.data.playerLeftStatus = 'Connected';
+      if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
+    }
+  }
+
+  // --------------------------------  DISCONNECT METHODS  -------------------------------- //
+
+  public async disconnect(user: UserInfo): Promise<any> {
+    const data: ReturnData = {
+      success: false,
+      message: '',
+    };
+    if (this.playerLeft && this.playerLeft === user) {
+      console.log('Disconnect playerLeft');
+      this.playerLeft = null;
+      this.disconnectPlayer('Left');
+      // this.stopGameLoop();
+    } else if (this.playerRight && this.playerRight === user) {
+      console.log('Disconnect playerRight');
+      this.playerRight = null;
+      this.disconnectPlayer('Right');
+      // this.stopGameLoop();
+    } else {
+      console.log('Disconnect spectator');
+      if (this.spectators.length === 0) {
+        data.message = 'No spectators in the game';
+        return data;
+      }
+      this.spectators = this.spectators.filter(
+        (spectator) => spectator !== user,
+      );
+    }
+    user.socket.leave(this.gameId);
+    data.success = true;
+    data.message = 'User disconnected from game';
+    return data;
+  }
+
+  private disconnectLoop(side: 'Left' | 'Right') {
+    if (this.disconnectLoopRunning) {
+      const actualTime = new Date().getTime();
+      console.log('disconnect loop for ', side);
+      if (actualTime > this.data.timer.end) {
+        this.data.status = 'Finished';
+        if (side === 'Left') {
+          this.data.result =
+            this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+        } else if (side === 'Right') {
+          this.data.result =
+            this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+        }
+        this.data.sendStatus = true;
+      } else {
+        // continue checking every second
+        setTimeout(() => {
+          this.disconnectLoop(side);
+        }, 1000);
+      }
+    }
+  }
+
+  private startDisconnectLoop(side: 'Left' | 'Right') {
+    if (!this.disconnectLoopRunning) {
+      this.disconnectLoopRunning = side;
+      this.disconnectLoop(side);
+    }
+  }
+
+  private stopDisconnectLoop() {
+    this.disconnectLoopRunning = null;
+  }
+
   private disconnectPlayer(side: 'Left' | 'Right') {
     if (side === 'Left') {
       this.data.playerLeftStatus = 'Disconnected';
@@ -483,6 +528,9 @@ export class Pong {
           'Deconnection',
           this.data.playerLeft.name,
         );
+        if (this.data.playerRightStatus === 'Connected')
+          this.startDisconnectLoop('Left');
+        else this.stopDisconnectLoop();
       }
     } else if (side === 'Right') {
       this.data.playerRightStatus = 'Disconnected';
@@ -494,6 +542,9 @@ export class Pong {
           'Deconnection',
           this.data.playerRight.name,
         );
+        if (this.data.playerLeftStatus === 'Connected')
+          this.startDisconnectLoop('Right');
+        else this.stopDisconnectLoop();
       }
     }
   }

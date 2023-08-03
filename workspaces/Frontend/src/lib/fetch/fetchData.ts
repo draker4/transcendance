@@ -41,5 +41,8 @@ export default async function fetchData(
     console.log(
       `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
     );
+    throw new Error(
+      `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
+    );
   }
 }

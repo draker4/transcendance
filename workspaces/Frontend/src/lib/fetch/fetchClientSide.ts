@@ -77,6 +77,11 @@ export default async function fetchClientSide(
     }
     return response;
   } catch (error) {
-    console.log(`Error while fetching api: ${url}. Error log: ${error}`);
+    console.log(
+      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
+    );
+    throw new Error(
+      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
+    );
   }
 }

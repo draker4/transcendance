@@ -131,14 +131,12 @@ export class GameManager {
         (user) => user.id === userId && user.socket.id === socket.id,
       );
       if (!user) {
-        // throw new WsException('User already disconnected');
         return;
       }
 
       //Find the game linked to the user
       const pong = this.pongOnGoing.get(user.gameId);
       if (!pong) {
-        // throw new WsException('The game does not exist');
         return;
       }
 
