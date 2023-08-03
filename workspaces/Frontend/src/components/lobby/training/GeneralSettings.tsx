@@ -5,15 +5,15 @@ import SideSelector from "@/components/lobby/selector/SideSelector";
 import Slider from "@/components/lobby/selector/Slider";
 
 type Props = {
-  hostSide: "Left" | "Right";
-  setHostSide: Function;
+  side: "Left" | "Right";
+  setSide: Function;
   difficulty: 1 | 2 | 3 | 4 | 5;
   setDifficulty: Function;
 };
 
 export default function GeneralSettings({
-  hostSide,
-  setHostSide,
+  side,
+  setSide,
   difficulty,
   setDifficulty,
 }: Props) {
@@ -24,7 +24,7 @@ export default function GeneralSettings({
       {/* Side */}
       <div className={styles.set}>
         <label className={styles.section}>Side</label>
-        <SideSelector id="hostSide" value={hostSide} setValue={setHostSide} />
+        <SideSelector id="side" value={side} setValue={setSide} />
       </div>
       {/* Difficulty */}
       <div className={styles.set}>

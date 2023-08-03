@@ -41,7 +41,7 @@ export class Training {
   status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted';
 
   @Column({ default: 'Not Finished' })
-  result: 'Not Finished' | 'Draw' | 'Win' | 'Lose' | 'Deleted';
+  result: 'Not Finished' | 'Win' | 'Lose' | 'Deleted';
 
   @Column({ default: 0 })
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -57,6 +57,9 @@ export class Training {
 
   @Column()
   push: boolean;
+
+  @Column()
+  pause: boolean;
 
   @Column()
   background: string;

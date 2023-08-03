@@ -72,6 +72,7 @@ export class Pong {
         type: this.gameDB.type,
         mode: this.gameDB.mode,
         hostSide: this.gameDB.hostSide,
+        actualRound: this.gameDB.actualRound,
         maxPoint: this.gameDB.maxPoint,
         maxRound: this.gameDB.maxRound,
         difficulty: this.gameDB.difficulty,

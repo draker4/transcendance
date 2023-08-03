@@ -29,20 +29,20 @@ export class TrainingController {
   // 01 - api/training/create
   @Post('create')
   @UsePipes(new ValidationPipe({ transform: true }))
-  CreateGame(@Req() req, @Body() training: CreateTrainingDTO) {
-    //return this.trainingService.createTraining(req.user.id, training);
+  CreateTraining(@Body() training: CreateTrainingDTO) {
+    return this.trainingService.createTraining(training);
   }
 
   // 02 - api/training/get/:id
   @Get('get/:id')
-  GetTraining(@Param('id') id: string, @Req() req) {
-    //return this.trainingService.getTraining(id, req.user.id);
+  GetTrainingData(@Param('id') id: string, @Req() req) {
+    return this.trainingService.getTrainingById(id, req.user.id);
   }
 
   // 03 - api/training/isInTraining
   @Get('isInTraining')
-  IsInGame(@Req() req) {
-    //return this.trainingService.isInTraining(req.user.id);
+  IsInTraining(@Req() req) {
+    return this.trainingService.isInTraining(req.user.id);
   }
 
   // 04 - api/training/update/:id
@@ -53,12 +53,12 @@ export class TrainingController {
     @Req() req,
     @Body() training: UpdateTrainingDTO,
   ) {
-    //return this.trainingService.updateTraining(id, req.user.id, training);
+    return this.trainingService.updateTraining(id, req.user.id, training);
   }
 
   // 05 - api/training/quit/:id
   @Post('quit/:id')
-  Quit(@Param('id') id: string, @Req() req) {
-    //return this.trainingService.quitTraining(id, req.user.id);
+  QuitTraining(@Param('id') id: string, @Req() req) {
+    return this.trainingService.quitTraining(id, req.user.id);
   }
 }

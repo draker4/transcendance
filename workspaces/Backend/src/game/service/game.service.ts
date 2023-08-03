@@ -145,9 +145,7 @@ export class GameService {
 
   public async createGame(game: CreateGameDTO): Promise<any> {
     try {
-      const newGame: Game = this.gameRepository.create(game);
-      newGame.createdAt = new Date();
-      await this.gameRepository.save(newGame);
+      const newGame = await this.gameRepository.save(game);
       const newScore: CreateScoreDTO = {
         gameId: newGame.id,
         mode: newGame.mode,
@@ -183,7 +181,7 @@ export class GameService {
   public async updateStatus(
     gameId: string,
     status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted',
-    result: 'Not Finished' | 'Draw' | 'Draw' | 'Host' | 'Opponent' | 'Deleted',
+    result: 'Not Finished' | 'Host' | 'Opponent' | 'Deleted',
     actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
   ): Promise<any> {
     try {

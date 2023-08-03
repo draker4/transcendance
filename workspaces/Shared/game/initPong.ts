@@ -86,8 +86,8 @@ export function initPong(initData: InitData): GameData {
     difficulty: initData.difficulty,
     push: initData.push,
     color: initColor(initData.background),
-    playerServe: "Left", // revoir pour faire un random
-    actualRound: 0,
+    playerServe: Math.random() < 0.5 ? "Left" : "Right",
+    actualRound: initData.actualRound,
     maxPoint: initData.maxPoint,
     maxRound: initData.maxRound,
     score: initData.score,

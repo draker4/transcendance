@@ -134,7 +134,7 @@ export type GameData = {
   timer: Timer;
   pause: Pause;
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
-  result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
+  result: "Not Finished" | "Host" | "Opponent" | "Deleted";
   sendStatus: boolean;
   updateScore: boolean;
 };
@@ -145,6 +145,7 @@ export type InitData = {
   type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
   hostSide: "Left" | "Right";
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
   difficulty: 1 | 2 | 3 | 4 | 5;
