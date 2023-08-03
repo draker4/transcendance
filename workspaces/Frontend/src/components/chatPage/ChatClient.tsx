@@ -7,6 +7,8 @@ import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
 import LoadingSuspense from "../loading/LoadingSuspense";
 import { Socket } from "socket.io-client";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 export default function ChatClient({
   token,
@@ -19,6 +21,7 @@ export default function ChatClient({
   const [open, setOpen] = useState<boolean>(false);
   const [display, setDisplay] = useState<Display>();
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const  router = useRouter();
 
   const openDisplay = (display: Display) => {
     setOpen(true);
@@ -50,11 +53,22 @@ export default function ChatClient({
     const handleError = () => {
       setSocket(undefined);
     }
+    
+		const	disconnectClient = async () => {
+			await disconnect();
+			router.refresh();
+		}
 
     if (!socket) {
 
       const intervalId = setInterval(() => {
         const chatService = new ChatService(token);
+        
+				if (chatService.disconnectClient) {
+					clearInterval(intervalId);
+					disconnectClient();
+				}
+
         if (chatService.socket) {
           setSocket(chatService.socket);
           clearInterval(intervalId);

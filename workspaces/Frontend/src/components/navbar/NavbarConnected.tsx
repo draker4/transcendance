@@ -8,6 +8,8 @@ import ChatService from "@/services/Chat.service";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 export default function NavbarConnected({
 	avatar,
@@ -18,20 +20,29 @@ export default function NavbarConnected({
 	token: string,
 	profile: Profile,
 }) {
-	const [socket, setSocket] = useState<Socket | undefined>(undefined);
+	const	[socket, setSocket] = useState<Socket | undefined>(undefined);
+	const	router = useRouter();
 
 	useEffect(() => {
-		console.log("useeffect navbarconnected id=", socket?.id);
 
 		const handleError = () => {
 			toast.info("Connection closed! Reconnecting...");
 			setSocket(undefined);
 		}
 
+		const	disconnectClient = async () => {
+			await disconnect();
+			router.refresh();
+		}
+
 		if (!socket) {
-			const intervalId = setInterval(() => {
+			const	intervalId = setInterval(() => {
 				const chatService = new ChatService(token);
-				if (chatService.socket) {
+				if (chatService.disconnectClient) {
+					clearInterval(intervalId);
+					disconnectClient();
+				}
+				else if (chatService.socket) {
 					setSocket(chatService.socket);
 					clearInterval(intervalId);
 				}
