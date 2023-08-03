@@ -2,6 +2,9 @@ type	Pongie = {
 	id: number,
 	login: string,
 	avatar: Avatar,
-	updatedAt: Date,
-	isfriend: boolean,
+	isFriend: boolean;
+	isInvited: boolean;
+	hasInvited: boolean;
+	isBlacklisted: boolean;
+	hasBlacklisted: boolean;
 };

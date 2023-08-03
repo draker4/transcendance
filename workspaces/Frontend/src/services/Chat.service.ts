@@ -58,7 +58,8 @@ export default class ChatService {
 		  
 		this.socket.on('disconnect', async () => {
 			console.log('WebSocket disconnected id=', this.socket?.id);
-			await this.refreshSocket();
+			if (process.env.DISCONNECT)
+		  		await this.refreshSocket();
 			// this.disconnect();
 		});
 	
@@ -126,7 +127,7 @@ export default class ChatService {
 		  this.initializeSocket(data.access_token);
 		}
 		catch (error: any) {
-		  	this.disconnectClient = true;
+			this.disconnectClient = true;
 		}
 	}
 }

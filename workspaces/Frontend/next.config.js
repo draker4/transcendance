@@ -30,6 +30,7 @@ const nextConfig = {
     WEBSITE_KEY: process.env.WEBSITE_KEY,
     SECRET_KEY: process.env.SECRET_KEY,
     HOST_IP: process.env.HOST_IP,
+    DISCONNECT: process.env.HOST_IP,
   },
 
   // Image domains to allow image optimization and usage

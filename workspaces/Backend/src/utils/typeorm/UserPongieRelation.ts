@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User.entity";
-import { Channel } from "diagnostics_channel";
 
 @Entity("user_pongie_relation")
 export class UserPongieRelation {
@@ -31,8 +30,14 @@ export class UserPongieRelation {
 	isFriend: boolean;
 
 	@Column({ default: false})
-	invited: boolean;
+	isInvited: boolean;
 
 	@Column({ default: false})
-	deleted: boolean;
+	hasInvited: boolean;
+
+	@Column({ default: false})
+	isBlacklisted: boolean;
+
+	@Column({ default: false})
+	hasBlacklisted: boolean;
 }

@@ -30,7 +30,7 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 0:
             return <SectionPongStats profile={profile} />;
           case 1:
-            return <SectionPongies />
+            return <SectionPongies socket={socket} />
           case 2:
             return (
               <div className={styles.sections}>contenu section3 : Channels</div>

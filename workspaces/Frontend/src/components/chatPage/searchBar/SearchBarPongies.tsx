@@ -38,6 +38,7 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
 		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
+			console.log(pongies);
 			setPongies(pongies);
 		});
 
@@ -46,7 +47,6 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 
 	useEffect(() => {
 		const	createList = (text: string) => {
-			let	hasPongie: boolean = false;
 			setError(null);
 			
 			if (!text) {
@@ -60,9 +60,6 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 			list = list.concat(
 				pongies.filter(pongie => pongie?.login.toLowerCase().includes(textlowerCase))
 			);
-	
-			if (pongies.find(pongie => pongie?.login === text))
-				hasPongie = true;
 	
 			if (list.length === 0) {
 				const	err: ListError = verifyLogin(text);

@@ -23,4 +23,5 @@ export const ValidationSchema = Joi.object({
   GOOGLE_CALLBACK: Joi.string().required(),
   HOST_IP: Joi.string().required(),
   TWO_FACTOR_AUTHENTICATION_APP_NAME: Joi.string().required(),
+  DISCONNECT: Joi.boolean().required(),
 });

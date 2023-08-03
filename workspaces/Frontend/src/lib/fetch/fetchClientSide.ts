@@ -43,7 +43,11 @@ export default async function fetchClientSide(
       );
 
 	  // [!][!][!] Use "disconnect" for build versions
-      if (!res.ok) throw new Error("disconnect");
+      if (!res.ok) {
+        if (process.env.DISCONNECT)
+		  		throw new Error("disconnect");
+        throw new Error("should disconnect here, change .env file");
+      }
 
       const data = await res.json();
       const token = data.access_token;
