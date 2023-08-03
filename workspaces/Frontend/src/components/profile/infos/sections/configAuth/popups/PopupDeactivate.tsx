@@ -1,3 +1,4 @@
+import disconnect from "@/lib/disconnect/disconnect";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import styles from "@/styles/profile/TfaComponent.module.css";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
@@ -60,9 +61,7 @@ export default function PopupCodeEmail({
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotifPopup('Something went wrong, please try again!');

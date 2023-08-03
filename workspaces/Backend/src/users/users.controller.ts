@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
   BadGatewayException,
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -142,6 +141,19 @@ export class UsersController {
   async deleteTokens(@Param('id', ParseIntPipe) id: number) {
     try {
       const user = await this.usersService.getUserTokens(id);
+
+      if (user)
+        return await this.usersService.deleteAllUserTokens(user);
+    }
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+
+  @Delete('disconnectByToken')
+  async deleteTokensByAccessToken(@Req() req) {
+    try {
+      const user = await this.usersService.getUserTokens(req.user.id);
 
       if (user)
         return await this.usersService.deleteAllUserTokens(user);

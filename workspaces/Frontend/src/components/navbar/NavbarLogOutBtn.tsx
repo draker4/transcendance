@@ -1,3 +1,4 @@
+import disconnect from "@/lib/disconnect/disconnect";
 import styles from "@/styles/navbar/Navbar.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -6,14 +7,8 @@ export default function NavbarLogOutBtn({ profile }: { profile: Profile }) {
   const router = useRouter();
 
   const signoff = async () => {
-    try {
-      await fetch(
-        `http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`
-      );
+      await disconnect(profile.id.toString());
       router.refresh();
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   return (

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { Socket } from "socket.io-client";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   avatar: Avatar;
@@ -20,9 +21,7 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
 
   const signoff = async () => {
     try {
-      await fetch(
-        `http://${process.env.HOST_IP}:3000/api/signoff?id=${profile.id}`
-      );
+      await disconnect(profile.id.toString());
       router.refresh();
     } catch (error) {
       console.log(error);
