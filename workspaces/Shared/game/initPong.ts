@@ -82,6 +82,7 @@ export function initPong(initData: InitData): GameData {
     ballImg: initData.ball,
     type: initData.type,
     mode: initData.mode,
+    hostSide: initData.hostSide,
     difficulty: initData.difficulty,
     push: initData.push,
     color: initColor(initData.background),
