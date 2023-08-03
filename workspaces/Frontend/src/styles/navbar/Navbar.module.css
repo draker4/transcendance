@@ -1,6 +1,6 @@
 .nav {
   width: 90%;
-  min-height: clamp(60px, 5vh, 80px);
+  min-height: clamp(60px, 5vh, 100px);
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -27,11 +27,12 @@
 }
 
 .right {
+  /* border: 1px solid red; */
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-evenly;
-  width: 160px;
+  width: clamp(160px, 25vw, 300px);
 }
 
 .logo {
@@ -55,10 +56,10 @@
 
 .logInBtn {
   appearance: none;
-  width: 80px;
-  height: 30px;
+  min-width: 80px;
+  min-height: 30px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: clamp(14px, 2vw, 30px);
   font-weight: bold;
   color: var(--tertiary1);
   background-color: var(--primary1);
@@ -84,8 +85,8 @@
   flex-shrink: 0;
   margin-left: 20px;
   border-radius: 100%;
-  width: clamp(40px, 3vh, 50px);
-  height: clamp(40px, 3vh, 50px);
+  width: clamp(40px, 3vh, 70px);
+  height: clamp(40px, 3vh, 70px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -107,4 +108,16 @@
 .chatBtn:hover {
   border: 3px solid var(--accent1);
   cursor: pointer;
+}
+
+@media screen and (min-width: 2000px) {
+  .title {
+    font-size: 2rem;
+  }
+}
+@media screen and (min-width: 1500px) {
+
+  .logInBtn {
+    padding: 5px 30px;
+  }
 }

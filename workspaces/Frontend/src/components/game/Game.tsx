@@ -50,9 +50,9 @@ export default function Game({ profile, token, gameId }: Props) {
           setGameData(gameData.data);
           setIsLoading(false);
           setIsPlayer(
-            gameData.playerLeft?.id === profile.id
+            gameData.data.playerLeft.id === profile.id
               ? "Left"
-              : gameData.playerRight?.id === profile.id
+              : gameData.data.playerRight.id === profile.id
               ? "Right"
               : "Spectator"
           );
@@ -72,6 +72,7 @@ export default function Game({ profile, token, gameId }: Props) {
     if (quitStatus) return;
     setQuitStatus(true);
     if (isPlayer === "Spectator") {
+      console.log("Quit Spectator");
       router.push("/home");
       return;
     }

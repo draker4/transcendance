@@ -8,14 +8,14 @@
 
 .description {
   text-align: center;
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: clamp(16px, 1vw, 30px);
+  margin-bottom: clamp(20px, 5vh, 80px);
 }
 
 .input {
   appearance: none;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: clamp(16px, 1vw, 30px);
   font-weight: bold;
   color: var(--secondary1);
   background-color: inherit;
@@ -42,8 +42,8 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  padding-bottom: 10px;
-  font-size: 18px;
+  padding-bottom: clamp(10px, 3vh, 50px);
+  font-size: clamp(18px, 2vw, 30px);
   font-weight: bold;
   color: var(--tertiary1);
   word-break: break-all;
@@ -64,10 +64,10 @@
   appearance: none;
   padding: 5px 20px;
   border-radius: 4px;
-  font-size: 18px;
+  font-size: clamp(18px, 2vw, 40px);
   font-weight: bold;
   /* transition: all 0.3s ease-in; */
-  margin-top: 20px;
+  margin-top: clamp(20px, 3vh, 80px);
   margin-inline: 10px;
   color: var(--tertiary1);
   background-color: inherit;
@@ -98,9 +98,9 @@
 }
 
 .openPassword p {
-  padding-top: 10px;
+  padding-top: clamp(10px, 1vh, 30px);
   color: var(--accent1);
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1vw, 1.5rem);
   font-family: var(--text-font);
   max-width: 70%;
   margin: 0 auto;
@@ -108,4 +108,21 @@
 
 .openPassword p span {
   cursor: pointer;
+}
+
+@media screen and (min-width: 1500px) {
+  .input {
+    max-width: 900px;
+  }
+
+  .continueBtn {
+    min-width: 400px;
+  }
+}
+
+@media screen and (min-height: 2000px) {
+
+  .continueBtn {
+    margin-bottom: 50px;
+  }
 }

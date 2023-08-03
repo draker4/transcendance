@@ -13,6 +13,8 @@ import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import * as bcrypt from 'bcrypt';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { StatsService } from '@/stats/service/stats.service';
+import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
 
 @Injectable()
 export class UsersService {
@@ -27,11 +29,23 @@ export class UsersService {
     private readonly backupCodeRepository: Repository<BackupCode>,
     @InjectRepository(SocketToken)
     private readonly socketTokenRepository: Repository<SocketToken>,
+
     private cryptoService: CryptoService,
+    private readonly statsService: StatsService,
   ) {}
 
   async addUser(CreateUserDto: CreateUserDto): Promise<User> {
-    return await this.userRepository.save(CreateUserDto);
+    const user = await this.userRepository.save(CreateUserDto);
+    const newStats: CreateStatsDTO = {
+      userId: user.id,
+    };
+    const stats = await this.statsService.createStats(newStats);
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'stats')
+      .of(user.id)
+      .set(stats);
+    return user;
   }
 
   async saveUserEntity(user: User): Promise<User> {
@@ -123,7 +137,7 @@ export class UsersService {
   async deleteAllUserTokens(user: User) {
     await this.tokenRepository.remove(user.tokens);
     const socketTokens: SocketToken[] = await this.socketTokenRepository.find({
-      where: { userId: user.id }
+      where: { userId: user.id },
     });
     await this.socketTokenRepository.remove(socketTokens);
   }
@@ -232,29 +246,26 @@ export class UsersService {
 
   async checkPassword(userId: number, passwordCrypted: string) {
     try {
-      if (!passwordCrypted)
-        throw new Error('no password');
+      if (!passwordCrypted) throw new Error('no password');
 
       const user = await this.getUserById(userId);
 
-      if (!user)
-        throw new Error('no user');
-      
+      if (!user) throw new Error('no user');
+
       const password = await this.cryptoService.decrypt(passwordCrypted);
 
       const isMatch = await bcrypt.compare(password, user.passwordHashed);
-  
+
       if (!isMatch)
         return {
           success: false,
           error: 'wrong',
         };
-      
+
       return {
         success: true,
-      }
-    }
-    catch (error) {
+      };
+    } catch (error) {
       console.log(error);
       throw new BadRequestException();
     }
@@ -262,23 +273,20 @@ export class UsersService {
 
   async updatePassword(userId: number, password: string) {
     try {
-      if (!password)
-        throw new Error('no password');
-      
+      if (!password) throw new Error('no password');
+
       const user = await this.getUserById(userId);
 
-      if (!user)
-        throw new Error('no user');
-      
+      if (!user) throw new Error('no user');
+
       await this.updateUser(user.id, {
         passwordHashed: password,
-      })
-      
+      });
+
       return {
         success: true,
-      }
-    }
-    catch (error) {
+      };
+    } catch (error) {
       console.log(error);
       throw new BadRequestException();
     }

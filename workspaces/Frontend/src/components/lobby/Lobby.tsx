@@ -1,7 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";

@@ -29,9 +29,34 @@ down :
 
 rmvolume :
 	@echo "----Deleting all Volumes----"
-	docker volume rm $$(docker volume ls -q)
+	@volumes=$$(docker volume ls -q); \
+	if [ -n "$$volumes" ]; then \
+		docker volume rm $$volumes; \
+	else \
+		echo "No volumes to remove."; \
+	fi
 	@echo "----All Volumes deleted-----"
 
+rmNodeModules :
+	@echo "----Deleting all node_modules----"
+	rm -rf node_modules
+	rm -rf yarn.lock
+	rm -rf workspaces/Backend/dist
+	rm -rf workspaces/Backend/logs
+	rm -rf workspaces/Backend/node_modules
+	rm -rf workspaces/Frontend/node_modules
+	rm -rf workspaces/Frontend/.next
+	@echo "----All node_modules deleted-----"
+
+rmNetwork :
+	@echo "----Deleting all Networks----"
+	@networks=$$(docker network ls --format "{{.Name}}" | grep -Ev "^bridge$$|^host$$|^none$$"); \
+	if [ -n "$$networks" ]; then \
+		docker network rm $$networks; \
+	else \
+		echo "No networks to remove."; \
+	fi
+	@echo "----All Networks deleted-----"
 
 clean : down write-env-localhost
 	@echo "----Cleaning all Docker----"
@@ -49,27 +74,12 @@ clean : down write-env-localhost
 	fi
 	@echo "----All Docker cleaned-----"
 
-fclean : clean
+fclean :
 	@echo "----Full Cleaning all Docker----"
-	rm -rf node_modules
-	rm -rf yarn.lock
-	rm -rf workspaces/Backend/dist
-	rm -rf workspaces/Backend/logs
-	rm -rf workspaces/Backend/node_modules
-	rm -rf workspaces/Frontend/node_modules
-	rm -rf workspaces/Frontend/.next
-	@volumes=$$(docker volume ls -q); \
-	if [ -n "$$volumes" ]; then \
-		docker volume rm $$volumes; \
-	else \
-		echo "No volumes to remove."; \
-	fi
-	@networks=$$(docker network ls --format "{{.Name}}" | grep -Ev "^bridge$$|^host$$|^none$$"); \
-	if [ -n "$$networks" ]; then \
-		docker network rm $$networks; \
-	else \
-		echo "No networks to remove."; \
-	fi
+	make clean
+	make rmNodeModules
+	make rmvolume
+	make rmNetwork
 	docker system prune -a
 	@echo "----All Docker fully cleaned-----"
 
@@ -96,10 +106,13 @@ write-env-ip:
 			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
 			mv $(ENV_FILE).tmp $(ENV_FILE); \
 		fi; \
-		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "HOST_IP=$(HOST_IP)" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		sed -i 's|^REDIRECT_42=.*$$|REDIRECT_42=http://$(HOST_IP):4000/api/auth/42|' $(ENV_FILE); \
 		echo "Updated IP address in $(ENV_FILE) file"; \
 	else \
 		echo "HOST_IP=$(HOST_IP)" >> $(ENV_FILE); \
+		echo "REDIRECT_42=http://$(HOST_IP):4000/api/auth/42" >> $(ENV_FILE); \
 		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 
@@ -109,10 +122,13 @@ write-env-localhost:
 			grep -v "HOST_IP=" $(ENV_FILE) > $(ENV_FILE).tmp; \
 			mv $(ENV_FILE).tmp $(ENV_FILE); \
 		fi; \
-		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "HOST_IP=localhost" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		sed -i 's|^REDIRECT_42=.*$$|REDIRECT_42=http://localhost:4000/api/auth/42|' $(ENV_FILE); \
 		echo "Updated IP address to localhost in $(ENV_FILE) file"; \
 	else \
 		echo "HOST_IP=localhost" >> $(ENV_FILE); \
+		echo "REDIRECT_42=http://localhost:4000/api/auth/42" >> $(ENV_FILE); \
 		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 

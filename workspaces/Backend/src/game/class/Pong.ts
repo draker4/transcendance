@@ -22,6 +22,7 @@ import { Game } from '@/utils/typeorm/Game.entity';
 
 // import services
 import { GameService } from '../service/game.service';
+import { ScoreService } from '@/score/service/score.service';
 import { ColoredLogger } from '../colored-logger';
 
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
@@ -35,6 +36,7 @@ import {
   TIMER_RESTART,
   TIMER_START,
 } from '@transcendence/shared/constants/Game.constants';
+import { StatsService } from '@/stats/service/stats.service';
 
 export class Pong {
   // Game Loop variables
@@ -56,6 +58,8 @@ export class Pong {
     public readonly gameId: string,
     private readonly gameDB: Game,
     private readonly gameService: GameService,
+    private readonly scoreService: ScoreService,
+    private readonly statsService: StatsService,
     private readonly logger: ColoredLogger,
     score: ScoreInfo,
   ) {
@@ -161,10 +165,6 @@ export class Pong {
   }
 
   public async playerAction(action: ActionDTO): Promise<any> {
-    this.logger.log(
-      `User ${action.userId} performed action ${action.move}`,
-      'Pong - playerAction',
-    );
     if (
       this.playerLeft.id === action.userId ||
       this.playerRight.id === action.userId
@@ -172,6 +172,7 @@ export class Pong {
       if (action.move === 'Stop') {
         if (this.data.status === 'Playing') {
           this.data.status = 'Stopped';
+          this.data.sendStatus = true;
           this.data.timer = defineTimer(
             TIMER_PAUSE,
             'Pause',
@@ -181,6 +182,7 @@ export class Pong {
           );
         } else if (this.data.status === 'Stopped') {
           this.data.status = 'Playing';
+          this.data.sendStatus = true;
           this.data.timer = defineTimer(
             TIMER_RESTART,
             'ReStart',
@@ -189,7 +191,6 @@ export class Pong {
               : this.data.playerRight.name,
           );
         }
-        this.sendStatus();
       } else if (action.move === 'Push') {
         if (
           this.playerLeft.id === action.userId &&
@@ -286,13 +287,18 @@ export class Pong {
     if (this.data.status === 'Playing') {
       updatePong(this.data);
       this.sendUpdate();
-      if (this.data.sendStatus) {
-        this.sendStatus();
-        this.data.sendStatus = false;
-      }
       if (this.data.updateScore) {
-        //this.updateScore();
+        this.updateDBScore();
         this.data.updateScore = false;
+      }
+    }
+    if (this.data.sendStatus) {
+      this.updateDBStatus();
+      this.sendStatus();
+      this.data.sendStatus = false;
+      if (this.data.status === 'Finished') {
+        this.stopGameLoop();
+        this.updateDBStats();
       }
     }
 
@@ -310,6 +316,80 @@ export class Pong {
     if (this.updateGameInterval) {
       clearTimeout(this.updateGameInterval);
       this.updateGameInterval = null;
+    }
+  }
+
+  // -------------------------------  UPDATE DB METHODS  ------------------------------ //
+
+  private async updateDBScore() {
+    try {
+      if (
+        this.data.actualRound > 0 &&
+        this.data.score.round[this.data.actualRound].left === 0 &&
+        this.data.score.round[this.data.actualRound].right === 0
+      ) {
+        await this.scoreService.updateScore(
+          this.gameId,
+          this.data.score,
+          this.data.actualRound,
+          true,
+        );
+      } else {
+        await this.scoreService.updateScore(
+          this.gameId,
+          this.data.score,
+          this.data.actualRound,
+          false,
+        );
+      }
+    } catch (error) {
+      this.logger.error(
+        `Error Updating Score: ${error.message}`,
+        'Pong - updateDBScore',
+        error,
+      );
+    }
+  }
+
+  private async updateDBStatus() {
+    try {
+      await this.gameService.updateStatus(
+        this.gameId,
+        this.data.status,
+        this.data.result,
+        this.data.actualRound,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error Updating Status: ${error.message}`,
+        'Pong - updateDBStatus',
+        error,
+      );
+    }
+  }
+
+  private async updateDBStats() {
+    try {
+      await this.statsService.updateStats(
+        this.data.playerLeft.id,
+        this.data.type,
+        this.data.mode,
+        'Left',
+        this.data.score,
+      );
+      await this.statsService.updateStats(
+        this.data.playerRight.id,
+        this.data.type,
+        this.data.mode,
+        'Right',
+        this.data.score,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error Updating Stats: ${error.message}`,
+        'Pong - updateDBStats',
+        error,
+      );
     }
   }
 
@@ -380,15 +460,16 @@ export class Pong {
     ) {
       if (this.data.status === 'Not Started') {
         this.data.status = 'Playing';
+        this.data.sendStatus = true;
         this.startGameLoop();
         this.data.timer = defineTimer(TIMER_START, 'Start');
       } else if (this.data.status === 'Stopped') {
         this.data.status = 'Playing';
+        this.data.sendStatus = true;
         this.startGameLoop();
         this.data.timer = defineTimer(TIMER_RESTART, 'ReStart');
       }
     }
-    this.sendStatus();
   }
 
   private disconnectPlayer(side: 'Left' | 'Right') {
@@ -396,6 +477,7 @@ export class Pong {
       this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
+        this.data.sendStatus = true;
         this.data.timer = defineTimer(
           TIMER_DECONNECTION,
           'Deconnection',
@@ -406,6 +488,7 @@ export class Pong {
       this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
+        this.data.sendStatus = true;
         this.data.timer = defineTimer(
           TIMER_DECONNECTION,
           'Deconnection',
@@ -413,6 +496,5 @@ export class Pong {
         );
       }
     }
-    this.sendStatus();
   }
 }

@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
 import {
   BadGatewayException,
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -58,7 +57,7 @@ export class UsersController {
     id = decodeURIComponent(id);
     const user = await this.usersService.getUserAvatar(parseInt(id));
 
-    console.log("=== userWithAvatar ===\n", user);
+    console.log('=== userWithAvatar ===\n', user);
 
     if (!user) throw new NotFoundException();
 
@@ -88,8 +87,7 @@ export class UsersController {
 
       if (user) return { exists: true };
       return { exists: false };
-    }
-    catch (error) {
+    } catch (error) {
       console.log(error.message);
       throw new BadGatewayException();
     }
@@ -97,7 +95,7 @@ export class UsersController {
 
   @Put()
   async editUser(@Request() req, @Body('properties') properties: EditUserDto) {
-	  return await this.usersService.editUser(req.user.id, properties);
+    return await this.usersService.editUser(req.user.id, properties);
   }
 
   // @Public()
@@ -143,60 +141,46 @@ export class UsersController {
     try {
       const user = await this.usersService.getUserTokens(id);
 
-      if (user)
-        return await this.usersService.deleteAllUserTokens(user);
-    }
-    catch (error) {
+      if (user) return await this.usersService.deleteAllUserTokens(user);
+    } catch (error) {
       console.log(error.message);
     }
   }
 
   @Put('changeLogin')
-  async changeLogin(
-    @Req() req,
-		@Body() { login } : EditUserDto,
-  ) {
+  async changeLogin(@Req() req, @Body() { login }: EditUserDto) {
     try {
       const user = await this.usersService.getUserById(req.user.id);
 
-      if (!user)
-        throw new Error("no user found");
+      if (!user) throw new Error('no user found');
 
       const userWithLogin = await this.usersService.getUserByLogin(login);
       if (userWithLogin)
         return {
           success: false,
           error: 'exists',
-        }
-      
+        };
+
       this.usersService.updateUser(user.id, {
         login: login,
       });
 
       return {
-        success: true
-      }
-      
-    }
-    catch (error) {
+        success: true,
+      };
+    } catch (error) {
       console.log(error.message);
       throw new BadGatewayException();
     }
   }
 
   @Post('checkPassword')
-  async checkPassword(
-    @Req() req,
-    @Body('password') password: string,
-  ) {
+  async checkPassword(@Req() req, @Body('password') password: string) {
     return await this.usersService.checkPassword(req.user.id, password);
   }
 
   @Put('updatePassword')
-  async updatePassword(
-    @Req() req,
-    @Body('password') password: string,
-  ) {
+  async updatePassword(@Req() req, @Body('password') password: string) {
     return await this.usersService.updatePassword(req.user.id, password);
   }
 }

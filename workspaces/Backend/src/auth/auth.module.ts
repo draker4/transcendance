@@ -22,6 +22,8 @@ import { AuthService } from './services/auth.service';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
+import { Stats } from '@/utils/typeorm/Stats.entity';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
       UserChannelRelation,
       BackupCode,
       SocketToken,
+      Stats,
     ]),
     JwtModule,
     MailModule,
@@ -49,6 +52,7 @@ import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
     GoogleStrategy,
     LocalStrategy,
     CryptoService,
+    StatsService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

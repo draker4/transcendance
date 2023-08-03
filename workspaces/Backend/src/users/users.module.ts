@@ -9,11 +9,22 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { StatsService } from '@/stats/service/stats.service';
+import { Stats } from '@/utils/typeorm/Stats.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Token, BackupCode, SocketToken])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Channel,
+      Token,
+      BackupCode,
+      SocketToken,
+      Stats,
+    ]),
+  ],
   controllers: [UsersController],
-  providers: [UsersService, CryptoService],
+  providers: [UsersService, CryptoService, StatsService],
   exports: [UsersService],
 })
 export class UsersModule {}

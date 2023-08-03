@@ -38,6 +38,7 @@ export default function GameLine({
     );
     if (!res.success) {
       console.log(res.message);
+      console.log(res.error);
       return;
     }
     const url = "home/game/" + res.data;

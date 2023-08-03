@@ -18,6 +18,7 @@ import { UserPongieRelation } from './UserPongieRelation';
 import { UserChannelRelation } from './UserChannelRelation';
 import { Token } from './Token.entity';
 import { BackupCode } from './BackupCode.entity';
+import { Stats } from './Stats.entity';
 
 @Entity()
 export class User {
@@ -78,7 +79,7 @@ export class User {
   @Column({ default: false })
   isTwoFactorAuthenticationEnabled: boolean;
 
-  @Column({ nullable: true})
+  @Column({ nullable: true })
   twoFactorAuthenticationSecret: string;
 
   @ManyToMany(() => Channel, (channel) => channel.users)
@@ -131,11 +132,15 @@ export class User {
   @JoinColumn()
   avatar: Avatar;
 
-  @OneToMany(() => BackupCode, backupCode => backupCode.user)
+  @OneToMany(() => BackupCode, (backupCode) => backupCode.user)
   backupCodes: BackupCode[];
 
-  @OneToMany(() => Token, token => token.user)
+  @OneToMany(() => Token, (token) => token.user)
   tokens: Token[];
+
+  @OneToOne(() => Stats)
+  @JoinColumn()
+  stats: Stats;
 
   @AfterLoad()
   async nullChecks() {

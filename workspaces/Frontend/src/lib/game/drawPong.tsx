@@ -119,17 +119,21 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
+  let actualRound = gameData.actualRound;
+  if (gameData.status === "Finished") {
+    actualRound--;
+  }
 
   // Draw Score
   drawScore(
     draw,
-    gameData.score.round[gameData.actualRound].left,
+    gameData.score.round[actualRound].left,
     draw.canvas.width / 4,
     50
   );
   drawScore(
     draw,
-    gameData.score.round[gameData.actualRound].right,
+    gameData.score.round[actualRound].right,
     draw.canvas.width / 4 + draw.canvas.width / 2,
     50
   );
@@ -137,11 +141,7 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   // Draw actual round
   if (gameData.maxRound > 1) {
     draw.context.font = FONT_ROUND;
-    draw.context.fillText(
-      "Round " + gameData.actualRound,
-      draw.canvas.width / 2,
-      45
-    );
+    draw.context.fillText("Round " + actualRound, draw.canvas.width / 2, 45);
   }
 
   // Draw player round won

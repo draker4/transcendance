@@ -82,7 +82,9 @@ export default function FormLogin({
       refresh_token &&
       refresh_token.length > 0
     )
-      changeCookie();
+    
+    changeCookie();
+
   }, [access_token, router, refresh_token]);
 
   const handleSubmit = async (e: any) => {

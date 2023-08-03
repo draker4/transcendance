@@ -1,10 +1,13 @@
 import {
   Action,
   GameData,
-  StatusMessage,
-  UpdateData,
   Player,
 } from "@transcendence/shared/types/Game.types";
+
+import {
+  StatusMessage,
+  UpdateData,
+} from "@transcendence/shared/types/Message.types";
 
 import { Socket } from "socket.io-client";
 import {

@@ -4,12 +4,14 @@ import { Refresher } from "@/components/refresher/Refresher";
 import Link from "next/link";
 import styles from "@/styles/chatPage/ChatPage.module.css";
 import LoadingComponent from "@/components/loading/Loading";
-import { useEffect, useState } from "react";
-// import { cookies } from "next/headers";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default async function ConnectPage() {
+export default function ConnectPage() {
 
-  const [error, setError] = useState<boolean>(false);
+  const  router = useRouter();
+
+  console.log("here connect page");
 
   useEffect(() => {
     const setCookies = async () => {
@@ -19,40 +21,33 @@ export default async function ConnectPage() {
           credentials: 'include',
         });
     
-        if (!res.ok) throw new Error("cant get new tokens");
+        if (!res.ok)
+          throw new Error("cant get new tokens");
     
         const data = await res.json();
     
-        if (data.status !== 200) throw new Error("no token found in the api");
+        if (data.status !== 200)
+          throw new Error("no token found in the api");
+        
+        router.replace('/home');
+  
       } catch (error) {
         console.log(error);
     
         await fetch(
           `http://${process.env.HOST_IP}:3000/api/signoff`
         );
-        setError(true);
+        router.replace("/welcome/login/wrong");
       }
     }
 
     setCookies();
   }, [])
   
-
-  if (!error)
-    return (
-      <>
-        <Refresher />
-        <LoadingComponent />
-      </>
-    );
-  
-  else
-    return (
-      <div className={styles.error}>
-        <h2>Oops... Something went wrong!</h2>
-        <Link href={"/welcome/login/wrong"} className={styles.errorLink}>
-          <p>Return to Login Page!</p>
-        </Link>
-      </div>
-    );
+  return (
+    <>
+      <Refresher />
+      <LoadingComponent />
+    </>
+  );
 }
