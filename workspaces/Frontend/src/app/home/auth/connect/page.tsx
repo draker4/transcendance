@@ -1,17 +1,14 @@
 "use client"
 
 import { Refresher } from "@/components/refresher/Refresher";
-import Link from "next/link";
-import styles from "@/styles/chatPage/ChatPage.module.css";
 import LoadingComponent from "@/components/loading/Loading";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function ConnectPage() {
 
   const  router = useRouter();
-
-  console.log("here connect page");
 
   useEffect(() => {
     const setCookies = async () => {
@@ -34,9 +31,7 @@ export default function ConnectPage() {
       } catch (error) {
         console.log(error);
     
-        await fetch(
-          `http://${process.env.HOST_IP}:3000/api/signoff`
-        );
+        await disconnect();
         router.replace("/welcome/login/wrong");
       }
     }

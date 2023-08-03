@@ -147,6 +147,19 @@ export class UsersController {
     }
   }
 
+  @Delete('disconnectByToken')
+  async deleteTokensByAccessToken(@Req() req) {
+    try {
+      const user = await this.usersService.getUserTokens(req.user.id);
+
+      if (user)
+        return await this.usersService.deleteAllUserTokens(user);
+    }
+    catch (error) {
+      console.log(error.message);
+    }
+  }
+
   @Put('changeLogin')
   async changeLogin(@Req() req, @Body() { login }: EditUserDto) {
     try {

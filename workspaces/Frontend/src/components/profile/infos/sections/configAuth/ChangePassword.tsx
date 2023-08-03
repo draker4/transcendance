@@ -6,6 +6,7 @@ import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import hash from "@/lib/bcrypt/hash";
 import { CryptoService } from "@/services/Crypto.service";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
 
 const	Crypto = new CryptoService();
 
@@ -161,9 +162,7 @@ export default function ChangePassword({
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif('Something went wrong, please try again!');

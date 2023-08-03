@@ -53,52 +53,56 @@ export default class Channel_Service {
     const response: Response = await this.fetchData(true, id.toString(), "GET");
     const data: ChannelUsersRelation = await response.json();
 
-    console.log("GET CHANNEL & USERS \n :", data);
     return data;
   }
 
+  public async editRelation(
+    channelId: number,
+    userId: number,
+    newRelation: {
+      isChanOp?: boolean;
+      isBanned?: boolean;
+      joined?: boolean;
+      invited?: boolean;
+    }
+  ) {
+    let rep: ReturnData = {
+      success: false,
+      message: "",
+    };
 
-  public async editRelation(channelId: number, userId: number, newRelation: {isChanOp?: boolean,
-	isBanned?: boolean,
-	joined?: boolean,
-	invited?: boolean,
-}) {
+    try {
+      if (Object.keys(newRelation).length === 0) {
+        throw new Error("no relation property in request");
+      }
 
-	let rep:ReturnData = {
-		success: false,
-		message: "",
-	}
+      const body = JSON.stringify({
+        channelId: channelId,
+        userId: userId,
+        newRelation: {
+          ...(newRelation.isChanOp !== undefined && {isChanOp: newRelation.isChanOp}),
+          ...(newRelation.isBanned !== undefined && {isBanned: newRelation.isBanned}),
+          ...(newRelation.joined !== undefined && {joined: newRelation.joined}),
+          ...(newRelation.invited !== undefined && {invited: newRelation.invited}),
+        },
+      });
 
-	try {
-		
-		if (Object.keys(newRelation).length === 0) {
-			throw new Error("no relation property in request");
-		}
-	
-		const body = JSON.stringify({
-			channelId: channelId,
-			userId: userId,
-			newRelation: {
-				...(newRelation.isChanOp !== undefined && { isChanOp: newRelation.isChanOp }),
-				...(newRelation.isBanned !== undefined && { isBanned: newRelation.isBanned }),
-				...(newRelation.joined !== undefined && { joined: newRelation.joined }),
-				...(newRelation.invited !== undefined && { invited: newRelation.invited }),
-			  }
-		});
+      const response: Response = await this.fetchData(
+        false,
+        "editRelation",
+        "PUT",
+        body
+      );
+      if (!response.ok) throw new Error("failed getting response from server");
+      const data: ReturnData = await response.json();
+      rep.success = data.success;
+      rep.message = data.message;
+    } catch (e: any) {
+      rep.message = e.message;
+    }
 
-		console.log("BODY :", body); // checking
-		const response: Response = await this.fetchData(false, "editRelation", "PUT",  body);
-
-	} catch(e:any) {
-		rep.message = e.message;
-	}
-
-	return rep;
-}
-
-
-
-
+    return rep;
+  }
 
   /* -------- vvv NO NEED TOKEN HERE vvv ------- */
 

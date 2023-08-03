@@ -6,6 +6,7 @@ import PopupCodeEmail from "./popups/PopupCodeEmail";
 import PopupActivate from "./popups/PopupActivate";
 import PopupDeactivate from "./popups/PopupDeactivate";
 import PopupDownloadCodes from "./popups/PopupDownloadCodes";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function SectionCustom({ profile }: {
 	profile: Profile
@@ -96,9 +97,7 @@ export default function SectionCustom({ profile }: {
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif1('Something went wrong, please try again!');
@@ -142,9 +141,7 @@ export default function SectionCustom({ profile }: {
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif2('Something went wrong, please try again!');
@@ -192,9 +189,7 @@ export default function SectionCustom({ profile }: {
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif2('Something went wrong, please try again!');

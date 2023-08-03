@@ -1,5 +1,6 @@
 "use client"
 
+import disconnect from "@/lib/disconnect/disconnect";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import styles from "@/styles/welcome/auth/Confirm.module.css";
 import { useRouter } from "next/navigation";
@@ -115,9 +116,7 @@ export default function TwoFactorAuthClient() {
 		} catch (err: any) {
 			setButtonText("Verify");
 			if (err.message === 'disconnect') {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setMsg('Oops... Something went wrong! Please try again!')
@@ -182,9 +181,7 @@ export default function TwoFactorAuthClient() {
 		catch (err: any) {
 			setButtonBackText("Get my account back");
 			if (err.message === 'disconnect') {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif('Oops... Something went wrong! Please try again!')

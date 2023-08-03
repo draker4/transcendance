@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { Socket } from "socket.io-client";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function ChangeLogin({
 	setChangeLogin,
@@ -87,9 +88,7 @@ export default function ChangeLogin({
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
-				await fetch(
-					`http://${process.env.HOST_IP}:3000/api/signoff`
-				);
+				await disconnect();
 				router.refresh();
 			}
 			setNotif('Something went wrong, please try again!');

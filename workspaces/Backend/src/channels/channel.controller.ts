@@ -1,51 +1,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, HttpException, HttpStatus, Param, ParseIntPipe, Put, Request } from "@nestjs/common";
-import { ChannelService } from "./channel.service";
-import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Put,
+  Request,
+} from '@nestjs/common';
+import { ChannelService } from './channel.service';
+import { EditChannelRelationDto } from './dto/EditChannelRelation.dto';
 
 @Controller('channel')
 export class ChannelController {
+  constructor(private readonly channelService: ChannelService) {}
 
-	constructor(
-		private readonly channelService: ChannelService
-	) {}
+  // [+] l'user req.user.id => filtrer les infos en fonction des boolean de la Relation
+  // > a accorder avec avatarService.editChannelAvatarColors(), mm principe
+  @Get(':id')
+  async getChannelById(@Request() req, @Param('id', ParseIntPipe) id: number) {
+    return await this.channelService.getChannelUsersRelations(id);
+  }
 
-	// [+] l'user req.user.id => filtrer les infos en fonction des boolean de la Relation
-	// > a accorder avec avatarService.editChannelAvatarColors(), mm principe
-	@Get(':id')
-	async getChannelById(@Request() req, @Param('id', ParseIntPipe) id: number) {
-		// console.log("[channel controller] Get channel of id :" + id); // checking
-		const data = await this.channelService.getChannelUsersRelations(id);
-		
-		// console.log("[channel controller] data :", data); // checking
+  // [+] Un guard verifiant que l'user est chanOp ? (verifie si il est dans la channel aussi avant)
+  @Put('editRelation')
+  async editRelation(
+    @Request() req,
+    @Body() newRelation: EditChannelRelationDto,
+  ) {
+    let rep: ReturnData = {
+      success: false,
+      message: '',
+    };
+    try {
+      const check = await this.channelService.checkChanOpPrivilege(
+        req.user.id,
+        newRelation.channelId,
+      );
+      if (!check.isChanOp) throw new Error(check.error);
+      rep = await this.channelService.editRelation(req.user.id, newRelation);
+    } catch (error) {
+      rep.success = false;
+      rep.message = error.message;
+    }
 
-		return data;
-	}
-
-
-	// [+] Un guard verifiant que l'user est chanOp ? (verifie si il est dans la channel aussi avant)
-	@Put('editRelation')
-	async editRelation(@Request() req, @Body() newRelation: EditChannelRelationDto ) {
-		console.log("NEW RELATION = ", newRelation); // checking
-
-		let rep:ReturnData = {
-			success: false,
-			message: ""
-		}
-
-		try {
-		const check = await this.channelService.checkChanOpPrivilege(req.user.id, newRelation.channelId);
-		if (!check.isChanOp)
-			throw new Error(check.error);
-
-		rep = await this.channelService.editRelation(req.user.id, newRelation);
-
-	   } catch (error) {
-		 rep.success = false;
-		 rep.message = error.message;
-	   }
-
-	   return rep;
-	}
+    return rep;
+  }
 }
