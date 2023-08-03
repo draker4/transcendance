@@ -4,4 +4,5 @@ type ChannelLists = {
 	setInvited: Dispatch<SetStateAction<UserRelation[]>>,
 	setBanned: Dispatch<SetStateAction<UserRelation[]>>,
 	setLeavers: Dispatch<SetStateAction<UserRelation[]>>,
+	setNotif: Dispatch<SetStateAction<string>>,
 };

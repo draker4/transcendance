@@ -18,7 +18,7 @@ const	[pongers, setPongers] = useState<UserRelation[]>(channelAndUsersRelation.u
 const	[invited, setInvited] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited)));
 const	[banned, setBanned] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned)));
 const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited)));
-
+const   [notif, setNotif] = useState<string>("");
 
 	const lists:ChannelLists = {
 		setOperators: setOperators,
@@ -26,6 +26,7 @@ const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.u
 		setInvited: setInvited,
 		setBanned: setBanned,
 		setLeavers: setLeavers,
+		setNotif: setNotif,
 	}
 
   const renderRowList = (role:ChannelRoles, relations: UserRelation[]):JSX.Element => {
@@ -50,6 +51,7 @@ const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.u
   }
 
   return <div className={styles.sections}>
+	<p className={styles.notif}>{notif}</p>
     {renderRowList(ChannelRoles.operator, operators)}
     {renderRowList(ChannelRoles.ponger, pongers)}
 	{putSpliter()}

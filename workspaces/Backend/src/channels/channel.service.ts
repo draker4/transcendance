@@ -146,7 +146,35 @@ export class ChannelService {
 		}
 	}
 
-	
+	public async updateChannelUserRelation(relation:UserChannelRelation ) {
+		const rep:ReturnData = {
+			success: false,
+			message: ""
+		}
+		
+		try {
+			const { userId, channelId } = relation;
+			
+			await this.userChannelRelation
+			.createQueryBuilder()
+			.update(UserChannelRelation)
+			.set({
+				isChanOp: relation.isChanOp,
+				joined: relation.joined,
+				invited: relation.invited,
+				isBanned: relation.isBanned,
+			})
+			.where("userId = :userId AND channelId = :channelId", { userId, channelId })
+			.execute()
+			
+			rep.success = true;
+			
+		} catch(e) {
+			rep.message = e.message;
+			rep.error = e;
+		}
+		return rep;
+	}
 	
 	
 	public async updateChannelUsers(channel: Channel, user: User) {
@@ -187,12 +215,13 @@ export class ChannelService {
 			&& channelInfos.newRelation.isBanned === undefined)
 		throw new Error("need at least one property to edit channel relation");
 
-		const	relation = await this.userChannelRelation.findOne({
+		const	relation:UserChannelRelation = await this.userChannelRelation.findOne({
 			where: { userId:channelInfos.userId, channelId:channelInfos.channelId }
 		});
 
 		if (!relation)
 			throw new Error("can't find the user or the channel requested");
+
 
 		// [+] to extract
 		if (channelInfos.newRelation.joined !== undefined) {
@@ -202,20 +231,23 @@ export class ChannelService {
 
 		if (channelInfos.newRelation.isChanOp !== undefined) {
 			relation.isChanOp = channelInfos.newRelation.isChanOp;
-			rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+			rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.isChanOp} of user[${channelInfos.userId}]`
 		}
 
 		if (channelInfos.newRelation.invited !== undefined) {
 			relation.invited = channelInfos.newRelation.invited;
-			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.invited} of user[${channelInfos.userId}]`
 		}
 
 		if (channelInfos.newRelation.isBanned !== undefined) {
 			relation.isBanned = channelInfos.newRelation.isBanned;
-			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
+			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`
 		}
 
 		// [+] save relation dans la db maintenant
+		const repDatabase:ReturnData = await this.updateChannelUserRelation(relation);
+		if (!repDatabase.success)
+			throw new Error("Error occured while updating user channel relation in database : " + repDatabase.message);
 
 		rep.success = true;
 		return rep;
