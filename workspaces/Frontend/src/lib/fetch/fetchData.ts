@@ -1,3 +1,5 @@
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 import fetchClientSide from "./fetchClientSide";
 
 export default async function fetchData(
@@ -37,8 +39,16 @@ export default async function fetchData(
 
       return response;
     }
-  } catch (error) {
+  } catch (error:any) {
+	if (error.message === 'disconnect') {
+		const	router = useRouter();
+		await disconnect();
+		router.refresh();
+	}
     console.log(
+      `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
+    );
+    throw new Error(
       `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
     );
   }

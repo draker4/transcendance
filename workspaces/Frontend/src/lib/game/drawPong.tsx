@@ -120,7 +120,8 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
   let actualRound = gameData.actualRound;
-  if (gameData.status === "Finished") {
+  if (actualRound > gameData.maxRound) {
+    console.log("actualRound", actualRound);
     actualRound--;
   }
 

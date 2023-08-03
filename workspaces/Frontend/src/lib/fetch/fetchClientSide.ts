@@ -42,6 +42,7 @@ export default async function fetchClientSide(
         }
       );
 
+	  // [!][!][!] Use "disconnect" for build versions
       if (!res.ok) throw new Error("disconnect");
 
       const data = await res.json();
@@ -75,8 +76,12 @@ export default async function fetchClientSide(
       return resAgain;
     }
     return response;
-  } catch (error: any) {
-    console.log(`Error while fetching api: ${url}. Error log: ${error}`);
-    throw new Error(error.message);
+  } catch (error) {
+    console.log(
+      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
+    );
+    throw new Error(
+      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
+    );
   }
 }
