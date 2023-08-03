@@ -1,5 +1,5 @@
 import { CryptoService } from "./Crypto.service";
-import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import fetchData from "@/lib/fetch/fetchData";
 
 const Crypto = new CryptoService();
 
@@ -10,40 +10,8 @@ export default class Profile_Service {
     if (token) this.token = token;
   }
 
-  private async fetchData(url: string, method: string, body: any = null) {
-    const preUrl = this.token
-      ? `http://backend:4000/api/users/`
-      : `http://${process.env.HOST_IP}:4000/api/users/`;
-
-    if (this.token) {
-      const response = await fetch(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.token,
-        },
-        body: body,
-      });
-
-      if (!response.ok) throw new Error("fetched failed at " + preUrl + url);
-      return response;
-    } else {
-      const response = await fetchClientSide(preUrl + url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: body,
-      });
-
-      if (!response || !response.ok) throw new Error("fetched failed at " + preUrl + url);
-
-      return response;
-    }
-  }
-
   public async getProfileByToken(): Promise<Profile> {
-    const profile = await this.fetchData("me", "GET");
+    const profile = await fetchData(this.token, "users", "me", "GET");
 
     if (!profile.ok) {
       throw new Error("Profil cannot be found");
@@ -61,7 +29,7 @@ export default class Profile_Service {
   }
 
   public async getProfileById(id: number): Promise<Profile> {
-    const profile = await this.fetchData(`profile/${id.toString()}`, "GET");
+    const profile = await fetchData(this.token, "users", `profile/${id.toString()}`, "GET");
 
     if (!profile.ok) {
       throw new Error("Profil cannot be found");
@@ -85,7 +53,7 @@ export default class Profile_Service {
     };
     try {
       const body = JSON.stringify({ properties: properties });
-      const response = await this.fetchData("", "PUT", body);
+      const response = await fetchData(this.token, "users", "", "PUT", body);
 
       if (response.ok) {
         rep.message = await response.json();
@@ -100,9 +68,8 @@ export default class Profile_Service {
     return rep;
   }
 
-  // GetProfilByToken() version fetching Avatar too
   public async getProfileAndAvatar(): Promise<Profile & { avatar: Avatar }> {
-    const profile = await this.fetchData("myAvatar", "GET", null);
+    const profile = await fetchData(this.token, "users", "myAvatar", "GET", null);
 
     const data: Profile & { avatar: Avatar } = await profile.json();
 
