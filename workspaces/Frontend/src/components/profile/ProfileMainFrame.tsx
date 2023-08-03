@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import ChatService from "@/services/Chat.service";
 import { Socket } from "socket.io-client";
 import LoadingSuspense from "../loading/LoadingSuspense";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   profile: Profile;
@@ -23,6 +25,7 @@ export default function ProfileMainFrame({
 }: Props) {
   const [login, setLogin] = useState<string>(profile.login);
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const router = useRouter();
   
   // WsException Managing
   useEffect(() => {
@@ -31,10 +34,21 @@ export default function ProfileMainFrame({
       setSocket(undefined);
     }
 
+    const	disconnectClient = async () => {
+			await disconnect();
+			router.refresh();
+		}
+
     if (!socket) {
       const intervalId = setInterval(() => {
         const chatService = new ChatService(token);
         console.log("profile service reload here", chatService.socket?.id);
+        
+				if (chatService.disconnectClient) {
+					clearInterval(intervalId);
+					disconnectClient();
+				}
+
         if (chatService.socket) {
           setSocket(chatService.socket);
           clearInterval(intervalId);

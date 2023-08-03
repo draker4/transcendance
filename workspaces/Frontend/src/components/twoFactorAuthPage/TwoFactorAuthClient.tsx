@@ -184,7 +184,7 @@ export default function TwoFactorAuthClient() {
 				await disconnect();
 				router.refresh();
 			}
-			setNotif('Oops... Something went wrong! Please try again!')
+			setNotif('Oops... Something went wrong! Please try again!');
 		}
 	}
   

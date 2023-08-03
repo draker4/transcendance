@@ -33,7 +33,7 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 export class ChatGateway implements OnModuleInit {
   constructor(private readonly chatService: ChatService) {}
 
-  // Container of connected users : Map<userId, socket.id>
+  // Container of connected users : Map<socket.id, user id>
   private connectedUsers: Map<string, string> = new Map<string, string>();
 
   @WebSocketServer()
@@ -51,15 +51,12 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-        //     socket.join('channel:1 2'); // [!] remis en brut pour tester tant que join pas implementer à chaque reco de socket
-        // socket.join('channel:2'); // [!] ouh c'est moche
-
-        this.connectedUsers.set(payload.sub, socket.id);
+        this.connectedUsers.set(socket.id, payload.sub);
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
 
         socket.on('disconnect', () => {
-          this.connectedUsers.delete(payload.sub);
+          this.connectedUsers.delete(socket.id);
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
         });
 
@@ -95,7 +92,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllChannels')
   async getAllChannels(@Request() req) {
-    throw new Error('test');
     return await this.chatService.getAllChannels(req.user.id);
   }
 
@@ -110,13 +106,30 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('addPongie')
-  async addPongie(@MessageBody() pongieId: number, @Request() req) {
-    return await this.chatService.addPongie(req.user.id, pongieId);
+  async addPongie(
+    @MessageBody() pongieId: number,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const pongieSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === pongieId.toString())
+        pongieSockets.push(key);
+    }
+
+    return await this.chatService.addPongie(
+      req.user.id,
+      pongieId,
+      pongieSockets,
+      this.server,
+      socket,
+    );
   }
 
   @SubscribeMessage('deletePongie')
   async deletePongie(@MessageBody() pongieId: number, @Request() req) {
-    return await this.chatService.deletePongie(req.user.id, pongieId);
+    // return await this.chatService.deletePongie(req.user.id, pongieId);
   }
 
   @SubscribeMessage('join')

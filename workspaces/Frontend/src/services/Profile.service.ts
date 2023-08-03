@@ -73,7 +73,6 @@ export default class Profile_Service {
     return rep;
   }
 
-  // GetProfilByToken() version fetching Avatar too
   public async getProfileAndAvatar(): Promise<Profile & { avatar: Avatar }> {
     const profile = await fetchData(
       this.token,
