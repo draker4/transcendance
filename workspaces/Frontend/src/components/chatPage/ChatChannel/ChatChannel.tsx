@@ -99,7 +99,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   return (
     <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
-      <MessageBoard messages={messages} />
+      <MessageBoard messages={messages} channel={channel} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} />
     </div>
   );

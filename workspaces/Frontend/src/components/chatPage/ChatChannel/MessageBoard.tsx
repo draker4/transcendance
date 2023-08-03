@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 type Props = {
   messages: Message[];
+  channel: Channel;
 };
 
 type GroupedMsgType = {
@@ -12,7 +13,7 @@ type GroupedMsgType = {
   messages: Message[];
 };
 
-export default function MessageBoard({ messages }: Props) {
+export default function MessageBoard({ messages, channel }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
     GroupedMsgType[]
   >([]);
@@ -39,6 +40,7 @@ export default function MessageBoard({ messages }: Props) {
     return diffMinutes < 2;
   };
 
+  const placeholder:string = channel.type === "privateMsg" ? "Feel free to say hello :D !" : " The channel is empty, start here a new passionating topic !";
   
   const joiningMessages = () => {
     const join = [];
@@ -70,7 +72,7 @@ export default function MessageBoard({ messages }: Props) {
       {messages.length > 0 && groupedMessages.map((group, index) => (
         <MessageItem key={index} groupedMessages={group} />
       ))}
-	  {messages.length === 0 && <p>P L A C E H O L D E R</p>}
+	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}
     </div>
   );
 }
