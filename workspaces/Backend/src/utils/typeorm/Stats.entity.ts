@@ -17,7 +17,10 @@ export class Stats {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // Global points
+  // Global
+
+  @Column()
+  userId: number;
 
   @Column({ default: 0 })
   leagueXP: number;

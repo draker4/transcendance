@@ -174,6 +174,29 @@ export class GameService {
       }
       game.opponent = opponentId;
       await this.gameRepository.save(game);
+      await this.scoreService.addOpponent(gameId, opponentId);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async updateStatus(
+    gameId: string,
+    status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted',
+    result: 'Not Finished' | 'Draw' | 'Draw' | 'Host' | 'Opponent' | 'Deleted',
+    actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9,
+  ): Promise<any> {
+    try {
+      const game = await this.gameRepository.findOne({
+        where: { id: gameId },
+      });
+      if (!game) {
+        throw new Error('Game not found');
+      }
+      game.status = status;
+      game.result = result;
+      game.actualRound = actualRound;
+      await this.gameRepository.save(game);
     } catch (error) {
       throw new Error(error.message);
     }

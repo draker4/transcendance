@@ -179,6 +179,7 @@ export class GameManager {
         gameId,
         game,
         this.gameService,
+        this.scoreService,
         this.logger,
         score,
       );

@@ -17,17 +17,22 @@ import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { Stats } from '@/utils/typeorm/Stats.entity';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    User,
-    Channel,
-    Token,
-    Avatar,
-    UserChannelRelation,
-    BackupCode,
-    SocketToken,
-  ])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Channel,
+      Token,
+      Avatar,
+      UserChannelRelation,
+      BackupCode,
+      SocketToken,
+      Stats,
+    ]),
+  ],
   providers: [
     TwoFactorAuthenticationService,
     UsersService,
@@ -37,6 +42,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
     AuthService,
     AvatarService,
     ChannelService,
+    StatsService,
   ],
   controllers: [TwoFactorAuthenticationController],
 })

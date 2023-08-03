@@ -1,5 +1,5 @@
 import styles from "@/styles/lobby/HomeProfile.module.css";
-import AvatarUser from "../avatarUser/AvatarUser";
+import AvatarUser from "../../avatarUser/AvatarUser";
 
 type Props = {
   profile: Profile;

@@ -30,10 +30,10 @@ export class Score {
   rightPlayerId: number;
 
   @Column({ default: 0 })
-  leftPlayerRoundWon: 0 | 1 | 2 | 3 | 4;
+  leftPlayerRoundWon: 0 | 1 | 2 | 3 | 4 | 5;
 
   @Column({ default: 0 })
-  rightPlayerRoundWon: 0 | 1 | 2 | 3 | 4;
+  rightPlayerRoundWon: 0 | 1 | 2 | 3 | 4 | 5;
 
   @Column({ default: 0 })
   leftPlayerRound1: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
