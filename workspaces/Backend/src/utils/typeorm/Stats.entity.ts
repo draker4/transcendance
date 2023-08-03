@@ -31,25 +31,28 @@ export class Stats {
   // League stats
 
   @Column({ default: 0 })
-  leagueGamePlayed: number;
+  leagueClassicWon: number;
 
   @Column({ default: 0 })
-  leagueGameWon: number;
+  leagueClassicLost: number;
 
   @Column({ default: 0 })
-  leagueGameLost: number;
+  leagueBest3Won: number;
 
   @Column({ default: 0 })
-  leagueRoundPlayed: number;
+  leagueBest3Lost: number;
+
+  @Column({ default: 0 })
+  leagueBest5Won: number;
+
+  @Column({ default: 0 })
+  leagueBest5Lost: number;
 
   @Column({ default: 0 })
   leagueRoundWon: number;
 
   @Column({ default: 0 })
   leagueRoundLost: number;
-
-  @Column({ default: 0 })
-  leaguePointPlayed: number;
 
   @Column({ default: 0 })
   leaguePointWon: number;
@@ -60,25 +63,34 @@ export class Stats {
   // Party stats
 
   @Column({ default: 0 })
-  partyGamePlayed: number;
+  partyClassicWon: number;
 
   @Column({ default: 0 })
-  partyGameWon: number;
+  partyClassicLost: number;
 
   @Column({ default: 0 })
-  partyGameLost: number;
+  partyBest3Won: number;
 
   @Column({ default: 0 })
-  partyRoundPlayed: number;
+  partyBest3Lost: number;
+
+  @Column({ default: 0 })
+  partyBest5Won: number;
+
+  @Column({ default: 0 })
+  partyBest5Lost: number;
+
+  @Column({ default: 0 })
+  partyCustomWon: number;
+
+  @Column({ default: 0 })
+  partyCustomLost: number;
 
   @Column({ default: 0 })
   partyRoundWon: number;
 
   @Column({ default: 0 })
   partyRoundLost: number;
-
-  @Column({ default: 0 })
-  partyPointPlayed: number;
 
   @Column({ default: 0 })
   partyPointWon: number;
@@ -89,25 +101,34 @@ export class Stats {
   // Training stats
 
   @Column({ default: 0 })
-  trainingGamePlayed: number;
+  trainingClassicWon: number;
 
   @Column({ default: 0 })
-  trainingGameWon: number;
+  trainingClassicLost: number;
 
   @Column({ default: 0 })
-  trainingGameLost: number;
+  trainingBest3Won: number;
 
   @Column({ default: 0 })
-  trainingRoundPlayed: number;
+  trainingBest3Lost: number;
+
+  @Column({ default: 0 })
+  trainingBest5Won: number;
+
+  @Column({ default: 0 })
+  trainingBest5Lost: number;
+
+  @Column({ default: 0 })
+  trainingCustomWon: number;
+
+  @Column({ default: 0 })
+  trainingCustomLost: number;
 
   @Column({ default: 0 })
   trainingRoundWon: number;
 
   @Column({ default: 0 })
   trainingRoundLost: number;
-
-  @Column({ default: 0 })
-  trainingPointPlayed: number;
 
   @Column({ default: 0 })
   trainingPointWon: number;

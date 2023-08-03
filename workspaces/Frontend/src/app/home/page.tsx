@@ -4,7 +4,7 @@ import { cookies, headers } from "next/dist/client/components/headers";
 //Import le composant pour le lobby
 import styles from "@/styles/lobby/Lobby.module.css";
 import Lobby from "@/components/lobby/Lobby";
-import HomeProfile from "@/components/lobby/HomeProfile/HomeProfile";
+import HomeProfile from "@/components/lobby/homeProfile/HomeProfile";
 import Profile_Service from "@/services/Profile.service";
 import { Refresher } from "@/components/refresher/Refresher";
 import { Suspense } from "react";

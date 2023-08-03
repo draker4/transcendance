@@ -1,7 +1,7 @@
 // import standard package froms nest
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
 
 // import entities
@@ -53,7 +53,7 @@ export class GameService {
       let game = await this.gameRepository.findOne({
         where: {
           host: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
+          status: In(['Not Started', 'Stopped', 'Playing']),
         },
       });
       if (game != null) {
@@ -62,7 +62,7 @@ export class GameService {
       game = await this.gameRepository.findOne({
         where: {
           opponent: userId,
-          status: 'Not Started' || 'Stopped' || 'Playing',
+          status: In(['Not Started', 'Stopped', 'Playing']),
         },
       });
       if (game != null) {
@@ -76,7 +76,7 @@ export class GameService {
   public async getCurrentGames(): Promise<Game[]> {
     try {
       const games = await this.gameRepository.find({
-        where: { status: 'Not Started' || 'Stopped' || 'Playing' },
+        where: { status: In(['Not Started', 'Stopped', 'Playing']) },
       });
       return games;
     } catch (error) {

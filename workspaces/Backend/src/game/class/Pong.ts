@@ -36,6 +36,7 @@ import {
   TIMER_RESTART,
   TIMER_START,
 } from '@transcendence/shared/constants/Game.constants';
+import { StatsService } from '@/stats/service/stats.service';
 
 export class Pong {
   // Game Loop variables
@@ -58,6 +59,7 @@ export class Pong {
     private readonly gameDB: Game,
     private readonly gameService: GameService,
     private readonly scoreService: ScoreService,
+    private readonly statsService: StatsService,
     private readonly logger: ColoredLogger,
     score: ScoreInfo,
   ) {
@@ -294,6 +296,10 @@ export class Pong {
       this.updateDBStatus();
       this.sendStatus();
       this.data.sendStatus = false;
+      if (this.data.status === 'Finished') {
+        this.stopGameLoop();
+        this.updateDBStats();
+      }
     }
 
     // Calculate FPS
@@ -322,14 +328,14 @@ export class Pong {
         this.data.score.round[this.data.actualRound].left === 0 &&
         this.data.score.round[this.data.actualRound].right === 0
       ) {
-        this.scoreService.updateScore(
+        await this.scoreService.updateScore(
           this.gameId,
           this.data.score,
           this.data.actualRound,
           true,
         );
       } else {
-        this.scoreService.updateScore(
+        await this.scoreService.updateScore(
           this.gameId,
           this.data.score,
           this.data.actualRound,
@@ -347,7 +353,7 @@ export class Pong {
 
   private async updateDBStatus() {
     try {
-      this.gameService.updateStatus(
+      await this.gameService.updateStatus(
         this.gameId,
         this.data.status,
         this.data.result,
@@ -357,6 +363,31 @@ export class Pong {
       this.logger.error(
         `Error Updating Status: ${error.message}`,
         'Pong - updateDBStatus',
+        error,
+      );
+    }
+  }
+
+  private async updateDBStats() {
+    try {
+      await this.statsService.updateStats(
+        this.data.playerLeft.id,
+        this.data.type,
+        this.data.mode,
+        'Left',
+        this.data.score,
+      );
+      await this.statsService.updateStats(
+        this.data.playerRight.id,
+        this.data.type,
+        this.data.mode,
+        'Right',
+        this.data.score,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error Updating Stats: ${error.message}`,
+        'Pong - updateDBStats',
         error,
       );
     }

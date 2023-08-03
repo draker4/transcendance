@@ -80,7 +80,6 @@ export class LobbyService {
       if (game.host === userId || game.opponent === userId) {
         ret.success = true;
         ret.message = 'You are already in this game';
-        console.log('You are already in this game');
         return ret;
       }
 
