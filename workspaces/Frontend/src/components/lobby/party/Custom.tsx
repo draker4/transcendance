@@ -31,8 +31,20 @@ export default function Custom({
 
   return (
     <div className={styles.custom}>
+      {/* Push */}
+      <div className={styles.set}>
+        <label className={styles.section}>Push</label>
+        <Selector id="push" value={push} setValue={setPush} />
+      </div>
+
+      {/* Pause */}
+      <div className={styles.set}>
+        <label className={styles.section}>Pause</label>
+        <Selector id="pause" value={pause} setValue={setPause} />
+      </div>
+
       {/* Score */}
-      <div className={styles.score}>
+      <div className={styles.set}>
         <label className={styles.section}>Score</label>
         <Slider
           min={3}
@@ -44,7 +56,7 @@ export default function Custom({
       </div>
 
       {/* Round */}
-      <div className={styles.round}>
+      <div className={styles.set}>
         <label className={styles.section}>Round</label>
         <Slider
           min={1}
@@ -53,18 +65,6 @@ export default function Custom({
           value={maxRound}
           setValue={setMaxRound}
         />
-      </div>
-
-      {/* Push */}
-      <div className={styles.push}>
-        <label className={styles.section}>Push</label>
-        <Selector id="push" value={push} setValue={setPush} />
-      </div>
-
-      {/* Pause */}
-      <div className={styles.pause}>
-        <label className={styles.section}>Pause</label>
-        <Selector id="pause" value={pause} setValue={setPause} />
       </div>
     </div>
   );

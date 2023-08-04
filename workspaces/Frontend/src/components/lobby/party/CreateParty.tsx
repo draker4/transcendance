@@ -6,10 +6,16 @@ import styles from "@/styles/lobby/party/CreateParty.module.css";
 import LobbyService from "@/services/Lobby.service";
 import DefineType from "@/components/lobby/party/DefineType";
 import DefineField from "@/components/lobby/party/DefineField";
-import DefineInvite from "@/components/lobby/party/DefineInvite";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { confirmBackground, confirmBall } from "@/lib/game/random";
+import {
+  randomMaxPoint,
+  randomMaxRound,
+  confirmBackground,
+  confirmBall,
+} from "@/lib/game/random";
+import GeneralSettings from "./GeneralSettings";
+import DefineName from "./DefineName";
 
 type Props = {
   lobbyService: LobbyService;
@@ -27,19 +33,22 @@ export default function CreateParty({
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
-  const [enterName, setEnterName] = useState<boolean>(false); //Si le nom est vide, on affiche un message d'erreur
+  const [enterName, setEnterName] = useState<boolean>(false);
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(9);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(1);
-  const [hostSide, setHostSide] = useState<"Left" | "Right">("Left");
+  const [side, setSide] = useState<"Left" | "Right">("Left");
   const [push, setPush] = useState<boolean>(false);
   const [pause, setPause] = useState<boolean>(false);
+  const [speed, setSpeed] = useState<1 | 2 | 3 | 4 | 5>(3);
   const [background, setBackground] = useState<string>("Classic");
   const [ball, setBall] = useState<string>("Classic");
+  const [selected, setSelected] = useState<
+    "Classic" | "Best3" | "Best5" | "Random" | "Custom"
+  >("Classic");
   const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
     "Classic"
   );
   const router = useRouter();
-  const difficulty: 1 | 2 | 3 | 4 | 5 = 3;
 
   async function createGame() {
     // if name is empty, show error message
@@ -57,10 +66,10 @@ export default function CreateParty({
       mode: "Party",
       host: userId,
       opponent: -1,
-      hostSide: hostSide,
+      hostSide: side,
       maxPoint: maxPoint,
       maxRound: maxRound,
-      difficulty: difficulty,
+      difficulty: speed,
       pause: pause,
       push: push,
       background: confirmBackground(background),
@@ -84,84 +93,90 @@ export default function CreateParty({
     router.push("/home/game/" + res.data);
   }
 
-  const resetCreate = () => {
-    setName("");
-    setMaxPoint(9);
-    setMaxRound(1);
-    setHostSide("Left");
-    setPush(false);
-    setPause(false);
-    setBackground("Classic");
-    setBall("Classic");
-    setType("Classic");
-    setCreateParty(false);
-  };
-
-  // Function to reset Background and Ball when type changes to "Classic"
   useEffect(() => {
-    if (type === "Classic") {
+    if (selected === "Classic") {
+      setMaxPoint(9);
+      setMaxRound(1);
+      setType("Classic");
+      setPush(false);
+      setPause(false);
       setBackground("Classic");
       setBall("Classic");
+    } else if (selected === "Best3") {
+      setMaxPoint(7);
+      setMaxRound(3);
+      setType("Best3");
+      setPush(true);
+      setPause(true);
+      setBackground("Earth");
+      setBall("Classic");
+    } else if (selected === "Best5") {
+      setMaxPoint(5);
+      setMaxRound(5);
+      setType("Best5");
+      setPush(true);
+      setPause(true);
+      setBackground("Island");
+      setBall("Classic");
+    } else if (selected === "Random") {
+      setMaxPoint(randomMaxPoint());
+      setMaxRound(randomMaxRound());
+      setType("Custom");
+      setPush(Math.random() < 0.5);
+      setPause(Math.random() < 0.5);
+      setBackground("Random");
+      setBall("Random");
+    } else if (selected === "Custom") {
+      setType("Custom");
     }
-  }, [type]);
+  }, [selected]);
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <div className={styles.createParty}>
-      <div className={styles.name}>
-        <label className={styles.section}>Party Name</label>
-        <input
-          className={enterName ? styles.nameInputError : styles.nameInput}
-          type="text"
-          placeholder={enterName ? "Please enter a name" : ""}
-          id="name"
-          name="name"
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value);
-            setEnterName(false);
-          }}
-        />
-      </div>
+      <DefineName
+        name={name}
+        setName={setName}
+        enterName={enterName}
+        setEnterName={setEnterName}
+      />
 
-      <div className={styles.define}>
-        <div className={styles.settings}>
-          <label className={styles.section}>Define Party Settings</label>
-          <DefineType
-            maxPoint={maxPoint}
-            setMaxPoint={setMaxPoint}
-            maxRound={maxRound}
-            setMaxRound={setMaxRound}
-            type={type}
-            setType={setType}
-            hostSide={hostSide}
-            setHostSide={setHostSide}
-            push={push}
-            setPush={setPush}
-            pause={pause}
-            setPause={setPause}
-          />
-        </div>
-        <div className={styles.field}>
-          <label className={styles.section}>Define Party Field</label>
-          <DefineField
-            background={background}
-            setBackground={setBackground}
-            ball={ball}
-            setBall={setBall}
-            type={type}
-          />
-        </div>
-      </div>
-      <div className={styles.invite}>
-        <label className={styles.section}>Invite</label>
-        <DefineInvite />
-      </div>
+      <label className={styles.section}>Define Party Settings</label>
+      <DefineType
+        selected={selected}
+        setSelected={setSelected}
+        maxPoint={maxPoint}
+        setMaxPoint={setMaxPoint}
+        maxRound={maxRound}
+        setMaxRound={setMaxRound}
+        push={push}
+        setPush={setPush}
+        pause={pause}
+        setPause={setPause}
+      />
+      <GeneralSettings
+        side={side}
+        setSide={setSide}
+        speed={speed}
+        setSpeed={setSpeed}
+      />
+      <label className={styles.section}>Define Party Field</label>
+      <DefineField
+        background={background}
+        setBackground={setBackground}
+        ball={ball}
+        setBall={setBall}
+        selected={selected}
+      />
       <div className={styles.confirm}>
         <button className={styles.save} type="button" onClick={createGame}>
-          Create Game
+          Create Party
         </button>
-        <button className={styles.cancel} type="button" onClick={resetCreate}>
+        <button
+          className={styles.cancel}
+          type="button"
+          onClick={() => setCreateParty(false)}
+        >
           Cancel
         </button>
       </div>

@@ -1,6 +1,16 @@
 "use client";
-import styles from "@/styles/game/Pong.module.css";
+
+// Import des composants react
 import { useRef, useEffect, useMemo } from "react";
+import { Socket } from "socket.io-client";
+
+// Import du style
+import styles from "@/styles/game/Pong.module.css";
+
+// Import des composants projets
+import Info from "@/components/game/Info";
+
+// Import GameLogic
 import {
   pongKeyDown,
   pongKeyUp,
@@ -8,15 +18,13 @@ import {
   handleStatusMessage,
   handleUpdateMessage,
   handlePing,
-} from "../../lib/game/eventHandlers";
-import { gameLoop } from "@/lib/game/gameLoop";
-import { Socket } from "socket.io-client";
+} from "../../lib/game/eventHandlersMulti";
+import { gameLoop } from "@/lib/game/gameLoopMulti";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import Info from "./Info";
 
 type Props = {
   userId: number;

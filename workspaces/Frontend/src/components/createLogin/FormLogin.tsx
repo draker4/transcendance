@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { handleActionServer } from "@/lib/create/handleActionServer";
 import { useRouter } from "next/navigation";
 import { PongColors } from "@/lib/enums/PongColors.enum";
+import { uniqueNamesGenerator, names, Config } from "unique-names-generator";
+import { MdRefresh } from "react-icons/md";
 
 export default function FormLogin({
   avatars,
@@ -20,6 +22,12 @@ export default function FormLogin({
   const [access_token, setAccessToken] = useState<string>("");
   const [refresh_token, setRefreshToken] = useState<string>("");
   const router = useRouter();
+  const config: Config = {
+    dictionaries: [names],
+    length: 1,
+    separator: "-",
+    style: "capital",
+  };
   const avatarChosenRef = useRef<Avatar>({
     image: "",
     variant: "circular",
@@ -47,7 +55,16 @@ export default function FormLogin({
     const text = e.target.value;
 
     avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
-    setText(text.toUpperCase().slice(0, 2));
+    setText(text);
+  };
+
+  const generateRandomName = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const randomName = uniqueNamesGenerator(config);
+    console.log(randomName);
+    const text = randomName;
+    avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
+    setText(text);
   };
 
   useEffect(() => {
@@ -82,9 +99,7 @@ export default function FormLogin({
       refresh_token &&
       refresh_token.length > 0
     )
-    
-    changeCookie();
-
+      changeCookie();
   }, [access_token, router, refresh_token]);
 
   const handleSubmit = async (e: any) => {
@@ -116,14 +131,26 @@ export default function FormLogin({
           Don&apos;t worry, you can change it later.
         </p>
 
-        <input
-          type="text"
-          name="login"
-          placeholder="login"
-          maxLength={10}
-          onChange={handleText}
-          className={styles.login}
-        />
+        <div className={styles.nameContainer}>
+          <input
+            type="text"
+            name="login"
+            placeholder="login"
+            maxLength={10}
+            value={text}
+            onChange={handleText}
+            className={styles.login}
+          />
+          <button
+            className={styles.randomBtn}
+            onClick={
+              generateRandomName
+              // no submit when click on random button
+            }
+          >
+            <MdRefresh />
+          </button>
+        </div>
 
         {notif.length > 0 && <div className={styles.notif}>{notif}</div>}
         <p className={styles.choose}>Make you pretty:</p>

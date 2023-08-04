@@ -1,4 +1,4 @@
-.custom {
+.generalSettings {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -12,13 +12,5 @@
   align-items: center;
   justify-content: center;
   width: 200px;
-  height: 70px;
-  margin: 10px auto;
-}
-
-.section {
-  font-size: 16px;
-  font-weight: bold;
-  color: var(--tertiary2);
-  margin-bottom: 5px;
+  height: 60px;
 }

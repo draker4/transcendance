@@ -35,14 +35,13 @@ export default function ImgSelector({
     <div className={styles.imgList}>
       {imgs.map((img: string, index: number) => {
         const isActive = value === img;
-        const isDisabled = disabled && value !== img;
+        const isDisabled = disabled;
 
-        // define button class
         let buttonClass = styles.inactiveButton;
         if (isActive) {
           buttonClass = styles.activeButton;
-        } else if (isDisabled) {
-          buttonClass = styles.disabled;
+        } else if (isDisabled && img !== "classic") {
+          buttonClass = `${styles.disabled} ${styles.blur}`;
         }
 
         return (

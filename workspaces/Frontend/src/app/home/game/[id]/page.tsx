@@ -1,15 +1,19 @@
 //Server side rendering
 
-//Merdouille pour les cookies
-import { cookies } from "next/dist/client/components/headers";
-
-//Import le composant pour le lobby
-import styles from "@/styles/game/Game.module.css";
-import Game from "@/components/game/Game";
-import Profile_Service from "@/services/Profile.service";
-import { Refresher } from "@/components/refresher/Refresher";
+// Import des composants react
 import { Suspense } from "react";
+
+// Import du style
+import styles from "@/styles/game/Game.module.css";
+
+// Import des composants projets
+import { cookies } from "next/dist/client/components/headers";
 import LoadingSuspense from "@/components/loading/LoadingSuspense";
+import Game from "@/components/game/Game";
+import { Refresher } from "@/components/refresher/Refresher";
+
+// Import des services
+import ProfileService from "@/services/Profile.service";
 
 export default async function GamePage({ params }: any) {
   let profile: Profile = {
@@ -31,8 +35,8 @@ export default async function GamePage({ params }: any) {
     token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
 
-    const profileData = new Profile_Service(token);
-    profile = await profileData.getProfileByToken();
+    const profileService = new ProfileService(token);
+    profile = await profileService.getProfileByToken();
   } catch (err) {
     console.log(err);
   }

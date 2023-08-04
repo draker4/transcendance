@@ -1,29 +1,39 @@
 "use client";
+// Import des composants react
+import { useRef, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+
+// Import du style
 import styles from "@/styles/gameSolo/GameSolo.module.css";
-import { useRef, useEffect, useMemo } from "react";
-import { pongKeyDown, pongKeyUp } from "@/lib/game/eventHandlers";
-import { gameLoop } from "@/lib/game/gameLoop";
+
+// Import des composants
+import Info from "@/components/game/Info";
+import { toast } from "react-toastify";
+import { MdLogout } from "react-icons/md";
+
+// Import des services
+import TrainingService from "@/services/Training.service";
+
+// Import GameLogic
+import { pongKeyDown, pongKeyUp } from "../../lib/game/eventHandlersSolo";
+import { gameLoop } from "@/lib/game/gameLoopSolo";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import Info from "@/components/game/Info";
 
 type Props = {
-  profile: Profile;
-  gameData: GameData;
+  data: GameData;
 };
 
-export default function GameSolo({ profile, gameData }: Props) {
+export default function Pong({ data }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
-  const isPlayer: "Left" | "Right" | "Spectator" =
-    gameData.playerLeft?.id === profile.id
-      ? "Left"
-      : gameData.playerRight?.id === profile.id
-      ? "Right"
-      : "Spectator";
+  const animationFrameIdRef = useRef<number | undefined>(undefined);
+  const [gameData, setGameData] = useState<GameData>(data);
+  const trainingService = new TrainingService();
+  const router = useRouter();
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
@@ -38,8 +48,6 @@ export default function GameSolo({ profile, gameData }: Props) {
   }, [gameData.ballImg]);
 
   useEffect(() => {
-    isMountedRef.current = true;
-    let animationFrameId: number | undefined;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -48,39 +56,54 @@ export default function GameSolo({ profile, gameData }: Props) {
     };
     draw.canvas.focus();
 
-    if (animationFrameId === undefined) {
-      animationFrameId = requestAnimationFrame((timestamp) =>
+    isMountedRef.current = true;
+
+    if (animationFrameIdRef.current === undefined) {
+      animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
     return () => {
       isMountedRef.current = false;
-      if (animationFrameId !== undefined) {
-        cancelAnimationFrame(animationFrameId);
+      if (animationFrameIdRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = undefined;
       }
     };
   }, []);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, null, profile.id, isPlayer);
+      pongKeyDown(event, gameData, setGameData);
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, null, profile.id, isPlayer);
+      pongKeyUp(event, gameData, setGameData);
     }
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("keyup", handleKeyUp);
+    // Add key event listeners when the component mounts
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
+    // Remove key event listeners when the component unmounts
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [profile.id, isPlayer, gameData]);
+  }, [gameData]);
+
+  async function quitTraining() {
+    const ret = await trainingService.quitTraining(gameData.id);
+    await toast.promise(new Promise((resolve) => resolve(ret)), {
+      pending: "Leaving training...",
+      success: "You have left this training",
+      error: "Error leaving training",
+    });
+    router.push("/home");
+  }
 
   return (
-    <div className={styles.pong}>
-      <div className={styles.canvasContainer}>
+    <div className={styles.gameSolo}>
+      <div className={styles.pong}>
         <canvas
           ref={canvasRef}
           className={styles.canvas}
@@ -88,7 +111,11 @@ export default function GameSolo({ profile, gameData }: Props) {
           height={GAME_HEIGHT}
         />
       </div>
-      {/* <Info gameData={gameData}></Info> */}
+      <Info gameData={gameData} setGameData={setGameData} />
+      <button onClick={quitTraining} className={styles.quitBtn}>
+        <MdLogout />
+        <p className={styles.btnTitle}>Leave</p>
+      </button>
     </div>
   );
 }

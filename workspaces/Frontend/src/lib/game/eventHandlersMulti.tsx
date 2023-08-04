@@ -14,7 +14,7 @@ import {
   addUpdateMessage,
   addPlayerMessage,
   addStatusMessage,
-} from "@/lib/game/gameLoop";
+} from "@/lib/game/gameLoopMulti";
 
 export const pongKeyDown = (
   event: KeyboardEvent,
