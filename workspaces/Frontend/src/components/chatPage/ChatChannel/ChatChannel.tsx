@@ -4,7 +4,7 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import Header from "./Header";
 import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -21,6 +21,7 @@ type ReceivedMsg = {
   sender: User;
   channelName: string;
   channelId: number;
+  isServerNotif: boolean;
 };
 
 // Previous messages loaded from database
@@ -46,6 +47,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
             content: item.content,
             sender: item.user,
             date: new Date(item.createdAt),
+            isServerNotif: item.isServerNotif,
           };
           previousMsg.push(msg);
         });
@@ -66,11 +68,14 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
 
+      console.log(receivedMsg);
+
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
         content: receivedMsg.content,
         sender: receivedMsg.sender,
         date: receivedDate,
+        isServerNotif: receivedMsg.isServerNotif,
       };
 
 	  console.log(`[channel : ${channel.name}] recMsg : ${msg.content}`);

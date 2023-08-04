@@ -6,6 +6,7 @@ type GroupedMsgType = {
   user: User;
   date: Date;
   messages: Message[];
+  isServerNotif: boolean;
 };
 
 type Props = {
@@ -20,22 +21,25 @@ export default function MessageItem({ groupedMessages }: Props) {
 
   const formatedDate = makeHumanDateFormat(groupedMessages.date);
 
-  if (!groupedMessages.user.avatar)
-    return ;
+  // if (!groupedMessages.user.avatar)
+  //   return ;
 
   return (
     <div className={styles.msgItem}>
       {/* Avatar Side */}
-      <div className={styles.avatarSide}>
-        <div className={styles.avatarSlot}>
-          <AvatarUser
-            avatar={groupedMessages.user.avatar}
-            borderSize="3px"
-            borderColor={groupedMessages.user.avatar.borderColor}
-            backgroundColor={groupedMessages.user.avatar.backgroundColor}
-          />
+      {
+        !groupedMessages.isServerNotif &&
+        <div className={styles.avatarSide}>
+          <div className={styles.avatarSlot}>
+            <AvatarUser
+              avatar={groupedMessages.user.avatar}
+              borderSize="3px"
+              borderColor={groupedMessages.user.avatar.borderColor}
+              backgroundColor={groupedMessages.user.avatar.backgroundColor}
+            />
+          </div>
         </div>
-      </div>
+    }
 
       {/* Text Side */}
       <div className={styles.textSide}>
@@ -43,9 +47,9 @@ export default function MessageItem({ groupedMessages }: Props) {
         <div className={styles.tsheader}>
           <div
             className={styles.name}
-            style={{ color: groupedMessages.user.avatar.borderColor }}
+            style={{ color: groupedMessages.isServerNotif ? "var(--accent1)" : groupedMessages.user.avatar.borderColor }}
           >
-            {groupedMessages.user.login}
+            {groupedMessages.isServerNotif ? "Server" : groupedMessages.user.login}
           </div>
           <div className={styles.date}>
             {formatedDate}

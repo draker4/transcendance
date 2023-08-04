@@ -11,6 +11,7 @@ type GroupedMsgType = {
   user: User;
   date: Date;
   messages: Message[];
+  isServerNotif: boolean;
 };
 
 export default function MessageBoard({ messages, channel }: Props) {
@@ -23,6 +24,8 @@ export default function MessageBoard({ messages, channel }: Props) {
   }, [messages]);
 
   const isSameSender = (senderA: User, senderB: User) => {
+    if (!senderA || !senderB)
+      return false;
     return senderA.id === senderB.id;
   };
 
@@ -60,6 +63,7 @@ export default function MessageBoard({ messages, channel }: Props) {
           user: currentMsg.sender,
           date: currentMsg.date,
           messages: [currentMsg],
+          isServerNotif: currentMsg.isServerNotif,
         });
       }
     }
