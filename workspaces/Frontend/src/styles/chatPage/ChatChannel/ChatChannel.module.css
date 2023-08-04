@@ -92,6 +92,11 @@
 	border-radius: 5px;
   }
 
+  .channelMsgFrame .msgBoard p.placeholder {
+	color:var(--secondary1);
+	text-align: center;
+  }
+
 .channelMsgFrame .msgBoard .msgItem {
   margin-bottom: 20px;
   display: flex;

@@ -14,31 +14,6 @@ type Params = {
 };
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
-  //   const emptyProfile: Profile = {
-  // 	  id: -1,
-  // 	  login: "",
-  // 	  first_name: "",
-  // 	  last_name: "",
-  // 	  email: "",
-  // 	  phone: "",
-  // 	  image: "",
-  // 	  provider: "",
-  // 	  motto: "",
-  // 	  story: ""
-  //   }
-
-  //   const emptyAvatar:Avatar = {
-  // 	  image: "",
-  // 	  variant: "",
-  // 	  borderColor: "",
-  // 	  backgroundColor: "",
-  // 	  text: "",
-  // 	  empty: false,
-  // 	  isChannel: false,
-  // 	  decrypt: false
-  //   }
-
-  // [+] vvv s'occuper du pb eslint vvv
 
   let myRelation: UserRelation = {
     userId: 0,
@@ -70,8 +45,6 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     }
   };
 
-  // [+] Recup l'info du statut user par rapport a channel
-  // joined | banned | invited | operator etc... a determiner
   let channelAndUsersRelation: ChannelUsersRelation = {
     usersRelation: [],
     channel: {
@@ -92,8 +65,6 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     },
   };
 
-  // [+] Recup la channel elle meme, avec dependances des users
-
   try {
     const token = cookies().get("crunchy-token")?.value;
     if (!token) throw new Error("No token value");
@@ -104,22 +75,15 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
-    channelAndUsersRelation.channel.avatar =
-      await avatarService.getChannelAvatarById(id);
+    channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
 
-    // console.log("channelAndUserStatus = ", channelAndUsersRelation); // checking
-
-    // [+]
     const myProfile = await profileService.getProfileByToken();
-    // console.log("myProfile = ", myProfile);
-    // console.log("channelAndUserStatus.usersStatus = ", channelAndUsersRelation.usersRelation); //checking
 
     const findStatus: UserRelation | undefined =
       channelAndUsersRelation.usersRelation.find(
         (relation) => relation.userId === myProfile.id
       );
 
-    // console.log("findStatus = ", findStatus); //checking
 
     if (findStatus !== undefined) myRelation = findStatus;
     else myRelation.userId = myProfile.id;
@@ -132,7 +96,8 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     !channelAndUsersRelation ||
     !channelAndUsersRelation.channel ||
     !channelAndUsersRelation.channel.avatar ||
-    channelAndUsersRelation.channel.id === -1
+    channelAndUsersRelation.channel.id === -1 ||
+	channelAndUsersRelation.channel.type === "privateMsg"
   ) {
     // [+] ajoutter des param a ErrorChanel, si private par ex
     return <ErrorChannel params={{ id }} />;

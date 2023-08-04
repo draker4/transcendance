@@ -148,7 +148,7 @@ export default function SearchBar({ socket, openDisplay }: {
 			}
 		  }
 		);
-	  };
+	};
 
 	return <Search
 				list={list}

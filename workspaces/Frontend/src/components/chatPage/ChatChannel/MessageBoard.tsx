@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 type Props = {
   messages: Message[];
+  channel: Channel;
 };
 
 type GroupedMsgType = {
@@ -12,16 +13,13 @@ type GroupedMsgType = {
   messages: Message[];
 };
 
-export default function MessageBoard({ messages }: Props) {
+export default function MessageBoard({ messages, channel }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
     GroupedMsgType[]
   >([]);
 
-  // [!] peu etre un peu lourd de join tous les messages à chaque new message ?
   useEffect(() => {
     joiningMessages();
-    // joiningMessages() won't change, no need to put in dependencies :
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
   const isSameSender = (senderA: User, senderB: User) => {
@@ -42,6 +40,7 @@ export default function MessageBoard({ messages }: Props) {
     return diffMinutes < 2;
   };
 
+  const placeholder:string = channel.type === "privateMsg" ? "Feel free to say hello :D !" : " The channel is empty, start here a new passionating topic !";
   
   const joiningMessages = () => {
     const join = [];
@@ -70,9 +69,10 @@ export default function MessageBoard({ messages }: Props) {
 
   return (
     <div className={styles.msgBoard}>
-      {groupedMessages.map((group, index) => (
+      {messages.length > 0 && groupedMessages.map((group, index) => (
         <MessageItem key={index} groupedMessages={group} />
       ))}
+	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}
     </div>
   );
 }

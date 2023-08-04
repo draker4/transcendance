@@ -38,7 +38,7 @@ export default class Avatar_Service {
     const response: Response = await fetchData(
       this.token,
       "avatar",
-      this.makeUrl(id, false),
+      this.makeUrl(id, true),
       "GET"
     );
     const avatar: Avatar = await response.json();

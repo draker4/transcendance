@@ -1,7 +1,6 @@
 import Profile_Service from "@/services/Profile.service";
 import ErrorProfile from "./ErrorProfile";
 import ProfileMainFrame from "./ProfileMainFrame";
-import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/headers";
 import Avatar_Service from "@/services/Avatar.service";
 import { verifyAuth } from "@/lib/auth/auth";
