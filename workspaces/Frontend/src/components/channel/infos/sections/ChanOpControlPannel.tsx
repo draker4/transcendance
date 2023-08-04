@@ -78,6 +78,7 @@ export default function ChanOpControlPannel({
     if (rep.success) {
       options.onSuccess();
       // [+] emit dans la channel le chgt
+	  
     } else {
       lists.setNotif("Error : " + rep.message + " ...try later please");
     }

@@ -96,7 +96,8 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     !channelAndUsersRelation ||
     !channelAndUsersRelation.channel ||
     !channelAndUsersRelation.channel.avatar ||
-    channelAndUsersRelation.channel.id === -1
+    channelAndUsersRelation.channel.id === -1 ||
+	channelAndUsersRelation.channel.type === "privateMsg"
   ) {
     // [+] ajoutter des param a ErrorChanel, si private par ex
     return <ErrorChannel params={{ id }} />;
