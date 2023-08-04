@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ChanOpControlPannel from "./ChanOpControlPannel";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
+import { Socket } from "socket.io-client";
 
 type Props = {
   channelId:number;
@@ -15,9 +16,10 @@ type Props = {
   onHover: () => void;
   onLeave: () => void;
   lists:ChannelLists;
+  socket: Socket | undefined;
 };
 
-export default function RolesItem({ channelId, relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists }: Props) {
+export default function RolesItem({ channelId, relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists, socket }: Props) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocusOn = () => {
@@ -65,7 +67,7 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
         {relation.user.login}
       </Link>
 
-      { isFocused && myRelation.isChanOp && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} />}
+      { isFocused && myRelation.isChanOp && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}
     </article>
   );
 }

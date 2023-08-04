@@ -466,14 +466,17 @@ export class ChatService {
       const msg: sendMsgDto = {
         content: `${user.login} just arrived`,
         date: date.toISOString(),
-        sender: user,
+        sender: null,
         channelName: relation.channel.name,
         channelId: channelId,
+        isServerNotif: true,
       };
+
+      console.log(msg);
 
       server.to('channel:' + channelId).emit('sendMsg', msg);
       'channel:' + channelId;
-      socket.emit('notif');
+      // socket.emit('notif');
 
       socket.join('channel:' + channel.id);
 
@@ -612,6 +615,7 @@ export class ChatService {
         sender: sender,
         channelName: fetchedChannel.name,
         channelId: fetchedChannel.id,
+        isServerNotif: false,
       };
       
       this.log(
