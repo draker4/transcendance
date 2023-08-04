@@ -3,7 +3,6 @@ import {
   Player,
   Draw,
   PlayerDynamic,
-  RGBA,
   Timer,
 } from "@transcendence/shared/types/Game.types";
 import {
@@ -15,16 +14,18 @@ import {
   GAME_HEIGHT,
   FONT_TIMER,
   FONT_ROUND,
+  MAX_PAUSE,
 } from "@transcendence/shared/constants/Game.constants";
+import {
+  COLOR_MENU,
+  COLOR_FONT,
+  COLOR_ROUND_WON,
+  COLOR_PAUSE,
+} from "@transcendence/shared/constants/Asset.constants";
 
-function drawPlayer(
-  draw: Draw,
-  player: Player | null,
-  playerDynamic: PlayerDynamic
-) {
+function drawPlayer(draw: Draw, player: Player, playerDynamic: PlayerDynamic) {
   const radius = 8; // Adjust the radius to control the roundness of the corners
 
-  if (!player) return;
   const { r, g, b } = player.color;
   draw.context.fillStyle = `rgb(${r}, ${g}, ${b})`;
 
@@ -88,16 +89,21 @@ function drawScore(draw: Draw, score: number, posX: number, posY: number) {
   draw.context.fillText(score.toString(), posX, posY);
 }
 
-function drawRound(
-  draw: Draw,
-  roundDraw: number,
-  color: RGBA,
-  side: "left" | "Right"
-) {
-  const { r, g, b, a } = color;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  const sign = side === "left" ? -1 : 1;
-  for (let i = 0; i < roundDraw; i++) {
+function drawRound(draw: Draw, gameData: GameData, side: "Left" | "Right") {
+  const { r: emptyR, g: emptyG, b: emptyB, a: emptyA } = COLOR_FONT;
+  const { r: wonR, g: wonG, b: wonB, a: wonA } = COLOR_ROUND_WON;
+  const { r: borderR, g: borderG, b: borderB, a: borderA } = COLOR_FONT;
+
+  draw.context.fillStyle = `rgba(${wonR}, ${wonG}, ${wonB}, ${wonA})`;
+  draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
+  draw.context.lineWidth = 3;
+
+  const sign = side === "Left" ? -1 : 1;
+  const rondWon =
+    side === "Left" ? gameData.score.leftRound : gameData.score.rightRound;
+  for (let i = 0; i < gameData.maxRound / 2; i++) {
+    if (i >= rondWon)
+      draw.context.fillStyle = `rgba(${emptyR}, ${emptyG}, ${emptyB}, ${emptyA})`;
     draw.context.beginPath();
     draw.context.arc(
       draw.canvas.width / 2 + 140 * sign + i * 35 * sign,
@@ -107,13 +113,43 @@ function drawRound(
       Math.PI * 2
     );
     draw.context.fill();
+    draw.context.stroke();
+    draw.context.closePath();
+  }
+}
+
+function drawPause(draw: Draw, gameData: GameData, side: "Left" | "Right") {
+  const { r: emptyR, g: emptyG, b: emptyB, a: emptyA } = COLOR_FONT;
+  const { r: pauseR, g: pauseG, b: pauseB, a: pauseA } = COLOR_PAUSE;
+  const { r: borderR, g: borderG, b: borderB, a: borderA } = COLOR_FONT;
+
+  draw.context.fillStyle = `rgba(${pauseR}, ${pauseG}, ${pauseB}, ${pauseA})`;
+  draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
+  draw.context.lineWidth = 3;
+
+  const sign = side === "Left" ? -1 : 1;
+  const available =
+    side === "Left" ? gameData.pause.left : gameData.pause.right;
+  for (let i = MAX_PAUSE; i > 0; i--) {
+    if (i <= available)
+      draw.context.fillStyle = `rgba(${emptyR}, ${emptyG}, ${emptyB}, ${emptyA})`;
+    draw.context.beginPath();
+    draw.context.arc(
+      draw.canvas.width / 2 + 440 * sign + i * 35 * sign,
+      32,
+      10,
+      0,
+      Math.PI * 2
+    );
+    draw.context.fill();
+    draw.context.stroke();
     draw.context.closePath();
   }
 }
 
 function drawScoreTable(gameData: GameData, draw: Draw) {
   // Set font
-  const { r, g, b, a } = gameData.color.font;
+  const { r, g, b, a } = COLOR_FONT;
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
@@ -144,21 +180,23 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   }
 
   // Draw player round won
-  drawRound(draw, gameData.maxRound / 2, gameData.color.font, "left");
-  drawRound(draw, gameData.score.leftRound, gameData.color.roundWon, "left");
-  drawRound(draw, gameData.maxRound / 2, gameData.color.font, "Right");
-  drawRound(draw, gameData.score.rightRound, gameData.color.roundWon, "Right");
+  drawRound(draw, gameData, "Left");
+  drawRound(draw, gameData, "Right");
+
+  // Draw pause
+  drawPause(draw, gameData, "Left");
+  drawPause(draw, gameData, "Right");
 }
 
 function applyBlurEffect(draw: Draw) {
-  const overlayColor = "rgba(0, 0, 0, 0.5)"; // Adjust the color and opacity as needed
-  draw.context.fillStyle = overlayColor;
+  const { r, g, b, a } = COLOR_MENU;
+  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.fillRect(0, 0, draw.canvas.width, draw.canvas.height);
 }
 
 function startingMenu(gameData: GameData, draw: Draw) {
   applyBlurEffect(draw);
-  const { r, g, b, a } = gameData.color.font;
+  const { r, g, b, a } = COLOR_FONT;
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_MENU;
   draw.context.textAlign = "center";
@@ -171,7 +209,7 @@ function startingMenu(gameData: GameData, draw: Draw) {
 
 function finishedMenu(gameData: GameData, draw: Draw) {
   applyBlurEffect(draw);
-  const { r, g, b, a } = gameData.color.font;
+  const { r, g, b, a } = COLOR_FONT;
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_MENU;
   draw.context.textAlign = "center";
@@ -190,13 +228,13 @@ function finishedMenu(gameData: GameData, draw: Draw) {
   );
 }
 
-function drawTimer(timer: Timer, color: RGBA, draw: Draw, round: number) {
+function drawTimer(timer: Timer, draw: Draw, round: number) {
   // remove 2h from the timer
   const actualTime = new Date().getTime();
 
   if (actualTime <= timer.end) {
     applyBlurEffect(draw);
-    const { r, g, b, a } = color;
+    const { r, g, b, a } = COLOR_FONT;
     draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
     draw.context.font = FONT_TIMER;
     draw.context.textAlign = "center";
@@ -207,7 +245,7 @@ function drawTimer(timer: Timer, color: RGBA, draw: Draw, round: number) {
     // Draw timer reason
     let reason: string = timer.reason;
     if (timer.reason === "Pause") {
-      reason = `${timer.playerName} as requested a Break`;
+      reason = `${timer.playerName} as requested a Pause`;
     } else if (timer.reason === "Deconnection") {
       reason = `${timer.playerName} has been disconnected`;
     } else if (timer.reason === "Round") {
@@ -257,17 +295,11 @@ export function drawPong(gameData: GameData, draw: Draw) {
   // Draw the Score
   drawScoreTable(gameData, draw);
 
-  // Draw the Timer
-  if (gameData.timer)
-    drawTimer(
-      gameData.timer,
-      gameData.color.font,
-      draw,
-      gameData.actualRound + 1
-    );
-
   // Draw the ball
   if (gameData.status === "Playing") drawBall(gameData, draw);
+
+  // Draw the Timer
+  if (gameData.timer) drawTimer(gameData.timer, draw, gameData.actualRound + 1);
 
   // Draw the menu
   if (gameData.status === "Not Started") startingMenu(gameData, draw);

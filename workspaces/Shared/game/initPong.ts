@@ -3,7 +3,6 @@ import {
   GameData,
   Ball,
   Player,
-  Color,
   PlayerDynamic,
   Action,
 } from "@transcendence/shared/types/Game.types";
@@ -44,14 +43,6 @@ export function initBall(
     moveX: 0,
     moveY: 0,
     push: 0,
-  };
-}
-
-export function initColor(background: string): Color {
-  return {
-    menu: { r: 0, g: 0, b: 0, a: 0.5 },
-    font: { r: 255, g: 255, b: 255, a: 1 },
-    roundWon: { r: 116, g: 200, b: 87, a: 1 },
   };
 }
 
@@ -100,7 +91,6 @@ export function initPong(initData: InitData): GameData {
     hostSide: initData.hostSide,
     difficulty: initData.difficulty,
     push: initData.push,
-    color: initColor(initData.background),
     playerServe: Math.random() < 0.5 ? "Left" : "Right",
     actualRound: initData.actualRound,
     maxPoint: initData.maxPoint,
