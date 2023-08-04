@@ -103,10 +103,6 @@ export class GameManager {
       throw new WsException('User not found');
     }
     user.pingSend = 0;
-    this.logger.log(
-      `User with ID ${action.userId} performed action ${action.move}`,
-      'playerAction',
-    );
     return pong.playerAction(action);
   }
 
@@ -124,7 +120,11 @@ export class GameManager {
   }
 
   // Method to handle user disconnection from a game
-  public async disconnect(userId: number, socket: Socket): Promise<any> {
+  public async disconnect(
+    userId: number,
+    socket: Socket,
+    manual: boolean,
+  ): Promise<any> {
     try {
       // Find user in the collection based on userId and socketId
       const user = this.usersConnected.find(
@@ -141,7 +141,7 @@ export class GameManager {
       }
 
       // Remove the user from the game and userConnected array
-      await pong.disconnect(user);
+      await pong.disconnect(user, manual);
       this.usersConnected = this.usersConnected.filter(
         (user) => user.id !== userId && user.socket.id !== socket.id,
       );
@@ -204,7 +204,7 @@ export class GameManager {
         (!user.isPlayer && user.pingSend >= SPECTATOR_PING)
       ) {
         this.logger.log(`User with ID ${user.id} disconnected`);
-        this.disconnect(user.id, user.socket).catch((error) => {
+        this.disconnect(user.id, user.socket, false).catch((error) => {
           this.logger.error(
             `Error while disconnecting user: ${error.message}`,
             'checkConnexion',
@@ -212,10 +212,6 @@ export class GameManager {
           );
         });
       } else {
-        // this.logger.log(
-        //   `Ping sent to user: ${user.id} and socket id: ${user.socket.id}`,
-        //   'checkConnexion',
-        // );
         user.sendPing();
       }
     });

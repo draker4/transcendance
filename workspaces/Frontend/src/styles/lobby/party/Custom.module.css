@@ -14,3 +14,8 @@
   color: var(--tertiary2);
   margin-bottom: 5px;
 }
+
+.score,
+.round {
+  width: 100%;
+}

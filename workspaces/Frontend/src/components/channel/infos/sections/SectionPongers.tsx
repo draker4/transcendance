@@ -18,7 +18,7 @@ const	[pongers, setPongers] = useState<UserRelation[]>(channelAndUsersRelation.u
 const	[invited, setInvited] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited)));
 const	[banned, setBanned] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned)));
 const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited)));
-const   [notif, setNotif] = useState<string>("");
+const [notif, setNotif] = useState<string>("");
 
 	const lists:ChannelLists = {
 		setOperators: setOperators,

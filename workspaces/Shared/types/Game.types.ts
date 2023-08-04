@@ -26,6 +26,13 @@ export const DirYValues: { [key: string]: DirY } = {
   Down: 1,
 };
 
+export type Pause = {
+  active: boolean;
+  left: number;
+  right: number;
+  status: "Left" | "Right" | "None";
+};
+
 export type Timer = {
   reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection";
   end: number;
@@ -113,6 +120,7 @@ export type GameData = {
   ballImg: string;
   type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
+  hostSide: "Left" | "Right";
   difficulty: 1 | 2 | 3 | 4 | 5;
   push: boolean;
   color: Color;
@@ -123,9 +131,10 @@ export type GameData = {
   playerServe: "Left" | "Right" | null;
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   score: ScoreInfo;
-  timer: Timer | null;
+  timer: Timer;
+  pause: Pause;
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
-  result: "Not Finished" | "Draw" | "Draw" | "Host" | "Opponent" | "Deleted";
+  result: "Not Finished" | "Host" | "Opponent" | "Deleted";
   sendStatus: boolean;
   updateScore: boolean;
 };
@@ -135,10 +144,13 @@ export type InitData = {
   name: string;
   type: "Classic" | "Best3" | "Best5" | "Custom";
   mode: "League" | "Party" | "Training";
+  hostSide: "Left" | "Right";
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
   difficulty: 1 | 2 | 3 | 4 | 5;
   push: boolean;
+  pause: boolean;
   background: string;
   ball: string;
   score: ScoreInfo;

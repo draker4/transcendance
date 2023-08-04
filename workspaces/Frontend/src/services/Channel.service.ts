@@ -1,15 +1,19 @@
 import fetchData from "@/lib/fetch/fetchData";
 
-
 export default class Channel_Service {
-	private token?: string;
+  private token?: string;
 
-	constructor(token?: string) {
-	  if (token) this.token = token;
-	}
+  constructor(token?: string) {
+    if (token) this.token = token;
+  }
 
   public async getChannelAndUsers(id: number): Promise<ChannelUsersRelation> {
-    const response: Response = await fetchData(this.token, "channel", id.toString(), "GET");
+    const response: Response = await fetchData(
+      this.token,
+      "channel",
+      id.toString(),
+      "GET"
+    );
     const data: ChannelUsersRelation = await response.json();
 
     return data;
@@ -39,16 +43,24 @@ export default class Channel_Service {
         channelId: channelId,
         userId: userId,
         newRelation: {
-          ...(newRelation.isChanOp !== undefined && {isChanOp: newRelation.isChanOp}),
-          ...(newRelation.isBanned !== undefined && {isBanned: newRelation.isBanned}),
-          ...(newRelation.joined !== undefined && {joined: newRelation.joined}),
-          ...(newRelation.invited !== undefined && {invited: newRelation.invited}),
+          ...(newRelation.isChanOp !== undefined && {
+            isChanOp: newRelation.isChanOp,
+          }),
+          ...(newRelation.isBanned !== undefined && {
+            isBanned: newRelation.isBanned,
+          }),
+          ...(newRelation.joined !== undefined && {
+            joined: newRelation.joined,
+          }),
+          ...(newRelation.invited !== undefined && {
+            invited: newRelation.invited,
+          }),
         },
       });
 
       const response: Response = await fetchData(
-		this.token,
-		"channel",
+        this.token,
+        "channel",
         "editRelation",
         "PUT",
         body

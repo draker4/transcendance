@@ -8,8 +8,6 @@ import SideSelector from "@/components/lobby/selector/SideSelector";
 import Custom from "@/components/lobby/party/Custom";
 
 type Props = {
-  push: boolean;
-  setPush: Function;
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   setMaxPoint: Function;
   maxRound: 1 | 3 | 5 | 7 | 9;
@@ -18,11 +16,13 @@ type Props = {
   setType: Function;
   hostSide: "Left" | "Right";
   setHostSide: Function;
+  push: boolean;
+  setPush: Function;
+  pause: boolean;
+  setPause: Function;
 };
 
 export default function DefineType({
-  push,
-  setPush,
   maxPoint,
   setMaxPoint,
   maxRound,
@@ -31,6 +31,10 @@ export default function DefineType({
   setType,
   hostSide,
   setHostSide,
+  push,
+  setPush,
+  pause,
+  setPause,
 }: Props) {
   // ----------------------------------  CHANGEMENT  ---------------------------------- //
 
@@ -41,31 +45,35 @@ export default function DefineType({
   }, [setType, setHostSide]);
 
   const setClassic = () => {
-    setPush(false);
+    setType("Classic");
     setMaxPoint(9);
     setMaxRound(1);
-    setType("Classic");
+    setPush(false);
+    setPause(false);
   };
 
   const setBest3 = () => {
-    setPush(true);
+    setType("Best3");
     setMaxPoint(5);
     setMaxRound(3);
-    setType("Best3");
+    setPush(true);
+    setPause(true);
   };
 
   const setBest5 = () => {
-    setPush(true);
+    setType("Best5");
     setMaxPoint(5);
     setMaxRound(5);
-    setType("Best5");
+    setPush(true);
+    setPause(true);
   };
 
   const setCustom = () => {
-    setPush(false);
     setMaxPoint(3);
     setMaxRound(1);
     setType("Custom");
+    setPush(true);
+    setPause(true);
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //
@@ -115,12 +123,14 @@ export default function DefineType({
       </div>
       {type === "Custom" && (
         <Custom
-          push={push}
-          setPush={setPush}
           maxPoint={maxPoint}
           setMaxPoint={setMaxPoint}
           maxRound={maxRound}
           setMaxRound={setMaxRound}
+          push={push}
+          setPush={setPush}
+          pause={pause}
+          setPause={setPause}
         />
       )}
     </div>

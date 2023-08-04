@@ -11,6 +11,8 @@ type Props = {
   setMaxRound: Function;
   push: boolean;
   setPush: Function;
+  pause: boolean;
+  setPause: Function;
 };
 
 export default function Custom({
@@ -20,6 +22,8 @@ export default function Custom({
   setMaxRound,
   push,
   setPush,
+  pause,
+  setPause,
 }: Props) {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
@@ -27,29 +31,41 @@ export default function Custom({
 
   return (
     <div className={styles.custom}>
-      {/* Push */}
-      <label className={styles.section}>Push</label>
-      <Selector id="push" value={push} setValue={setPush} />
-
       {/* Score */}
-      <label className={styles.section}>Score</label>
-      <Slider
-        min={3}
-        max={9}
-        step={1}
-        value={maxPoint}
-        setValue={setMaxPoint}
-      />
+      <div className={styles.score}>
+        <label className={styles.section}>Score</label>
+        <Slider
+          min={3}
+          max={9}
+          step={1}
+          value={maxPoint}
+          setValue={setMaxPoint}
+        />
+      </div>
 
       {/* Round */}
-      <label className={styles.section}>Round</label>
-      <Slider
-        min={1}
-        max={9}
-        step={2}
-        value={maxRound}
-        setValue={setMaxRound}
-      />
+      <div className={styles.round}>
+        <label className={styles.section}>Round</label>
+        <Slider
+          min={1}
+          max={9}
+          step={2}
+          value={maxRound}
+          setValue={setMaxRound}
+        />
+      </div>
+
+      {/* Push */}
+      <div className={styles.push}>
+        <label className={styles.section}>Push</label>
+        <Selector id="push" value={push} setValue={setPush} />
+      </div>
+
+      {/* Pause */}
+      <div className={styles.pause}>
+        <label className={styles.section}>Pause</label>
+        <Selector id="pause" value={pause} setValue={setPause} />
+      </div>
     </div>
   );
 }

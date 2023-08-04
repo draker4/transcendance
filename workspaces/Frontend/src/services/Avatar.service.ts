@@ -18,7 +18,9 @@ export default class Avatar_Service {
   /* ----------------------------- PUBLIC METHODS ---------------------------- */
 
   public async getAvatarbyUserId(id: number): Promise<Avatar> {
-    const response: Response = await fetchData(this.token, "avatar",
+    const response: Response = await fetchData(
+      this.token,
+      "avatar",
       this.makeUrl(id, false),
       "GET"
     );
@@ -35,8 +37,8 @@ export default class Avatar_Service {
   public async getChannelAvatarById(id: number): Promise<Avatar> {
     const response: Response = await fetchData(
       this.token,
-	  "avatar",
-      this.makeUrl(id, true),
+      "avatar",
+      this.makeUrl(id, false),
       "GET"
     );
     const avatar: Avatar = await response.json();
@@ -56,8 +58,7 @@ export default class Avatar_Service {
     isChannel: number
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-    const response = await fetchData(this.token,
-		"avatar","", "PUT", body);
+    const response = await fetchData(this.token, "avatar", "", "PUT", body);
     const data = await response.json();
   }
 }

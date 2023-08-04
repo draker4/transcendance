@@ -42,13 +42,11 @@
 }
 
 .school {
-  padding: 0.4vw;
-  object-fit: fill;
+  padding: 0.5vw;
 }
 
 .google {
   padding: 0.7vw;
-  object-fit: fill;
 }
 
 @media screen and (min-height: 1500px) {

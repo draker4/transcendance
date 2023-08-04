@@ -47,6 +47,7 @@ export class Pong {
   private currentFps = 0;
   private updateGameInterval: NodeJS.Timeout | null = null;
   private disconnectLoopRunning: 'Left' | 'Right' | null = null;
+  private pauseLoopRunning: 'Left' | 'Right' | null = null;
 
   // Game data
   private playerLeft: UserInfo | null = null;
@@ -70,10 +71,13 @@ export class Pong {
         name: this.gameDB.name,
         type: this.gameDB.type,
         mode: this.gameDB.mode,
+        hostSide: this.gameDB.hostSide,
+        actualRound: this.gameDB.actualRound,
         maxPoint: this.gameDB.maxPoint,
         maxRound: this.gameDB.maxRound,
         difficulty: this.gameDB.difficulty,
         push: this.gameDB.push,
+        pause: this.gameDB.pause,
         background: this.gameDB.background,
         ball: this.gameDB.ball,
         score: score,
@@ -169,52 +173,126 @@ export class Pong {
 
   // --------------------------------  ACTION METHODS  -------------------------------- //
 
-  public async playerAction(action: ActionDTO): Promise<any> {
+  private pauseLoop(side: 'Left' | 'Right') {
+    if (!this.disconnectLoopRunning && this.pauseLoopRunning) {
+      const actualTime = new Date().getTime();
+      if (actualTime >= this.data.timer.end) {
+        this.data.status = 'Playing';
+        this.data.sendStatus = true;
+        this.data.timer = defineTimer(
+          TIMER_RESTART,
+          'ReStart',
+          side === 'Left'
+            ? this.data.playerLeft.name
+            : this.data.playerRight.name,
+        );
+        this.data.sendStatus = true;
+        this.pauseLoopRunning = null;
+      } else {
+        // continue checking every second
+        setTimeout(() => {
+          this.pauseLoop(side);
+        }, 1000);
+      }
+    }
+  }
+
+  private startPauseLoop(side: 'Left' | 'Right') {
+    if (!this.disconnectLoopRunning) {
+      this.pauseLoopRunning = side;
+      this.pauseLoop(side);
+    }
+  }
+
+  private stopPauseLoop() {
+    if (!this.disconnectLoopRunning) {
+      this.pauseLoopRunning = null;
+    }
+  }
+
+  private handleStop(action: ActionDTO) {
+    if (this.data.status === 'Playing') {
+      // Check if player is allowed to pause
+      if (this.playerLeft.id === action.userId && this.data.pause.left) {
+        this.data.pause.left--;
+        this.data.pause.status = 'Left';
+      } else if (
+        this.playerRight.id === action.userId &&
+        this.data.pause.right
+      ) {
+        this.data.pause.right--;
+        this.data.pause.status = 'Right';
+      } else return;
+
+      // Pause the game
+      this.data.status = 'Stopped';
+      this.data.sendStatus = true;
+      this.data.timer = defineTimer(
+        TIMER_PAUSE,
+        'Pause',
+        this.playerLeft.id === action.userId
+          ? this.data.playerLeft.name
+          : this.data.playerRight.name,
+      );
+      this.startPauseLoop(
+        this.playerLeft.id === action.userId ? 'Left' : 'Right',
+      );
+    } else if (this.data.status === 'Stopped') {
+      // Check if player is allowed to restart
+      if (
+        this.playerLeft.id === action.userId &&
+        this.data.pause.status === 'Right'
+      ) {
+        return;
+      } else if (
+        this.playerRight.id === action.userId &&
+        this.data.pause.status === 'Left'
+      ) {
+        return;
+      }
+
+      // Restart the game
+      this.data.status = 'Playing';
+      this.data.sendStatus = true;
+      this.data.timer = defineTimer(
+        TIMER_RESTART,
+        'ReStart',
+        this.playerLeft.id === action.userId
+          ? this.data.playerLeft.name
+          : this.data.playerRight.name,
+      );
+      this.stopPauseLoop();
+    }
+  }
+
+  private handlePush(action: ActionDTO) {
+    if (
+      this.playerLeft.id === action.userId &&
+      !this.data.playerLeftDynamic.push
+    )
+      this.data.playerLeftDynamic.push = 1;
+    else if (
+      this.playerRight.id === action.userId &&
+      !this.data.playerRightDynamic.push
+    )
+      this.data.playerRightDynamic.push = 1;
+  }
+
+  public playerAction(action: ActionDTO) {
     if (
       this.playerLeft.id === action.userId ||
       this.playerRight.id === action.userId
     ) {
-      if (action.move === 'Stop') {
-        if (this.data.status === 'Playing') {
-          this.data.status = 'Stopped';
-          this.data.sendStatus = true;
-          this.data.timer = defineTimer(
-            TIMER_PAUSE,
-            'Pause',
-            this.playerLeft.id === action.userId
-              ? this.data.playerLeft.name
-              : this.data.playerRight.name,
-          );
-        } else if (this.data.status === 'Stopped') {
-          this.data.status = 'Playing';
-          this.data.sendStatus = true;
-          this.data.timer = defineTimer(
-            TIMER_RESTART,
-            'ReStart',
-            this.playerLeft.id === action.userId
-              ? this.data.playerLeft.name
-              : this.data.playerRight.name,
-          );
-        }
+      if (action.move === 'Stop' && this.data.pause.active) {
+        this.handleStop(action);
       } else if (action.move === 'Push') {
-        if (
-          this.playerLeft.id === action.userId &&
-          !this.data.playerLeftDynamic.push
-        )
-          this.data.playerLeftDynamic.push = 1;
-        else if (
-          this.playerRight.id === action.userId &&
-          !this.data.playerRightDynamic.push
-        )
-          this.data.playerRightDynamic.push = 1;
+        this.handlePush(action);
       } else {
         if (this.playerLeft.id === action.userId)
           this.data.playerLeftDynamic.move = action.move;
         else if (this.playerRight.id === action.userId)
           this.data.playerRightDynamic.move = action.move;
       }
-    } else {
-      throw new WsException('Action not performed by player');
     }
   }
 
@@ -232,6 +310,7 @@ export class Pong {
       playerLeft: this.data.playerLeftStatus,
       playerRight: this.data.playerRightStatus,
       timer: this.data.timer,
+      pause: this.data.pause,
     };
     this.server.to(this.gameId).emit('status', status);
   }
@@ -353,6 +432,7 @@ export class Pong {
         this.data.mode,
         'Left',
         this.data.score,
+        this.data.maxRound,
       );
       await this.statsService.updateStats(
         this.data.playerRight.id,
@@ -360,6 +440,7 @@ export class Pong {
         this.data.mode,
         'Right',
         this.data.score,
+        this.data.maxRound,
       );
     } catch (error) {
       this.logger.error(
@@ -452,23 +533,20 @@ export class Pong {
 
   // --------------------------------  DISCONNECT METHODS  -------------------------------- //
 
-  public async disconnect(user: UserInfo): Promise<any> {
+  public async disconnect(user: UserInfo, manual: boolean): Promise<any> {
     const data: ReturnData = {
       success: false,
       message: '',
     };
     if (this.playerLeft && this.playerLeft === user) {
-      console.log('Disconnect playerLeft');
       this.playerLeft = null;
-      this.disconnectPlayer('Left');
-      // this.stopGameLoop();
+      if (manual && this.data.status === 'Playing') this.rageQuit('Left');
+      else this.disconnectPlayer('Left');
     } else if (this.playerRight && this.playerRight === user) {
-      console.log('Disconnect playerRight');
       this.playerRight = null;
-      this.disconnectPlayer('Right');
-      // this.stopGameLoop();
+      if (manual && this.data.status === 'Playing') this.rageQuit('Right');
+      else this.disconnectPlayer('Right');
     } else {
-      console.log('Disconnect spectator');
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';
         return data;
@@ -486,15 +564,16 @@ export class Pong {
   private disconnectLoop(side: 'Left' | 'Right') {
     if (this.disconnectLoopRunning) {
       const actualTime = new Date().getTime();
-      console.log('disconnect loop for ', side);
       if (actualTime > this.data.timer.end) {
         this.data.status = 'Finished';
         if (side === 'Left') {
           this.data.result =
             this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+          this.data.score.disconnect = 'Left';
         } else if (side === 'Right') {
           this.data.result =
             this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+          this.data.score.disconnect = 'Right';
         }
         this.data.sendStatus = true;
       } else {
@@ -546,6 +625,20 @@ export class Pong {
           this.startDisconnectLoop('Right');
         else this.stopDisconnectLoop();
       }
+    }
+  }
+
+  private rageQuit(side: 'Left' | 'Right') {
+    this.data.status = 'Finished';
+    this.data.sendStatus = true;
+    if (side === 'Left') {
+      this.data.result = this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+      this.data.score.rageQuit = 'Left';
+      this.scoreService.updateRageQuit(this.gameId, 'Left');
+    } else if (side === 'Right') {
+      this.data.result = this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+      this.data.score.rageQuit = 'Right';
+      this.scoreService.updateRageQuit(this.gameId, 'Right');
     }
   }
 }

@@ -8,4 +8,6 @@ export type ScoreInfo = {
   leftRound: 0 | 1 | 2 | 3 | 4 | 5;
   rightRound: 0 | 1 | 2 | 3 | 4 | 5;
   round: Round[];
+  rageQuit: "Left" | "Right" | "";
+  disconnect: "Left" | "Right" | "";
 };

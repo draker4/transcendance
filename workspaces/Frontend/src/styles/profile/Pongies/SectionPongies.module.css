@@ -7,17 +7,54 @@
 	flex-flow: row nowrap;
 	justify-content: flex-start;
 	align-items: center;
-	padding: 10px;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-size: clamp(18px, 1vw, 30px);
+	/* border: 1px solid red; */
 }
+
+/* .pongieSearched:hover {
+	background-color: var(--primary2);
+} */
 
 .avatar {
 	width: 40px;
 	height: 40px;
 	flex-shrink: 0;
-	cursor: pointer;
 }
 
 .login{
 	word-break: break-all;
 	padding-left: 10px;
+}
+
+.footer {
+	border: 1px solid green;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	justify-content: space-around;
+	height: 40px;
+	background-color: var(--accent1);
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+}
+
+.footer .icon {
+	width: 25px;
+	height: 25px;
+	color: var(--primary1);
+}
+
+.iconHover:hover, .badge:hover {
+	scale: 1.05;
+	cursor: pointer;
+}
+
+.iconHover:active, .badge:active {
+	scale: 0.95;
+}
+
+.footer .badge {
+	cursor: pointer;
 }

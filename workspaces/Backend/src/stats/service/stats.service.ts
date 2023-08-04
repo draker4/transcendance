@@ -32,6 +32,7 @@ export class StatsService {
     mode: 'League' | 'Party' | 'Training',
     side: 'Left' | 'Right',
     score: ScoreInfo,
+    nbRound: number,
   ): Promise<Stats> {
     try {
       let stats = await this.statsRepository.findOne({
@@ -40,7 +41,6 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
-      const nbRound = score.leftRound + score.rightRound;
       if (mode === 'League') {
         stats = this.defineLeagueStats(stats, side, type, score, nbRound);
       } else if (mode === 'Party') {
@@ -95,6 +95,10 @@ export class StatsService {
           stats.trainingBest5Lost,
         customWon: stats.partyCustomWon + stats.trainingCustomWon,
         customLost: stats.partyCustomLost + stats.trainingCustomLost,
+        rageQuitWin: stats.leagueRageQuitWin + stats.partyRageQuitWin,
+        rageQuitLost: stats.leagueRageQuitLost + stats.partyRageQuitLost,
+        disconnectWin: stats.leagueDisconnectWin + stats.partyDisconnectWin,
+        disconnectLost: stats.leagueDisconnectLost + stats.partyDisconnectLost,
         roundWon:
           stats.leagueRoundWon + stats.partyRoundWon + stats.trainingRoundWon,
         roundLost:
@@ -156,6 +160,10 @@ export class StatsService {
         else if (type === 'Best5') stats.leagueBest5Won += 1;
       }
     }
+    if (score.rageQuit) {
+      if (side === score.rageQuit) stats.leagueRageQuitLost += 1;
+      else stats.leagueRageQuitWin += 1;
+    }
     stats.leagueRoundWon +=
       side === 'Left' ? score.leftRound : score.rightRound;
     stats.leagueRoundLost +=
@@ -178,7 +186,13 @@ export class StatsService {
     score: ScoreInfo,
     nbRound: number,
   ): Stats {
-    if (score.leftRound > score.rightRound) {
+    if (
+      score.rageQuit === 'Right' ||
+      score.disconnect === 'Right' ||
+      (score.leftRound > score.rightRound &&
+        !score.rageQuit &&
+        !score.disconnect)
+    ) {
       if (side === 'Left') {
         if (type === 'Classic') stats.partyClassicWon += 1;
         else if (type === 'Best3') stats.partyBest3Won += 1;
@@ -190,7 +204,13 @@ export class StatsService {
         else if (type === 'Best5') stats.partyBest5Lost += 1;
         else if (type === 'Custom') stats.partyCustomLost += 1;
       }
-    } else {
+    } else if (
+      score.rageQuit === 'Left' ||
+      score.disconnect === 'Left' ||
+      (score.leftRound < score.rightRound &&
+        !score.rageQuit &&
+        !score.disconnect)
+    ) {
       if (side === 'Left') {
         if (type === 'Classic') stats.partyClassicLost += 1;
         else if (type === 'Best3') stats.partyBest3Lost += 1;
@@ -202,6 +222,13 @@ export class StatsService {
         else if (type === 'Best5') stats.partyBest5Won += 1;
         else if (type === 'Custom') stats.partyCustomWon += 1;
       }
+    }
+    if (score.rageQuit) {
+      if (side === score.rageQuit) stats.partyRageQuitLost += 1;
+      else stats.partyRageQuitWin += 1;
+    } else if (score.disconnect) {
+      if (side === score.disconnect) stats.partyDisconnectLost += 1;
+      else stats.partyDisconnectWin += 1;
     }
     stats.partyRoundWon += side === 'Left' ? score.leftRound : score.rightRound;
     stats.partyRoundLost +=

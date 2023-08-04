@@ -47,6 +47,10 @@ export class CreateGameDTO {
   @IsNotEmpty()
   push: boolean;
 
+  @IsBoolean()
+  @IsNotEmpty()
+  pause: boolean;
+
   @IsString()
   @IsNotEmpty()
   background: string;

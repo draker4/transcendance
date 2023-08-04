@@ -1,4 +1,3 @@
-import { turnDelayIsOver } from "@transcendence/shared/game/pongUtils";
 import {
   GameData,
   Player,
@@ -12,7 +11,6 @@ import {
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
   FONT_SCORE,
-  MENU_COLOR,
   GAME_WIDTH,
   GAME_HEIGHT,
   FONT_TIMER,
@@ -177,10 +175,14 @@ function finishedMenu(gameData: GameData, draw: Draw) {
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_MENU;
   draw.context.textAlign = "center";
-  const winner =
-    gameData.score.leftRound > gameData.score.rightRound
-      ? gameData.playerLeft.name
-      : gameData.playerRight.name;
+  let winner = "Error";
+  if (gameData.result === "Host") {
+    if (gameData.hostSide === "Left") winner = gameData.playerLeft.name;
+    else winner = gameData.playerRight.name;
+  } else if (gameData.result === "Opponent") {
+    if (gameData.hostSide === "Left") winner = gameData.playerRight.name;
+    else winner = gameData.playerLeft.name;
+  }
   draw.context.fillText(
     `${winner} has won!`,
     draw.canvas.width / 2,
@@ -207,7 +209,7 @@ function drawTimer(timer: Timer, color: RGBA, draw: Draw, round: number) {
     if (timer.reason === "Pause") {
       reason = `${timer.playerName} as requested a Break`;
     } else if (timer.reason === "Deconnection") {
-      reason = `${timer.playerName} has been deconnected`;
+      reason = `${timer.playerName} has been disconnected`;
     } else if (timer.reason === "Round") {
       reason = `Round ${round} is starting`;
     } else if (timer.reason === "Start") {
@@ -228,7 +230,11 @@ function drawTimer(timer: Timer, color: RGBA, draw: Draw, round: number) {
         draw.canvas.width / 2,
         draw.canvas.height / 2 + 50
       );
-    } else if (showTimer === 0) {
+    } else if (
+      showTimer === 0 &&
+      timer.reason !== "Deconnection" &&
+      timer.reason !== "Pause"
+    ) {
       draw.context.fillText(
         "GO!",
         draw.canvas.width / 2,

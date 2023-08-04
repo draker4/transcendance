@@ -20,6 +20,7 @@ type GameDTO = {
   maxRound: 1 | 3 | 5 | 7 | 9;
   difficulty: 1 | 2 | 3 | 4 | 5;
   push: boolean;
+  pause: boolean;
   background: string;
   ball: string;
 };

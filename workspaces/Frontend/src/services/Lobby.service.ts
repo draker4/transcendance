@@ -1,5 +1,5 @@
 import fetchData from "@/lib/fetch/fetchData";
-class LobbyService {
+export default class LobbyService {
   private token?: string;
 
   constructor(token?: string) {
@@ -62,5 +62,3 @@ class LobbyService {
     return data;
   }
 }
-
-export default LobbyService;

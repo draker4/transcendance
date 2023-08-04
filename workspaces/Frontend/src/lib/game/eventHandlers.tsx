@@ -191,6 +191,7 @@ export const handleStatusMessage =
       playerLeftStatus: fullStatus.playerLeft,
       playerRightStatus: fullStatus.playerRight,
       timer: fullStatus.timer,
+      pause: fullStatus.pause,
     }));
   };
 

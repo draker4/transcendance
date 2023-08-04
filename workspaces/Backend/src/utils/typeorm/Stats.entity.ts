@@ -49,6 +49,18 @@ export class Stats {
   leagueBest5Lost: number;
 
   @Column({ default: 0 })
+  leagueRageQuitWin: number;
+
+  @Column({ default: 0 })
+  leagueRageQuitLost: number;
+
+  @Column({ default: 0 })
+  leagueDisconnectWin: number;
+
+  @Column({ default: 0 })
+  leagueDisconnectLost: number;
+
+  @Column({ default: 0 })
   leagueRoundWon: number;
 
   @Column({ default: 0 })
@@ -85,6 +97,18 @@ export class Stats {
 
   @Column({ default: 0 })
   partyCustomLost: number;
+
+  @Column({ default: 0 })
+  partyRageQuitWin: number;
+
+  @Column({ default: 0 })
+  partyRageQuitLost: number;
+
+  @Column({ default: 0 })
+  partyDisconnectWin: number;
+
+  @Column({ default: 0 })
+  partyDisconnectLost: number;
 
   @Column({ default: 0 })
   partyRoundWon: number;

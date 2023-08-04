@@ -1,10 +1,4 @@
-import {
-  IsNumber,
-  IsString,
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-} from 'class-validator';
+import { IsNumber, IsString, IsBoolean, IsNotEmpty } from 'class-validator';
 
 export class CreateTrainingDTO {
   @IsString()
@@ -15,21 +9,13 @@ export class CreateTrainingDTO {
   @IsNotEmpty()
   type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
 
-  @IsString()
-  @IsNotEmpty()
-  mode: 'League' | 'Party';
-
   @IsNumber()
   @IsNotEmpty()
-  host: number;
-
-  @IsNumber()
-  @IsOptional()
-  opponent: number;
+  player: number;
 
   @IsString()
   @IsNotEmpty()
-  hostSide: 'Left' | 'Right';
+  side: 'Left' | 'Right';
 
   @IsNumber()
   @IsNotEmpty()
@@ -46,6 +32,10 @@ export class CreateTrainingDTO {
   @IsBoolean()
   @IsNotEmpty()
   push: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  pause: boolean;
 
   @IsString()
   @IsNotEmpty()

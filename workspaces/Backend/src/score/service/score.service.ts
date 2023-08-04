@@ -94,6 +94,8 @@ export class ScoreService {
             right: score.rightPlayerRound9,
           },
         ],
+        rageQuit: '',
+        disconnect: '',
       };
       return scoreInfo;
     } catch (error) {
@@ -156,6 +158,24 @@ export class ScoreService {
           score.leftPlayerRound9 = scoreInfo.round[8].left;
           score.rightPlayerRound9 = scoreInfo.round[8].right;
       }
+      await this.scoreRepository.save(score);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async updateRageQuit(
+    gameId: string,
+    rageQuit: 'Left' | 'Right',
+  ): Promise<void> {
+    try {
+      const score = await this.scoreRepository.findOne({
+        where: { gameId: gameId },
+      });
+      if (!score) {
+        throw new Error('Score not found');
+      }
+      score.rageQuit = rageQuit;
       await this.scoreRepository.save(score);
     } catch (error) {
       throw new Error(error.message);

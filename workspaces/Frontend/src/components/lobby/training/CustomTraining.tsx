@@ -4,6 +4,10 @@ import styles from "@/styles/lobby/training/CustomTraining.module.css";
 import ImgSelector from "@/components/lobby/selector/ImgSelector";
 import Selector from "@/components/lobby/selector/Selector";
 import Slider from "@/components/lobby/selector/Slider";
+import {
+  BACKGROUND,
+  BALL,
+} from "@transcendence/shared/constants/Asset.constants";
 
 type Props = {
   selected: string;
@@ -14,6 +18,8 @@ type Props = {
   setMaxRound: Function;
   push: boolean;
   setPush: Function;
+  pause: boolean;
+  setPause: Function;
   background: string;
   setBackground: Function;
   ball: string;
@@ -29,6 +35,8 @@ export default function CustomTraining({
   setMaxRound,
   push,
   setPush,
+  pause,
+  setPause,
   background,
   setBackground,
   ball,
@@ -70,6 +78,12 @@ export default function CustomTraining({
           <Selector id="push" value={push} setValue={setPush} />
         </div>
 
+        {/* Pause */}
+        <div className={styles.set}>
+          <label className={styles.section}>Pause</label>
+          <Selector id="pause" value={pause} setValue={setPause} />
+        </div>
+
         {/* Score */}
         <div className={styles.set}>
           <label className={styles.section}>Score</label>
@@ -103,16 +117,7 @@ export default function CustomTraining({
             type={"background"}
             value={background}
             setValue={setBackground}
-            imgs={[
-              "Classic",
-              "Earth",
-              "Football",
-              "Island",
-              "Rugby",
-              "Tennis",
-              "Winter",
-              "Random",
-            ]}
+            imgs={BACKGROUND}
             width={135}
             height={80}
             disabled={false}
@@ -126,21 +131,7 @@ export default function CustomTraining({
             type={"ball"}
             value={ball}
             setValue={setBall}
-            imgs={[
-              "Classic",
-              "Basket",
-              "Bowling1",
-              "Bowling2",
-              "Bowling3",
-              "Football",
-              "Soccer1",
-              "Soccer2",
-              "Soccer3",
-              "Soccer4",
-              "Volley1",
-              "Volley2",
-              "Random",
-            ]}
+            imgs={BALL}
             width={30}
             height={30}
             disabled={false}

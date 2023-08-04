@@ -29,7 +29,12 @@ export default class Profile_Service {
   }
 
   public async getProfileById(id: number): Promise<Profile> {
-    const profile = await fetchData(this.token, "users", `profile/${id.toString()}`, "GET");
+    const profile = await fetchData(
+      this.token,
+      "users",
+      `profile/${id.toString()}`,
+      "GET"
+    );
 
     if (!profile.ok) {
       throw new Error("Profil cannot be found");
@@ -69,7 +74,13 @@ export default class Profile_Service {
   }
 
   public async getProfileAndAvatar(): Promise<Profile & { avatar: Avatar }> {
-    const profile = await fetchData(this.token, "users", "myAvatar", "GET", null);
+    const profile = await fetchData(
+      this.token,
+      "users",
+      "myAvatar",
+      "GET",
+      null
+    );
 
     const data: Profile & { avatar: Avatar } = await profile.json();
 

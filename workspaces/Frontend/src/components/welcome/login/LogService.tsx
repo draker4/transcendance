@@ -32,6 +32,7 @@ export default function LogInComponent({ setTextButton }: Props) {
             style={{
               objectFit: "cover",
             }}
+            sizes="100%"
             className={styles.school}
           />
         </div>
@@ -43,6 +44,7 @@ export default function LogInComponent({ setTextButton }: Props) {
             style={{
               objectFit: "cover",
             }}
+            sizes="100%"
             onClick={openGoogle}
             className={styles.google}
           />

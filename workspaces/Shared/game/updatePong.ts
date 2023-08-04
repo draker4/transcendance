@@ -55,6 +55,8 @@ function handleRound(gameData: GameData) {
       gameData.playerRightDynamic.speed++;
       gameData.ball.speed++;
       gameData.timer = defineTimer(TIMER_ROUND, "Round");
+      if (gameData.pause.left < 3) gameData.pause.left++;
+      if (gameData.pause.right < 3) gameData.pause.right++;
     }
     gameData.updateScore = true;
     gameData.sendStatus = true;

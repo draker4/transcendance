@@ -18,6 +18,8 @@ import { sendMsgDto } from './dto/sendMsg.dto';
 import { newMsgDto } from './dto/newMsg.dto';
 import { MessagesService } from 'src/messages/messages.service';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { Avatar } from '@/utils/typeorm/Avatar.entity';
+import { getPongieDto } from './dto/getPongie.dto';
 
 @Injectable()
 export class ChatService {
@@ -160,7 +162,7 @@ export class ChatService {
     }
   }
 
-  async getAllPongies(id: number): Promise<pongieDto[]> {
+  async getAllPongies(id: number): Promise<getPongieDto[]> {
     try {
       let pongies = await this.userRepository.find({
         where: { verified: true },
@@ -170,27 +172,45 @@ export class ChatService {
       pongies = pongies.filter((pongie) => pongie.id !== id);
       pongies = pongies.filter(pongie => pongie.login && pongie.login !== "");
 
-      const friends = await this.getPongies(id);
+      const myPongies: getPongieDto[] = await this.getPongies(id);
 
       const all = await Promise.all(
         pongies.map(async (pongie) => {
-          let isFriend = false;
+
+          const myPongie = myPongies.find(myPongie => myPongie.id === pongie.id);
+
+          if (myPongie) {
+
+            if (myPongie && myPongie.isBlacklisted)
+              return ;
+            
+            return {
+              id: myPongie.id,
+              login: myPongie.login,
+              avatar: myPongie.avatar,
+              isFriend: myPongie.isFriend,
+              isInvited: myPongie.isInvited,
+              hasInvited: myPongie.hasInvited,
+              isBlacklisted: myPongie.isBlacklisted,
+              hasBlacklisted: myPongie.hasBlacklisted,
+            }
+          }
 
           if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
             pongie.avatar.image = await this.cryptoService.decrypt(
               pongie.avatar.image,
             );
-            pongie.avatar.decrypt = false;
           }
-
-          if (friends.find((friend) => friend.id === pongie.id))
-            isFriend = true;
 
           return {
             id: pongie.id,
             login: pongie.login,
             avatar: pongie.avatar,
-            isFriend: isFriend,
+            isFriend: false,
+            isInvited: false,
+            hasInvited: false,
+            isBlacklisted: false,
+            hasBlacklisted: false,
           };
         }),
       );
@@ -201,16 +221,16 @@ export class ChatService {
     }
   }
 
-  async getPongies(id: number) {
+  async getPongies(id: number): Promise<getPongieDto[]> {
     try {
       const relations = await this.userPongieRelation.find({
-        where: { userId: id, deleted: false, isFriend: true },
+        where: { userId: id },
         relations: ['pongie', 'pongie.avatar'],
       });
 
       if (!relations) return [];
 
-      const pongies = await Promise.all(
+      const all = await Promise.all(
         relations.map(async (relation) => {
           if (
             relation.pongie.avatar?.decrypt &&
@@ -220,37 +240,46 @@ export class ChatService {
               relation.pongie.avatar.image,
             );
           }
-          return relation.pongie;
+          return {
+            id: relation.pongieId,
+            login: relation.pongie.login,
+            avatar: relation.pongie.avatar,
+            isFriend: relation.isFriend,
+            isInvited: relation.isInvited,
+            hasInvited: relation.hasInvited,
+            isBlacklisted: relation.isBlacklisted,
+            hasBlacklisted: relation.hasBlacklisted,
+          };
         }),
       );
 
-      return pongies;
+      return all;
     } catch (error) {
       console.log(error);
       throw new WsException(error.message);
     }
   }
 
-  async deletePongie(userId: number, pongieId: number) {
-    try {
-      const relation1 = await this.userPongieRelation.findOne({
-        where: { userId: userId, pongieId: pongieId },
-      });
+  // async deletePongie(userId: number, pongieId: number) {
+  //   try {
+  //     const relation1 = await this.userPongieRelation.findOne({
+  //       where: { userId: userId, pongieId: pongieId },
+  //     });
 
-      const relation2 = await this.userPongieRelation.findOne({
-        where: { userId: pongieId, pongieId: userId },
-      });
+  //     const relation2 = await this.userPongieRelation.findOne({
+  //       where: { userId: pongieId, pongieId: userId },
+  //     });
 
-      relation1.deleted = true;
-      relation2.deleted = true;
+  //     relation1.deleted = true;
+  //     relation2.deleted = true;
 
-      await this.userPongieRelation.save(relation1);
-      await this.userPongieRelation.save(relation2);
-    } catch (error) {
-      console.log(error);
-      throw new WsException('cannot delete pongie');
-    }
-  }
+  //     await this.userPongieRelation.save(relation1);
+  //     await this.userPongieRelation.save(relation2);
+  //   } catch (error) {
+  //     console.log(error);
+  //     throw new WsException('cannot delete pongie');
+  //   }
+  // }
 
   async addChannel(userId: number, channelId: number) {
     try {
@@ -302,41 +331,76 @@ export class ChatService {
     }
   }
 
-  async addPongie(userId: number, pongieId: number) {
+  async addPongie(userId: number, pongieId: number, pongieSockets: string[], server: Server, socket: Socket) {
     try {
-      const relation = await this.userPongieRelation.findOne({
+      
+      const user = await this.usersService.getUserPongies(userId);
+      const pongie = await this.usersService.getUserPongies(pongieId);
+
+      if (!user || !pongie)
+        throw new Error('no user found');
+      
+      let relationUser = await this.userPongieRelation.findOne({
         where: { userId: userId, pongieId: pongieId },
         relations: ['user', 'pongie'],
       });
 
-      if (!relation) {
-        const user = await this.usersService.getUserPongies(userId);
-        const pongie = await this.usersService.getUserPongies(pongieId);
-
+      if (!relationUser) {
         await this.usersService.updateUserPongies(user, pongie);
-      } else {
-        relation.invited = true;
-        relation.deleted = false;
-
-        await this.userPongieRelation.save(relation);
+        relationUser = await this.userPongieRelation.findOne({
+          where: { userId: userId, pongieId: pongieId },
+          relations: ['user', 'pongie'],
+        });
       }
 
-      const relation2 = await this.userPongieRelation.findOne({
+      if (!relationUser)
+        throw new Error("cannot create relation");
+
+      if (relationUser.isBlacklisted)
+        return {
+          success: true,
+          error: 'isBlacklisted',
+        }
+
+      let relationPongie = await this.userPongieRelation.findOne({
         where: { userId: pongieId, pongieId: userId },
         relations: ['user', 'pongie'],
       });
 
-      if (!relation2) {
-        const user = await this.usersService.getUserPongies(userId);
-        const pongie = await this.usersService.getUserPongies(pongieId);
-
-        await this.usersService.updateUserPongies(user, pongie);
-      } else {
-        relation2.invited = true;
-        relation2.deleted = false;
-
-        await this.userPongieRelation.save(relation2);
+      if (!relationPongie) {
+        await this.usersService.updateUserPongies(pongie, user);
+        relationPongie = await this.userPongieRelation.findOne({
+          where: { userId: pongieId, pongieId: userId },
+          relations: ['user', 'pongie'],
+        });
       }
+
+      if (!relationPongie)
+        throw new Error("cannot create relation");
+
+      relationUser.hasInvited = true;
+      relationPongie.isInvited = true;
+
+      await this.userPongieRelation.save(relationUser);
+      await this.userPongieRelation.save(relationPongie);
+
+      if (pongieSockets.length !== 0) {
+        for (const socketId of pongieSockets) {
+          server.to(socketId).emit('notif', {
+            "why": "invitation",
+          });
+        }
+      }
+
+      server.to(socket.id).emit('notif', {
+        "why": "updatePongies",
+      });
+
+      return {
+        success: true,
+        error: '',
+      }
+
     } catch (error) {
       throw new WsException(error.message);
     }

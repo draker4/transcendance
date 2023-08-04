@@ -1,11 +1,10 @@
 import { drawPong } from "./drawPong";
+import { GameData, Draw, Player } from "@transcendence/shared/types/Game.types";
+
 import {
-  GameData,
-  Draw,
   UpdateData,
-  Player,
   StatusMessage,
-} from "@transcendence/shared/types/Game.types";
+} from "@transcendence/shared/types/Message.types";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
 
@@ -60,6 +59,7 @@ const updateGame = (game: GameData) => {
     newGameData.playerLeftStatus = statusData.playerLeft;
     newGameData.playerRightStatus = statusData.playerRight;
     newGameData.timer = statusData.timer;
+    newGameData.pause = statusData.pause;
     game = newGameData;
   }
   return game;
