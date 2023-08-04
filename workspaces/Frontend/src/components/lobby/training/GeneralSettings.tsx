@@ -7,7 +7,7 @@ import Slider from "@/components/lobby/selector/Slider";
 type Props = {
   side: "Left" | "Right";
   setSide: Function;
-  difficulty: 1 | 2 | 3 | 4 | 5;
+  difficulty: -2 | -1 | 0 | 1 | 2;
   setDifficulty: Function;
 };
 
@@ -35,6 +35,7 @@ export default function GeneralSettings({
           step={1}
           value={difficulty}
           setValue={setDifficulty}
+          adjust={-3}
         />
       </div>
     </div>

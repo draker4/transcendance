@@ -1,5 +1,6 @@
 import { drawPong } from "./drawPong";
-import { GameData, Draw } from "@transcendence/shared/types/Game.types";
+import { GameData, Draw, Action } from "@transcendence/shared/types/Game.types";
+import { ActionSolo } from "@transcendence/shared/types/Message.types";
 import { updatePong } from "@transcendence/shared/game/updatePong";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
@@ -13,17 +14,19 @@ const showFpsRef = false;
 export const gameLoop = (
   timestamp: number,
   game: GameData,
+  setGameData: Function,
   draw: Draw,
   isMountedRef: React.MutableRefObject<boolean>
 ) => {
   if (!isMountedRef.current) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
   frameCountRef.current++;
-  if (elapsedTime >= 16.67) {
-    if (game.status === "Playing") {
-      updatePong(game);
+  const updatedGame = { ...game };
+  if (elapsedTime >= FRONT_FPS) {
+    if (updatedGame.status === "Playing") {
+      updatePong(updatedGame);
     }
-    drawPong(game, draw);
+    drawPong(updatedGame, draw);
     lastTimestampRef.current = timestamp;
   }
 
@@ -49,7 +52,8 @@ export const gameLoop = (
   );
   setTimeout(() => {
     requestAnimationFrame((timestamp) =>
-      gameLoop(timestamp, game, draw, isMountedRef)
+      gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef)
     );
   }, remainingDelay);
+  setGameData(updatedGame);
 };

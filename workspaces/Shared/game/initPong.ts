@@ -19,21 +19,28 @@ import {
   PLAYER_START_SPEED,
 } from "@transcendence/shared/constants/Game.constants";
 
-export function initPlayerDynamic(side: "Left" | "Right"): PlayerDynamic {
+export function initPlayerDynamic(
+  side: "Left" | "Right",
+  difficulty: -2 | -1 | 0 | 1 | 2,
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+): PlayerDynamic {
   return {
     posX: side === "Left" ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
     posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
-    speed: PLAYER_START_SPEED,
+    speed: PLAYER_START_SPEED + difficulty + actualRound,
     move: Action.Idle,
     push: 0,
   };
 }
 
-export function initBall(): Ball {
+export function initBall(
+  difficulty: -2 | -1 | 0 | 1 | 2,
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+): Ball {
   return {
     posX: GAME_WIDTH / 2 - BALL_SIZE / 2,
     posY: GAME_HEIGHT / 2 - BALL_SIZE / 2,
-    speed: BALL_START_SPEED,
+    speed: BALL_START_SPEED + difficulty + actualRound,
     moveX: 0,
     moveY: 0,
     push: 0,
@@ -71,11 +78,19 @@ export function initPong(initData: InitData): GameData {
   return {
     id: initData.id,
     name: initData.name,
-    ball: initBall(),
+    ball: initBall(initData.difficulty, initData.actualRound),
     playerLeft: initPlayer("Left"),
     playerRight: initPlayer("Right"),
-    playerLeftDynamic: initPlayerDynamic("Left"),
-    playerRightDynamic: initPlayerDynamic("Right"),
+    playerLeftDynamic: initPlayerDynamic(
+      "Left",
+      initData.difficulty,
+      initData.actualRound
+    ),
+    playerRightDynamic: initPlayerDynamic(
+      "Right",
+      initData.difficulty,
+      initData.actualRound
+    ),
     playerLeftStatus: "Unknown",
     playerRightStatus: "Unknown",
     background: initData.background,

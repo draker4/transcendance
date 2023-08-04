@@ -39,7 +39,7 @@ export default function CreateParty({
   const [side, setSide] = useState<"Left" | "Right">("Left");
   const [push, setPush] = useState<boolean>(false);
   const [pause, setPause] = useState<boolean>(false);
-  const [speed, setSpeed] = useState<1 | 2 | 3 | 4 | 5>(3);
+  const [speed, setSpeed] = useState<-2 | -1 | 0 | 1 | 2>(0);
   const [background, setBackground] = useState<string>("Classic");
   const [ball, setBall] = useState<string>("Classic");
   const [selected, setSelected] = useState<
@@ -130,6 +130,10 @@ export default function CreateParty({
       setType("Custom");
     }
   }, [selected]);
+
+  useEffect(() => {
+    console.log("Difficulty: ", speed);
+  }, [speed]);
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (

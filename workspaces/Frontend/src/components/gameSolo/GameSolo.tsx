@@ -29,6 +29,7 @@ export default function Game({ profile, trainingId }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
   const [error, setError] = useState<boolean>(false);
+  const [isPlayer, setIsPlayer] = useState<"Left" | "Right" | "">("");
 
   //------------------------------------Chargement------------------------------------//
 
@@ -39,8 +40,17 @@ export default function Game({ profile, trainingId }: Props) {
         if (ret.success == false) {
           setError(true);
         } else {
+          ret.data.status = "Playing";
           setGameData(ret.data);
           setIsLoading(false);
+          if (ret.data.playerLeft.id === profile.id) {
+            setIsPlayer("Left");
+          } else if (ret.data.playerRight.id === profile.id) {
+            setIsPlayer("Right");
+          } else {
+            setIsPlayer("");
+            setError(true);
+          }
         }
       }
     };
@@ -76,7 +86,11 @@ export default function Game({ profile, trainingId }: Props) {
   if (!isLoading && gameData) {
     return (
       <div className={styles.game}>
-        <PongSolo gameData={gameData} setGameData={setGameData}></PongSolo>
+        <PongSolo
+          gameData={gameData}
+          setGameData={setGameData}
+          isPlayer={isPlayer}
+        />
         <button onClick={quitTraining} className={styles.quitBtn}>
           <MdLogout />
           <p className={styles.btnTitle}>Leave</p>

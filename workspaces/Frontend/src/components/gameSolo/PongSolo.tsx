@@ -20,9 +20,10 @@ import {
 type Props = {
   gameData: GameData;
   setGameData: Function;
+  isPlayer: "Left" | "Right" | "";
 };
 
-export default function Pong({ gameData, setGameData }: Props) {
+export default function Pong({ gameData, setGameData, isPlayer }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
@@ -52,7 +53,7 @@ export default function Pong({ gameData, setGameData }: Props) {
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, draw, isMountedRef)
+        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef)
       );
     }
     return () => {
@@ -66,11 +67,11 @@ export default function Pong({ gameData, setGameData }: Props) {
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, setGameData);
+      pongKeyDown(event, gameData, isPlayer === "Left" ? "Left" : "Right");
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, setGameData);
+      pongKeyUp(gameData, isPlayer);
     }
     // Add key event listeners when the component mounts
     window.addEventListener("keydown", handleKeyDown);

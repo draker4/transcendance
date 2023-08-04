@@ -93,6 +93,7 @@ export default function CustomTraining({
             step={1}
             value={maxPoint}
             setValue={setMaxPoint}
+            adjust={0}
           />
         </div>
 
@@ -105,6 +106,7 @@ export default function CustomTraining({
             step={2}
             value={maxRound}
             setValue={setMaxRound}
+            adjust={0}
           />
         </div>
       </div>

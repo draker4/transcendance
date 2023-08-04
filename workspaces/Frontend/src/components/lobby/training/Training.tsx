@@ -34,7 +34,7 @@ export default function Training({ profile }: Props) {
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [side, setSide] = useState<"Left" | "Right">("Left");
-  const [difficulty, setDifficulty] = useState<1 | 2 | 3 | 4 | 5>(3);
+  const [difficulty, setDifficulty] = useState<-2 | -1 | 0 | 1 | 2>(0);
   const [push, setPush] = useState<boolean>(false);
   const [pause, setPause] = useState<boolean>(false);
   const [background, setBackground] = useState<string>("Classic");

@@ -52,6 +52,7 @@ export default function Custom({
           step={1}
           value={maxPoint}
           setValue={setMaxPoint}
+          adjust={0}
         />
       </div>
 
@@ -64,6 +65,7 @@ export default function Custom({
           step={2}
           value={maxRound}
           setValue={setMaxRound}
+          adjust={0}
         />
       </div>
     </div>

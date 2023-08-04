@@ -53,7 +53,7 @@ export class Training {
   maxRound: 1 | 3 | 5 | 7 | 9;
 
   @Column()
-  difficulty: 1 | 2 | 3 | 4 | 5;
+  difficulty: -2 | -1 | 0 | 1 | 2;
 
   @Column()
   push: boolean;

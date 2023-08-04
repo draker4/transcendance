@@ -69,16 +69,16 @@ function handleMovement(gameData: GameData): void {
     if (gameData.playerLeft.id === AI_ID) {
       moveAI(
         gameData,
-        gameData.playerRight,
-        gameData.playerRightDynamic,
+        gameData.playerLeft,
+        gameData.playerLeftDynamic,
         gameData.ball
       );
       updatePlayer(gameData.playerRight, gameData.playerRightDynamic);
-    } else if (gameData.playerLeft.id === AI_ID) {
+    } else if (gameData.playerRight.id === AI_ID) {
       moveAI(
         gameData,
-        gameData.playerLeft,
-        gameData.playerLeftDynamic,
+        gameData.playerRight,
+        gameData.playerRightDynamic,
         gameData.ball
       );
       updatePlayer(gameData.playerLeft, gameData.playerLeftDynamic);
@@ -105,4 +105,5 @@ function handleMovement(gameData: GameData): void {
 export function updatePong(gameData: GameData) {
   handleMovement(gameData);
   handleRound(gameData);
+  return gameData;
 }
