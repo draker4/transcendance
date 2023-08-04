@@ -3,7 +3,6 @@ import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { useEffect, useState } from "react";
 import SearchBarPongies from "@/components/chatPage/searchBar/SearchBarPongies";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
-import { useRouter } from "next/navigation";
 import { Socket } from "socket.io-client";
 import LoadingSuspense from "@/components/loading/LoadingSuspense";
 import PongieFooter from "./footerOptions/PongieFooter";
@@ -14,9 +13,9 @@ export default function SectionPongies({socket}: {
 }) {
 
 	const	[pongies, setPongies] = useState<Pongie[]>([]);
-	const	[invited, setInvited] = useState<Pongie[]>([]);
+	const	[isInvited, setIsInvited] = useState<Pongie[]>([]);
+	const	[hasInvited, setHasInvited] = useState<Pongie[]>([]);
 	const	[pongieSearched, setPongieSearched] = useState<Pongie>();
-	const	router = useRouter();
 	const	[isFocused, setIsFocused] = useState(false);
 
 	const handleFocusOn = () => {
@@ -38,17 +37,20 @@ export default function SectionPongies({socket}: {
 	useEffect(() => {
 
 		const	getPongies = (payload: Pongie[]) => {
-			console.log(payload);
-			const	invited: Pongie[] = [];
+			const	isInvited: Pongie[] = [];
+			const	hasInvited: Pongie[] = [];
 			const	pongies: Pongie[] = [];
 			for (const	pongie of payload) {
 				if (pongie.isFriend)
 					pongies.push(pongie);
 				else if (pongie.hasInvited)
-					invited.push(pongie);
+					hasInvited.push(pongie);
+				else if (pongie.isInvited)
+					isInvited.push(pongie);
 			}
 			setPongies(pongies);
-			setInvited(invited);
+			setIsInvited(isInvited);
+			setHasInvited(hasInvited);
 		}
 
 		const	updatePongies = (payload: {
@@ -89,7 +91,28 @@ export default function SectionPongies({socket}: {
 		);
 	});
 
-	const invitedList = invited.map(pongie => {
+	const isInvitedList = isInvited.map(pongie => {
+	
+		return (
+		  <React.Fragment key={pongie.id}>
+			<div className={styles.pongieSearched} >
+			  <div className={styles.avatar}>
+				<AvatarUser
+				  avatar={pongie.avatar}
+				  borderSize="3px"
+				  borderColor={pongie.avatar.borderColor}
+				  backgroundColor={pongie.avatar.backgroundColor}
+				/>
+			  </div>
+				<div className={styles.login} style={{color: pongie.avatar.borderColor}}>
+					<h4>{pongie.login}</h4>
+				</div>
+			</div>
+		  </React.Fragment>
+		);
+	});
+
+	const hasInvitedList = hasInvited.map(pongie => {
 	
 		return (
 		  <React.Fragment key={pongie.id}>
@@ -164,9 +187,16 @@ export default function SectionPongies({socket}: {
 
 			<div className={styles.part}>
 				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
+					Invitations
+				</p>
+				{isInvitedList}
+			</div>
+
+			<div className={styles.part}>
+				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
 					Invited Pongies
 				</p>
-				{invitedList}
+				{hasInvitedList}
 			</div>
 
 		</div>

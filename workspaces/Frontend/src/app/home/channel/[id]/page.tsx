@@ -75,8 +75,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
-    channelAndUsersRelation.channel.avatar =
-      await avatarService.getChannelAvatarById(id);
+    channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
 
     const myProfile = await profileService.getProfileByToken();
 
