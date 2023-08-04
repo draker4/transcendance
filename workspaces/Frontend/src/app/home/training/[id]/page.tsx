@@ -4,7 +4,7 @@
 import { Suspense } from "react";
 
 // Import du style
-import styles from "@/styles/gameSolo/GameSolo.module.css";
+import styles from "@/styles/game/Game.module.css";
 
 // Import des composants projets
 import { cookies } from "next/dist/client/components/headers";
@@ -44,14 +44,6 @@ export default async function TrainingPage({ params }: any) {
 
     const profileService = new ProfileService(token);
     profile = await profileService.getProfileByToken();
-
-    const trainingService = new TrainingService(token);
-    const ret = await trainingService.getTrainingData(trainingId);
-    if (ret.success == false) {
-      error = true;
-    } else {
-      gameData = ret.data;
-    }
   } catch (err) {
     console.log(err);
     error = true;
@@ -68,10 +60,10 @@ export default async function TrainingPage({ params }: any) {
   }
 
   return (
-    <main className={styles.trainingPage}>
+    <main className={styles.gamePage}>
       <Refresher />
       <Suspense fallback={<LoadingSuspense />}>
-        {gameData && <GameSolo data={gameData} />}
+        <GameSolo profile={profile} trainingId={trainingId} />
       </Suspense>
     </main>
   );
