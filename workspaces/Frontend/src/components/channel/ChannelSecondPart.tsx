@@ -1,23 +1,18 @@
 import styles from "@/styles/profile/Profile.module.css";
-import { cookies } from "next/headers";
 import ChannelInfoCard from "./infos/ChannelInfoCard";
+import { Socket } from "socket.io-client";
 
 type Props = {
 	channelAndUsersRelation: ChannelUsersRelation;
 	myRelation: UserRelation;
+	socket: Socket | undefined;
   };
 
-export default function ChannelSecondPart({ channelAndUsersRelation, myRelation }: Props) {
-
-	const token = cookies().get("crunchy-token")?.value;
-
-	// [+][!] ameliorer le composant d'erreure
-    if (!token)
-		return (<div> E R R O R ... try refresh and reconnect</div>);
+export default function ChannelSecondPart({ channelAndUsersRelation, myRelation, socket }: Props) {
 
   return (
 	<div className={styles.both + " " + styles.second}>
-		<ChannelInfoCard token={token} channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} />
+		<ChannelInfoCard channelAndUsersRelation={channelAndUsersRelation} myRelation={myRelation} socket={socket}  />
 	</div>
-  )
+  );
 }
