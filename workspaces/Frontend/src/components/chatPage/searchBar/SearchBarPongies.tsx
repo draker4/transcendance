@@ -2,9 +2,10 @@ import { Socket } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import Search from "./Search";
 
-export default function SearchBarPongies({ socket, displayPongie }: {
+export default function SearchBarPongies({ socket, setPongieSearched, pongieSearchedId }: {
 	socket: Socket | undefined;
-	displayPongie: (display: Display) => void;
+	setPongieSearched: React.Dispatch<React.SetStateAction<Pongie | undefined>>;
+	pongieSearchedId: React.MutableRefObject<number | undefined>;
 }) {
 	const	[pongies, setPongies] = useState<Pongie []>([]);
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
@@ -37,6 +38,8 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 	}
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
+		setPongieSearched(undefined);
+		
 		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
 			console.log(pongies);
 			setPongies(pongies);
@@ -91,7 +94,8 @@ export default function SearchBarPongies({ socket, displayPongie }: {
 		setList([]);
 		setError(null);
 
-		displayPongie(item);
+		setPongieSearched(item);
+		pongieSearchedId.current = item.id;
 	};
 
 	return <Search

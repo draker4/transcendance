@@ -51,7 +51,7 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-        this.connectedUsers.set(socket.id, payload.sub);
+        this.connectedUsers.set(socket.id, payload.sub.toString());
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
 
@@ -95,6 +95,11 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getAllChannels(req.user.id);
   }
 
+  @SubscribeMessage('getPongie')
+  async getPongie(@Request() req, @MessageBody() pongieId: number) {
+    return await this.chatService.getPongie(req.user.id, pongieId);
+  }
+
   @SubscribeMessage('getPongies')
   async getPongies(@Request() req) {
     return await this.chatService.getPongies(req.user.id);
@@ -128,8 +133,25 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('deletePongie')
-  async deletePongie(@MessageBody() pongieId: number, @Request() req) {
-    // return await this.chatService.deletePongie(req.user.id, pongieId);
+  async deletePongie(
+    @MessageBody() pongieId: number,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    const pongieSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === pongieId.toString())
+        pongieSockets.push(key);
+    }
+
+    return await this.chatService.deletePongie(
+      req.user.id,
+      pongieId,
+      pongieSockets,
+      this.server,
+      socket,
+    );
   }
 
   @SubscribeMessage('join')

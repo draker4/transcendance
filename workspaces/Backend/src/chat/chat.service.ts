@@ -221,6 +221,60 @@ export class ChatService {
     }
   }
 
+  async getPongie(userId: number, pongieId: number) {
+    try {
+      const pongie = await this.userRepository.findOne({
+        where: { verified: true, id: pongieId },
+        relations: ['avatar'],
+      });
+
+      if (!pongie)
+        return {
+          error: "no pongie found"
+        };
+
+      if (pongie.avatar?.decrypt && pongie.avatar?.image?.length > 0) {
+        pongie.avatar.image = await this.cryptoService.decrypt(
+          pongie.avatar.image,
+        );
+      }
+
+      const myPongie = await this.userPongieRelation.findOne({
+        where: { userId: userId, pongieId: pongieId },
+      })
+
+      if (myPongie) {
+
+        if (myPongie.isBlacklisted)
+          return null;
+            
+        return {
+          id: pongie.id,
+          login: pongie.login,
+          avatar: pongie.avatar,
+          isFriend: myPongie.isFriend,
+          isInvited: myPongie.isInvited,
+          hasInvited: myPongie.hasInvited,
+          isBlacklisted: myPongie.isBlacklisted,
+          hasBlacklisted: myPongie.hasBlacklisted,
+        }
+      }
+
+      return {
+        id: pongie.id,
+        login: pongie.login,
+        avatar: pongie.avatar,
+        isFriend: false,
+        isInvited: false,
+        hasInvited: false,
+        isBlacklisted: false,
+        hasBlacklisted: false,
+      };
+    } catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
   async getPongies(id: number): Promise<getPongieDto[]> {
     try {
       const relations = await this.userPongieRelation.find({
@@ -260,26 +314,78 @@ export class ChatService {
     }
   }
 
-  // async deletePongie(userId: number, pongieId: number) {
-  //   try {
-  //     const relation1 = await this.userPongieRelation.findOne({
-  //       where: { userId: userId, pongieId: pongieId },
-  //     });
+  async deletePongie(userId: number, pongieId: number, pongieSockets: string[], server: Server, socket: Socket) {
+    try {
 
-  //     const relation2 = await this.userPongieRelation.findOne({
-  //       where: { userId: pongieId, pongieId: userId },
-  //     });
+      const user = await this.usersService.getUserPongies(userId);
+      const pongie = await this.usersService.getUserPongies(pongieId);
 
-  //     relation1.deleted = true;
-  //     relation2.deleted = true;
+      if (!user || !pongie)
+        throw new Error('no user found');
+      
+      let relationUser = await this.userPongieRelation.findOne({
+        where: { userId: userId, pongieId: pongieId },
+        relations: ['user', 'pongie'],
+      });
 
-  //     await this.userPongieRelation.save(relation1);
-  //     await this.userPongieRelation.save(relation2);
-  //   } catch (error) {
-  //     console.log(error);
-  //     throw new WsException('cannot delete pongie');
-  //   }
-  // }
+      if (!relationUser) {
+        await this.usersService.updateUserPongies(user, pongie);
+        relationUser = await this.userPongieRelation.findOne({
+          where: { userId: userId, pongieId: pongieId },
+          relations: ['user', 'pongie'],
+        });
+      }
+
+      if (!relationUser)
+        throw new Error("cannot create relation");
+
+      let relationPongie = await this.userPongieRelation.findOne({
+        where: { userId: pongieId, pongieId: userId },
+        relations: ['user', 'pongie'],
+      });
+
+      if (!relationPongie) {
+        await this.usersService.updateUserPongies(pongie, user);
+        relationPongie = await this.userPongieRelation.findOne({
+          where: { userId: pongieId, pongieId: userId },
+          relations: ['user', 'pongie'],
+        });
+      }
+
+      if (!relationPongie)
+        throw new Error("cannot create relation");
+
+      relationUser.isFriend = false;
+      relationPongie.isFriend = false;
+      relationUser.isInvited = false;
+      relationPongie.isInvited = false;
+      relationUser.hasInvited = false;
+      relationPongie.hasInvited = false;
+
+      await this.userPongieRelation.save(relationUser);
+      await this.userPongieRelation.save(relationPongie);
+
+      if (pongieSockets.length !== 0) {
+        for (const socketId of pongieSockets) {
+          server.to(socketId).emit('notif', {
+            "why": "updatePongies",
+          });
+        }
+      }
+
+      server.to(socket.id).emit('notif', {
+        "why": "updatePongies",
+      });
+
+      return {
+        success: true,
+      }
+
+    } catch (error) {
+      console.log(error);
+      throw new WsException('cannot delete pongie');
+    }
+  }
 
   async addChannel(userId: number, channelId: number) {
     try {
@@ -360,6 +466,7 @@ export class ChatService {
         return {
           success: true,
           error: 'isBlacklisted',
+          msg: '',
         }
 
       let relationPongie = await this.userPongieRelation.findOne({
@@ -377,6 +484,50 @@ export class ChatService {
 
       if (!relationPongie)
         throw new Error("cannot create relation");
+      
+      if (relationPongie.hasBlacklisted) {
+        relationUser.isBlacklisted = true;
+        await this.userPongieRelation.save(relationUser);
+        return {
+          success: true,
+          error: 'isBlacklisted',
+          msg: '',
+        }
+      }
+
+      // if invitation already sent add Friend
+      if (relationPongie.hasInvited || relationUser.isInvited) {
+        // [!]HERE BEFORE !!!
+        relationUser.isFriend = true;
+        relationPongie.isFriend = true;
+        relationUser.isInvited = false;
+        relationPongie.isInvited = false;
+        relationUser.hasInvited = false;
+        relationPongie.hasInvited = false;
+        await this.userPongieRelation.save(relationUser);
+        await this.userPongieRelation.save(relationPongie);
+
+        if (pongieSockets.length !== 0) {
+          for (const socketId of pongieSockets) {
+            server.to(socketId).emit('notif', {
+              "why": "friend",
+            });
+            server.to(socketId).emit('notif', {
+              "why": "updatePongies",
+            });
+          }
+        }
+  
+        server.to(socket.id).emit('notif', {
+          "why": "updatePongies",
+        });
+
+        return {
+          success: 'true',
+          error: '',
+          msg: 'friend',
+        }
+      }
 
       relationUser.hasInvited = true;
       relationPongie.isInvited = true;
@@ -389,6 +540,9 @@ export class ChatService {
           server.to(socketId).emit('notif', {
             "why": "invitation",
           });
+          server.to(socketId).emit('notif', {
+            "why": "updatePongies",
+          });
         }
       }
 
@@ -399,6 +553,7 @@ export class ChatService {
       return {
         success: true,
         error: '',
+        msg: 'invited',
       }
 
     } catch (error) {

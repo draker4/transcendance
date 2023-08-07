@@ -44,14 +44,14 @@
 	width: 25px;
 	height: 25px;
 	color: var(--primary1);
-}
-
-.iconHover:hover, .badge:hover {
-	scale: 1.05;
 	cursor: pointer;
 }
 
-.iconHover:active, .badge:active {
+.icon:hover, .badge:hover {
+	scale: 1.05;
+}
+
+.icon:active, .badge:active {
 	scale: 0.95;
 }
 

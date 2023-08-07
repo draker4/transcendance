@@ -14,6 +14,7 @@ const badgeStyle = {
 	  backgroundColor: 'var(--primary1)',
 	  borderColor: 'var(--tertiary1)',
 	  right: "-4px",
+	  cursor: "pointer",
 	}
 }
 
@@ -23,7 +24,7 @@ export default function PongieFooter({pongie, socket}: {
 }) {
 
 	const	router = useRouter();
-	// const	[isFriend, setIsFriend] = useState<boolean>(pongie.isfriend);
+	const	[isFriend, setIsFriend] = useState<boolean>(pongie.isFriend);
 
 	const	openProfile = () => {
 		if (pongie) {
@@ -32,16 +33,36 @@ export default function PongieFooter({pongie, socket}: {
 	}
 
 	const	addFriend = () => {
-		socket?.emit('addPongie', pongie.id, (payload: {
-			success: boolean;
-			error: string;
-		}) => {
-			if (!payload.success && payload.error === "isBlacklisted") {
-				toast.error("You cannot send an invitation to this pongie!");
-				return ;
-			}
-			toast.success("Invitation sent!");
-		});
+		if (!pongie.isFriend)
+			socket?.emit('addPongie', pongie.id, (payload: {
+				success: boolean;
+				error: string;
+				msg: string;
+			}) => {
+				if (!payload.success && payload.error === "isBlacklisted") {
+					toast.error("You cannot send an invitation to this pongie!");
+					return ;
+				}
+
+				if (payload.success && payload.msg === "friend")
+					toast.success("Invitation accepted!");
+					
+				if (payload.success && payload.msg === "invited")
+					toast.success("Invitation sent!");
+			});
+		
+		if (pongie.isFriend)
+			socket?.emit('deletePongie', pongie.id, (payload: {
+				success: boolean;
+			}) => {
+				if (!payload.success) {
+					toast.error("Something went wrong, try again!");
+					return ;
+				}
+
+				if (payload.success)
+					toast.success("Friend removed");
+			});
 	}
 
 	return (
@@ -55,7 +76,6 @@ export default function PongieFooter({pongie, socket}: {
 							icon={faPlus}
 						/>} sx={badgeStyle}
 						overlap="circular"
-						className={styles.badge}
 					>
 						<FontAwesomeIcon
 							icon={faFaceLaughBeam}
@@ -67,32 +87,34 @@ export default function PongieFooter({pongie, socket}: {
 
 			{
 				pongie?.isFriend &&
-				<Badge badgeContent={
-					<FontAwesomeIcon
-						icon={faCheck}
-					/>
-				} sx={badgeStyle} overlap="circular" >
-					<FontAwesomeIcon
-						icon={faFaceLaughBeam}
-						className={styles.icon}
-					/>
-				</Badge>
+				<div onClick={addFriend}>
+					<Badge badgeContent={
+						<FontAwesomeIcon
+							icon={faCheck}
+						/>
+					} sx={badgeStyle} overlap="circular" >
+						<FontAwesomeIcon
+							icon={faFaceLaughBeam}
+							className={styles.icon}
+						/>
+					</Badge>
+				</div>
 			}
 
 			<FontAwesomeIcon
 				icon={faAddressCard}
-				className={styles.icon + " " + styles.iconHover}
+				className={styles.icon}
 				onClick={openProfile}
 			/>
 
 			<FontAwesomeIcon
 				icon={faMessage}
-				className={styles.icon + " " + styles.iconHover}
+				className={styles.icon}
 			/>
 
 			<FontAwesomeIcon
 				icon={faSkull}
-				className={styles.icon + " " + styles.iconHover}
+				className={styles.icon}
 			/>
 			
 		</div>
