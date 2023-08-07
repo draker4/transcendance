@@ -62,7 +62,7 @@ import { SocketToken } from './utils/typeorm/SocketToken.entity';
         BackupCode,
         SocketToken,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     AvatarModule,

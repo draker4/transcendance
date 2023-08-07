@@ -1,5 +1,3 @@
-import disconnect from "@/lib/disconnect/disconnect";
-import { log } from "console";
 import { Socket, io } from "socket.io-client";
 
 export default class ChatService {
@@ -53,33 +51,24 @@ export default class ChatService {
 		});
 
 		this.socket.on('connect', () => {
+			this.loading = false;
 			// console.log('WebSocket connected id=', this.socket?.id);
 		});
 		  
 		this.socket.on('disconnect', async () => {
 			console.log('WebSocket disconnected id=', this.socket?.id);
-			if (process.env.DISCONNECT)
+			if (process.env.DISCONNECT) {
+				this.disconnect();
 		  		await this.refreshSocket();
-			// this.disconnect();
+			}
 		});
 	
 		// Catching error or exception will force disconnect then reconnect
 		this.socket.on("connect_error", (error: any) => {
+			this.loading = false;
 		//   console.log("Socket connection error:", error);
 		  this.disconnect();
 		});
-	
-		this.socket.on("error", (error: any) => {
-		  console.log("Socket error:", error);
-		  this.disconnect();
-		});
-	
-		this.socket.on("exception", (exception: any) => {
-		  	console.log("WsException:", exception);
-			this.disconnect();
-		});
-
-		this.loading = false;
 	}
 
 	// Disconnect socket + stop listen errors & exceptions
@@ -95,8 +84,12 @@ export default class ChatService {
 	}
 
 	private async refreshSocket() {
+
+		if (this.disconnectClient)
+			return ;
+
 		try {
-		  console.log("trying to refresh token");
+			console.log("trying to refresh tokens and socket");
 
 		  const res = await fetch(
 			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import AvatarUser from "../avatarUser/AvatarUser";
 import { Socket } from "socket.io-client";
 import disconnect from "@/lib/disconnect/disconnect";
+import ChatService from "@/services/Chat.service";
 
 type Props = {
   avatar: Avatar;
@@ -21,6 +22,8 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
 
   const signoff = async () => {
     try {
+      const chatService = new ChatService();
+      chatService.disconnectClient = true;
       await disconnect(profile.id.toString());
       router.refresh();
     } catch (error) {
