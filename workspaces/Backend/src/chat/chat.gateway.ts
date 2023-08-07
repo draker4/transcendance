@@ -227,8 +227,11 @@ export class ChatGateway implements OnModuleInit {
 
   // [+] reflechir aux guard + autorisation chanOp / channelprivee necessaires
   @SubscribeMessage('editRelation')
-  async sendEditRelationEvents() {
-	console.log("sendEditRelationEvents() reached");
+  async sendEditRelationEvents(@MessageBody() payload: channelIdDto) {
+	console.log("sendEditRelationEvents() reached - about channel id : " + payload.id);
+  //const channel: Channel = await this.chatService.getChannelById(payload.id);
+
+  this.server.to("channel:" + payload.id).emit('editRelation');
   }
 
   // tools
