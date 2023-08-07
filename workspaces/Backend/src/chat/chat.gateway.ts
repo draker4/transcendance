@@ -22,6 +22,7 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { ChannelAuthGuard } from './guard/channelAuthGuard';
 import { channelIdDto } from './dto/channelId.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
+import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({
@@ -324,11 +325,21 @@ export class ChatGateway implements OnModuleInit {
 
   // [+] reflechir aux guard + autorisation chanOp / channelprivee necessaires
   @SubscribeMessage('editRelation')
-  async sendEditRelationEvents(@MessageBody() payload: channelIdDto) {
-	console.log("sendEditRelationEvents() reached - about channel id : " + payload.id);
-  //const channel: Channel = await this.chatService.getChannelById(payload.id);
+  async sendEditRelationEvents(@MessageBody() payload: EditChannelRelationDto, @Request() req) {
+	console.log("sendEditRelationEvents() reached - about channel id : " + payload.channelId);
 
-  this.server.to("channel:" + payload.id).emit('editRelation');
+    // follow up to update channel profile + handleEditRelation in <ChatChannel />
+    this.server.to("channel:" + payload.channelId).emit('editRelation', payload);
+
+    // send Server Notif message into the channel
+    const updatedPayload = {
+      ...payload,
+      server: this.server,
+      from: req.user.id
+    };
+
+    this.chatService.sendEditRelationNotif(updatedPayload);
+
   }
 
   // tools
