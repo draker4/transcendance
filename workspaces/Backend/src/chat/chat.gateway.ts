@@ -11,6 +11,7 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from './guard/wsJwt.guard';
@@ -85,8 +86,21 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getLoginWithAvatar(req.user.id);
   }
 
+  @SubscribeMessage('getChannel')
+  async getChannel(
+    @Req() req,
+    @MessageBody() channelId: number,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (!channelId)
+      throw new WsException('test');
+
+    return await this.chatService.getChannel(channelId, req.user.id, socket, this.server);
+  }
+
   @SubscribeMessage('getChannels')
   async getChannels(@Request() req) {
+    throw new WsException('test');
     return await this.chatService.getChannels(req.user.id);
   }
 
@@ -101,8 +115,10 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('getPongies')
-  async getPongies(@Request() req) {
-    return await this.chatService.getPongies(req.user.id);
+  async getPongies(@MessageBody() userId: number) {
+    if (!userId)
+      throw new WsException('no given id');
+    return await this.chatService.getPongies(userId, true);
   }
 
   @SubscribeMessage('getAllPongies')
@@ -116,6 +132,9 @@ export class ChatGateway implements OnModuleInit {
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+  
     const pongieSockets: string[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
@@ -138,6 +157,9 @@ export class ChatGateway implements OnModuleInit {
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+
     const pongieSockets: string[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
@@ -146,6 +168,81 @@ export class ChatGateway implements OnModuleInit {
     }
 
     return await this.chatService.deletePongie(
+      req.user.id,
+      pongieId,
+      pongieSockets,
+      this.server,
+      socket,
+    );
+  }
+
+  @SubscribeMessage('cancelInvitation')
+  async cancelInvitation(
+    @MessageBody() pongieId: number,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+
+    const pongieSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === pongieId.toString())
+        pongieSockets.push(key);
+    }
+
+    return await this.chatService.cancelInvitation(
+      req.user.id,
+      pongieId,
+      pongieSockets,
+      this.server,
+      socket,
+    );
+  }
+
+  @SubscribeMessage('cancelBlacklist')
+  async cancelBlacklist(
+    @MessageBody() pongieId: number,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+
+    const pongieSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === pongieId.toString())
+        pongieSockets.push(key);
+    }
+
+    return await this.chatService.cancelBlacklist(
+      req.user.id,
+      pongieId,
+      pongieSockets,
+      this.server,
+      socket,
+    );
+  }
+
+  @SubscribeMessage('blacklist')
+  async blacklist(
+    @MessageBody() pongieId: number,
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+
+    const pongieSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === pongieId.toString())
+        pongieSockets.push(key);
+    }
+
+    return await this.chatService.blacklist(
       req.user.id,
       pongieId,
       pongieSockets,

@@ -6,26 +6,36 @@ import { Socket } from "socket.io-client";
 import LoadingSuspense from "@/components/loading/LoadingSuspense";
 import React from "react";
 import PongieList from "./sectionPongies/PongieList";
+import AvatarUser from "@/components/avatarUser/AvatarUser";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-export default function SectionPongies({socket}: {
+export default function SectionPongies({socket, isOwner, profile}: {
 	socket: Socket | undefined;
+	isOwner: boolean;
+	profile: Profile;
 }) {
 
 	const	[pongies, setPongies] = useState<Pongie[]>([]);
 	const	[isInvited, setIsInvited] = useState<Pongie[]>([]);
 	const	[hasInvited, setHasInvited] = useState<Pongie[]>([]);
+	const	[hasBlacklisted, setHasBlacklisted] = useState<Pongie[]>([]);
 	const	[pongieSearched, setPongieSearched] = useState<Pongie | undefined>();
 	const	pongieSearchedId = useRef<number | undefined>();
+	const	router = useRouter();
 
 	useEffect(() => {
 
 		const	getPongies = (payload: Pongie[]) => {
 			const	isInvited: Pongie[] = [];
 			const	hasInvited: Pongie[] = [];
+			const	hasBlacklisted: Pongie[] = [];
 			const	pongies: Pongie[] = [];
 
 			for (const	pongie of payload) {
-				if (pongie.isFriend)
+				if (pongie.hasBlacklisted)
+					hasBlacklisted.push(pongie);
+				else if (pongie.isFriend)
 					pongies.push(pongie);
 				else if (pongie.hasInvited)
 					hasInvited.push(pongie);
@@ -36,26 +46,27 @@ export default function SectionPongies({socket}: {
 			setPongies(pongies);
 			setIsInvited(isInvited);
 			setHasInvited(hasInvited);
+			setHasBlacklisted(hasBlacklisted);
 		}
 
 		const	updatePongieSearched = (payload: Pongie | { error: string }) => {
-			if ('error' in payload)
+			if (payload && 'error' in payload)
 				setPongieSearched(undefined);
-			else
+			else if (payload)
 				setPongieSearched(payload);
 		}
 
 		const	updatePongies = (payload: {
 			why: string;
 		}) => {
-			if (payload.why === "updatePongies") {
-				socket?.emit('getPongies', getPongies);
+			if (payload && payload.why === "updatePongies") {
+				socket?.emit('getPongies', profile.id, getPongies);
 				if (pongieSearchedId.current)
 					socket?.emit('getPongie', pongieSearchedId.current, updatePongieSearched);
 			}
 		}
 
-		socket?.emit('getPongies', getPongies);
+		socket?.emit('getPongies', profile.id, getPongies);
 
 		socket?.on('notif', updatePongies);
 
@@ -65,15 +76,84 @@ export default function SectionPongies({socket}: {
 
 	}, [socket]);
 
-	const	hidePongie = () => {
+	const	hidePongie = (pongie: Pongie) => {
 		setPongieSearched(undefined);
 		pongieSearchedId.current = undefined;
+	}
+
+	const	cancelInvitation = (pongie: Pongie) => {
+		socket?.emit('cancelInvitation', pongie.id, (payload: {
+			success: boolean;
+		}) => {
+			if (payload && payload.success)
+				toast('Invitation cancelled!');
+		});
+	}
+
+	const	refuseInvitation = (pongie: Pongie) => {
+		socket?.emit('cancelInvitation', pongie.id, (payload: {
+			success: boolean;
+		}) => {
+			if (payload && payload.success)
+				toast('Invitation refused!');
+		});
+	}
+
+	const	cancelBlacklist = (pongie: Pongie) => {
+		socket?.emit('cancelBlacklist', pongie.id, (payload: {
+			success: boolean;
+		}) => {
+			if (payload && payload.success)
+				toast('Blacklist updated!');
+		});
+	}
+	
+	const	deletePongie = (pongie: Pongie) => {
+		socket?.emit('deletePongie', pongie.id, (payload: {
+			success: boolean;
+		}) => {
+			if (!payload.success) {
+				toast.error("Something went wrong, try again!");
+				return ;
+			}
+
+			if (payload.success)
+				toast.success("Friend removed");
+		});
+	}
+
+	const	openProfile = (id: number) => {
+		router.push(`/home/profile/${id}`);
 	}
 
 	const pongiesList = pongies.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
+				<PongieList pongie={pongie} socket={socket} crossFunction={deletePongie} />
+			</div>
+		);
+	});
+
+	const pongiesListNotOwner = pongies.map(pongie => {
+		return (
+			<div
+				className={styles.pongieSearched + ' ' + styles.otherPongies}
+				key={pongie.id}
+				onClick={() => openProfile(pongie.id)}
+			>
+				<div className={styles.avatar}>
+					<AvatarUser
+						avatar={pongie.avatar}
+						borderSize="3px"
+						borderColor={pongie.avatar.borderColor}
+						backgroundColor={pongie.avatar.backgroundColor}
+					/>
+				</div>
+
+				<div className={styles.login} style={{color: pongie.avatar.borderColor}}>
+					<h4>{pongie.login}</h4>
+				</div>
+
 			</div>
 		);
 	});
@@ -81,7 +161,7 @@ export default function SectionPongies({socket}: {
 	const isInvitedList = isInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
+				<PongieList pongie={pongie} socket={socket} crossFunction={refuseInvitation} />
 			</div>
 		);
 	});
@@ -89,7 +169,15 @@ export default function SectionPongies({socket}: {
 	const hasInvitedList = hasInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
+				<PongieList pongie={pongie} socket={socket} crossFunction={cancelInvitation} />
+			</div>
+		);
+	});
+
+	const hasBlacklistedList = hasBlacklisted.map(pongie => {
+		return (
+			<div key={pongie.id}>
+				<PongieList pongie={pongie} socket={socket} crossFunction={cancelBlacklist} />
 			</div>
 		);
 	});
@@ -97,45 +185,71 @@ export default function SectionPongies({socket}: {
 	if (!socket)
 		return <LoadingSuspense />;
 
-	return (
-		<div className={stylesInfoCard.sections}>
-			<SearchBarPongies
-				socket={socket}
-				setPongieSearched={setPongieSearched}
-				pongieSearchedId={pongieSearchedId}
-			/>
+	if (isOwner)
+		return (
+			<div className={stylesInfoCard.sections}>
+				<SearchBarPongies
+					socket={socket}
+					setPongieSearched={setPongieSearched}
+					pongieSearchedId={pongieSearchedId}
+				/>
 
-			{
-				pongieSearched &&
+				{
+					pongieSearched &&
+					<div className={styles.part}>
+						<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
+							Pongie Searched 🔎
+						</p>
+						<PongieList pongie={pongieSearched} socket={socket} crossFunction={hidePongie} />
+					</div>
+				}
+
 				<div className={styles.part}>
 					<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
-						Pongie Searched
+						All my Pongies 😎
 					</p>
-					<PongieList pongie={pongieSearched} socket={socket} cross={true} hidePongie={hidePongie} />
+					{pongiesList}
 				</div>
-			}
 
-			<div className={styles.part}>
-				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
-					All my Pongies
-				</p>
-				{pongiesList}
+				{
+					isInvited.length > 0 &&
+					<div className={styles.part}>
+						<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
+							Invitations received 📩
+						</p>
+						{isInvitedList}
+					</div>
+				}
+
+				{
+					hasInvited.length > 0 &&
+					<div className={styles.part}>
+						<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
+							Invitations sent 📨
+						</p>
+						{hasInvitedList}
+					</div>
+				}
+
+				{
+					hasBlacklisted.length > 0 &&
+					<div className={styles.part}>
+						<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
+							Blacklisted Pongies ⛔
+						</p>
+						{hasBlacklistedList}
+					</div>
+				}
+
 			</div>
-
-			<div className={styles.part}>
+		);
+	
+	return (
+		<div className={stylesInfoCard.sections}>
 				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
-					Invitations received
+					All my Pongies 😎
 				</p>
-				{isInvitedList}
-			</div>
-
-			<div className={styles.part}>
-				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
-					Invitation sent
-				</p>
-				{hasInvitedList}
-			</div>
-
+				{pongiesListNotOwner}
 		</div>
 	);
 }

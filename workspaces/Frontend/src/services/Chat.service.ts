@@ -7,6 +7,7 @@ export default class ChatService {
 	public	token: string | undefined;
 	public	disconnectClient: boolean = false;
 	public	loading: boolean = false;
+	public	nbExceptions: number = 0;
 
 	// Singleton
     constructor(token?: string) {
@@ -68,6 +69,25 @@ export default class ChatService {
 			this.loading = false;
 		//   console.log("Socket connection error:", error);
 		  this.disconnect();
+		});
+	
+		this.socket.on("error", (error: any) => {
+		  console.log("Socket error:", error);
+		  this.disconnect();
+		});
+	
+		this.socket.on("exception", (exception: any) => {
+		  	console.log("WsException:", exception);
+			if (++this.nbExceptions >= 2)
+				this.disconnectClient = true;
+
+			if (this.nbExceptions === 1)
+				setTimeout(() => {
+					this.nbExceptions = 0;
+					console.log("timeout hereeee");
+				}, 2000);
+
+			this.disconnect();
 		});
 	}
 

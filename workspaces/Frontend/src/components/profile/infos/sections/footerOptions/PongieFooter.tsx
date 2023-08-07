@@ -13,15 +13,13 @@ const badgeStyle = {
 	  backgroundColor: 'var(--primary1)',
 	  borderColor: 'var(--tertiary1)',
 	  right: "-4px",
-	  cursor: "pointer",
 	}
 }
 
-export default function PongieFooter({pongie, socket, cross, hidePongie}: {
+export default function PongieFooter({pongie, socket, crossFunction}: {
 	socket: Socket | undefined;
 	pongie: Pongie;
-	cross: boolean;
-	hidePongie: () => void;
+	crossFunction: (pongie: Pongie) => void;
 }) {
 
 	const	router = useRouter();
@@ -33,48 +31,44 @@ export default function PongieFooter({pongie, socket, cross, hidePongie}: {
 	}
 
 	const	addFriend = () => {
-		if (!pongie.isFriend)
-			socket?.emit('addPongie', pongie.id, (payload: {
-				success: boolean;
-				error: string;
-				msg: string;
-			}) => {
-				if (!payload.success && payload.error === "isBlacklisted") {
-					toast.error("You cannot send an invitation to this pongie!");
-					return ;
-				}
+		socket?.emit('addPongie', pongie.id, (payload: {
+			success: boolean;
+			error: string;
+			msg: string;
+		}) => {
+			if (!payload.success && payload.error === "isBlacklisted") {
+				toast.error("You cannot send an invitation to this pongie!");
+				return ;
+			}
 
-				if (payload.success && payload.msg === "friend")
-					toast.success("Invitation accepted!");
-					
-				if (payload.success && payload.msg === "invited")
-					toast.success("Invitation sent!");
-			});
-		
-		if (pongie.isFriend)
-			socket?.emit('deletePongie', pongie.id, (payload: {
-				success: boolean;
-			}) => {
-				if (!payload.success) {
-					toast.error("Something went wrong, try again!");
-					return ;
-				}
+			if (payload.success && payload.msg === "friend")
+				toast.success("Invitation accepted!");
+				
+			if (payload.success && payload.msg === "invited")
+				toast.success("Invitation sent!");
+		});
+	}
 
-				if (payload.success)
-					toast.success("Friend removed");
-			});
+	const	blackList = () => {
+		socket?.emit('blacklist', pongie.id, (payload: {
+			success: boolean;
+		}) => {
+			if (payload && payload.success)
+				toast.info("Pongie added to the blacklist!");
+		});
 	}
 
 	return (
 		<div className={styles.footer}>
 
 			{
-				!pongie?.isFriend &&
+				!pongie?.isFriend && !pongie.hasBlacklisted &&
 				<div onClick={addFriend}>
 					<Badge badgeContent={
 						<FontAwesomeIcon
 							icon={faPlus}
 						/>} sx={badgeStyle}
+						style={{cursor: 'pointer'}}
 						overlap="circular"
 					>
 						<FontAwesomeIcon
@@ -86,19 +80,18 @@ export default function PongieFooter({pongie, socket, cross, hidePongie}: {
 			}
 
 			{
-				pongie?.isFriend &&
-				<div onClick={addFriend}>
-					<Badge badgeContent={
-						<FontAwesomeIcon
-							icon={faCheck}
-						/>
-					} sx={badgeStyle} overlap="circular" >
-						<FontAwesomeIcon
-							icon={faFaceLaughBeam}
-							className={styles.icon}
-						/>
-					</Badge>
-				</div>
+				pongie?.isFriend && !pongie.hasBlacklisted &&
+				<Badge badgeContent={
+					<FontAwesomeIcon
+						icon={faCheck}
+					/>
+				} sx={badgeStyle} overlap="circular" >
+					<FontAwesomeIcon
+						icon={faFaceLaughBeam}
+						className={styles.iconFriend}
+						style={{color: "#8bc34a"}}
+					/>
+				</Badge>
 			}
 
 			<FontAwesomeIcon
@@ -107,24 +100,28 @@ export default function PongieFooter({pongie, socket, cross, hidePongie}: {
 				onClick={openProfile}
 			/>
 
-			<FontAwesomeIcon
-				icon={faMessage}
-				className={styles.icon}
-			/>
-
-			<FontAwesomeIcon
-				icon={faSkull}
-				className={styles.icon}
-			/>
-
 			{
-				cross &&
+				!pongie.hasBlacklisted &&
 				<FontAwesomeIcon
-					icon={faXmark}
+					icon={faMessage}
 					className={styles.icon}
-					onClick={hidePongie}
 				/>
 			}
+
+			{
+				!pongie.hasBlacklisted &&
+				<FontAwesomeIcon
+					icon={faSkull}
+					className={styles.icon}
+					onClick={blackList}
+				/>
+			}
+
+			<FontAwesomeIcon
+				icon={faXmark}
+				className={styles.icon}
+				onClick={() => crossFunction(pongie)}
+			/>
 			
 		</div>
 	);

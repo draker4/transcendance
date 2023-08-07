@@ -4,7 +4,9 @@ import styles from "@/styles/chatPage/ChatPage.module.css";
 import ChatClient from "@/components/chatPage/ChatClient";
 import Profile_Service from "@/services/Profile.service";
 
-export default async function ChatPage() {
+export default async function ChatServer({ channelId }: {
+	channelId: number[] | undefined;
+}) {
 	let		token: string | undefined;
 	let		myself: User;
 
@@ -29,6 +31,6 @@ export default async function ChatPage() {
 	}
 
 	return (
-		<ChatClient token={token} myself={myself}/>
+		<ChatClient token={token} myself={myself} channelId={channelId} />
 	)
 }

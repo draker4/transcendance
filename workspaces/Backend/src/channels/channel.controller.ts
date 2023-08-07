@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -20,7 +21,12 @@ export class ChannelController {
   // > a accorder avec avatarService.editChannelAvatarColors(), mm principe
   @Get(':id')
   async getChannelById(@Request() req, @Param('id', ParseIntPipe) id: number) {
-    return await this.channelService.getChannelUsersRelations(id);
+    try {
+      return await this.channelService.getChannelUsersRelations(id);
+    }
+    catch (error) {
+      throw new BadRequestException();
+    }
   }
 
   // [+] Un guard verifiant que l'user est chanOp ? (verifie si il est dans la channel aussi avant)

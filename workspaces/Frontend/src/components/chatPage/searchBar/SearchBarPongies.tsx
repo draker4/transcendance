@@ -41,7 +41,6 @@ export default function SearchBarPongies({ socket, setPongieSearched, pongieSear
 		setPongieSearched(undefined);
 		
 		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
-			console.log(pongies);
 			setPongies(pongies);
 		});
 

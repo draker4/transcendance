@@ -246,14 +246,13 @@ export class AuthService {
         process.env.JWT_REFRESH_SECRET,
       ) as any;
 
-      if (!payload || payload.sub !== userId) {
+      if (!payload) {
         // send mail refresh password [!]
         throw new Error('cannot verify token');
       }
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
 
-      console.log(isMatch.id + ' to delete');
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
         //send mail [!] user change password;

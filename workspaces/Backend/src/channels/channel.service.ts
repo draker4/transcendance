@@ -24,7 +24,7 @@ export class ChannelService {
 		@InjectRepository(Avatar)
 		private readonly avatarRepository: Repository<Avatar>,
 		@InjectRepository(UserChannelRelation)
-    	private readonly userChannelRelation: Repository<UserChannelRelation>
+    	private readonly userChannelRelation: Repository<UserChannelRelation>,
 	) {}
 
 	async getChannelByName(
@@ -135,7 +135,6 @@ export class ChannelService {
 			usersRelation: usersRelation,
 		}
 	}
-
 
 	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isChanOp:boolean, error?:string}> {
 		const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);

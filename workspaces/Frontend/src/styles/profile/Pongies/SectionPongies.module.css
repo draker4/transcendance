@@ -47,6 +47,12 @@
 	cursor: pointer;
 }
 
+.footer .iconFriend {
+	width: 25px;
+	height: 25px;
+	color: var(--primary1);
+}
+
 .icon:hover, .badge:hover {
 	scale: 1.05;
 }
@@ -57,4 +63,12 @@
 
 .footer .badge {
 	cursor: pointer;
+}
+
+.otherPongies {
+	cursor: pointer;
+}
+
+.otherPongies:hover {
+	background-color: var(--primary2);
 }

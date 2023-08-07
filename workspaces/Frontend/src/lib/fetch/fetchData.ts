@@ -7,7 +7,7 @@ export default async function fetchData(
   apiName: string,
   url: string,
   method: string,
-  body: any = null
+  body: any = null,
 ) {
   const preUrl = token
     ? `http://backend:4000/api/${apiName}/`
@@ -39,17 +39,17 @@ export default async function fetchData(
 
       return response;
     }
-  } catch (error:any) {
-	if (error.message === 'disconnect') {
-		const	router = useRouter();
-		await disconnect();
-		router.refresh();
-	}
-    console.log(
-      `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
-    );
-    throw new Error(
-      `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error}`
-    );
-  }
+  } catch (error: any) {
+    if (!token && error.message === 'disconnect') {
+      const	router = useRouter();
+      await disconnect();
+      router.refresh();
+    }
+      console.log(
+        `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error.message}`
+      );
+      throw new Error(
+        `Error while fetching api: ${apiName} at url: ${url}. Error log: ${error.message}`
+      );
+    }
 }

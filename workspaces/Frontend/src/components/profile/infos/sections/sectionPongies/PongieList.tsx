@@ -4,11 +4,10 @@ import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import PongieFooter from "../footerOptions/PongieFooter";
 
-export default function SectionPongies({pongie, socket, cross, hidePongie}: {
+export default function SectionPongies({pongie, socket, crossFunction}: {
 	pongie: Pongie;
 	socket: Socket | undefined;
-	cross: boolean;
-	hidePongie: () => void;
+	crossFunction: (pongie: Pongie) => void;
 }) {
 	const	[isFocused, setIsFocused] = useState(false);
 
@@ -53,7 +52,7 @@ export default function SectionPongies({pongie, socket, cross, hidePongie}: {
 
 			{
 				isFocused &&
-				<PongieFooter pongie={pongie} socket={socket} cross={cross} hidePongie={hidePongie} />
+				<PongieFooter pongie={pongie} socket={socket} crossFunction={crossFunction} />
 			}
 		</div>
 	);

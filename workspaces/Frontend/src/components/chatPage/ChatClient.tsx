@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/ChatClient.module.css";
+import stylesError from "@/styles/chatPage/ChatPage.module.css";
 import Conversations from "./Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
@@ -9,18 +10,23 @@ import LoadingSuspense from "../loading/LoadingSuspense";
 import { Socket } from "socket.io-client";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function ChatClient({
   token,
   myself,
+  channelId,
 }: {
   token: string;
   myself: Profile & { avatar: Avatar };
+  channelId: number[] | undefined;
 }) {
   const [littleScreen, setLittleScreen] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
   const [display, setDisplay] = useState<Display>();
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const [error, setError] = useState<boolean>(false);
+  const [getChannel, setGetChannel] = useState<boolean>(channelId && channelId.length >= 1 ? true : false);
   const  router = useRouter();
 
   const openDisplay = (display: Display) => {
@@ -84,8 +90,35 @@ export default function ChatClient({
     }
   }, [socket]);
 
-  if (!socket)
+  useEffect(() => {
+    if (socket && channelId && channelId.length >= 1)
+      socket.emit('getChannel', channelId[0], (payload: {
+        success: boolean;
+        error: string;
+        channel: Channel;
+    }) => {
+      if (payload && payload.success) {
+        openDisplay(payload.channel);
+        setGetChannel(false);
+        return ;
+      }
+      setError(true);
+    });
+  }, [socket]);
+
+  if (!socket || (getChannel && !error))
     return <LoadingSuspense />;
+
+  if (error) {
+    return (
+			<div className={stylesError.error}>
+				<h2>Oops... You cannot access this channel!</h2>
+				<Link href={"/home"} className={stylesError.errorLink}>
+					<p>Return to Home Page!</p>
+				</Link>
+			</div>
+		);
+  }
 
   // narrow screen width, display not opened
   if (littleScreen && !open)
