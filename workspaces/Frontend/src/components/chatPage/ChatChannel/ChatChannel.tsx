@@ -6,6 +6,7 @@ import MessageBoard from "./MessageBoard";
 import Prompt from "./Prompt";
 import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 
 type Props = {
   icon: ReactNode;
@@ -65,10 +66,16 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     );
   }, [channel, socket]);
 
+  const handleEditRelation = (edit:EditChannelRelation) => {
+    // [+] features a impl (ex: je me fais ban/kick alors que je suis dans le chat)
+    // [+] CONTINUER ICI
+    console.log("EditChannelRelation reçu :", edit);
+  }
+
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
 
-      console.log(receivedMsg);
+      console.log(receivedMsg); // checking [!]
 
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
@@ -84,9 +91,11 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     };
 
     socket?.on("sendMsg", handleReceivedMsg);
+    socket?.on("editRelation", handleEditRelation);
 
     return () => {
       socket?.off("sendMsg", handleReceivedMsg);
+      socket?.off("editRelation", handleEditRelation);
     };
     
 

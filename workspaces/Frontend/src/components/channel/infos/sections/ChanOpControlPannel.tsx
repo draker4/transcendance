@@ -38,7 +38,6 @@ type UpdateOptions = {
   onSuccess: () => void;
 };
 
-// [+] essayer d'extraire au mieux les parties redondantes
 export default function ChanOpControlPannel({
   channelId,
   relation,
@@ -81,8 +80,16 @@ export default function ChanOpControlPannel({
     if (rep.success) {
       options.onSuccess();
 
-      // [+] emit dans la channel le chgt
-	  socket?.emit("editRelation", {id: channelId});
+	  socket?.emit("editRelation", {
+      channelId: channelId,
+      newRelation: {
+        isChanOp : options.isChanOp,
+        joined : options.joined,
+        isBanned : options.isBanned,
+        invited : options.invited,
+      },
+      userId: relation.userId,
+    });
 	  
     } else {
       lists.setNotif("Error : " + rep.message + " ...try later please");
@@ -91,7 +98,7 @@ export default function ChanOpControlPannel({
 
   const handleChanOp = async () => {
     if (relation.isChanOp) {
-      const isOk = await sendUpdates({
+      sendUpdates({
         isChanOp: false,
         onSuccess: () => {
           relation.isChanOp = false;

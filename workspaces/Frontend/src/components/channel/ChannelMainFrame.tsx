@@ -95,10 +95,12 @@ export default function ChannelMainFrame({
     }
 
     socket?.on("editRelation", reloadData);
+    socket?.on("notif", reloadData);
     socket?.on("disconnect", handleError);
 
     return () => {
       socket?.off("editRelation", reloadData);
+      socket?.off("notif", reloadData);
       socket?.off("disconnect", handleError);
     };
   }, [socket]);
