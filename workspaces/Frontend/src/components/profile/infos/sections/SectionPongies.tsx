@@ -65,10 +65,15 @@ export default function SectionPongies({socket}: {
 
 	}, [socket]);
 
+	const	hidePongie = () => {
+		setPongieSearched(undefined);
+		pongieSearchedId.current = undefined;
+	}
+
 	const pongiesList = pongies.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} />
+				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
 			</div>
 		);
 	});
@@ -76,7 +81,7 @@ export default function SectionPongies({socket}: {
 	const isInvitedList = isInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} />
+				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
 			</div>
 		);
 	});
@@ -84,7 +89,7 @@ export default function SectionPongies({socket}: {
 	const hasInvitedList = hasInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} />
+				<PongieList pongie={pongie} socket={socket} cross={false} hidePongie={hidePongie} />
 			</div>
 		);
 	});
@@ -106,7 +111,7 @@ export default function SectionPongies({socket}: {
 					<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
 						Pongie Searched
 					</p>
-					<PongieList pongie={pongieSearched} socket={socket} />
+					<PongieList pongie={pongieSearched} socket={socket} cross={true} hidePongie={hidePongie} />
 				</div>
 			}
 
