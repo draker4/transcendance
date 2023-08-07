@@ -1,6 +1,7 @@
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import RolesItem from "./RolesItem";
+import { Socket } from "socket.io-client";
 
 type Props = {
   channelId: number;
@@ -8,9 +9,10 @@ type Props = {
   role: ChannelRoles;
   myRelation: UserRelation;
   lists:ChannelLists;
+  socket: Socket | undefined;
 };
 
-export default function RolesList({ channelId, relations, role, myRelation, lists }: Props) {
+export default function RolesList({ channelId, relations, role, myRelation, lists, socket }: Props) {
   return (
     <div className={styles.rolesList}>
       <p className={styles.tinyTitle}>{role}</p>
@@ -27,6 +29,7 @@ export default function RolesList({ channelId, relations, role, myRelation, list
               onHover={() => {/* console.log("Hoover") */}}
               onLeave={() => {/* console.log("Leave") */}}
 			  lists={lists}
+			  socket={socket}
             />
           </li>
         ))}

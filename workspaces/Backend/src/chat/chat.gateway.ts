@@ -225,6 +225,12 @@ export class ChatGateway implements OnModuleInit {
     return users;
   }
 
+  // [+] reflechir aux guard + autorisation chanOp / channelprivee necessaires
+  @SubscribeMessage('editRelation')
+  async sendEditRelationEvents() {
+	console.log("sendEditRelationEvents() reached");
+  }
+
   // tools
 
   // [!][?] virer ce log pour version build ?

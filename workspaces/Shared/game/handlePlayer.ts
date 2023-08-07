@@ -58,8 +58,8 @@ export function moveAI(
   const targetY = Ball.posY - PLAYER_HEIGHT / 2;
 
   // Define the movement speeds based on the player's side
-  const moveSlow = playerDynamic.speed / 3;
-  const moveFast = playerDynamic.speed / 1.5;
+  const moveSlow = playerDynamic.speed / 1.5;
+  const moveFast = playerDynamic.speed;
 
   // Determine the movement direction and speed based on the ball's movement and the player's side
   let movementSpeed = moveSlow;

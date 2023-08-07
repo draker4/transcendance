@@ -15,6 +15,7 @@ type Params = {
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
 
+  let	token: string = "";
   let myRelation: UserRelation = {
     userId: 0,
     isChanOp: false,
@@ -66,8 +67,10 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
   };
 
   try {
-    const token = cookies().get("crunchy-token")?.value;
-    if (!token) throw new Error("No token value");
+    const tryToken = cookies().get("crunchy-token")?.value;
+    if (!tryToken) throw new Error("No token value");
+
+	token = tryToken;
 
     const avatarService = new Avatar_Service(token);
     const channelService = new Channel_Service(token);
@@ -106,7 +109,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
   return (
     <div className={styles.main}>
       <Refresher />
-      <ChannelMainFrame
+      <ChannelMainFrame token={token}
         channelAndUsersRelation={channelAndUsersRelation}
         myRelation={myRelation}
       />

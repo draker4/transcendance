@@ -37,7 +37,12 @@ export default class TrainingService {
 
   //Recupere l'etat du joueur ( in game or not )
   public async isInTraining(): Promise<ReturnData> {
-    const response = await fetchData(this.token, "training", "isingame", "GET");
+    const response = await fetchData(
+      this.token,
+      "training",
+      "isInTraining",
+      "GET"
+    );
     const data = await response.json();
     return data;
   }
@@ -60,8 +65,13 @@ export default class TrainingService {
   }
 
   //Quit la partie en cours
-  public async quitGame(): Promise<ReturnData> {
-    const response = await fetchData(this.token, "training", "quit", "POST");
+  public async quitTraining(id: string): Promise<ReturnData> {
+    const response = await fetchData(
+      this.token,
+      "training",
+      `quit/${id}`,
+      "POST"
+    );
     const data: ReturnData = await response.json();
     return data;
   }

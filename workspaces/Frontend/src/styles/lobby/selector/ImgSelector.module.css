@@ -39,3 +39,7 @@
   color: var(--accent2);
   border: 3px solid var(--accent2);
 }
+
+.blur {
+  filter: blur(2px);
+}

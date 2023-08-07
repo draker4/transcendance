@@ -32,3 +32,5 @@ export const TIMER_START = 5;
 export const TIMER_RESTART = 5;
 export const TIMER_PAUSE = 15;
 export const TIMER_DECONNECTION = 30;
+
+export const MAX_PAUSE = 3;

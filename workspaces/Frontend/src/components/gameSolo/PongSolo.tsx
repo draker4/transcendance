@@ -1,25 +1,16 @@
 "use client";
-
 // Import des composants react
 import { useRef, useEffect, useMemo } from "react";
-import { Socket } from "socket.io-client";
 
 // Import du style
 import styles from "@/styles/game/Pong.module.css";
 
-// Import des composants projets
+// Import des composants
 import Info from "@/components/game/Info";
 
 // Import GameLogic
-import {
-  pongKeyDown,
-  pongKeyUp,
-  handlePlayerMessage,
-  handleStatusMessage,
-  handleUpdateMessage,
-  handlePing,
-} from "../../lib/game/eventHandlersMulti";
-import { gameLoop } from "@/lib/game/gameLoopMulti";
+import { pongKeyDown, pongKeyUp } from "../../lib/game/eventHandlersSolo";
+import { gameLoop } from "@/lib/game/gameLoopSolo";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
@@ -27,20 +18,12 @@ import {
 } from "@transcendence/shared/constants/Game.constants";
 
 type Props = {
-  userId: number;
   gameData: GameData;
   setGameData: Function;
-  socket: Socket;
-  isPlayer: "Left" | "Right" | "Spectator";
+  isPlayer: "Left" | "Right" | "";
 };
 
-export default function Pong({
-  userId,
-  gameData,
-  setGameData,
-  socket,
-  isPlayer,
-}: Props) {
+export default function Pong({ gameData, setGameData, isPlayer }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
@@ -70,7 +53,7 @@ export default function Pong({
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, draw, isMountedRef)
+        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef)
       );
     }
     return () => {
@@ -84,11 +67,11 @@ export default function Pong({
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, socket, userId, isPlayer);
+      pongKeyDown(event, gameData, isPlayer === "Left" ? "Left" : "Right");
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, socket, userId, isPlayer);
+      pongKeyUp(gameData, isPlayer);
     }
     // Add key event listeners when the component mounts
     window.addEventListener("keydown", handleKeyDown);
@@ -99,34 +82,10 @@ export default function Pong({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [socket, userId, isPlayer, gameData]);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
-    socket.on("status", handleStatusMessage(setGameData, isMountedRef));
-    socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
-
-    return () => {
-      isMountedRef.current = false;
-      socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
-      socket.off("status", handleStatusMessage(setGameData, isMountedRef));
-      socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
-    };
-  }, [socket, setGameData]);
-
-  useEffect(() => {
-    isMountedRef.current = true;
-    socket.on("ping", handlePing(socket, userId, isMountedRef));
-
-    return () => {
-      isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, userId, isMountedRef));
-    };
-  }, [socket, userId]);
+  }, [gameData]);
 
   return (
-    <div className={styles.pongSolo}>
+    <div className={styles.pong}>
       <div className={styles.canvasContainer}>
         <canvas
           ref={canvasRef}

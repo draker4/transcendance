@@ -1,20 +1,21 @@
 "use client";
 
-//Import les composants react
+// Import des composants react
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-//Import les services
+// Import du style
+import styles from "@/styles/game/Game.module.css";
+import stylesError from "@/styles/game/GameError.module.css";
+
+// Import des services
 import LobbyService from "@/services/Lobby.service";
 import GameService from "@/services/Game.service";
 
-//Import les composants
-import styles from "@/styles/game/Game.module.css";
-import stylesError from "@/styles/game/GameError.module.css";
+// Import des composants
 import Pong from "./Pong";
 import { MdLogout } from "react-icons/md";
-
 import { GameData } from "@transcendence/shared/types/Game.types";
 import { toast } from "react-toastify";
 
@@ -80,14 +81,11 @@ export default function Game({ profile, token, gameId }: Props) {
       gameService.socket?.emit("quit");
       router.push("/home");
     });
-    await toast.promise(
-      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-      {
-        pending: "Leaving game...",
-        success: "You have left the game",
-        error: "Error leaving game",
-      }
-    );
+    await toast.promise(new Promise((resolve) => resolve(res)), {
+      pending: "Leaving game...",
+      success: "You have left the game",
+      error: "Error leaving game",
+    });
   }
 
   //------------------------------------RENDU------------------------------------//

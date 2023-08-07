@@ -2,15 +2,18 @@ import styles from "@/styles/profile/InfoCard.module.css";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import RolesList from "./RolesList";
 import { useState } from "react";
+import { Socket } from "socket.io-client";
 
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
   myRelation: UserRelation;
+  socket: Socket | undefined;
 };
 
 export default function SectionPongers({
   channelAndUsersRelation,
   myRelation,
+  socket,
 }: Props) {
 
 const	[operators, setOperators] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBanned)));
@@ -34,7 +37,7 @@ const [notif, setNotif] = useState<string>("");
       return <></>
     } else {
       return (
-        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} lists={lists}/>
+        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} lists={lists} socket={socket}/>
       );
     }
   };

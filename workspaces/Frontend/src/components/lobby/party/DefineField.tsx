@@ -13,7 +13,7 @@ type Props = {
   setBackground: Function;
   ball: string;
   setBall: Function;
-  type: "Classic" | "Best3" | "Best5" | "Custom" | "Training";
+  selected: "Classic" | "Best3" | "Best5" | "Random" | "Custom";
 };
 
 export default function DefineField({
@@ -21,7 +21,7 @@ export default function DefineField({
   setBackground,
   ball,
   setBall,
-  type,
+  selected,
 }: Props) {
   // ----------------------------------  CHARGEMENT  ---------------------------------- //
 
@@ -41,7 +41,7 @@ export default function DefineField({
         imgs={BACKGROUND}
         width={135}
         height={80}
-        disabled={type === "Classic"}
+        disabled={selected === "Classic" || selected === "Random"}
       />
 
       {/* Ball */}
@@ -53,7 +53,7 @@ export default function DefineField({
         imgs={BALL}
         width={30}
         height={30}
-        disabled={type === "Classic"}
+        disabled={selected === "Classic" || selected === "Random"}
       />
     </div>
   );

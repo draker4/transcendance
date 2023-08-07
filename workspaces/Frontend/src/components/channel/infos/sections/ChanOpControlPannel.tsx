@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
+import { Socket } from "socket.io-client";
 import ConfirmationPannel from "./ConfirmationPannel";
 
 type Props = {
@@ -18,6 +19,7 @@ type Props = {
   myRelation: UserRelation;
   role: ChannelRoles;
   lists: ChannelLists;
+  socket: Socket | undefined;
 };
 
 type ButtonData = {
@@ -43,6 +45,7 @@ export default function ChanOpControlPannel({
   myRelation,
   role,
   lists,
+  socket,
 }: Props) {
   const channelService = new Channel_Service();
 
@@ -77,7 +80,9 @@ export default function ChanOpControlPannel({
     });
     if (rep.success) {
       options.onSuccess();
+
       // [+] emit dans la channel le chgt
+	  socket?.emit("editRelation");
 	  
     } else {
       lists.setNotif("Error : " + rep.message + " ...try later please");

@@ -7,11 +7,19 @@ type Props = {
   step: number;
   value: number;
   setValue: Function;
+  adjust: number;
 };
 
-export default function Slider({ min, max, step, value, setValue }: Props) {
+export default function Slider({
+  min,
+  max,
+  step,
+  value,
+  setValue,
+  adjust,
+}: Props) {
   const handleChange = (value: number) => {
-    setValue(value);
+    setValue(value + adjust);
   };
 
   const renderThumb = (props: any, state: any) => (
@@ -27,7 +35,7 @@ export default function Slider({ min, max, step, value, setValue }: Props) {
       min={min}
       max={max}
       step={step}
-      value={value}
+      value={value - adjust}
       onChange={handleChange}
       renderThumb={renderThumb}
     />

@@ -1,11 +1,19 @@
 "use client";
 
+// Import les composants react
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+// Import du style
 import styles from "@/styles/lobby/training/Training.module.css";
+
+// Import des composants
 import StandardTraining from "./StandardTraining";
 import CustomTraining from "./CustomTraining";
 import GeneralSettings from "./GeneralSettings";
-import { useRouter } from "next/router";
+import InTraining from "./InTraining";
+
+// Other imports
 import { toast } from "react-toastify";
 import {
   randomMaxPoint,
@@ -26,13 +34,14 @@ export default function Training({ profile }: Props) {
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [side, setSide] = useState<"Left" | "Right">("Left");
-  const [difficulty, setDifficulty] = useState<1 | 2 | 3 | 4 | 5>(3);
+  const [difficulty, setDifficulty] = useState<-2 | -1 | 0 | 1 | 2>(0);
   const [push, setPush] = useState<boolean>(false);
   const [pause, setPause] = useState<boolean>(false);
   const [background, setBackground] = useState<string>("Classic");
   const [ball, setBall] = useState<string>("Classic");
   const router = useRouter();
   const trainingService = new TrainingService();
+  const [trainingId, setTrainingId] = useState<string>("");
 
   // ----------------------------------  CREATE PONG  --------------------------------- //
 
@@ -54,14 +63,11 @@ export default function Training({ profile }: Props) {
 
     //Creer la game
     const res = await trainingService.createTraining(settings);
-    await toast.promise(
-      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-      {
-        pending: "Creating game...",
-        success: "Game created",
-        error: "Error creating game",
-      }
-    );
+    await toast.promise(new Promise((resolve) => resolve(res)), {
+      pending: "Creating training...",
+      success: "Training created",
+      error: "Error creating training",
+    });
     if (!res.success) {
       console.log(res.message);
       return;
@@ -101,10 +107,21 @@ export default function Training({ profile }: Props) {
     }
   }, [selected]);
 
+  useEffect(() => {
+    trainingService.isInTraining().then((ret) => {
+      setTrainingId(ret.data);
+    });
+  }, []);
+
   // -----------------------------------  TRAINING  ----------------------------------- //
 
   return (
     <div className={styles.training}>
+      <InTraining
+        trainingService={trainingService}
+        trainingId={trainingId}
+        setTrainingId={setTrainingId}
+      />
       <StandardTraining selected={selected} setSelected={setSelected} />
       <CustomTraining
         selected={selected}

@@ -41,7 +41,7 @@ export class CreateGameDTO {
 
   @IsNumber()
   @IsNotEmpty()
-  difficulty: 1 | 2 | 3 | 4 | 5;
+  difficulty: -2 | -1 | 0 | 1 | 2;
 
   @IsBoolean()
   @IsNotEmpty()
