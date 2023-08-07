@@ -2,10 +2,9 @@ import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAddressCard, faFaceLaughBeam, faMessage } from "@fortawesome/free-regular-svg-icons";
-import { faCheck, faPlus, faSkull } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@mui/material";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "react-toastify";
 
 const badgeStyle = {
@@ -18,13 +17,14 @@ const badgeStyle = {
 	}
 }
 
-export default function PongieFooter({pongie, socket}: {
+export default function PongieFooter({pongie, socket, cross, hidePongie}: {
 	socket: Socket | undefined;
 	pongie: Pongie;
+	cross: boolean;
+	hidePongie: () => void;
 }) {
 
 	const	router = useRouter();
-	const	[isFriend, setIsFriend] = useState<boolean>(pongie.isFriend);
 
 	const	openProfile = () => {
 		if (pongie) {
@@ -116,6 +116,15 @@ export default function PongieFooter({pongie, socket}: {
 				icon={faSkull}
 				className={styles.icon}
 			/>
+
+			{
+				cross &&
+				<FontAwesomeIcon
+					icon={faXmark}
+					className={styles.icon}
+					onClick={hidePongie}
+				/>
+			}
 			
 		</div>
 	);
