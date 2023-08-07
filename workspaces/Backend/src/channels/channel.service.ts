@@ -115,14 +115,20 @@ export class ChannelService {
 		});
 
 
-		// console.log("channel = ", channel); //checking
+		// this.log("Fetching from getChannelUsersRelations() : "); //checking [!]
 
 		const usersRelation : UserChannelRelation[] = await this.userChannelRelation.find({
 			where: { channelId : id }, relations: ["user", "user.avatar"]
 		});
 		
-		
-		// console.log("USER RELATION[0].user = ", usersRelation[0].user); //checking
+		/* [!]
+		console.log("USER RELATION[0].isBanned) = ", usersRelation[0].isBanned); //checking
+		console.log("USER RELATION[1].isBanned) = ", usersRelation[1].isBanned); //checking
+		console.log("USER RELATION[2].isBanned) = ", usersRelation[2].isBanned); //checking
+		console.log("USER RELATION[3].isBanned) = ", usersRelation[3].isBanned); //checking
+		console.log("USER RELATION[4].isBanned) = ", usersRelation[4].isBanned); //checking
+		console.log("USER RELATION[5].isBanned) = ", usersRelation[5].isBanned); //checking
+		*/
 
 		return {
 			channel: channel,

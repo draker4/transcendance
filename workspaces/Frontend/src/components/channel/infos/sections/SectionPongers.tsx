@@ -1,7 +1,7 @@
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import RolesList from "./RolesList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -16,12 +16,28 @@ export default function SectionPongers({
   socket,
 }: Props) {
 
-const	[operators, setOperators] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBanned)));
-const	[pongers, setPongers] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined && !relation.isChanOp && !relation.isBanned)));
-const	[invited, setInvited] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited)));
-const	[banned, setBanned] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned)));
-const	[leavers, setLeavers] = useState<UserRelation[]>(channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited)));
+const	[operators, setOperators] = useState<UserRelation[]>([]);
+const	[pongers, setPongers] = useState<UserRelation[]>([]);
+const	[invited, setInvited] = useState<UserRelation[]>([]);
+const	[banned, setBanned] = useState<UserRelation[]>([]);
+const	[leavers, setLeavers] = useState<UserRelation[]>([]);
 const [notif, setNotif] = useState<string>("");
+
+useEffect(() => {
+  // need new instances
+  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBanned));
+  const filteredPongers = channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined && !relation.isChanOp && !relation.isBanned));
+  const filteredInvited = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited));
+  const filteredBanned = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned));
+  const filteredLeavers = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited));
+
+  setOperators(filteredOperators);
+  setPongers(filteredPongers);
+  setInvited(filteredInvited);
+  setBanned(filteredBanned);
+  setLeavers(filteredLeavers);
+
+}, [channelAndUsersRelation]);
 
 	const lists:ChannelLists = {
 		setOperators: setOperators,

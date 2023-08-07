@@ -144,8 +144,8 @@
 }
 
 .channelMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
-  color: var(--tertiary1);
-  font-size: 0.85rem;
+  color: var(--secondary1);
+  font-size: 0.70rem;
 
   /* background-color: rgb(151, 190, 107); */
 }

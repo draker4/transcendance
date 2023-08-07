@@ -79,7 +79,6 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
     channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
-
     const myProfile = await profileService.getProfileByToken();
 
     const findStatus: UserRelation | undefined =
@@ -102,6 +101,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     channelAndUsersRelation.channel.id === -1 ||
 	channelAndUsersRelation.channel.type === "privateMsg"
   ) {
+    // [+] Ajouter conditions dans le cas ou findStatus est undefined ou si myRelation.banned === true
     // [+] ajoutter des param a ErrorChanel, si private par ex
     return <ErrorChannel params={{ id }} />;
   }

@@ -82,7 +82,7 @@ export default function ChanOpControlPannel({
       options.onSuccess();
 
       // [+] emit dans la channel le chgt
-	  socket?.emit("editRelation");
+	  socket?.emit("editRelation", {id: channelId});
 	  
     } else {
       lists.setNotif("Error : " + rep.message + " ...try later please");
