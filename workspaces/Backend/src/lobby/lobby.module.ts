@@ -23,6 +23,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { StatsService } from '@/stats/service/stats.service';
 import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -37,6 +38,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
       User,
       UserChannelRelation,
       SocketToken,
+      Notif,
     ]),
   ],
   controllers: [LobbyController],

@@ -15,6 +15,7 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
       BackupCode,
       SocketToken,
       Stats,
+      Notif,
     ]),
   ],
   controllers: [AvatarController],

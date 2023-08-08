@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceSmileWink,
@@ -10,12 +10,24 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "@/styles/profile/InfoCard.module.css";
+import { Socket } from "socket.io-client";
+import { Badge } from "@mui/material";
 
 type Props = {
   activeButton: number;
   setActiveButton: Dispatch<SetStateAction<number>>;
   isOwner: boolean;
+  socket: Socket | undefined;
 };
+
+const badgeStyle = {
+	"& .MuiBadge-badge": {
+	  color: 'var(--tertiary1)',
+	  backgroundColor: 'var(--notif)',
+    border: '2px solid var(--notif)',
+    borderRadius: "100%",
+	}
+}
 
 type ButtonData = {
   id: number;
@@ -27,10 +39,36 @@ export default function NavbarProfilInfo({
   activeButton,
   setActiveButton,
   isOwner,
+  socket,
 }: Props) {
   const [selectedItem, setSelectedItem] = useState(0);
+  const [invisible, setInvisible] = useState<boolean>(true);
+
+  useEffect(() => {
+    const updateProfile = (payload: {
+      why: string;
+    }) => {
+      if (payload && payload.why && payload.why === "updatePongies"
+        && selectedItem !== 1) {
+        setInvisible(false);
+      }
+    };
+
+    socket?.emit('getNotif', (payload: Notif) => {
+      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+        setInvisible(false);
+    });
+
+    socket?.on("notif", updateProfile);
+
+    return () => {
+      socket?.off("notif", updateProfile);
+    };
+  }, [socket]);
 
   const handleClick = (buttonId: number) => {
+    if (buttonId === 1)
+      setInvisible(true);
     setActiveButton(buttonId);
     setSelectedItem(buttonId);
   };
@@ -58,7 +96,21 @@ export default function NavbarProfilInfo({
           }`}
           onClick={() => handleClick(button.id)}
         >
-          <FontAwesomeIcon icon={button.icon} />
+          {
+            (!isOwner || button.name !== "Pongies") &&
+            <FontAwesomeIcon icon={button.icon} />
+          }
+          {
+            isOwner && button.name === "Pongies" &&
+            <Badge
+              overlap="rectangular"
+              sx={badgeStyle}
+              variant="dot"
+              invisible={invisible}
+            >
+               <FontAwesomeIcon icon={button.icon} />
+            </Badge>
+          }
           <div>&#8239;{button.name}</div>
         </div>
       ))}

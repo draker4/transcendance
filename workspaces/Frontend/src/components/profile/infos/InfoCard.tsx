@@ -24,6 +24,7 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
         activeButton={activeButton}
         setActiveButton={setActiveButton}
         isOwner={isOwner}
+        socket={socket}
       />
       {(() => {
         switch (activeButton) {

@@ -52,7 +52,9 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
     avatar.backgroundColor = botColor.toString();
     setDisplaySettings(false);
 
-    socket?.emit('notif');
+    socket?.emit('notif', {
+      why: "updateProfile",
+    });
   };
 
   const colorAddedStyle: CSSProperties = {

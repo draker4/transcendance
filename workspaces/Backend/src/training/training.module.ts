@@ -20,6 +20,7 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
       SocketToken,
       Stats,
       UserChannelRelation,
+      Notif,
     ]),
   ],
   controllers: [TrainingController],

@@ -28,6 +28,7 @@ import { AvatarService } from '@/avatar/avatar.service';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
       User,
       UserChannelRelation,
       SocketToken,
+      Notif,
     ]),
   ],
   providers: [

@@ -82,8 +82,24 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('notif')
-  async notif(@ConnectedSocket() socket) {
-    this.server.to(socket.id).emit('notif');
+  async notif(
+    @ConnectedSocket() socket: Socket,
+    @MessageBody() why: string,
+  ) {
+    console.log("laaaa et", why);
+    if (!why)
+      throw new WsException('no argument for notif');
+    this.server.to(socket.id).emit('notif', why);
+  }
+
+  @SubscribeMessage('getNotif')
+  async getNotif(@Req() req) {
+    return await this.chatService.getNotif(req.user.id);
+  }
+
+  @SubscribeMessage('clearNotif')
+  async clearNotif(@Req() req, @MessageBody() toClear: string) {
+    return await this.chatService.clearNotif(req.user.id, toClear);
   }
 
   @SubscribeMessage('getLoginWithAvatar')
@@ -115,6 +131,9 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getPongie')
   async getPongie(@Request() req, @MessageBody() pongieId: number) {
+    if (!pongieId)
+      throw new WsException('no pongie id');
+    
     return await this.chatService.getPongie(req.user.id, pongieId);
   }
 
@@ -134,7 +153,6 @@ export class ChatGateway implements OnModuleInit {
   async addPongie(
     @MessageBody() pongieId: number,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!pongieId)
       throw new WsException('no pongie id');
@@ -145,13 +163,20 @@ export class ChatGateway implements OnModuleInit {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
+  
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
 
     return await this.chatService.addPongie(
       req.user.id,
       pongieId,
       pongieSockets,
+      userSockets,
       this.server,
-      socket,
     );
   }
 
@@ -159,7 +184,6 @@ export class ChatGateway implements OnModuleInit {
   async deletePongie(
     @MessageBody() pongieId: number,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!pongieId)
       throw new WsException('no pongie id');
@@ -171,12 +195,19 @@ export class ChatGateway implements OnModuleInit {
         pongieSockets.push(key);
     }
 
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
     return await this.chatService.deletePongie(
       req.user.id,
       pongieId,
       pongieSockets,
+      userSockets,
       this.server,
-      socket,
     );
   }
 
@@ -184,7 +215,6 @@ export class ChatGateway implements OnModuleInit {
   async cancelInvitation(
     @MessageBody() pongieId: number,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!pongieId)
       throw new WsException('no pongie id');
@@ -196,12 +226,19 @@ export class ChatGateway implements OnModuleInit {
         pongieSockets.push(key);
     }
 
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
     return await this.chatService.cancelInvitation(
       req.user.id,
       pongieId,
       pongieSockets,
+      userSockets,
       this.server,
-      socket,
     );
   }
 
@@ -209,7 +246,6 @@ export class ChatGateway implements OnModuleInit {
   async cancelBlacklist(
     @MessageBody() pongieId: number,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!pongieId)
       throw new WsException('no pongie id');
@@ -221,12 +257,19 @@ export class ChatGateway implements OnModuleInit {
         pongieSockets.push(key);
     }
 
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
     return await this.chatService.cancelBlacklist(
       req.user.id,
       pongieId,
       pongieSockets,
+      userSockets,
       this.server,
-      socket,
     );
   }
 
@@ -234,7 +277,6 @@ export class ChatGateway implements OnModuleInit {
   async blacklist(
     @MessageBody() pongieId: number,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!pongieId)
       throw new WsException('no pongie id');
@@ -246,12 +288,19 @@ export class ChatGateway implements OnModuleInit {
         pongieSockets.push(key);
     }
 
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
     return await this.chatService.blacklist(
       req.user.id,
       pongieId,
       pongieSockets,
+      userSockets,
       this.server,
-      socket,
     );
   }
 
@@ -261,7 +310,6 @@ export class ChatGateway implements OnModuleInit {
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
-    console.log(payload);
     if (payload.channelType === 'privateMsg')
       return await this.chatService.joinPongie(req.user.id, payload.id, socket);
     else

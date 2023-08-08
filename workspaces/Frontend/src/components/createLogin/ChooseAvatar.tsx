@@ -116,7 +116,7 @@ export default function ChooseAvatar({
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
-              text: text,
+              text: text.toUpperCase().slice(0, 2),
               empty: false,
               isChannel: false,
               decrypt: false,
@@ -129,7 +129,7 @@ export default function ChooseAvatar({
             backgroundColor: `${backgroundColor}`,
           }}
         >
-          {text}
+          {text.toUpperCase().slice(0, 2)}
         </Avatar>
       </div>
 

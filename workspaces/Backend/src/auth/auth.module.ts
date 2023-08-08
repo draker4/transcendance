@@ -24,6 +24,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { StatsService } from '@/stats/service/stats.service';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { StatsService } from '@/stats/service/stats.service';
       BackupCode,
       SocketToken,
       Stats,
+      Notif,
     ]),
     JwtModule,
     MailModule,

@@ -15,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
+import { Notif } from '@/utils/typeorm/Notif.entity';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,8 @@ export class UsersService {
     private readonly backupCodeRepository: Repository<BackupCode>,
     @InjectRepository(SocketToken)
     private readonly socketTokenRepository: Repository<SocketToken>,
+    @InjectRepository(Notif)
+    private readonly notifRepository: Repository<Notif>,
 
     private cryptoService: CryptoService,
     private readonly statsService: StatsService,
@@ -40,11 +43,20 @@ export class UsersService {
       userId: user.id,
     };
     const stats = await this.statsService.createStats(newStats);
+
     await this.userRepository
       .createQueryBuilder()
       .relation(User, 'stats')
       .of(user.id)
       .set(stats);
+
+    const notif = await this.notifRepository.save(new Notif());
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'notif')
+      .of(user.id)
+      .set(notif);
+
     return user;
   }
 

@@ -101,15 +101,15 @@
 
 .menu {
   /* border: 2px solid red; */
-  width: 60%;
-  height: 60%;
+  width: 70%;
+  height: 70%;
   margin: 0;
   padding: 0;
   padding-right: 2px;
 }
 
 .chatBtn:hover {
-  border: 3px solid var(--accent1);
+  border: 3px solid var(--accent3);
   cursor: pointer;
 }
 

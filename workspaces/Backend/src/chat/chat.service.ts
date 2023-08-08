@@ -11,16 +11,16 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { UserPongieRelation } from 'src/utils/typeorm/UserPongieRelation';
 import { Not, Repository } from 'typeorm';
-import { pongieDto } from './dto/pongie.dto';
 import { channelDto } from './dto/channel.dto';
 import { Socket, Server } from 'socket.io';
 import { sendMsgDto } from './dto/sendMsg.dto';
 import { newMsgDto } from './dto/newMsg.dto';
 import { MessagesService } from 'src/messages/messages.service';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
-import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { getPongieDto } from './dto/getPongie.dto';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
+import { Notif } from '@/utils/typeorm/Notif.entity';
+import { async } from 'rxjs';
 
 @Injectable()
 export class ChatService {
@@ -40,6 +40,9 @@ export class ChatService {
     @InjectRepository(SocketToken)
     private readonly socketTokenRepository: Repository<SocketToken>,
 
+    @InjectRepository(Notif)
+    private readonly notifRepository: Repository<Notif>,
+
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
     private readonly messageService: MessagesService,
@@ -56,6 +59,54 @@ export class ChatService {
       await this.socketTokenRepository.save(tokenEntity);
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async getNotif(userId: number) {
+    try {
+      const user = await this.usersService.getUserById(userId);
+      if(user.id===1)
+      console.log(user.notif);
+
+      if (!user)
+        throw new WsException('no user found');
+
+      return user.notif;
+    }
+    catch (error) {
+      console.log(error.message);
+      throw new WsException(error.message);
+    }
+  }
+
+  async clearNotif(userId: number, toClear: string) {
+    try {
+      const user = await this.usersService.getUserById(userId);
+
+      if (!user)
+        throw new WsException('no user found');
+
+      if (toClear === "redPongies")
+        await this.notifRepository.update(
+          user.notif.id,
+          { redPongies: [] },
+        );
+
+      else if (toClear === "redChannels")
+        await this.notifRepository.update(
+          user.notif.id,
+          { redChannels: [] },
+        );
+
+      else if (toClear === "nbMessages")
+        await this.notifRepository.update(
+          user.notif.id,
+          { nbMessages: [] },
+        );
+    }
+    catch (error) {
+      console.log(error.message);
+      throw new WsException(error.message);
     }
   }
 
@@ -427,8 +478,8 @@ export class ChatService {
     userId: number,
     pongieId: number,
     pongieSockets: string[],
+    userSockets: string[],
     server: Server,
-    socket: Socket,
   ) {
     try {
       const user = await this.usersService.getUserPongies(userId);
@@ -476,6 +527,13 @@ export class ChatService {
       await this.userPongieRelation.save(relationUser);
       await this.userPongieRelation.save(relationPongie);
 
+      const updatedRedPongies = pongie.notif.redPongies.filter(id => id !== user.id);
+
+      await this.notifRepository.update(
+        pongie.notif.id,
+        { redPongies: updatedRedPongies },
+      );
+
       if (pongieSockets.length !== 0) {
         for (const socketId of pongieSockets) {
           server.to(socketId).emit('notif', {
@@ -484,9 +542,13 @@ export class ChatService {
         }
       }
 
-      server.to(socket.id).emit('notif', {
-        why: 'updatePongies',
-      });
+      if (userSockets.length !== 0) {
+        for (const socketId of userSockets) {
+          server.to(socketId).emit('notif', {
+            why: 'updatePongies',
+          });
+        }
+      }
 
       return {
         success: true,
@@ -497,7 +559,7 @@ export class ChatService {
     }
   }
 
-  async cancelInvitation(userId: number, pongieId: number, pongieSockets: string[], server: Server, socket: Socket) {
+  async cancelInvitation(userId: number, pongieId: number, pongieSockets: string[], userSockets: string[], server: Server) {
     try {
 
       const user = await this.usersService.getUserPongies(userId);
@@ -546,6 +608,12 @@ export class ChatService {
       await this.userPongieRelation.save(relationUser);
       await this.userPongieRelation.save(relationPongie);
 
+      const updatedRedPongies = pongie.notif.redPongies.filter(id => id !== user.id);
+      await this.notifRepository.update(
+        pongie.notif.id,
+        { redPongies: updatedRedPongies },
+      );
+
       if (pongieSockets.length !== 0) {
         for (const socketId of pongieSockets) {
           server.to(socketId).emit('notif', {
@@ -554,9 +622,13 @@ export class ChatService {
         }
       }
 
-      server.to(socket.id).emit('notif', {
-        "why": "updatePongies",
-      });
+      if (userSockets.length !== 0) {
+        for (const socketId of userSockets) {
+          server.to(socketId).emit('notif', {
+            "why": "updatePongies",
+          });
+        }
+      }
 
       return {
         success: true,
@@ -568,7 +640,7 @@ export class ChatService {
     }
   }
 
-  async cancelBlacklist(userId: number, pongieId: number, pongieSockets: string[], server: Server, socket: Socket) {
+  async cancelBlacklist(userId: number, pongieId: number, pongieSockets: string[], userSockets: string[], server: Server) {
     try {
 
       const user = await this.usersService.getUserPongies(userId);
@@ -623,9 +695,13 @@ export class ChatService {
         }
       }
 
-      server.to(socket.id).emit('notif', {
-        "why": "updatePongies",
-      });
+      if (userSockets.length !== 0) {
+        for (const socketId of userSockets) {
+          server.to(socketId).emit('notif', {
+            "why": "updatePongies",
+          });
+        }
+      }
 
       return {
         success: true,
@@ -637,7 +713,7 @@ export class ChatService {
     }
   }
 
-  async blacklist(userId: number, pongieId: number, pongieSockets: string[], server: Server, socket: Socket) {
+  async blacklist(userId: number, pongieId: number, pongieSockets: string[], userSockets: string[], server: Server) {
     try {
 
       const user = await this.usersService.getUserPongies(userId);
@@ -692,9 +768,13 @@ export class ChatService {
         }
       }
 
-      server.to(socket.id).emit('notif', {
-        "why": "updatePongies",
-      });
+      if (userSockets.length !== 0) {
+        for (const socketId of userSockets) {
+          server.to(socketId).emit('notif', {
+            "why": "updatePongies",
+          });
+        }
+      }
 
       return {
         success: true,
@@ -762,8 +842,8 @@ export class ChatService {
     userId: number,
     pongieId: number,
     pongieSockets: string[],
+    userSockets: string[],
     server: Server,
-    socket: Socket,
   ) {
     try {
       const user = await this.usersService.getUserPongies(userId);
@@ -830,20 +910,26 @@ export class ChatService {
         await this.userPongieRelation.save(relationUser);
         await this.userPongieRelation.save(relationPongie);
 
+        await this.notifRepository.update(
+          pongie.notif.id,
+          { redPongies: [...pongie.notif.redPongies, user.id] },
+        );
+
         if (pongieSockets.length !== 0) {
           for (const socketId of pongieSockets) {
-            server.to(socketId).emit('notif', {
-              why: 'friend',
-            });
             server.to(socketId).emit('notif', {
               why: 'updatePongies',
             });
           }
         }
 
-        server.to(socket.id).emit('notif', {
-          why: 'updatePongies',
-        });
+        if (userSockets.length !== 0) {
+          for (const socketId of userSockets) {
+            server.to(socketId).emit('notif', {
+              why: 'updatePongies',
+            });
+          }
+        }
 
         return {
           success: 'true',
@@ -858,20 +944,26 @@ export class ChatService {
       await this.userPongieRelation.save(relationUser);
       await this.userPongieRelation.save(relationPongie);
 
+      await this.notifRepository.update(
+        pongie.notif.id,
+        { redPongies: [...pongie.notif.redPongies, user.id] },
+      );
+
       if (pongieSockets.length !== 0) {
         for (const socketId of pongieSockets) {
-          server.to(socketId).emit('notif', {
-            why: 'invitation',
-          });
           server.to(socketId).emit('notif', {
             why: 'updatePongies',
           });
         }
       }
 
-      server.to(socket.id).emit('notif', {
-        why: 'updatePongies',
-      });
+      if (userSockets.length !== 0) {
+        for (const socketId of userSockets) {
+          server.to(socketId).emit('notif', {
+            why: 'updatePongies',
+          });
+        }
+      }
 
       return {
         success: true,

@@ -33,6 +33,7 @@ import { ScoreModule } from './score/score.module';
 import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-factor-authentication.module';
 import { BackupCode } from './utils/typeorm/BackupCode.entity';
 import { SocketToken } from './utils/typeorm/SocketToken.entity';
+import { Notif } from './utils/typeorm/Notif.entity';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { SocketToken } from './utils/typeorm/SocketToken.entity';
         Token,
         BackupCode,
         SocketToken,
+        Notif,
       ],
       synchronize: false,
     }),

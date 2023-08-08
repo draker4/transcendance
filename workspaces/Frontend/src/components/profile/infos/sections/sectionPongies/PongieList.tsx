@@ -1,18 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import PongieFooter from "../footerOptions/PongieFooter";
+import { Badge } from "@mui/material";
 
-export default function SectionPongies({pongie, socket, crossFunction}: {
+const badgeStyle = {
+	"& .MuiBadge-badge": {
+	  color: 'var(--tertiary1)',
+	  backgroundColor: 'var(--notif)',
+    border: '2px solid var(--notif)',
+    width: "12px",
+    height: "12px",
+    borderRadius: "100%",
+	}
+}
+
+export default function PongieList({pongie, socket, crossFunction, notifsIds}: {
 	pongie: Pongie;
 	socket: Socket | undefined;
 	crossFunction: (pongie: Pongie) => void;
+	notifsIds: number[];
 }) {
 	const	[isFocused, setIsFocused] = useState(false);
+	const	[invisible, setInvisible] = useState(true);
+
+	useEffect(() => {
+		console.log("notifids=", notifsIds);
+		const	match = notifsIds.find(id => id === pongie.id);
+
+		if (match && invisible)
+			setInvisible(false);
+	}, [notifsIds]);
 
 	const handleFocusOn = () => {
 		setIsFocused(true);
+		setInvisible(true);
 	};
 
 	const handleFocusOff = () => {
@@ -21,6 +44,7 @@ export default function SectionPongies({pongie, socket, crossFunction}: {
 
 	const handleHover = () => {
 		setIsFocused(true);
+		setInvisible(true);
 	};
 
 	const handleMouseLeave = () => {
@@ -35,14 +59,21 @@ export default function SectionPongies({pongie, socket, crossFunction}: {
 			onMouseLeave={handleMouseLeave}
 		>
 			<div className={styles.pongieSearched} >
-				<div className={styles.avatar}>
-					<AvatarUser
-						avatar={pongie.avatar}
-						borderSize="3px"
-						borderColor={pongie.avatar.borderColor}
-						backgroundColor={pongie.avatar.backgroundColor}
-					/>
-				</div>
+				<Badge
+					overlap="circular"
+					sx={badgeStyle}
+					variant="dot"
+					invisible={invisible}
+				>
+					<div className={styles.avatar}>
+						<AvatarUser
+							avatar={pongie.avatar}
+							borderSize="3px"
+							borderColor={pongie.avatar.borderColor}
+							backgroundColor={pongie.avatar.backgroundColor}
+						/>
+					</div>
+				</Badge>
 
 				<div className={styles.login} style={{color: pongie.avatar.borderColor}}>
 					<h4>{pongie.login}</h4>
