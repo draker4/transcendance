@@ -16,11 +16,12 @@ const badgeStyle = {
 	}
 }
 
-export default function PongieList({pongie, socket, crossFunction, notifsIds}: {
+export default function PongieList({pongie, socket, crossFunction, notifsIds, setNotifIds}: {
 	pongie: Pongie;
 	socket: Socket | undefined;
 	crossFunction: (pongie: Pongie) => void;
 	notifsIds: number[];
+	setNotifIds: React.Dispatch<React.SetStateAction<number[]>>;
 }) {
 	const	[isFocused, setIsFocused] = useState(false);
 	const	[invisible, setInvisible] = useState(true);
@@ -36,6 +37,12 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds}: {
 	const handleFocusOn = () => {
 		setIsFocused(true);
 		setInvisible(true);
+		socket?.emit('getNotif', (payload: Notif) => {
+			if (payload && payload.redPongies) {
+				setNotifIds(payload.redPongies);
+				socket.emit("clearNotif", "redPongies");
+			}
+		});
 	};
 
 	const handleFocusOff = () => {
@@ -45,6 +52,12 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds}: {
 	const handleHover = () => {
 		setIsFocused(true);
 		setInvisible(true);
+		socket?.emit('getNotif', (payload: Notif) => {
+			if (payload && payload.redPongies) {
+				setNotifIds(payload.redPongies);
+				socket.emit("clearNotif", "redPongies");
+			}
+		});
 	};
 
 	const handleMouseLeave = () => {

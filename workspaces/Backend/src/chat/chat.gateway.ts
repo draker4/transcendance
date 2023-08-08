@@ -84,12 +84,13 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('notif')
   async notif(
     @ConnectedSocket() socket: Socket,
-    @MessageBody() why: string,
+    @MessageBody() payload: {
+      why: string,
+    }
   ) {
-    console.log("laaaa et", why);
-    if (!why)
+    if (!payload)
       throw new WsException('no argument for notif');
-    this.server.to(socket.id).emit('notif', why);
+    this.server.to(socket.id).emit('notif', payload);
   }
 
   @SubscribeMessage('getNotif')
