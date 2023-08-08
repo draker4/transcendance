@@ -4,6 +4,8 @@ import {
   Req,
   Request,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -23,8 +25,10 @@ import { ChannelAuthGuard } from './guard/channelAuthGuard';
 import { channelIdDto } from './dto/channelId.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
+import { JoinDto } from './dto/join.dto';
 
 @UseGuards(WsJwtGuard)
+@UsePipes(new ValidationPipe())
 @WebSocketGateway({
   cors: {
     origin: [`http://${process.env.HOST_IP}:3000`, 'http://localhost:3000'],
@@ -253,15 +257,11 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(
-    @MessageBody()
-    payload: {
-      id: number;
-      channelName: string;
-      channelType: 'public' | 'protected' | 'private' | 'privateMsg';
-    },
+    @MessageBody() payload: JoinDto,
     @Request() req,
     @ConnectedSocket() socket: Socket,
   ) {
+    console.log(payload);
     if (payload.channelType === 'privateMsg')
       return await this.chatService.joinPongie(req.user.id, payload.id, socket);
     else
