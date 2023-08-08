@@ -26,6 +26,7 @@ import { channelIdDto } from './dto/channelId.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { JoinDto } from './dto/join.dto';
+import { ClearNotifDto } from './dto/clearNotif.dto';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -83,14 +84,18 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('notif')
   async notif(
-    @ConnectedSocket() socket: Socket,
     @MessageBody() payload: {
       why: string,
-    }
+    },
+    @Req() req,
   ) {
     if (!payload)
       throw new WsException('no argument for notif');
-    this.server.to(socket.id).emit('notif', payload);
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+        this.server.to(key).emit('notif', payload);
+    }
   }
 
   @SubscribeMessage('getNotif')
@@ -99,8 +104,15 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('clearNotif')
-  async clearNotif(@Req() req, @MessageBody() toClear: string) {
-    return await this.chatService.clearNotif(req.user.id, toClear);
+  async clearNotif(@Req() req, @MessageBody() toClear: ClearNotifDto) {
+    const userSockets: string[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
+    return await this.chatService.clearNotif(req.user.id, toClear, userSockets, this.server);
   }
 
   @SubscribeMessage('getLoginWithAvatar')

@@ -20,7 +20,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { getPongieDto } from './dto/getPongie.dto';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
-import { async } from 'rxjs';
+import { ClearNotifDto } from './dto/clearNotif.dto';
 
 @Injectable()
 export class ChatService {
@@ -77,30 +77,51 @@ export class ChatService {
     }
   }
 
-  async clearNotif(userId: number, toClear: string) {
+  async clearNotif(userId: number, toClear: ClearNotifDto, userSockets: string[], server: Server) {
     try {
       const user = await this.usersService.getUserById(userId);
 
       if (!user)
         throw new WsException('no user found');
 
-      if (toClear === "redPongies")
+      if (toClear.which === "redPongies") {
+        const updatedNotif = user.notif.redPongies.filter(id => id !== toClear.id);
         await this.notifRepository.update(
           user.notif.id,
-          { redPongies: [] },
+          { redPongies: updatedNotif },
         );
 
-      else if (toClear === "redChannels")
-        await this.notifRepository.update(
-          user.notif.id,
-          { redChannels: [] },
-        );
+        if (userSockets.length !== 0) {
+          for (const socketId of userSockets) {
+            server.to(socketId).emit('notif', {
+              why: 'updatePongies',
+            });
+          }
+        }
+      }
 
-      else if (toClear === "nbMessages")
+      else if (toClear.which === "redChannels") {
+        const updatedNotif = user.notif.redChannels.filter(id => id !== toClear.id);
         await this.notifRepository.update(
           user.notif.id,
-          { nbMessages: [] },
+          { redChannels: updatedNotif },
         );
+        if (userSockets.length !== 0) {
+          for (const socketId of userSockets) {
+            server.to(socketId).emit('notif', {
+              why: 'updateChannels',
+            });
+          }
+        }
+      }
+
+      // else if (toClear.which === "nbMessages") {
+      //   const updatedNotif = user.notif.redChannels.filter(id => id !== toClear.id);
+      //   await this.notifRepository.update(
+      //     user.notif.id,
+      //     { redChannels: updatedNotif },
+      //   );
+      // }
     }
     catch (error) {
       console.log(error.message);

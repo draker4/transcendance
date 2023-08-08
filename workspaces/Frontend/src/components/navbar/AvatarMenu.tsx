@@ -32,10 +32,14 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
   const [avatarUpdated, setAvatarUpdated] = useState<Avatar>(avatar);
   const [login, setLogin] = useState<string>(profile.login);
   const [invisible, setInvisible] = useState<boolean>(true);
+  const [notif, setNotif] = useState<boolean>(false);
   const pathName = usePathname();
 
   if (pathName.startsWith("/home/profile") && !invisible)
     setInvisible(true);
+
+  if (!pathName.startsWith("/home/profile") && invisible && notif)
+    setInvisible(false);
 
   const signoff = async () => {
     try {
@@ -81,18 +85,26 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
         );
       else if (payload && payload.why && payload.why === "updatePongies")
         socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+          if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
             setInvisible(false);
-          else
+            setNotif(true);
+          }
+          else {
             setInvisible(true);
+            setNotif(false);
+          }
         });
     };
 
     socket?.emit('getNotif', (payload: Notif) => {
-      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
         setInvisible(false);
-      else
+        setNotif(true);
+      }
+      else {
         setInvisible(true);
+        setNotif(false);
+      }
     });
 
     socket?.on("notif", updateProfile);

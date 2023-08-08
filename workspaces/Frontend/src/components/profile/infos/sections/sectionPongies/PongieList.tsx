@@ -27,21 +27,23 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 	const	[invisible, setInvisible] = useState(true);
 
 	useEffect(() => {
-		console.log("notifids=", notifsIds);
 		const	match = notifsIds.find(id => id === pongie.id);
 
 		if (match && invisible)
 			setInvisible(false);
+		if (!match && !invisible)
+			setInvisible(true);
 	}, [notifsIds]);
 
 	const handleFocusOn = () => {
 		setIsFocused(true);
 		setInvisible(true);
-		socket?.emit('getNotif', (payload: Notif) => {
-			if (payload && payload.redPongies) {
-				setNotifIds(payload.redPongies);
-				socket.emit("clearNotif", "redPongies");
-			}
+		const	ids = notifsIds.filter(id => id !== pongie.id);
+		setNotifIds(ids);
+		
+		socket?.emit("clearNotif", {
+			which: "redPongies",
+			id: pongie.id,
 		});
 	};
 
@@ -52,11 +54,11 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 	const handleHover = () => {
 		setIsFocused(true);
 		setInvisible(true);
-		socket?.emit('getNotif', (payload: Notif) => {
-			if (payload && payload.redPongies) {
-				setNotifIds(payload.redPongies);
-				socket.emit("clearNotif", "redPongies");
-			}
+		const	ids = notifsIds.filter(id => id !== pongie.id);
+		setNotifIds(ids);
+		socket?.emit("clearNotif", {
+			which: "redPongies",
+			id: pongie.id,
 		});
 	};
 
