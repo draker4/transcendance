@@ -87,6 +87,8 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		}) => {
 			if (payload && payload.success)
 				toast('Invitation cancelled!');
+			else
+				toast.error("Something went wrong, please try again");
 		});
 	}
 
@@ -96,6 +98,8 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		}) => {
 			if (payload && payload.success)
 				toast('Invitation refused!');
+			else
+				toast.error("Something went wrong, please try again");
 		});
 	}
 
@@ -105,6 +109,8 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		}) => {
 			if (payload && payload.success)
 				toast('Blacklist updated!');
+			else
+				toast.error("Something went wrong, please try again");
 		});
 	}
 	
@@ -113,7 +119,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 			success: boolean;
 		}) => {
 			if (!payload.success) {
-				toast.error("Something went wrong, try again!");
+				toast.error("Something went wrong, please try again");
 				return ;
 			}
 

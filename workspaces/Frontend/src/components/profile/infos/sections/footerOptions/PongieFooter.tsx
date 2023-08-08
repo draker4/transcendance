@@ -41,11 +41,17 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 				return ;
 			}
 
-			if (payload.success && payload.msg === "friend")
+			if (payload.success && payload.msg === "friend") {
 				toast.success("Invitation accepted!");
+				return ;
+			}
 				
-			if (payload.success && payload.msg === "invited")
+			if (payload.success && payload.msg === "invited") {
 				toast.success("Invitation sent!");
+				return ;
+			}
+
+			toast.error("Something went wrong, please try again");
 		});
 	}
 
@@ -55,6 +61,31 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 		}) => {
 			if (payload && payload.success)
 				toast.info("Pongie added to the blacklist!");
+			else
+				toast.error("Something went wrong, please try again");
+		});
+	}
+
+	const	openChat = () => {
+		socket?.emit('join', {
+			id: pongie.id,
+			channelName: pongie.login,
+			channelType: 'privateMsg',
+		}, (payload: {
+			success: boolean;
+			exists: boolean;
+			banned: boolean;
+			channel: Channel;
+		  }) => {
+
+			if (payload.success)
+				router.push(`/home/chat/${payload.channel.id}`)
+
+			else if (payload.banned)
+				toast.error("You are not allowed to see this channel!");
+
+			else
+				toast.error('Something went wrong, please try again!');
 		});
 	}
 
@@ -105,6 +136,7 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 				<FontAwesomeIcon
 					icon={faMessage}
 					className={styles.icon}
+					onClick={openChat}
 				/>
 			}
 

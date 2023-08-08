@@ -127,7 +127,7 @@ export default function SearchBar({ socket, openDisplay }: {
 			success: boolean;
 			exists: boolean;
 			banned: boolean;
-			channel: boolean;
+			channel: Channel;
 		  }) => {
 			if (payload.success) {
 			  openDisplay(payload.channel);
