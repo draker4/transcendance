@@ -953,8 +953,13 @@ export class ChatService {
       'channel:' + channelId;
       // socket.emit('notif');
 
-      // Upload Data for clients i!n channel profile componnent
-      server.to('channel:' + channelId).emit('editRelation');
+      // Upload Data for clients in channel profile component
+      server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
+        newRelation: {
+          joined : true,
+        },
+        userId: userId ,
+        senderId: userId});
 
       socket.join('channel:' + channel.id);
 

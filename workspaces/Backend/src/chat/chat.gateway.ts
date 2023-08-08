@@ -328,16 +328,21 @@ export class ChatGateway implements OnModuleInit {
 	console.log("sendEditRelationEvents() reached - about channel id : " + payload.channelId);
 
     // follow up to update channel profile + handleEditRelation in <ChatChannel />
-    this.server.to("channel:" + payload.channelId).emit('editRelation', payload);
+    const updatedPayload1 = {
+      ...payload,
+      senderId: req.user.id
+    };
+
+    this.server.to("channel:" + payload.channelId).emit('editRelation', updatedPayload1);
 
     // send Server Notif message into the channel
-    const updatedPayload = {
+    const updatedPayload2 = {
       ...payload,
       server: this.server,
       from: req.user.id
     };
 
-    this.chatService.sendEditRelationNotif(updatedPayload);
+    this.chatService.sendEditRelationNotif(updatedPayload2);
 
   }
 

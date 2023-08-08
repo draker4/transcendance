@@ -1,10 +1,14 @@
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import MessageItem from "./MessageItem";
 import { useEffect, useState } from "react";
+import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
+import { RelationNotif } from "@/lib/enums/relationNotif.enum";
+import MessageBoardPopUp from "./MessageBoardPopUp";
 
 type Props = {
   messages: Message[];
   channel: Channel;
+  relNotif: RelationNotifPack;
 };
 
 type GroupedMsgType = {
@@ -14,7 +18,7 @@ type GroupedMsgType = {
   isServerNotif: boolean;
 };
 
-export default function MessageBoard({ messages, channel }: Props) {
+export default function MessageBoard({ messages, channel, relNotif }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
     GroupedMsgType[]
   >([]);
@@ -67,9 +71,15 @@ export default function MessageBoard({ messages, channel }: Props) {
         });
       }
     }
-
     setGroupedMessages(join);
   };
+
+  // Ban, Kick while inside channel management
+  if (relNotif.notif !== RelationNotif.nothing) {
+    return (
+          <MessageBoardPopUp relNotif={relNotif} />
+    );
+  }
 
   return (
     <div className={styles.msgBoard}>
