@@ -1186,7 +1186,7 @@ export class ChatService {
       } else if (infos.newRelation.joined === true) {
         action = 'allows joinning channel';
       } else if (infos.newRelation.joined === false) {
-        action = 'kicks out';
+        action = 'gives a channel kick';
       } else if (infos.newRelation.invited === true) {
         action = 'gives a channel invitation';
       } else if (infos.newRelation.invited === false) {

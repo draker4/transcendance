@@ -143,6 +143,12 @@
   /* background-color: rgb(151, 190, 107); */
 }
 
+.channelMsgFrame .msgBoard .msgItem .notifDate {
+  color: var(--accent1);
+  font-size: 0.70rem;
+  text-align: center;
+}
+
 .channelMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
   color: var(--secondary1);
   font-size: 0.70rem;
@@ -154,11 +160,18 @@
   min-width: 0;
 }
 
+
 .channelMsgFrame .msgBoard .msgItem .textSide .content pre {
   overflow-wrap: break-word;
   white-space: pre-wrap;
   font-family: var(--text);
   font-size: 1rem;
+}
+
+.channelMsgFrame .msgBoard .msgItem .textSide .content.serverNotif pre {
+
+  font-size: 0.8rem;
+  color: var(--secondary1);
 }
 
 /* ----------------- PROMPT ----------------- */
