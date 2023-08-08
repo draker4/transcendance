@@ -42,14 +42,19 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
     if (!myRelation.isChanOp)
       return ;
 
-    await avatarService.submitAvatarColors(
-      topColor.toString(),
-      botColor.toString(),
-	  channelAndUsersRelation.channel.id,
-    );
-
-    channelAndUsersRelation.channel.avatar.borderColor = topColor.toString();
-    channelAndUsersRelation.channel.avatar.backgroundColor = botColor.toString();
+    try {
+      await avatarService.submitAvatarColors(
+        topColor.toString(),
+        botColor.toString(),
+      channelAndUsersRelation.channel.id,
+      );
+  
+      channelAndUsersRelation.channel.avatar.borderColor = topColor.toString();
+      channelAndUsersRelation.channel.avatar.backgroundColor = botColor.toString();
+    } catch(e:any) {
+      // [+] error management ?
+      console.log("Channel saveColorChanges() error : " + e.message);
+    }
     setDisplaySettings(false);
   };
 

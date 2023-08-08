@@ -1,4 +1,6 @@
+import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
+import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
@@ -7,9 +9,10 @@ type Props = {
   channel: Channel;
   myself: User;
   addMsg: (msg: Message) => void;
+  relNotif: RelationNotifPack;
 };
 
-export default function Prompt({ channel, myself, addMsg }: Props) {
+export default function Prompt({ channel, myself, addMsg, relNotif}: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [text, setText] = useState<string>("");
@@ -33,12 +36,13 @@ export default function Prompt({ channel, myself, addMsg }: Props) {
   const handleSendMsg = (e: React.FormEvent | null) => {
     e?.preventDefault();
 
-    if (text.length > 0) {
+    if (text.length > 0 && relNotif.notif === RelationNotif.nothing) {
     //   console.log("Message to send :", text); // [!] checking
       const newMsg: Message = {
         content: text,
         sender: myself,
         date: new Date(),
+        isServerNotif: false
       };
 
       addMsg(newMsg);

@@ -143,6 +143,12 @@
   /* background-color: rgb(151, 190, 107); */
 }
 
+.channelMsgFrame .msgBoard .msgItem .notifDate {
+  color: var(--accent1);
+  font-size: 0.70rem;
+  text-align: center;
+}
+
 .channelMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
   color: var(--secondary1);
   font-size: 0.70rem;
@@ -154,11 +160,56 @@
   min-width: 0;
 }
 
+
 .channelMsgFrame .msgBoard .msgItem .textSide .content pre {
   overflow-wrap: break-word;
   white-space: pre-wrap;
   font-family: var(--text);
   font-size: 1rem;
+}
+
+.channelMsgFrame .msgBoard .msgItem .textSide .content.serverNotif pre {
+
+  font-size: 0.8rem;
+  color: var(--secondary1);
+}
+
+.channelMsgFrame .popUp {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--primary1);
+  padding: 6px 20px 6px 10px;
+
+  /* min-height: 0px; */
+  flex-grow: 1;
+  overflow-y: scroll;
+
+  /* [!] pas idéal */
+  /* max-height: 900px; */
+
+  /* mieux [?] mais rapetisse le tout [?] depend des parents ? */
+  height: 0px;
+}
+
+.channelMsgFrame .popUp p.error {
+  color: var(--notif);
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.channelMsgFrame .popUp p.icon {
+  font-size: 7.5rem;
+}
+
+.channelMsgFrame .popUp .link {
+  text-decoration: none;
+  color: var(--accent1);
+  font-family: var(--title-font);
+  font-size: 1.2rem;
+  font-weight: 650;
 }
 
 /* ----------------- PROMPT ----------------- */

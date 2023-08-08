@@ -7,6 +7,9 @@ import Prompt from "./Prompt";
 import { ReactNode, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
+import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
+import { RelationNotif } from "@/lib/enums/relationNotif.enum";
+
 
 type Props = {
   icon: ReactNode;
@@ -37,6 +40,7 @@ type LoadMsg = {
 export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [codeName, setCodename] = useState<string>("");
+  const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
 
   useEffect(() => {
     socket?.emit( "getMessages", {id : channel.id},
@@ -60,7 +64,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 				}
 			});
 		}
-
         setMessages(previousMsg);
       }
     );
@@ -68,8 +71,19 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   const handleEditRelation = (edit:EditChannelRelation) => {
     // [+] features a impl (ex: je me fais ban/kick alors que je suis dans le chat)
-    // [+] CONTINUER ICI
     console.log("EditChannelRelation reçu :", edit);
+
+    // [+] CONTINUER ICI
+    if (edit !== undefined && edit.userId === myself.id) {
+      if (edit.newRelation.isBanned === true)
+        setRelNotif({notif:RelationNotif.ban, edit:edit});
+      else if (edit.newRelation.joined === false || edit.newRelation.invited === false)
+        setRelNotif({notif:RelationNotif.kick, edit:edit});
+      else if (edit.newRelation.joined === true || edit.newRelation.isBanned === false)
+        setRelNotif({notif:RelationNotif.nothing, edit:edit});
+      else if (edit.newRelation.invited === true)
+        setRelNotif({notif:RelationNotif.invite, edit:edit});
+    }
   }
 
   useEffect(() => {
@@ -113,8 +127,8 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   return (
     <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
-      <MessageBoard messages={messages} channel={channel} />
-      <Prompt channel={channel} myself={myself} addMsg={addMsg} />
+      <MessageBoard messages={messages} channel={channel} relNotif={relNotif}/>
+      <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif}/>
     </div>
   );
 }

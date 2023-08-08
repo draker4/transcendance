@@ -1,4 +1,4 @@
-import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 
@@ -14,21 +14,35 @@ type Props = {
 };
 
 export default function MessageItem({ groupedMessages }: Props) {
-  
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
     <pre key={index}>{msg.content}</pre>
   ));
 
   const formatedDate = makeHumanDateFormat(groupedMessages.date);
 
-  // if (!groupedMessages.user.avatar)
-  //   return ;
+  // Server Notif Message
+  if (groupedMessages.isServerNotif) {
+    return (
+      <div className={styles.msgItem}>
+        {
+          <div className={styles.avatarSide}>
+            <div className={styles.notifDate}> {formatedDate} </div>
+          </div>
+        }
+        <div className={styles.textSide}>
+          <div className={`${styles.content} ${styles.serverNotif}`}>
+            {mappingMessages}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
+  // User Message
   return (
     <div className={styles.msgItem}>
       {/* Avatar Side */}
       {
-        !groupedMessages.isServerNotif &&
         <div className={styles.avatarSide}>
           <div className={styles.avatarSlot}>
             <AvatarUser
@@ -39,7 +53,7 @@ export default function MessageItem({ groupedMessages }: Props) {
             />
           </div>
         </div>
-    }
+      }
 
       {/* Text Side */}
       <div className={styles.textSide}>
@@ -47,18 +61,14 @@ export default function MessageItem({ groupedMessages }: Props) {
         <div className={styles.tsheader}>
           <div
             className={styles.name}
-            style={{ color: groupedMessages.isServerNotif ? "var(--accent1)" : groupedMessages.user.avatar.borderColor }}
+            style={{ color: groupedMessages.user.avatar.borderColor }}
           >
-            {groupedMessages.isServerNotif ? "Server" : groupedMessages.user.login}
+            {groupedMessages.user.login}
           </div>
-          <div className={styles.date}>
-            {formatedDate}
-          </div>
+          <div className={styles.date}>{formatedDate}</div>
         </div>
         {/* Content */}
-        <div className={styles.content}>
-			{mappingMessages}
-		</div>
+        <div className={styles.content}>{mappingMessages}</div>
       </div>
     </div>
   );

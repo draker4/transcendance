@@ -1,4 +1,4 @@
-type NewRelationDto = {
+type NewRelation = {
   isChanOp?: boolean;
   isBanned?: boolean;
   joined?: boolean;
@@ -8,5 +8,6 @@ type NewRelationDto = {
 export type EditChannelRelation = {
   channelId: number,
   userId: number,
+  senderId: number,
   newRelation: NewRelation;
 };

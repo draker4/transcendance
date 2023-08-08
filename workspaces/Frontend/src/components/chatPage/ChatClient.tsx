@@ -11,6 +11,7 @@ import { Socket } from "socket.io-client";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Height } from "@mui/icons-material";
 
 export default function ChatClient({
   token,
@@ -106,6 +107,11 @@ export default function ChatClient({
     });
   }, [socket]);
 
+  const reloadChannels = () => {
+    // [+] comment que je fais ça moi ???
+    
+  }
+
   if (!socket || (getChannel && !error))
     return <LoadingSuspense />;
 
@@ -163,6 +169,7 @@ export default function ChatClient({
         myself={myself}
         openDisplay={openDisplay}
       />
+      <button style={{height:"40px"}} onClick={reloadChannels}>RELOAD_CHANNELS</button>
     </div>
   );
 }

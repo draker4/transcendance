@@ -58,7 +58,7 @@ export default class Avatar_Service {
     isChannel: number
   ) {
     const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-    const response = await fetchData(this.token, "avatar", "", "PUT", body);
+    const response = await fetchData(undefined, "avatar", "", "PUT", body);
     const data = await response.json();
   }
 }
