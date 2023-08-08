@@ -19,16 +19,12 @@ import DefineName from "./DefineName";
 
 type Props = {
   lobbyService: LobbyService;
-  setCreateParty: Function;
   userId: number;
-  createBtnRef: React.RefObject<HTMLButtonElement>;
 };
 
 export default function CreateParty({
   lobbyService,
-  setCreateParty,
   userId,
-  createBtnRef,
 }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
@@ -55,7 +51,6 @@ export default function CreateParty({
     if (name.trim() === "") {
       setName("");
       setEnterName(true);
-      createBtnRef.current!.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
@@ -175,13 +170,6 @@ export default function CreateParty({
       <div className={styles.confirm}>
         <button className={styles.save} type="button" onClick={createGame}>
           Create Party
-        </button>
-        <button
-          className={styles.cancel}
-          type="button"
-          onClick={() => setCreateParty(false)}
-        >
-          Cancel
         </button>
       </div>
     </div>

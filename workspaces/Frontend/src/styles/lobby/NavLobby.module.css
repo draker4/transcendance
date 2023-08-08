@@ -12,31 +12,28 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  border-radius: 10px;
   font-size: 14px;
   margin-top: 5px;
   width: 33%;
+  background-color: var(--primary2);
 }
 
 .activeBtn {
   color: var(--secondary1);
   background-color: var(--primary2);
-  border: 5px solid var(--primary2);
-  border-bottom: none;
+  border: 5px solid var(--accent3);
   transition: all 0.3s ease-in;
 }
 
 .inactiveBtn {
   color: var(--secondary1);
-  background-color: var(--primary1);
+  background-color: var(--primary2);
   border: 5px solid var(--primary2);
-  border-bottom: none;
   transition: all 0.3s ease-out;
 }
 
 .inactiveBtn:hover {
   color: var(--secondary2);
   border: 5px solid var(--primary3);
-  border-bottom: none;
 }

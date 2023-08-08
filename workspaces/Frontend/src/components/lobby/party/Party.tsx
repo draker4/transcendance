@@ -13,28 +13,11 @@ type Props = {
 };
 
 export default function Party({ lobbyService, profile }: Props) {
-  const [createParty, setCreateParty] = useState<boolean>(false);
-  const createBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <div className={styles.party}>
-      <button
-        ref={createBtnRef}
-        className={styles.createBtn}
-        onClick={() => setCreateParty(!createParty)}
-      >
-        Create New Party
-      </button>
-
-      {createParty && (
-        <CreateParty
-          lobbyService={lobbyService}
-          setCreateParty={setCreateParty}
-          userId={profile.id}
-          createBtnRef={createBtnRef}
-        />
-      )}
-      {!createParty && <PartyList lobbyService={lobbyService} mode={"Party"} />}
+      {<CreateParty lobbyService={lobbyService} userId={profile.id}/>}
+      {<PartyList lobbyService={lobbyService} mode={"Party"} />}
     </div>
   );
 }
