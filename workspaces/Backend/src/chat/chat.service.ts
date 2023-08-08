@@ -65,8 +65,6 @@ export class ChatService {
   async getNotif(userId: number) {
     try {
       const user = await this.usersService.getUserById(userId);
-      if(user.id===1)
-      console.log(user.notif);
 
       if (!user)
         throw new WsException('no user found');

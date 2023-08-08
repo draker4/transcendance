@@ -88,6 +88,13 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
         });
     };
 
+    socket?.emit('getNotif', (payload: Notif) => {
+      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+        setInvisible(false);
+      else
+        setInvisible(true);
+    });
+
     socket?.on("notif", updateProfile);
 
     return () => {
