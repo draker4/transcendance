@@ -152,6 +152,7 @@ export default function LogEmail({
         return;
       }
 
+      // password step
       const passwordUser = data.password;
 
       let res: {

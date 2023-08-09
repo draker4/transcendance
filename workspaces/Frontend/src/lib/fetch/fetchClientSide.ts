@@ -75,7 +75,11 @@ export default async function fetchClientSide(
       }
 
       const resAgain = await fetch(url, fetchOptions);
-      if (resAgain.status === 401) throw new Error("disconnect");
+      if (resAgain.status === 401) {
+        if (process.env.DISCONNECT)
+          throw new Error("disconnect");
+        throw new Error("should disconnect here, change .env file");
+      }
 
       return resAgain;
     }

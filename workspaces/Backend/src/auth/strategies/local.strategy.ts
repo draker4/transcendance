@@ -23,21 +23,26 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   async validate(email: string, password: string) {
 
     let user: User;
+    let isMatch: boolean = false;
     try {
       user = await this.usersService.getUserByEmail(email, 'email');
+    } catch (error) {
+      throw new BadGatewayException();
+    }
     
-      if (!user)
-        throw new NotFoundException();
+    if (!user)
+      throw new NotFoundException();
       
+    try {
       const passDecrypted = await this.cryptoService.decrypt(password);
-      const isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
+      isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
+    } catch (error) {
+      throw new BadGatewayException();
+    }
 
-      if (!isMatch)
-        throw new UnauthorizedException();
+    if (!isMatch)
+      throw new UnauthorizedException();
 
-      return user;
-  } catch (error) {
-    throw new BadGatewayException();
-  }
+    return user;
   }
 }

@@ -1,7 +1,7 @@
 import { Socket, io } from "socket.io-client";
 
 export default class ChatService {
-	private static instance: ChatService | null = null;
+	public static instance: ChatService | null = null;
 
 	public	socket: Socket | undefined = undefined;
 	public	token: string | undefined;
@@ -11,14 +11,13 @@ export default class ChatService {
 
 	// Singleton
     constructor(token?: string) {
-		// console.log("constructor");
         if (ChatService.instance) {
-			// console.log("instance returned");
+			console.log("instance returned");
 			return ChatService.instance;
 		}
 		
 		if (token) {
-			// console.log("socket initialized");
+			console.log("socket initialized");
 			this.initializeSocket(token);
 			ChatService.instance = this;
 		}
@@ -33,16 +32,14 @@ export default class ChatService {
 
 		console.log("initialization with token = ", token);
 
-		// const	lastSocket = this.socket;
-		// if (this.socket) {
-		// 	this.disconnect();
-		// }
-
 		while (this.loading) {}
 
-		this.loading = true;
-		
+		if (this.socket)
+			return ;
+
 		this.token = token;
+
+		this.loading = true;
 
 		this.socket = io(`ws://${process.env.HOST_IP}:4000/chat`, {
 		  extraHeaders: {
@@ -65,10 +62,11 @@ export default class ChatService {
 		});
 	
 		// Catching error or exception will force disconnect then reconnect
-		this.socket.on("connect_error", (error: any) => {
+		this.socket.on("connect_error", async (error: any) => {
 			this.loading = false;
-		   console.log("Socket connection error:", error);
-		  this.disconnect();
+			console.log("Socket connection error:", error);
+			this.disconnect();
+			await this.refreshSocket();
 		});
 	
 		this.socket.on("error", (error: any) => {
@@ -104,7 +102,6 @@ export default class ChatService {
 	}
 
 	private async refreshSocket() {
-		console.log("here trying refresh");
 
 		if (this.disconnectClient)
 			return ;

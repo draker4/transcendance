@@ -62,8 +62,10 @@ export default function LogInComponent() {
       }
     }
 
-    if (register.length !== 0)
+    if (register.length !== 0) {
       router.push(`/welcome/confirm/${register}`);
+      return ;
+    }
 
     if (notifParam && notifParam[0] === "wrong")
       setNotif("Something went wrong, please try again!");

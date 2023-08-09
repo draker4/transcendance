@@ -52,6 +52,7 @@ export async function middleware(req: NextRequest) {
         changeCookies = true;
       } catch (error) {
         console.log(error);
+        verifiedToken = undefined;
       }
     }
   }

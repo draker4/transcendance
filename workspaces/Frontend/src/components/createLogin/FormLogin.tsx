@@ -87,7 +87,7 @@ export default function FormLogin({
         if (!res.ok || data.error)
           throw new Error();
 
-        router.replace('/home');
+        router.refresh();
       } catch (error) {
         console.log(error);
         setNotif("Something went wrong, please try again");
