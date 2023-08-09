@@ -21,6 +21,7 @@ export default function Conversations({
   openDisplay: (display: Display) => void;
 }) {
   const [channels, setChannels] = useState<Channel[]>([]);
+  const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
   let date = "";
 
   const channelsList = channels.map((channel) => {
@@ -83,28 +84,42 @@ export default function Conversations({
 
   useEffect(() => {
 
-    const getData = () => {
-      socket?.emit("getChannels", (channels: Channel[]) => {
-        setChannels(channels);
+    const getData = (payload: {
+      why: string;
+    }) => {
+      if (payload && payload.why && payload.why === "updateChannels")
+        socket?.emit("getChannels", (channels: Channel[]) => {
+          setChannels(channels);
+        });
+    }
+
+    const updateNotif = () => {
+      socket?.emit('getNotifMsg', (payload: NotifMsg[]) => {
+        setNotifMsg(payload);
       });
     }
 
+    socket?.on('notifMsg', updateNotif);
+
     socket?.on("notif", getData);
 
-    getData();
+    socket?.emit("getChannels", (channels: Channel[]) => {
+      setChannels(channels);
+    });
     
     return () => {
       socket?.off("notif", getData);
+      socket?.off("notifMsg", updateNotif);
     }
   }, [socket]);
 
-  const handleClickPongie = () => {
-    openDisplay({ button: "pongies" });
-  };
+  // const handleClickPongie = () => {
+  //   openDisplay({ button: "pongies" });
+  // };
 
-  const handleClickChannel = () => {
-    openDisplay({ button: "channels" });
-  };
+  // const handleClickChannel = () => {
+  //   openDisplay({ button: "channels" });
+  // };
 
   const handleClickNew = () => {
     openDisplay({ button: "new" });
@@ -119,8 +134,8 @@ export default function Conversations({
 
       <div className={styles.title}>
         <h3>Discussions</h3>
-        <div className={styles.icons}>
-          <FontAwesomeIcon
+        {/* <div className={styles.icons}> */}
+          {/* <FontAwesomeIcon
             icon={faFaceLaughBeam}
             className={styles.menu}
             onClick={handleClickPongie}
@@ -129,13 +144,13 @@ export default function Conversations({
             icon={faPeopleGroup}
             className={styles.menu}
             onClick={handleClickChannel}
-          />
+          /> */}
           <FontAwesomeIcon
             icon={faPenToSquare}
             className={styles.menu}
             onClick={handleClickNew}
           />
-        </div>
+        {/* </div> */}
       </div>
       <div className={styles.scroll}>
         {channelsList}

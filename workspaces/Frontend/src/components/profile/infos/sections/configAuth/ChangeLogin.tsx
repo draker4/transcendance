@@ -77,7 +77,9 @@ export default function ChangeLogin({
 				toast.info("Login successfully changed");
 
 				if (socket)
-					socket.emit('notif');
+					socket.emit('notif', {
+						why: "updateProfile",
+					});
 
 				return ;
 			}

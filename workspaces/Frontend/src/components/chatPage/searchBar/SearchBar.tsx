@@ -138,11 +138,18 @@ export default function SearchBar({ socket, openDisplay }: {
 				msg: `${name} is private, please choose an other name`,
 			  });
 			  setDropdownVisible(true);
-			} else if (payload.banned) {
+			} else if (payload.banned && type !== "privateMsg") {
 			  setError({
 				id: -1,
 				error: true,
 				msg: `You are banned from ${name}`,
+			  });
+			  setDropdownVisible(true);
+			} else if (payload.banned && type === "privateMsg") {
+			  setError({
+				id: -1,
+				error: true,
+				msg: `You blacklisted ${name} or he has!`,
 			  });
 			  setDropdownVisible(true);
 			}

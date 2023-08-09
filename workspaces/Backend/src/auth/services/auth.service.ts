@@ -16,6 +16,7 @@ import * as bcrypt from 'bcrypt';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { verify } from 'jsonwebtoken';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {

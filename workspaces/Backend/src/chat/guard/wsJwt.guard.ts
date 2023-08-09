@@ -22,7 +22,7 @@ export class WsJwtGuard implements CanActivate {
 
         try {
             const payload = verify(bearerToken, process.env.JWT_SECRET, {
-                ignoreExpiration: false,
+                ignoreExpiration: true,
             }) as any;
 
             if (payload.exp + 2700 < Date.now()) {
@@ -38,7 +38,7 @@ export class WsJwtGuard implements CanActivate {
             client.user = { id: payload.sub, login: payload.login };
             return true;
         } catch (err) {
-            console.log(err);
+            console.log(err.message);
             throw new WsException('invalid token');
         }
     }

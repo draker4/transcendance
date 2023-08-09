@@ -83,7 +83,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
 
   return (
     <div className={styles.msgBoard}>
-      {messages.length > 0 && groupedMessages.map((group, index) => (
+      {messages.length > 0 && groupedMessages.reverse().map((group, index) => (
         <MessageItem key={index} groupedMessages={group} />
       ))}
 	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}

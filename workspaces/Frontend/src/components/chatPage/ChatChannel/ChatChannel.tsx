@@ -10,7 +10,6 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 
-
 type Props = {
   icon: ReactNode;
   channel: Channel;
@@ -70,11 +69,9 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel, socket]);
 
   const handleEditRelation = (edit:EditChannelRelation) => {
-    // [+] features a impl (ex: je me fais ban/kick alors que je suis dans le chat)
-    console.log("EditChannelRelation reçu :", edit);
+    console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
 
-    // [+] CONTINUER ICI
-    if (edit !== undefined && edit.userId === myself.id) {
+    if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)
         setRelNotif({notif:RelationNotif.ban, edit:edit});
       else if (edit.newRelation.joined === false || edit.newRelation.invited === false)
@@ -88,8 +85,14 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
+      
+      clearNotifMsg();
 
-      console.log(receivedMsg); // checking [!]
+      // to not display ServerNotifMessage from other channels
+      if (receivedMsg.channelId !== channel.id)
+        return ;
+
+      console.log("ChatChannel : handleReceivedMsg :", receivedMsg); // checking [!]
 
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
@@ -99,10 +102,17 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         isServerNotif: receivedMsg.isServerNotif,
       };
 
-	  console.log(`[channel : ${channel.name}] recMsg : ${msg.content}`);
-
       setMessages((previous) => [...previous, msg]);
     };
+
+    const clearNotifMsg = () => {
+      socket?.emit('clearNotif', {
+        which: "messages",
+        id: channel.id,
+      });
+    }
+
+    clearNotifMsg();
 
     socket?.on("sendMsg", handleReceivedMsg);
     socket?.on("editRelation", handleEditRelation);
@@ -112,12 +122,9 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
       socket?.off("editRelation", handleEditRelation);
     };
     
-
-
   }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
-    console.log("laaaa", msg);
     socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,

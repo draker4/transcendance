@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/ChatClient.module.css";
 import stylesError from "@/styles/chatPage/ChatPage.module.css";
-import Conversations from "./Conversations";
+import Conversations from "./ConversationPannel/Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
 import LoadingSuspense from "../loading/LoadingSuspense";
@@ -11,7 +11,7 @@ import { Socket } from "socket.io-client";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Height } from "@mui/icons-material";
+import { toast } from "react-toastify";
 
 export default function ChatClient({
   token,
@@ -103,14 +103,13 @@ export default function ChatClient({
         setGetChannel(false);
         return ;
       }
+      if (payload && payload.error && payload.error === "protected")
+        toast.info('This channel is protected! You need a password');
+      if (payload && payload.error && payload.error === "private")
+        toast.info('This channel is private! You cannot see it!');
       setError(true);
     });
   }, [socket]);
-
-  const reloadChannels = () => {
-    // [+] comment que je fais ça moi ???
-    
-  }
 
   if (!socket || (getChannel && !error))
     return <LoadingSuspense />;
@@ -169,7 +168,6 @@ export default function ChatClient({
         myself={myself}
         openDisplay={openDisplay}
       />
-      <button style={{height:"40px"}} onClick={reloadChannels}>RELOAD_CHANNELS</button>
     </div>
   );
 }

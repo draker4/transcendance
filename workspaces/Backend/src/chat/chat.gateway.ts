@@ -26,6 +26,7 @@ import { channelIdDto } from './dto/channelId.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { JoinDto } from './dto/join.dto';
+import { ClearNotifDto } from './dto/clearNotif.dto';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -39,8 +40,8 @@ import { JoinDto } from './dto/join.dto';
 export class ChatGateway implements OnModuleInit {
   constructor(private readonly chatService: ChatService) {}
 
-  // Container of connected users : Map<socket.id, user id>
-  private connectedUsers: Map<string, string> = new Map<string, string>();
+  // Container of connected users : Map<socket, user id>
+  private connectedUsers: Map<Socket, string> = new Map<Socket, string>();
 
   @WebSocketServer()
   server: Server;
@@ -57,17 +58,19 @@ export class ChatGateway implements OnModuleInit {
           return;
         }
 
-        this.connectedUsers.set(socket.id, payload.sub.toString());
+        this.connectedUsers.set(socket, payload.sub.toString());
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
 
         socket.on('disconnect', () => {
-          this.connectedUsers.delete(socket.id);
+          this.connectedUsers.delete(socket);
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
         });
 
         this.log('connected users = '); // [?]
-        this.log(this.connectedUsers); // [?]
+        for (const connect of this.connectedUsers) {
+          console.log("Socket id: ", connect[0].id + " , user id : " + connect[1]);
+        }
       } catch (error) {
         console.log(error);
         socket.disconnect();
@@ -83,13 +86,18 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('notif')
   async notif(
-    @ConnectedSocket() socket: Socket,
-    @MessageBody() why: string,
+    @MessageBody() payload: {
+      why: string,
+    },
+    @Req() req,
   ) {
-    console.log("laaaa et", why);
-    if (!why)
+    if (!payload)
       throw new WsException('no argument for notif');
-    this.server.to(socket.id).emit('notif', why);
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+        this.server.to(key.id).emit('notif', payload);
+    }
   }
 
   @SubscribeMessage('getNotif')
@@ -97,9 +105,21 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getNotif(req.user.id);
   }
 
+  @SubscribeMessage('getNotifMsg')
+  async getNotifMsg(@Req() req) {
+    return await this.chatService.getNotifMsg(req.user.id);
+  }
+
   @SubscribeMessage('clearNotif')
-  async clearNotif(@Req() req, @MessageBody() toClear: string) {
-    return await this.chatService.clearNotif(req.user.id, toClear);
+  async clearNotif(@Req() req, @MessageBody() toClear: ClearNotifDto) {
+    const userSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
+    return await this.chatService.clearNotif(req.user.id, toClear, userSockets, this.server);
   }
 
   @SubscribeMessage('getLoginWithAvatar')
@@ -111,12 +131,18 @@ export class ChatGateway implements OnModuleInit {
   async getChannel(
     @Req() req,
     @MessageBody() channelId: number,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!channelId)
-      throw new WsException('test');
+      throw new WsException('no channel id');
 
-    return await this.chatService.getChannel(channelId, req.user.id, socket, this.server);
+    const userSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
+    return await this.chatService.getChannel(channelId, req.user.id, userSockets, this.server);
   }
 
   @SubscribeMessage('getChannels')
@@ -157,14 +183,14 @@ export class ChatGateway implements OnModuleInit {
     if (!pongieId)
       throw new WsException('no pongie id');
   
-    const pongieSockets: string[] = [];
+    const pongieSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
   
-    const userSockets: string[] = [];
+    const userSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === req.user.id.toString())
@@ -188,14 +214,14 @@ export class ChatGateway implements OnModuleInit {
     if (!pongieId)
       throw new WsException('no pongie id');
 
-    const pongieSockets: string[] = [];
+    const pongieSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
 
-    const userSockets: string[] = [];
+    const userSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === req.user.id.toString())
@@ -219,14 +245,14 @@ export class ChatGateway implements OnModuleInit {
     if (!pongieId)
       throw new WsException('no pongie id');
 
-    const pongieSockets: string[] = [];
+    const pongieSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
 
-    const userSockets: string[] = [];
+    const userSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === req.user.id.toString())
@@ -250,14 +276,14 @@ export class ChatGateway implements OnModuleInit {
     if (!pongieId)
       throw new WsException('no pongie id');
 
-    const pongieSockets: string[] = [];
+    const pongieSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
 
-    const userSockets: string[] = [];
+    const userSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === req.user.id.toString())
@@ -281,14 +307,14 @@ export class ChatGateway implements OnModuleInit {
     if (!pongieId)
       throw new WsException('no pongie id');
 
-    const pongieSockets: string[] = [];
+    const pongieSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === pongieId.toString())
         pongieSockets.push(key);
     }
 
-    const userSockets: string[] = [];
+    const userSockets: Socket[] = [];
 
     for (const  [key, val] of this.connectedUsers) {
       if (val === req.user.id.toString())
@@ -308,17 +334,35 @@ export class ChatGateway implements OnModuleInit {
   async join(
     @MessageBody() payload: JoinDto,
     @Request() req,
-    @ConnectedSocket() socket: Socket,
   ) {
+    
+    const pongieSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === payload.id.toString())
+        pongieSockets.push(key);
+    }
+
+    const userSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
     if (payload.channelType === 'privateMsg')
-      return await this.chatService.joinPongie(req.user.id, payload.id, socket);
+      return await this.chatService.joinPongie(
+        req.user.id,
+        payload.id,
+        userSockets,
+        pongieSockets,
+      );
     else
       return await this.chatService.joinChannel(
         req.user.id,
         payload.id,
         payload.channelName,
         payload.channelType,
-        socket,
+        userSockets,
         this.server,
       );
   }

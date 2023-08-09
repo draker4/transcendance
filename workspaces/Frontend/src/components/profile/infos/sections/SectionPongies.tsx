@@ -64,7 +64,6 @@ export default function SectionPongies({socket, isOwner, profile}: {
 				socket?.emit('getNotif', (payload: Notif) => {
 					if (payload && payload.redPongies) {
 						setNotifIds(payload.redPongies);
-						socket.emit("clearNotif", "redPongies");
 					}
 				});
 
@@ -79,7 +78,6 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		socket?.emit('getNotif', (payload: Notif) => {
 			if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
 			  setNotifIds(payload.redPongies);
-			  socket.emit("clearNotif", "redPongies");
 			}
 		});
 
@@ -150,7 +148,13 @@ export default function SectionPongies({socket, isOwner, profile}: {
 	const pongiesList = pongies.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} crossFunction={deletePongie} notifsIds={notifIds} />
+				<PongieList
+					pongie={pongie}
+					socket={socket}
+					crossFunction={deletePongie}
+					notifsIds={notifIds}
+					setNotifIds={setNotifIds}
+				/>
 			</div>
 		);
 	});
@@ -182,7 +186,13 @@ export default function SectionPongies({socket, isOwner, profile}: {
 	const isInvitedList = isInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} crossFunction={refuseInvitation} notifsIds={notifIds} />
+				<PongieList
+					pongie={pongie}
+					socket={socket}
+					crossFunction={refuseInvitation}
+					notifsIds={notifIds}
+					setNotifIds={setNotifIds}
+				/>
 			</div>
 		);
 	});
@@ -190,7 +200,13 @@ export default function SectionPongies({socket, isOwner, profile}: {
 	const hasInvitedList = hasInvited.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} crossFunction={cancelInvitation} notifsIds={notifIds} />
+				<PongieList
+					pongie={pongie}
+					socket={socket}
+					crossFunction={cancelInvitation}
+					notifsIds={notifIds}
+					setNotifIds={setNotifIds}
+				/>
 			</div>
 		);
 	});
@@ -198,7 +214,13 @@ export default function SectionPongies({socket, isOwner, profile}: {
 	const hasBlacklistedList = hasBlacklisted.map(pongie => {
 		return (
 			<div key={pongie.id}>
-				<PongieList pongie={pongie} socket={socket} crossFunction={cancelBlacklist} notifsIds={notifIds}  />
+				<PongieList
+					pongie={pongie}
+					socket={socket}
+					crossFunction={cancelBlacklist}
+					notifsIds={notifIds}
+					setNotifIds={setNotifIds}
+				/>
 			</div>
 		);
 	});
@@ -221,7 +243,13 @@ export default function SectionPongies({socket, isOwner, profile}: {
 						<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
 							Pongie Searched 🔎
 						</p>
-						<PongieList pongie={pongieSearched} socket={socket} crossFunction={hidePongie} notifsIds={[]} />
+						<PongieList
+							pongie={pongieSearched}
+							socket={socket}
+							crossFunction={hidePongie}
+							notifsIds={[]}
+							setNotifIds={setNotifIds}
+						/>
 					</div>
 				}
 

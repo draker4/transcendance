@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction, useEffect } from "react";
+import { useState, Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceSmileWink,
@@ -43,14 +43,19 @@ export default function NavbarProfilInfo({
 }: Props) {
   const [selectedItem, setSelectedItem] = useState(0);
   const [invisible, setInvisible] = useState<boolean>(true);
+  const idRef = useRef<boolean>(false);
 
   useEffect(() => {
     const updateProfile = (payload: {
       why: string;
     }) => {
-      if (payload && payload.why && payload.why === "updatePongies"
-        && selectedItem !== 1) {
-        setInvisible(false);
+      if (payload && payload.why && payload.why === "updatePongies") {
+        socket?.emit('getNotif', (payload: Notif) => {
+          if (payload && !idRef.current && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+            setInvisible(false);
+          else
+            setInvisible(true);
+        });
       }
     };
 
@@ -67,8 +72,12 @@ export default function NavbarProfilInfo({
   }, [socket]);
 
   const handleClick = (buttonId: number) => {
-    if (buttonId === 1)
+    if (buttonId === 1) {
       setInvisible(true);
+      idRef.current = true;
+    }
+    else
+      idRef.current = false;
     setActiveButton(buttonId);
     setSelectedItem(buttonId);
   };
