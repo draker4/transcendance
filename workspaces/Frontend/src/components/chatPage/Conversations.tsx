@@ -10,6 +10,7 @@ import {
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { Socket } from "socket.io-client";
 import SearchBar from "./searchBar/SearchBar";
+import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 
 export default function Conversations({
   socket,
@@ -72,16 +73,18 @@ export default function Conversations({
               </p>
             }
           </div>
-
-		{/* [!][+] PROVISOIRE checking */}
-		 {/* <div>{`(id:${channel.id})`}</div> */}
-
         </div>
       </React.Fragment>
     );
   });
 
   useEffect(() => {
+
+    const reloadData = (edit:EditChannelRelation) => {
+      console.log("Conversation : editRelation received : ");
+      console.log(edit);
+      getData();
+    }
 
     const getData = () => {
       socket?.emit("getChannels", (channels: Channel[]) => {
@@ -90,11 +93,13 @@ export default function Conversations({
     }
 
     socket?.on("notif", getData);
+    socket?.on("editRelation", reloadData);
 
     getData();
     
     return () => {
       socket?.off("notif", getData);
+      socket?.off("editRelation", reloadData);
     }
   }, [socket]);
 

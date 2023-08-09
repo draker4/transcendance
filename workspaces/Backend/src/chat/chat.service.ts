@@ -1039,8 +1039,10 @@ export class ChatService {
         isServerNotif: true,
       };
 
+      socket.join('channel:' + channel.id);
+      this.log(`user[${userId}] joined channel ${relation.channel.name}`);
+
       server.to('channel:' + channelId).emit('sendMsg', msg);
-      'channel:' + channelId;
       // socket.emit('notif');
 
       // Upload Data for clients in channel profile component
@@ -1051,7 +1053,6 @@ export class ChatService {
         userId: userId ,
         senderId: userId});
 
-      socket.join('channel:' + channel.id);
 
       // check if user already joined
       if (!relation.joined) {
