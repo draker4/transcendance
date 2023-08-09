@@ -91,35 +91,19 @@ export class UsersService {
 		});
 	}
 
-<<<<<<< HEAD
 	async getUserChannels(id: number) {
 		return await this.userRepository.findOne({
 			where: { id: id },
-			relations: ['channels', 'channels.avatar'],
+			relations: ['channels', 'channels.avatar', 'avatar'],
 		});
 	}
 
 	async getUserPongies(id: number) {
 		return await this.userRepository.findOne({
 			where: { id: id },
-			relations: ['pongies', 'pongies.avatar'],
+			relations: ['pongies', 'pongies.avatar', 'avatar'],
 		});
 	}
-=======
-  async getUserChannels(id: number) {
-    return await this.userRepository.findOne({
-      where: { id: id },
-      relations: ['channels', 'channels.avatar', 'avatar'],
-    });
-  }
-
-  async getUserPongies(id: number) {
-    return await this.userRepository.findOne({
-      where: { id: id },
-      relations: ['pongies', 'pongies.avatar', 'avatar'],
-    });
-  }
->>>>>>> 02d5dfdd8e691a5fdbd5d63a0e9a92643689915e
 
 	async getUserAvatar(id: number) {
 		return await this.userRepository.findOne({
