@@ -1,7 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useState } from "react";
+import { useState , useMemo} from "react";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export default function Lobby({ profile, avatar }: Props) {
+
   const lobbyService = new LobbyService();
   const matchmakingService = new MatchmakingService();
   const [menu, setMenu] = useState<string>("League");
@@ -26,7 +27,7 @@ export default function Lobby({ profile, avatar }: Props) {
 	<div className={styles.lobby}>
 		<NavLobby menu={menu} setMenu={setMenu} />
 		<div className={styles.content}>
-			{menu == "League" && (<League Matchmaking={matchmakingService} Lobby={lobbyService}/>)}
+			{menu == "League" && (<League Matchmaking={matchmakingService} />)}
 			{menu == "Party" && (<Party lobbyService={lobbyService} profile={profile} />)}
 			{menu == "Training" && <Training profile={profile} />}
 		</div>

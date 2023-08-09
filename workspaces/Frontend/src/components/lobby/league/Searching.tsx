@@ -31,7 +31,6 @@ export default function Searching({Matchmaking}: Props) {
 
 			<div className={styles.ImgBox}>
 				{ !inMatchMaking && <DefineType type={type} setType={setType} /> }
-				{/* {  inMatchMaking && <Image src={`/images/lobby/balls.gif`} alt="Searching giff" width="50" height="50" /> } */}
 				{  inMatchMaking && <p className={styles.loading} >Looking for opponent...</p> }
 			</div>
 

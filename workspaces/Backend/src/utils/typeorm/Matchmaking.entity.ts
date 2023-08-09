@@ -17,5 +17,5 @@ export class Matchmaking {
   createdAt: Date;
 
   @Column()
-  Mode: string;
+  Type: string;
 }

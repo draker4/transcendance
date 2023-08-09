@@ -15,6 +15,7 @@ export default function Leaderboard({ json }: Props) {
             </div>
         )
     }
+    
 
     return (
 

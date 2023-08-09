@@ -11,7 +11,7 @@ export class MatchmakingDTO {
 
   @IsNotEmpty()
   @IsNumber()
-  Mode: string;
+  Type: string;
 
   @IsNotEmpty()
   CreatedAt: Date;

@@ -59,6 +59,6 @@ export default class LobbyService {
 	public async getLeague(): Promise<any> {
 		const response = await fetchData(this.token, "lobby", "getleague", "GET");
 		const data = await response.json();
-		return data;
+		return data.data;
 	}
 }
