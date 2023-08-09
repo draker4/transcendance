@@ -21,6 +21,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Notif } from '@/utils/typeorm/Notif.entity';
+import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
       SocketToken,
       Stats,
       Notif,
+      NotifMessages,
     ]),
   ],
   providers: [

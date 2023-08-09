@@ -94,14 +94,14 @@ export class UsersService {
   async getUserChannels(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ['channels', 'channels.avatar'],
+      relations: ['channels', 'channels.avatar', 'avatar'],
     });
   }
 
   async getUserPongies(id: number) {
     return await this.userRepository.findOne({
       where: { id: id },
-      relations: ['pongies', 'pongies.avatar'],
+      relations: ['pongies', 'pongies.avatar', 'avatar'],
     });
   }
 

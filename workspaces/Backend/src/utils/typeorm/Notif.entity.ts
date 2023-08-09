@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { AfterLoad, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { NotifMessages } from "./NotifMessages.entity";
 
 @Entity()
 export class Notif {
@@ -13,6 +14,15 @@ export class Notif {
 	@Column("int", { array: true, default: {} })
 	redChannels: number[];
 
-	@Column("int", { array: true, default: {} })
-	nbMessages: number[];
+	@OneToMany(() => NotifMessages, notifMessages => notifMessages.notif, {
+		eager: true,
+	})
+	notifMessages: NotifMessages[];
+
+	@AfterLoad()
+	async nullChecks() {
+		if (!this.notifMessages) {
+			this.notifMessages = [];
+		}
+	}
 }

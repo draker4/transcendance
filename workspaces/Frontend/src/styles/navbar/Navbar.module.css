@@ -71,8 +71,8 @@
 }
 
 .logInBtn:hover {
-  color: var(--accent2);
-  border: 3px solid var(--accent2);
+  color: var(--accent3);
+  border: 3px solid var(--accent3);
   cursor: pointer;
 }
 

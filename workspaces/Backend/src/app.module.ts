@@ -34,6 +34,7 @@ import { TwoFactorAuthenticationModule } from './two-factor-authentication/two-f
 import { BackupCode } from './utils/typeorm/BackupCode.entity';
 import { SocketToken } from './utils/typeorm/SocketToken.entity';
 import { Notif } from './utils/typeorm/Notif.entity';
+import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { Notif } from './utils/typeorm/Notif.entity';
         BackupCode,
         SocketToken,
         Notif,
+        NotifMessages,
       ],
       synchronize: false,
     }),
