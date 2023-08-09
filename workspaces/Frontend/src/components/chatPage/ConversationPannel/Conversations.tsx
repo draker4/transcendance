@@ -11,18 +11,6 @@ import { Socket } from "socket.io-client";
 import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import ConversationItem from "./ConversationItem";
- 
-type RelationResume = {
-  isChanOp:boolean,
-  joined:boolean,
-  invited:boolean,
-  banned:boolean
-}
-
-type ChannelRelationResume = Channel & {
-  relationResume?:RelationResume
-}
-
 
 export default function Conversations({
   socket,
@@ -52,41 +40,29 @@ export default function Conversations({
     }
 
     const getData = () => {
-      socket?.emit("getChannels", (channels:ChannelRelationResume[]
-      ) => {
+      socket?.emit("getChannels", (channels: Channel[]) => {
         console.log("Conversation - GETDATA channelRelationResume : ", channels)
 
         setChannels(channels);
       });
     }
 
-    // Baptiste : 
-    // actuellement j'utilise cette fonction getData
-    // quand j'emit je fais :
-    //
-    // socket?.emit('notif', {
-    //     why: "updateChannels",
-    // });
-    //
-    // a voir ensemble comment on merge ca
-
-    const getData2 = (payload: {
+    const updateChannels = (payload: {
       why: string;
     }) => {
       if (payload && payload.why && payload.why === "updateChannels")
-        socket?.emit("getChannels", (channels: Channel[]) => {
-          setChannels(channels);
-        });
+        getData();
     }
 
-    socket?.on("notif", getData2);
+    socket?.on("notif", updateChannels);
     socket?.on('notifMsg', updateNotif);
     socket?.on("editRelation", reloadData);
 
     getData();
+    updateNotif();
     
     return () => {
-      socket?.off("notif", getData2);
+      socket?.off("notif", updateChannels);
       socket?.off("notifMsg", updateNotif);
       socket?.off("editRelation", reloadData);
     }
@@ -94,17 +70,22 @@ export default function Conversations({
 
 
   // Conversation lists Pannel
-  const [channels, setChannels] = useState<ChannelRelationResume[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
-  const handleClickDefault = (channel:Channel) => {
+  const handleClickDefault = (channel: Channel) => {
     openDisplay(channel);
   };
 
   const joinedConversations = channels
-  .filter(channel => channel.relationResume?.joined === true)
+  .filter(channel => channel.type !== "privateMsg")
   .map((channel) => (
     channel ? (
-      <ConversationItem key={channel.id} channel={channel} handleClick={handleClickDefault} />
+      <ConversationItem
+        key={channel.id}
+        channel={channel}
+        handleClick={handleClickDefault}
+        notifMsg={notifMsg}
+      />
     ) : null
   ));
 
@@ -112,7 +93,12 @@ export default function Conversations({
   .filter(channel => channel.type === "privateMsg")
   .map((channel) => (
     channel ? (
-      <ConversationItem key={channel.id} channel={channel} handleClick={handleClickDefault} />
+      <ConversationItem
+        key={channel.id}
+        channel={channel}
+        handleClick={handleClickDefault}
+        notifMsg={notifMsg}
+      />
     ) : null
   ));
 

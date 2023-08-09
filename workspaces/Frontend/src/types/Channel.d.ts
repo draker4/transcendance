@@ -6,7 +6,7 @@ type	Channel = {
 	isChanOp:boolean;
 	joined:boolean;
 	invited:boolean;
-	banned:boolean;
+	isBanned:boolean;
 	lastMessage?: {
 		user: User;
 		content: string;

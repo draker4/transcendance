@@ -10,7 +10,6 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 
-
 type Props = {
   icon: ReactNode;
   channel: Channel;
@@ -86,6 +85,8 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
+      
+      clearNotifMsg();
 
       // to not display ServerNotifMessage from other channels
       if (receivedMsg.channelId !== channel.id)
@@ -104,6 +105,15 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
       setMessages((previous) => [...previous, msg]);
     };
 
+    const clearNotifMsg = () => {
+      socket?.emit('clearNotif', {
+        which: "messages",
+        id: channel.id,
+      });
+    }
+
+    clearNotifMsg();
+
     socket?.on("sendMsg", handleReceivedMsg);
     socket?.on("editRelation", handleEditRelation);
 
@@ -112,8 +122,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
       socket?.off("editRelation", handleEditRelation);
     };
     
-
-
   }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {

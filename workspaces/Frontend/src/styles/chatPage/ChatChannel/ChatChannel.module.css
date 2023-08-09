@@ -76,6 +76,8 @@
 
   /* mieux [?] mais rapetisse le tout [?] depend des parents ? */
   height: 0px;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 

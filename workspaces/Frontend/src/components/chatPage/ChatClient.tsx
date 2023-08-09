@@ -11,6 +11,7 @@ import { Socket } from "socket.io-client";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function ChatClient({
   token,
@@ -102,6 +103,10 @@ export default function ChatClient({
         setGetChannel(false);
         return ;
       }
+      if (payload && payload.error && payload.error === "protected")
+        toast.info('This channel is protected! You need a password');
+      if (payload && payload.error && payload.error === "private")
+        toast.info('This channel is private! You cannot see it!');
       setError(true);
     });
   }, [socket]);

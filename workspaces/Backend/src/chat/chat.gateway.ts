@@ -131,12 +131,18 @@ export class ChatGateway implements OnModuleInit {
   async getChannel(
     @Req() req,
     @MessageBody() channelId: number,
-    @ConnectedSocket() socket: Socket,
   ) {
     if (!channelId)
       throw new WsException('no channel id');
 
-    return await this.chatService.getChannel(channelId, req.user.id, socket, this.server);
+    const userSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
+    return await this.chatService.getChannel(channelId, req.user.id, userSockets, this.server);
   }
 
   @SubscribeMessage('getChannels')

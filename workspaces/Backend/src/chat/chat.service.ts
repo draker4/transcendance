@@ -136,6 +136,29 @@ export class ChatService {
           }
         }
       }
+
+      else if (toClear.which === "messages") {
+
+        const notifUser = user.notif;
+
+        const notif = await this.notifRepository.findOne({
+          where : { id: notifUser.id },
+          relations: ['notifMessages'],
+        });
+
+        const notifMsg = notif.notifMessages.find(
+          notif => notif.channelId === toClear.id
+        );
+
+        if (notifMsg)
+          await this.notifMessagesRepository.remove(notifMsg);
+
+        if (userSockets.length !== 0) {
+          for (const socket of userSockets) {
+            server.to(socket.id).emit('notifMsg');
+          }
+        }
+      }
     }
     catch (error) {
       console.log(error.message);
@@ -198,25 +221,14 @@ export class ChatService {
             channel.avatar = pongie.avatar;
             channel.name = pongie.login;
           }
-          
-          /* */
-          else {
-            const relationResume: {
-              isChanOp:boolean,
-              joined:boolean,
-              invited:boolean,
-              banned:boolean
-            } = {
-              isChanOp: relation.isChanOp,
-              joined: relation.joined,
-              invited: relation.invited,
-              banned: relation.isBanned,
-            };
-            return {...channel, relationResume};
-          }
-          /* */
 
-          return channel;
+          return {
+            ...channel,
+            joined: relation.joined,
+            invited: relation.invited,
+            isBanned: relation.isBanned,
+            isChanop: relation.isChanOp,
+          };
         }),
       );
 
@@ -226,7 +238,8 @@ export class ChatService {
     }
   }
 
-  async getChannel(channelId: number, userId: number, socket: Socket, server: Server) {		
+  // [!] getChannel update !!!
+  async getChannel(channelId: number, userId: number, userSockets: Socket[], server: Server) {		
       try {
         const	user = await this.usersService.getUserChannels(userId);
         const	channel = await this.channelService.getChannelById(channelId);
@@ -284,10 +297,17 @@ export class ChatService {
           }
         }
   
-        if (!relation.joined && (channel.type === "private" || channel.type === "protected"))
+        if (!relation.joined && channel.type === "private")
             return {
               success: false,
-              error: 'private or protected',
+              error: 'private',
+              channel: null,
+            }
+  
+        if (!relation.joined && channel.type === "protected")
+            return {
+              success: false,
+              error: 'protected',
               channel: null,
             }
 
@@ -305,15 +325,29 @@ export class ChatService {
 
           server.to('channel:' + channelId).emit('sendMsg', msg);
           'channel:' + channelId;
-          // socket.emit('notif');
+          server.to('channel:' + channelId).emit('notif', {
+            why: "updateChannels",
+          });
         }
 
-        socket.join('channel:' + channel.id);
+        if (userSockets.length >=1) {
+          for (const socket of userSockets) {
+            socket.join('channel:' + channel.id);
+          }
+        }
+
+        const channelRelation = {
+          ...channel,
+          joined: true,
+          isBanned: relation.isBanned,
+          invited: relation.invited,
+          isChanOp: relation.isChanOp,
+        }
 
         return {
           success: true,
           error: '',
-          channel: channel,
+          channel: channelRelation,
         }
     }
     catch (error) {
@@ -330,22 +364,31 @@ export class ChatService {
       });
 
       // get channels already joined
-      const channelsJoined = await this.getChannels(id);
+      const myRelations = await this.userChannelRelation.find({
+        where: {userId: id},
+        relations: ["channel"],
+      });
 
-      const all = channels.map((channel) => {
-        let joined = false;
+      let all = channels.map((channel) => {
         let see = true;
 
         if (channel.type === 'private') see = false;
 
-        const channelJoined = channelsJoined.find(
-          (channelJoined) => channelJoined.id === channel.id,
+        const myRelation = myRelations.find(
+          relation => relation.channel.id === channel.id,
         );
 
-        if (channelJoined) {
-          joined = true;
-          see = true;
-        }
+        if (myRelation)
+          return {
+            id: channel.id,
+            name: channel.name,
+            avatar: channel.avatar,
+            type: channel.type,
+            joined: myRelation.joined,
+            invited: myRelation.invited,
+            isBanned: myRelation.isBanned,
+            isChanOp: myRelation.isChanOp,
+          };
 
         if (see)
           return {
@@ -353,9 +396,16 @@ export class ChatService {
             name: channel.name,
             avatar: channel.avatar,
             type: channel.type,
-            joined: joined,
+            joined: false,
+            invited: false,
+            isBanned: false,
+            isChanOp: false,
           };
+        
+        return null;
       });
+
+      all = all.filter(channel => channel);
 
       return all;
     } catch (error) {
@@ -1119,11 +1169,19 @@ export class ChatService {
         }
       }
 
+      const channelRelation = {
+        ...channel,
+        joined: true,
+        isBanned: relation.isBanned,
+        invited: relation.invited,
+        isChanOp: relation.isChanOp,
+      }
+
       return {
         success: true,
         exists: false,
         banned: false,
-        channel: channel,
+        channel: channelRelation,
       };
     } catch (error) {
       throw new WsException(error.msg);
@@ -1227,11 +1285,19 @@ export class ChatService {
       channel.name = pongie.login;
       channel.avatar = pongie.avatar;
 
+      const channelrelation = {
+        ...channel,
+        joined: true,
+        isBanned: relationUser.isBanned,
+        invited: relationUser.invited,
+        isChanop: relationUser.isChanOp,
+      }
+
       return {
         success: true,
         exists: false,
         banned: false,
-        channel: channel,
+        channel: channelrelation,
       };
     } catch (error) {
       console.log(error.message);
