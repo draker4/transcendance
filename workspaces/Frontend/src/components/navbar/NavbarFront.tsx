@@ -1,4 +1,5 @@
 "use client";
+
 import { usePathname, useSelectedLayoutSegment } from "next/navigation";
 import styles from "@/styles/navbar/Navbar.module.css";
 import Theme from "../theme/Theme";

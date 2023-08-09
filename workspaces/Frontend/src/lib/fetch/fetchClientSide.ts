@@ -80,12 +80,12 @@ export default async function fetchClientSide(
       return resAgain;
     }
     return response;
-  } catch (error) {
+  } catch (error: any) {
+    console.log("fetchClientSide function: ", error.message);
+    console.log(url);
     console.log(
       `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
     );
-    throw new Error(
-      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
-    );
+    throw new Error(error.message);
   }
 }

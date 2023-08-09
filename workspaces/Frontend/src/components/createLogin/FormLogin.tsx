@@ -21,6 +21,7 @@ export default function FormLogin({
   const [text, setText] = useState<string>("");
   const [access_token, setAccessToken] = useState<string>("");
   const [refresh_token, setRefreshToken] = useState<string>("");
+  const [textButton, setTextButton] = useState<string>("Let's go!");
   const router = useRouter();
   const config: Config = {
     dictionaries: [names],
@@ -61,7 +62,6 @@ export default function FormLogin({
   const generateRandomName = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const randomName = uniqueNamesGenerator(config);
-    console.log(randomName);
     const text = randomName;
     avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
     setText(text);
@@ -84,37 +84,42 @@ export default function FormLogin({
 
         const data = await res.json();
 
-        if (!res.ok || data.error) throw new Error();
+        if (!res.ok || data.error)
+          throw new Error();
 
-        router.refresh();
+        router.replace('/home');
       } catch (error) {
         console.log(error);
         setNotif("Something went wrong, please try again");
       }
     };
 
-    if (
-      access_token &&
-      access_token.length > 0 &&
-      refresh_token &&
-      refresh_token.length > 0
-    )
+    if (access_token && access_token.length > 0)
       changeCookie();
-  }, [access_token, router, refresh_token]);
+    
+  }, [access_token, router]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setTextButton('Loading...');
+
     const loginUser = e.target.login.value;
     const loginChecked = checkLoginFormat(loginUser);
     setNotif(loginChecked);
 
-    if (loginChecked.length > 0) return;
+    if (loginChecked.length > 0) {
+      setTextButton("Let's go!");
+      return;
+    }
 
     const res: {
       exists: string;
       access_token: string;
       refresh_token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
+
+    if (res.access_token.length === 0)
+      setTextButton("Let's go!");
 
     setNotif(res.exists);
     setAccessToken(res.access_token);
@@ -165,8 +170,12 @@ export default function FormLogin({
           />
         </div>
 
-        <button title="Create avatar" className={styles.confirmBtn}>
-          Let&apos;s go!
+        <button
+          title="Create avatar"
+          className={styles.confirmBtn}
+          disabled={textButton !== "Let's go!"}
+        >
+          {textButton}
         </button>
       </form>
     </div>

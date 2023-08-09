@@ -189,7 +189,8 @@ export class AuthService {
 
   async updateAvatarLogin(userId: number, login: string, avatar: Avatar) {
     const user = await this.usersService.getUserById(userId);
-    if (!user) throw new Error('No user found');
+    if (!user)
+      throw new Error('No user found');
 
     user.login = login;
     await this.usersService.updateUser(user.id, {

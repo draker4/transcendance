@@ -1,11 +1,11 @@
-import { cookies, headers } from "next/dist/client/components/headers";
+import { cookies } from "next/dist/client/components/headers";
 import Avatar_Service from "@/services/Avatar.service";
 
 import NavbarFront from "./NavbarFront";
 import Profile_Service from "@/services/Profile.service";
 
 export default async function NavbarServ() {
-  const url = headers().get('referer');
+
   let token: string | undefined;
   let avatar: Avatar = {
     image: "",
@@ -40,7 +40,8 @@ export default async function NavbarServ() {
       const Avatar = new Avatar_Service(token);
       avatar = await Avatar.getAvatarbyUserId(profile.id);
 
-  } catch (error) {
+  } catch (error: any) {
+    // console.log(error.message);
   }
 
   return <NavbarFront avatar={avatar} profile={profile} token={token} />;

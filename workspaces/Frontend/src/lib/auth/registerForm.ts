@@ -3,6 +3,7 @@ import { checkPassword, getDoubleEmail } from "./checkUserInscription";
 import registerUser from "./registerUser";
 import hash from "../bcrypt/hash";
 import logUserEmail from "./logUserEmail";
+import sendNewCode from "./sendNewCode";
 
 const Crypto = new CryptoService();
 
@@ -11,7 +12,7 @@ export async function loginPassword(
   email: string
 ): Promise<{
   passwordSecured: string;
-  register: boolean;
+  register: '';
   login: string;
 }> {
   try {
@@ -20,7 +21,7 @@ export async function loginPassword(
     if (passwordSecured.length > 0)
       return {
         passwordSecured: passwordSecured,
-        register: false,
+        register: '',
         login: "",
       };
 
@@ -32,7 +33,7 @@ export async function loginPassword(
     if (res === "wrong password") {
       return {
         passwordSecured: "Wrong password, please try again!",
-        register: false,
+        register: '',
         login: "",
       };
     }
@@ -40,18 +41,24 @@ export async function loginPassword(
       const passwordHashed = await hash(passwordUser);
       const res = await registerUser(emailCrypt, passwordHashed);
 
-      if (res.message !== "ok") throw new Error("Cannot create user");
+      if (res.message !== "ok")
+        throw new Error("Cannot create user");
 
       return {
         passwordSecured: "",
-        register: true,
+        register: res.id,
         login: "",
       };
     }
-    if (res === "user not verified") {
+    if (res.msg && res.msg === "not verified") {
+      const sendCode = await sendNewCode(res.id);
+
+      if (!sendCode || !sendCode.success)
+        throw new Error('cannot send code to user');
+      
       return {
         passwordSecured: "",
-        register: true,
+        register: res.id,
         login: "",
       };
     }
@@ -61,13 +68,13 @@ export async function loginPassword(
 
     return {
       passwordSecured: "",
-      register: false,
+      register: '',
       login: res.access_token + " " + res.refresh_token,
     };
   } catch (err) {
     return {
       passwordSecured: "Something went wrong, please try again!",
-      register: false,
+      register: '',
       login: "",
     };
   }
@@ -78,7 +85,7 @@ export async function registerFormPassword(
   email: string
 ): Promise<{
   passwordSecured: string;
-  register: boolean;
+  register: string;
   login: string;
 }> {
   try {
@@ -88,24 +95,25 @@ export async function registerFormPassword(
     if (passwordSecured.length > 0)
       return {
         passwordSecured,
-        register: false,
+        register: '',
         login: "",
       };
 
     const passwordHashed = await hash(passwordUser);
     const res = await registerUser(emailCrypt, passwordHashed);
 
-    if (res.message !== "ok") throw new Error("Cannot create user");
+    if (res.message !== "ok")
+      throw new Error("Cannot create user");
 
     return {
       passwordSecured: "",
-      register: true,
+      register: res.id,
       login: "",
     };
   } catch (err) {
     return {
       passwordSecured: "",
-      register: false,
+      register: '',
       login: "",
     };
   }

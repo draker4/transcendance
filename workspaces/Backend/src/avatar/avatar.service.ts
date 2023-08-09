@@ -25,20 +25,30 @@ export class AvatarService {
   public async getAvatarById(id: number, isChannel: boolean) {
     try {
       if (!isChannel) {
-        const avatar = (await this.usersService.getUserAvatar(id)).avatar;
+        const user = await this.usersService.getUserAvatar(id);
 
-        if (!avatar) throw new NotFoundException('avatar not found');
+        if (!user)
+          throw new Error('no user found');
+
+        const avatar = user.avatar;
+
+        if (!avatar) throw new Error('avatar not found');
 
         return avatar;
       } else {
-        const avatar = (await this.channelService.getChannelAvatar(id)).avatar;
+        const channel = await this.channelService.getChannelAvatar(id);
 
-        if (!avatar) throw new NotFoundException('avatar not found');
+        if (!channel)
+          throw new Error('no channel found');
+
+        const avatar = channel.avatar;
+
+        if (!avatar) throw new Error('avatar not found');
 
         return avatar;
       }
     } catch (error) {
-      return undefined;
+      throw new NotFoundException();
     }
   }
 

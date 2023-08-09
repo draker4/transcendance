@@ -30,6 +30,7 @@ export class AvatarController {
       };
 
     console.log("[!] EST CE QU'ON UTILISE CE ENDPOINT ?");
+    // je crois pas on peut supprimer je pense - Baptiste
 
     return user.avatar;
   }
@@ -39,7 +40,7 @@ export class AvatarController {
     @Param('id', ParseIntPipe) id: number,
     @Param('isChannel', ParseBoolPipe) isChannel: boolean,
   ) {
-    return this.avatarService.getAvatarById(id, isChannel);
+    return await this.avatarService.getAvatarById(id, isChannel);
   }
 
   @Put()

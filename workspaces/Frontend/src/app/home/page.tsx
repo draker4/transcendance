@@ -1,5 +1,5 @@
 //Server side rendering
-import { cookies, headers } from "next/dist/client/components/headers";
+import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
 import styles from "@/styles/lobby/Lobby.module.css";
@@ -12,7 +12,6 @@ import LoadingSuspense from "@/components/loading/LoadingSuspense";
 import Avatar_Service from "@/services/Avatar.service";
 
 export default async function HomePage() {
-	const url = headers().get("referer");
 	let token: string | undefined;
 	let avatar: Avatar = {
 		image: "",

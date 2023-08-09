@@ -104,6 +104,7 @@ export default class ChatService {
 	}
 
 	private async refreshSocket() {
+		console.log("here trying refresh");
 
 		if (this.disconnectClient)
 			return ;
@@ -140,6 +141,7 @@ export default class ChatService {
 		  this.initializeSocket(data.access_token);
 		}
 		catch (error: any) {
+			console.log(error.message, "in chat service");
 			this.disconnectClient = true;
 		}
 	}
