@@ -71,8 +71,6 @@ export default function ChatDisplay({
   }
 
   if ("name" in display) {
-	// [+][!] a clean une fois inutile
-    // if ("type" in display && display.type === "privateMsg") {
       return (
         <div className={styles.main + " " + styles.noPadding}>
           <ChatChannel
@@ -83,12 +81,5 @@ export default function ChatDisplay({
           />
         </div>
       );
-    // } else {
-	// 	// [+][!] provisoire
-    //   return <div className={styles.main}>
-	// 	<h1>{"name" in display && display.name}</h1>
-	// 	<h1>{"id" in display && display.id}</h1>
-	//   </div>;
-    // }
   }
 }

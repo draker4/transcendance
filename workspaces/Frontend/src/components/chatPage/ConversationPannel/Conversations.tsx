@@ -11,39 +11,34 @@ import { Socket } from "socket.io-client";
 import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import ConversationItem from "./ConversationItem";
+import Channel_Service from "@/services/Channel.service";
 
 export default function Conversations({
   socket,
   maxWidth,
   openDisplay,
+  myself,
 }: {
   socket: Socket | undefined;
   maxWidth: string;
   openDisplay: (display: Display) => void;
+  myself: Profile & { avatar: Avatar };
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
 
+  const loadData = () => {
+    socket?.emit("getChannels", (channels: Channel[]) => {
+      console.log("Conversation - LOADATA channel : ", channels)
+
+      setChannels(channels);
+    });
+  }
+
   // ChatWebSocket Management
   useEffect(() => {
-
-    // [!][+] remplacer par getData directement une fois les log inutiles
-    const reloadData = (edit:EditChannelRelation) => {
-      //console.log("Conversation : editRelation received : ");
-      //console.log(edit);
-      getData();
-    }
-
     const updateNotif = () => {
       socket?.emit('getNotifMsg', (payload: NotifMsg[]) => {
         setNotifMsg(payload);
-      });
-    }
-
-    const getData = () => {
-      socket?.emit("getChannels", (channels: Channel[]) => {
-        console.log("Conversation - GETDATA channelRelationResume : ", channels)
-
-        setChannels(channels);
       });
     }
 
@@ -51,20 +46,20 @@ export default function Conversations({
       why: string;
     }) => {
       if (payload && payload.why && payload.why === "updateChannels")
-        getData();
+        loadData();
     }
 
     socket?.on("notif", updateChannels);
     socket?.on('notifMsg', updateNotif);
-    socket?.on("editRelation", reloadData);
+    socket?.on("editRelation", loadData);
 
-    getData();
+    loadData();
     updateNotif();
     
     return () => {
       socket?.off("notif", updateChannels);
       socket?.off("notifMsg", updateNotif);
-      socket?.off("editRelation", reloadData);
+      socket?.off("editRelation", loadData);
     }
   }, [socket]);
 
@@ -76,14 +71,63 @@ export default function Conversations({
     openDisplay(channel);
   };
 
+  const handleLeave = (channel: Channel) => {
+    console.log("Wanna leave the channel : " + channel.name);
+  };
+
+  const handleClickAcceptInvite = async (channel: Channel) => {
+    console.log("invitation to channel " +  channel.name + "accepted");
+
+    const channelService = new Channel_Service(undefined);
+    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: true});
+
+    //openDisplay(channel);
+    if (rep.success) {
+      const newRelation:EditChannelRelation = {
+        channelId: channel.id,
+        userId: myself.id,
+        senderId: myself.id,
+        newRelation: {
+          joined: true,
+          invited:false,
+        }
+      }
+      socket?.emit("editRelation", newRelation);
+      openDisplay(channel);
+    }
+    else
+      console.log("JoinRecent channel error : " + rep.message);
+  };
+
+  const handleClickJoinRecent = async (channel: Channel) => {
+    const channelService = new Channel_Service(undefined);
+    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {joined: true});
+
+    if (rep.success) {
+      const newRelation:EditChannelRelation = {
+        channelId: channel.id,
+        userId: myself.id,
+        senderId: myself.id,
+        newRelation: {
+          joined: true,
+        }
+      }
+      socket?.emit("editRelation", newRelation);
+      openDisplay(channel);
+    }
+    else
+      console.log("JoinRecent channel error : " + rep.message);
+  };
+
   const joinedConversations = channels
-  .filter(channel => channel.type !== "privateMsg")
+  .filter(channel => channel.type !== "privateMsg" && channel.joined === true && channel.isBanned === false)
   .map((channel) => (
     channel ? (
       <ConversationItem
         key={channel.id}
         channel={channel}
         handleClick={handleClickDefault}
+        handleLeave={handleLeave}
         notifMsg={notifMsg}
       />
     ) : null
@@ -97,12 +141,39 @@ export default function Conversations({
         key={channel.id}
         channel={channel}
         handleClick={handleClickDefault}
+        handleLeave={handleLeave}
         notifMsg={notifMsg}
       />
     ) : null
   ));
 
-  const title = joinedConversations.length > 0 ? <h2>Conversations actives</h2> : null;
+  const invitedConversations = channels
+  .filter(channel => channel.type !== "privateMsg" && channel.joined === false && channel.invited === true)
+  .map((channel) => (
+    channel ? (
+      <ConversationItem
+        key={channel.id}
+        channel={channel}
+        handleClick={handleClickAcceptInvite}
+        handleLeave={handleLeave}
+        notifMsg={notifMsg}
+      />
+    ) : null
+  ));
+
+  const recentConversations = channels
+  .filter(channel => channel.type !== "privateMsg" && channel.joined === false && channel.invited === false && channel.isBanned === false)
+  .map((channel) => (
+    channel ? (
+      <ConversationItem
+        key={channel.id}
+        channel={channel}
+        handleClick={handleClickJoinRecent}
+        handleLeave={handleLeave}
+        notifMsg={notifMsg}
+      />
+    ) : null
+  ));
 
 
   const makeConversationList = (conversations:(React.JSX.Element | null)[], title:string):React.JSX.Element | null => {
@@ -155,9 +226,12 @@ export default function Conversations({
         </div>
       </div>
       <div className={styles.scroll}>
-        
+        {/* */}
         {makeConversationList(joinedConversations, "Registered Channels")}
         {makeConversationList(pmConversations, "Private messages")}
+        {makeConversationList(recentConversations, "Recent Channels")}
+        {makeConversationList(invitedConversations, "Invitations")}
+        {/* */}
       </div>
     </div>
   );

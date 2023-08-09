@@ -53,6 +53,7 @@
 	text-overflow: ellipsis;
 	/* width: 100px; */
 	overflow: hidden;
+	color:var(--secondary1);
 }
 
 .name h4 {
@@ -105,4 +106,5 @@
 .time {
 	font-size: 0.8rem;
 	padding-left: 10px;
+	color:var(--secondary1);
 }

@@ -29,23 +29,36 @@ export class ChannelController {
     }
   }
 
-  // [+] Un guard verifiant que l'user est chanOp ? (verifie si il est dans la channel aussi avant)
   @Put('editRelation')
   async editRelation(
     @Request() req,
-    @Body() newRelation: EditChannelRelationDto,
+    @Body() edit: EditChannelRelationDto,
   ) {
     let rep: ReturnData = {
       success: false,
       message: '',
     };
+
+    let isSpecialCase:boolean;
+
     try {
+
+      if (req.user.id === edit.userId) {
+        isSpecialCase = await this.channelService.checkEditRelationSpecialCase(
+          req.user.id,
+          edit
+        );
+      } else
+        isSpecialCase = false;
+
       const check = await this.channelService.checkChanOpPrivilege(
         req.user.id,
-        newRelation.channelId,
+        edit.channelId
       );
-      if (!check.isChanOp) throw new Error(check.error);
-      rep = await this.channelService.editRelation(req.user.id, newRelation);
+
+      if (!isSpecialCase && !check.isChanOp) throw new Error(check.error);
+      rep = await this.channelService.editRelation(req.user.id, edit);
+
     } catch (error) {
       rep.success = false;
       rep.message = error.message;
