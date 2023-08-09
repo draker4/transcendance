@@ -58,8 +58,15 @@ export default function Leaderboard({ json }: Props) {
                     )}
                 </div>
             </div>
-
+            
             <div className={styles.playerlist}>
+                <div className={styles.header}>
+                        <div className={styles.avatar_box}>
+							<p>Login</p>
+						</div>
+                        <p>Score</p>
+                        <p>Rank</p>
+                </div>
                 {json.length > 0   && json.map((player: any, index: number) => (
                     <div className={styles.player} key={index}>
                         <div className={styles.avatar_box}>

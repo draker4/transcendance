@@ -52,8 +52,15 @@ export default function StreamGame({ Lobby, json }: Props) {
 			</div>
 
 			<div className={styles.gamelist}>
+				<div className={styles.header} >
+						<p className={styles.header_name}>Name</p>
+						<p className={styles.header_type}>Type</p>
+						<p className={styles.header_host}>Host</p>
+						<p className={styles.header_vs}>VS</p>
+						<p className={styles.header_opponent}>Opponent</p>
+                </div>
                 {json.map((game: any, index: number) => (
-                    <div className={styles.game} key={index} onMouseEnter={() => handleHover(game)} >
+                    <div className={styles.game} key={index} onClick={() => handleHover(game)} >
 						<p className={styles.game_name}>{game.Name}</p>
 						{game.Mode == "3rounds" && <Md3GMobiledata size={40} />}
 						{game.Mode == "5rounds" && <Md5G size={40} />}

@@ -21,7 +21,7 @@ export default function League({ Matchmaking }: Props) {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			lobbyService.getLeague().then((Data : League) => { setJson(Data); });
-		}, 3000);
+		}, 1000);
 		return () => clearInterval(interval);
 	}, [lobbyService]);
 

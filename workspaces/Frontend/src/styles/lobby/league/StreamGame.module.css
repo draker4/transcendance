@@ -26,7 +26,7 @@
 }
 
 .game {
-    background-color: var(--secondary1);
+    background-color: var(--secondary3);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -36,6 +36,48 @@
     padding: 10px;
     font-size: 20px;
     margin: 10px;
+    font-family: var(--title-font);
+    font-size: 1.5rem;
+}
+
+.header {
+    background-color: var(--secondary2);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 50px;
+    align-items: center;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    margin: 10px;
+    font-weight: bold;
+    position: sticky;
+    top: 0px;
+    font-family: var(--title-font);
+    font-size: 1.5rem;
+}
+
+.header_name {
+    width: 25%;
+}
+
+.header_type {
+    width: 13%;
+    text-align: start;
+}
+
+.header_host {
+    width: 100px;
+    text-align: right;
+}
+
+.header_vs {
+    width: 150px;
+}
+
+.header_opponent {
+    width: 60px;
 }
 
 .game:hover {
@@ -198,4 +240,23 @@
     top: 100px;
     font-size: 30px;
     left: 20px;
+}
+
+@media screen and (max-width: 1200px) {
+
+    .StreamGame {
+        display: flex;
+        flex-direction: column;
+        justify-content: bottom;
+        min-height: 800px;
+    }
+
+    .resume {
+        width: 100%;
+    }
+
+    .gamelist {
+        width: 100%;
+        height: 90%;
+    }
 }

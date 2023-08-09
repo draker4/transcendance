@@ -66,3 +66,14 @@
         opacity: 1;
     }
 }
+
+@media screen and (max-width: 1200px) {
+
+    .Searching {
+        display: flex;
+        flex-direction: column;
+        justify-content: bottom;
+        min-height: 250px;
+        padding-top: 80px;
+    }
+}
