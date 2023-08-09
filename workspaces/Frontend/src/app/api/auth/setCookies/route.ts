@@ -6,7 +6,6 @@ export async function POST(req: NextRequest) {
 	const	accessToken = cookies.accessToken;
 	const	refreshToken = cookies.refreshToken;
 
-	console.log(accessToken, refreshToken);
 	if (!accessToken) {
 		const	data = {
 			message: "Something went wrong, please try again !",

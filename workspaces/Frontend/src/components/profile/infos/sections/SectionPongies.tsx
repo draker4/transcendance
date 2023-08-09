@@ -64,7 +64,6 @@ export default function SectionPongies({socket, isOwner, profile}: {
 				socket?.emit('getNotif', (payload: Notif) => {
 					if (payload && payload.redPongies) {
 						setNotifIds(payload.redPongies);
-						socket.emit("clearNotif", "redPongies");
 					}
 				});
 
@@ -79,7 +78,6 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		socket?.emit('getNotif', (payload: Notif) => {
 			if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
 			  setNotifIds(payload.redPongies);
-			  socket.emit("clearNotif", "redPongies");
 			}
 		});
 
