@@ -70,11 +70,9 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel, socket]);
 
   const handleEditRelation = (edit:EditChannelRelation) => {
-    // [+] features a impl (ex: je me fais ban/kick alors que je suis dans le chat)
-    console.log("EditChannelRelation reçu :", edit);
+    console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
 
-    // [+] CONTINUER ICI
-    if (edit !== undefined && edit.userId === myself.id) {
+    if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)
         setRelNotif({notif:RelationNotif.ban, edit:edit});
       else if (edit.newRelation.joined === false || edit.newRelation.invited === false)
@@ -89,7 +87,11 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   useEffect(() => {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
 
-      console.log(receivedMsg); // checking [!]
+      // to not display ServerNotifMessage from other channels
+      if (receivedMsg.channelId !== channel.id)
+        return ;
+
+      console.log("ChatChannel : handleReceivedMsg :", receivedMsg); // checking [!]
 
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
@@ -98,8 +100,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         date: receivedDate,
         isServerNotif: receivedMsg.isServerNotif,
       };
-
-	  console.log(`[channel : ${channel.name}] recMsg : ${msg.content}`);
 
       setMessages((previous) => [...previous, msg]);
     };
@@ -117,7 +117,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
-    console.log("laaaa", msg);
     socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,

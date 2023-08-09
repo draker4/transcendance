@@ -198,6 +198,23 @@ export class ChatService {
             channel.avatar = pongie.avatar;
             channel.name = pongie.login;
           }
+          
+          /* */
+          else {
+            const relationResume: {
+              isChanOp:boolean,
+              joined:boolean,
+              invited:boolean,
+              banned:boolean
+            } = {
+              isChanOp: relation.isChanOp,
+              joined: relation.joined,
+              invited: relation.invited,
+              banned: relation.isBanned,
+            };
+            return {...channel, relationResume};
+          }
+          /* */
 
           return channel;
         }),
@@ -1063,6 +1080,13 @@ export class ChatService {
           channel: null,
         };
 
+        
+      // check if user already joined
+      if (!relation.joined) {
+        relation.joined = true;
+        await this.userChannelRelation.save(relation);
+      }
+
       const date = new Date();
 
       const msg: sendMsgDto = {
@@ -1075,8 +1099,6 @@ export class ChatService {
       };
 
       server.to('channel:' + channelId).emit('sendMsg', msg);
-      'channel:' + channelId;
-      // socket.emit('notif');
 
       // Upload Data for clients in channel profile component
       server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
@@ -1086,6 +1108,8 @@ export class ChatService {
         userId: userId ,
         senderId: userId});
 
+      this.log(`user[${userId}] joined channel ${relation.channel.name}`);
+
       if (userSockets.length >= 1) {
         for (const socket of userSockets) {
           socket.join('channel:' + channel.id);
@@ -1093,12 +1117,6 @@ export class ChatService {
             why: "updateChannels",
           });
         }
-      }
-
-      // check if user already joined
-      if (!relation.joined) {
-        relation.joined = true;
-        await this.userChannelRelation.save(relation);
       }
 
       return {
