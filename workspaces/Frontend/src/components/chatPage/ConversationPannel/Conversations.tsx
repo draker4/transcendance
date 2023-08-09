@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AvatarUser from "../avatarUser/AvatarUser";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,8 +8,21 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
 import { Socket } from "socket.io-client";
-import SearchBar from "./searchBar/SearchBar";
+import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
+import ConversationItem from "./ConversationItem";
+ 
+type RelationResume = {
+  isChanOp:boolean,
+  joined:boolean,
+  invited:boolean,
+  banned:boolean
+}
+
+type ChannelRelationResume = Channel & {
+  relationResume?:RelationResume
+}
+
 
 export default function Conversations({
   socket,
@@ -21,73 +33,22 @@ export default function Conversations({
   maxWidth: string;
   openDisplay: (display: Display) => void;
 }) {
-  const [channels, setChannels] = useState<Channel[]>([]);
-  let date = "";
 
-  const channelsList = channels.map((channel) => {
-    const handleClick = () => {
-      openDisplay(channel);
-    };
-
-    if (channel.lastMessage?.createdAt) {
-      const diff = (Date.now() - new Date(channel.lastMessage.createdAt).getTime()) / 1000;
-      date = diff < 60
-              ? Math.floor(diff) + "s"
-              : diff < 3600
-              ? Math.floor(diff / 60) + "min"
-              : diff < 86400
-              ? Math.floor(diff / 60 / 60) + "h"
-              : diff < 604800
-              ? Math.floor(diff / 60 / 60 / 24) + "d"
-              : Math.floor(diff / 60 / 60 / 24 / 7) + "w"
-    }
-
-    return (
-      <React.Fragment key={channel.id}>
-        <div className={styles.list} onClick={handleClick}>
-          <div className={styles.avatar}>
-            <AvatarUser
-              avatar={channel.avatar}
-              borderSize="2px"
-              borderColor={channel.avatar.borderColor}
-              backgroundColor={channel.avatar.backgroundColor}
-            />
-          </div>
-          <div className={styles.name}>
-            <h4>{channel.name}</h4>
-            {
-              channel.lastMessage &&
-               <p>{
-                  channel.lastMessage.user?.login
-                  ? channel.lastMessage.user.login
-                  : "****"
-                }: {channel.lastMessage.content}</p>
-            }
-          </div>
-
-          <div className={styles.time}>
-            {
-              channel.lastMessage &&
-              <p>
-                {date}
-              </p>
-            }
-          </div>
-        </div>
-      </React.Fragment>
-    );
-  });
-
+  // ChatWebSocket Management
   useEffect(() => {
 
+    // [!][+] remplacer par getData directement une fois les log inutiles
     const reloadData = (edit:EditChannelRelation) => {
-      console.log("Conversation : editRelation received : ");
-      console.log(edit);
+      //console.log("Conversation : editRelation received : ");
+      //console.log(edit);
       getData();
     }
 
     const getData = () => {
-      socket?.emit("getChannels", (channels: Channel[]) => {
+      socket?.emit("getChannels", (channels:ChannelRelationResume[]
+      ) => {
+        console.log("Conversation - GETDATA channelRelationResume : ", channels)
+
         setChannels(channels);
       });
     }
@@ -102,6 +63,43 @@ export default function Conversations({
       socket?.off("editRelation", reloadData);
     }
   }, [socket]);
+
+
+  // Conversation lists Pannel
+  const [channels, setChannels] = useState<ChannelRelationResume[]>([]);
+
+  const handleClickDefault = (channel:Channel) => {
+    openDisplay(channel);
+  };
+
+  const joinedConversations = channels
+  .filter(channel => channel.relationResume?.joined === true)
+  .map((channel) => (
+    channel ? (
+      <ConversationItem key={channel.id} channel={channel} handleClick={handleClickDefault} />
+    ) : null
+  ));
+
+  const pmConversations = channels
+  .filter(channel => channel.type === "privateMsg")
+  .map((channel) => (
+    channel ? (
+      <ConversationItem key={channel.id} channel={channel} handleClick={handleClickDefault} />
+    ) : null
+  ));
+
+  const title = joinedConversations.length > 0 ? <h2>Conversations actives</h2> : null;
+
+
+  const makeConversationList = (conversations:(React.JSX.Element | null)[], title:string):React.JSX.Element | null => {
+    if (!conversations || conversations.length === 0) return null;
+    return (
+      <>
+        <p className={styles.tinyTitle}>{title}</p>
+        {conversations}
+      </>
+    );
+  };
 
   const handleClickPongie = () => {
     openDisplay({ button: "pongies" });
@@ -143,7 +141,9 @@ export default function Conversations({
         </div>
       </div>
       <div className={styles.scroll}>
-        {channelsList}
+        
+        {makeConversationList(joinedConversations, "Registered Channels")}
+        {makeConversationList(pmConversations, "Private messages")}
       </div>
     </div>
   );

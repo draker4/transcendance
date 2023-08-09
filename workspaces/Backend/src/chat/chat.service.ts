@@ -184,6 +184,23 @@ export class ChatService {
             channel.avatar = pongie.avatar;
             channel.name = pongie.login;
           }
+          
+          /* */
+          else {
+            const relationResume: {
+              isChanOp:boolean,
+              joined:boolean,
+              invited:boolean,
+              banned:boolean
+            } = {
+              isChanOp: relation.isChanOp,
+              joined: relation.joined,
+              invited: relation.invited,
+              banned: relation.isBanned,
+            };
+            return {...channel, relationResume};
+          }
+          /* */
 
           return channel;
         }),

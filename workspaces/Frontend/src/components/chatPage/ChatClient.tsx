@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/ChatClient.module.css";
 import stylesError from "@/styles/chatPage/ChatPage.module.css";
-import Conversations from "./Conversations";
+import Conversations from "./ConversationPannel/Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
 import LoadingSuspense from "../loading/LoadingSuspense";

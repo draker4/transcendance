@@ -72,6 +72,12 @@
   margin-top: 5px;
 }
 
+.tinyTitle {
+	color: var(--accent1);
+	font-family: var(--title);
+	font-size: 0.7rem;
+}
+
 .menu {
   height: 20px;
   width: 20px;
