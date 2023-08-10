@@ -68,7 +68,7 @@ export class ChatService {
 
   async getNotif(userId: number) {
     try {
-      const user = await this.usersService.getUserById(userId);
+      const user:User = await this.usersService.getUserById(userId);
 
       if (!user)
         throw new WsException('no user found');
@@ -76,7 +76,7 @@ export class ChatService {
       return user.notif;
     }
     catch (error) {
-      console.log(error.message);
+      console.log("ChatGateway getNotif() error : " + error.message);
       throw new WsException(error.message);
     }
   }
@@ -188,7 +188,8 @@ export class ChatService {
   async getChannels(id: number) {
     try {
       const relations = await this.userChannelRelation.find({
-        where: { userId: id, joined: true, isBanned: false },
+        // where: { userId: id, joined: true, isBanned: false },
+        where: { userId: id },
         relations: [
           'channel',
           'channel.avatar',
@@ -220,6 +221,10 @@ export class ChatService {
 
             channel.avatar = pongie.avatar;
             channel.name = pongie.login;
+          }
+
+          if (relation.joined === false || relation.isBanned === true) {
+            channel.lastMessage = null;
           }
 
           return {
@@ -1465,6 +1470,7 @@ export class ChatService {
     infos: EditChannelRelationDto & { server: Server; from: number },
   ) {
     let content: string = '';
+    let needEnd:boolean = true;
 
     try {
       const isSelf: boolean = infos.from === infos.userId;
@@ -1486,8 +1492,11 @@ export class ChatService {
         action = 'gives a ban penalty';
       } else if (infos.newRelation.isBanned === false) {
         action = 'removes the ban penalty';
-      } else if (infos.newRelation.joined === true) {
+      } else if (infos.newRelation.joined === true && !isSelf) {
         action = 'allows joinning channel';
+      } else if (infos.newRelation.joined === true && isSelf) {
+        action = 'just joined the channel';
+        needEnd = false;
       } else if (infos.newRelation.joined === false) {
         action = 'gives a channel kick';
       } else if (infos.newRelation.invited === true) {
@@ -1498,8 +1507,16 @@ export class ChatService {
         throw new Error('no relation boolean found');
       }
 
-      if (isSelf) content = `${whoFrom.login} ${action} to itself`;
-      else content = `${whoFrom.login} ${action} to ${whotTo.login}`;
+      if (isSelf) {
+        content = needEnd ?
+        `${whoFrom.login} ${action} to itself` :
+        `${whoFrom.login} ${action}`;
+      } else {
+        content = needEnd ? 
+        `${whoFrom.login} ${action} to ${whotTo.login}`:
+        `${whoFrom.login} ${action}`;
+      }
+
     } catch (e) {
       this.log('makeEditRelationNotifContent() error : ' + e.message);
     }

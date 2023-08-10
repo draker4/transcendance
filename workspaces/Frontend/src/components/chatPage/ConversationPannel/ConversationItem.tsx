@@ -1,11 +1,14 @@
 import styles from "@/styles/chatPage/Conversations.module.css";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { Badge } from "@mui/material";
+import { Badge, Button } from "@mui/material";
 import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHand } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     channel:Channel,
     handleClick: (channel:Channel) => void;
+    handleLeave: (channel:Channel) => void;
     notifMsg: NotifMsg[];
 }
 
@@ -18,7 +21,57 @@ const badgeStyle = {
 	}
 }
 
-export default function ConversationItem({channel, handleClick, notifMsg}:Props) {
+export default function ConversationItem({channel, handleClick, handleLeave, notifMsg}:Props) {
+
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocusOn = () => {
+    setIsFocused(true);
+  };
+
+  const handleFocusOff = () => {
+    setIsFocused(false);
+  };
+
+  const handleHover = () => {
+    setIsFocused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsFocused(false);
+  };
+
+  const [buttonIsFocused, setButtonIsFocused] = useState(false);
+
+  const buttonFocusOn = () => {
+    setIsFocused(true);
+  };
+
+  const buttonFocusOff = () => {
+    setButtonIsFocused(false);
+  };
+
+  const buttonHover = () => {
+    setButtonIsFocused(true);
+  };
+
+  const buttonMouseLeave = () => {
+    setButtonIsFocused(false);
+  };
+
+
+  const rowClick = () => {
+    if (!buttonIsFocused) {
+      console.log("ConversationItem : row click triggered")
+      handleClick(channel);
+    }
+    else
+      console.log("ConversationItem : row click prevented")
+  }
+
+  const leaveButtonClick = () => {
+      handleLeave(channel);
+  }
 
     let date = '';
     let nbMsg = 0;
@@ -45,7 +98,12 @@ export default function ConversationItem({channel, handleClick, notifMsg}:Props)
     }
   
     return (
-      <div className={styles.list} onClick={() => handleClick(channel)}>
+      <div className={styles.list} onClick={rowClick}
+      onFocus={handleFocusOn}
+      onBlur={handleFocusOff}
+      onMouseEnter={handleHover}
+      onMouseLeave={handleMouseLeave}
+      >
         
         <Badge badgeContent={nbMsg}
           overlap="circular"
@@ -63,7 +121,14 @@ export default function ConversationItem({channel, handleClick, notifMsg}:Props)
         
         <div className={styles.name}>
           <h4>{channel.name}</h4>
-          {channel.lastMessage && (
+          {isFocused && (
+            <FontAwesomeIcon icon={faHand} onClick={leaveButtonClick}
+              onFocus={buttonFocusOn}
+              onBlur={buttonFocusOff}
+              onMouseEnter={buttonHover}
+              onMouseLeave={buttonMouseLeave} style={{backgroundColor:"chartreuse"}}/>
+          )}
+          {!isFocused && channel.lastMessage && (
             <p>
               {channel.lastMessage.user?.login ? channel.lastMessage.user.login : '****'}:{' '}
               {channel.lastMessage.content}
@@ -71,9 +136,11 @@ export default function ConversationItem({channel, handleClick, notifMsg}:Props)
           )}
         </div>
   
+        {!isFocused && (
         <div className={styles.time}>
           {channel.lastMessage && <p>{date}</p>}
         </div>
+        )}
       </div>
     );
 }

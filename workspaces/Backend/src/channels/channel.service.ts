@@ -114,21 +114,9 @@ export class ChannelService {
 			where: { id : id }, relations: ["users", "users.avatar"]
 		});
 
-
-		// this.log("Fetching from getChannelUsersRelations() : "); //checking [!]
-
 		const usersRelation : UserChannelRelation[] = await this.userChannelRelation.find({
 			where: { channelId : id }, relations: ["user", "user.avatar"]
 		});
-		
-		/* [!]
-		console.log("USER RELATION[0].isBanned) = ", usersRelation[0].isBanned); //checking
-		console.log("USER RELATION[1].isBanned) = ", usersRelation[1].isBanned); //checking
-		console.log("USER RELATION[2].isBanned) = ", usersRelation[2].isBanned); //checking
-		console.log("USER RELATION[3].isBanned) = ", usersRelation[3].isBanned); //checking
-		console.log("USER RELATION[4].isBanned) = ", usersRelation[4].isBanned); //checking
-		console.log("USER RELATION[5].isBanned) = ", usersRelation[5].isBanned); //checking
-		*/
 
 		return {
 			channel: channel,
@@ -137,8 +125,9 @@ export class ChannelService {
 	}
 
 	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isChanOp:boolean, error?:string}> {
-		const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
 		try {
+			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
+
 			this.verifyPermissions(userId, channelId, relation);
 			return {
 				isChanOp:relation.isChanOp,
@@ -150,6 +139,34 @@ export class ChannelService {
 			}
 		}
 	}
+
+	public async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
+		try {
+			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, edit.channelId);
+
+			/* Special cases where chanOp privileges are not required */
+			// [1] a User can change himself his joined relation to a channel
+			if ( !('isChanOp' in edit.newRelation) &&
+				!('isBanned' in edit.newRelation) &&
+				!('invited' in edit.newRelation)
+			) { return true; }
+
+			// [2] An invited user can join then consume his invitation
+			if (
+				!('isChanOp' in edit.newRelation) &&
+				!('isBanned' in edit.newRelation) &&
+				relation.invited === true &&
+				edit.newRelation.invited === false &&
+				edit.newRelation.joined === true
+			) { return true; }
+
+			// [3] else its not a special case
+			return false;
+		} catch (error) {
+			return false;
+		}
+	}
+
 
 	public async updateChannelUserRelation(relation:UserChannelRelation ) {
 		const rep:ReturnData = {
