@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { BadGatewayException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { UsersService } from '@/users/users.service';
@@ -25,24 +25,19 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     let user: User;
     try {
       user = await this.usersService.getUserByEmail(email, 'email');
-    } catch (error) {
-      throw new BadGatewayException();
-    }
     
-    if (!user)
-      throw new NotFoundException();
-    
-    const passDecrypted = await this.cryptoService.decrypt(password);
-    const isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
+      if (!user)
+        throw new NotFoundException();
+      
+      const passDecrypted = await this.cryptoService.decrypt(password);
+      const isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
 
-    if (!isMatch)
-      throw new UnauthorizedException();
+      if (!isMatch)
+        throw new UnauthorizedException();
 
-    if (!user.verified) {
-      this.authService.sendNewCode(user);
-      throw new ForbiddenException();
-    }
-
-    return user;
+      return user;
+  } catch (error) {
+    throw new BadGatewayException();
+  }
   }
 }

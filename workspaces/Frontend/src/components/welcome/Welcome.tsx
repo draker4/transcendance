@@ -8,7 +8,7 @@ import DisconnectClient from "../disconnect/DisconnectClient";
 export default function Welcome() {
   const notif = useParams().notif;
 
-  if (notif) {
+  if (notif && notif[0] === "notif") {
     return (
       <div className={styles.main}>
         <DisconnectClient />

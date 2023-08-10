@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
 	const	code: string | null = req.nextUrl.searchParams.get('code');
+	const	id: string | null = req.nextUrl.searchParams.get('id');
 
-	if (code) {
+	if (code && id) {
 		try {
-			const	res = await fetch(`http://backend:4000/api/auth/verifyCode/${code}`);
+			const	res = await fetch(`http://backend:4000/api/auth/verifyCode/${code}/${id}`);
 			const	data = await res.json();
 
 			const	response = NextResponse.json(data);
-			if (data?.message === "Loading...") {
+			if (data?.success) {
 				response.cookies.set({
 					name: "crunchy-token",
 					value: data.access_token,
@@ -27,17 +28,15 @@ export async function GET(req: NextRequest) {
 						path: "/",
 					});
 			}
-
-			if (data?.message)
-				return response;
-			throw new Error("Cannot verify user");
+			return response;
 		}
 		catch (err) {
 			console.log(err);
 		}
 	}
 	const	data = {
-		message: "Something went wrong, please try again !",
+		success: false,
+		message: "Something went wrong, please try again!",
 	}
 	return NextResponse.json(data);
 }

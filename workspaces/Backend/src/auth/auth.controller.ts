@@ -82,10 +82,13 @@ export class AuthController {
   async registerUser(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.authService.addUser(createUserDto);
-      if (!user) throw new BadRequestException();
+      
+      if (!user)
+        throw new BadRequestException();
 
       return {
         message: 'ok',
+        id: user.id,
       };
     } catch (error) {
       throw new BadRequestException();
@@ -93,33 +96,45 @@ export class AuthController {
   }
 
   @Public()
-  @Get('verifyCode/:code')
-  async verifyCode(@Param('code') code: string) {
+  @Get('verifyCode/:code/:id')
+  async verifyCode(
+    @Param('code') code: string,
+    @Param('id') id: string,
+  ) {
     try {
-      const user = await this.authService.verifyCode(code);
+      const userCode = await this.authService.verifyCode(code);
 
-      if (!user)
-        return { message: 'This code does not exist. Please try again!' };
-
-      if (user && user.expirationCode < Date.now()) {
-        await this.authService.sendNewCode(user);
+      if (!userCode)
         return {
+          success: false,
+          message: 'This code does not exist. Please try again!'
+        };
+
+      if (id !== userCode.id.toString())
+        return {
+          error: 'wrong user',
+        };
+
+      if (userCode.expirationCode < Date.now()) {
+        await this.authService.sendNewCode(userCode);
+        return {
+          success: false,
           message:
             'This code has expired. A new one has been sent to your email address',
         };
       }
 
-      await this.authService.updateUser(user.id, {
+      await this.authService.updateUser(userCode.id, {
         verified: true,
       });
 
       const { access_token, refresh_token } = await this.authService.login(
-        user,
+        userCode,
         0,
-        user.isTwoFactorAuthenticationEnabled,
+        userCode.isTwoFactorAuthenticationEnabled,
       );
       return {
-        message: 'Loading...',
+        success: true,
         access_token,
         refresh_token,
       };
@@ -127,6 +142,25 @@ export class AuthController {
       return {
         message: 'Something went wrong, please try again !',
       };
+    }
+  }
+
+  @Public()
+  @Post('sendNewCode/:id')
+  async sendNewCode(@Param('id') id: number) {
+    try {
+      const user = await this.authService.getUserById(id);
+
+      if (!user)
+        throw new Error('no user found');
+
+      await this.authService.sendNewCode(user);
+
+      return {
+        success: true,
+      };
+    } catch (error) {
+      throw new BadRequestException();
     }
   }
 
@@ -210,6 +244,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   loginEmail(@Request() req) {
+    if (!req.user.verified)
+      return {
+        msg: 'not verified',
+        id: req.user.id,
+      }
+    
     return this.authService.login(
       req.user,
       0,

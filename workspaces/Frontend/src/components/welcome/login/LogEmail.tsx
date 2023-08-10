@@ -26,7 +26,7 @@ type Props = {
   setNotif: Function;
   textButton: string;
   setTextButton: Function;
-  register: boolean;
+  register: string;
   setRegister: Function;
   login: string;
   setLogin: Function;
@@ -44,6 +44,7 @@ export default function LogEmail({
   setLogin,
   setSuccessNewPassword,
 }: Props) {
+
   const initialTextForget = "Forgot your password?";
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<boolean>(false);
@@ -95,7 +96,7 @@ export default function LogEmail({
     setNotif("");
 
     try {
-      //await handleCaptcha();
+      await handleCaptcha();
 
       // if user has forgotten his password
       if (sendPassword !== initialTextForget) {
@@ -155,9 +156,9 @@ export default function LogEmail({
 
       let res: {
         passwordSecured: string;
-        register: boolean;
+        register: string;
         login: string;
-      } = { passwordSecured: "", register: false, login: "" };
+      } = { passwordSecured: "", register: '', login: "" };
 
       if (!exists.current)
         res = await registerFormPassword(passwordUser, email);
@@ -165,7 +166,9 @@ export default function LogEmail({
 
       setPasswordSecured(res.passwordSecured);
 
-      if (!register && !login) setTextButton("Continue");
+      if (register.length === 0 && login.length === 0)
+        setTextButton("Continue");
+
       setRegister(res.register);
       setLogin(res.login);
     } catch (error) {

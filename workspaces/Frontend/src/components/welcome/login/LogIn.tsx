@@ -9,7 +9,7 @@ export default function LogInComponent() {
   const notifParam = useParams().notif;
   const router = useRouter();
   const [textButton, setTextButton] = useState<string>("Continue");
-  const [register, setRegister] = useState<boolean>(false);
+  const [register, setRegister] = useState<string>('');
   const [login, setLogin] = useState<string>("");
   const [notif, setNotif] = useState<string>("");
   const [successNewPassword, setSuccessNewPassword] = useState<boolean>(false);
@@ -36,6 +36,7 @@ export default function LogInComponent() {
 
         if (data.message === "Loading...") {
           router.push("/home");
+          return ;
         }
         
         else
@@ -61,9 +62,9 @@ export default function LogInComponent() {
       }
     }
 
-    if (register) router.push("/welcome/confirm");
+    if (register.length !== 0)
+      router.push(`/welcome/confirm/${register}`);
 
-    console.log(notifParam);
     if (notifParam && notifParam[0] === "wrong")
       setNotif("Something went wrong, please try again!");
   }, [register, login, router, notifParam]);
