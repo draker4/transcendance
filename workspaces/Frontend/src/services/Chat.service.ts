@@ -4,7 +4,6 @@ export default class ChatService {
 	public static instance: ChatService | null = null;
 
 	public	socket: Socket | undefined = undefined;
-	public	token: string | undefined;
 	public	disconnectClient: boolean = false;
 	public	loading: boolean = false;
 	public	nbExceptions: number = 0;
@@ -12,12 +11,12 @@ export default class ChatService {
 	// Singleton
     constructor(token?: string) {
         if (ChatService.instance) {
-			console.log("instance returned");
+			// console.log("instance returned");
 			return ChatService.instance;
 		}
 		
 		if (token) {
-			console.log("socket initialized");
+			// console.log("socket initialized");
 			this.initializeSocket(token);
 			ChatService.instance = this;
 		}
@@ -36,8 +35,6 @@ export default class ChatService {
 
 		if (this.socket)
 			return ;
-
-		this.token = token;
 
 		this.loading = true;
 
@@ -76,6 +73,9 @@ export default class ChatService {
 	
 		this.socket.on("exception", (exception: any) => {
 		  	console.log("WsException:", exception);
+			if (exception.message === "invalid token")
+				this.disconnectClient = true;
+
 			if (++this.nbExceptions >= 2)
 				this.disconnectClient = true;
 
