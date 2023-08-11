@@ -25,6 +25,19 @@ const badgeStyle = {
 	}
 }
 
+const badgeStyleProfile = {
+	"& .MuiBadge-badge": {
+	  color: 'var(--tertiary1)',
+	  backgroundColor: 'var(--notif)',
+    border: '2px solid var(--notif)',
+    width: "6px",
+    height: "8px",
+    top: "4px",
+    right: "-2px",
+    borderRadius: "100%",
+	}
+}
+
 export default function AvatarMenu({ avatar, profile, socket }: Props) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -134,7 +147,16 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
           <div className={styles.dropdown} ref={menuRef}>
             <ul className={styles.list}>
               <Link href={`/home/profile/${profile.id}`}>
-                <li className={styles.profile}>{login}</li>
+                <li className={styles.profile}>
+                  <Badge
+                    overlap="rectangular"
+                    sx={badgeStyleProfile}
+                    variant="dot"
+                    invisible={invisible}
+                  >
+                    {login}
+                  </Badge>
+                </li>
               </Link>
               <li onClick={signoff} className={styles.logOut}>
                 Log Out
