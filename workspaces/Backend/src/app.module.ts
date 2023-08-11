@@ -66,7 +66,7 @@ import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
         Notif,
         NotifMessages,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     AvatarModule,

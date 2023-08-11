@@ -71,17 +71,43 @@ export default function Conversations({
     openDisplay(channel);
   };
 
-  const handleLeave = (channel: Channel) => {
-    console.log("Wanna leave the channel : " + channel.name);
+  const handleLeave = async (channel: Channel) => {
+    console.log("Wanna leave the channel : " + channel.name); // checking
+    if (channel.joined === false && channel.invited === false) {
+      console.log("[+] Feature keepTrack channel [?]"); // [!][+]
+      return ;
+    }
+    try { 
+    const channelService = new Channel_Service(undefined);
+    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: false});
+
+    if (rep.success) {
+      const newRelation:EditChannelRelation = {
+        channelId: channel.id,
+        userId: myself.id,
+        senderId: myself.id,
+        newRelation: {
+          joined: false,
+          invited:false,
+        }
+      }
+      socket?.emit("editRelation", newRelation);
+      // [+] comment fermer le display seulement si la channel quittée est affichée ?
+    } else
+    throw new Error(rep.message);
+
+    } catch(e:any) {
+      console.log("Leave channel error : " + e.message);
+    }
   };
 
   const handleClickAcceptInvite = async (channel: Channel) => {
-    console.log("invitation to channel " +  channel.name + "accepted");
+    console.log("invitation to channel " +  channel.name + "accepted"); // checking
 
+    try {
     const channelService = new Channel_Service(undefined);
     const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: true});
 
-    //openDisplay(channel);
     if (rep.success) {
       const newRelation:EditChannelRelation = {
         channelId: channel.id,
@@ -96,27 +122,35 @@ export default function Conversations({
       openDisplay(channel);
     }
     else
-      console.log("JoinRecent channel error : " + rep.message);
+      throw new Error(rep.message);
+    } catch(e:any) {
+      console.log("JoinRecent channel error : " + e.message);
+    }
   };
 
   const handleClickJoinRecent = async (channel: Channel) => {
-    const channelService = new Channel_Service(undefined);
-    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {joined: true});
-
-    if (rep.success) {
-      const newRelation:EditChannelRelation = {
-        channelId: channel.id,
-        userId: myself.id,
-        senderId: myself.id,
-        newRelation: {
-          joined: true,
+    console.log("Wanna join a recent channel : " + channel.name); // checking
+    try {
+      const channelService = new Channel_Service(undefined);
+      const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {joined: true});
+      
+      if (rep.success) {
+        const newRelation:EditChannelRelation = {
+          channelId: channel.id,
+          userId: myself.id,
+          senderId: myself.id,
+          newRelation: {
+            joined: true,
+          }
         }
+        socket?.emit("editRelation", newRelation);
+        openDisplay(channel);
       }
-      socket?.emit("editRelation", newRelation);
-      openDisplay(channel);
+      else
+        throw new Error(rep.message);
+    } catch(e:any) {
+      console.log("JoinRecent channel error : " + e.message);
     }
-    else
-      console.log("JoinRecent channel error : " + rep.message);
   };
 
   const joinedConversations = channels
@@ -134,7 +168,7 @@ export default function Conversations({
   ));
 
   const pmConversations = channels
-  .filter(channel => channel.type === "privateMsg")
+  .filter(channel => channel.type === "privateMsg" && channel.joined === true)
   .map((channel) => (
     channel ? (
       <ConversationItem

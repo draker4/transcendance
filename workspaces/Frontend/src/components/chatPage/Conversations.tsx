@@ -1,3 +1,7 @@
+// [+][!] normalement on peut supprimer ce fichier
+
+/*
+
 import { useEffect, useState } from "react";
 import AvatarUser from "../avatarUser/AvatarUser";
 import styles from "@/styles/chatPage/Conversations.module.css";
@@ -74,8 +78,6 @@ export default function Conversations({
             }
           </div>
 
-		{/* [!][+] PROVISOIRE checking */}
-		 {/* <div>{`(id:${channel.id})`}</div> */}
 
         </div>
       </React.Fragment>
@@ -134,23 +136,11 @@ export default function Conversations({
 
       <div className={styles.title}>
         <h3>Discussions</h3>
-        {/* <div className={styles.icons}> */}
-          {/* <FontAwesomeIcon
-            icon={faFaceLaughBeam}
-            className={styles.menu}
-            onClick={handleClickPongie}
-          />
-          <FontAwesomeIcon
-            icon={faPeopleGroup}
-            className={styles.menu}
-            onClick={handleClickChannel}
-          /> */}
           <FontAwesomeIcon
             icon={faPenToSquare}
             className={styles.menu}
             onClick={handleClickNew}
           />
-        {/* </div> */}
       </div>
       <div className={styles.scroll}>
         {channelsList}
@@ -158,3 +148,5 @@ export default function Conversations({
     </div>
   );
 }
+
+*/

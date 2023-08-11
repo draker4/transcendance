@@ -140,6 +140,7 @@ export class ChannelService {
 		}
 	}
 
+	// the user is himself, already checked
 	public async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
 		try {
 			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, edit.channelId);
@@ -160,7 +161,15 @@ export class ChannelService {
 				edit.newRelation.joined === true
 			) { return true; }
 
-			// [3] else its not a special case
+			// [3] A user can leave a channel AND/OR switch invited to false
+			if ( !('isChanOp' in edit.newRelation) &&
+				!('isBanned' in edit.newRelation) &&
+				(relation.invited === true || relation.joined === true) && 
+				edit.newRelation.invited === false &&
+				edit.newRelation.joined === false
+			) { return true; }
+
+			// [X] else its not a special case
 			return false;
 		} catch (error) {
 			return false;

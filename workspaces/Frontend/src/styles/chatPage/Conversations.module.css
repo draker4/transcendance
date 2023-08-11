@@ -108,3 +108,15 @@
 	padding-left: 10px;
 	color:var(--secondary1);
 }
+
+/* conversation item */
+
+.list .xMark {
+	font-size: 1.5rem;
+	color: var(--secondary1);
+}
+
+.list .xMark:hover {
+	color: var(--tertiary1);
+	scale:1.2;
+}

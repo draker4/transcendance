@@ -1,9 +1,9 @@
 import styles from "@/styles/chatPage/Conversations.module.css";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { Badge, Button } from "@mui/material";
+import { Badge } from "@mui/material";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHand } from "@fortawesome/free-solid-svg-icons";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
     channel:Channel,
@@ -61,12 +61,7 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
 
 
   const rowClick = () => {
-    if (!buttonIsFocused) {
-      console.log("ConversationItem : row click triggered")
-      handleClick(channel);
-    }
-    else
-      console.log("ConversationItem : row click prevented")
+    if (!buttonIsFocused) handleClick(channel);
   }
 
   const leaveButtonClick = () => {
@@ -121,14 +116,7 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
         
         <div className={styles.name}>
           <h4>{channel.name}</h4>
-          {isFocused && (
-            <FontAwesomeIcon icon={faHand} onClick={leaveButtonClick}
-              onFocus={buttonFocusOn}
-              onBlur={buttonFocusOff}
-              onMouseEnter={buttonHover}
-              onMouseLeave={buttonMouseLeave} style={{backgroundColor:"chartreuse"}}/>
-          )}
-          {!isFocused && channel.lastMessage && (
+          {channel.lastMessage && (
             <p>
               {channel.lastMessage.user?.login ? channel.lastMessage.user.login : '****'}:{' '}
               {channel.lastMessage.content}
@@ -136,6 +124,17 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
           )}
         </div>
   
+          {isFocused && (
+            <FontAwesomeIcon 
+              className={styles.xMark}
+              icon={faXmark} onClick={leaveButtonClick}
+              onFocus={buttonFocusOn}
+              onBlur={buttonFocusOff}
+              onMouseEnter={buttonHover}
+              onMouseLeave={buttonMouseLeave}
+              />
+          )}
+
         {!isFocused && (
         <div className={styles.time}>
           {channel.lastMessage && <p>{date}</p>}
