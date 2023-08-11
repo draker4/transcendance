@@ -88,7 +88,6 @@ export default function ProfileSecondPart({ profile, isOwner, setLogin, socket }
 		});
 	}
   const crossFunction = (pongie: Pongie) => {
-    console.log(pongie);
     if (pongie.hasBlacklisted)
       cancelBlacklist(pongie);
     else if (pongie.isFriend)

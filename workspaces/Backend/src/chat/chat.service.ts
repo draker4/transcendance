@@ -185,11 +185,10 @@ export class ChatService {
     }
   }
 
-  async getChannels(id: number) {
+  async getChannels(userId: number) {
     try {
       const relations = await this.userChannelRelation.find({
-        // where: { userId: id, joined: true, isBanned: false },
-        where: { userId: id },
+        where: { userId: userId, isBanned: false },
         relations: [
           'channel',
           'channel.avatar',
@@ -207,7 +206,7 @@ export class ChatService {
 
           if (channel.type === 'privateMsg') {
             const ids = channel.name.split(' ');
-            if (id.toString() === ids[0]) pongieId = parseInt(ids[1]);
+            if (userId.toString() === ids[0]) pongieId = parseInt(ids[1]);
             else pongieId = parseInt(ids[0]);
 
             const pongie = await this.usersService.getUserAvatar(pongieId);
@@ -236,6 +235,43 @@ export class ChatService {
           };
         }),
       );
+
+      return channels;
+    } catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
+  async getChannelsProfile(userId: number) {
+    try {
+      const relations = await this.userChannelRelation.find({
+        where: { userId: userId, isBanned: false },
+        relations: [
+          'channel',
+          'channel.avatar',
+        ],
+      });
+
+      if (!relations) return [];
+
+      let channels = await Promise.all(
+        relations.map(async (relation) => {
+          const channel = relation.channel;
+
+          if (channel.type === 'privateMsg')
+            return ;
+
+          return {
+            ...channel,
+            joined: relation.joined,
+            invited: relation.invited,
+            isBanned: relation.isBanned,
+            isChanop: relation.isChanOp,
+          };
+        }),
+      );
+
+      channels = channels.filter(channel => channel);
 
       return channels;
     } catch (error) {
@@ -1313,7 +1349,7 @@ export class ChatService {
   async leave(
     userId: number,
     channelId: number,
-    socket: Socket,
+    userSockets: Socket[],
     server: Server,
   ) {
     try {
@@ -1322,15 +1358,45 @@ export class ChatService {
         relations: ['user', 'channel'],
       });
 
-      if (!relation) throw new Error('no relation found');
+      if (!relation)
+        throw new Error('no relation found');
 
       relation.joined = false;
       await this.userChannelRelation.save(relation);
 
-      socket.leave('channel:' + channelId);
-      socket.emit('notif');
+      const date = new Date();
+
+      const msg: sendMsgDto = {
+        content: `${relation.user.login} just left`,
+        date: date.toISOString(),
+        sender: null,
+        channelName: relation.channel.name,
+        channelId: channelId,
+        isServerNotif: true,
+      };
+
+      // leave channel for all sockets of the user
+      // update channels in the user profile
+      if (userSockets.length >= 1) {
+        for (const socket of userSockets) {
+          socket.leave('channel:' + channelId);
+          socket.emit('notif', {
+            why: "updateChannels",
+          });
+        }
+      }
+
+      // Upload Data for clients in channel profile component
+      server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
+        newRelation: {
+          joined : true,
+        },
+        userId: userId ,
+        senderId: userId});
 
       // send message server [!]
+      server.to('channel:' + channelId).emit('sendMsg', msg);
+
     } catch (error) {
       throw new WsException(error.message);
     }

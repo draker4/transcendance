@@ -9,6 +9,7 @@ import { User } from "src/utils/typeorm/User.entity";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { Message } from "@/utils/typeorm/Message.entity";
 import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
+import { PongColors } from "@/utils/enums/PongColors.enum";
 
 type ChannelAndUsers = {
 	channel: Channel;
@@ -52,14 +53,24 @@ export class ChannelService {
 		if (channel)
 			return null;
 		
+		const	colors = Object.values(PongColors);
+		const	random1 = Math.floor(Math.random() * colors.length);
+		const	random2 = Math.floor(Math.random() * colors.length);
+		const	borderColor = colors[random1];
+		const	backgroundColor = colors[random2];
+
+		const	text = channelName.length > 3
+					? channelName.slice(0, 3)
+					: channelName;
+
 		const	avatar = await this.avatarRepository.save({
 			name: channelName,
 			image: '',
-			text: '',
+			text: text,
 			variant: 'rounded',
-			borderColor: '#22d3ee',
-			backgroundColor: '#22d3ee',
-			empty: true,
+			borderColor: borderColor,
+			backgroundColor: backgroundColor,
+			empty: false,
 			isChannel: true,
 			decrypt: false,
 		  });

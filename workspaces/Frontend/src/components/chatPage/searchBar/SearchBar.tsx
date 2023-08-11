@@ -56,7 +56,7 @@ export default function SearchBar({ socket, openDisplay }: {
 				channels.filter(channel => channel?.name.toLowerCase().includes(textlowerCase))
 			);
 	
-			if (channels.find(channel => channel?.name.toLowerCase() === text.toLowerCase()))
+			if (channels.find(channel => channel?.name === text))
 				hasChannel = true;
 	
 			list = list.concat(

@@ -4,9 +4,9 @@ import { Dispatch, SetStateAction, useState } from "react";
 import NavbarProfilInfo from "./NavbarProfilInfo";
 import SectionPongStats from "./sections/SectionPongStats";
 import SectionCustom from "./sections/SectionCustom";
-import styles from "@/styles/profile/InfoCard.module.css";
 import { Socket } from "socket.io-client";
 import SectionPongies from "./sections/SectionPongies";
+import SectionChannels from "./sections/SectionChannels";
 
 type Props = {
   profile: Profile;
@@ -33,9 +33,7 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 1:
             return <SectionPongies socket={socket} isOwner={isOwner} profile={profile} />
           case 2:
-            return (
-              <div className={styles.sections}>contenu section3 : Channels</div>
-            );
+            return <SectionChannels socket={socket} isOwner={isOwner} profile={profile} />
           case 3:
             return <SectionCustom profile={profile} setLogin={setLogin} socket={socket}/>;
           default:
