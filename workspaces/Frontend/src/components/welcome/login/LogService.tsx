@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "@/styles/welcome/login/LogService.module.css";
+import { toast } from "react-toastify";
 
 type Props = {
   setTextButton: Function;
@@ -8,14 +9,36 @@ type Props = {
 export default function LogInComponent({ setTextButton }: Props) {
 
   // -------------------------------------  FONCTIONS  ------------------------------------ //
-  const open42 = () => {
+  const open42 = async () => {
     setTextButton("Loading...");
-    window.open(process.env.URL_42, "_self");
+    try {
+      const res = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/healthCheck`);
+
+      if (!res.ok || res.status !== 200)
+        throw new Error('fetch failed');
+
+      window.open(process.env.URL_42, "_self");
+    }
+    catch (error) {
+      toast.error("Something went wrong, please try again!");
+      setTextButton("Continue");
+    }
   };
 
   const openGoogle = async () => {
     setTextButton("Loading...");
-    window.open(`http://${process.env.HOST_IP}:4000/api/auth/google`, "_self");
+    try {
+      const res = await fetch(`http://${process.env.HOST_IP}:4000/api/auth/healthCheck`);
+
+      if (!res.ok || res.status !== 200)
+        throw new Error('fetch failed');
+
+      window.open(`http://${process.env.HOST_IP}:4000/api/auth/google`, "_self");
+    }
+    catch (error) {
+      toast.error("Something went wrong, please try again!");
+      setTextButton("Continue");
+    }
   };
 
   // -------------------------------------  RENDU  ------------------------------------ //

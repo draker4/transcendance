@@ -65,6 +65,9 @@ export class ChatGateway implements OnModuleInit {
         socket.on('disconnect', () => {
           this.connectedUsers.delete(socket);
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
+          for (const connect of this.connectedUsers) {
+            console.log("Socket id: ", connect[0].id + " , user id : " + connect[1]);
+          }
         });
 
         this.log('connected users = '); // [?]

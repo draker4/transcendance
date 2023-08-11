@@ -13,6 +13,7 @@ import {
   Query,
   UseFilters,
   Headers,
+  HttpCode,
 } from '@nestjs/common';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
@@ -287,5 +288,11 @@ export class AuthController {
     @Body('email') email: string,
   ) {
     return await this.authService.forgotPassword(email);
+  }
+
+  @Public()
+  @Get('healthCheck')
+  @HttpCode(200)
+  healthCheck() {
   }
 }
