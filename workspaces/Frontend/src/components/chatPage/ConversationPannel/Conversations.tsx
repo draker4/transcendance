@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFaceLaughBeam,
-  faPenToSquare,
-} from "@fortawesome/free-regular-svg-icons";
-import { faPeopleGroup } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { Socket } from "socket.io-client";
 import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
@@ -186,14 +182,6 @@ export default function Conversations({
     );
   };
 
-  // const handleClickPongie = () => {
-  //   openDisplay({ button: "pongies" });
-  // };
-
-  // const handleClickChannel = () => {
-  //   openDisplay({ button: "channels" });
-  // };
-
   const handleClickNew = () => {
     openDisplay({ button: "new" });
   };
@@ -208,16 +196,6 @@ export default function Conversations({
       <div className={styles.title}>
         <h3>Discussions</h3>
         <div className={styles.icons}>
-          {/* <FontAwesomeIcon
-            icon={faFaceLaughBeam}
-            className={styles.menu}
-            onClick={handleClickPongie}
-          />
-          <FontAwesomeIcon
-            icon={faPeopleGroup}
-            className={styles.menu}
-            onClick={handleClickChannel}
-          /> */}
           <FontAwesomeIcon
             icon={faPenToSquare}
             className={styles.menu}

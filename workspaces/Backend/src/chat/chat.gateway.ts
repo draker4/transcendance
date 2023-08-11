@@ -8,7 +8,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
-  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -151,6 +150,15 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('getChannels')
   async getChannels(@Request() req) {
     return await this.chatService.getChannels(req.user.id);
+  }
+
+  @SubscribeMessage('getChannelsProfile')
+  async getChannelsProfile(
+    @MessageBody() userId: number,
+  ) {
+    if (!userId)
+      throw new WsException('no given id');
+    return await this.chatService.getChannelsProfile(userId);
   }
 
   @SubscribeMessage('getAllChannels')
@@ -352,6 +360,7 @@ export class ChatGateway implements OnModuleInit {
       if (val === req.user.id.toString())
       userSockets.push(key);
     }
+
     if (payload.channelType === 'privateMsg')
       return await this.chatService.joinPongie(
         req.user.id,
@@ -374,12 +383,21 @@ export class ChatGateway implements OnModuleInit {
   async leave(
     @MessageBody() channelId: number,
     @Request() req,
-    @ConnectedSocket() socket,
   ) {
+    if (!channelId)
+      throw new WsException('no given id');
+
+    const userSockets: Socket[] = [];
+
+    for (const  [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString())
+      userSockets.push(key);
+    }
+
     return await this.chatService.leave(
       req.user.id,
       channelId,
-      socket,
+      userSockets,
       this.server,
     );
   }

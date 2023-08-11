@@ -59,7 +59,7 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
       const chatService = new ChatService();
       chatService.disconnectClient = true;
       await disconnect(profile.id.toString());
-      router.refresh();
+      router.push('/welcome');
     } catch (error) {
       console.log(error);
     }

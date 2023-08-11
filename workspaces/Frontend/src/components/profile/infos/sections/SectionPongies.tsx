@@ -33,15 +33,17 @@ export default function SectionPongies({socket, isOwner, profile}: {
 			const	hasBlacklisted: Pongie[] = [];
 			const	pongies: Pongie[] = [];
 
-			for (const	pongie of payload) {
-				if (pongie.hasBlacklisted)
-					hasBlacklisted.push(pongie);
-				else if (pongie.isFriend)
-					pongies.push(pongie);
-				else if (pongie.hasInvited)
-					hasInvited.push(pongie);
-				else if (pongie.isInvited)
-					isInvited.push(pongie);
+			if (payload && payload.length >= 1) {
+				for (const	pongie of payload) {
+					if (pongie.hasBlacklisted)
+						hasBlacklisted.push(pongie);
+					else if (pongie.isFriend)
+						pongies.push(pongie);
+					else if (pongie.hasInvited)
+						hasInvited.push(pongie);
+					else if (pongie.isInvited)
+						isInvited.push(pongie);
+				}
 			}
 			
 			setPongies(pongies);
@@ -76,7 +78,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		socket?.emit('getPongies', profile.id, getPongies);
 
 		socket?.emit('getNotif', (payload: Notif) => {
-			if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
+			if (payload && payload.redPongies.length > 0) {
 			  setNotifIds(payload.redPongies);
 			}
 		});
