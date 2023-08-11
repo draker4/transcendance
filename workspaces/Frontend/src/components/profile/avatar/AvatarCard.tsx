@@ -57,8 +57,9 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
     });
   };
 
+  // backgroundColor: topColor.toString(),
   const colorAddedStyle: CSSProperties = {
-    backgroundColor: topColor.toString(),
+    background: `linear-gradient(to bottom, ${topColor.toString()} 60%, var(--primary1) 40%)`,
   };
 
   const previewChangeTopColor = (color: string) => {
@@ -78,9 +79,8 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
     <div className={styles.avatarFrame}>
       <div className={styles.avatarCard}>
         <div className={styles.rectangle} style={colorAddedStyle}>
-          <div className={styles.top} style={colorAddedStyle}></div>
-          <div className={styles.bot}></div>
-
+          {/* <div className={styles.top} style={colorAddedStyle}></div>
+          <div className={styles.bot}></div> */ }
           <Avatar
             avatar={avatar}
             isOwner={isOwner}
@@ -90,8 +90,8 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
             previewBackground={botColor.toString()}
           />
         </div>
-        <ProfileLogin name={login} isOwner={isOwner} />
       </div>
+        <ProfileLogin name={login} isOwner={isOwner} />
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

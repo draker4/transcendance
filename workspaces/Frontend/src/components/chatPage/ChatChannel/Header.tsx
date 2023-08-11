@@ -26,7 +26,7 @@ Header({ icon, channel, myself, channelCodeName }: Props) {
 			id2: number;
 		} = channelService.getIdsFromPrivateMsgChannelName(channelCodeName);
 
-		const otherId:number = myself.id === channel.id ? tuple.id2 : tuple.id1;
+		const otherId:number = myself.id === tuple.id1 ? tuple.id2 : tuple.id1;
 		url = "/home/profile/" + otherId;
 	} else {
 		url = "/home/channel/" + channel.id;

@@ -31,7 +31,7 @@ export default function Avatar({
         {!displaySettings && (
           <AvatarUser
             avatar={avatar}
-            borderSize="clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem)"
+            borderSize="6px"
             backgroundColor={avatar.backgroundColor}
             borderColor={avatar.borderColor}
           />
@@ -39,7 +39,7 @@ export default function Avatar({
         {displaySettings && (
           <AvatarUser
             avatar={avatar}
-            borderSize="clamp(0.2rem, 0.1rem + 0.7vw, 0.8rem)"
+            borderSize="6px"
             backgroundColor={previewBackground}
             borderColor={previewBorder}
           />
