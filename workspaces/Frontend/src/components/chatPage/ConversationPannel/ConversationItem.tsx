@@ -10,6 +10,7 @@ type Props = {
     handleClick: (channel:Channel) => void;
     handleLeave: (channel:Channel) => void;
     notifMsg: NotifMsg[];
+    isRecentSection:boolean
 }
 
 const badgeStyle = {
@@ -21,7 +22,7 @@ const badgeStyle = {
 	}
 }
 
-export default function ConversationItem({channel, handleClick, handleLeave, notifMsg}:Props) {
+export default function ConversationItem({channel, handleClick, handleLeave, notifMsg, isRecentSection }:Props) {
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -124,7 +125,7 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
           )}
         </div>
   
-          {isFocused && (
+          {isFocused && !isRecentSection &&(
             <FontAwesomeIcon 
               className={styles.xMark}
               icon={faXmark} onClick={leaveButtonClick}

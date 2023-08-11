@@ -74,9 +74,9 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)
         setRelNotif({notif:RelationNotif.ban, edit:edit});
-      else if ((edit.newRelation.joined === false || edit.newRelation.invited === false) && edit.senderId !== myself.id)
+      else if ((edit.newRelation.joined === false || (edit.newRelation.invited === false && edit.newRelation.joined !== true)) && edit.senderId !== myself.id)
         setRelNotif({notif:RelationNotif.kick, edit:edit});
-      else if ((edit.newRelation.joined === false || edit.newRelation.invited === false) && edit.senderId === myself.id)
+      else if ((edit.newRelation.joined === false || (edit.newRelation.invited === false && edit.newRelation.joined !== true)) && edit.senderId === myself.id)
         setRelNotif({notif:RelationNotif.leave, edit:edit});
       else if (edit.newRelation.joined === true || edit.newRelation.isBanned === false)
         setRelNotif({notif:RelationNotif.nothing, edit:edit});

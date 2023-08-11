@@ -77,6 +77,7 @@ export default function Conversations({
       console.log("[+] Feature keepTrack channel [?]"); // [!][+]
       return ;
     }
+
     try { 
     const channelService = new Channel_Service(undefined);
     const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: false});
@@ -163,6 +164,7 @@ export default function Conversations({
         handleClick={handleClickDefault}
         handleLeave={handleLeave}
         notifMsg={notifMsg}
+        isRecentSection={false}
       />
     ) : null
   ));
@@ -177,6 +179,7 @@ export default function Conversations({
         handleClick={handleClickDefault}
         handleLeave={handleLeave}
         notifMsg={notifMsg}
+        isRecentSection={false}
       />
     ) : null
   ));
@@ -191,6 +194,7 @@ export default function Conversations({
         handleClick={handleClickAcceptInvite}
         handleLeave={handleLeave}
         notifMsg={notifMsg}
+        isRecentSection={false}
       />
     ) : null
   ));
@@ -205,6 +209,7 @@ export default function Conversations({
         handleClick={handleClickJoinRecent}
         handleLeave={handleLeave}
         notifMsg={notifMsg}
+        isRecentSection={true}
       />
     ) : null
   ));
