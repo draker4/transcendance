@@ -27,7 +27,10 @@ export default function Prompt({ channel, myself, addMsg, relNotif}: Props) {
   }, [text]);
 
   const junctionWord = channel.type === "privateMsg" ? "at " : "into ";
-  const placeholder = "Send a message " + junctionWord + channel.name;
+
+  const truncatedName = channel.name.length > 15 ? `${channel.name.slice(0, 5)}...` : channel.name;
+
+  const placeholder = "Send a message " + junctionWord + truncatedName;
 
   const buttonAddedClass = isEmpty
     ? styles.disabledButton

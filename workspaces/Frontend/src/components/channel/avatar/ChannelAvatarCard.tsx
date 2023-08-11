@@ -59,7 +59,7 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
   };
 
   const colorAddedStyle: CSSProperties = {
-    backgroundColor: topColor.toString(),
+    background: `linear-gradient(to bottom, ${topColor.toString()} 60%, var(--primary1) 40%)`
   };
 
   const previewChangeTopColor = (color: string) => {
@@ -80,8 +80,8 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
     <div className={styles.avatarFrame}>
       <div className={styles.avatarCard}>
         <div className={styles.rectangle} style={colorAddedStyle}>
-          <div className={styles.top} style={colorAddedStyle}></div>
-          <div className={styles.bot}></div>
+       {/*   <div className={styles.top} style={colorAddedStyle}></div>
+          <div className={styles.bot}></div> */}
 		  <Avatar
             avatar={channelAndUsersRelation.channel.avatar}
             isOwner={myRelation.isChanOp}
@@ -92,8 +92,8 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
           />
         </div>
 
-        <ProfileLogin name={channelAndUsersRelation.channel.name} isOwner={myRelation.isChanOp} />
       </div>
+        <ProfileLogin name={channelAndUsersRelation.channel.name} isOwner={myRelation.isChanOp} />
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}
