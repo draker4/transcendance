@@ -1563,8 +1563,11 @@ export class ChatService {
       } else if (infos.newRelation.joined === true && isSelf) {
         action = 'just joined the channel';
         needEnd = false;
-      } else if (infos.newRelation.joined === false) {
+      } else if (infos.newRelation.joined === false && !isSelf) {
         action = 'gives a channel kick';
+      } else if (infos.newRelation.joined === false && isSelf) {
+        action = 'left channel';
+        needEnd = false;
       } else if (infos.newRelation.invited === true) {
         action = 'gives a channel invitation';
       } else if (infos.newRelation.invited === false) {

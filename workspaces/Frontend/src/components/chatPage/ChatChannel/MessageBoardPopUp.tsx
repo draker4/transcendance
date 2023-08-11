@@ -7,6 +7,7 @@ import {
     faHand,
     faHandPeace,
     IconDefinition,
+    faPersonThroughWindow,
   } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
@@ -56,6 +57,11 @@ export default function MessageBoardPopUp({relNotif}:Props) {
             iconDef = faHand;
             break;
 
+        case RelationNotif.leave:
+            notifMsg = "You left the channel";
+            iconDef = faPersonThroughWindow;
+            break;
+
         case RelationNotif.invite:
             notifMsg = "invited you into channel";
             iconDef = faHandPeace;
@@ -73,7 +79,7 @@ export default function MessageBoardPopUp({relNotif}:Props) {
 
         <div className={styles.popUp}>
             <p className={styles.icon} style={{color: iconColor}}><FontAwesomeIcon icon={iconDef}/></p>
-            <h1 style={{color: "var(--accent1)"}}>{senderLogin}</h1>
+            {relNotif.edit?.senderId !== relNotif.edit?.userId && <h1 style={{color: "var(--accent1)"}}>{senderLogin}</h1>}
             <h1>{notifMsg}</h1>
             <Link href={linkHref} className={styles.link}>{linkMessage}</Link>
         </div>
