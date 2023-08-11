@@ -12,7 +12,7 @@ export default class ChatService {
 
 	// Singleton
     constructor(token?: string) {
-		console.log(ChatService.nbTimes);
+		// console.log(ChatService.nbTimes);
 
 		ChatService.nbTimes++;
 		
@@ -35,7 +35,7 @@ export default class ChatService {
 	// Create socket + listen errors & exceptions
 	public initializeSocket(token: string) {
 
-		console.log("initialization with token = ", token);
+		// console.log("initialization with token = ", token);
 
 		while (this.loading) {}
 
@@ -49,6 +49,7 @@ export default class ChatService {
 			Authorization: "Bearer " + token,
 		  },
 		  path: "/chat/socket.io",
+		  reconnection: false,
 		});
 
 		this.socket.on('connect', () => {
@@ -57,7 +58,7 @@ export default class ChatService {
 		});
 		  
 		this.socket.on('disconnect', async () => {
-			console.log('WebSocket disconnected id=', this.socket?.id);
+			// console.log('WebSocket disconnected id=', this.socket?.id);
 			if (process.env.DISCONNECT) {
 				this.disconnect();
 		  		await this.refreshSocket();
@@ -113,7 +114,7 @@ export default class ChatService {
 			return ;
 
 		try {
-			console.log("trying to refresh tokens and socket");
+			// console.log("trying to refresh tokens and socket");
 
 		  const res = await fetch(
 			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
@@ -144,7 +145,7 @@ export default class ChatService {
 		  this.initializeSocket(data.access_token);
 		}
 		catch (error: any) {
-			console.log(error.message, "in chat service");
+			// console.log(error.message, "in chat service");
 			this.disconnectClient = true;
 		}
 	}

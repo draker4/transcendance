@@ -1,10 +1,6 @@
-import ChatService from "@/services/Chat.service";
-
 export default async function disconnect(id?: string) {
 	if (!id)
 		id = "";
-
-	ChatService.instance = null;
 	
 	try {
 		await fetch(
