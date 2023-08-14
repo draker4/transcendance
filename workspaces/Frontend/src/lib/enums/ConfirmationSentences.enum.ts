@@ -1,4 +1,6 @@
 export enum confSentences {
+	giveBoss = "Give channel master ?",
+	rmBoss = "Remove channel master ?",
     giveChanOp = "Give chanOp ?",
     rmChanOp = "Remove chanOp ?",
 	giveInvite= "Send invitation ?",

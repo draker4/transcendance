@@ -91,15 +91,16 @@ export class AuthService {
     let access_token = '';
     let refresh_token = '';
 
+	// [!][!][!][?][+] valeurs changees pour empecher decos
     if (!isTwoFactorAuthenticationEnabled) {
       [access_token, refresh_token] = await Promise.all([
         this.jwtService.signAsync(payload, {
           secret: process.env.JWT_SECRET,
-          expiresIn: '15m',
+          expiresIn: '7d',
         }),
         this.jwtService.signAsync(payload, {
           secret: process.env.JWT_REFRESH_SECRET,
-          expiresIn: '1d',
+          expiresIn: '7d',
         }),
       ]);
 
@@ -111,7 +112,7 @@ export class AuthService {
     } else
       access_token = await this.jwtService.signAsync(payload, {
         secret: process.env.JWT_SECRET,
-        expiresIn: '15m',
+        expiresIn: '7d',
       });
 
     return {

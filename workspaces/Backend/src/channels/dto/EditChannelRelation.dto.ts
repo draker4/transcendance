@@ -9,6 +9,10 @@ import {
 class NewRelationDto {
   @IsOptional()
   @IsBoolean()
+  isBoss?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
   isChanOp?: boolean;
 
   @IsOptional()

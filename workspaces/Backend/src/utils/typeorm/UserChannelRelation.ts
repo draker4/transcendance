@@ -28,6 +28,9 @@ export class UserChannelRelation {
     channel: Channel;
 
 	@Column({ default: false})
+	isBoss: boolean;
+
+	@Column({ default: false})
 	isBanned: boolean;
 
 	@Column({ default: false})

@@ -53,6 +53,10 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
       name: "",
       type: "public",
       joined: false,
+	  isBanned: false,
+	  isBoss: false,
+	  isChanOp:false,
+	  invited:false,
       avatar: {
         image: "",
         variant: "",

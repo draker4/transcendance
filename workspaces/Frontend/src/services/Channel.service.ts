@@ -23,6 +23,7 @@ export default class Channel_Service {
     channelId: number,
     userId: number,
     newRelation: {
+      isBoss?: boolean;
       isChanOp?: boolean;
       isBanned?: boolean;
       joined?: boolean;
@@ -43,6 +44,9 @@ export default class Channel_Service {
         channelId: channelId,
         userId: userId,
         newRelation: {
+          ...(newRelation.isBoss !== undefined && {
+            isBoss: newRelation.isBoss,
+          }),
           ...(newRelation.isChanOp !== undefined && {
             isChanOp: newRelation.isChanOp,
           }),

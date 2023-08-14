@@ -16,21 +16,23 @@ export default function SectionPongers({
   socket,
 }: Props) {
 
+const	[boss, setBoss] = useState<UserRelation[]>([]);
 const	[operators, setOperators] = useState<UserRelation[]>([]);
 const	[pongers, setPongers] = useState<UserRelation[]>([]);
 const	[invited, setInvited] = useState<UserRelation[]>([]);
 const	[banned, setBanned] = useState<UserRelation[]>([]);
 const	[leavers, setLeavers] = useState<UserRelation[]>([]);
-const [notif, setNotif] = useState<string>("");
+const   [notif, setNotif] = useState<string>("");
 
 useEffect(() => {
-  // need new instances
-  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBanned));
-  const filteredPongers = channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined && !relation.isChanOp && !relation.isBanned));
+  const filteredBoss = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBoss));
+  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBoss && !relation.isBanned));
+  const filteredPongers = channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined  && !relation.isBoss && !relation.isChanOp && !relation.isBanned));
   const filteredInvited = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited));
   const filteredBanned = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned));
   const filteredLeavers = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited));
 
+  setBoss(filteredBoss);
   setOperators(filteredOperators);
   setPongers(filteredPongers);
   setInvited(filteredInvited);
@@ -40,6 +42,7 @@ useEffect(() => {
 }, [channelAndUsersRelation]);
 
 	const lists:ChannelLists = {
+		setBoss: setBoss,
 		setOperators: setOperators,
 		setPongers: setPongers,
 		setInvited: setInvited,
@@ -59,7 +62,7 @@ useEffect(() => {
   };
 
   const putSpliter = ():JSX.Element  => {
-	if (myRelation.isChanOp) {
+	if (myRelation.isChanOp || myRelation.isBoss) {
 		if (invited.length === 0 && banned.length === 0 && leavers.length === 0)
 			return <></>;
 	} else {
@@ -71,11 +74,12 @@ useEffect(() => {
 
   return <div className={styles.sections}>
 	<p className={styles.notif}>{notif}</p>
+	{renderRowList(ChannelRoles.boss, boss)}
     {renderRowList(ChannelRoles.operator, operators)}
     {renderRowList(ChannelRoles.ponger, pongers)}
 	{putSpliter()}
     {renderRowList(ChannelRoles.invited, invited)}
-    {myRelation.isChanOp && renderRowList(ChannelRoles.leaver, leavers)}
+    {(myRelation.isChanOp || myRelation.isBoss) && renderRowList(ChannelRoles.leaver, leavers)}
     {renderRowList(ChannelRoles.banned, banned)}
   </div>;
 }

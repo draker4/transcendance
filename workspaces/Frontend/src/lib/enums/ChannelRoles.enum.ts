@@ -1,7 +1,8 @@
 export enum ChannelRoles {
-    operator = "Operator",
-    ponger = "Ponger",
-    invited = "Invited",
-    banned = "Banned",
-	leaver = "Leaver",
+  boss = "Channel Master",
+  operator = "Operator",
+  ponger = "Ponger",
+  invited = "Invited",
+  banned = "Banned",
+  leaver = "Leaver",
 }

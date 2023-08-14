@@ -67,7 +67,7 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
         {relation.user.login}
       </Link>
 
-      { isFocused && myRelation.isChanOp && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}
+      { isFocused && (myRelation.isChanOp || myRelation.isBoss) && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}
     </article>
   );
 }

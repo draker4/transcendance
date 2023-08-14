@@ -19,6 +19,10 @@ export default function ConfirmationPannel({
 
  const makeConf = ():string => {
 	switch(confirmationList) {
+
+		case "boss":
+		return relation.isBoss ? confSentences.rmBoss : confSentences.giveBoss
+
 		case "chanOp":
 		return relation.isChanOp ? confSentences.rmChanOp : confSentences.giveChanOp;
 

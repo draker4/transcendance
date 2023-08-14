@@ -102,7 +102,7 @@ export class AvatarService {
 
     const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.isChannel);
 
-    if (!check.isChanOp)
+    if (!check.isOk)
       throw new Error(rep.error);
 
 		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel))).avatar;

@@ -22,6 +22,7 @@ import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { ClearNotifDto } from './dto/clearNotif.dto';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
+import { boolean } from 'joi';
 
 @Injectable()
 export class ChatService {
@@ -228,10 +229,11 @@ export class ChatService {
 
           return {
             ...channel,
+			isBoss: relation.isBoss,
+            isChanop: relation.isChanOp,
             joined: relation.joined,
             invited: relation.invited,
             isBanned: relation.isBanned,
-            isChanop: relation.isChanOp,
           };
         }),
       );
@@ -1125,6 +1127,9 @@ export class ChatService {
     userSockets: Socket[],
     server: Server,
   ) {
+
+	let isCreation:boolean = false;
+
     try {
       // check if user exists
       const user = await this.usersService.getUserChannels(userId);
@@ -1134,6 +1139,7 @@ export class ChatService {
       let channel = await this.channelService.getChannelById(channelId);
 
       if (!channel) {
+		isCreation = true;
         channel = await this.channelService.addChannel(
           channelName,
           channelType,
@@ -1178,6 +1184,12 @@ export class ChatService {
         await this.userChannelRelation.save(relation);
       }
 
+	  // check if channel creation (adding isBoss user trait)
+	  if (isCreation) {
+		relation.isBoss = true;
+		await this.userChannelRelation.save(relation);
+	  }
+
       const date = new Date();
 
       const msg: sendMsgDto = {
@@ -1212,10 +1224,11 @@ export class ChatService {
 
       const channelRelation = {
         ...channel,
+		isBoss: relation.isBoss,
+        isChanOp: relation.isChanOp,
         joined: true,
         isBanned: relation.isBanned,
         invited: relation.invited,
-        isChanOp: relation.isChanOp,
       }
 
       return {
@@ -1550,7 +1563,11 @@ export class ChatService {
 
       let action: string;
 
-      if (infos.newRelation.isChanOp === true) {
+	  if (infos.newRelation.isBoss === true) {
+        action = 'grants channel Master privilege';
+      } else if (infos.newRelation.isBoss === false) {
+        action = 'removes channel Master privilege';
+	  } else if (infos.newRelation.isChanOp === true) {
         action = 'grants channel Operator privilege';
       } else if (infos.newRelation.isChanOp === false) {
         action = 'removes channel Operator privilege';

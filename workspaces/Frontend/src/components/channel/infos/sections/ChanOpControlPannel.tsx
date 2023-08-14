@@ -7,6 +7,7 @@ import {
   faSkull,
   faHand,
   faHandPeace,
+  faBahai,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -31,6 +32,7 @@ type ButtonData = {
 };
 
 type UpdateOptions = {
+  isBoss?: boolean;
   isChanOp?: boolean;
   joined?: boolean;
   isBanned?: boolean;
@@ -66,12 +68,14 @@ export default function ChanOpControlPannel({
 
   const sendUpdates = async (options: UpdateOptions) => {
     const {
+	  isBoss = undefined,
       isChanOp = undefined,
       joined = undefined,
       isBanned = undefined,
       invited = undefined,
     } = options;
     const rep = await channelService.editRelation(channelId, relation.userId, {
+      isBoss,
       isChanOp,
       joined,
       isBanned,
@@ -83,6 +87,7 @@ export default function ChanOpControlPannel({
 	  socket?.emit("editRelation", {
       channelId: channelId,
       newRelation: {
+		isBoss : options.isBoss,
         isChanOp : options.isChanOp,
         joined : options.joined,
         isBanned : options.isBanned,
@@ -200,8 +205,30 @@ export default function ChanOpControlPannel({
     }
   };
 
+  const handleBoss = () => {
+	if (relation.isBoss) {
+		sendUpdates({
+		  isBoss: false,
+		  onSuccess: () => {
+			relation.isBoss = false;
+			jumpList(lists.setBoss, lists.setPongers, relation);
+		  },
+		});
+	  } else {
+		sendUpdates({
+		  isBoss: true,
+		  onSuccess: () => {
+			relation.isBoss = true;
+			jumpList(lists.setOperators, lists.setBoss, relation);
+		  },
+		});
+	  }
+  }
+
+  // [+] ameliorer : regarder si besoin de tableau de fonction
   const handleValidate = () => {
-    if (confirmationList === "chanOp") handleChanOp();
+    if (confirmationList === "boss") handleBoss();
+	else if (confirmationList === "chanOp") handleChanOp();
     else if (confirmationList === "kick") handleKick();
     else if (confirmationList === "ban") handleBan();
     else if (confirmationList === "invite") handleInvite();
@@ -213,36 +240,43 @@ export default function ChanOpControlPannel({
     setWaitingConfirmation(false);
   };
 
-  const chanOpConfirmation = () => {
-    setConfirmationList("chanOp");
-    setWaitingConfirmation(true);
-  };
-
-  const kickConfirmation = () => {
-    setConfirmationList("kick");
-    setWaitingConfirmation(true);
-  };
-
-  const banConfirmation = () => {
-    setConfirmationList("ban");
-    setWaitingConfirmation(true);
-  };
-
-  const inviteConfirmation = () => {
-    setConfirmationList("invite");
-    setWaitingConfirmation(true);
-  };
+  const updateConfirmation = (status:ConfirmationList) => {
+	setConfirmationList(status);
+	setWaitingConfirmation(true);
+  }
 
   const buttonData: ButtonData[] = (() => {
     switch (role) {
+
+		case ChannelRoles.boss:
+			if (relation.userId !== myRelation.userId) {
+				return [
+					{
+						id: 0,
+						name: "boss",
+						icon: faBahai,
+						onClick: () => updateConfirmation("boss"),
+						colorDep: relation.isBoss,
+					}
+				];
+			  } else return [];
+
+
       case ChannelRoles.operator:
         if (relation.userId !== myRelation.userId) {
           return [
             {
-              id: 0,
+				id: 0,
+				name: "boss",
+				icon: faBahai,
+				onClick: () => updateConfirmation("boss"),
+				colorDep: relation.isBoss,
+			},
+			{
+              id: 1,
               name: "chanOp",
               icon: faCertificate,
-              onClick: chanOpConfirmation,
+              onClick: () => updateConfirmation("chanOp"),
               colorDep: relation.isChanOp,
             },
           ];
@@ -254,21 +288,21 @@ export default function ChanOpControlPannel({
             id: 0,
             name: "chanOp",
             icon: faCertificate,
-            onClick: chanOpConfirmation,
+            onClick: () => updateConfirmation("chanOp"),
             colorDep: relation.isChanOp,
           },
           {
             id: 1,
             name: "kick",
             icon: faHand,
-            onClick: kickConfirmation,
+            onClick: () => updateConfirmation("kick"),
             colorDep: true,
           },
           {
             id: 2,
             name: "ban",
             icon: faSkull,
-            onClick: banConfirmation,
+            onClick: () => updateConfirmation("ban"),
             colorDep: !relation.isBanned,
           },
         ];
@@ -279,7 +313,7 @@ export default function ChanOpControlPannel({
             id: 0,
             name: "kick",
             icon: faHand,
-            onClick: kickConfirmation,
+            onClick: () => updateConfirmation("kick"),
             colorDep: true,
           },
         ];
@@ -290,7 +324,7 @@ export default function ChanOpControlPannel({
             id: 0,
             name: "ban",
             icon: faSkull,
-            onClick: banConfirmation,
+            onClick: () => updateConfirmation("ban"),
             colorDep: !relation.isBanned,
           },
         ];
@@ -301,14 +335,14 @@ export default function ChanOpControlPannel({
             id: 0,
             name: "invite",
             icon: faHandPeace,
-            onClick: inviteConfirmation,
+            onClick: () => updateConfirmation("invite"),
             colorDep: relation.joined,
           },
           {
             id: 1,
             name: "ban",
             icon: faSkull,
-            onClick: banConfirmation,
+            onClick: () => updateConfirmation("ban"),
             colorDep: !relation.isBanned,
           },
         ];

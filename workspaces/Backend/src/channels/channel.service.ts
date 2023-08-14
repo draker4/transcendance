@@ -135,17 +135,17 @@ export class ChannelService {
 		}
 	}
 
-	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isChanOp:boolean, error?:string}> {
+	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
 		try {
 			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
 
 			this.verifyPermissions(userId, channelId, relation);
 			return {
-				isChanOp:relation.isChanOp,
+				isOk:true,
 			}
 		} catch (error) {
 			return {
-				isChanOp:false,
+				isOk:false,
 				error:error.message,
 			}
 		}
@@ -201,6 +201,7 @@ export class ChannelService {
 			.createQueryBuilder()
 			.update(UserChannelRelation)
 			.set({
+				isBoss: relation.isBoss,
 				isChanOp: relation.isChanOp,
 				joined: relation.joined,
 				invited: relation.invited,
@@ -253,7 +254,8 @@ export class ChannelService {
 
 		if (channelInfos.newRelation.joined === undefined 
 			&& channelInfos.newRelation.invited === undefined 
-			&& channelInfos.newRelation.isChanOp === undefined 
+			&& channelInfos.newRelation.isChanOp === undefined
+			&& channelInfos.newRelation.isBoss === undefined
 			&& channelInfos.newRelation.isBanned === undefined)
 		throw new Error("need at least one property to edit channel relation");
 
@@ -270,6 +272,11 @@ export class ChannelService {
 			relation.joined = channelInfos.newRelation.joined;
 			rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`
 		}
+		
+		if (channelInfos.newRelation.isBoss !== undefined) {
+			relation.isBoss = channelInfos.newRelation.isBoss;
+			rep.message += `\nChannel Master[${chanOpId}]:put channel master to ${channelInfos.newRelation.isBoss} of user[${channelInfos.userId}]`
+		}
 
 		if (channelInfos.newRelation.isChanOp !== undefined) {
 			relation.isChanOp = channelInfos.newRelation.isChanOp;
@@ -285,6 +292,7 @@ export class ChannelService {
 			relation.isBanned = channelInfos.newRelation.isBanned;
 			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`
 		}
+
 
 		// [+] save relation dans la db maintenant
 		const repDatabase:ReturnData = await this.updateChannelUserRelation(relation);
@@ -307,9 +315,11 @@ export class ChannelService {
 	private verifyPermissions(userId:number, channelId:number, relation: UserChannelRelation) {
 		if (!relation)
 		 throw new Error(`channel(id: ${channelId}) has no relation with user(id: ${userId})`);
+		else if (relation.isBoss === true)
+			return;
 		else if (relation.isBanned)
 			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) is banned`);
-		else if (!relation.isChanOp)
+		else if (!relation.isChanOp || !relation.isBoss)
 			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) channel operator privileges required`);
 	}
 	

@@ -56,7 +56,8 @@ export class ChannelController {
         edit.channelId
       );
 
-      if (!isSpecialCase && !check.isChanOp) throw new Error(check.error);
+      if (!isSpecialCase && !check.isOk) throw new Error(check.error);
+
       rep = await this.channelService.editRelation(req.user.id, edit);
 
     } catch (error) {
