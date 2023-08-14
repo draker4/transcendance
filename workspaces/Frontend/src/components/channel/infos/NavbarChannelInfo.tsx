@@ -32,7 +32,7 @@ export default function NavbarChannelInfo({
     setSelectedItem(buttonId);
   };
 
-  const buttonData: ButtonData[] = myRelation.isChanOp
+  const buttonData: ButtonData[] = myRelation.isBoss
     ? [
 		{ id: 0, name: "Pongers", icon: faFaceSmileWink },
         { id: 1, name: "Channel", icon: faSquarePollHorizontal },

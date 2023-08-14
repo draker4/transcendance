@@ -16,6 +16,7 @@ type Props = {
 
 export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
+  const [notif, setNotif] = useState<string>("");
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
@@ -24,37 +25,38 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
 
   const avatarService = new Avatar_Service();
 
-  const handleArea = (
-    newArea: "border" | "background" | null
-  ) => {
+  const handleArea = (newArea: "border" | "background" | null) => {
     if (newArea) setSelectedArea(newArea);
   };
 
   const toogleDisplaySettings = () => {
-    if (!isOwner)
-      return ;
+    if (!isOwner) return;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
   };
 
   const saveColorChanges = async () => {
+    if (!isOwner) return;
 
-    if (!isOwner)
-      return ;
+    try {
+      const rep = await avatarService.submitAvatarColors(
+        topColor.toString(),
+        botColor.toString(),
+        0
+      );
 
-    await avatarService.submitAvatarColors(
-      topColor.toString(),
-      botColor.toString(),
-	    0,
-    );
+      if (!rep.success) throw new Error(rep.message);
 
-    avatar.borderColor = topColor.toString();
-    avatar.backgroundColor = botColor.toString();
-    setDisplaySettings(false);
+      avatar.borderColor = topColor.toString();
+      avatar.backgroundColor = botColor.toString();
+      setDisplaySettings(false);
 
-    socket?.emit('notif', {
-      why: "updateProfile",
-    });
+      socket?.emit("notif", {
+        why: "updateProfile",
+      });
+    } catch (e: any) {
+      setNotif("Profile Avatar ColorChanges error : " + e.message);
+    }
   };
 
   // backgroundColor: topColor.toString(),
@@ -80,7 +82,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
       <div className={styles.avatarCard}>
         <div className={styles.rectangle} style={colorAddedStyle}>
           {/* <div className={styles.top} style={colorAddedStyle}></div>
-          <div className={styles.bot}></div> */ }
+          <div className={styles.bot}></div> */}
           <Avatar
             avatar={avatar}
             isOwner={isOwner}
@@ -91,7 +93,8 @@ export default function AvatarCard({ login, isOwner, avatar, socket }: Props) {
           />
         </div>
       </div>
-        <ProfileLogin name={login} isOwner={isOwner} />
+      <ProfileLogin name={login} isOwner={isOwner} />
+      {<p className={styles.notif}>{notif}</p>}
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

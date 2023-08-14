@@ -56,9 +56,22 @@ export default class Avatar_Service {
     borderColor: string,
     backgroundColor: string,
     isChannel: number
-  ) {
-    const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
-    const response = await fetchData(undefined, "avatar", "", "PUT", body);
-    const data = await response.json();
+  ):Promise<ReturnData> {
+	try {
+		const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
+		const response = await fetchData(undefined, "avatar", "", "PUT", body);
+
+		if (!response.ok)
+			throw new Error("submitAvatarColors error");
+
+		const data:ReturnData = await response.json();
+		return (data);
+	} catch(e:any) {
+		return ({
+			success: false,
+			message: e.message,
+			error: e,
+		});
+	}
   }
 }

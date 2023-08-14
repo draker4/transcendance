@@ -94,6 +94,12 @@
   color: var(--primary1);
 }
 
+p.notif {
+  font-size:0.8rem;
+  color: var(--notif);
+  text-align: left;
+}
+
 .small {
   font-size: 1.1rem;
 }

@@ -16,6 +16,7 @@ type Props = {
 export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation, token }: Props) {
 
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
+  const [notif, setNotif] = useState<string>("");
   const [topColor, setTopColor] = useState<Color>(channelAndUsersRelation.channel.avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(channelAndUsersRelation.channel.avatar.backgroundColor);
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
@@ -31,7 +32,7 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
   };
 
   const toogleDisplaySettings = () => {
-    if (!myRelation.isChanOp)
+    if (!myRelation.isChanOp && !myRelation.isBoss)
       return ;
     if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
@@ -39,21 +40,23 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
 
   const saveColorChanges = async () => {
 
-    if (!myRelation.isChanOp)
+    if (!myRelation.isChanOp && !myRelation.isBoss)
       return ;
 
     try {
-      await avatarService.submitAvatarColors(
+      const rep = await avatarService.submitAvatarColors(
         topColor.toString(),
         botColor.toString(),
       channelAndUsersRelation.channel.id,
       );
-  
+
+	  if (!rep.success)
+		throw new Error(rep.message);
+
       channelAndUsersRelation.channel.avatar.borderColor = topColor.toString();
       channelAndUsersRelation.channel.avatar.backgroundColor = botColor.toString();
     } catch(e:any) {
-      // [+] error management ?
-      console.log("Channel saveColorChanges() error : " + e.message);
+	  setNotif("Channel Avatar ColorChanges error : " + e.message);
     }
     setDisplaySettings(false);
   };
@@ -84,16 +87,17 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
           <div className={styles.bot}></div> */}
 		  <Avatar
             avatar={channelAndUsersRelation.channel.avatar}
-            isOwner={myRelation.isChanOp}
+            isOwner={myRelation.isChanOp || myRelation.isBoss}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}
             previewBackground={botColor.toString()}
-          />
+			/>
         </div>
 
       </div>
-        <ProfileLogin name={channelAndUsersRelation.channel.name} isOwner={myRelation.isChanOp} />
+        <ProfileLogin name={channelAndUsersRelation.channel.name} isOwner={myRelation.isChanOp || myRelation.isBoss} />
+		{<p className={styles.notif}>{notif}</p>}
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

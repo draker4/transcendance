@@ -319,7 +319,7 @@ export class ChannelService {
 			return;
 		else if (relation.isBanned)
 			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) is banned`);
-		else if (!relation.isChanOp || !relation.isBoss)
+		else if (!relation.isChanOp && !relation.isBoss)
 			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) channel operator privileges required`);
 	}
 	
