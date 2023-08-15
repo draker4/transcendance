@@ -3,6 +3,8 @@ type NewRelation = {
   isBanned?: boolean;
   joined?: boolean;
   invited?: boolean;
+  isBoss?: boolean;
+  muted?: boolean;
 };
 
 export type EditChannelRelation = {

@@ -8,4 +8,6 @@ export enum confSentences {
 	kick = "Kick from channel ?",
 	giveBan = "Ban from channel ?",
 	rmBan = "Remove ban penalty ?",
+	giveMute = "Give Mute Penalty ?",
+	rmMute = "Remove Mute penalty ?",
 }

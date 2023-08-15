@@ -26,6 +26,10 @@ class NewRelationDto {
   @IsOptional()
   @IsBoolean()
   invited?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  muted?: boolean;
 }
 
 export class EditChannelRelationDto {

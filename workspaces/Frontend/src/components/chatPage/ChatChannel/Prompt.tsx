@@ -1,7 +1,7 @@
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faXmarkSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 
@@ -10,9 +10,10 @@ type Props = {
   myself: User;
   addMsg: (msg: Message) => void;
   relNotif: RelationNotifPack;
+  isMuted: boolean;
 };
 
-export default function Prompt({ channel, myself, addMsg, relNotif}: Props) {
+export default function Prompt({ channel, myself, addMsg, relNotif, isMuted}: Props) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [text, setText] = useState<string>("");
@@ -39,7 +40,7 @@ export default function Prompt({ channel, myself, addMsg, relNotif}: Props) {
   const handleSendMsg = (e: React.FormEvent | null) => {
     e?.preventDefault();
 
-    if (text.length > 0 && relNotif.notif === RelationNotif.nothing) {
+    if (text.length > 0 && relNotif.notif === RelationNotif.nothing && !isMuted) {
     //   console.log("Message to send :", text); // [!] checking
       const newMsg: Message = {
         content: text,
@@ -91,7 +92,7 @@ export default function Prompt({ channel, myself, addMsg, relNotif}: Props) {
           className={`${styles.paperPlane} ${buttonAddedClass}`}
           type="submit"
         >
-          <FontAwesomeIcon icon={faPaperPlane} />
+          <FontAwesomeIcon icon={isMuted ? faXmarkSquare : faPaperPlane} />
         </button>
       </form>
     </div>

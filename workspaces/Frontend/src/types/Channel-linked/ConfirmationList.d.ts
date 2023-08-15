@@ -4,4 +4,5 @@ type ConfirmationList =
   | "kick"
   | "ban"
   | "invite"
-  | "boss";
+  | "boss"
+  | "mute";

@@ -9,6 +9,7 @@ import { Socket } from "socket.io-client";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
+import Channel_Service from "@/services/Channel.service";
 
 type Props = {
   icon: ReactNode;
@@ -40,6 +41,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [codeName, setCodename] = useState<string>("");
   const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
+  const [isMuted, setIsMuted] = useState<boolean>(false);
 
   useEffect(() => {
     socket?.emit( "getMessages", {id : channel.id},
@@ -68,6 +70,25 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     );
   }, [channel, socket]);
 
+  useEffect(() => { 
+	checkIfMuted()
+
+  }, []);
+
+  const checkIfMuted = async () => {
+	try {
+		const channelService = new Channel_Service(undefined);
+		const rep:ReturnDataTyped<UserRelation> = await channelService.getMyChannelRelation(channel.id);
+		
+		if (!rep.success) throw new Error(rep.message);
+
+		if (rep.success && rep.data)
+			setIsMuted(rep.data.muted)
+	} catch(e:any) {
+		console.log("ChatChannel, checkIfMuted() error : ", e.message);
+	}
+  }
+
   const handleEditRelation = (edit:EditChannelRelation) => {
     console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
 
@@ -82,6 +103,8 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         setRelNotif({notif:RelationNotif.nothing, edit:edit});
       else if (edit.newRelation.invited === true)
         setRelNotif({notif:RelationNotif.invite, edit:edit});
+	  else if (edit.newRelation.muted !== undefined)
+	    setIsMuted(edit.newRelation.muted);
     }
   }
 
@@ -93,8 +116,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
       // to not display ServerNotifMessage from other channels
       if (receivedMsg.channelId !== channel.id)
         return ;
-
-      console.log("ChatChannel : handleReceivedMsg :", receivedMsg); // checking [!]
 
       const receivedDate = new Date(receivedMsg.date);
       const msg: Message = {
@@ -137,7 +158,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
     <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
       <MessageBoard messages={messages} channel={channel} relNotif={relNotif}/>
-      <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif}/>
+      <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif} isMuted={isMuted}/>
     </div>
   );
 }

@@ -4,6 +4,16 @@ import RolesList from "./RolesList";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
+import {
+	faCertificate,
+	faSkull,
+	faFaceSmile,
+	faHandPeace,
+	faBahai,
+	IconDefinition,
+	faPersonThroughWindow,
+  } from "@fortawesome/free-solid-svg-icons";
+
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
   myRelation: UserRelation;
@@ -51,12 +61,14 @@ useEffect(() => {
 		setNotif: setNotif,
 	}
 
-  const renderRowList = (role:ChannelRoles, relations: UserRelation[]):JSX.Element => {
+
+
+  const renderRowList = (role:ChannelRoles, icon:IconDefinition, relations: UserRelation[]):JSX.Element => {
     if ((relations.length === 0)) {
       return <></>
     } else {
       return (
-        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} lists={lists} socket={socket}/>
+        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} icon={icon} lists={lists} socket={socket}/>
       );
     }
   };
@@ -74,12 +86,12 @@ useEffect(() => {
 
   return <div className={styles.sections}>
 	<p className={styles.notif}>{notif}</p>
-	{renderRowList(ChannelRoles.boss, boss)}
-    {renderRowList(ChannelRoles.operator, operators)}
-    {renderRowList(ChannelRoles.ponger, pongers)}
+	{renderRowList(ChannelRoles.boss, faBahai, boss)}
+    {renderRowList(ChannelRoles.operator, faCertificate, operators)}
+    {renderRowList(ChannelRoles.ponger, faFaceSmile, pongers)}
 	{putSpliter()}
-    {renderRowList(ChannelRoles.invited, invited)}
-    {(myRelation.isChanOp || myRelation.isBoss) && renderRowList(ChannelRoles.leaver, leavers)}
-    {renderRowList(ChannelRoles.banned, banned)}
+    {renderRowList(ChannelRoles.invited, faHandPeace, invited)}
+    {(myRelation.isChanOp || myRelation.isBoss) && renderRowList(ChannelRoles.leaver, faPersonThroughWindow, leavers)}
+    {renderRowList(ChannelRoles.banned, faSkull, banned)}
   </div>;
 }

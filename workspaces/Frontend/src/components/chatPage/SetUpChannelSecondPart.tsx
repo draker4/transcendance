@@ -4,7 +4,7 @@ import Profile_Service from "@/services/Profile.service";
 import styleMain from "@/styles/chatPage/ChatDisplay.module.css";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import SectionPongers from "../channel/infos/sections/SectionPongers";
+import ChannelSecondPart from "../channel/ChannelSecondPart";
 import LoadingSuspense from "../loading/LoadingSuspense";
 
 type Props = {
@@ -13,34 +13,35 @@ type Props = {
 };
 
 let myRelation: UserRelation = {
-  userId: 0,
-  isBoss: false,
-  isChanOp: false,
-  isBanned: false,
-  joined: false,
-  invited: false,
-  user: {
-    id: 0,
-    login: "",
-    first_name: "",
-    last_name: "",
-    email: "",
-    phone: "",
-    image: "",
-    provider: "",
-    motto: "",
-    story: "",
-    avatar: {
-      image: "",
-      variant: "",
-      borderColor: "",
-      backgroundColor: "",
-      text: "",
-      empty: true,
-      isChannel: false,
-      decrypt: false,
-    },
-  },
+	userId: 0,
+	isBoss: false,
+	isChanOp: false,
+	isBanned: false,
+	joined: false,
+	invited: false,
+	muted: false,
+	user: {
+		id: 0,
+		login: "",
+		first_name: "",
+		last_name: "",
+		email: "",
+		phone: "",
+		image: "",
+		provider: "",
+		motto: "",
+		story: "",
+		avatar: {
+			image: "",
+			variant: "",
+			borderColor: "",
+			backgroundColor: "",
+			text: "",
+			empty: true,
+			isChannel: false,
+			decrypt: false,
+		},
+	},
 };
 
 let channelAndUsersRelation: ChannelUsersRelation = {
@@ -54,6 +55,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
     isBoss: false,
     isChanOp: false,
     invited: false,
+	muted: false,
     avatar: {
       image: "",
       variant: "",
@@ -103,8 +105,6 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
 
     setChannelRelation(channelAndUsersRelation);
     setMe(myRelation);
-
-    console.log("DATA = channelAndUsersRelation : ", channelAndUsersRelation); // cheking
   };
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
   if (me && channelRelation) {
     return (
       <div className={styleMain.main + " " + styleMain.noPadding}>
-        <SectionPongers
+        <ChannelSecondPart
           channelAndUsersRelation={channelRelation}
           myRelation={me}
           socket={socket}

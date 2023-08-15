@@ -135,6 +135,34 @@ export class ChannelService {
 		}
 	}
 
+	public async getOneChannelUserRelation(userId: number, channelId: number):Promise<ReturnDataTyped<UserChannelRelation>> {
+		const rep: ReturnDataTyped<UserChannelRelation> = {
+			success: false,
+			message: ""
+		}
+		
+		try {
+			const channel: Channel = await this.channelRepository.findOne({
+			where: { id : channelId }, relations: ["userChannelRelations"]
+		});
+
+			if (!channel) throw new Error(`Channel[${channelId}] not found`);
+
+			const relation: UserChannelRelation | undefined  = channel.userChannelRelations.find((rel) => (rel.userId === userId));
+
+			if (!relation) throw new Error(`user[${userId}] relation not found with Channel[${channelId}]`);
+			
+			rep.success = true;
+			rep.data = relation;
+
+		} catch (e:any) {
+			rep.error = e;
+			rep.message = e.message;
+		}
+		
+		return rep;
+	}
+
 	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
 		try {
 			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
@@ -223,6 +251,7 @@ export class ChannelService {
 				joined: relation.joined,
 				invited: relation.invited,
 				isBanned: relation.isBanned,
+				muted: relation.muted,
 			})
 			.where("userId = :userId AND channelId = :channelId", { userId, channelId })
 			.execute()
@@ -273,7 +302,8 @@ export class ChannelService {
 			&& channelInfos.newRelation.invited === undefined 
 			&& channelInfos.newRelation.isChanOp === undefined
 			&& channelInfos.newRelation.isBoss === undefined
-			&& channelInfos.newRelation.isBanned === undefined)
+			&& channelInfos.newRelation.isBanned === undefined
+			&& channelInfos.newRelation.muted === undefined)
 		throw new Error("need at least one property to edit channel relation");
 
 		const	relation:UserChannelRelation = await this.userChannelRelation.findOne({
@@ -310,6 +340,10 @@ export class ChannelService {
 			rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`
 		}
 
+		if (channelInfos.newRelation.muted !== undefined) {
+			relation.muted = channelInfos.newRelation.muted;
+			rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`
+		}
 
 		// [+] save relation dans la db maintenant
 		const repDatabase:ReturnData = await this.updateChannelUserRelation(relation);

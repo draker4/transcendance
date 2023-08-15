@@ -1589,6 +1589,10 @@ export class ChatService {
         action = 'gives a channel invitation';
       } else if (infos.newRelation.invited === false) {
         action = 'cancels the channel invitation';
+	  } else if (infos.newRelation.muted === true) {
+        action = 'gives a mute penalty';
+	  } else if (infos.newRelation.muted === false) {
+        action = 'removes the mute penalty';
       } else {
         throw new Error('no relation boolean found');
       }

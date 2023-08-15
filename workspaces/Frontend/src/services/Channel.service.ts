@@ -19,6 +19,32 @@ export default class Channel_Service {
     return data;
   }
 
+  public async getMyChannelRelation(id: number): Promise<ReturnDataTyped<UserRelation>> {
+	let rep: ReturnDataTyped<UserRelation> = {
+		success: false,
+		message: "",
+	  };
+	try {
+		const response: Response = await fetchData(
+			this.token,
+			"channel",
+			"relation/" + id.toString(),
+			"GET"
+		  );
+
+		if (!response.ok) throw new Error("Can't fetch user relation");
+
+		const relation:UserRelation = await response.json();
+
+		rep.success = true;
+		rep.data = relation;
+	} catch(e:any) {
+		rep.error = e;
+		rep.message = e.message;
+	}
+	return rep;
+  }
+
   public async editRelation(
     channelId: number,
     userId: number,
@@ -28,6 +54,7 @@ export default class Channel_Service {
       isBanned?: boolean;
       joined?: boolean;
       invited?: boolean;
+      muted?: boolean;
     }
   ) {
     let rep: ReturnData = {
@@ -58,6 +85,9 @@ export default class Channel_Service {
           }),
           ...(newRelation.invited !== undefined && {
             invited: newRelation.invited,
+          }),
+		  ...(newRelation.muted !== undefined && {
+            muted: newRelation.muted,
           }),
         },
       });

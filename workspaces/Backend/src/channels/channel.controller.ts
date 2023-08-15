@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
+import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import {
   BadRequestException,
   Body,
@@ -27,6 +28,19 @@ export class ChannelController {
     catch (error) {
       throw new BadRequestException();
     }
+  }
+
+  @Get('/relation/:id')
+  async getSelfChannelRelation(@Request() req, @Param('id', ParseIntPipe) id: number) : Promise<ReturnDataTyped<UserChannelRelation>> {	
+	try {
+		return await this.channelService.getOneChannelUserRelation(req.user.id, id);
+	} catch (e:any) {
+		return ({
+			success: false,
+			message: e.message,
+			error: e,
+		});
+	}
   }
 
   @Put('editRelation')

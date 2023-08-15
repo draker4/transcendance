@@ -35,6 +35,9 @@ export default function ConfirmationPannel({
 		case "invite":
 		return confSentences.giveInvite;
 
+		case "mute":
+		return relation.muted ? confSentences.rmMute : confSentences.giveMute;
+
 		case "nothing":
 		return "";
 

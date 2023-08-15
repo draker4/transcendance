@@ -5,5 +5,6 @@ type	UserRelation = {
 	isBanned: boolean,
 	joined: boolean,
 	invited: boolean,
+	muted: boolean,
 	user:User ,
 }

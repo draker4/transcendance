@@ -8,6 +8,7 @@ import {
   faHand,
   faHandPeace,
   faBahai,
+  faVolumeHigh,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -37,6 +38,7 @@ type UpdateOptions = {
   joined?: boolean;
   isBanned?: boolean;
   invited?: boolean;
+  muted?: boolean;
   onSuccess: () => void;
 };
 
@@ -72,6 +74,7 @@ export default function ChanOpControlPannel({
       isChanOp = undefined,
       joined = undefined,
       isBanned = undefined,
+	  muted = undefined,
       invited = undefined,
     } = options;
     const rep = await channelService.editRelation(channelId, relation.userId, {
@@ -80,6 +83,7 @@ export default function ChanOpControlPannel({
       joined,
       isBanned,
       invited,
+	  muted
     });
     if (rep.success) {
       options.onSuccess();
@@ -92,6 +96,7 @@ export default function ChanOpControlPannel({
         joined : options.joined,
         isBanned : options.isBanned,
         invited : options.invited,
+		muted : options.muted,
       },
       userId: relation.userId,
     });
@@ -225,6 +230,25 @@ export default function ChanOpControlPannel({
 	  }
   }
 
+  const handleMute = () => {
+	if (relation.muted) {
+		sendUpdates({
+		  muted: false,
+		  onSuccess: () => {
+			relation.muted = false;
+		  },
+		});
+	  } else {
+		sendUpdates({
+			muted: true,
+			onSuccess: () => {
+			  relation.muted = true;
+			},
+		  });
+	}
+  }
+
+
   // [+] ameliorer : regarder si besoin de tableau de fonction
   const handleValidate = () => {
     if (confirmationList === "boss") handleBoss();
@@ -232,6 +256,7 @@ export default function ChanOpControlPannel({
     else if (confirmationList === "kick") handleKick();
     else if (confirmationList === "ban") handleBan();
     else if (confirmationList === "invite") handleInvite();
+	else if (confirmationList === "mute") handleMute();
     handleCancel();
   };
 
@@ -273,7 +298,14 @@ export default function ChanOpControlPannel({
 				colorDep: relation.isBoss,
 			},
 			{
-              id: 1,
+				id: 1,
+				name: "mute",
+				icon: faVolumeHigh,
+				onClick: () => updateConfirmation("mute"),
+				colorDep: !relation.muted,
+			  },
+			{
+              id: 2,
               name: "chanOp",
               icon: faCertificate,
               onClick: () => updateConfirmation("chanOp"),
@@ -283,7 +315,14 @@ export default function ChanOpControlPannel({
         } else if (relation.userId !== myRelation.userId && !myRelation.isBoss) {
 			return [
 				{
-				  id: 0,
+					id: 0,
+					name: "mute",
+					icon: faVolumeHigh,
+					onClick: () => updateConfirmation("mute"),
+					colorDep: !relation.muted,
+				  },
+				{
+				  id: 1,
 				  name: "chanOp",
 				  icon: faCertificate,
 				  onClick: () => updateConfirmation("chanOp"),
@@ -302,15 +341,22 @@ export default function ChanOpControlPannel({
             onClick: () => updateConfirmation("chanOp"),
             colorDep: relation.isChanOp,
           },
+		  {
+			id: 1,
+			name: "mute",
+			icon: faVolumeHigh,
+			onClick: () => updateConfirmation("mute"),
+			colorDep: !relation.muted,
+		  },
           {
-            id: 1,
+            id: 2,
             name: "kick",
             icon: faHand,
             onClick: () => updateConfirmation("kick"),
             colorDep: true,
           },
           {
-            id: 2,
+            id: 3,
             name: "ban",
             icon: faSkull,
             onClick: () => updateConfirmation("ban"),

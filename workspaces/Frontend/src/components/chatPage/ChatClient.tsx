@@ -12,7 +12,7 @@ import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
-import SetUpSectionPongers from "./SetUpSectionPongers";
+import SetUpChannelSecondPart from "./SetUpChannelSecondPart";
 
 export default function ChatClient({
   token,
@@ -172,8 +172,7 @@ export default function ChatClient({
         openDisplay={openDisplay}
       />
 
-	  {/* [+][!] TRYING coolish truc */}
-	  {display && "type" in display && display.type !== "privateMsg" && <SetUpSectionPongers channelId={display.id} socket={socket}/>}
+	  {display && "type" in display && display.type !== "privateMsg" && <SetUpChannelSecondPart channelId={display.id} socket={socket}/>}
 	</div>
   );
 }
