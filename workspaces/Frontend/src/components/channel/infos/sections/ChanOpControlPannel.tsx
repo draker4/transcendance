@@ -249,7 +249,7 @@ export default function ChanOpControlPannel({
     switch (role) {
 
 		case ChannelRoles.boss:
-			if (relation.userId !== myRelation.userId) {
+			if (relation.userId !== myRelation.userId && myRelation.isBoss) {
 				return [
 					{
 						id: 0,
@@ -263,7 +263,7 @@ export default function ChanOpControlPannel({
 
 
       case ChannelRoles.operator:
-        if (relation.userId !== myRelation.userId) {
+        if (relation.userId !== myRelation.userId && myRelation.isBoss) {
           return [
             {
 				id: 0,
@@ -280,7 +280,18 @@ export default function ChanOpControlPannel({
               colorDep: relation.isChanOp,
             },
           ];
-        } else return [];
+        } else if (relation.userId !== myRelation.userId && !myRelation.isBoss) {
+			return [
+				{
+				  id: 0,
+				  name: "chanOp",
+				  icon: faCertificate,
+				  onClick: () => updateConfirmation("chanOp"),
+				  colorDep: relation.isChanOp,
+				},
+			  ];
+		}
+		else return [];
 
       case ChannelRoles.ponger:
         return [

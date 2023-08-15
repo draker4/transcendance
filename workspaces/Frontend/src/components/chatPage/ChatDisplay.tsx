@@ -82,4 +82,6 @@ export default function ChatDisplay({
         </div>
       );
   }
+
+  return <></>;
 }

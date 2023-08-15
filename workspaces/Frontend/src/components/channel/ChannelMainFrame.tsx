@@ -49,17 +49,7 @@ export default function ChannelMainFrame({
         setMe(findStatus);
         setRelation(updatedRelation);
       }
-
-      console.log("Data Reloaded");
-      /* [!]
-      console.log("usersRelation[0].isBanned : ", updatedRelation.usersRelation[0].isBanned);
-      console.log("usersRelation[1].isBanned : ", updatedRelation.usersRelation[1].isBanned);
-      console.log("usersRelation[2].isBanned : ", updatedRelation.usersRelation[2].isBanned);
-      console.log("usersRelation[3].isBanned : ", updatedRelation.usersRelation[3].isBanned);
-      console.log("usersRelation[4].isBanned : ", updatedRelation.usersRelation[4].isBanned);
-      console.log("usersRelation[5].isBanned : ", updatedRelation.usersRelation[5].isBanned);
-      */
-
+	  
     } catch(e:any) {
       console.log("Error while updating channel profile : " + e.message);
       // [+] gestion de l'erreure ?

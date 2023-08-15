@@ -151,6 +151,23 @@ export class ChannelService {
 		}
 	}
 
+	public async checkChannelMasterPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
+		try {
+			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
+			if (!relation)
+				throw new Error(`channel(id: ${channelId}) has no relation with user(id: ${userId})`);
+			if (!relation.isBoss)
+				throw new Error(`channel Master privilege required`);
+		} catch (e) {
+			return ({
+				isOk: false,
+				error: e.message,
+			});
+		}
+
+		return ({isOk: true});
+	}
+
 	// the user is himself, already checked
 	public async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
 		try {

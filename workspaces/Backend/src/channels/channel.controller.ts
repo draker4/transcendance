@@ -56,6 +56,12 @@ export class ChannelController {
         edit.channelId
       );
 
+	  if (edit.newRelation && "isBoss" in edit.newRelation) {
+		const checkBoss = await this.channelService.checkChannelMasterPrivilege(req.user.id,
+			edit.channelId);
+		if (!checkBoss) throw new Error(checkBoss.error)
+	  }
+
       if (!isSpecialCase && !check.isOk) throw new Error(check.error);
 
       rep = await this.channelService.editRelation(req.user.id, edit);

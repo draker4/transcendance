@@ -17,33 +17,34 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
   let	token: string = "";
   let myRelation: UserRelation = {
-    userId: 0,
-    isChanOp: false,
-    isBanned: false,
-    joined: false,
-    invited: false,
-    user: {
-      id: 0,
-      login: "",
-      first_name: "",
-      last_name: "",
-      email: "",
-      phone: "",
-      image: "",
-      provider: "",
-      motto: "",
-      story: "",
-      avatar: {
-        image: "",
-        variant: "",
-        borderColor: "",
-        backgroundColor: "",
-        text: "",
-        empty: true,
-        isChannel: false,
-        decrypt: false,
-      },
-    }
+	  userId: 0,
+	  isBoss: false,
+	  isChanOp: false,
+	  isBanned: false,
+	  joined: false,
+	  invited: false,
+	  user: {
+		  id: 0,
+		  login: "",
+		  first_name: "",
+		  last_name: "",
+		  email: "",
+		  phone: "",
+		  image: "",
+		  provider: "",
+		  motto: "",
+		  story: "",
+		  avatar: {
+			  image: "",
+			  variant: "",
+			  borderColor: "",
+			  backgroundColor: "",
+			  text: "",
+			  empty: true,
+			  isChannel: false,
+			  decrypt: false,
+		  },
+	  },
   };
 
   let channelAndUsersRelation: ChannelUsersRelation = {
