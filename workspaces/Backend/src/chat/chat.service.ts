@@ -22,7 +22,6 @@ import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { ClearNotifDto } from './dto/clearNotif.dto';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
-import { boolean } from 'joi';
 
 @Injectable()
 export class ChatService {
@@ -1415,14 +1414,71 @@ export class ChatService {
     }
   }
 
+  // memo : Container of connected users : Map<socket, user id>
+  async joinLeaveRoomProcByEditRelation(isLeave:boolean, edit:EditChannelRelationDto, connectedUsers: Map<Socket, string>):Promise<ReturnData> {
+	const rep: ReturnData = {
+		success: false,
+		message: ''
+	}
+
+	try {
+		const repRelation = await this.channelService.getOneChannelUserRelation(edit.userId, edit.channelId);
+		if (!repRelation.success) throw new Error(repRelation.message);
+
+		const whatToDo = this.shouldJoinOrLeave(edit, repRelation.data);
+		
+		if (whatToDo !== "nothing") {
+
+			const sockets: Socket[] = [];
+			for (const [socket, value] of connectedUsers) {
+				if (value === edit.userId.toString())
+					sockets.push(socket);
+			}
+
+			if (whatToDo === "join" && !isLeave) {
+				sockets.forEach((socket) => {
+					socket.join(`channel:${edit.channelId}`);
+					this.log(`Connected User[${edit.userId}] joined channel[${edit.channelId}] procByEdit Relation`);
+				});
+			} else if (whatToDo === "leave" && isLeave) {
+				sockets.forEach((socket) => {
+					socket.leave(`channel:${edit.channelId}`);
+					this.log(`Connected User[${edit.userId}] left channel[${edit.channelId}] procByEdit Relation`);
+				});
+			}
+		}
+
+	} catch(error:any) {
+		rep.success = false;
+		rep.message = error.message;
+	}
+
+	return rep;
+  }
+
+  private shouldJoinOrLeave(edit:EditChannelRelationDto, current: UserChannelRelation):"join" | "leave" | "nothing" {
+	let whatToDo:"join" | "leave" | "nothing" = "nothing";
+	const next = edit.newRelation;
+
+	if (next.joined === false || (next.isBanned === true && current.joined === true))
+		whatToDo = "leave";
+	else if (next.joined === true || (next.isBanned === false && current.joined === true))
+		whatToDo = "join";
+
+	return whatToDo;
+  }
+
+
   async receiveNewMsg(message: newMsgDto, reqUserId: number, server: Server) {
     try {
       const now = new Date();
       const nowtoISOString = now.toISOString();
-      const [fetchedChannel, sender] = await Promise.all([
+      const [fetchedChannel, sender, repRelation] = await Promise.all([
         this.channelService.getChannelById(message.channelId),
         this.usersService.getUserAvatar(reqUserId),
+		this.channelService.getOneChannelUserRelation(reqUserId, message.channelId),
       ]);
+
 
       await this.receiveNewMsgNotif(message.channelId, sender.id, server);
 
@@ -1431,6 +1487,10 @@ export class ChatService {
           sender.avatar.image,
         );
       }
+
+	  if (repRelation.success && repRelation.data)
+	  	this.verifyChatAllowed(repRelation.data)
+	  else throw new Error(repRelation.message); 
 
       const sendMsg: sendMsgDto = {
         content: message.content,
@@ -1453,8 +1513,20 @@ export class ChatService {
         why: "updateChannels",
       });
     } catch (error) {
+      this.log(`receiveNewMsg error : ${error.message}`);
       throw new WsException(error.message);
     }
+  }
+
+  private verifyChatAllowed(relation: UserChannelRelation):void {
+	if (!relation.joined)
+		throw new Error(`Channel [${relation.channelId}] chat not allowed : user[${relation.userId}] need join channel`);
+	else if (relation.isBoss)
+		return ;
+	else if (relation.isBanned)
+		throw new Error(`Channel [${relation.channelId}] chat not allowed : user[${relation.userId}] banned from channel`);
+	else if (relation.muted)
+		throw new Error(`Channel [${relation.channelId}] chat not allowed : user[${relation.userId}] is muted`);
   }
 
   private async receiveNewMsgNotif(channelId: number, userId: number, server) {

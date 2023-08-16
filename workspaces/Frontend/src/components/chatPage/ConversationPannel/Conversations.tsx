@@ -68,7 +68,7 @@ export default function Conversations({
   };
 
   const handleLeave = async (channel: Channel) => {
-    console.log("Wanna leave the channel : " + channel.name); // checking
+
     if (channel.joined === false && channel.invited === false) {
       console.log("[+] Feature keepTrack channel [?]"); // [!][+]
       return ;
@@ -90,9 +90,11 @@ export default function Conversations({
       }
       socket?.emit("editRelation", newRelation);
       // [+] comment fermer le display seulement si la channel quittée est affichée ?
+	  
     } else
     throw new Error(rep.message);
 
+	console.log("Conversations => handleLeave => Successfully done"); // checking
     } catch(e:any) {
       console.log("Leave channel error : " + e.message);
     }

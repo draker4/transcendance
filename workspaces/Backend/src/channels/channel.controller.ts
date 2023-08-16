@@ -57,6 +57,12 @@ export class ChannelController {
 
     try {
 
+		const checkRep = await this.channelService.checkEditAuthorization(req.user.id, edit);
+		if (!checkRep.success) throw new Error(checkRep.message);
+		/*
+
+		[!][+] A Effacer
+		
       if (req.user.id === edit.userId) {
         isSpecialCase = await this.channelService.checkEditRelationSpecialCase(
           req.user.id,
@@ -77,6 +83,7 @@ export class ChannelController {
 	  }
 
       if (!isSpecialCase && !check.isOk) throw new Error(check.error);
+	  */
 
       rep = await this.channelService.editRelation(req.user.id, edit);
 

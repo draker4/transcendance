@@ -142,13 +142,13 @@ export class ChannelService {
 		}
 		
 		try {
-			const channel: Channel = await this.channelRepository.findOne({
-			where: { id : channelId }, relations: ["userChannelRelations"]
-		});
+			const usersRelations : UserChannelRelation[] = await this.userChannelRelation.find({
+				where: { channelId : channelId }
+			});
 
-			if (!channel) throw new Error(`Channel[${channelId}] not found`);
+			if (!usersRelations) throw new Error(`User Relations of Channel[${channelId}] not found`);
 
-			const relation: UserChannelRelation | undefined  = channel.userChannelRelations.find((rel) => (rel.userId === userId));
+			const relation: UserChannelRelation | undefined  = usersRelations.find((rel) => (rel.userId === userId));
 
 			if (!relation) throw new Error(`user[${userId}] relation not found with Channel[${channelId}]`);
 			
@@ -160,6 +160,47 @@ export class ChannelService {
 			rep.message = e.message;
 		}
 		
+		return rep;
+	}
+
+
+
+	public async checkEditAuthorization(userId: number, edit:EditChannelRelationDto):Promise<ReturnData> {
+		const rep: ReturnData = {
+			success: false,
+			message: '',
+		};
+
+		let isSpecialCase:boolean;
+
+		try {
+			if (userId === edit.userId) {
+			isSpecialCase = await this.checkEditRelationSpecialCase(
+				userId,
+				edit
+			);
+			} else
+				isSpecialCase = false;
+
+			const check = await this.checkChanOpPrivilege(
+				userId,
+				edit.channelId
+			);
+
+			if (edit.newRelation && "isBoss" in edit.newRelation) {
+				const checkBoss = await this.checkChannelMasterPrivilege(userId, edit.channelId);
+				if (!checkBoss) throw new Error(checkBoss.error)
+			}	
+
+			if (!isSpecialCase && !check.isOk) throw new Error(check.error);
+
+			rep.success = true;
+
+		} catch (error) {
+			rep.success = false;
+			rep.message = error.message;
+		}
+
 		return rep;
 	}
 
@@ -179,7 +220,7 @@ export class ChannelService {
 		}
 	}
 
-	public async checkChannelMasterPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
+	private async checkChannelMasterPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
 		try {
 			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
 			if (!relation)
@@ -197,7 +238,7 @@ export class ChannelService {
 	}
 
 	// the user is himself, already checked
-	public async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
+	private async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
 		try {
 			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, edit.channelId);
 

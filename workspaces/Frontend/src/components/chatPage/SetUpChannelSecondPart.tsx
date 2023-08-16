@@ -107,13 +107,25 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
     setMe(myRelation);
   };
 
+  const loadData = () => {
+	try {
+		getPongersData();
+	  } catch (err) {
+		console.log("SetUpSectionPongers error : ", err);
+	  }
+  };
+
   useEffect(() => {
-    try {
-      getPongersData();
-    } catch (err) {
-      console.log("SetUpSectionPongers error : ", err);
-    }
-  }, []);
+	
+	socket.on("editRelation", loadData);
+    
+    loadData();
+
+	return () => {
+		socket?.off("editRelation", loadData);
+	  };
+
+  }, [socket]);
 
   if (me && channelRelation) {
     return (
