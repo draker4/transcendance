@@ -148,10 +148,27 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel.name, socket]);
 
   const addMsg = (msg: Message) => {
+
+  // Force receiver to open socket if needed
+  if (channel.type === "privateMsg") {
+    socket?.emit("forceJoinPrivateMsgChannel", 
+      {id:channel.id}, 
+      (rep:ReturnData) => {
+        if (rep.success) {
+            socket?.emit("newMsg", {
+              content: msg.content,
+              channelId: channel.id,
+            });
+          } else {
+            // [+] manage privmsg sending error
+          }
+      });
+  } else {
     socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,
     });
+  }
   };
 
   return (
