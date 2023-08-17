@@ -10,6 +10,7 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import Channel_Service from "@/services/Channel.service";
+import { log } from "console";
 
 type Props = {
   icon: ReactNode;
@@ -65,6 +66,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 				}
 			});
 		}
+        console.log(previousMsg);
         setMessages(previousMsg);
       }
     );

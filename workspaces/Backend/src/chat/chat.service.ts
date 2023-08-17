@@ -1656,7 +1656,7 @@ export class ChatService {
       } else if (infos.newRelation.joined === true && !isSelf) {
         action = 'allows joinning channel';
       } else if (infos.newRelation.joined === true && isSelf) {
-        action = 'just joined the channel';
+        action = '[!] just joined the channel';
         needEnd = false;
       } else if (infos.newRelation.joined === false && !isSelf) {
         action = 'gives a channel kick';

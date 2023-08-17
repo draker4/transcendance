@@ -50,9 +50,9 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
   const placeholder:string = channel.type === "privateMsg" ? "Feel free to say hello :D !" : " The channel is empty, start here a new passionating topic !";
   
   const joiningMessages = () => {
-    const join = [];
+    const join: any[] = [];
 
-    for (let i = 0; i < messages.length; i++) {
+    for (let i = messages.length - 1; i >= 0; i--) {
       const currentMsg = messages[i];
       const lastGroup = join[join.length - 1];
 
@@ -61,7 +61,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
         isSameSender(currentMsg.sender, lastGroup.user) &&
         isWithinTwoMinutes(currentMsg.date, lastGroup.date)
       ) {
-        lastGroup.messages.push(currentMsg);
+        lastGroup.messages.unshift(currentMsg);
       } else {
         join.push({
           user: currentMsg.sender,
@@ -71,6 +71,8 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
         });
       }
     }
+
+    // console.log(join);
     setGroupedMessages(join);
   };
 
@@ -83,7 +85,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
 
   return (
     <div className={styles.msgBoard}>
-      {messages.length > 0 && groupedMessages.reverse().map((group, index) => (
+      {messages.length > 0 && groupedMessages.map((group, index) => (
         <MessageItem key={index} groupedMessages={group} />
       ))}
 	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}
