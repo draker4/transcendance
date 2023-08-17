@@ -402,7 +402,6 @@ export class ChatGateway implements OnModuleInit {
     return users;
   }
 
-
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editRelation')
   async sendEditRelationEvents(
@@ -452,6 +451,30 @@ export class ChatGateway implements OnModuleInit {
       throw new WsException(error.message);
     }
   }
+
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('forceJoinPrivateMsgChannel')
+  async forceJoinPrivateMsgChannel(@Request() req, @MessageBody() payload: channelIdDto,
+  ):Promise<ReturnData> {
+
+    const rep: ReturnData = {
+      success: false,
+      message: ''
+    }
+
+    try {
+      await this.channelService.forceJoinPrivateMsgChannel(req.user.id, payload.id, this.connectedUsers);
+
+      rep.success = true;
+    } catch (error: any) {
+      this.log(`forceJoinPrivateMsgChannel error : ${error.message}`);
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
+
 
   // tools
 

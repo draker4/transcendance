@@ -102,6 +102,8 @@ export default function ChatClient({
       if (payload && payload.success) {
         openDisplay(payload.channel);
         setGetChannel(false);
+
+        console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
         return ;
       }
       if (payload && payload.error && payload.error === "protected")

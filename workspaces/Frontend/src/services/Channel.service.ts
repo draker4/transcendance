@@ -34,10 +34,11 @@ export default class Channel_Service {
 
 		if (!response.ok) throw new Error("Can't fetch user relation");
 
-		const relation:UserRelation = await response.json();
-
+		const repRelation:ReturnDataTyped<UserRelation> = await response.json();
+    if (!repRelation.success)
+      throw new Error(repRelation.message);
 		rep.success = true;
-		rep.data = relation;
+		rep.data = repRelation.data;
 	} catch(e:any) {
 		rep.error = e;
 		rep.message = e.message;

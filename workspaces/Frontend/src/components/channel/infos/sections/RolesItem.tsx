@@ -5,6 +5,10 @@ import { useState } from "react";
 import ChanOpControlPannel from "./ChanOpControlPannel";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import { Socket } from "socket.io-client";
+import {
+  faVolumeXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type Props = {
   channelId:number;
@@ -65,6 +69,7 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
         style={{ color: relation.user.avatar.borderColor }}
       >
         {relation.user.login}
+        {relation.muted && <FontAwesomeIcon icon={faVolumeXmark} style={{marginLeft: "0.3rem"}}/>}
       </Link>
 
       { isFocused && (myRelation.isChanOp || myRelation.isBoss) && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}

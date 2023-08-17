@@ -59,32 +59,6 @@ export class ChannelController {
 
 		const checkRep = await this.channelService.checkEditAuthorization(req.user.id, edit);
 		if (!checkRep.success) throw new Error(checkRep.message);
-		/*
-
-		[!][+] A Effacer
-		
-      if (req.user.id === edit.userId) {
-        isSpecialCase = await this.channelService.checkEditRelationSpecialCase(
-          req.user.id,
-          edit
-        );
-      } else
-        isSpecialCase = false;
-
-      const check = await this.channelService.checkChanOpPrivilege(
-        req.user.id,
-        edit.channelId
-      );
-
-	  if (edit.newRelation && "isBoss" in edit.newRelation) {
-		const checkBoss = await this.channelService.checkChannelMasterPrivilege(req.user.id,
-			edit.channelId);
-		if (!checkBoss) throw new Error(checkBoss.error)
-	  }
-
-      if (!isSpecialCase && !check.isOk) throw new Error(check.error);
-	  */
-
       rep = await this.channelService.editRelation(req.user.id, edit);
 
     } catch (error) {

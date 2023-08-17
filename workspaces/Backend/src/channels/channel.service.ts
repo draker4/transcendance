@@ -10,6 +10,7 @@ import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { Message } from "@/utils/typeorm/Message.entity";
 import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
 import { PongColors } from "@/utils/enums/PongColors.enum";
+import { Socket } from "socket.io";
 
 type ChannelAndUsers = {
 	channel: Channel;
@@ -206,7 +207,7 @@ export class ChannelService {
 
 	public async checkChanOpPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
 		try {
-			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
+			const relation:UserChannelRelation = await this.privateGetOneChannelUserRelation(userId, channelId);
 
 			this.verifyPermissions(userId, channelId, relation);
 			return {
@@ -222,7 +223,7 @@ export class ChannelService {
 
 	private async checkChannelMasterPrivilege(userId:number, channelId:number):Promise<{isOk:boolean, error?:string}> {
 		try {
-			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, channelId);
+			const relation:UserChannelRelation = await this.privateGetOneChannelUserRelation(userId, channelId);
 			if (!relation)
 				throw new Error(`channel(id: ${channelId}) has no relation with user(id: ${userId})`);
 			if (!relation.isBoss)
@@ -240,7 +241,7 @@ export class ChannelService {
 	// the user is himself, already checked
 	private async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
 		try {
-			const relation:UserChannelRelation = await this.getOneUserChannelRelation(userId, edit.channelId);
+			const relation:UserChannelRelation = await this.privateGetOneChannelUserRelation(userId, edit.channelId);
 
 			/* Special cases where chanOp privileges are not required */
 			// [1] a User can change himself his joined relation to a channel
@@ -396,10 +397,67 @@ export class ChannelService {
 	}
 	
 
+  public async forceJoinPrivateMsgChannel(senderId:number, channelId:number, connectedUsers:Map<Socket, string>):Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: ''
+    }
+    
+    try {
+      // [+] CONTINUER ICI
+
+      // [0] get privateMsg Channel + deduce target id
+      const channel = await this.getChannelById(channelId);
+      if (!channel)
+        throw new Error(`channel[${channelId}] not found`);
+      else if (channel.type !== "privateMsg" || !channel.name || channel.name === "")
+        throw new Error(`channel[${channelId}] is not a privateMsg channel`);
+      
+      
+
+      // [1] check channel relation exists
+      const otherId:number = this.getOtherIdFromPrivateMsg(senderId, channel.name);
+
+      const repRelation = await this.getOneChannelUserRelation(otherId, channelId);
+
+      // [2] update receiver joined relation to true if needed
+      if (repRelation.success && repRelation.data && repRelation.data.joined === false) {
+
+        repRelation.data.joined = true;
+
+        const repDatabase:ReturnData = await this.updateChannelUserRelation(repRelation.data);
+        if (!repDatabase.success)
+          throw new Error("Error occured while updating user channel relation in database : " + repDatabase.message);
+        else {
+            // [3] emit an editRelation to receiver (if offline np ?)
+            const sockets: Socket[] = [];
+            for (const [socket, value] of connectedUsers) {
+              if (value === otherId.toString())
+                sockets.push(socket);
+            }
+
+            sockets.forEach((socket) => {
+              this.log(`forceJoinPrivateMsgChannel emit empty editRelation to user[${otherId}]->socket[${socket.id}]`);
+              socket.emit("editRelation", {});
+            });
+        }
+      }
+
+      rep.success = true;
+    } catch (error: any) {
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+
+  }
+
 
 	// ------------------- PRIVATE ---------------------------------- //
 
-	private async getOneUserChannelRelation(userId:number, channelId:number):Promise<UserChannelRelation> {
+  // [!][+] Doublon avec la version public : getOneChannelUserRelation
+	private async privateGetOneChannelUserRelation(userId:number, channelId:number):Promise<UserChannelRelation> {
 		return (await this.getChannelUsersRelations(channelId)).usersRelation.find( (relation) => relation.userId === userId);
 	}
 	
@@ -414,6 +472,34 @@ export class ChannelService {
 		else if (!relation.isChanOp && !relation.isBoss)
 			throw new Error(`channel(id: ${channelId}) user(id: ${userId}) channel operator privileges required`);
 	}
+
+
+  private getOtherIdFromPrivateMsg(senderId:number, channelName: string):number {
+    const tuple: {
+      id1: number;
+      id2: number;
+    } = this.getIdsFromPrivateMsgChannelName(channelName);
+
+    return senderId === tuple.id1 ? tuple.id2 : tuple.id1;
+  }
+
+  private getIdsFromPrivateMsgChannelName(channelName: string): {
+    id1: number;
+    id2: number;
+  } {
+    const tuple: string[] = channelName.split(" ");
+
+    if (tuple.length !== 2)
+      return {
+        id1: -1,
+        id2: -1,
+      };
+
+    return {
+      id1: parseInt(tuple[0]),
+      id2: parseInt(tuple[1]),
+    };
+  }
 	
 	
 	
