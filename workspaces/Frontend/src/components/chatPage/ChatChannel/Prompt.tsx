@@ -92,7 +92,7 @@ export default function Prompt({ channel, myself, addMsg, relNotif, isMuted}: Pr
           className={`${styles.paperPlane} ${buttonAddedClass}`}
           type="submit"
         >
-          <FontAwesomeIcon icon={isMuted ? faXmarkSquare : faPaperPlane} />
+          <FontAwesomeIcon icon={isMuted ? faXmarkSquare : faPaperPlane} style={{color: isMuted? "var(--notif)" : ""}}/>
         </button>
       </form>
     </div>

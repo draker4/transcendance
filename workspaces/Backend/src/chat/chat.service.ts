@@ -233,6 +233,7 @@ export class ChatService {
             joined: relation.joined,
             invited: relation.invited,
             isBanned: relation.isBanned,
+            muted: relation.muted,
           };
         }),
       );
@@ -384,6 +385,7 @@ export class ChatService {
           isBanned: relation.isBanned,
           invited: relation.invited,
           isChanOp: relation.isChanOp,
+          muted: relation.muted,
         }
 
         return {
@@ -430,6 +432,7 @@ export class ChatService {
             invited: myRelation.invited,
             isBanned: myRelation.isBanned,
             isChanOp: myRelation.isChanOp,
+            muted: myRelation.muted,
           };
 
         if (see)
@@ -442,6 +445,7 @@ export class ChatService {
             invited: false,
             isBanned: false,
             isChanOp: false,
+            muted: false,
           };
         
         return null;
@@ -1228,6 +1232,7 @@ export class ChatService {
         joined: true,
         isBanned: relation.isBanned,
         invited: relation.invited,
+        muted: relation.muted,
       }
 
       return {
@@ -1344,6 +1349,7 @@ export class ChatService {
         isBanned: relationUser.isBanned,
         invited: relationUser.invited,
         isChanop: relationUser.isChanOp,
+        muted: relationUser.muted,
       }
 
       return {

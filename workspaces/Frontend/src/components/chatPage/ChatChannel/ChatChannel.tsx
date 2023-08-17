@@ -41,7 +41,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [codeName, setCodename] = useState<string>("");
   const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(channel.muted);
 
   useEffect(() => {
     socket?.emit( "getMessages", {id : channel.id},
@@ -71,7 +71,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }, [channel, socket]);
 
   useEffect(() => { 
-	checkIfMuted()
+	 checkIfMuted()
 
   }, []);
 
@@ -82,8 +82,9 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 		
 		if (!rep.success) throw new Error(rep.message);
 
-		if (rep.success && rep.data)
+		if (rep.success && rep.data) {
 			setIsMuted(rep.data.muted)
+    }
 	} catch(e:any) {
 		console.log("ChatChannel, checkIfMuted() error : ", e.message);
 	}
@@ -149,7 +150,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   const addMsg = (msg: Message) => {
 
-  // Force receiver to open socket if needed
+  // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {
     socket?.emit("forceJoinPrivateMsgChannel", 
       {id:channel.id}, 
