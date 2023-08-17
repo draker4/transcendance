@@ -50,10 +50,15 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         const previousMsg: Message[] = [];
 
         response.forEach((item) => {
+          const originalDate = new Date(item.createdAt);
+          const modifiedDate = new Date(originalDate); // Create a new Date object to avoid mutating the original
+    
+          // Add two hours to the timestamp
+          modifiedDate.setHours(originalDate.getHours() + 2);
           const msg: Message = {
             content: item.content,
             sender: item.user,
-            date: new Date(item.createdAt),
+            date: modifiedDate,
             isServerNotif: item.isServerNotif,
           };
           previousMsg.push(msg);
@@ -120,6 +125,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
         return ;
 
       const receivedDate = new Date(receivedMsg.date);
+      console.log("la=", receivedDate, receivedMsg.date);
       const msg: Message = {
         content: receivedMsg.content,
         sender: receivedMsg.sender,

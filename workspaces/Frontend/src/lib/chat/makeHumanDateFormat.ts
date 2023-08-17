@@ -12,8 +12,7 @@ export default function makeHumanDateFormat(date:Date):string {
 
     formated += addZero(date.getHours()) + ":" + addZero(date.getMinutes());
 
-
-    return formated; 
+    return formated;
 }
 
 function addZero(num: number): string {

@@ -6,6 +6,8 @@ import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
+process.env.TZ = 'Africa/Maputo';
+
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule, {
