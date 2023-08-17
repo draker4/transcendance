@@ -165,6 +165,16 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getChannels(req.user.id);
   }
 
+  @SubscribeMessage('getChannelProfile')
+  async getChannelProfile(
+    @Request() req,
+    @MessageBody() channelId: number,
+  ) {
+    if (!channelId) throw new WsException('no channel id');
+
+    return await this.chatService.getChannelProfile(req.user.id, channelId);
+  }
+
   @SubscribeMessage('getChannelsProfile')
   async getChannelsProfile(@MessageBody() userId: number) {
     if (!userId) throw new WsException('no given id');
@@ -402,7 +412,7 @@ export class ChatGateway implements OnModuleInit {
     return users;
   }
 
-  @UseGuards(ChannelAuthGuard)
+  // @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editRelation')
   async sendEditRelationEvents(
     @MessageBody() payload: EditChannelRelationDto,

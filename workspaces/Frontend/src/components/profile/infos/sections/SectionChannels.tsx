@@ -1,16 +1,16 @@
 import stylesInfoCard from "@/styles/profile/InfoCard.module.css";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { useEffect, useRef, useState } from "react";
-import SearchBarPongies from "@/components/chatPage/searchBar/SearchBarPongies";
 import { Socket } from "socket.io-client";
 import LoadingSuspense from "@/components/loading/LoadingSuspense";
 import React from "react";
-import PongieList from "./sectionPongies/PongieList";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import SearchBarChannels from "@/components/chatPage/searchBar/SearchBarChannels";
 import ChannelList from "./sectionChannels/ChannelList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 
 export default function SectionChannels({socket, isOwner, profile}: {
 	socket: Socket | undefined;
@@ -67,16 +67,16 @@ export default function SectionChannels({socket, isOwner, profile}: {
 			why: string;
 		}) => {
 			if (payload && payload.why === "updateChannels") {
-				socket?.emit('getNotif', (payload: Notif) => {
-					if (payload && payload.redChannels) {
-						setNotifIds(payload.redChannels);
-					}
-				});
+				// socket?.emit('getNotif', (payload: Notif) => {
+				// 	if (payload && payload.redChannels) {
+				// 		setNotifIds(payload.redChannels);
+				// 	}
+				// });
 
 				socket?.emit('getChannelsProfile', profile.id, getChannels);
 				
 				if (channelSearchedId.current)
-					socket?.emit('getChannel', channelSearchedId.current, updateChannelSearched);
+					socket?.emit('getChannelProfile', channelSearchedId.current, updateChannelSearched);
 			}
 		}
 
@@ -116,18 +116,18 @@ export default function SectionChannels({socket, isOwner, profile}: {
 		socket?.emit('leave', channel.id, (payload: {
 			success: boolean;
 		}) => {
-			if (!payload.success) {
-				toast.error("Something went wrong, please try again");
-				return ;
-			}
 
-			if (payload.success)
+			if (payload && payload.success)
 				toast.success("Channel removed");
 		});
 	}
 
 	const	openProfile = (id: number) => {
 		router.push(`/home/channel/${id}`);
+	}
+
+	const	handleClickNew = () => {
+		router.push("/home/chat/0");
 	}
 
 	const publicChannelsList = publicChannels.map(channel => {
@@ -214,13 +214,26 @@ export default function SectionChannels({socket, isOwner, profile}: {
 		return <LoadingSuspense />;
 
 	if (isOwner)
+
 		return (
 			<div className={stylesInfoCard.sections}>
-				<SearchBarChannels
-					socket={socket}
-					setChannelSearched={setChannelSearched}
-					channelSearchedId={channelSearchedId}
-				/>
+
+				<div className={styles.searchBar}>
+
+					<div className={styles.bar}>
+						<SearchBarChannels
+							socket={socket}
+							setChannelSearched={setChannelSearched}
+							channelSearchedId={channelSearchedId}
+						/>
+					</div>
+
+					<FontAwesomeIcon
+						icon={faPenToSquare}
+						className={styles.menu}
+						onClick={handleClickNew}
+					/>
+				</div>
 
 				{
 					channelSearched &&

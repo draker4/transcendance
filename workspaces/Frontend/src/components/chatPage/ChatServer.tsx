@@ -5,7 +5,7 @@ import ChatClient from "@/components/chatPage/ChatClient";
 import Profile_Service from "@/services/Profile.service";
 
 export default async function ChatServer({ channelId }: {
-	channelId: number[] | undefined;
+	channelId: number | undefined;
 }) {
 	let		token: string | undefined;
 	let		myself: User;

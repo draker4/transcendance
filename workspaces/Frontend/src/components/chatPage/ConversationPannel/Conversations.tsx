@@ -92,7 +92,7 @@ export default function Conversations({
       // [+] comment fermer le display seulement si la channel quittée est affichée ?
 	  
     } else
-    throw new Error(rep.message);
+      throw new Error(rep.message);
 
 	console.log("Conversations => handleLeave => Successfully done"); // checking
     } catch(e:any) {

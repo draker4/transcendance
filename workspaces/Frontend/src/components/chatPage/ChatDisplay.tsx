@@ -56,7 +56,7 @@ export default function ChatDisplay({
 
   if (!display) return <div className={styles.main}></div>;
 
-  if ("button" in display) {
+  if ("button" in display && display.button === "new") {
     return (
       <div className={styles.main}>
         <DisplayInfos

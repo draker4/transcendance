@@ -57,9 +57,9 @@ export class ChannelController {
 
     try {
 
-		const checkRep = await this.channelService.checkEditAuthorization(req.user.id, edit);
-		if (!checkRep.success) throw new Error(checkRep.message);
-      rep = await this.channelService.editRelation(req.user.id, edit);
+      const checkRep = await this.channelService.checkEditAuthorization(req.user.id, edit);
+      if (!checkRep.success) throw new Error(checkRep.message);
+        rep = await this.channelService.editRelation(req.user.id, edit);
 
     } catch (error) {
       rep.success = false;

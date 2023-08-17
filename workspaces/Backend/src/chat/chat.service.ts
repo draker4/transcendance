@@ -281,14 +281,87 @@ export class ChatService {
     }
   }
 
-  // [!] getChannel update !!!
+  async getChannelProfile(userId: number, channelId: number) {		
+    try {
+      const channel = await this.channelRepository.findOne({
+        where: { id: channelId },
+        relations: ['avatar'],
+      });
+  
+      if (!channel)
+        return {
+          error: 'no channel found',
+        };
+  
+      if (channel.avatar?.decrypt && channel.avatar?.image?.length > 0) {
+        channel.avatar.image = await this.cryptoService.decrypt(
+          channel.avatar.image,
+        );
+      }
+  
+      const myChannel = await this.userChannelRelation.findOne({
+        where: { userId: userId, channelId: channelId },
+      });
+  
+      if (myChannel) {
+
+        if (myChannel.isBanned)
+          return {
+            error: "banned",
+          };
+
+        if (channel.type === "private"
+          && (!myChannel.joined || !myChannel.invited))
+          return {
+            error: "private channel",
+          }
+              
+          return {
+            id: channel.id,
+            name: channel.name,
+            avatar: channel.avatar,
+            type: channel.type,
+            isBoss: myChannel.isBoss,
+            isChanOp: myChannel.isChanOp,
+            joined: myChannel.joined,
+            invited: myChannel.invited,
+            isBanned: myChannel.isBanned,
+            muted: myChannel.muted,
+          };
+      }
+  
+      return {
+        id: channel.id,
+        name: channel.name,
+        avatar: channel.avatar,
+        type: channel.type,
+        isBoss: false,
+        isChanOp: false,
+        joined: false,
+        invited: false,
+        isBanned: false,
+        muted: false,
+      };
+
+    } catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
   async getChannel(channelId: number, userId: number, userSockets: Socket[], server: Server) {		
       try {
         const	user = await this.usersService.getUserChannels(userId);
         const	channel = await this.channelService.getChannelById(channelId);
   
-        if (!user || !channel)
+        if (!user)
           throw new Error('no channel or user found');
+        
+        if (!channel)
+          return {
+            success: false,
+            error: 'no channel',
+            channel: null,
+          }
   
         // check if relation exists
         let relation = await this.userChannelRelation.findOne({
@@ -833,6 +906,12 @@ export class ChatService {
       await this.userPongieRelation.save(relationUser);
       await this.userPongieRelation.save(relationPongie);
 
+      if (relationPongie.isFriend || relationPongie.isInvited)
+        await this.notifRepository.update(
+          pongie.notif.id,
+          { redPongies: [...pongie.notif.redPongies, user.id] },
+        );
+
       if (pongieSockets.length !== 0) {
         for (const socket of pongieSockets) {
           server.to(socket.id).emit('notif', {
@@ -905,6 +984,12 @@ export class ChatService {
 
       await this.userPongieRelation.save(relationUser);
       await this.userPongieRelation.save(relationPongie);
+
+      const updatedRedPongies = pongie.notif.redPongies.filter(id => id !== user.id);
+      await this.notifRepository.update(
+        pongie.notif.id,
+        { redPongies: updatedRedPongies },
+      );
 
       if (pongieSockets.length !== 0) {
         for (const socket of pongieSockets) {
@@ -1142,7 +1227,7 @@ export class ChatService {
       let channel = await this.channelService.getChannelById(channelId);
 
       if (!channel) {
-		isCreation = true;
+		    isCreation = true;
         channel = await this.channelService.addChannel(
           channelName,
           channelType,
@@ -1180,6 +1265,14 @@ export class ChatService {
           channel: null,
         };
 
+      if (channel.type === "private"
+        && (!relation.joined || !relation.invited))
+        return {
+          success: false,
+          exists: false,
+          banned: true,
+          channel: null,
+        };
         
       // check if user already joined
       if (!relation.joined) {
@@ -1407,13 +1500,17 @@ export class ChatService {
       // Upload Data for clients in channel profile component
       server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
         newRelation: {
-          joined : true,
+          joined : false,
         },
         userId: userId ,
         senderId: userId});
 
       // send message server [!]
       server.to('channel:' + channelId).emit('sendMsg', msg);
+
+      return {
+        success: true,
+      }
 
     } catch (error) {
       throw new WsException(error.message);

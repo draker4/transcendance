@@ -5,14 +5,19 @@ import { Suspense } from "react";
 
 export default async function ChatPage({ params: { id } }: {
 	params: {
-		id: number[];
+		id: string[];
 	}
 }) {
+	let	channelId: number | undefined = undefined;
+
+	if (id && id.length >= 0 && !isNaN(parseInt(id[0])))
+		channelId = parseInt(id[0]);
+
 	return (
 		<>
 			<Refresher />
 			<Suspense fallback={<LoadingSuspense/>}>
-				<ChatServer channelId={id}/>
+				<ChatServer channelId={channelId}/>
 			</Suspense>
 		</>
 	)

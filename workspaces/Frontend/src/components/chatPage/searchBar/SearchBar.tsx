@@ -127,6 +127,7 @@ export default function SearchBar({ socket, openDisplay }: {
 			success: boolean;
 			exists: boolean;
 			banned: boolean;
+			private: boolean;
 			channel: Channel;
 		  }) => {
 			if (payload.success) {
@@ -150,6 +151,12 @@ export default function SearchBar({ socket, openDisplay }: {
 				id: -1,
 				error: true,
 				msg: `You blacklisted ${name} or he has!`,
+			  });
+			} else if (payload.private) {
+			  setError({
+				id: -1,
+				error: true,
+				msg: `You cannot see this channel, sorry!`,
 			  });
 			  setDropdownVisible(true);
 			}

@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAddressCard, faFaceLaughBeam, faMessage } from "@fortawesome/free-regular-svg-icons";
-import { faCheck, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPeopleGroup, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -30,6 +30,32 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 		}
 	}
 
+	const	addChannel = () => {
+		socket?.emit('join', {
+			id: channel.id,
+			channelName: channel.name,
+			channelType: channel.type,
+		}, (payload: {
+			success: boolean;
+			exists: boolean;
+			banned: boolean;
+			private: boolean;
+			channel: Channel;
+		  }) => {
+			if (payload.success)
+				toast.success(`Welcome to ${channel.name}`);
+
+			else if (payload.banned)
+				toast.error("You are banned from this channel!");
+			
+			else if (payload.private)
+				toast.error("You cannot see this channel, sorry!");
+
+			else
+				toast.error('Something went wrong, please try again!');
+		});
+	}
+
 	const	openChat = () => {
 		socket?.emit('join', {
 			id: channel.id,
@@ -39,6 +65,7 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 			success: boolean;
 			exists: boolean;
 			banned: boolean;
+			private: boolean;
 			channel: Channel;
 		  }) => {
 
@@ -46,7 +73,10 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 				router.push(`/home/chat/${payload.channel.id}`)
 
 			else if (payload.banned)
-				toast.error("You are not allowed to see this channel!");
+				toast.error("You are banned from this channel!");
+			
+			else if (payload.private)
+				toast.error("You cannot see this channel, sorry!");
 
 			else
 				toast.error('Something went wrong, please try again!');
@@ -55,6 +85,39 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 
 	return (
 		<div className={styles.footer}>
+
+			{
+				!channel?.joined && !channel.isBanned &&
+				<div onClick={addChannel}>
+					<Badge badgeContent={
+						<FontAwesomeIcon
+							icon={faPlus}
+						/>} sx={badgeStyle}
+						style={{cursor: 'pointer'}}
+						overlap="circular"
+					>
+						<FontAwesomeIcon
+							icon={faPeopleGroup}
+							className={styles.icon}
+						/>
+					</Badge>
+				</div>
+			}
+
+			{
+				channel?.joined && !channel.isBanned &&
+				<Badge badgeContent={
+					<FontAwesomeIcon
+						icon={faCheck}
+					/>
+				} sx={badgeStyle} overlap="circular" >
+					<FontAwesomeIcon
+						icon={faPeopleGroup}
+						className={styles.iconFriend}
+						style={{color: "#8bc34a"}}
+					/>
+				</Badge>
+			}
 
 			<FontAwesomeIcon
 				icon={faAddressCard}

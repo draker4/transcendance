@@ -21,7 +21,7 @@ export default function ChatClient({
 }: {
   token: string;
   myself: Profile & { avatar: Avatar };
-  channelId: number[] | undefined;
+  channelId: number | undefined;
 }) {
   const [littleScreen, setLittleScreen] = useState<boolean>(true);
   const [open, setOpen] = useState<boolean>(false);
@@ -93,8 +93,9 @@ export default function ChatClient({
   }, [socket]);
 
   useEffect(() => {
-    if (socket && channelId && channelId.length >= 1)
-      socket.emit('getChannel', channelId[0], (payload: {
+    console.log("useeffect=", channelId)
+    if (socket && channelId && channelId !== 0)
+      socket.emit('getChannel', channelId, (payload: {
         success: boolean;
         error: string;
         channel: Channel;
@@ -110,8 +111,17 @@ export default function ChatClient({
         toast.info('This channel is protected! You need a password');
       if (payload && payload.error && payload.error === "private")
         toast.info('This channel is private! You cannot see it!');
+      if (payload && payload.error && payload.error === "no channel")
+        return ;
       setError(true);
     });
+
+    if (socket && channelId !== undefined && channelId === 0) {
+      openDisplay({
+        "button": "new",
+      });
+    }
+
   }, [socket]);
 
   if (!socket || (getChannel && !error))

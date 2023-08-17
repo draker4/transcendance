@@ -13,10 +13,6 @@
 	/* border: 1px solid red; */
 }
 
-/* .pongieSearched:hover {
-	background-color: var(--primary2);
-} */
-
 .avatar {
 	width: 40px;
 	height: 40px;
@@ -71,4 +67,30 @@
 
 .otherPongies:hover {
 	background-color: var(--primary2);
+}
+
+.searchBar {
+	display: flex;
+	flex-flow: row nowrap;
+	/* border: 1px solid red; */
+	justify-content: space-between;
+	align-items: center;
+}
+
+.bar {
+	flex-grow: 1;
+}
+
+.menu {
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+}
+
+.menu:hover {
+	scale: 1.05;
+}
+
+.menu:active {
+	scale: 0.95;
 }
