@@ -1,12 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { WsException } from '@nestjs/websockets';
 import { ChannelService } from 'src/channels/channel.service';
-import { sendMsgDto } from 'src/chat/dto/sendMsg.dto';
 import { Message } from 'src/utils/typeorm/Message.entity';
 import { Repository } from 'typeorm';
-import { saveNewMsgDto } from './dto/saveNewMsg.dto';
+import { MakeMessage } from './dto/makeMessage';
 
 @Injectable()
 export class MessagesService {
@@ -17,20 +15,34 @@ export class MessagesService {
     private readonly channelService: ChannelService,
   ) {}
 
-  async addMessage(message: sendMsgDto) {
-    const channel = await this.channelService.getChannelById(message.channelId);
+  async addMessage(message: MakeMessage) {
+    try {
+      // const channel = await this.channelService.getChannelById(message.channelId);
+  
+      if (!message.channel || (!message.user && !message.isServerNotif))
+        throw new Error(`Database can't find channel[${message.channel.name}]`);
+      else if (!message.user && !message.isServerNotif)
+        throw new Error(`Error message server notif type`);
 
-    if (!channel || !message.sender)
-      throw new Error("Database can't find " + message.channelName);
+        
+      const messageSaved = await this.messageRepository.save(message);
+        
+      if (!message.isServerNotif) {
+        await this.channelService.saveLastMessage(message.channel.id, messageSaved);
+      }
+    } catch(error) {
+      this.log(error.message);
+    }
+  }
 
-    const newMsg: saveNewMsgDto = {
-      content: message.content,
-      channel: channel,
-      user: message.sender,
-    };
 
-    const messageSaved = await this.messageRepository.save(newMsg);
 
-    await this.channelService.saveLastMessage(channel.id, messageSaved);
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const gray = '\x1b[90m';
+    const stop = '\x1b[0m';
+
+    process.stdout.write(gray + '[MessageService]  ' + stop);
+    console.log(message);
   }
 }

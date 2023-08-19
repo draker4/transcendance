@@ -22,6 +22,7 @@ import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { ClearNotifDto } from './dto/clearNotif.dto';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
+import { MakeMessage } from '@/messages/dto/makeMessage';
 
 @Injectable()
 export class ChatService {
@@ -429,15 +430,28 @@ export class ChatService {
 
         if (channel.type !== "privateMsg") {
           const date = new Date();
+          const content = `${user.login} just joined the channel`;
 
           const msg: sendMsgDto = {
-            content: `${user.login} just arrived`,
+            content: content,
             date: date.toISOString(),
             sender: null,
             channelName: relation.channel.name,
             channelId: channelId,
             isServerNotif: true,
           };
+
+          const saveServerNotif : MakeMessage = {
+            content: content,
+            channel: relation.channel,
+            isServerNotif: true,
+          }
+
+          try {
+            this.messageService.addMessage(saveServerNotif)
+          } catch (dbError) {
+            console.log("saving notif in db failed : " + dbError.message);
+          }
 
           server.to('channel:' + channelId).emit('sendMsg', msg);
           'channel:' + channelId;
@@ -1053,7 +1067,7 @@ export class ChatService {
       channel.messages = await Promise.all(
         channel.messages.map(async (message) => {
           // decrypt image if needed
-          if (message.user.avatar.decrypt) {
+          if (!message.isServerNotif && message.user && message.user.avatar.decrypt) {
             message.user.avatar.image = await this.cryptoService.decrypt(
               message.user.avatar.image,
             );
@@ -1287,15 +1301,28 @@ export class ChatService {
 	  }
 
       const date = new Date();
+      const content = `${user.login} just joined the channel`;
 
       const msg: sendMsgDto = {
-        content: `${user.login} just arrived`,
+        content: content,
         date: date.toISOString(),
         sender: null,
         channelName: relation.channel.name,
         channelId: channelId,
         isServerNotif: true,
       };
+
+        const saveServerNotif : MakeMessage = {
+          content: content,
+          channel: relation.channel,
+          isServerNotif: true,
+        }
+
+        try {
+          this.messageService.addMessage(saveServerNotif)
+        } catch (dbError) {
+          console.log("saving notif in db failed : " + dbError.message);
+        }
 
       server.to('channel:' + channelId).emit('sendMsg', msg);
 
@@ -1572,7 +1599,7 @@ export class ChatService {
   }
 
 
-  async receiveNewMsg(message: newMsgDto, reqUserId: number, server: Server) {
+  async receiveNewMsg(message: {content:string, channelId:number}, reqUserId: number, server: Server) {
     try {
       const now: Date | string = new Date();
       const nowtoISOString = now.toISOString();
@@ -1609,11 +1636,18 @@ export class ChatService {
         isServerNotif: false,
       };
 
+      const makeMsg: MakeMessage = {
+        content: message.content,
+        user: sender,
+        channel: fetchedChannel,
+        isServerNotif: false,
+      }
+
       this.log(
         `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
       ); // checking
 
-      await this.messageService.addMessage(sendMsg);
+      await this.messageService.addMessage(makeMsg);
 
       this.log(`message emit to room : 'channel:${sendMsg.channelId}'`);
       server.to('channel:' + sendMsg.channelId).emit('sendMsg', sendMsg);
@@ -1693,7 +1727,7 @@ export class ChatService {
     infos: EditChannelRelationDto & { server: Server; from: number },
   ) {
     const content: string = await this.makeEditRelationNotifContent(infos);
-    this.sendServerNotifMsg(
+    await this.sendServerNotifMsg(
       infos.channelId,
       content,
       infos.server,
@@ -1701,7 +1735,7 @@ export class ChatService {
   }
 
   // tools
-  private sendServerNotifMsg(
+  private async sendServerNotifMsg(
     channelId: number,
     content: string,
     server: Server,
@@ -1709,6 +1743,9 @@ export class ChatService {
     try {
       const now = new Date();
       const nowtoISOString = now.toISOString();
+
+      const channel = await this.channelService.getChannelById(channelId);
+      if (!channel) throw new Error(`Can't retrieve channel[${channelId}]`)
 
       const notif: sendMsgDto = {
         content: content,
@@ -1719,7 +1756,20 @@ export class ChatService {
         isServerNotif: true,
       };
 
+      // [+] a continuer ici aussi
+      const newMessage : MakeMessage = {
+        content: content,
+        user: undefined,
+        channel: channel,
+        isServerNotif: true
+      }
+
       server.to('channel:' + channelId).emit('sendMsg', notif);
+
+      // [+] ajout archivage des notif en cours :
+      console.log("before save notif message");// checking
+      this.messageService.addMessage(newMessage);
+      console.log("after save notif message");// checking
     } catch (e) {
       this.log('Error : ' + e.message);
     }
@@ -1758,7 +1808,7 @@ export class ChatService {
       } else if (infos.newRelation.joined === true && !isSelf) {
         action = 'allows joinning channel';
       } else if (infos.newRelation.joined === true && isSelf) {
-        action = '[!] just joined the channel';
+        action = 'just joined the channel';
         needEnd = false;
       } else if (infos.newRelation.joined === false && !isSelf) {
         action = 'gives a channel kick';

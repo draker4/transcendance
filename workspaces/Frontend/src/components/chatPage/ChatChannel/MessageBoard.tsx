@@ -27,7 +27,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
     joiningMessages();
   }, [messages]);
 
-  const isSameSender = (senderA: User, senderB: User) => {
+  const isSameSender = (senderA: User | undefined, senderB: User | undefined) => {
     if (!senderA || !senderB)
       return false;
     return senderA.id === senderB.id;
@@ -64,7 +64,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
         lastGroup.messages.unshift(currentMsg);
       } else {
         join.push({
-          user: currentMsg.sender,
+          user: currentMsg.isServerNotif ? undefined : currentMsg.sender,
           date: currentMsg.date,
           messages: [currentMsg],
           isServerNotif: currentMsg.isServerNotif,
@@ -72,7 +72,6 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
       }
     }
 
-    // console.log(join);
     setGroupedMessages(join);
   };
 

@@ -412,7 +412,6 @@ export class ChatGateway implements OnModuleInit {
     return users;
   }
 
-  // @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editRelation')
   async sendEditRelationEvents(
     @MessageBody() payload: EditChannelRelationDto,

@@ -33,7 +33,7 @@ export class Message {
   // Relation one message to one user (unidirectionnel)
   @ManyToOne(() => User)
   @JoinColumn()
-  user: User;
+  user?: User;
 
   // Si pas de user === server message/notif
   // en plus par securite un booleen isServerNotif par defaut a fasle

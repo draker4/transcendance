@@ -10,7 +10,6 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import Channel_Service from "@/services/Channel.service";
-import { log } from "console";
 
 type Props = {
   icon: ReactNode;
@@ -33,7 +32,7 @@ type ReceivedMsg = {
 type LoadMsg = {
   content: string;
   createdAt: string;
-  user: User;
+  user?: User;
   isServerNotif: boolean;
   updatedAt: string;
 };
@@ -57,10 +56,11 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
           modifiedDate.setHours(originalDate.getHours() + 2);
           const msg: Message = {
             content: item.content,
-            sender: item.user,
+            sender: item.isServerNotif ? undefined : item.user,
             date: modifiedDate,
             isServerNotif: item.isServerNotif,
           };
+          console.log("ChatChannel => socket?.emit( \"getMessages\" => +One :", msg);
           previousMsg.push(msg);
         });
 
@@ -71,7 +71,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 				}
 			});
 		}
-        console.log(previousMsg);
         setMessages(previousMsg);
       }
     );
@@ -98,7 +97,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   }
 
   const handleEditRelation = (edit:EditChannelRelation) => {
-    console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
+    // console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
 
     if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)

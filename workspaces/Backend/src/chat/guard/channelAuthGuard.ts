@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import { ChannelService } from 'src/channels/channel.service';
 
@@ -15,9 +14,9 @@ export class ChannelAuthGuard implements CanActivate {
     private readonly channelService: ChannelService,
   ) {}
 
-  canActivate(
+  async canActivate(
     context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  ): Promise<boolean> {
 
 
     const req = context.switchToHttp().getRequest();
@@ -27,6 +26,23 @@ export class ChannelAuthGuard implements CanActivate {
     const channelId = message.channelId;
     const userId = req.user.id;
 
-    return this.channelService.isUserInChannel(userId, channelId);
+    const isAllowed = await this.channelService.isUserInChannel(userId, channelId);
+
+    if (!isAllowed)
+      this.log(`user[${userId}] not into channel[${channelId}]`)
+
+    return isAllowed;
+  }
+
+
+  // tools
+
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const green = '\x1b[36m';
+    const stop = '\x1b[0m';
+
+    process.stdout.write(green + '[ChannelAuthGuard]  ' + stop);
+    console.log(message);
   }
 }
