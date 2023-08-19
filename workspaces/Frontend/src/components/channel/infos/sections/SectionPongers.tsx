@@ -35,12 +35,12 @@ const	[leavers, setLeavers] = useState<UserRelation[]>([]);
 const   [notif, setNotif] = useState<string>("");
 
 useEffect(() => {
-  const filteredBoss = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBoss));
-  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBoss && !relation.isBanned));
+  const filteredBoss = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBoss && relation.joined));
+  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBoss && !relation.isBanned && relation.joined));
   const filteredPongers = channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined  && !relation.isBoss && !relation.isChanOp && !relation.isBanned));
   const filteredInvited = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited));
   const filteredBanned = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned));
-  const filteredLeavers = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && !relation.invited));
+  const filteredLeavers = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isBanned && !relation.invited));
 
   setBoss(filteredBoss);
   setOperators(filteredOperators);

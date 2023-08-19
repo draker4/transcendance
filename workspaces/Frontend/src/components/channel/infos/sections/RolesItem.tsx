@@ -72,7 +72,7 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
         {relation.muted && <FontAwesomeIcon icon={faVolumeXmark} style={{marginLeft: "0.3rem"}}/>}
       </Link>
 
-      { isFocused && (myRelation.isChanOp || myRelation.isBoss) && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}
+      { isFocused && ((myRelation.isChanOp || myRelation.isBoss) && myRelation.joined && !myRelation.isBanned) && <ChanOpControlPannel channelId={channelId} role={role} relation={relation} myRelation={myRelation} lists={lists} socket={socket}/>}
     </article>
   );
 }

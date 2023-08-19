@@ -387,14 +387,39 @@ export class ChannelService {
 			rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`
 		}
 
-		// [+] save relation dans la db maintenant
 		const repDatabase:ReturnData = await this.updateChannelUserRelation(relation);
 		if (!repDatabase.success)
 			throw new Error("Error occured while updating user channel relation in database : " + repDatabase.message);
 
+    if (channelInfos.newRelation.muted !== undefined && channelInfos.newRelation.muted === true) {
+      setTimeout(async () => {
+        await this.unMute(channelInfos);
+      }, 10 * 60 * 1000);
+    }
+
 		rep.success = true;
 		return rep;
 	}
+
+private async unMute(channelInfos:EditChannelRelationDto) {
+    try {
+      const	relation:UserChannelRelation = await this.userChannelRelation.findOne({
+        where: { userId:channelInfos.userId, channelId:channelInfos.channelId }
+      });
+      if (relation.muted) {
+        relation.muted = false;
+
+        const repDatabase:ReturnData = await this.updateChannelUserRelation(relation);
+        if (!repDatabase.success)
+          throw new Error("Error occured while updating user channel relation in database : " + repDatabase.message);
+
+        // [+] notifier le retour ou forcer update ... hum ?
+
+        }
+    } catch(timeErr) {
+      this.log(`unMute auto timer error : ${timeErr.message}`);
+    }
+}
 	
 
   public async forceJoinPrivateMsgChannel(senderId:number, channelId:number, connectedUsers:Map<Socket, string>):Promise<ReturnData> {
@@ -404,8 +429,6 @@ export class ChannelService {
     }
     
     try {
-      // [+] CONTINUER ICI
-
       // [0] get privateMsg Channel + deduce target id
       const channel = await this.getChannelById(channelId);
       if (!channel)
