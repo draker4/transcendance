@@ -30,6 +30,7 @@ export default function AvatarUser({
         <Avatar
           src={avatar.image}
           variant={avatar.variant as "circular" | "rounded"}
+          sizes="cover"
           sx={{
             width: "100%",
             height: "100%",
@@ -37,7 +38,7 @@ export default function AvatarUser({
             borderStyle: "solid",
             borderColor: `${borderColor}`,
             backgroundColor: `${backgroundColor}`,
-			borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
+			      borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
           }}
         >
           {avatar.text}

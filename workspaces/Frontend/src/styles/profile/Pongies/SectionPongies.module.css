@@ -14,8 +14,8 @@
 }
 
 .avatar {
-	width: 40px;
 	height: 40px;
+	aspect-ratio: 1 / 1;
 	flex-shrink: 0;
 }
 

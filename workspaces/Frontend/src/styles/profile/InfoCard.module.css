@@ -204,6 +204,7 @@
   padding: 6px;
   height: 45px;
   display: flex;
+  align-items: center;
   cursor: pointer;
 }
 
@@ -212,8 +213,8 @@
 }
 
 .rolesList .row .avatar {
-  height: 100%;
-  aspect-ratio: 1;
+  height: 40px;
+  width: 40px;
 }
 
 .rolesList .row a {

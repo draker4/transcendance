@@ -3,6 +3,7 @@ import ErrorChannel from "@/components/channel/ErrorChannel";
 import { Refresher } from "@/components/refresher/Refresher";
 import Avatar_Service from "@/services/Avatar.service";
 import Channel_Service from "@/services/Channel.service";
+import { CryptoService } from "@/services/Crypto.service";
 import Profile_Service from "@/services/Profile.service";
 import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
@@ -12,6 +13,8 @@ type Params = {
     id: number;
   };
 };
+
+const Crypto = new CryptoService();
 
 export default async function ChannelprofilePage({ params: { id } }: Params) {
 
@@ -83,6 +86,17 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
+
+    if (channelAndUsersRelation.usersRelation.length > 0) {
+      for (const relationUser of channelAndUsersRelation.usersRelation) {
+        const avatarUser = relationUser.user.avatar;
+
+        if (avatarUser.decrypt) {
+          avatarUser.image = await Crypto.decrypt(avatarUser.image);
+        }
+      }
+    }
+
     channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
     const myProfile = await profileService.getProfileByToken();
 

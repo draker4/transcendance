@@ -12,7 +12,7 @@ export default class Channel_Service {
       this.token,
       "channel",
       id.toString(),
-      "GET"
+      "GET",
     );
     const data: ChannelUsersRelation = await response.json();
 
