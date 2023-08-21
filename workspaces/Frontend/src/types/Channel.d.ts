@@ -1,6 +1,4 @@
-export type ChannelType = "public" | "protected" | "private" | "privateMsg";
-
-export type Channel = {
+type Channel = {
   id: number;
   name: string;
   avatar: Avatar;
