@@ -25,7 +25,7 @@
 .avatar {
   flex: 0 0 auto;
   width: clamp(60px, 8vh, 150px);
-  height: auto;
+  height: clamp(60px, 8vh, 150px);
   margin: 0 10px;
 }
 

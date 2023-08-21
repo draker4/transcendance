@@ -13,7 +13,6 @@ export default function ChooseAvatar({
   selectAvatar,
   text,
   avatars,
-  setAvatar,
   fontSize,
   textButton,
   textButtonInitial,
@@ -23,7 +22,6 @@ export default function ChooseAvatar({
   selectAvatar: (avatar: Avatar) => void;
   text: string;
   avatars: string[];
-  setAvatar: Dispatch<SetStateAction<string[]>>;
   fontSize: string;
   textButton: string;
   textButtonInitial: string;
@@ -31,6 +29,7 @@ export default function ChooseAvatar({
   const [colorBorder, setColorBorder] = useState<string>(PongColors.appleGreen);
   const [backgroundColor, setBackgroundColor] = useState<string>(PongColors.appleGreen);
   const [selectedAvatar, setSelectedAvatar] = useState<string>("empty");
+  const [avatarsAdded, setAvatarsAdded] = useState<string[]>([]);
 
   const handleBorder = (color: string) => {
     setColorBorder(color);
@@ -142,9 +141,41 @@ export default function ChooseAvatar({
           );
         })}
 
+        {avatarsAdded.map((avatar) => {
+          return (
+            <Avatar
+              className={`${styles.avatar} ${
+                avatar === selectedAvatar ? styles.selected : ""
+              }`}
+              key={avatar}
+              src={avatar}
+              alt={text}
+              variant="circular"
+              onClick={() =>
+                handleSelectAvatar(avatar, {
+                  image: avatar,
+                  variant: "circular",
+                  borderColor: colorBorder,
+                  backgroundColor: backgroundColor,
+                  text: text,
+                  empty: false,
+                  isChannel: false,
+                  decrypt: true,
+                })
+              }
+              sx={{
+                width: 80,
+                height: 80,
+                border: `4px solid ${colorBorder}`,
+                backgroundColor: `${backgroundColor}`,
+              }}
+            />
+          );
+        })}
+
         <div className={styles.avatar}>
           <UploadButton
-            setAvatar={setAvatar}
+            setAvatar={setAvatarsAdded}
             borderColor={colorBorder}
             backgroundColor={backgroundColor}
           />

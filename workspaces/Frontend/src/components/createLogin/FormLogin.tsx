@@ -23,7 +23,6 @@ export default function FormLogin({
   const [access_token, setAccessToken] = useState<string>("");
   const [refresh_token, setRefreshToken] = useState<string>("");
   const [textButton, setTextButton] = useState<string>(textButtonInitial);
-  const [avatarList, setAvatarList] = useState<string[]>(avatars);
   const router = useRouter();
   const config: Config = {
     dictionaries: [names],
@@ -171,8 +170,7 @@ export default function FormLogin({
             selectBackground={backgroundColor}
             selectAvatar={selectAvatar}
             text={text}
-            avatars={avatarList}
-            setAvatar={setAvatarList}
+            avatars={avatars}
             fontSize="1rem"
             textButton={textButton}
             textButtonInitial={textButtonInitial}
