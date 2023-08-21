@@ -5,8 +5,12 @@ import { ReactNode, useState } from "react";
 
 export default function ChooseColor({
   onSelect,
+  textButton,
+  textButtonInitial,
 }: {
   onSelect: (color: string) => void;
+  textButton: string;
+  textButtonInitial: string;
 }) {
   const [colorClass, setColorClass] = useState<string>(PongColors.appleGreen);
 
@@ -32,8 +36,10 @@ export default function ChooseColor({
   ];
 
   const handleSelect = (color: string) => {
-    setColorClass(color);
-    onSelect(color);
+    if (textButton === textButtonInitial) {
+      setColorClass(color);
+      onSelect(color);
+    }
   };
 
   const renderColor = () => {

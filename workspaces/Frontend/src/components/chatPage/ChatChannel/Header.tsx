@@ -45,6 +45,7 @@ Header({ icon, channel, myself, channelCodeName }: Props) {
             borderSize="3px"
             borderColor={channel.avatar.borderColor}
             backgroundColor={channel.avatar.backgroundColor}
+            fontSize="1rem"
           />
         </div>
         <div style={{ color: channel.avatar.borderColor }} className={styles.name}>

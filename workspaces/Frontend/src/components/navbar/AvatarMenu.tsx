@@ -141,6 +141,7 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
             borderSize={"3px"}
             backgroundColor={avatarUpdated.backgroundColor}
             borderColor={avatarUpdated.borderColor}
+            fontSize="1rem"
           />
         </div>
         {menuOpen && profile.id > 0 && (

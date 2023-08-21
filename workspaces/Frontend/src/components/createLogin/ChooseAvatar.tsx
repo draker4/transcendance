@@ -13,18 +13,23 @@ export default function ChooseAvatar({
   selectAvatar,
   text,
   avatars,
-  setAvatar,
+  fontSize,
+  textButton,
+  textButtonInitial,
 }: {
   selectBorder: (color: string) => void;
   selectBackground: (color: string) => void;
   selectAvatar: (avatar: Avatar) => void;
   text: string;
   avatars: string[];
-  setAvatar: Dispatch<SetStateAction<string[]>>;
+  fontSize: string;
+  textButton: string;
+  textButtonInitial: string;
 }) {
   const [colorBorder, setColorBorder] = useState<string>(PongColors.appleGreen);
   const [backgroundColor, setBackgroundColor] = useState<string>(PongColors.appleGreen);
   const [selectedAvatar, setSelectedAvatar] = useState<string>("empty");
+  const [avatarsAdded, setAvatarsAdded] = useState<string[]>([]);
 
   const handleBorder = (color: string) => {
     setColorBorder(color);
@@ -37,13 +42,10 @@ export default function ChooseAvatar({
   };
 
   const handleSelectAvatar = (key: string, avatar: Avatar) => {
-    // if (
-    //   avatar.image?.length > 0 &&
-    //   !avatar.image.includes("/images/avatars/avatar")
-    // )
-    //   avatar.decrypt = true;
-    setSelectedAvatar(key);
-    selectAvatar(avatar);
+    if (textButton === textButtonInitial) {
+      setSelectedAvatar(key);
+      selectAvatar(avatar);
+    }
   };
 
   return (
@@ -90,7 +92,7 @@ export default function ChooseAvatar({
               variant: "circular",
               borderColor: colorBorder,
               backgroundColor: backgroundColor,
-              text: text.toUpperCase().slice(0, 2),
+              text: text.toUpperCase().slice(0, 3),
               empty: false,
               isChannel: false,
               decrypt: true,
@@ -101,9 +103,10 @@ export default function ChooseAvatar({
             height: 80,
             border: `4px solid ${colorBorder}`,
             backgroundColor: `${backgroundColor}`,
+            fontSize: fontSize,
           }}
         >
-          {text.toUpperCase().slice(0, 2)}
+          {text.toUpperCase().slice(0, 3)}
         </Avatar>
 
         {avatars.map((avatar) => {
@@ -138,9 +141,41 @@ export default function ChooseAvatar({
           );
         })}
 
+        {avatarsAdded.map((avatar) => {
+          return (
+            <Avatar
+              className={`${styles.avatar} ${
+                avatar === selectedAvatar ? styles.selected : ""
+              }`}
+              key={avatar}
+              src={avatar}
+              alt={text}
+              variant="circular"
+              onClick={() =>
+                handleSelectAvatar(avatar, {
+                  image: avatar,
+                  variant: "circular",
+                  borderColor: colorBorder,
+                  backgroundColor: backgroundColor,
+                  text: text,
+                  empty: false,
+                  isChannel: false,
+                  decrypt: true,
+                })
+              }
+              sx={{
+                width: 80,
+                height: 80,
+                border: `4px solid ${colorBorder}`,
+                backgroundColor: `${backgroundColor}`,
+              }}
+            />
+          );
+        })}
+
         <div className={styles.avatar}>
           <UploadButton
-            setAvatar={setAvatar}
+            setAvatar={setAvatarsAdded}
             borderColor={colorBorder}
             backgroundColor={backgroundColor}
           />
@@ -149,8 +184,16 @@ export default function ChooseAvatar({
       </div>
 
       <div className={styles.chooseColor}>
-        <ChooseColor onSelect={handleBorder} />
-        <ChooseColor onSelect={handleBackground} />
+        <ChooseColor
+          onSelect={handleBorder}
+          textButton={textButton}
+          textButtonInitial={textButtonInitial}
+        />
+        <ChooseColor
+          onSelect={handleBackground}
+          textButton={textButton}
+          textButtonInitial={textButtonInitial}
+        />
       </div>
     </div>
   );

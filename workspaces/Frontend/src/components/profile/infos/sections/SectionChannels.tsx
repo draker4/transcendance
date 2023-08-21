@@ -185,6 +185,7 @@ export default function SectionChannels({socket, isOwner, profile}: {
 						borderSize="3px"
 						borderColor={channel.avatar.borderColor}
 						backgroundColor={channel.avatar.backgroundColor}
+						fontSize="1rem"
 					/>
 				</div>
 

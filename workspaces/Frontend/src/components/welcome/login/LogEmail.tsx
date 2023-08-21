@@ -96,7 +96,7 @@ export default function LogEmail({
     setNotif("");
 
     try {
-      await handleCaptcha();
+      // await handleCaptcha();
 
       // if user has forgotten his password
       if (sendPassword !== initialTextForget) {

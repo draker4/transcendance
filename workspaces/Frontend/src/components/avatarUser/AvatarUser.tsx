@@ -5,11 +5,13 @@ export default function AvatarUser({
   borderSize,
   backgroundColor,
   borderColor,
+  fontSize,
 }: {
   avatar: Avatar;
   borderSize: string;
   backgroundColor: string;
   borderColor: string;
+  fontSize: string;
 }) {
   return (
     <>
@@ -39,6 +41,7 @@ export default function AvatarUser({
             borderColor: `${borderColor}`,
             backgroundColor: `${backgroundColor}`,
 			      borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
+            fontSize: fontSize,
           }}
         >
           {avatar.text}

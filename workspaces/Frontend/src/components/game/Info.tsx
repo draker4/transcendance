@@ -67,6 +67,7 @@ function showPlayer(
           borderSize={"3px"}
           backgroundColor={avatar.backgroundColor}
           borderColor={avatar.borderColor}
+          fontSize="1rem"
         />
       </div>
       <h2 style={nameStyle}>{player.name}</h2>

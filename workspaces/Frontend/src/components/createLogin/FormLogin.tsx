@@ -17,12 +17,12 @@ export default function FormLogin({
   avatars: string[];
   token: string;
 }) {
+  const textButtonInitial = "Let's go!";
   const [notif, setNotif] = useState<string>("");
   const [text, setText] = useState<string>("");
   const [access_token, setAccessToken] = useState<string>("");
   const [refresh_token, setRefreshToken] = useState<string>("");
-  const [textButton, setTextButton] = useState<string>("Let's go!");
-  const [avatarList, setAvatarList] = useState<string[]>(avatars);
+  const [textButton, setTextButton] = useState<string>(textButtonInitial);
   const router = useRouter();
   const config: Config = {
     dictionaries: [names],
@@ -56,16 +56,19 @@ export default function FormLogin({
   const handleText = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
 
-    avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
+    avatarChosenRef.current.text = text.toUpperCase().slice(0, 3);
     setText(text);
   };
 
   const generateRandomName = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const randomName = uniqueNamesGenerator(config);
-    const text = randomName;
-    avatarChosenRef.current.text = text.toUpperCase().slice(0, 2);
-    setText(text);
+
+    if (textButton === textButtonInitial) {
+      const randomName = uniqueNamesGenerator(config);
+      const text = randomName;
+      avatarChosenRef.current.text = text.toUpperCase().slice(0, 3);
+      setText(text);
+    }
   };
 
   useEffect(() => {
@@ -109,7 +112,7 @@ export default function FormLogin({
     setNotif(loginChecked);
 
     if (loginChecked.length > 0) {
-      setTextButton("Let's go!");
+      setTextButton(textButtonInitial);
       return;
     }
 
@@ -120,7 +123,7 @@ export default function FormLogin({
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
 
     if (res.access_token.length === 0)
-      setTextButton("Let's go!");
+      setTextButton(textButtonInitial);
 
     setNotif(res.exists);
     setAccessToken(res.access_token);
@@ -167,15 +170,17 @@ export default function FormLogin({
             selectBackground={backgroundColor}
             selectAvatar={selectAvatar}
             text={text}
-            avatars={avatarList}
-            setAvatar={setAvatarList}
+            avatars={avatars}
+            fontSize="1rem"
+            textButton={textButton}
+            textButtonInitial={textButtonInitial}
           />
         </div>
 
         <button
           title="Create avatar"
           className={styles.confirmBtn}
-          disabled={textButton !== "Let's go!"}
+          disabled={textButton !== textButtonInitial}
         >
           {textButton}
         </button>

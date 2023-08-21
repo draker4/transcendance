@@ -26,6 +26,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 	  isBanned: false,
 	  joined: false,
 	  invited: false,
+    muted: false,
 	  user: {
 		  id: 0,
 		  login: "",
@@ -61,6 +62,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 	  isBoss: false,
 	  isChanOp:false,
 	  invited:false,
+    muted: false,
       avatar: {
         image: "",
         variant: "",

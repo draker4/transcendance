@@ -34,6 +34,7 @@ export default function Avatar({
             borderSize="6px"
             backgroundColor={avatar.backgroundColor}
             borderColor={avatar.borderColor}
+            fontSize="3rem"
           />
         )}
         {displaySettings && (
@@ -42,6 +43,7 @@ export default function Avatar({
             borderSize="6px"
             backgroundColor={previewBackground}
             borderColor={previewBorder}
+            fontSize="3rem"
           />
         )}
       </div>

@@ -45,7 +45,7 @@ export default function UploadButton({
   	const	[isFocused, setIsFocused] = useState<boolean>(false);
 	const	[imageSrc, setImageSrc] = useState<string | undefined>(undefined);
 	const	fileInputRef = useRef<HTMLInputElement>(null);
-	const	formRef = useRef<HTMLFormElement>(null);
+	const	formRef = useRef<HTMLDivElement>(null);
 	const 	{ handleSubmit, setValue } = useForm<FormInputs>();
 
 	const handleFocusOn = () => {
@@ -120,7 +120,7 @@ export default function UploadButton({
 	}
 
 	return (
-		<form
+		<div
 			className={styles.form}
 			onFocus={handleFocusOn}
 			onBlur={handleFocusOff}
@@ -141,7 +141,7 @@ export default function UploadButton({
 						defaultValue=""
 						id="fileImage"
 						multiple={false}
-						accept=".png, .jpg, .jpeg"
+						accept=".png, .jpg, .jpeg, .webp"
 						hidden
 						ref={fileInputRef}
 						onChange={handleOnChange}
@@ -194,6 +194,6 @@ export default function UploadButton({
 					</Badge>
 				</Badge>
 			}
-		</form>
+		</div>
 	);
 }
