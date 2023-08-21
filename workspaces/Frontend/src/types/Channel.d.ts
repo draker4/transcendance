@@ -2,7 +2,7 @@ type Channel = {
   id: number;
   name: string;
   avatar: Avatar;
-  type: "public" | "protected" | "private" | "privateMsg";
+  type: ChannelType;
   isBoss: boolean;
   isChanOp: boolean;
   joined: boolean;

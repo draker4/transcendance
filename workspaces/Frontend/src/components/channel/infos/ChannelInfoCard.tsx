@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "@/styles/profile/InfoCard.module.css";
 import NavbarChannelInfo from "./NavbarChannelInfo";
 import SectionPongers from "./sections/SectionPongers";
 import { Socket } from "socket.io-client";
+import SectionCustomChannel from "./sections/custom channel/SectionCustomChannel";
+
 
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
@@ -41,7 +43,8 @@ export default function ChannelInfoCard({
             );
           case 2:
             return (
-              <div className={styles.sections}>contenu section3 : Custom</div>
+              <SectionCustomChannel channelAndUsersRelation={channelAndUsersRelation}
+                myRelation={myRelation} socket={socket}/>
             );
           default:
             return (
