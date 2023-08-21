@@ -422,7 +422,8 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 }
 	
 
-  public async forceJoinPrivateMsgChannel(senderId:number, channelId:number, connectedUsers:Map<Socket, string>):Promise<ReturnData> {
+  public async forceJoinPrivateMsgChannel(senderId:number, channelId:number, connectedUsers:Map<Socket, string>)
+  :Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
       message: ''
@@ -465,6 +466,50 @@ private async unMute(channelInfos:EditChannelRelationDto) {
             });
         }
       }
+
+      rep.success = true;
+    } catch (error: any) {
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+
+  }
+
+  public async editChannelPassword(senderId:number, channelId:number, password:string, connectedUsers:Map<Socket, string>)
+  :Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: ''
+    }
+
+    try {
+      // [0] get Channel +  users relation to check channel master rights
+      const channel = await this.getChannelById(senderId);
+      if (!channel)
+        throw new Error(`channel[${channelId}] not found`);
+      else if (channel.type === "privateMsg")
+        throw new Error(`channel[${channelId}] is a privateMsg channel`);
+      
+      const repRelation = await this.getOneChannelUserRelation(senderId, channelId);
+
+      if (!repRelation)
+        throw new Error(`relation not found channel[${channelId}] user[${senderId}]`);
+      else if (!repRelation.data.isBoss)
+        throw new Error(`user[${senderId}] is not channel master`);
+      
+      // channel.password = password;
+
+
+      /* [+] CONTINUER ICI
+      this.channelRepository.update(channelId, {
+        password:password
+      })
+
+      // [+] emit le changement de password
+      */
+      
 
       rep.success = true;
     } catch (error: any) {

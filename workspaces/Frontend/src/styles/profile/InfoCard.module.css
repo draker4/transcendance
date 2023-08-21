@@ -70,12 +70,18 @@
   padding-left: 0;
 }
 
+.sections p.password {
+  color: var(--secondary1);
+  font-size: 1rem;
+}
+
 .section input::placeholder {
   color: var(--secondary3);
 }
 
 .sections p.story.placeholder,
-.sections p.motto.placeholder {
+.sections p.motto.placeholder,
+.sections p.password.placeholder {
   color: var(--secondary3);
 }
 
@@ -259,6 +265,10 @@
   margin-top: 10px;
 }
 
+.sections .noMargin {
+  margin: 0px;
+}
+
 .sections .button {
   user-select: none;
 	display: inline-block;
@@ -294,3 +304,4 @@
 	color: var(--accent2);
 	border: 3px solid var(--accent2);
 }
+

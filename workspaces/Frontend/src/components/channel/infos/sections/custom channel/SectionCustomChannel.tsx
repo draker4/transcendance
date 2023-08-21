@@ -1,5 +1,5 @@
 import styles from "@/styles/profile/InfoCard.module.css";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Socket } from "socket.io-client";
 import {
   faLock,
@@ -20,15 +20,28 @@ export default function SectionCustomChannel({
   socket,
 }: Props) {
 
-  const tempPassword = "yolo484*"; // [+] a remplacer par le password de channel, prop a ajouter
+  //const tempPassword = "yolo484*"; // [+] a remplacer par le password de channel, prop a ajouter
+  const tempPassword = ""; // [+] a remplacer par le password de channel, prop a ajouter
 
   const [channelType, setChannelType] = useState<ChannelType>(channelAndUsersRelation.channel.type);
   const [password, setPassword] = useState<string>(tempPassword);
+  const [notif, setNotif] = useState<string>("");
+
+  const pack :{
+    password:string,
+    setPassword:Dispatch<SetStateAction<string>>,
+    notif: string,
+    setNotif: Dispatch<SetStateAction<string>>,
+  } = {
+    password: password,
+    setPassword: setPassword,
+    notif: notif,
+    setNotif: setNotif,
+  }
 
 
   const handleSwitchPublicPrivate = (type:ChannelType) => {
       // [+] gestion vers backend + attente reponse
-
       if (channelType === "public" || channelType === "protected")
         setChannelType("private");
       else if (channelType === "private")
@@ -63,18 +76,19 @@ export default function SectionCustomChannel({
   const handleSwitchLock = (locked:boolean) => {
 
     // [+] gestion vers backend + attente rep
-
     // [+] pas oublier si type === protected && password === "" revient a type === public
 
-    /* */
     if (locked) {
       // [+] gestion de valider le password avant, doit etre diff de ""
-        // setChannelType("protected");
+      if (password !== "")
+        setChannelType("protected");
+      else {
+        setNotif("Set a password before locking channel");
+      }
     }
     else if (!locked) {
       setChannelType("public"); 
     }
-    /* */
   }
   
   const makeLockButton = (locked:boolean, onClick:(locked:boolean) => void, displayIt:boolean):JSX.Element => {
@@ -87,7 +101,7 @@ export default function SectionCustomChannel({
     };
 
     const getButtonStatus = ():boolean => {
-       if (locked && channelType === "protected" || !locked && channelType !== "protected")
+       if ((locked && channelType === "protected" ) || (!locked && channelType !== "protected"))
           return true;
        return false;
      }
@@ -115,8 +129,8 @@ export default function SectionCustomChannel({
           {makeLockButton(false, handleSwitchLock, channelType !== "private")}
           {makeLockButton(true, handleSwitchLock, channelType !== "private")}
         
-      { channelType === "protected" && 
-        <EditPassword password={password} setPassword={setPassword}/>
+      { channelType !== "private" && 
+        <EditPassword pack={pack} socket={socket} channelAndUsersRelation={channelAndUsersRelation}/>
       }
 
       {/* TEMPO checking */}

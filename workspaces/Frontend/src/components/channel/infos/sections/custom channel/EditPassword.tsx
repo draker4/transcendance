@@ -1,15 +1,21 @@
 import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { Socket } from "socket.io-client";
 
 type Props = {
-  password: string;
-  setPassword: Dispatch<SetStateAction<string>>
+  pack : {
+    password:string,
+    setPassword:Dispatch<SetStateAction<string>>,
+    notif: string,
+    setNotif: Dispatch<SetStateAction<string>>,
+  }
+  socket:Socket | undefined,
+  channelAndUsersRelation: ChannelUsersRelation,
 }
 
-export default function EditPassword({password, setPassword}:Props) {
+export default function EditPassword({pack, socket, channelAndUsersRelation}:Props) {
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [editedPassword, setEditedPassword] = useState<string>(password);
-  const [notif, setNotif] = useState<string>("");
+  const [editedPassword, setEditedPassword] = useState<string>(pack.password);
 
   const handleEditedPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEditedPassword(event.target.value);
@@ -22,14 +28,28 @@ export default function EditPassword({password, setPassword}:Props) {
   // [+] oblige le type any?
   const handleSubmitPassword = async (e: any) => {
     e.preventDefault();
+    const submitedPassword = e.target.password.value;
 
+    pack.setPassword(submitedPassword);
+    socket?.emit(
+      "editChannelPassword", 
+      {
+        channelId: channelAndUsersRelation.channel.id,
+        password: submitedPassword,
+      }, 
+      (rep:ReturnData) => {
+        console.log("handleSubmitPassword => REP : ", rep); // checking
+    });
+    // [+] set channel type too after response
     setEditMode(false);
+    pack.setNotif("");
   }
 
-  if (!editMode && password === "") {
+  if (!editMode && pack.password === "") {
     return (
       <>
       <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
+      {pack.notif !== "" && <p className={`${styles.notif} ${styles.noMargin}`}>{pack.notif}</p>}
       <div onClick={handleClickEdit}>
         <p className={styles.password + " " + styles.placeholder}>
           {" "}set channel password{" "}
@@ -37,12 +57,13 @@ export default function EditPassword({password, setPassword}:Props) {
       </div>
       </>
     );
-  } else if (!editMode && password !== "") {
+  } else if (!editMode && pack.password !== "") {
     return (
       <>
         <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
+        {pack.notif !== "" && <p className={`${styles.notif} ${styles.noMargin}`}>{pack.notif}</p>}
         <div onClick={handleClickEdit}>
-          <p className={styles.password}> {password} </p>
+          <p className={styles.password}> {pack.password} </p>
         </div>
       </>
     );
@@ -50,6 +71,7 @@ export default function EditPassword({password, setPassword}:Props) {
     return (
       <>
         <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
+        {pack.notif !== "" && <p className={`${styles.notif} ${styles.noMargin}`}>{pack.notif}</p>}
         <form onSubmit={handleSubmitPassword}>
           <p className={styles.password}>
             {" "}
@@ -63,7 +85,6 @@ export default function EditPassword({password, setPassword}:Props) {
               id="passwordInput"
             />
           </p>
-          <div className={styles.notif}>{notif}</div>
 
           <button className={styles.button_type1} type="submit">
             confirm changes
@@ -72,11 +93,4 @@ export default function EditPassword({password, setPassword}:Props) {
       </>
     );
   }
-
-  return (
-    <>
-      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
-      <p>{password}</p>
-    </>
-  )
 }

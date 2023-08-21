@@ -27,6 +27,7 @@ import { JoinDto } from './dto/join.dto';
 import { ClearNotifDto } from './dto/clearNotif.dto';
 import { ChatService } from './chat.service';
 import { ChannelService } from '@/channels/channel.service';
+import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -472,9 +473,35 @@ export class ChatGateway implements OnModuleInit {
     }
 
     try {
-      await this.channelService.forceJoinPrivateMsgChannel(req.user.id, payload.id, this.connectedUsers);
+      const repJoin = await this.channelService.forceJoinPrivateMsgChannel(req.user.id, payload.id, this.connectedUsers);
+      if (!repJoin.success) {
+        throw new Error(repJoin.message);
+      }
+      rep.success = repJoin.success;
+    } catch (error: any) {
+      this.log(`forceJoinPrivateMsgChannel error : ${error.message}`);
+      rep.error = error;
+      rep.message = error.message;
+    }
 
-      rep.success = true;
+    return rep;
+  }
+
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('editChannelPassword')
+  async editChannelPassword(@Request() req, @MessageBody() payload: editChannelPasswordDto)
+  :Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    }
+
+    try {
+      const repEdit = await this.channelService.editChannelPassword(req.user.id, payload, this.connectedUsers);
+      if (!repEdit.success) {
+        throw new Error(repEdit.message);
+      }
+      rep.success = repEdit.success;
     } catch (error: any) {
       this.log(`forceJoinPrivateMsgChannel error : ${error.message}`);
       rep.error = error;
