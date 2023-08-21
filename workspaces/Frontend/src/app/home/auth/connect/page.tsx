@@ -14,7 +14,7 @@ export default function ConnectPage() {
     const setCookies = async () => {
       try {
         const res = await fetch(
-          `http://${process.env.HOST_IP}:3000/api/auth/google`, {
+          `http://${process.env.HOST_IP}:3000/api/auth/connect`, {
           credentials: 'include',
         });
     

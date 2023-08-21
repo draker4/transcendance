@@ -10,6 +10,10 @@ import AvatarUser from "@/components/avatarUser/AvatarUser";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
+interface StatusData {
+    [key: string]: string;
+}
+
 export default function SectionPongies({socket, isOwner, profile}: {
 	socket: Socket | undefined;
 	isOwner: boolean;
@@ -22,6 +26,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 	const	[hasBlacklisted, setHasBlacklisted] = useState<Pongie[]>([]);
 	const	[pongieSearched, setPongieSearched] = useState<Pongie | undefined>();
 	const	[notifIds, setNotifIds] = useState<number[]>([]);
+	const	[status, setStatus] = useState<Map<string, string>>(new Map());
 	const	pongieSearchedId = useRef<number | undefined>();
 	const	router = useRouter();
 
@@ -75,6 +80,18 @@ export default function SectionPongies({socket, isOwner, profile}: {
 			}
 		}
 
+		const	updateStatus = (payload: StatusData) => {
+			if (payload) {
+				console.log("here before", status);
+				const	payloadMap = new Map(Object.entries(payload));
+				const	statusMap = new Map(status);
+
+				payloadMap.forEach((value, key) => statusMap.set(key, value));
+				setStatus(statusMap);
+				console.log("here after", statusMap);
+			}
+		}
+
 		socket?.emit('getPongies', profile.id, getPongies);
 
 		socket?.emit('getNotif', (payload: Notif) => {
@@ -83,10 +100,19 @@ export default function SectionPongies({socket, isOwner, profile}: {
 			}
 		});
 
+		socket?.emit('getStatus', (payload: StatusData) => {
+			if (payload) {
+				const statusMap = new Map(Object.entries(payload));
+				setStatus(statusMap);
+			}
+		});
+
 		socket?.on('notif', updatePongies);
+		socket?.on('updateStatus', updateStatus);
 
 		return () => {
 			socket?.off('notif', updatePongies);
+			socket?.off('updateStatus', updateStatus);
 		}
 
 	}, [socket]);
@@ -156,6 +182,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 					crossFunction={deletePongie}
 					notifsIds={notifIds}
 					setNotifIds={setNotifIds}
+					status={status}
 				/>
 			</div>
 		);
@@ -195,6 +222,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 					crossFunction={refuseInvitation}
 					notifsIds={notifIds}
 					setNotifIds={setNotifIds}
+					status={status}
 				/>
 			</div>
 		);
@@ -209,6 +237,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 					crossFunction={cancelInvitation}
 					notifsIds={notifIds}
 					setNotifIds={setNotifIds}
+					status={status}
 				/>
 			</div>
 		);
@@ -223,6 +252,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 					crossFunction={cancelBlacklist}
 					notifsIds={notifIds}
 					setNotifIds={setNotifIds}
+					status={status}
 				/>
 			</div>
 		);
@@ -252,6 +282,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 							crossFunction={hidePongie}
 							notifsIds={[]}
 							setNotifIds={setNotifIds}
+							status={status}
 						/>
 					</div>
 				}

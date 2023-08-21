@@ -25,7 +25,7 @@ import { StatsService } from '@/stats/service/stats.service';
 export class GameManager {
   // -----------------------------------  VARIABLES  ----------------------------------- //
   private readonly pongOnGoing: Map<string, Pong> = new Map<string, Pong>();
-  private usersConnected: UserInfo[] = [];
+  public usersConnected: UserInfo[] = [];
   private server: Server;
 
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //

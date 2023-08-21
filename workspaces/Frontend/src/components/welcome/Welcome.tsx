@@ -14,7 +14,7 @@ export default function Welcome() {
         <DisconnectClient />
         <p>Crunchy Pong!</p>
       </div>
-    )
+    );
   }
 
   return (

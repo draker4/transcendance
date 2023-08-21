@@ -19,9 +19,10 @@ import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Stats } from '@/utils/typeorm/Stats.entity';
-import { StatsService } from '@/stats/service/stats.service';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
+import { StatsService } from '@/stats/service/stats.service';
+import { StatusService } from '@/statusService/status.service';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
     ChannelService,
     MessagesService,
     StatsService,
+    StatusService,
   ],
 })
 export class ChatModule {}

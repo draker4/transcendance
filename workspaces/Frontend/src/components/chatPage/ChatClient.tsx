@@ -28,7 +28,7 @@ export default function ChatClient({
   const [display, setDisplay] = useState<Display>();
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [error, setError] = useState<boolean>(false);
-  const [getChannel, setGetChannel] = useState<boolean>(channelId && channelId.length >= 1 ? true : false);
+  const [getChannel, setGetChannel] = useState<boolean>(channelId ? true : false);
   const  router = useRouter();
 
   const openDisplay = (display: Display) => {

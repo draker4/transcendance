@@ -17,7 +17,7 @@ export function GET(req: NextRequest) {
 	}
 	else if (crunchyToken) {
 		try {
-			fetch(`http://backend:4000/api/users/disconnectToken`, {
+			fetch(`http://backend:4000/api/users/disconnectByToken`, {
 				method: "DELETE",
 				credentials: 'include',
 			});

@@ -8,6 +8,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import {
+  ConnectedSocket,
   MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -27,6 +28,7 @@ import { JoinDto } from './dto/join.dto';
 import { ClearNotifDto } from './dto/clearNotif.dto';
 import { ChatService } from './chat.service';
 import { ChannelService } from '@/channels/channel.service';
+import { StatusService } from '@/statusService/status.service';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -41,10 +43,12 @@ export class ChatGateway implements OnModuleInit {
   constructor(
     private readonly chatService: ChatService,
     private readonly channelService: ChannelService,
+    private readonly statusService: StatusService,
   ) {}
 
   // Container of connected users : Map<socket, user id>
   private connectedUsers: Map<Socket, string> = new Map<Socket, string>();
+  
   @WebSocketServer()
   server: Server;
 
@@ -61,11 +65,29 @@ export class ChatGateway implements OnModuleInit {
         }
 
         this.connectedUsers.set(socket, payload.sub.toString());
+        this.statusService.add(payload.sub.toString(), "connected");
+
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(socket);
+
+          // update status
+          if (this.connectedUsers.size > 0) {
+            let connected = false;
+
+            for (const user of this.connectedUsers) {
+              if (user[1] === payload.sub.toString()) {
+                connected = true;
+                break;
+              }
+            }
+
+            if (!connected)
+              this.statusService.add(payload.sub.toString(), "disconnected");
+          }
+
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
           for (const connect of this.connectedUsers) {
             console.log(
@@ -87,12 +109,41 @@ export class ChatGateway implements OnModuleInit {
         socket.disconnect();
       }
     });
+
+    setInterval(() => {
+
+      const updateStatus = this.statusService.updateStatus;
+
+      if (updateStatus.size > 0) {
+        console.log("!!! update: ", updateStatus);
+        this.server.emit('updateStatus', Object.fromEntries(updateStatus));
+      }
+
+      this.statusService.remove(updateStatus);
+
+    }, 1000);
   }
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('newMsg')
   async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
     await this.chatService.receiveNewMsg(message, req.user.id, this.server);
+  }
+
+  @SubscribeMessage('disconnectClient')
+  async disconnectClient(
+    @Request() req,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    for (const [key, val] of this.connectedUsers) {
+      if (val === req.user.id.toString() && key !== socket)
+        key.disconnect();
+    }
+  }
+
+  @SubscribeMessage('getStatus')
+  async getStatus(@Req() req) {
+    return this.chatService.getStatus(this.statusService.status, req.user.id);
   }
 
   @SubscribeMessage('notif')

@@ -67,6 +67,20 @@ export class ChatService {
     }
   }
 
+  async getStatus(updateStatus: Map<string, string>, userId: number) {
+    try {
+      const user = await this.usersService.getUserById(userId);
+
+      if (!user)
+        throw new Error('no user found');
+
+      return Object.fromEntries(updateStatus);
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
   async getNotif(userId: number) {
     try {
       const user:User = await this.usersService.getUserById(userId);
@@ -229,12 +243,13 @@ export class ChatService {
 
           return {
             ...channel,
-			isBoss: relation.isBoss,
+			      isBoss: relation.isBoss,
             isChanop: relation.isChanOp,
             joined: relation.joined,
             invited: relation.invited,
             isBanned: relation.isBanned,
             muted: relation.muted,
+            statusPongieId: pongieId,
           };
         }),
       );

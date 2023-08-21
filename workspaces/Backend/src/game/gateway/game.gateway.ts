@@ -27,6 +27,7 @@ import { GameService } from '../service/game.service';
 import { GameManager } from '../class/GameManager';
 import { ColoredLogger } from '../colored-logger';
 import { ActionDTO } from '../dto/Action.dto';
+import { StatusService } from '@/statusService/status.service';
 
 // Decorator to define WebSocketGateway settings
 
@@ -45,6 +46,7 @@ export class GameGateway implements OnModuleInit {
     private readonly gameService: GameService,
     private readonly gameManager: GameManager,
     private readonly logger: ColoredLogger,
+    private readonly statusService: StatusService,
   ) {}
 
   @WebSocketServer()

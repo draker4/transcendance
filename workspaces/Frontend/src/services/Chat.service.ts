@@ -8,13 +8,13 @@ export default class ChatService {
 	public	loading: boolean = false;
 	public	nbExceptions: number = 0;
 
-	public static nbTimes = 0;
+	// public static nbTimes = 0;
 
 	// Singleton
     constructor(token?: string) {
 		// console.log(ChatService.nbTimes);
 
-		ChatService.nbTimes++;
+		// ChatService.nbTimes++;
 		
         if (ChatService.instance) {
 			// console.log("instance returned");

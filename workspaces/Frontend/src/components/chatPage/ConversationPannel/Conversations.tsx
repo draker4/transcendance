@@ -9,6 +9,10 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import ConversationItem from "./ConversationItem";
 import Channel_Service from "@/services/Channel.service";
 
+interface StatusData {
+  [key: string]: string;
+}
+
 export default function Conversations({
   socket,
   maxWidth,
@@ -21,6 +25,7 @@ export default function Conversations({
   myself: Profile & { avatar: Avatar };
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
+  const	[status, setStatus] = useState<Map<string, string>>(new Map());
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
@@ -45,9 +50,29 @@ export default function Conversations({
         loadData();
     }
 
+		const	updateStatus = (payload: StatusData) => {
+			if (payload) {
+				console.log("here before", status);
+				const	payloadMap = new Map(Object.entries(payload));
+				const	statusMap = new Map(status);
+
+				payloadMap.forEach((value, key) => statusMap.set(key, value));
+				setStatus(statusMap);
+				console.log("here after", statusMap);
+			}
+		}
+    
+		socket?.emit('getStatus', (payload: StatusData) => {
+			if (payload) {
+				const statusMap = new Map(Object.entries(payload));
+				setStatus(statusMap);
+			}
+		});
+
     socket?.on("notif", updateChannels);
     socket?.on('notifMsg', updateNotif);
     socket?.on("editRelation", loadData);
+		socket?.on('updateStatus', updateStatus);
 
     loadData();
     updateNotif();
@@ -56,6 +81,7 @@ export default function Conversations({
       socket?.off("notif", updateChannels);
       socket?.off("notifMsg", updateNotif);
       socket?.off("editRelation", loadData);
+			socket?.off('updateStatus', updateStatus);
     }
   }, [socket]);
 
@@ -163,6 +189,8 @@ export default function Conversations({
         handleLeave={handleLeave}
         notifMsg={notifMsg}
         isRecentSection={false}
+        status={status}
+        myself={myself}
       />
     ) : null
   ));
@@ -178,6 +206,8 @@ export default function Conversations({
         handleLeave={handleLeave}
         notifMsg={notifMsg}
         isRecentSection={false}
+        status={status}
+        myself={myself}
       />
     ) : null
   ));
@@ -193,6 +223,8 @@ export default function Conversations({
         handleLeave={handleLeave}
         notifMsg={notifMsg}
         isRecentSection={false}
+        status={status}
+        myself={myself}
       />
     ) : null
   ));
@@ -208,6 +240,8 @@ export default function Conversations({
         handleLeave={handleLeave}
         notifMsg={notifMsg}
         isRecentSection={true}
+        status={status}
+        myself={myself}
       />
     ) : null
   ));

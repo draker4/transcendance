@@ -91,7 +91,6 @@ export class AuthService {
     let access_token = '';
     let refresh_token = '';
 
-	// [!][!][!][?][+] valeurs changees pour empecher decos
     if (!isTwoFactorAuthenticationEnabled) {
       [access_token, refresh_token] = await Promise.all([
         this.jwtService.signAsync(payload, {

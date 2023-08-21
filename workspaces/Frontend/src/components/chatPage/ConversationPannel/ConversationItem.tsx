@@ -1,16 +1,19 @@
 import styles from "@/styles/chatPage/Conversations.module.css";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { Badge } from "@mui/material";
-import { useState } from "react";
+import { Badge, Tooltip } from "@mui/material";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { PongColors } from "@/lib/enums/PongColors.enum";
 
 type Props = {
-    channel:Channel,
+    channel: Channel,
     handleClick: (channel:Channel) => void;
     handleLeave: (channel:Channel) => void;
     notifMsg: NotifMsg[];
-    isRecentSection:boolean
+    isRecentSection:boolean;
+    status: Map<string, string>;
+    myself: Profile & { avatar: Avatar };
 }
 
 const badgeStyle = {
@@ -22,7 +25,15 @@ const badgeStyle = {
 	}
 }
 
-export default function ConversationItem({channel, handleClick, handleLeave, notifMsg, isRecentSection }:Props) {
+export default function ConversationItem({
+  channel,
+  handleClick,
+  handleLeave,
+  notifMsg,
+  isRecentSection,
+  status,
+  myself,
+}: Props) {
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -92,6 +103,43 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
           nbMsg = notif.nbMessages;
       }
     }
+
+    const	[color, setColor] = useState<string>(PongColors.mustardYellow);
+    const	[textStatus, setTextStatus] = useState<string>("disconnected");
+
+    const badgeStyleStatus = {
+      "& .MuiBadge-badge": {
+        backgroundColor: color,
+        border: "1px solid var(--tertiary1)",
+        width: "12px",
+        height: "12px",
+        borderRadius: "100%",
+        right: "5px",
+      }
+    }
+
+    useEffect(() => {
+  
+      if (status && status.size > 0
+        && channel.type === "privateMsg"
+        && channel.statusPongieId
+      ) {
+
+        if (status.has(channel.statusPongieId.toString())) {
+          const	text = status.get(channel.statusPongieId.toString()) as string;
+          setTextStatus(text);
+          if (text === "connected")
+            setColor(PongColors.appleGreen);
+          else if (text === "disconnected")
+            setColor(PongColors.mustardYellow);
+          else if (text === "in game")
+            setColor(PongColors.mauve);
+          else if (text === "viewer")
+            setColor(PongColors.blue);
+        }
+      }
+      
+    }, [status]);
   
     return (
       <div className={styles.list} onClick={rowClick}
@@ -105,15 +153,27 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
           overlap="circular"
           sx={badgeStyle}
         >
-          <div className={styles.avatar}>
-            <AvatarUser
-              avatar={channel.avatar}
-              borderSize="2px"
-              borderColor={channel.avatar.borderColor}
-              backgroundColor={channel.avatar.backgroundColor}
-              fontSize="1rem"
-            />
-          </div>
+          <Tooltip title={textStatus} placement="left" arrow>
+            <Badge
+              overlap="circular"
+              sx={badgeStyleStatus}
+              variant="dot"
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <div className={styles.avatar}>
+                <AvatarUser
+                  avatar={channel.avatar}
+                  borderSize="2px"
+                  borderColor={channel.avatar.borderColor}
+                  backgroundColor={channel.avatar.backgroundColor}
+                  fontSize="1rem"
+                />
+              </div>
+            </Badge>
+          </Tooltip>
         </Badge>
         
         <div className={styles.name}>

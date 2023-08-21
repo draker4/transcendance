@@ -29,6 +29,7 @@ import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
+import { StatusService } from '@/statusService/status.service';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
     ScoreService,
     StatsService,
     UsersService,
+    StatusService,
   ],
 })
 export class GameModule {}

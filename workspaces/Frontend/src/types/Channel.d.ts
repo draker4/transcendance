@@ -14,4 +14,5 @@ type Channel = {
     content: string;
     createdAt: Date;
   };
+  statusPongieId?: number;
 };

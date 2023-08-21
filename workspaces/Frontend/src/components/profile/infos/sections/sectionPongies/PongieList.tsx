@@ -3,28 +3,41 @@ import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import PongieFooter from "../footerOptions/PongieFooter";
-import { Badge } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
+import { PongColors } from "@/lib/enums/PongColors.enum";
 
 const badgeStyle = {
 	"& .MuiBadge-badge": {
-	  color: 'var(--tertiary1)',
-	  backgroundColor: 'var(--notif)',
-    border: '2px solid var(--notif)',
-    width: "12px",
-    height: "12px",
-    borderRadius: "100%",
+		backgroundColor: 'var(--notif)',
+		border: "1px solid var(--tertiary1)",
+		width: "12px",
+		height: "12px",
+		borderRadius: "100%",
 	}
 }
 
-export default function PongieList({pongie, socket, crossFunction, notifsIds, setNotifIds}: {
+export default function PongieList({pongie, socket, crossFunction, notifsIds, setNotifIds, status}: {
 	pongie: Pongie;
 	socket: Socket | undefined;
 	crossFunction: (pongie: Pongie) => void;
 	notifsIds: number[];
 	setNotifIds: React.Dispatch<React.SetStateAction<number[]>>;
+	status: Map<string, string>;
 }) {
-	const	[isFocused, setIsFocused] = useState(false);
-	const	[invisible, setInvisible] = useState(true);
+	const	[isFocused, setIsFocused] = useState<boolean>(false);
+	const	[invisible, setInvisible] = useState<boolean>(true);
+	const	[color, setColor] = useState<string>(PongColors.mustardYellow);
+	const	[textStatus, setTextStatus] = useState<string>("disconnected");
+
+	const badgeStyleStatus = {
+		"& .MuiBadge-badge": {
+			backgroundColor: color,
+			border: "1px solid var(--tertiary1)",
+			width: "12px",
+			height: "12px",
+			borderRadius: "100%",
+		}
+	}
 
 	useEffect(() => {
 		const	match = notifsIds.find(id => id === pongie.id);
@@ -33,18 +46,39 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 			setInvisible(false);
 		if (!match && !invisible)
 			setInvisible(true);
-	}, [notifsIds]);
+
+		if (status && status.size > 0) {
+			if (status.has(pongie.id.toString())) {
+				const	text = status.get(pongie.id.toString()) as string;
+				setTextStatus(text);
+				if (text === "connected")
+					setColor(PongColors.appleGreen);
+				else if (text === "disconnected")
+					setColor(PongColors.mustardYellow);
+				else if (text === "in game")
+					setColor(PongColors.mauve);
+				else if (text === "viewer")
+					setColor(PongColors.blue);
+			}
+		}
+		
+	}, [notifsIds, status]);
 
 	const handleFocusOn = () => {
 		setIsFocused(true);
 		setInvisible(true);
-		const	ids = notifsIds.filter(id => id !== pongie.id);
-		setNotifIds(ids);
-		
-		socket?.emit("clearNotif", {
-			which: "redPongies",
-			id: pongie.id,
-		});
+
+		const	id = notifsIds.find(id => id === pongie.id);
+
+		if (id) {
+			const	ids = notifsIds.filter(id => id !== pongie.id);
+			setNotifIds(ids);
+			
+			socket?.emit("clearNotif", {
+				which: "redPongies",
+				id: pongie.id,
+			});
+		}
 	};
 
 	const handleFocusOff = () => {
@@ -54,12 +88,17 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 	const handleHover = () => {
 		setIsFocused(true);
 		setInvisible(true);
-		const	ids = notifsIds.filter(id => id !== pongie.id);
-		setNotifIds(ids);
-		socket?.emit("clearNotif", {
-			which: "redPongies",
-			id: pongie.id,
-		});
+		const	id = notifsIds.find(id => id === pongie.id);
+
+		if (id) {
+			const	ids = notifsIds.filter(id => id !== pongie.id);
+			setNotifIds(ids);
+			
+			socket?.emit("clearNotif", {
+				which: "redPongies",
+				id: pongie.id,
+			});
+		}
 	};
 
 	const handleMouseLeave = () => {
@@ -80,15 +119,27 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 					variant="dot"
 					invisible={invisible}
 				>
-					<div className={styles.avatar}>
-						<AvatarUser
-							avatar={pongie.avatar}
-							borderSize="3px"
-							borderColor={pongie.avatar.borderColor}
-							backgroundColor={pongie.avatar.backgroundColor}
-							fontSize="1rem"
-						/>
-					</div>
+					<Tooltip title={textStatus} placement="left" arrow>
+					<Badge
+						overlap="circular"
+						sx={badgeStyleStatus}
+						variant="dot"
+						anchorOrigin={{
+							vertical: "bottom",
+							horizontal: "right",
+						}}
+					>
+						<div className={styles.avatar}>
+							<AvatarUser
+								avatar={pongie.avatar}
+								borderSize="3px"
+								borderColor={pongie.avatar.borderColor}
+								backgroundColor={pongie.avatar.backgroundColor}
+								fontSize="1rem"
+							/>
+						</div>
+					</Badge>
+					</Tooltip>
 				</Badge>
 
 				<div className={styles.login} style={{color: pongie.avatar.borderColor}}>

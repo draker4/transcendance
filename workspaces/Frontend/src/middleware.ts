@@ -13,7 +13,8 @@ export async function middleware(req: NextRequest) {
       console.log(err);
     }));
   // const url = req.nextUrl;
-  // console.log(verifiedToken, url);
+  // console.log(url.href);
+  // console.log(verifiedToken);
 
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
     // console.log("do nothing go to auth");
@@ -27,7 +28,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/home/auth/2fa", req.url));
   }
 
-  // refresh token if token expires in less than 10 minutes
+  // refresh token if token expires in less than 5 minutes
   if (req.nextUrl.pathname.startsWith("/home") && refreshToken) {
     const currentTimestamp = Math.floor(Date.now() / 1000);
 
@@ -104,7 +105,23 @@ export async function middleware(req: NextRequest) {
 
   if (req.nextUrl.pathname === "/" && !verifiedToken && !changeCookies) {
     // console.log("redirect go to welcome")
-    return NextResponse.redirect(new URL("/welcome", req.url));
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const response = NextResponse.redirect(new URL("/welcome", req.url));
+    response.cookies.set("crunchy-token", "", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      expires: yesterday,
+    });
+    response.cookies.set("refresh-token", "", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      expires: yesterday,
+    });
+    return response;
+    // return NextResponse.redirect(new URL("/welcome", req.url));
   }
 
   if (req.nextUrl.pathname === "/" && (verifiedToken || changeCookies)) {
@@ -152,9 +169,25 @@ export async function middleware(req: NextRequest) {
     !verifiedToken &&
     !changeCookies
   ) {
-    // console.log("redirect go to welcome from /home")
+    // console.log("redirect go to welcome from /home");
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const response = NextResponse.redirect(new URL("/welcome/notif", req.url));
+    response.cookies.set("crunchy-token", "", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      expires: yesterday,
+    });
+    response.cookies.set("refresh-token", "", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      expires: yesterday,
+    });
+    return response;
 
-    return NextResponse.redirect(new URL("/welcome/notif", req.url));
+    // return NextResponse.redirect(new URL("/welcome/notif", req.url));
   }
 
   // Check if user is in a multiplayer game and redirect to page
