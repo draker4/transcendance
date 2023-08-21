@@ -22,6 +22,7 @@ export default function FormLogin({
   const [access_token, setAccessToken] = useState<string>("");
   const [refresh_token, setRefreshToken] = useState<string>("");
   const [textButton, setTextButton] = useState<string>("Let's go!");
+  const [avatarList, setAvatarList] = useState<string[]>(avatars);
   const router = useRouter();
   const config: Config = {
     dictionaries: [names],
@@ -166,7 +167,8 @@ export default function FormLogin({
             selectBackground={backgroundColor}
             selectAvatar={selectAvatar}
             text={text}
-            avatars={avatars}
+            avatars={avatarList}
+            setAvatar={setAvatarList}
           />
         </div>
 

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
-import PongieFooter from "../footerOptions/PongieFooter";
 import { Badge } from "@mui/material";
 import ChannelFooter from "../footerOptions/ChannelFooter";
 
