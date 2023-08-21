@@ -86,6 +86,7 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 							borderSize="3px"
 							borderColor={pongie.avatar.borderColor}
 							backgroundColor={pongie.avatar.backgroundColor}
+							fontSize="1rem"
 						/>
 					</div>
 				</Badge>

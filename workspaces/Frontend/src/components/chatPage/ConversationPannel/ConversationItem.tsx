@@ -111,6 +111,7 @@ export default function ConversationItem({channel, handleClick, handleLeave, not
               borderSize="2px"
               borderColor={channel.avatar.borderColor}
               backgroundColor={channel.avatar.backgroundColor}
+              fontSize="1rem"
             />
           </div>
         </Badge>

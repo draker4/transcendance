@@ -50,6 +50,7 @@ export default function DisplayInfos({
 								borderSize="2px"
 								borderColor={pongie.avatar.borderColor}
 								backgroundColor={pongie.avatar.backgroundColor}
+								fontSize="1rem"
 							/>
 						</div>
 						<div className={styles.name}>

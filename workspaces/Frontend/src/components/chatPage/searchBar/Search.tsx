@@ -87,6 +87,7 @@ export default function Search({
                 borderSize="2px"
                 backgroundColor={item.avatar.backgroundColor}
                 borderColor={item.avatar.borderColor}
+                fontSize="1rem"
               />
             </div>
             {"type" in item && item.type === "public" && (

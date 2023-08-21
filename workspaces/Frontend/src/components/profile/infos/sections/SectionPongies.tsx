@@ -174,6 +174,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 						borderSize="3px"
 						borderColor={pongie.avatar.borderColor}
 						backgroundColor={pongie.avatar.backgroundColor}
+						fontSize="1rem"
 					/>
 				</div>
 

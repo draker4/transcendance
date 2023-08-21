@@ -50,6 +50,7 @@ export default function MessageItem({ groupedMessages }: Props) {
               borderSize="3px"
               borderColor={groupedMessages.user.avatar.borderColor}
               backgroundColor={groupedMessages.user.avatar.backgroundColor}
+              fontSize="1rem"
             />
           </div>
         </div>

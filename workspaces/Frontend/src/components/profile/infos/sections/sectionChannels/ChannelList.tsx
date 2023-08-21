@@ -87,6 +87,7 @@ export default function ChannelList({channel, socket, crossFunction, notifsIds, 
 							borderSize="3px"
 							borderColor={channel.avatar.borderColor}
 							backgroundColor={channel.avatar.backgroundColor}
+							fontSize="1rem"
 						/>
 					</div>
 				</Badge>

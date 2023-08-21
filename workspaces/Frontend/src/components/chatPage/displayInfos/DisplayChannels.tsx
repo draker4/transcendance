@@ -49,6 +49,7 @@ export default function DisplayInfos({
 								borderSize="2px"
 								borderColor={channel.avatar.borderColor}
 								backgroundColor={channel.avatar.backgroundColor}
+								fontSize="1rem"
 							/>
 						</div>
 						

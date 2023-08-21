@@ -62,6 +62,7 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
           borderSize="2px"
           backgroundColor={relation.user.avatar.backgroundColor}
           borderColor={relation.user.avatar.borderColor}
+          fontSize="1rem"
         />
       </div>
       <Link

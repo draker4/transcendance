@@ -18,6 +18,7 @@ export default function HomeProfile({ profile, avatar }: Props) {
           borderSize={"6px"}
           backgroundColor={avatar.backgroundColor}
           borderColor={avatar.borderColor}
+          fontSize="3rem"
         />
       </div>
       <div className={styles.profileInfo}>
