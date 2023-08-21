@@ -153,27 +153,42 @@ export default function ConversationItem({
           overlap="circular"
           sx={badgeStyle}
         >
-          <Tooltip title={textStatus} placement="left" arrow>
-            <Badge
-              overlap="circular"
-              sx={badgeStyleStatus}
-              variant="dot"
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-            >
-              <div className={styles.avatar}>
-                <AvatarUser
-                  avatar={channel.avatar}
-                  borderSize="2px"
-                  borderColor={channel.avatar.borderColor}
-                  backgroundColor={channel.avatar.backgroundColor}
-                  fontSize="1rem"
-                />
-              </div>
-            </Badge>
-          </Tooltip>
+          {
+            channel.type === "privateMsg" &&
+            <Tooltip title={textStatus} placement="left" arrow>
+              <Badge
+                overlap="circular"
+                sx={badgeStyleStatus}
+                variant="dot"
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+              >
+                <div className={styles.avatar}>
+                  <AvatarUser
+                    avatar={channel.avatar}
+                    borderSize="2px"
+                    borderColor={channel.avatar.borderColor}
+                    backgroundColor={channel.avatar.backgroundColor}
+                    fontSize="1rem"
+                  />
+                </div>
+              </Badge>
+            </Tooltip>
+          }
+          {
+            channel.type !== "privateMsg" &&
+            <div className={styles.avatar}>
+              <AvatarUser
+                avatar={channel.avatar}
+                borderSize="2px"
+                borderColor={channel.avatar.borderColor}
+                backgroundColor={channel.avatar.backgroundColor}
+                fontSize="1rem"
+              />
+            </div>
+          }
         </Badge>
         
         <div className={styles.name}>
