@@ -2,7 +2,7 @@
 
 import Avatar from "@mui/material/Avatar";
 import styles from "@/styles/createLogin/ChooseAvatar.module.css";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import ChooseColor from "./ChooseColor";
 import { PongColors } from "@/lib/enums/PongColors.enum";
 import UploadButton from "../uploadImage/UploadButton";

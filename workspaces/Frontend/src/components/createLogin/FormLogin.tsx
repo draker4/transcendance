@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { PongColors } from "@/lib/enums/PongColors.enum";
 import { uniqueNamesGenerator, names, Config } from "unique-names-generator";
 import { MdRefresh } from "react-icons/md";
+import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 
 export default function FormLogin({
   avatars,
@@ -108,6 +109,16 @@ export default function FormLogin({
     setTextButton('Loading...');
 
     const loginUser = e.target.login.value;
+
+    const loginBadWords = filterBadWords(loginUser);
+
+    if (loginBadWords !== loginUser) {
+      setTextButton(textButtonInitial);
+      setNotif('What a bad word! 😱');
+      setText('');
+      return ;
+    }
+
     const loginChecked = checkLoginFormat(loginUser);
     setNotif(loginChecked);
 
