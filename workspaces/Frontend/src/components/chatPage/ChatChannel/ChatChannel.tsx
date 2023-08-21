@@ -60,7 +60,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
             date: modifiedDate,
             isServerNotif: item.isServerNotif,
           };
-          console.log("ChatChannel => socket?.emit( \"getMessages\" => +One :", msg);
           previousMsg.push(msg);
         });
 

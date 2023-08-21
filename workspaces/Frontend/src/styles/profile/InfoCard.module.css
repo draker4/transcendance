@@ -43,16 +43,6 @@
   /* padding: 0.8rem 0.5rem 0.5rem 0.5rem; */
   padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
 
-  /* border-top: 0.15rem solid;
-	border-image: 
-		linear-gradient( 
-			to right, 
-			var(--primary1) 5%, 
-			var(--accent1) 20%,
-			var(--accent1) 80%,
-			var(--primary1) 95%);
-	border-image-slice: 1; */
-
   /* border: dashed 1px var(--tertiary1); */
 }
 
@@ -260,4 +250,46 @@
 	background-color: var(--accent1);
 	color:var(--primary1);
 	padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
+}
+
+/* -------------------- section content ------------------------- */
+
+.sections .marginTop {
+  margin-top: 10px;
+}
+
+.sections .button {
+  user-select: none;
+	display: inline-block;
+	letter-spacing: 1px;
+	appearance: none;
+	border-radius: 4px;
+	font-size: 0.8rem;
+	color: var(--tertiary1);
+	background-color: var(--primary1);
+	border: 3px solid var(--accent1);
+  padding: 2px 15px;
+  margin-right: 10px;
+  transition: all 0.3s ease-out;
+}
+
+.sections .button.inactive:hover {
+  cursor:pointer;
+}
+
+.sections .button.inactive {
+	color: var(--primary2);
+	border: 3px solid var(--primary2);
+	
+}
+
+.sections .button.inactive:hover {
+	color: var(--accent1);
+	border: 3px solid var(--accent1);
+	
+}
+
+.sections .button.active {
+	color: var(--accent2);
+	border: 3px solid var(--accent2);
 }
