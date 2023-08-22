@@ -560,6 +560,14 @@ export class ChatGateway implements OnModuleInit {
     return rep;
   }
 
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('editChannelType')
+  async editChannelPassword(@Request() req, @MessageBody() payload: editChannelTypeDto)
+  :Promise<ReturnData> {
+  
+
+
+  }
 
   // tools
 

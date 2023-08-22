@@ -3,6 +3,7 @@ type Channel = {
   name: string;
   avatar: Avatar;
   type: ChannelType;
+  password:string;
   isBoss: boolean;
   isChanOp: boolean;
   joined: boolean;

@@ -499,16 +499,15 @@ private async unMute(channelInfos:EditChannelRelationDto) {
       else if (!repRelation.data.isBoss)
         throw new Error(`user[${senderId}] is not channel master`);
       
-      // channel.password = password;
+     
 
 
-      /* [+] CONTINUER ICI
       this.channelRepository.update(channelId, {
         password:password
       })
 
-      // [+] emit le changement de password
-      */
+      // [+][+] A FINIR emit le changement de password
+      /* */
       
 
       rep.success = true;

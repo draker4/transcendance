@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditPassword from "./EditPassword";
+import ResumeChannel from "./ResumeChannel";
 
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
@@ -39,13 +40,34 @@ export default function SectionCustomChannel({
     setNotif: setNotif,
   }
 
+  const emitEditChannelType = (type:ChannelType, onSuccess: ()=>void, onFail: ()=>void) => {
+    socket?.emit("editChannelType", 
+      {
+        channelId: channelAndUsersRelation.channel.id,
+        type: type,
+      },
+      (rep:ReturnData) => {
+        if (rep.success)
+          onSuccess()
+        else
+          onFail()
+      }
+    )
+  }
 
   const handleSwitchPublicPrivate = (type:ChannelType) => {
-      // [+] gestion vers backend + attente reponse
-      if (channelType === "public" || channelType === "protected")
-        setChannelType("private");
-      else if (channelType === "private")
-        setChannelType("public");
+
+    emitEditChannelType(type,
+        () => {
+          if (channelType === "public" || channelType === "protected")
+          setChannelType("private");
+        else if (channelType === "private")
+          setChannelType("public");
+        },
+        () => {
+          setNotif("error switching public/private try later please");
+        },
+     )
   };
 
   
@@ -81,6 +103,7 @@ export default function SectionCustomChannel({
     if (locked) {
       // [+] gestion de valider le password avant, doit etre diff de ""
       if (password !== "")
+
         setChannelType("protected");
       else {
         setNotif("Set a password before locking channel");
@@ -119,7 +142,11 @@ export default function SectionCustomChannel({
 
   return (
     <div className={styles.sections}>
-      <p className={styles.tinyTitle}>Channel type</p>
+      {/* //[+] A TESTER AVEC GRAND NOM DE ChANNEL */ }
+      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>{channelAndUsersRelation.channel.name}</p>
+      <ResumeChannel type={channelType} />
+
+      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Channel type</p>
           {makeChannelTypeButton("public", "Public", handleSwitchPublicPrivate)}
           {makeChannelTypeButton("private", "Private", handleSwitchPublicPrivate)}
       

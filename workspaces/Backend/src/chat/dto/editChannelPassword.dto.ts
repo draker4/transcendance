@@ -7,6 +7,6 @@ export class editChannelPasswordDto {
 
   @IsString()
   @IsNotEmpty()
-  @Length(1, 20)
+  @Length(0, 20)
   password: string;
 }
