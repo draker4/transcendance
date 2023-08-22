@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import EditPassword from "./EditPassword";
+import ResumeChannel from "./ResumeChannel";
 
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
@@ -32,20 +33,44 @@ export default function SectionCustomChannel({
     setPassword:Dispatch<SetStateAction<string>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
+    channelType: ChannelType,
   } = {
     password: password,
     setPassword: setPassword,
     notif: notif,
     setNotif: setNotif,
+    channelType: channelType,
   }
 
+  const emitEditChannelType = (type:ChannelType, onSuccess: ()=>void, onFail: ()=>void) => {
+    socket?.emit("editChannelType", 
+      {
+        channelId: channelAndUsersRelation.channel.id,
+        type: type,
+      },
+      (rep:ReturnData) => {
+        console.log("emitEditChannelType => Rep =", rep); // checking
+        if (rep.success)
+          onSuccess()
+        else
+          onFail()
+      }
+    )
+  }
 
   const handleSwitchPublicPrivate = (type:ChannelType) => {
-      // [+] gestion vers backend + attente reponse
-      if (channelType === "public" || channelType === "protected")
-        setChannelType("private");
-      else if (channelType === "private")
-        setChannelType("public");
+
+    emitEditChannelType(type,
+        () => {
+          if (channelType === "public" || channelType === "protected")
+          setChannelType("private");
+        else if (channelType === "private")
+          setChannelType("public");
+        },
+        () => {
+          setNotif("error switching public/private try later please");
+        },
+     )
   };
 
   
@@ -75,19 +100,31 @@ export default function SectionCustomChannel({
   
   const handleSwitchLock = (locked:boolean) => {
 
-    // [+] gestion vers backend + attente rep
-    // [+] pas oublier si type === protected && password === "" revient a type === public
-
     if (locked) {
-      // [+] gestion de valider le password avant, doit etre diff de ""
-      if (password !== "")
-        setChannelType("protected");
-      else {
+      if (password !== "") {
+      emitEditChannelType("protected",
+        () => {
+          setChannelType("protected");
+          setNotif("");
+        },
+        () => {
+          setNotif("error passing channel as protected try later please");
+        },
+     )
+      } else {
         setNotif("Set a password before locking channel");
       }
     }
     else if (!locked) {
-      setChannelType("public"); 
+      emitEditChannelType("public",
+        () => {
+          setChannelType("public");
+          setNotif("");
+        },
+        () => {
+          setNotif("error passing channel as public try later please");
+        },
+     )
     }
   }
   
@@ -119,7 +156,11 @@ export default function SectionCustomChannel({
 
   return (
     <div className={styles.sections}>
-      <p className={styles.tinyTitle}>Channel type</p>
+      {/* //[+] A TESTER AVEC GRAND NOM DE ChANNEL */ }
+      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>{channelAndUsersRelation.channel.name}</p>
+      <ResumeChannel type={channelType} />
+
+      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Channel type</p>
           {makeChannelTypeButton("public", "Public", handleSwitchPublicPrivate)}
           {makeChannelTypeButton("private", "Private", handleSwitchPublicPrivate)}
       
@@ -132,10 +173,6 @@ export default function SectionCustomChannel({
       { channelType !== "private" && 
         <EditPassword pack={pack} socket={socket} channelAndUsersRelation={channelAndUsersRelation}/>
       }
-
-      {/* TEMPO checking */}
-      <div style={{marginTop:"400px"}}>{`ChannelType = ${channelType}`}</div>
-
     </div>
   )
 }

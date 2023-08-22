@@ -30,6 +30,7 @@ import { ChatService } from './chat.service';
 import { ChannelService } from '@/channels/channel.service';
 import { StatusService } from '@/statusService/status.service';
 import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
+import { editChannelTypeDto } from './dto/editChannelType.dto';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -546,13 +547,19 @@ export class ChatGateway implements OnModuleInit {
     }
 
     try {
-      const repEdit = await this.channelService.editChannelPassword(req.user.id, payload.channelId, payload.password, this.connectedUsers);
+      const repEdit: ReturnData & {isProtected:boolean} = await this.channelService.editChannelPassword(req.user.id, payload.channelId, payload.password);
       if (!repEdit.success) {
         throw new Error(repEdit.message);
       }
+
+      if (repEdit.isProtected) {
+        const endContent:string = "changed the channel password to " + payload.password;
+        this.chatService.sendServerNotifMsgPublic(payload.channelId, req.user.id, endContent, this.server);
+      }
+
       rep.success = repEdit.success;
     } catch (error: any) {
-      this.log(`forceJoinPrivateMsgChannel error : ${error.message}`);
+      this.log(`editChannelPassword error : ${error.message}`);
       rep.error = error;
       rep.message = error.message;
     }
@@ -560,6 +567,37 @@ export class ChatGateway implements OnModuleInit {
     return rep;
   }
 
+  @UseGuards(ChannelAuthGuard)
+  @SubscribeMessage('editChannelType')
+  async editChannelType(@Request() req, @MessageBody() payload: editChannelTypeDto)
+  :Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    }
+
+    try {
+      const repEdit = await this.channelService.editChannelType(req.user.id, payload.channelId, payload.type);
+      if (!repEdit.success) {
+        throw new Error(repEdit.message);
+      }
+
+      let endContent:string = "changed channel type to " + payload.type;
+      if (payload.type === 'protected') {
+          endContent += ", password is " + repEdit.password;
+      }
+
+      this.chatService.sendServerNotifMsgPublic(payload.channelId, req.user.id, endContent, this.server);
+
+      rep.success = repEdit.success;
+    } catch (error: any) {
+      this.log(`editChannelType error : ${error.message}`);
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
 
   // tools
 

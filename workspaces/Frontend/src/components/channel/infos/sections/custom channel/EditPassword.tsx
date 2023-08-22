@@ -8,6 +8,7 @@ type Props = {
     setPassword:Dispatch<SetStateAction<string>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
+    channelType: ChannelType,
   }
   socket:Socket | undefined,
   channelAndUsersRelation: ChannelUsersRelation,
@@ -28,21 +29,30 @@ export default function EditPassword({pack, socket, channelAndUsersRelation}:Pro
   // [+] oblige le type any?
   const handleSubmitPassword = async (e: any) => {
     e.preventDefault();
-    const submitedPassword = e.target.password.value;
+    const submitedPassword:string = e.target.password.value;
 
-    pack.setPassword(submitedPassword);
-    socket?.emit(
-      "editChannelPassword", 
-      {
-        channelId: channelAndUsersRelation.channel.id,
-        password: submitedPassword,
-      }, 
-      (rep:ReturnData) => {
-        console.log("handleSubmitPassword => REP : ", rep); // checking
-    });
-    // [+] set channel type too after response
-    setEditMode(false);
-    pack.setNotif("");
+    if (submitedPassword === pack.password) {
+      pack.setNotif("");
+    } else if (submitedPassword.length > 20) {
+        pack.setNotif("Your password can't exceed 20 characters");
+    } else {
+        socket?.emit(
+          "editChannelPassword", 
+        {
+          channelId: channelAndUsersRelation.channel.id,
+          password: submitedPassword,
+        }, 
+        (rep:ReturnData) => {
+          console.log("handleSubmitPassword => REP : ", rep); // checking
+          if (rep.success) {
+            pack.setPassword(submitedPassword);
+            pack.setNotif("");
+          } else {
+            pack.setNotif(rep.message ? rep.message : "An error occured, please try again later");
+          }
+        });
+    }
+      setEditMode(false);
   }
 
   if (!editMode && pack.password === "") {

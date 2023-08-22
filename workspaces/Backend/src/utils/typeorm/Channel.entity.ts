@@ -47,6 +47,9 @@ export class Channel {
 	@Column({ default: 'public', nullable: false })
 	type: 'public' | 'protected' | 'private' | 'privateMsg';
 
+  @Column({ default: "", nullable: false })
+  password: string;
+
 	// Relation one<Channel> [to] Many<Message>
 	@OneToMany(() => Message, (message) => message.channel)
 	messages: Message[];
