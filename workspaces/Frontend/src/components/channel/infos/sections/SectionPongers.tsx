@@ -20,6 +20,10 @@ type Props = {
   socket: Socket | undefined;
 };
 
+interface StatusData {
+  [key: string]: string;
+}
+
 export default function SectionPongers({
   channelAndUsersRelation,
   myRelation,
@@ -32,6 +36,7 @@ const	[pongers, setPongers] = useState<UserRelation[]>([]);
 const	[invited, setInvited] = useState<UserRelation[]>([]);
 const	[banned, setBanned] = useState<UserRelation[]>([]);
 const	[leavers, setLeavers] = useState<UserRelation[]>([]);
+const	[status, setStatus] = useState<Map<string, string>>(new Map());
 const   [notif, setNotif] = useState<string>("");
 
 useEffect(() => {
@@ -51,6 +56,32 @@ useEffect(() => {
 
 }, [channelAndUsersRelation]);
 
+  useEffect(() => {
+    const	updateStatus = (payload: StatusData) => {
+      if (payload) {
+        const	payloadMap = new Map(Object.entries(payload));
+        const	statusMap = new Map(status);
+
+        payloadMap.forEach((value, key) => statusMap.set(key, value));
+        setStatus(statusMap);
+      }
+    }
+      
+    socket?.emit('getStatus', (payload: StatusData) => {
+      if (payload) {
+        const statusMap = new Map(Object.entries(payload));
+        setStatus(statusMap);
+      }
+    });
+
+    socket?.on('updateStatus', updateStatus);
+
+    return () => {
+      socket?.off('updateStatus', updateStatus);
+    }
+
+  }, [socket]);
+
 	const lists:ChannelLists = {
 		setBoss: setBoss,
 		setOperators: setOperators,
@@ -61,14 +92,21 @@ useEffect(() => {
 		setNotif: setNotif,
 	}
 
-
-
   const renderRowList = (role:ChannelRoles, icon:IconDefinition, relations: UserRelation[]):JSX.Element => {
     if ((relations.length === 0)) {
       return <></>
     } else {
       return (
-        <RolesList channelId={channelAndUsersRelation.channel.id} relations={relations} myRelation={myRelation} role={role} icon={icon} lists={lists} socket={socket}/>
+        <RolesList
+          channelId={channelAndUsersRelation.channel.id}
+          relations={relations}
+          myRelation={myRelation}
+          role={role}
+          icon={icon}
+          lists={lists}
+          socket={socket}
+          status={status}
+        />
       );
     }
   };

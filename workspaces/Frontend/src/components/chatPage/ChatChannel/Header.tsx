@@ -5,7 +5,6 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import { Badge, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
 
 type Props = {
   icon: ReactNode;
@@ -19,7 +18,7 @@ export default function
 Header({ icon, channel, myself, channelCodeName, status }: Props) {
 
 	const channelService = new Channel_Service();
-	let url:string = "";
+	let   url:string = "";
   const	[color, setColor] = useState<string>("#edf0f0");
   const	[textStatus, setTextStatus] = useState<string>("disconnected");
 
