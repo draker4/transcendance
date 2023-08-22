@@ -52,8 +52,6 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
           const originalDate = new Date(item.createdAt);
           const modifiedDate = new Date(originalDate); // Create a new Date object to avoid mutating the original
     
-          // Add two hours to the timestamp
-          modifiedDate.setHours(originalDate.getHours() + 2);
           const msg: Message = {
             content: item.content,
             sender: item.isServerNotif ? undefined : item.user,

@@ -25,8 +25,7 @@ export class WsJwtGuard implements CanActivate {
                 ignoreExpiration: true,
             }) as any;
 
-            if (payload.exp * 1000 >= Date.now() + 4500000) {
-                console.log("long time checking guard socket")
+            if (payload.exp + 3600 <= Date.now() / 1000) {
                 const   socketTokens = await this.socketTokenRepository.find({
                     where: { userId: payload.sub },
                 });

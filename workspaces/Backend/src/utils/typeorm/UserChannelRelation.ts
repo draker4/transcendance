@@ -9,10 +9,14 @@ export class UserChannelRelation {
 	@PrimaryGeneratedColumn()
 	relationId: number;
 
-	@CreateDateColumn()
+	@CreateDateColumn({
+		type: 'timestamptz',
+	  })
 	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({
+		type: 'timestamptz',
+	  })
 	updatedAt: Date;
 
 	@PrimaryColumn()

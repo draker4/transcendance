@@ -8,10 +8,14 @@ export class UserPongieRelation {
 	@PrimaryGeneratedColumn()
 	relationId: number;
 
-	@CreateDateColumn()
+	@CreateDateColumn({
+		type: 'timestamptz',
+	  })
 	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({
+		type: 'timestamptz',
+	  })
 	updatedAt: Date;
 
 	@PrimaryColumn()
