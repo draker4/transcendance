@@ -214,10 +214,13 @@ export class ChatService {
 
       if (!relations) return [];
 
-      const channels = await Promise.all(
+      let channels = await Promise.all(
         relations.map(async (relation) => {
           const channel = relation.channel;
           let pongieId: number;
+
+          if (channel.type === "private" && !relation.invited && !relation.joined)
+            return ;
 
           if (channel.type === 'privateMsg') {
             const ids = channel.name.split(' ');
@@ -253,6 +256,8 @@ export class ChatService {
           };
         }),
       );
+
+      channels = channels.filter(channel => channel);
 
       return channels;
     } catch (error) {
@@ -1253,7 +1258,10 @@ export class ChatService {
       if (!user) throw new Error('no user found');
 
       // check if channel already exists
-      let channel = await this.channelService.getChannelById(channelId);
+      let channel = undefined;
+
+      if (channelId !== -1)
+        channel = await this.channelService.getChannelById(channelId);
 
       if (!channel) {
 		    isCreation = true;
@@ -1294,8 +1302,8 @@ export class ChatService {
           channel: null,
         };
 
-      if (channel.type === "private"
-        && (!relation.joined || !relation.invited))
+      if (channel.type === "private" && !isCreation
+        && !relation.joined && !relation.invited)
         return {
           success: false,
           exists: false,
@@ -1303,29 +1311,22 @@ export class ChatService {
           channel: null,
         };
         
-      // check if user already joined
+      // check if user is not joined
       if (!relation.joined) {
         relation.joined = true;
         await this.userChannelRelation.save(relation);
-      }
 
-	  // check if channel creation (adding isBoss user trait)
-	  if (isCreation) {
-		relation.isBoss = true;
-		await this.userChannelRelation.save(relation);
-	  }
+        const date = new Date();
+        const content = `${user.login} just joined the channel`;
 
-      const date = new Date();
-      const content = `${user.login} just joined the channel`;
-
-      const msg: sendMsgDto = {
-        content: content,
-        date: date.toISOString(),
-        sender: null,
-        channelName: relation.channel.name,
-        channelId: channelId,
-        isServerNotif: true,
-      };
+        const msg: sendMsgDto = {
+          content: content,
+          date: date.toISOString(),
+          sender: null,
+          channelName: relation.channel.name,
+          channelId: channelId,
+          isServerNotif: true,
+        };
 
         const saveServerNotif : MakeMessage = {
           content: content,
@@ -1339,17 +1340,24 @@ export class ChatService {
           console.log("saving notif in db failed : " + dbError.message);
         }
 
-      server.to('channel:' + channelId).emit('sendMsg', msg);
+        server.to('channel:' + channelId).emit('sendMsg', msg);
 
-      // Upload Data for clients in channel profile component
-      server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
-        newRelation: {
-          joined : true,
-        },
-        userId: userId ,
-        senderId: userId});
+        // Upload Data for clients in channel profile component
+        server.to('channel:' + channelId).emit('editRelation', {channelId: channelId,
+          newRelation: {
+            joined : true,
+          },
+          userId: userId ,
+          senderId: userId});
 
-      this.log(`user[${userId}] joined channel ${relation.channel.name}`);
+        this.log(`user[${userId}] joined channel ${relation.channel.name}`);
+      }
+
+      // check if channel creation (adding isBoss user trait)
+      if (isCreation) {
+        relation.isBoss = true;
+        await this.userChannelRelation.save(relation);
+      }
 
       if (userSockets.length >= 1) {
         for (const socket of userSockets) {
@@ -1362,7 +1370,7 @@ export class ChatService {
 
       const channelRelation = {
         ...channel,
-		isBoss: relation.isBoss,
+		    isBoss: relation.isBoss,
         isChanOp: relation.isChanOp,
         joined: true,
         isBanned: relation.isBanned,
@@ -1625,8 +1633,6 @@ export class ChatService {
 		    this.channelService.getOneChannelUserRelation(reqUserId, message.channelId),
       ]);
 
-      await this.receiveNewMsgNotif(message.channelId, sender.id, server);
-
       if (sender.avatar.decrypt) {
         sender.avatar.image = await this.cryptoService.decrypt(
           sender.avatar.image,
@@ -1634,8 +1640,9 @@ export class ChatService {
       }
 
 	  if (repRelation.success && repRelation.data)
-	  	this.verifyChatAllowed(repRelation.data)
-	  else throw new Error(repRelation.message); 
+	  	this.verifyChatAllowed(repRelation.data);
+	  else
+      throw new Error(repRelation.message); 
 
       const sendMsg: sendMsgDto = {
         content: message.content,
@@ -1664,6 +1671,7 @@ export class ChatService {
       server.to('channel:' + sendMsg.channelId).emit('notif', {
         why: "updateChannels",
       });
+      await this.receiveNewMsgNotif(message.channelId, sender.id, server);
     } catch (error) {
       this.log(`receiveNewMsg error : ${error.message}`);
       throw new WsException(error.message);

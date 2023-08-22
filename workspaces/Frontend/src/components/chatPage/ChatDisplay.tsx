@@ -64,6 +64,7 @@ export default function ChatDisplay({
         <DisplayInfos
           icon={renderIcon()}
           socket={socket}
+          openDisplay={openDisplay}
         />
       </div>
     );
