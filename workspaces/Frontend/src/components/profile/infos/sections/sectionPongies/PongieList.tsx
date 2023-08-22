@@ -5,6 +5,7 @@ import AvatarUser from "@/components/avatarUser/AvatarUser";
 import PongieFooter from "../footerOptions/PongieFooter";
 import { Badge, Tooltip } from "@mui/material";
 import { PongColors } from "@/lib/enums/PongColors.enum";
+import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 
 const badgeStyle = {
 	"& .MuiBadge-badge": {
@@ -26,7 +27,7 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 }) {
 	const	[isFocused, setIsFocused] = useState<boolean>(false);
 	const	[invisible, setInvisible] = useState<boolean>(true);
-	const	[color, setColor] = useState<string>(PongColors.mustardYellow);
+	const	[color, setColor] = useState<string>("#edf0f0");
 	const	[textStatus, setTextStatus] = useState<string>("disconnected");
 
 	const badgeStyleStatus = {
@@ -51,14 +52,7 @@ export default function PongieList({pongie, socket, crossFunction, notifsIds, se
 			if (status.has(pongie.id.toString())) {
 				const	text = status.get(pongie.id.toString()) as string;
 				setTextStatus(text);
-				if (text === "connected")
-					setColor(PongColors.appleGreen);
-				else if (text === "disconnected")
-					setColor(PongColors.mustardYellow);
-				else if (text === "in game")
-					setColor(PongColors.mauve);
-				else if (text === "viewer")
-					setColor(PongColors.blue);
+				setColor(chooseColorStatus(text));
 			}
 		}
 		

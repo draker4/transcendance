@@ -159,7 +159,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
   // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {
     socket?.emit("forceJoinPrivateMsgChannel", 
-      {id:channel.id}, 
+      {id:channel.id},
       (rep:ReturnData) => {
         if (rep.success) {
             socket?.emit("newMsg", {

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { PongColors } from "@/lib/enums/PongColors.enum";
+import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 
 type Props = {
     channel: Channel,
@@ -13,7 +14,6 @@ type Props = {
     notifMsg: NotifMsg[];
     isRecentSection:boolean;
     status: Map<string, string>;
-    myself: Profile & { avatar: Avatar };
 }
 
 const badgeStyle = {
@@ -32,7 +32,6 @@ export default function ConversationItem({
   notifMsg,
   isRecentSection,
   status,
-  myself,
 }: Props) {
 
   const [isFocused, setIsFocused] = useState(false);
@@ -104,7 +103,7 @@ export default function ConversationItem({
       }
     }
 
-    const	[color, setColor] = useState<string>(PongColors.mustardYellow);
+    const	[color, setColor] = useState<string>("#edf0f0");
     const	[textStatus, setTextStatus] = useState<string>("disconnected");
 
     const badgeStyleStatus = {
@@ -128,14 +127,7 @@ export default function ConversationItem({
         if (status.has(channel.statusPongieId.toString())) {
           const	text = status.get(channel.statusPongieId.toString()) as string;
           setTextStatus(text);
-          if (text === "connected")
-            setColor(PongColors.appleGreen);
-          else if (text === "disconnected")
-            setColor(PongColors.mustardYellow);
-          else if (text === "in game")
-            setColor(PongColors.mauve);
-          else if (text === "viewer")
-            setColor(PongColors.blue);
+          setColor(chooseColorStatus(text));
         }
       }
       
@@ -155,7 +147,7 @@ export default function ConversationItem({
         >
           {
             channel.type === "privateMsg" &&
-            <Tooltip title={textStatus} placement="left" arrow>
+            <Tooltip title={textStatus} placement="top" arrow>
               <Badge
                 overlap="circular"
                 sx={badgeStyleStatus}

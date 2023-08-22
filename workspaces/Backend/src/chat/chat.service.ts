@@ -1618,16 +1618,11 @@ export class ChatService {
     try {
       const now: Date | string = new Date();
       const nowtoISOString = now.toISOString();
-      // console.log(now);
-
-      // const dataString = new Date().toLocaleString('en-US', {
-      //   timeZone: process.env.TZ,
-      // });
 
       const [fetchedChannel, sender, repRelation] = await Promise.all([
         this.channelService.getChannelById(message.channelId),
         this.usersService.getUserAvatar(reqUserId),
-		this.channelService.getOneChannelUserRelation(reqUserId, message.channelId),
+		    this.channelService.getOneChannelUserRelation(reqUserId, message.channelId),
       ]);
 
       await this.receiveNewMsgNotif(message.channelId, sender.id, server);

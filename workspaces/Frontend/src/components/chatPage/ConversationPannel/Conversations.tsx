@@ -52,13 +52,11 @@ export default function Conversations({
 
 		const	updateStatus = (payload: StatusData) => {
 			if (payload) {
-				console.log("here before", status);
 				const	payloadMap = new Map(Object.entries(payload));
 				const	statusMap = new Map(status);
 
 				payloadMap.forEach((value, key) => statusMap.set(key, value));
 				setStatus(statusMap);
-				console.log("here after", statusMap);
 			}
 		}
     
@@ -94,6 +92,11 @@ export default function Conversations({
   };
 
   const handleLeave = async (channel: Channel) => {
+
+    socket?.emit('clearNotif', {
+      which: "messages",
+      id: channel.id,
+    });
 
     if (channel.joined === false && channel.invited === false) {
       console.log("[+] Feature keepTrack channel [?]"); // [!][+]
@@ -190,7 +193,6 @@ export default function Conversations({
         notifMsg={notifMsg}
         isRecentSection={false}
         status={status}
-        myself={myself}
       />
     ) : null
   ));
@@ -207,7 +209,6 @@ export default function Conversations({
         notifMsg={notifMsg}
         isRecentSection={false}
         status={status}
-        myself={myself}
       />
     ) : null
   ));
@@ -224,7 +225,6 @@ export default function Conversations({
         notifMsg={notifMsg}
         isRecentSection={false}
         status={status}
-        myself={myself}
       />
     ) : null
   ));
@@ -241,7 +241,6 @@ export default function Conversations({
         notifMsg={notifMsg}
         isRecentSection={true}
         status={status}
-        myself={myself}
       />
     ) : null
   ));

@@ -11,6 +11,7 @@ import { Message } from "@/utils/typeorm/Message.entity";
 import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
 import { PongColors } from "@/utils/enums/PongColors.enum";
 import { Socket } from "socket.io";
+import { UsersService } from "@/users/users.service";
 
 type ChannelAndUsers = {
 	channel: Channel;
@@ -27,6 +28,7 @@ export class ChannelService {
 		private readonly avatarRepository: Repository<Avatar>,
 		@InjectRepository(UserChannelRelation)
     	private readonly userChannelRelation: Repository<UserChannelRelation>,
+		private readonly usersService: UsersService,
 	) {}
 
 	async getChannelByName(
@@ -436,13 +438,31 @@ private async unMute(channelInfos:EditChannelRelationDto) {
         throw new Error(`channel[${channelId}] not found`);
       else if (channel.type !== "privateMsg" || !channel.name || channel.name === "")
         throw new Error(`channel[${channelId}] is not a privateMsg channel`);
-      
-      
 
       // [1] check channel relation exists
       const otherId:number = this.getOtherIdFromPrivateMsg(senderId, channel.name);
 
       const repRelation = await this.getOneChannelUserRelation(otherId, channelId);
+
+	// creer relation here [!] [!]
+		if (!repRelation.success) {
+			const	other = await this.usersService.getUserById(otherId);
+
+			if (!other)
+				throw new Error('no user found');
+
+			await this.usersService.updateUserChannels(other, channel);
+			const	relationUser = await this.userChannelRelation.findOne({
+				where: { userId: otherId, channelId: channel.id },
+				relations: ['user', 'channel'],
+			});
+
+			if (!relationUser)
+				throw new Error('cannot create relation');
+
+			repRelation.data = relationUser;
+			repRelation.success = true;
+		}
 
       // [2] update receiver joined relation to true if needed
       if (repRelation.success && repRelation.data && repRelation.data.joined === false) {
@@ -463,6 +483,7 @@ private async unMute(channelInfos:EditChannelRelationDto) {
             sockets.forEach((socket) => {
               this.log(`forceJoinPrivateMsgChannel emit empty editRelation to user[${otherId}]->socket[${socket.id}]`);
               socket.emit("editRelation", {});
+			  socket.join("channel:" + channelId);
             });
         }
       }
