@@ -6,15 +6,9 @@ import React from "react";
 export default function DisplayInfos({
 	icon,
 	socket,
-	display,
-	openDisplay,
-	littleScreen,
 }: {
 	icon: ReactNode;
 	socket: Socket | undefined;
-	display: { button: string };
-	openDisplay: (display: Display) => void;
-	littleScreen: boolean,
 }) {
 
 	return (

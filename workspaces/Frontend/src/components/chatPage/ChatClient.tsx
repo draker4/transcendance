@@ -98,7 +98,7 @@ export default function ChatClient({
   }, [socket]);
 
   useEffect(() => {
-    if (socket && channelId) {
+    if (socket && channelId !== undefined) {
       if (channelId !== 0)
         socket.emit('getChannel', channelId, (payload: {
           success: boolean;
