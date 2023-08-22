@@ -8,14 +8,34 @@ import { Avatar } from "src/utils/typeorm/Avatar.entity";
 import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { UsersService } from "@/users/users.service";
 import { CryptoService } from "@/utils/crypto/crypto";
+import { User } from "@/utils/typeorm/User.entity";
+import { BackupCode } from "@/utils/typeorm/BackupCode.entity";
+import { SocketToken } from "@/utils/typeorm/SocketToken.entity";
+import { Notif } from "@/utils/typeorm/Notif.entity";
+import { StatsService } from "@/stats/service/stats.service";
+import { Token } from "@/utils/typeorm/Token.entity";
+import { Stats } from "@/utils/typeorm/Stats.entity";
 
 @Module({
 	imports: [
-		TypeOrmModule.forFeature([Channel, Avatar, UserChannelRelation]),
+		TypeOrmModule.forFeature([
+			Channel,
+			Avatar,
+			UserChannelRelation,
+			User,
+			BackupCode,
+			SocketToken,
+			Notif,
+			Token,
+			Stats,
+		]),
 	],
 	controllers: [ChannelController],
 	providers: [
 		ChannelService,
+		UsersService,
+		CryptoService,
+		StatsService,
 	],
 })
 export class ChannelModule {}
