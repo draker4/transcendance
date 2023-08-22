@@ -1744,6 +1744,23 @@ export class ChatService {
     );
   }
 
+  public async sendServerNotifMsgPublic(
+    channelId: number,
+    senderId: number,
+    endContent: string,
+    server: Server,
+  ) {
+    try {
+      const login = (await this.usersService.getUserById(senderId)).login
+      const content = login + " " + endContent;
+
+      this.sendServerNotifMsg(channelId, content, server)
+    } catch(e) {
+      this.log(`[sendServerNotifMsgPublic] error : ${e.message}`);
+    }
+  }
+
+
   // tools
   private async sendServerNotifMsg(
     channelId: number,
@@ -1766,7 +1783,6 @@ export class ChatService {
         isServerNotif: true,
       };
 
-      // [+] a continuer ici aussi
       const newMessage : MakeMessage = {
         content: content,
         user: undefined,
@@ -1775,11 +1791,8 @@ export class ChatService {
       }
 
       server.to('channel:' + channelId).emit('sendMsg', notif);
-
-      // [+] ajout archivage des notif en cours :
-      console.log("before save notif message");// checking
       this.messageService.addMessage(newMessage);
-      console.log("after save notif message");// checking
+      
     } catch (e) {
       this.log('Error : ' + e.message);
     }

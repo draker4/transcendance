@@ -8,6 +8,7 @@ type Props = {
     setPassword:Dispatch<SetStateAction<string>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
+    channelType: ChannelType,
   }
   socket:Socket | undefined,
   channelAndUsersRelation: ChannelUsersRelation,

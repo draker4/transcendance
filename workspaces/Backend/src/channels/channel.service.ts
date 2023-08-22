@@ -335,7 +335,7 @@ export class ChannelService {
 		return relation ? true : false;
 	}
 
-	// [!] to be called within a try-catch block
+	// [!] to be called within a try-catch block [+] a checker/ ameliorer ca
 	public async editRelation(chanOpId: number, channelInfos:EditChannelRelationDto) {
 		const rep:ReturnData = {
 			success: false,
@@ -498,11 +498,12 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 
   }
 
-  public async editChannelPassword(senderId:number, channelId:number, password:string, connectedUsers:Map<Socket, string>)
-  :Promise<ReturnData> {
-    const rep: ReturnData = {
+  public async editChannelPassword(senderId:number, channelId:number, password:string)
+  :Promise<ReturnData & {isProtected:boolean}> {
+    const rep: ReturnData & {isProtected:boolean} = {
       success: false,
-      message: ''
+      message: '',
+      isProtected: false,
     }
 
     try {
@@ -519,18 +520,12 @@ private async unMute(channelInfos:EditChannelRelationDto) {
         throw new Error(`relation not found channel[${channelId}] user[${senderId}]`);
       else if (!repRelation.data.isBoss)
         throw new Error(`user[${senderId}] is not channel master`);
-      
-     
-
 
       this.channelRepository.update(channelId, {
         password:password
       })
 
-      // [+][+] A FINIR emit le changement de password
-      /* */
-      
-
+      rep.isProtected = channel.type === "protected";
       rep.success = true;
     } catch (error: any) {
       rep.error = error;
@@ -541,6 +536,43 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 
   }
 
+  public async editChannelType(senderId:number, channelId:number, type:ChannelType)
+  :Promise<ReturnData & {password : string}> {
+
+    const rep: ReturnData & {password : string} = {
+      success: false,
+      message: '',
+      password: '',
+    }
+
+    try {
+      // [0] get Channel +  users relation to check channel master rights
+      const channel = await this.getChannelById(senderId);
+      if (!channel)
+        throw new Error(`channel[${channelId}] not found`);
+      else if (channel.type === "privateMsg")
+        throw new Error(`channel[${channelId}] is a privateMsg channel`);
+      
+      const repRelation = await this.getOneChannelUserRelation(senderId, channelId);
+
+      if (!repRelation)
+        throw new Error(`relation not found channel[${channelId}] user[${senderId}]`);
+      else if (!repRelation.data.isBoss)
+        throw new Error(`user[${senderId}] is not channel master`);
+
+      this.channelRepository.update(channelId, {
+        type:type
+      })
+
+      rep.password = channel.password;
+      rep.success = true;
+    } catch (error: any) {
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
 
 	// ------------------- PRIVATE ---------------------------------- //
 

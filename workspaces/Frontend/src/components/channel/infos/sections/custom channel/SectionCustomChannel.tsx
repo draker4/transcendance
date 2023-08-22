@@ -33,11 +33,13 @@ export default function SectionCustomChannel({
     setPassword:Dispatch<SetStateAction<string>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
+    channelType: ChannelType,
   } = {
     password: password,
     setPassword: setPassword,
     notif: notif,
     setNotif: setNotif,
+    channelType: channelType,
   }
 
   const emitEditChannelType = (type:ChannelType, onSuccess: ()=>void, onFail: ()=>void) => {
@@ -47,6 +49,7 @@ export default function SectionCustomChannel({
         type: type,
       },
       (rep:ReturnData) => {
+        console.log("emitEditChannelType => Rep =", rep); // checking
         if (rep.success)
           onSuccess()
         else
@@ -97,20 +100,31 @@ export default function SectionCustomChannel({
   
   const handleSwitchLock = (locked:boolean) => {
 
-    // [+] gestion vers backend + attente rep
-    // [+] pas oublier si type === protected && password === "" revient a type === public
-
     if (locked) {
-      // [+] gestion de valider le password avant, doit etre diff de ""
-      if (password !== "")
-
-        setChannelType("protected");
-      else {
+      if (password !== "") {
+      emitEditChannelType("protected",
+        () => {
+          setChannelType("protected");
+          setNotif("");
+        },
+        () => {
+          setNotif("error passing channel as protected try later please");
+        },
+     )
+      } else {
         setNotif("Set a password before locking channel");
       }
     }
     else if (!locked) {
-      setChannelType("public"); 
+      emitEditChannelType("public",
+        () => {
+          setChannelType("public");
+          setNotif("");
+        },
+        () => {
+          setNotif("error passing channel as public try later please");
+        },
+     )
     }
   }
   
@@ -159,10 +173,6 @@ export default function SectionCustomChannel({
       { channelType !== "private" && 
         <EditPassword pack={pack} socket={socket} channelAndUsersRelation={channelAndUsersRelation}/>
       }
-
-      {/* TEMPO checking */}
-      <div style={{marginTop:"400px"}}>{`ChannelType = ${channelType}`}</div>
-
     </div>
   )
 }
