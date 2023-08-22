@@ -15,10 +15,14 @@ export class Training {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamptz',
+  })
   updatedAt: Date;
 
   @Column()

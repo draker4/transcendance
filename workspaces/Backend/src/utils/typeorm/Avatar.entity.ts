@@ -7,10 +7,14 @@ export class Avatar {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@CreateDateColumn()
+	@CreateDateColumn({
+		type: 'timestamptz',
+	  })
  	createdAt: Date;
 
-	@UpdateDateColumn()
+	@UpdateDateColumn({
+		type: 'timestamptz',
+	  })
   	updatedAt: Date;
 
 	@Column({ nullable: true })

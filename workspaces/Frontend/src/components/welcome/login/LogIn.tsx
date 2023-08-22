@@ -95,9 +95,7 @@ export default function LogInComponent() {
         setNotif={setNotif}
         textButton={textButton}
         setTextButton={setTextButton}
-        register={register}
         setRegister={setRegister}
-        login={login}
         setLogin={setLogin}
         setSuccessNewPassword={setSuccessNewPassword}
       />

@@ -26,9 +26,7 @@ type Props = {
   setNotif: Function;
   textButton: string;
   setTextButton: Function;
-  register: string;
   setRegister: Function;
-  login: string;
   setLogin: Function;
   setSuccessNewPassword: Dispatch<SetStateAction<boolean>>;
 };
@@ -38,9 +36,7 @@ export default function LogEmail({
   setNotif,
   textButton,
   setTextButton,
-  register,
   setRegister,
-  login,
   setLogin,
   setSuccessNewPassword,
 }: Props) {
@@ -167,7 +163,7 @@ export default function LogEmail({
 
       setPasswordSecured(res.passwordSecured);
 
-      if (register.length === 0 && login.length === 0)
+      if (res.register.length === 0 && res.login.length === 0)
         setTextButton("Continue");
 
       setRegister(res.register);
@@ -195,13 +191,15 @@ export default function LogEmail({
     }
   };
 
+  console.log(email);
+
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <form onSubmit={handleSubmit(submit)} className={styles.logEmail}>
       <p className={styles.description}>
         Enter your email to log in or register your account
       </p>
-      {email.length === 0 && (
+      { email.length === 0 && 
         <input
           type="email"
           autoComplete="Email"
@@ -213,7 +211,7 @@ export default function LogEmail({
             setValue("email", (event.target as HTMLInputElement).value)
           }
         />
-      )}
+      }
 
       {email.length > 0 && (
         <div className={styles.email}>

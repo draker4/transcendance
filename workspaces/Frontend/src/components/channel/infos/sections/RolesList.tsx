@@ -13,9 +13,10 @@ type Props = {
   lists:ChannelLists;
   socket: Socket | undefined;
   icon:IconDefinition;
+  status: Map<string, string>;
 };
 
-export default function RolesList({ channelId, relations, role, myRelation, lists, socket, icon }: Props) {
+export default function RolesList({ channelId, relations, role, myRelation, lists, socket, icon, status }: Props) {
   return (
     <div className={styles.rolesList}>
       <p className={styles.tinyTitle}><FontAwesomeIcon icon={icon} />&thinsp;{role}</p>
@@ -23,16 +24,17 @@ export default function RolesList({ channelId, relations, role, myRelation, list
         {relations.map((relation) => (
           <li key={relation.userId}>
             <RolesItem
-			  channelId={channelId}
+			        channelId={channelId}
               relation={relation}
-			  myRelation={myRelation}
-			  role={role}
+              myRelation={myRelation}
+              role={role}
               onFocusOn={() => {/*console.log("Focused")*/}}
               onFocusOff={() => {/* console.log("Blurred") */}}
               onHover={() => {/* console.log("Hoover") */}}
               onLeave={() => {/* console.log("Leave") */}}
-			  lists={lists}
-			  socket={socket}
+              lists={lists}
+              socket={socket}
+              status={status}
             />
           </li>
         ))}

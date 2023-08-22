@@ -1,7 +1,7 @@
 import styles from "@/styles/profile/InfoCard.module.css";
 import AvatarUser from "../../../avatarUser/AvatarUser";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChanOpControlPannel from "./ChanOpControlPannel";
 import { ChannelRoles } from "@/lib/enums/ChannelRoles.enum";
 import { Socket } from "socket.io-client";
@@ -9,6 +9,8 @@ import {
   faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
+import { Badge, Tooltip } from "@mui/material";
 
 type Props = {
   channelId:number;
@@ -21,10 +23,36 @@ type Props = {
   onLeave: () => void;
   lists:ChannelLists;
   socket: Socket | undefined;
+  status: Map<string, string>;
 };
 
-export default function RolesItem({ channelId, relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists, socket }: Props) {
+export default function RolesItem({ channelId, relation, myRelation, role, onFocusOn, onFocusOff, onHover, onLeave, lists, socket, status }: Props) {
+  
   const [isFocused, setIsFocused] = useState(false);
+  const	[color, setColor] = useState<string>("#edf0f0");
+  const	[textStatus, setTextStatus] = useState<string>("disconnected");
+
+  const badgeStyleStatus = {
+    "& .MuiBadge-badge": {
+      backgroundColor: color,
+      border: "1px solid var(--tertiary1)",
+      width: "12px",
+      height: "12px",
+      borderRadius: "100%",
+      right: "5px",
+    }
+  }
+
+  useEffect(() => {
+		if (status && status.size > 0) {
+			if (status.has(relation.user.id.toString())) {
+				const	text = status.get(relation.user.id.toString()) as string;
+				setTextStatus(text);
+				setColor(chooseColorStatus(text));
+			}
+		}
+		
+	}, [status]);
 
   const handleFocusOn = () => {
     setIsFocused(true);
@@ -56,15 +84,27 @@ export default function RolesItem({ channelId, relation, myRelation, role, onFoc
       onMouseEnter={handleHover}
       onMouseLeave={handleMouseLeave}
     >
-      <div className={styles.avatar}>
-        <AvatarUser
-          avatar={relation.user.avatar}
-          borderSize="2px"
-          backgroundColor={relation.user.avatar.backgroundColor}
-          borderColor={relation.user.avatar.borderColor}
-          fontSize="1rem"
-        />
-      </div>
+      <Tooltip title={textStatus} placement="left" arrow>
+        <Badge
+          overlap="circular"
+          sx={badgeStyleStatus}
+          variant="dot"
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "right",
+          }}
+        >
+          <div className={styles.avatar}>
+            <AvatarUser
+              avatar={relation.user.avatar}
+              borderSize="2px"
+              backgroundColor={relation.user.avatar.backgroundColor}
+              borderColor={relation.user.avatar.borderColor}
+              fontSize="1rem"
+            />
+          </div>
+        </Badge>
+      </Tooltip>
       <Link
         href={`/home/profile/${relation.userId}`}
         style={{ color: relation.user.avatar.borderColor }}

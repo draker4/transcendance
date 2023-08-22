@@ -13,7 +13,9 @@ export class Matchmaking {
   @Column()
   Player_Id: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createdAt: Date;
 
   @Column()

@@ -11,10 +11,14 @@ export class Score {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'timestamptz',
+  })
   createdtd: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'timestamptz',
+  })
   updatedAt: Date;
 
   @Column({})
