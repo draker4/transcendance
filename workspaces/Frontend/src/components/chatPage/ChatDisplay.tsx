@@ -17,6 +17,7 @@ export default function ChatDisplay({
   closeDisplay,
   myself,
   openDisplay,
+  status,
 }: {
   socket: Socket | undefined;
   display: Display;
@@ -24,6 +25,7 @@ export default function ChatDisplay({
   closeDisplay: () => void;
   myself: Profile & { avatar: Avatar };
   openDisplay: (display: Display) => void;
+  status: Map<string, string>;
 }) {
   const renderIcon = (): ReactNode => {
     if (littleScreen)
@@ -78,6 +80,7 @@ export default function ChatDisplay({
             channel={display}
             myself={myself}
             socket={socket}
+            status={status}
           />
         </div>
       );

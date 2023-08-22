@@ -16,6 +16,7 @@ type Props = {
   channel: Channel;
   myself: Profile & { avatar: Avatar };
   socket: Socket | undefined;
+  status: Map<string, string>;
 };
 
 // Fresh Messages listened by websocket
@@ -37,7 +38,7 @@ type LoadMsg = {
   updatedAt: string;
 };
 
-export default function ChatChannel({ icon, channel, myself, socket }: Props) {
+export default function ChatChannel({ icon, channel, myself, socket, status }: Props) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [codeName, setCodename] = useState<string>("");
   const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
@@ -178,7 +179,7 @@ export default function ChatChannel({ icon, channel, myself, socket }: Props) {
 
   return (
     <div className={styles.channelMsgFrame}>
-      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} />
+      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} status={status} />
       <MessageBoard messages={messages} channel={channel} relNotif={relNotif}/>
       <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif} isMuted={isMuted}/>
     </div>

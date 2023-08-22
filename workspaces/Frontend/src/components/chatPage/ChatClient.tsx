@@ -14,6 +14,10 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import SetUpChannelSecondPart from "./SetUpChannelSecondPart";
 
+interface StatusData {
+  [key: string]: string;
+}
+
 export default function ChatClient({
   token,
   myself,
@@ -29,6 +33,7 @@ export default function ChatClient({
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [error, setError] = useState<boolean>(false);
   const [getChannel, setGetChannel] = useState<boolean>(channelId ? true : false);
+  const	[status, setStatus] = useState<Map<string, string>>(new Map());
   const  router = useRouter();
 
   const openDisplay = (display: Display) => {
@@ -93,33 +98,57 @@ export default function ChatClient({
   }, [socket]);
 
   useEffect(() => {
-    console.log("useeffect=", channelId)
-    if (socket && channelId && channelId !== 0)
-      socket.emit('getChannel', channelId, (payload: {
-        success: boolean;
-        error: string;
-        channel: Channel;
-    }) => {
-      if (payload && payload.success) {
-        openDisplay(payload.channel);
-        setGetChannel(false);
+    if (socket && channelId) {
+      if (channelId !== 0)
+        socket.emit('getChannel', channelId, (payload: {
+          success: boolean;
+          error: string;
+          channel: Channel;
+      }) => {
+        if (payload && payload.success) {
+          openDisplay(payload.channel);
+          setGetChannel(false);
 
-        console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
-        return ;
+          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
+          return ;
+        }
+        if (payload && payload.error && payload.error === "protected")
+          toast.info('This channel is protected! You need a password');
+        if (payload && payload.error && payload.error === "private")
+          toast.info('This channel is private! You cannot see it!');
+        if (payload && payload.error && payload.error === "no channel")
+          return ;
+        setError(true);
+      });
+
+      else {
+        openDisplay({
+          "button": "new",
+        });
       }
-      if (payload && payload.error && payload.error === "protected")
-        toast.info('This channel is protected! You need a password');
-      if (payload && payload.error && payload.error === "private")
-        toast.info('This channel is private! You cannot see it!');
-      if (payload && payload.error && payload.error === "no channel")
-        return ;
-      setError(true);
+    }
+
+    const	updateStatus = (payload: StatusData) => {
+      if (payload) {
+        const	payloadMap = new Map(Object.entries(payload));
+        const	statusMap = new Map(status);
+
+        payloadMap.forEach((value, key) => statusMap.set(key, value));
+        setStatus(statusMap);
+      }
+    }
+    
+    socket?.emit('getStatus', (payload: StatusData) => {
+      if (payload) {
+        const statusMap = new Map(Object.entries(payload));
+        setStatus(statusMap);
+      }
     });
 
-    if (socket && channelId !== undefined && channelId === 0) {
-      openDisplay({
-        "button": "new",
-      });
+		socket?.on('updateStatus', updateStatus);
+
+    return () => {
+      socket?.off('updateStatus', updateStatus);
     }
 
   }, [socket]);
@@ -147,6 +176,7 @@ export default function ChatClient({
           maxWidth="100%"
           openDisplay={openDisplay}
           myself={myself}
+          status={status}
         />
       </div>
     );
@@ -162,6 +192,7 @@ export default function ChatClient({
           closeDisplay={closeDisplay}
           myself={myself}
           openDisplay={openDisplay}
+          status={status}
         />
       </div>
     );
@@ -174,6 +205,7 @@ export default function ChatClient({
         maxWidth="400px"
         openDisplay={openDisplay}
         myself={myself}
+        status={status}
       />
       <ChatDisplay
         socket={socket}
@@ -182,6 +214,7 @@ export default function ChatClient({
         closeDisplay={closeDisplay}
         myself={myself}
         openDisplay={openDisplay}
+        status={status}
       />
 
 	  {display && "type" in display && display.type !== "privateMsg" && <SetUpChannelSecondPart channelId={display.id} socket={socket}/>}

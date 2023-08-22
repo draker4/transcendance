@@ -9,23 +9,21 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import ConversationItem from "./ConversationItem";
 import Channel_Service from "@/services/Channel.service";
 
-interface StatusData {
-  [key: string]: string;
-}
-
 export default function Conversations({
   socket,
   maxWidth,
   openDisplay,
   myself,
+  status,
 }: {
   socket: Socket | undefined;
   maxWidth: string;
   openDisplay: (display: Display) => void;
   myself: Profile & { avatar: Avatar };
+  status: Map<string, string>;
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
-  const	[status, setStatus] = useState<Map<string, string>>(new Map());
+  // const	[status, setStatus] = useState<Map<string, string>>(new Map());
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
@@ -50,27 +48,9 @@ export default function Conversations({
         loadData();
     }
 
-		const	updateStatus = (payload: StatusData) => {
-			if (payload) {
-				const	payloadMap = new Map(Object.entries(payload));
-				const	statusMap = new Map(status);
-
-				payloadMap.forEach((value, key) => statusMap.set(key, value));
-				setStatus(statusMap);
-			}
-		}
-    
-		socket?.emit('getStatus', (payload: StatusData) => {
-			if (payload) {
-				const statusMap = new Map(Object.entries(payload));
-				setStatus(statusMap);
-			}
-		});
-
     socket?.on("notif", updateChannels);
     socket?.on('notifMsg', updateNotif);
     socket?.on("editRelation", loadData);
-		socket?.on('updateStatus', updateStatus);
 
     loadData();
     updateNotif();
@@ -79,7 +59,6 @@ export default function Conversations({
       socket?.off("notif", updateChannels);
       socket?.off("notifMsg", updateNotif);
       socket?.off("editRelation", loadData);
-			socket?.off('updateStatus', updateStatus);
     }
   }, [socket]);
 
