@@ -382,11 +382,10 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(@MessageBody() payload: JoinDto, @Request() req) {
-    const pongieSockets: Socket[] = [];
 
-    for (const [key, val] of this.connectedUsers) {
-      if (val === payload.id.toString()) pongieSockets.push(key);
-    }
+    if (payload.channelType === "protected"
+      && (!payload.password || payload.password.length === 0))
+      throw new WsException('no password');
 
     const userSockets: Socket[] = [];
 
@@ -394,13 +393,20 @@ export class ChatGateway implements OnModuleInit {
       if (val === req.user.id.toString()) userSockets.push(key);
     }
 
-    if (payload.channelType === 'privateMsg')
+    if (payload.channelType === 'privateMsg') {
+      const pongieSockets: Socket[] = [];
+
+      for (const [key, val] of this.connectedUsers) {
+        if (val === payload.id.toString()) pongieSockets.push(key);
+      }
+
       return await this.chatService.joinPongie(
         req.user.id,
         payload.id,
         userSockets,
         pongieSockets,
       );
+    }
     else
       return await this.chatService.joinChannel(
         req.user.id,

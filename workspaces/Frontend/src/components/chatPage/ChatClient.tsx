@@ -177,6 +177,7 @@ export default function ChatClient({
           openDisplay={openDisplay}
           myself={myself}
           status={status}
+          display={display}
         />
       </div>
     );
@@ -202,7 +203,7 @@ export default function ChatClient({
     <div className={styles.main}>
       <Conversations
         socket={socket}
-        maxWidth="400px"
+        maxWidth="350px"
         openDisplay={openDisplay}
         myself={myself}
         status={status}

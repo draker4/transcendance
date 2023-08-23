@@ -15,15 +15,16 @@ export default function Conversations({
   openDisplay,
   myself,
   status,
+  display,
 }: {
   socket: Socket | undefined;
   maxWidth: string;
   openDisplay: (display: Display) => void;
   myself: Profile & { avatar: Avatar };
   status: Map<string, string>;
+  display: Display;
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
-  // const	[status, setStatus] = useState<Map<string, string>>(new Map());
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {

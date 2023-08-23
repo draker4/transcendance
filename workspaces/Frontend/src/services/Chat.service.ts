@@ -116,12 +116,12 @@ export default class ChatService {
 		try {
 			// console.log("trying to refresh tokens and socket");
 
-		  const res = await fetch(
-			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
-			  method: "POST",
-			  credentials: "include",
-			}
-		  );
+			const res = await fetch(
+				`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
+					method: "POST",
+					credentials: "include",
+				}
+			);
 	
 		  if (!res.ok)
 			throw new Error("fetch failed");
