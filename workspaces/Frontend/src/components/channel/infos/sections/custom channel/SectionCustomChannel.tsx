@@ -11,15 +11,11 @@ import ResumeChannel from "./ResumeChannel";
 
 type Props = {
   relation: ChannelUsersRelation;
-  myRelation: UserRelation;
   socket: Socket | undefined;
-  setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>;
 };
 
 export default function SectionCustomChannel({
   relation,
-  setRelation,
-  myRelation, // [+] enlever si useless
   socket,
 }: Props) {
 
@@ -28,12 +24,10 @@ export default function SectionCustomChannel({
 
   const pack :{
     relation: ChannelUsersRelation;
-    setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
   } = {
     relation: relation,
-    setRelation: setRelation,
     notif: notif,
     setNotif: setNotif,
   }
@@ -59,15 +53,9 @@ export default function SectionCustomChannel({
     emitEditChannelType(type,
         () => {
           if (channelType === "public" || channelType === "protected") {
-            const modified = relation;
-            modified.channel.type = "private";
             setChannelType("private");
-            setRelation(modified);
           } else if (channelType === "private") {
-            const modified = relation;
-            modified.channel.type = "public"
             setChannelType("public");
-            setRelation(modified);
           }
         },
         () => {
@@ -107,10 +95,7 @@ export default function SectionCustomChannel({
       if (relation.channel.password !== "") {
       emitEditChannelType("protected",
         () => {
-          const modified = relation;
-          modified.channel.type = "protected";
           setChannelType("protected");
-          setRelation(modified);
           setNotif("");
         },
         () => {
@@ -124,10 +109,7 @@ export default function SectionCustomChannel({
     else if (!locked) {
       emitEditChannelType("public",
         () => {
-          const modified = relation;
-          modified.channel.type = "public";
           setChannelType("public");
-          setRelation(modified);
           setNotif("");
         },
         () => {

@@ -13,12 +13,10 @@ type Props = {
   myRelation: UserRelation;
   socket: Socket | undefined;
   relation: ChannelUsersRelation;
-  setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>
 };
 
 export default function ChannelInfoCard({
   relation,
-  setRelation,
   myRelation,
   socket
 }: Props) {
@@ -46,8 +44,7 @@ export default function ChannelInfoCard({
             );
           case 2:
             return (
-              <SectionCustomChannel relation={relation} setRelation={setRelation}
-                myRelation={myRelation} socket={socket}/>
+              <SectionCustomChannel relation={relation} socket={socket}/>
             );
           default:
             return (

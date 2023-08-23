@@ -70,7 +70,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
   },
 };
 
-export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.Element {
+export default function SetUpChannelSecondPart({ channelId, socket }: Props): JSX.Element {
   const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
   const [me, setMe] = useState<UserRelation>(myRelation);
 
@@ -133,7 +133,6 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
       <div className={styleMain.main + " " + styleMain.noPadding}>
         <ChannelSecondPart
           relation={channelRelation}
-          setRelation={setChannelRelation}
           myRelation={me}
           socket={socket}
         />

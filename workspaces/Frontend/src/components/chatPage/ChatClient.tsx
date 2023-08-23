@@ -207,6 +207,7 @@ export default function ChatClient({
         openDisplay={openDisplay}
         myself={myself}
         status={status}
+        display={display}
       />
       <ChatDisplay
         socket={socket}

@@ -3,12 +3,11 @@ import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "reac
 import { Socket } from "socket.io-client";
 
 type Props = {
-  pack : {
+  pack :{
     relation: ChannelUsersRelation;
-    setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>,
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
-    }
+  }
   socket:Socket | undefined,
 }
 
@@ -46,9 +45,6 @@ export default function EditPassword({pack, socket}:Props) {
         (rep:ReturnData) => {
           console.log("handleSubmitPassword => REP : ", rep); // checking
           if (rep.success) {
-            const modified = pack.relation;
-            modified.channel.password = submitedPassword;
-            pack.setRelation(modified);
             setPassword(submitedPassword);
             pack.setNotif("");
           } else {

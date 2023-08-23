@@ -5,16 +5,15 @@ import { Dispatch, SetStateAction } from "react";
 
 type Props = {
 	relation: ChannelUsersRelation;
-  setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>;
 	myRelation: UserRelation;
 	socket: Socket | undefined;
   };
 
-export default function ChannelSecondPart({ relation, setRelation, myRelation, socket }: Props) {
+export default function ChannelSecondPart({ relation, myRelation, socket }: Props) {
 
   return (
 	<div className={styles.both + " " + styles.second}>
-		<ChannelInfoCard relation={relation} setRelation={setRelation} myRelation={myRelation} socket={socket}  />
+		<ChannelInfoCard relation={relation} myRelation={myRelation} socket={socket}  />
 	</div>
   );
 }

@@ -110,7 +110,6 @@ export default function ChannelMainFrame({
       <ChannelSecondPart
         socket={socket}
         relation={relation}
-        setRelation={setRelation}
         myRelation={me}
       />
     </div>
