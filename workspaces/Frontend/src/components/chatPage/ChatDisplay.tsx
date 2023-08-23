@@ -9,6 +9,7 @@ import {
   faMessage,
   faFaceLaughBeam,
 } from "@fortawesome/free-regular-svg-icons";
+import AskPassword from "./ChatChannel/protected/AskPassword";
 
 export default function ChatDisplay({
   socket,
@@ -57,6 +58,16 @@ export default function ChatDisplay({
   };
 
   if (!display) return <div className={styles.main}></div>;
+
+  if ("needPassword" in display && display.needPassword === true) {
+    return (
+      <AskPassword display={display} icon={renderIcon()}
+      channel={display}
+      myself={myself}
+      socket={socket}
+      status={status}/>
+    );
+  }
 
   if ("button" in display && display.button === "new") {
     return (
