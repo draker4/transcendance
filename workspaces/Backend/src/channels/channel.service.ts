@@ -10,7 +10,7 @@ import { UserChannelRelation } from "src/utils/typeorm/UserChannelRelation";
 import { Message } from "@/utils/typeorm/Message.entity";
 import { EditChannelRelationDto } from "./dto/EditChannelRelation.dto";
 import { PongColors } from "@/utils/enums/PongColors.enum";
-import { Socket } from "socket.io";
+import { Socket, Server } from "socket.io";
 import { UsersService } from "@/users/users.service";
 
 type ChannelAndUsers = {
@@ -574,6 +574,34 @@ private async unMute(channelInfos:EditChannelRelationDto) {
     }
 
     return rep;
+  }
+
+  // Container of connected users : Map<socket, user id>
+  public async sendUpdateChannelnotif(channelId: number, connectedUsers: Map<Socket, string>, server: Server) {
+    try {
+      const channel = await this.getChannelUsers(channelId);
+
+      const sockets:Socket[] = [];
+      const userIds: number[] = [];
+
+      channel.users.forEach((user) => {
+        userIds.push(user.id);
+      });
+
+      connectedUsers.forEach((idString, socket) => {
+        if (userIds.find((id) => id === parseInt(idString) !== undefined)) {
+          sockets.push(socket);
+        }
+      });
+
+      sockets.forEach((socket) => {
+        this.log(`sendUpdateChannelnotif emit empty editRelation to user[${connectedUsers.get(socket)}]->socket[${socket.id}]`);
+        server.to(socket.id).emit("editRelation", {});
+      })
+
+    } catch (e) {
+      this.log(`sendUpdateChannelnotif error : ${e.message}`);
+    }
   }
 
 	// ------------------- PRIVATE ---------------------------------- //

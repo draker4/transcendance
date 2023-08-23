@@ -130,7 +130,7 @@ export default function SetUpChannelSecondPart({ channelId, socket }: Props): JS
   if (me.userId !== 0 && channelRelation.channel.id !== -1) {
 
     return (
-      <div className={styleMain.main + " " + styleMain.noPadding}>
+      <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
         <ChannelSecondPart
           relation={channelRelation}
           myRelation={me}
@@ -140,7 +140,7 @@ export default function SetUpChannelSecondPart({ channelId, socket }: Props): JS
     );
   } else {
     return (
-    <div className={styleMain.main + " " + styleMain.noPadding}>
+    <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
       <LoadingSuspense />;
     </div>);
   }

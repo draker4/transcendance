@@ -137,7 +137,7 @@ export default function Conversations({
   };
 
   const handleClickJoinRecent = async (channel: Channel) => {
-    console.log("Wanna join a recent channel : " + channel.name); // checking
+    console.log("Wanna join a recent channel : " + channel.name + " of type [" + channel.type + "]"); // checking
     try {
       const channelService = new Channel_Service(undefined);
       const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {joined: true});

@@ -594,6 +594,10 @@ export class ChatGateway implements OnModuleInit {
       }
 
       this.chatService.sendServerNotifMsgPublic(payload.channelId, req.user.id, endContent, this.server);
+      
+      // [+] send notif to update channel to all user in relation
+      // Container of connected users : Map<socket, user id>
+      this.channelService.sendUpdateChannelnotif(payload.channelId, this.connectedUsers, this.server);
 
       rep.success = repEdit.success;
     } catch (error: any) {
