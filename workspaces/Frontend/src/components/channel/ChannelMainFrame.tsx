@@ -31,6 +31,9 @@ export default function ChannelMainFrame({
   const [me, setMe] = useState<UserRelation>(myRelation);
 
 
+  console.log("ChannelMainFrame => relation = ", relation); // checking
+
+
   // refresh channel user relation
   const reloadData = async () => {
     const avatarService = new Avatar_Service(undefined);
@@ -106,7 +109,8 @@ export default function ChannelMainFrame({
       />
       <ChannelSecondPart
         socket={socket}
-        channelAndUsersRelation={relation}
+        relation={relation}
+        setRelation={setRelation}
         myRelation={me}
       />
     </div>

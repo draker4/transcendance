@@ -50,6 +50,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
     id: -1,
     name: "",
     type: "public",
+    password: "",
     joined: false,
     isBanned: false,
     isBoss: false,
@@ -131,7 +132,8 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
     return (
       <div className={styleMain.main + " " + styleMain.noPadding}>
         <ChannelSecondPart
-          channelAndUsersRelation={channelRelation}
+          relation={channelRelation}
+          setRelation={setER}
           myRelation={me}
           socket={socket}
         />
