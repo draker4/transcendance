@@ -123,7 +123,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         return ;
 
       const receivedDate = new Date(receivedMsg.date);
-      console.log("la=", receivedDate, receivedMsg.date);
+      // console.log("la=", receivedDate, receivedMsg.date);
       const msg: Message = {
         content: receivedMsg.content,
         sender: receivedMsg.sender,

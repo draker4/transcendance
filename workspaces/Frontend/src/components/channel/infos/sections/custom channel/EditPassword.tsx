@@ -1,22 +1,20 @@
 import styles from "@/styles/profile/InfoCard.module.css";
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
-  pack : {
-    password:string,
-    setPassword:Dispatch<SetStateAction<string>>,
+  pack :{
+    relation: ChannelUsersRelation;
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
-    channelType: ChannelType,
   }
   socket:Socket | undefined,
-  channelAndUsersRelation: ChannelUsersRelation,
 }
 
-export default function EditPassword({pack, socket, channelAndUsersRelation}:Props) {
+export default function EditPassword({pack, socket}:Props) {
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [editedPassword, setEditedPassword] = useState<string>(pack.password);
+  const [password, setPassword] = useState<string>(pack.relation.channel.password);
+  const [editedPassword, setEditedPassword] = useState<string>(pack.relation.channel.password);
 
   const handleEditedPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEditedPassword(event.target.value);
@@ -31,21 +29,23 @@ export default function EditPassword({pack, socket, channelAndUsersRelation}:Pro
     e.preventDefault();
     const submitedPassword:string = e.target.password.value;
 
-    if (submitedPassword === pack.password) {
+    if (submitedPassword === pack.relation.channel.password) {
       pack.setNotif("");
     } else if (submitedPassword.length > 20) {
         pack.setNotif("Your password can't exceed 20 characters");
+    } else if (submitedPassword.length === 0 && pack.relation.channel.type === "protected") {
+        pack.setNotif("A protected channel can't have an empty password");
     } else {
         socket?.emit(
           "editChannelPassword", 
         {
-          channelId: channelAndUsersRelation.channel.id,
+          channelId: pack.relation.channel.id,
           password: submitedPassword,
         }, 
         (rep:ReturnData) => {
           console.log("handleSubmitPassword => REP : ", rep); // checking
           if (rep.success) {
-            pack.setPassword(submitedPassword);
+            setPassword(submitedPassword);
             pack.setNotif("");
           } else {
             pack.setNotif(rep.message ? rep.message : "An error occured, please try again later");
@@ -55,7 +55,7 @@ export default function EditPassword({pack, socket, channelAndUsersRelation}:Pro
       setEditMode(false);
   }
 
-  if (!editMode && pack.password === "") {
+  if (!editMode && password === "") {
     return (
       <>
       <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
@@ -67,13 +67,13 @@ export default function EditPassword({pack, socket, channelAndUsersRelation}:Pro
       </div>
       </>
     );
-  } else if (!editMode && pack.password !== "") {
+  } else if (!editMode && password !== "") {
     return (
       <>
         <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Password</p>
         {pack.notif !== "" && <p className={`${styles.notif} ${styles.noMargin}`}>{pack.notif}</p>}
         <div onClick={handleClickEdit}>
-          <p className={styles.password}> {pack.password} </p>
+          <p className={styles.password}> {password} </p>
         </div>
       </>
     );

@@ -50,6 +50,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
     id: -1,
     name: "",
     type: "public",
+    password: "",
     joined: false,
     isBanned: false,
     isBoss: false,
@@ -69,10 +70,9 @@ let channelAndUsersRelation: ChannelUsersRelation = {
   },
 };
 
-export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.Element {
-  const [channelRelation, setChannelRelation] =
-    useState<ChannelUsersRelation | null>(null);
-  const [me, setMe] = useState<UserRelation | null>(null);
+export default function SetUpChannelSecondPart({ channelId, socket }: Props): JSX.Element {
+  const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
+  const [me, setMe] = useState<UserRelation>(myRelation);
 
   const getPongersData = async () => {
     const avatarService = new Avatar_Service(undefined);
@@ -118,8 +118,7 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
   useEffect(() => {
 	
 	socket.on("editRelation", loadData);
-    
-    loadData();
+  loadData();
 
 	return () => {
 		socket?.off("editRelation", loadData);
@@ -127,11 +126,13 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
 
   }, [socket]);
 
-  if (me && channelRelation) {
+
+  if (me.userId !== 0 && channelRelation.channel.id !== -1) {
+
     return (
-      <div className={styleMain.main + " " + styleMain.noPadding}>
+      <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
         <ChannelSecondPart
-          channelAndUsersRelation={channelRelation}
+          relation={channelRelation}
           myRelation={me}
           socket={socket}
         />
@@ -139,7 +140,7 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
     );
   } else {
     return (
-    <div className={styleMain.main + " " + styleMain.noPadding}>
+    <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
       <LoadingSuspense />;
     </div>);
   }

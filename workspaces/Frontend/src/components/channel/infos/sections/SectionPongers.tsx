@@ -15,7 +15,7 @@ import {
   } from "@fortawesome/free-solid-svg-icons";
 
 type Props = {
-  channelAndUsersRelation: ChannelUsersRelation;
+  relation: ChannelUsersRelation;
   myRelation: UserRelation;
   socket: Socket | undefined;
 };
@@ -25,7 +25,7 @@ interface StatusData {
 }
 
 export default function SectionPongers({
-  channelAndUsersRelation,
+  relation,
   myRelation,
   socket,
 }: Props) {
@@ -40,12 +40,12 @@ const	[status, setStatus] = useState<Map<string, string>>(new Map());
 const   [notif, setNotif] = useState<string>("");
 
 useEffect(() => {
-  const filteredBoss = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBoss && relation.joined));
-  const filteredOperators = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBoss && !relation.isBanned && relation.joined));
-  const filteredPongers = channelAndUsersRelation.usersRelation.filter((relation) => (relation.joined  && !relation.isBoss && !relation.isChanOp && !relation.isBanned));
-  const filteredInvited = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited));
-  const filteredBanned = channelAndUsersRelation.usersRelation.filter((relation) => (relation.isBanned));
-  const filteredLeavers = channelAndUsersRelation.usersRelation.filter((relation) => (!relation.joined && !relation.isBanned && !relation.invited));
+  const filteredBoss = relation.usersRelation.filter((relation) => (relation.isBoss && relation.joined));
+  const filteredOperators = relation.usersRelation.filter((relation) => (relation.isChanOp && !relation.isBoss && !relation.isBanned && relation.joined));
+  const filteredPongers = relation.usersRelation.filter((relation) => (relation.joined  && !relation.isBoss && !relation.isChanOp && !relation.isBanned));
+  const filteredInvited = relation.usersRelation.filter((relation) => (!relation.joined && !relation.isChanOp && !relation.isBanned && relation.invited));
+  const filteredBanned = relation.usersRelation.filter((relation) => (relation.isBanned));
+  const filteredLeavers = relation.usersRelation.filter((relation) => (!relation.joined && !relation.isBanned && !relation.invited));
 
   setBoss(filteredBoss);
   setOperators(filteredOperators);
@@ -54,7 +54,7 @@ useEffect(() => {
   setBanned(filteredBanned);
   setLeavers(filteredLeavers);
 
-}, [channelAndUsersRelation]);
+}, [relation]);
 
   useEffect(() => {
     const	updateStatus = (payload: StatusData) => {
@@ -98,7 +98,7 @@ useEffect(() => {
     } else {
       return (
         <RolesList
-          channelId={channelAndUsersRelation.channel.id}
+          channelId={relation.channel.id}
           relations={relations}
           myRelation={myRelation}
           role={role}

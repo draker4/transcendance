@@ -10,42 +10,32 @@ import EditPassword from "./EditPassword";
 import ResumeChannel from "./ResumeChannel";
 
 type Props = {
-  channelAndUsersRelation: ChannelUsersRelation;
-  myRelation: UserRelation;
+  relation: ChannelUsersRelation;
   socket: Socket | undefined;
 };
 
 export default function SectionCustomChannel({
-  channelAndUsersRelation,
-  myRelation,
+  relation,
   socket,
 }: Props) {
 
-  //const tempPassword = "yolo484*"; // [+] a remplacer par le password de channel, prop a ajouter
-  const tempPassword = ""; // [+] a remplacer par le password de channel, prop a ajouter
-
-  const [channelType, setChannelType] = useState<ChannelType>(channelAndUsersRelation.channel.type);
-  const [password, setPassword] = useState<string>(tempPassword);
   const [notif, setNotif] = useState<string>("");
+  const [channelType, setChannelType] = useState<ChannelType>(relation.channel.type);
 
   const pack :{
-    password:string,
-    setPassword:Dispatch<SetStateAction<string>>,
+    relation: ChannelUsersRelation;
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
-    channelType: ChannelType,
   } = {
-    password: password,
-    setPassword: setPassword,
+    relation: relation,
     notif: notif,
     setNotif: setNotif,
-    channelType: channelType,
   }
 
   const emitEditChannelType = (type:ChannelType, onSuccess: ()=>void, onFail: ()=>void) => {
     socket?.emit("editChannelType", 
       {
-        channelId: channelAndUsersRelation.channel.id,
+        channelId: relation.channel.id,
         type: type,
       },
       (rep:ReturnData) => {
@@ -62,10 +52,11 @@ export default function SectionCustomChannel({
 
     emitEditChannelType(type,
         () => {
-          if (channelType === "public" || channelType === "protected")
-          setChannelType("private");
-        else if (channelType === "private")
-          setChannelType("public");
+          if (channelType === "public" || channelType === "protected") {
+            setChannelType("private");
+          } else if (channelType === "private") {
+            setChannelType("public");
+          }
         },
         () => {
           setNotif("error switching public/private try later please");
@@ -101,7 +92,7 @@ export default function SectionCustomChannel({
   const handleSwitchLock = (locked:boolean) => {
 
     if (locked) {
-      if (password !== "") {
+      if (relation.channel.password !== "") {
       emitEditChannelType("protected",
         () => {
           setChannelType("protected");
@@ -157,7 +148,7 @@ export default function SectionCustomChannel({
   return (
     <div className={styles.sections}>
       {/* //[+] A TESTER AVEC GRAND NOM DE ChANNEL */ }
-      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>{channelAndUsersRelation.channel.name}</p>
+      <p className={`${styles.tinyTitle} ${styles.marginTop}`}>{relation.channel.name}</p>
       <ResumeChannel type={channelType} />
 
       <p className={`${styles.tinyTitle} ${styles.marginTop}`}>Channel type</p>
@@ -171,8 +162,9 @@ export default function SectionCustomChannel({
           {makeLockButton(true, handleSwitchLock, channelType !== "private")}
         
       { channelType !== "private" && 
-        <EditPassword pack={pack} socket={socket} channelAndUsersRelation={channelAndUsersRelation}/>
+        <EditPassword pack={pack} socket={socket} />
       }
+
     </div>
   )
 }
