@@ -520,6 +520,8 @@ private async unMute(channelInfos:EditChannelRelationDto) {
         throw new Error(`relation not found channel[${channelId}] user[${senderId}]`);
       else if (!repRelation.data.isBoss)
         throw new Error(`user[${senderId}] is not channel master`);
+      else if (password === "" && channel.type === "protected")
+        throw new Error("A protected channel can't have an empty password");
 
       this.channelRepository.update(channelId, {
         password:password

@@ -6,7 +6,7 @@ export default function makeHumanDateFormat(date:Date):string {
 
     const dayMonthYear:string = date.toLocaleDateString();
     const today:string = now.toLocaleDateString();
-    console.log(date);
+    // console.log(date);
 
     if (dayMonthYear !== today)
         formated += dayMonthYear + " ";

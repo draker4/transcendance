@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction } from "react";
 
 type Props = {
 	relation: ChannelUsersRelation;
-  setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>
+  setRelation: Dispatch<SetStateAction<ChannelUsersRelation>>;
 	myRelation: UserRelation;
 	socket: Socket | undefined;
   };

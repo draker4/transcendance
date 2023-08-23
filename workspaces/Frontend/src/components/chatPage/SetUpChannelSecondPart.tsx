@@ -71,9 +71,8 @@ let channelAndUsersRelation: ChannelUsersRelation = {
 };
 
 export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.Element {
-  const [channelRelation, setChannelRelation] =
-    useState<ChannelUsersRelation | null>(null);
-  const [me, setMe] = useState<UserRelation | null>(null);
+  const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
+  const [me, setMe] = useState<UserRelation>(myRelation);
 
   const getPongersData = async () => {
     const avatarService = new Avatar_Service(undefined);
@@ -119,8 +118,7 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
   useEffect(() => {
 	
 	socket.on("editRelation", loadData);
-    
-    loadData();
+  loadData();
 
 	return () => {
 		socket?.off("editRelation", loadData);
@@ -128,12 +126,14 @@ export default function SetUpSectionPongers({ channelId, socket }: Props): JSX.E
 
   }, [socket]);
 
-  if (me && channelRelation) {
+
+  if (me.userId !== 0 && channelRelation.channel.id !== -1) {
+
     return (
       <div className={styleMain.main + " " + styleMain.noPadding}>
         <ChannelSecondPart
           relation={channelRelation}
-          setRelation={setER}
+          setRelation={setChannelRelation}
           myRelation={me}
           socket={socket}
         />
