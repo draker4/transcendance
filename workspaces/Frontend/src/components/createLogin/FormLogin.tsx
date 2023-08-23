@@ -14,9 +14,11 @@ import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 export default function FormLogin({
   avatars,
   token,
+  avatarsCrypted,
 }: {
   avatars: string[];
   token: string;
+  avatarsCrypted: string[];
 }) {
   const textButtonInitial = "Let's go!";
   const [notif, setNotif] = useState<string>("");
@@ -182,6 +184,7 @@ export default function FormLogin({
             selectAvatar={selectAvatar}
             text={text}
             avatars={avatars}
+            avatarsCrypted={avatarsCrypted}
             fontSize="1rem"
             textButton={textButton}
             textButtonInitial={textButtonInitial}

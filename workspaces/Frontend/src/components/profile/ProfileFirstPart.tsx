@@ -7,9 +7,10 @@ type Props = {
   isOwner: boolean;
   avatar: Avatar;
   socket: Socket | undefined;
+  avatars: Avatar[];
 };
 
-export default function ProfileFirstPart({ login, isOwner, avatar, socket }: Props) {
+export default function ProfileFirstPart({ login, isOwner, avatar, socket, avatars }: Props) {
 
   return (
     <div className={`${styles.both} ${styles.first}`}>
@@ -18,6 +19,7 @@ export default function ProfileFirstPart({ login, isOwner, avatar, socket }: Pro
         isOwner={isOwner}
         avatar={avatar}
         socket={socket}
+        avatars={avatars}
       />
     </div>
   );

@@ -7,7 +7,6 @@ type Props = {
   avatar: Avatar;
   isOwner: boolean;
   onClick: () => void;
-  displaySettings: boolean;
   previewBorder: string;
   previewBackground: string;
 };
@@ -16,7 +15,6 @@ export default function Avatar({
   avatar,
   isOwner,
   onClick,
-  displaySettings,
   previewBorder,
   previewBackground,
 }: Props) {
@@ -28,16 +26,6 @@ export default function Avatar({
         onClick={onClick}
         style={{ backgroundColor: previewBorder }}
       >
-        {!displaySettings && (
-          <AvatarUser
-            avatar={avatar}
-            borderSize="6px"
-            backgroundColor={avatar.backgroundColor}
-            borderColor={avatar.borderColor}
-            fontSize="3rem"
-          />
-        )}
-        {displaySettings && (
           <AvatarUser
             avatar={avatar}
             borderSize="6px"
@@ -45,7 +33,6 @@ export default function Avatar({
             borderColor={previewBorder}
             fontSize="3rem"
           />
-        )}
       </div>
     </div>
   );

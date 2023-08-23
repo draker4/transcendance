@@ -15,6 +15,7 @@ type Props = {
   isOwner: boolean;
   avatar: Avatar;
   token: string;
+  avatars: Avatar[];
 };
 
 export default function ProfileMainFrame({
@@ -22,6 +23,7 @@ export default function ProfileMainFrame({
   isOwner,
   avatar,
   token,
+  avatars,
 }: Props) {
   const [login, setLogin] = useState<string>(profile.login);
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
@@ -75,6 +77,7 @@ export default function ProfileMainFrame({
           isOwner={isOwner}
           avatar={avatar}
           socket={socket}
+          avatars={avatars}
         />
         <ProfileSecondPart
           profile={profile}

@@ -12,6 +12,10 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
+import { AvatarService } from '@/avatar/avatar.service';
+import { Avatar } from '@/utils/typeorm/Avatar.entity';
+import { ChannelService } from '@/channels/channel.service';
+import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 
 @Module({
   imports: [
@@ -23,10 +27,12 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
       SocketToken,
       Stats,
       Notif,
+      Avatar,
+      UserChannelRelation,
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, CryptoService, StatsService],
+  providers: [UsersService, CryptoService, StatsService, AvatarService, ChannelService],
   exports: [UsersService],
 })
 export class UsersModule {}

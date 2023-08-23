@@ -6,7 +6,7 @@ import ChangeLogin from "./ChangeLogin";
 import ChangePassword from "./ChangePassword";
 import { Socket } from "socket.io-client";
 
-export default function SectionCustom({ profile, setLogin, socket }: {
+export default function ConfigAuthEditable({ profile, setLogin, socket }: {
 	profile: Profile;
 	setLogin: Dispatch<SetStateAction<string>>;
 	socket: Socket | undefined;

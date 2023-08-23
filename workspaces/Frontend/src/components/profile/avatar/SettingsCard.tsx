@@ -1,16 +1,8 @@
 import styles from "@/styles/profile/AvatarCard.module.css";
-import { Stack, ToggleButton } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import { Stack } from "@mui/material";
 import ColorSelector from "./ColorSelector";
 import MyToggleButton from "./ToggleButton";
 import SingleButton from "./SingleButton";
-
-const ToggleButtonS = styled(ToggleButton)({
-  "&.Mui-selected, &.Mui-selected:hover": {
-    color: "#22d3ee",
-    backgroundColor: "#64748b",
-  },
-});
 
 type Props = {
   previewChangeTopColor: (color: string) => void;

@@ -18,10 +18,14 @@ import { UsersService } from './users.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
 import { EditUserDto } from './dto/EditUser.dto';
+import { AvatarService } from '@/avatar/avatar.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly avatarService: AvatarService,
+  ) {}
 
   @Get('me')
   getUserProfile(@Request() req) {
@@ -163,7 +167,7 @@ export class UsersController {
   @Put('changeLogin')
   async changeLogin(@Req() req, @Body() { login }: EditUserDto) {
     try {
-      const user = await this.usersService.getUserById(req.user.id);
+      const user = await this.usersService.getUserAvatar(req.user.id);
 
       if (!user) throw new Error('no user found');
 
@@ -177,6 +181,12 @@ export class UsersController {
       this.usersService.updateUser(user.id, {
         login: login,
       });
+
+      const avatar = user.avatar;
+      if (avatar.text.length !== 0) {
+        avatar.text = login.toUpperCase().slice(0, 3);
+        await this.avatarService.updateAvatar(avatar.id, avatar);
+      }
 
       return {
         success: true,

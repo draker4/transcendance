@@ -31,6 +31,11 @@ const nextConfig = {
     SECRET_KEY: process.env.SECRET_KEY,
     HOST_IP: process.env.HOST_IP,
     DISCONNECT: process.env.HOST_IP,
+    CLOUD_NAME: process.env.CLOUD_NAME,
+    CLOUD_API_KEY: process.env.CLOUD_API_KEY,
+    CLOUD_SECRET: process.env.CLOUD_SECRET,
+    CLOUD_API_ENV_VAR: process.env.CLOUD_API_ENV_VAR,
+    CLOUD_FOLDER: process.env.CLOUD_FOLDER,
   },
 
   // Image domains to allow image optimization and usage

@@ -64,7 +64,7 @@ export class AvatarService {
     try {
       const avatar: Avatar = (
         await this.usersService.getUserAvatar(req.user.id)
-      ).avatar;
+      )?.avatar;
 
       if (!avatar) {
         const defaultAvatar = this.createDefaultAvatar();
@@ -85,7 +85,45 @@ export class AvatarService {
       }
     } catch (error) {
       rep.message = error.message;
-	  rep.error
+    }
+    return rep;
+  }
+
+  async editUserAvatar(
+    userId: number,
+    avatar: AvatarDto,
+  ) {
+    const rep:ReturnData = {
+      success: false,
+      message: '',
+    };
+
+    try {
+      const user = await this.usersService.getUserAvatar(userId);
+
+      if (!user)
+        throw new Error('no user');
+
+      const avatarUser = user.avatar;
+
+      if (!avatarUser) {
+        const newAvatar = await this.avatarRepository.save(avatar);
+        await this.usersService.updateUserAvatar(user, newAvatar);
+        rep.success = true;
+        rep.message = 'Avatar successfully updated';
+      } else {
+        await this.avatarRepository.update(avatarUser.id, {
+          ...avatar
+        });
+
+        this.log(
+          `user : ${userId} avatar totally updated`,
+        );
+        rep.success = true;
+        rep.message = 'Avatar successfully updated';
+      }
+    } catch (error) {
+      rep.message = error.message;
     }
     return rep;
   }
@@ -105,7 +143,7 @@ export class AvatarService {
     if (!check.isOk)
       throw new Error(rep.error);
 
-		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel))).avatar;
+		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel)))?.avatar;
 
 		if (!avatar)
 			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.isChannel})`);
@@ -126,6 +164,12 @@ export class AvatarService {
 	}
 
 	return rep;
+  }
+
+  public async updateAvatar(avatarId: number, avatar: Avatar) {
+    await this.avatarRepository.update(avatarId, {
+      ...avatar,
+    })
   }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */

@@ -55,16 +55,45 @@ export default class Avatar_Service {
   public async submitAvatarColors(
     borderColor: string,
     backgroundColor: string,
+    avatarImage: string,
     isChannel: number
   ):Promise<ReturnData> {
 	try {
-		const body = JSON.stringify({ borderColor, backgroundColor, isChannel });
+		const body = JSON.stringify({ borderColor, backgroundColor, avatarImage, isChannel });
 		const response = await fetchData(undefined, "avatar", "", "PUT", body);
 
 		if (!response.ok)
 			throw new Error("submitAvatarColors error");
 
 		const data:ReturnData = await response.json();
+		return (data);
+	} catch(e:any) {
+		return ({
+			success: false,
+			message: e.message,
+			error: e,
+		});
+	}
+  }
+
+  // isChannel value is the channelId, 0 mean it's not a channel but an user's.
+  public async submitAvatarUser(
+    avatar: Avatar,
+    topColor: string,
+    botColor: string,
+  ):Promise<ReturnData> {
+	try {
+    const {isChannel, ...avatarBackend} = avatar;
+    avatarBackend.backgroundColor = botColor;
+    avatarBackend.borderColor = topColor;
+		const body = JSON.stringify({ ...avatarBackend });
+		const response = await fetchData(undefined, "avatar", "avatarUser", "PUT", body);
+
+		if (!response.ok)
+			throw new Error("submitAvatarColors error");
+
+		const data:ReturnData = await response.json();
+    console.log(data);
 		return (data);
 	} catch(e:any) {
 		return ({

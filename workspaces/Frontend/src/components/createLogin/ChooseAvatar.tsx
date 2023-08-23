@@ -6,6 +6,7 @@ import { useState } from "react";
 import ChooseColor from "./ChooseColor";
 import { PongColors } from "@/lib/enums/PongColors.enum";
 import UploadButton from "../uploadImage/UploadButton";
+import AvatarCloud from "./AvatarCloud";
 
 export default function ChooseAvatar({
   selectBorder,
@@ -13,6 +14,7 @@ export default function ChooseAvatar({
   selectAvatar,
   text,
   avatars,
+  avatarsCrypted,
   fontSize,
   textButton,
   textButtonInitial,
@@ -22,6 +24,7 @@ export default function ChooseAvatar({
   selectAvatar: (avatar: Avatar) => void;
   text: string;
   avatars: string[];
+  avatarsCrypted: string[];
   fontSize: string;
   textButton: string;
   textButtonInitial: string;
@@ -29,7 +32,7 @@ export default function ChooseAvatar({
   const [colorBorder, setColorBorder] = useState<string>(PongColors.appleGreen);
   const [backgroundColor, setBackgroundColor] = useState<string>(PongColors.appleGreen);
   const [selectedAvatar, setSelectedAvatar] = useState<string>("empty");
-  const [avatarsAdded, setAvatarsAdded] = useState<string[]>([]);
+  const [avatarsAdded, setAvatarsAdded] = useState<string[]>(avatarsCrypted);
 
   const handleBorder = (color: string) => {
     setColorBorder(color);
@@ -95,7 +98,7 @@ export default function ChooseAvatar({
               text: text.toUpperCase().slice(0, 3),
               empty: false,
               isChannel: false,
-              decrypt: true,
+              decrypt: false,
             })
           }
           sx={{
@@ -143,33 +146,16 @@ export default function ChooseAvatar({
 
         {avatarsAdded.map((avatar) => {
           return (
-            <Avatar
-              className={`${styles.avatar} ${
-                avatar === selectedAvatar ? styles.selected : ""
-              }`}
-              key={avatar}
-              src={avatar}
-              alt={text}
-              variant="circular"
-              onClick={() =>
-                handleSelectAvatar(avatar, {
-                  image: avatar,
-                  variant: "circular",
-                  borderColor: colorBorder,
-                  backgroundColor: backgroundColor,
-                  text: text,
-                  empty: false,
-                  isChannel: false,
-                  decrypt: true,
-                })
-              }
-              sx={{
-                width: 80,
-                height: 80,
-                border: `4px solid ${colorBorder}`,
-                backgroundColor: `${backgroundColor}`,
-              }}
-            />
+          <div key={avatar}>
+            <AvatarCloud
+                    avatar={avatar}
+                    selectedAvatar={selectedAvatar}
+                    text={text}
+                    handleSelectAvatar={handleSelectAvatar}
+                    colorBorder={colorBorder}
+                    backgroundColor={backgroundColor}
+                  />
+            </div>
           );
         })}
 

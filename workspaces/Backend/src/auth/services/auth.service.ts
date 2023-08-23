@@ -40,7 +40,8 @@ export class AuthService {
       }),
     });
 
-    if (!response.ok) throw new Error('fetch failed');
+    if (!response.ok)
+      throw new Error('fetch failed');
 
     return await response.json();
   }

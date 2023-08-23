@@ -5,6 +5,6 @@ type Avatar = {
   backgroundColor: string;
   text: string;
   empty: boolean;
-  isChannel: boolean;
+  isChannel?: boolean;
   decrypt: boolean;
 };

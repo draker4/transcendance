@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from "next/server";
+import cloudinary from 'cloudinary';
+import { cookies } from "next/headers";
+import { verifyAuth } from "@/lib/auth/auth";
+
+export async function GET(
+	req: NextRequest,
+) {
+	const	crunchyToken = cookies().get("crunchy-token")?.value;
+	try {
+
+		if (!crunchyToken)
+			return NextResponse.json({
+				success: false,
+			}, {
+				status: 401,
+			});
+
+		const	payload = verifyAuth(crunchyToken);
+
+		if (!payload)
+			return NextResponse.json({
+				success: false,
+			});
+
+		const timestamp = Math.round((new Date).getTime()/1000);
+
+		const signature = cloudinary.v2.utils.api_sign_request({
+			timestamp: timestamp,
+			eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
+			folder: process.env.CLOUD_FOLDER}, process.env.CLOUD_SECRET as string);
+
+		return NextResponse.json({
+			success: true,
+			timestamp,
+			signature,
+		});
+	}
+	catch (error) {
+		console.log(error);
+	}
+
+	return NextResponse.json({
+		success: false,
+	});
+}

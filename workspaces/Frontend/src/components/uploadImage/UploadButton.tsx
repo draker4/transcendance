@@ -1,11 +1,15 @@
-import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import styles from "@/styles/uploadImage/UploadButton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import stylesAvatar from "@/styles/createLogin/ChooseAvatar.module.css";
-import { Avatar, Badge } from "@mui/material";
+import { Avatar, Badge, CircularProgress } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { POST } from "@/app/api/login/route";
+import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import { useRouter } from "next/navigation";
+import disconnect from "@/lib/disconnect/disconnect";
 
 const badgeStyleRight = {
 	"& .MuiBadge-badge": {
@@ -14,6 +18,7 @@ const badgeStyleRight = {
 	  border: "2px solid var(--accent1)",
 	  cursor: "pointer",
 	  width: "6px",
+	  right: "15px",
 	}
 }
 
@@ -44,9 +49,12 @@ export default function UploadButton({
 	const	[colorIcon, setColorIcon] = useState<string>('var(--tertiary1)');
   	const	[isFocused, setIsFocused] = useState<boolean>(false);
 	const	[imageSrc, setImageSrc] = useState<string | undefined>(undefined);
+	const	[loading, setLoading] = useState<boolean>(false);
 	const	fileInputRef = useRef<HTMLInputElement>(null);
 	const	formRef = useRef<HTMLDivElement>(null);
 	const 	{ handleSubmit, setValue } = useForm<FormInputs>();
+	const	avatarRef = useRef<HTMLDivElement | null>(null);
+	const	router = useRouter();
 
 	const handleFocusOn = () => {
 		setIsFocused(true);
@@ -77,13 +85,36 @@ export default function UploadButton({
 
 		if (!data.file)
 			return ;
+		
+		setLoading(true);
+		setValue('file', null);
+		setImageSrc(undefined);
 
 		try {
+			if (!process.env.CLOUD_API_KEY || !process.env.CLOUD_SECRET || !process.env.CLOUD_FOLDER || !process.env.CLOUD_NAME)
+				throw new Error('env var missing');
+	
+			const	getSignature = await fetchClientSide(`http://${process.env.HOST_IP}:3000/api/cloud`, {
+				method: 'GET',
+			});
+
+			if (!getSignature.ok)
+				throw new Error('no signature');
+			
+			const	{timestamp, signature} = await getSignature.json();
+
+			if (!timestamp || !signature)
+				throw new Error('no signature');
+
 			const	formData = new FormData();
 			formData.set('file', data.file);
-			formData.append('upload_preset', 'crunchy-uploads');
+			formData.append("api_key", process.env.CLOUD_API_KEY as string);
+			formData.append("timestamp", timestamp.toString());
+			formData.append('signature', signature);
+			formData.append("eager", "c_pad,h_300,w_400|c_crop,h_200,w_260");
+			formData.append("folder", process.env.CLOUD_FOLDER as string);
 
-			const	res = await fetch(`https://api.cloudinary.com/v1_1/dyzodcnzr/image/upload`, {
+			const	res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/upload`, {
 				method: "POST",
 				body: formData,
 			});
@@ -92,11 +123,32 @@ export default function UploadButton({
 				throw new Error('fetch failed');
 			
 			const resJson = await res.json();
+
+			const	saveImage = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/addImage`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					image: resJson.secure_url,
+				}),
+			})
+
+			if (!saveImage.ok)
+				
+
 			setAvatar(prev => [...prev, resJson.secure_url]);
+			setLoading(false);
 		}
-		catch (error) {
-			console.log(error);
+		catch (error: any) {
+			console.log(error.message);
+			if (error.message === "disconnect") {
+				await disconnect();
+				router.refresh();
+				return ;
+			}
 			toast.error("Oops, something went wrong, please try again!");
+			setLoading(false);
 		}
 	}
 
@@ -114,7 +166,10 @@ export default function UploadButton({
 		}
 	}
 
-	const	deleteImage = () => {
+	const	deleteImage = (event: React.MouseEvent<HTMLSpanElement>) => {
+		if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
+			return ;
+		}
 		setValue('file', null);
 		setImageSrc(undefined);
 	}
@@ -130,7 +185,7 @@ export default function UploadButton({
 			ref={formRef}
 		>
 			{
-				!imageSrc &&
+				!imageSrc && !loading &&
 				<div
 					className={styles.upload}
 					style={{border: isFocused ? "4px solid var(--accent3)" : "4px solid var(--accent1)"}}
@@ -153,7 +208,7 @@ export default function UploadButton({
 				</div>
 			}
 			{
-				imageSrc &&
+				imageSrc && !loading &&
 				<Badge badgeContent={
 					<FontAwesomeIcon
 						icon={faCheck}
@@ -163,7 +218,12 @@ export default function UploadButton({
 						vertical: 'top',
 						horizontal: 'right',
 					}}
-					onClick={handleSubmit(handleOnSubmit)}
+					onClick={(event) => {
+						if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
+							return ;
+						}
+						handleSubmit(handleOnSubmit)()
+					}}
 				>
 					<Badge badgeContent={
 						<FontAwesomeIcon
@@ -190,9 +250,15 @@ export default function UploadButton({
 							border: `4px solid ${borderColor}`,
 							backgroundColor: {backgroundColor},
 						}}
+						ref={avatarRef}
 					/>
 					</Badge>
 				</Badge>
+			}
+
+			{
+				loading &&
+				<CircularProgress />
 			}
 		</div>
 	);

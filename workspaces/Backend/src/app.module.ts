@@ -35,6 +35,7 @@ import { BackupCode } from './utils/typeorm/BackupCode.entity';
 import { SocketToken } from './utils/typeorm/SocketToken.entity';
 import { Notif } from './utils/typeorm/Notif.entity';
 import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
+import { Image } from './utils/typeorm/Images.entity';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
         SocketToken,
         Notif,
         NotifMessages,
+        Image,
       ],
       synchronize: false,
     }),

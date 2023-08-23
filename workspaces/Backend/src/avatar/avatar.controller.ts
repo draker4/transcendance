@@ -12,6 +12,7 @@ import {
 import { AvatarService } from './avatar.service';
 import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
 import { UsersService } from 'src/users/users.service';
+import { AvatarDto } from './dto/Avatar.dto';
 
 @Controller('avatar')
 export class AvatarController {
@@ -51,5 +52,13 @@ export class AvatarController {
     return updateUserAvatarDto.isChannel > 0
       ? this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto)
       : this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
+  }
+
+  @Put('avatarUser')
+  async updateUserAvatarUser(
+    @Request() req,
+    @Body() avatar: AvatarDto,
+  ) {
+    return this.avatarService.editUserAvatar(req.user.id, avatar);
   }
 }

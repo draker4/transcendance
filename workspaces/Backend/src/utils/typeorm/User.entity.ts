@@ -20,6 +20,7 @@ import { Token } from './Token.entity';
 import { BackupCode } from './BackupCode.entity';
 import { Stats } from './Stats.entity';
 import { Notif } from './Notif.entity';
+import { Image } from './Images.entity';
 
 @Entity()
 export class User {
@@ -144,6 +145,9 @@ export class User {
   @OneToMany(() => BackupCode, (backupCode) => backupCode.user)
   backupCodes: BackupCode[];
 
+  @OneToMany(() => Image, (image) => image.user)
+  images: Image[];
+
   @OneToMany(() => Token, (token) => token.user)
   tokens: Token[];
 
@@ -175,6 +179,10 @@ export class User {
 
     if (!this.tokens) {
       this.tokens = [];
+    }
+
+    if (!this.images) {
+      this.images = [];
     }
   }
 }

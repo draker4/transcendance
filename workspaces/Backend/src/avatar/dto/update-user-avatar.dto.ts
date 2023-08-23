@@ -1,4 +1,5 @@
-import { IsEnum, IsHexColor, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEnum, IsHexColor, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { string } from 'joi';
 import { PongColors } from 'src/utils/enums/PongColors.enum';
 
 export class UpdateUserAvatarDto {

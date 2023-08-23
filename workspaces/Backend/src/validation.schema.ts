@@ -24,4 +24,9 @@ export const ValidationSchema = Joi.object({
   HOST_IP: Joi.string().required(),
   TWO_FACTOR_AUTHENTICATION_APP_NAME: Joi.string().required(),
   DISCONNECT: Joi.boolean().required(),
+  CLOUD_NAME: Joi.string().required(),
+  CLOUD_API_KEY: Joi.string().required(),
+  CLOUD_SECRET: Joi.string().required(),
+  CLOUD_API_ENV_VAR: Joi.string().required(),
+  CLOUD_FOLDER: Joi.string().required(),
 });
