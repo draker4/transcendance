@@ -30,6 +30,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { StatusService } from '@/statusService/status.service';
+import { Image } from '@/utils/typeorm/Image.entity';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { StatusService } from '@/statusService/status.service';
       UserChannelRelation,
       SocketToken,
       Notif,
+      Image,
     ]),
   ],
   providers: [

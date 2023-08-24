@@ -10,6 +10,9 @@ export class Image {
 	@Column()
 	imageUrl: string;
 
+	@Column()
+	publicId: string;
+
 	@ManyToOne(() => User, user => user.images)
 	user: User;
 }

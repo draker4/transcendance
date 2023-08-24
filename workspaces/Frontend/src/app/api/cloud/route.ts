@@ -3,10 +3,17 @@ import cloudinary from 'cloudinary';
 import { cookies } from "next/headers";
 import { verifyAuth } from "@/lib/auth/auth";
 
-export async function GET(
-	req: NextRequest,
-) {
+export async function POST(req: NextRequest) {
+
 	const	crunchyToken = cookies().get("crunchy-token")?.value;
+	let	publicIdReq: string | undefined = undefined;
+
+	try {
+		const	{ publicId } = await req.json();
+		publicIdReq = publicId;
+	}
+	catch (err) {}
+
 	try {
 
 		if (!crunchyToken)
@@ -25,10 +32,22 @@ export async function GET(
 
 		const timestamp = Math.round((new Date).getTime()/1000);
 
-		const signature = cloudinary.v2.utils.api_sign_request({
-			timestamp: timestamp,
-			eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
-			folder: process.env.CLOUD_FOLDER}, process.env.CLOUD_SECRET as string);
+		let	signature = "";
+
+		if (!publicIdReq)
+			signature = cloudinary.v2.utils.api_sign_request({
+					timestamp: timestamp,
+					eager: 'c_pad,h_300,w_400|c_crop,h_200,w_260',
+					folder: process.env.CLOUD_FOLDER,
+				},
+				process.env.CLOUD_SECRET as string);
+
+		else
+			signature = cloudinary.v2.utils.api_sign_request({
+					timestamp: timestamp,
+					public_id: publicIdReq,
+				},
+				process.env.CLOUD_SECRET as string);
 
 		return NextResponse.json({
 			success: true,

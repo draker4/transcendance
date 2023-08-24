@@ -15,6 +15,7 @@ import { Notif } from "@/utils/typeorm/Notif.entity";
 import { StatsService } from "@/stats/service/stats.service";
 import { Token } from "@/utils/typeorm/Token.entity";
 import { Stats } from "@/utils/typeorm/Stats.entity";
+import { Image } from "@/utils/typeorm/Image.entity";
 
 @Module({
 	imports: [
@@ -28,6 +29,7 @@ import { Stats } from "@/utils/typeorm/Stats.entity";
 			Notif,
 			Token,
 			Stats,
+			Image,
 		]),
 	],
 	controllers: [ChannelController],

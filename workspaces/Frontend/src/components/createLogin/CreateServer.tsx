@@ -19,7 +19,7 @@ export default async function CreateServer() {
 	};
 	let token: string | undefined = "";
 	let avatars: string[] = [];
-	let avatarsCrypted: string[] = [];
+	let avatarCrypted: string | undefined = undefined;
 
 	try {
 		token = cookies().get("crunchy-token")?.value;
@@ -43,11 +43,11 @@ export default async function CreateServer() {
 	}
 
   	if (profile.provider === "42")
-		avatarsCrypted.push(profile.image);
+		avatarCrypted = profile.image;
 
 	return (
 		<div style={{ width: "100%", height: "100%" }}>
-			<FormLogin token={token as string} avatars={avatars} avatarsCrypted={avatarsCrypted} />
+			<FormLogin token={token as string} avatars={avatars} avatarCrypted={avatarCrypted} />
 		</div>
 	);
 }

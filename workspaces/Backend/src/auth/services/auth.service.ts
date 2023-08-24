@@ -249,7 +249,6 @@ export class AuthService {
       ) as any;
 
       if (!payload) {
-        // send mail refresh password [!]
         throw new Error('cannot verify token');
       }
 
@@ -257,7 +256,6 @@ export class AuthService {
 
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
-        //send mail [!] user change password;
         throw new Error('token not valid!');
       }
 

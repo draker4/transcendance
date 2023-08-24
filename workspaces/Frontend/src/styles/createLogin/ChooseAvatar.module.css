@@ -45,3 +45,11 @@
   /* border: 1px solid green; */
   padding-top: clamp(10px, 1vh, 30px);
 }
+
+.loading {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

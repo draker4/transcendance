@@ -16,6 +16,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
+import { Image } from '@/utils/typeorm/Image.entity';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +33,8 @@ export class UsersService {
 		private readonly socketTokenRepository: Repository<SocketToken>,
 		@InjectRepository(Notif)
 		private readonly notifRepository: Repository<Notif>,
+		@InjectRepository(Image)
+		private readonly imageRepository: Repository<Image>,
 
 		private cryptoService: CryptoService,
 		private readonly statsService: StatsService,
@@ -116,6 +119,13 @@ export class UsersService {
 		return await this.userRepository.findOne({
 			where: { id: id },
 			relations: ['backupCodes'],
+		});
+	}
+
+	async getUserImages(id: number) {
+		return await this.userRepository.findOne({
+			where: { id: id },
+			relations: ['images'],
 		});
 	}
 
@@ -298,6 +308,78 @@ export class UsersService {
 			return {
 				success: true,
 			};
+		} catch (error) {
+			console.log(error);
+			throw new BadRequestException();
+		}
+	}
+
+	async addImage(userId: number, imageUrl: string, public_id: string) {
+		try {
+			if (!imageUrl || !public_id)
+				throw new Error('no image url');
+
+			const user = await this.getUserById(userId);
+			
+			if (!user)
+				throw new Error('no user');
+
+			const	newImage = new Image();
+			newImage.imageUrl = imageUrl;
+			newImage.user = user;
+			newImage.publicId = public_id;
+
+			const	imageSaved = await this.imageRepository.save(newImage);
+
+			if (!imageSaved)
+				throw new Error("cannot save image");
+
+			return imageSaved;
+		} catch (error) {
+			console.log(error);
+			throw new BadRequestException();
+		}
+	}
+
+	async getImages(userId: number) {
+		try {
+			const user = await this.getUserImages(userId);
+			
+			if (!user)
+				throw new Error('no user');
+
+			let	images = user.images;
+
+			if (!images)
+				return [];
+
+			images = await Promise.all(images.map(async (image) => {
+				image.imageUrl = await this.cryptoService.decrypt(image.imageUrl);
+				image.publicId = await this.cryptoService.decrypt(image.publicId);
+				return image;
+			}));
+
+			return user.images;
+		} catch (error) {
+			console.log(error);
+			throw new BadRequestException();
+		}
+	}
+
+	async deleteImage(imageId: number) {
+		try {
+			if (!imageId)
+				throw new Error('no image id');
+
+			const	image = await this.imageRepository.findOne({
+				where: { id: imageId },
+			});
+
+			if (!image)
+				return ;
+
+			await this.imageRepository.remove(image);
+
 		} catch (error) {
 			console.log(error);
 			throw new BadRequestException();
