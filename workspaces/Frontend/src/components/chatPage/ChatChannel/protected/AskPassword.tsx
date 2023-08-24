@@ -10,28 +10,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import PasswordInput from "./PasswordInput";
 
 type Props = {
-  display: Channel & {needPassword: boolean};
-  icon: ReactNode;
   channel: Channel;
   myself: Profile & { avatar: Avatar };
   socket: Socket | undefined;
-  status: Map<string, string>;
+  openDisplay: (display: Display) => void;
 }
 
-export default function AskPassword({display, icon, channel, myself, socket, status}: Props) {
+export default function AskPassword({channel, myself, socket, openDisplay}: Props) {
 
   return (
     <div className={styleMain.main}>
       <div className={styles.channelMsgFrame}>
         <div className={styles.popUp}>
           <p className={styles.icon} style={{color: "var(--notif)"}}><FontAwesomeIcon icon={faLock}/></p>
-          <h2 style={{color: "var(--accent1)"}}>{display.name}</h2>
+          <h2 style={{color: "var(--accent1)"}}>{channel.name}</h2>
           <h2>{"is protected by password"}</h2>
-          <PasswordInput display={display} icon={icon}
-      channel={display}
-      myself={myself}
-      socket={socket}
-      status={status} />
+          <PasswordInput
+            channel={channel}
+            myself={myself}
+            socket={socket}
+            openDisplay={openDisplay}
+          />
         </div>
       </div>
     </div>

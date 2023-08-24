@@ -1591,12 +1591,12 @@ export class ChatService {
 			if (whatToDo === "join" && !isLeave) {
 				sockets.forEach((socket) => {
 					socket.join(`channel:${edit.channelId}`);
-					this.log(`Connected User[${edit.userId}] joined channel[${edit.channelId}] procByEdit Relation`);
+					this.log(`Connected User[${edit.userId}] joined channel(room)[${edit.channelId}] procByEdit Relation`);
 				});
 			} else if (whatToDo === "leave" && isLeave) {
 				sockets.forEach((socket) => {
 					socket.leave(`channel:${edit.channelId}`);
-					this.log(`Connected User[${edit.userId}] left channel[${edit.channelId}] procByEdit Relation`);
+					this.log(`Connected User[${edit.userId}] left channel(room)[${edit.channelId}] procByEdit Relation`);
 				});
 			}
 		}
@@ -1780,7 +1780,10 @@ export class ChatService {
       const nowtoISOString = now.toISOString();
 
       const channel = await this.channelService.getChannelById(channelId);
+
       if (!channel) throw new Error(`Can't retrieve channel[${channelId}]`)
+      else if (channel.type === "privateMsg")
+        return ;
 
       const notif: sendMsgDto = {
         content: content,

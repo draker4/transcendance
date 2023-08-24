@@ -52,9 +52,7 @@ export class ChannelController {
       success: false,
       message: '',
     };
-
-    let isSpecialCase:boolean;
-
+    
     try {
 
       const checkRep = await this.channelService.checkEditAuthorization(req.user.id, edit);

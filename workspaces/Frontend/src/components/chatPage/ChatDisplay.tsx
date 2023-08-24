@@ -61,11 +61,12 @@ export default function ChatDisplay({
 
   if ("needPassword" in display && display.needPassword === true) {
     return (
-      <AskPassword display={display} icon={renderIcon()}
+      <AskPassword 
       channel={display}
       myself={myself}
       socket={socket}
-      status={status}/>
+      openDisplay={openDisplay}
+      />
     );
   }
 
