@@ -206,4 +206,25 @@ export class UsersController {
   async updatePassword(@Req() req, @Body('password') password: string) {
     return await this.usersService.updatePassword(req.user.id, password);
   }
+
+  @Post('addImage')
+  async addImage(
+    @Req() req,
+    @Body() {imageUrl, public_id}: {
+      imageUrl: string;
+      public_id: string;
+    },
+  ) {
+    return await this.usersService.addImage(req.user.id, imageUrl, public_id);
+  }
+
+  @Get('getImages')
+  async getImages(@Req() req) {
+    return await this.usersService.getImages(req.user.id);
+  }
+
+  @Delete('deleteImage')
+  async deleteImage(@Body('imageId') imageId: number) {
+    return await this.usersService.deleteImage(imageId);
+  }
 }

@@ -23,6 +23,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { StatusService } from '@/statusService/status.service';
+import { Image } from '@/utils/typeorm/Image.entity';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { StatusService } from '@/statusService/status.service';
       Stats,
       Notif,
       NotifMessages,
+      Image,
     ]),
   ],
   providers: [

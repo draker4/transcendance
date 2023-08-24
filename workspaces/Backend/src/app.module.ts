@@ -35,7 +35,7 @@ import { BackupCode } from './utils/typeorm/BackupCode.entity';
 import { SocketToken } from './utils/typeorm/SocketToken.entity';
 import { Notif } from './utils/typeorm/Notif.entity';
 import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
-import { Image } from './utils/typeorm/Images.entity';
+import { Image } from './utils/typeorm/Image.entity';
 
 @Module({
   imports: [
@@ -68,7 +68,7 @@ import { Image } from './utils/typeorm/Images.entity';
         NotifMessages,
         Image,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     AvatarModule,

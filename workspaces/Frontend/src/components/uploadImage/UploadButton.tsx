@@ -10,6 +10,7 @@ import { POST } from "@/app/api/login/route";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";
+import { CryptoService } from "@/services/Crypto.service";
 
 const badgeStyleRight = {
 	"& .MuiBadge-badge": {
@@ -36,12 +37,14 @@ type FormInputs = {
 	[key: string]: File | null;
 };
 
+const	Crypto = new CryptoService();
+
 export default function UploadButton({
 	setAvatar,
 	borderColor,
 	backgroundColor,
 }: {
-	setAvatar: Dispatch<SetStateAction<string[]>>;
+	setAvatar: Dispatch<SetStateAction<ImageType[]>>;
 	borderColor: string;
 	backgroundColor: string;
 }) {
@@ -95,7 +98,7 @@ export default function UploadButton({
 				throw new Error('env var missing');
 	
 			const	getSignature = await fetchClientSide(`http://${process.env.HOST_IP}:3000/api/cloud`, {
-				method: 'GET',
+				method: 'POST',
 			});
 
 			if (!getSignature.ok)
@@ -124,21 +127,29 @@ export default function UploadButton({
 			
 			const resJson = await res.json();
 
+			const	urlCrypted = await Crypto.encrypt(resJson.secure_url);
+			const	publicIdCrypted = await Crypto.encrypt(resJson.public_id);
 			const	saveImage = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/addImage`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					image: resJson.secure_url,
+					imageUrl: urlCrypted,
+					public_id: publicIdCrypted,
 				}),
 			})
 
 			if (!saveImage.ok)
-				
+				throw new Error('save image failed');
 
-			setAvatar(prev => [...prev, resJson.secure_url]);
+			const	imageSaved: ImageType = await saveImage.json();
+			imageSaved.imageUrl = resJson.secure_url;
+			imageSaved.publicId = resJson.public_id;
+					
+			setAvatar(prev => [...prev, imageSaved]);
 			setLoading(false);
+
 		}
 		catch (error: any) {
 			console.log(error.message);

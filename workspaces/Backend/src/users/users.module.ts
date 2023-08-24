@@ -16,6 +16,7 @@ import { AvatarService } from '@/avatar/avatar.service';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
+import { Image } from '@/utils/typeorm/Image.entity';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
       Notif,
       Avatar,
       UserChannelRelation,
+      Image,
     ]),
   ],
   controllers: [UsersController],

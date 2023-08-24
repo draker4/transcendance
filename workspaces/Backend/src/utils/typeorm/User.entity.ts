@@ -20,7 +20,7 @@ import { Token } from './Token.entity';
 import { BackupCode } from './BackupCode.entity';
 import { Stats } from './Stats.entity';
 import { Notif } from './Notif.entity';
-import { Image } from './Images.entity';
+import { Image } from './Image.entity';
 
 @Entity()
 export class User {

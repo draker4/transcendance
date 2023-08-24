@@ -21,6 +21,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { Notif } from '@/utils/typeorm/Notif.entity';
+import { Image } from '@/utils/typeorm/Image.entity';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
       Stats,
       UserChannelRelation,
       Notif,
+      Image,
     ]),
   ],
   controllers: [TrainingController],
