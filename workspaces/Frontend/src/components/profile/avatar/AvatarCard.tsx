@@ -41,6 +41,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   const avatarService = new Avatar_Service();
 
   const handleArea = (newArea: "border" | "background" | null) => {
+    console.log("la");
     if (newArea) setSelectedArea(newArea);
   };
 
@@ -176,7 +177,26 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
 
         const data: ImageType[] = await res.json();
 
-        setCloudList(prev => [...prev, ...data]);
+        
+        if (data && data.length !== 0) {
+          setCloudList(prev => [...prev, ...data]);
+          const newAvatars = [...avatarsList];
+          data.forEach(image => {
+            if (!newAvatars.find(avatar => avatar.image === image.imageUrl))
+              newAvatars.push({
+                image: image.imageUrl,
+                variant: "circular",
+                borderColor: avatarUser.borderColor,
+                backgroundColor: avatarUser.backgroundColor,
+                text: avatarUser.text,
+                empty: false,
+                isChannel: false,
+                decrypt: true,
+            });
+          });
+
+          setAvatarsList(newAvatars);
+        }
       }
       catch (err: any) {
         console.log(err.message);
@@ -187,7 +207,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     }
 
     getImagesCloud();
-  }, [[]]);
+  }, []);
 
   return (
     <div className={styles.avatarFrame}>

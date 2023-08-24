@@ -232,7 +232,7 @@ export default function UploadButton({
 						if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
 							return ;
 						}
-						handleSubmit(handleOnSubmit)()
+						handleSubmit(handleOnSubmit)();
 					}}
 				>
 					<Badge badgeContent={
