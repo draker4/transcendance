@@ -178,10 +178,8 @@ export class ChannelService {
 
 		try {
 			if (userId === edit.userId) {
-			isSpecialCase = await this.checkEditRelationSpecialCase(
-				userId,
-				edit
-			);
+			isSpecialCase = await this.checkEditRelationSpecialCase(userId, edit);
+			console.log("isSpecialCase : ", isSpecialCase);
 			} else
 				isSpecialCase = false;
 
@@ -244,7 +242,6 @@ export class ChannelService {
 	private async checkEditRelationSpecialCase(userId:number, edit:EditChannelRelationDto):Promise<boolean> {
 		try {
 			const relation:UserChannelRelation = await this.privateGetOneChannelUserRelation(userId, edit.channelId);
-
 			/* Special cases where chanOp privileges are not required */
 			// [1] a User can change himself his joined relation to a channel
 			if ( !('isChanOp' in edit.newRelation) &&
@@ -261,14 +258,22 @@ export class ChannelService {
 				edit.newRelation.joined === true
 			) { return true; }
 
-			// [3] A user can leave a channel AND/OR switch invited to false
+			// [4] A user can leave a channel AND/OR switch invited to false
 			if ( !('isChanOp' in edit.newRelation) &&
-				!('isBanned' in edit.newRelation) &&
-				(relation.invited === true || relation.joined === true) && 
-				edit.newRelation.invited === false &&
-				edit.newRelation.joined === false
+			!('isBanned' in edit.newRelation) &&
+			(relation.invited === true || relation.joined === true) && 
+			edit.newRelation.invited === false &&
+			edit.newRelation.joined === false
 			) { return true; }
 
+			// [5] A user can't cancel invite even if not invited (to clean boolean)
+			if (
+				!('isChanOp' in edit.newRelation) &&
+				!('isBanned' in edit.newRelation) &&
+				relation.invited === false &&
+				edit.newRelation.invited === false
+			) { return true; }
+			
 			// [X] else its not a special case
 			return false;
 		} catch (error) {
@@ -538,6 +543,54 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 
   }
 
+  public async verifyChannelPassword(senderId:number, channelId:number, password:string)
+  :Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    }
+
+    try {
+      const channel = await this.getChannelById(channelId);
+      if (!channel)
+        throw new Error(`channel[${channelId}] not found`);
+      else if (channel.type !== "protected")
+        throw new Error(`channel[${channelId}] is a ${channel.type} channel, no password can be asked`);
+
+      const repRelation = await this.getOneChannelUserRelation(senderId, channelId);
+      if (!repRelation) // [+] continuer => si pas de relation la créer
+        throw new Error(`relation not found channel[${channelId}] user[${senderId}]`);
+      else if (repRelation.data.isBoss) {
+		rep.success = true;
+		return rep;
+	  } else if (repRelation.data.isBanned)
+        throw new Error(`You are banned from this channel`);
+      else if (password === "" && channel.type === "protected")
+        throw new Error("A protected channel can't have an empty password");
+
+      rep.success = (channel.password === password);
+	  if (!rep.success)
+	  	throw new Error("Wrong password");
+	  else {
+		try {
+			repRelation.data.invited = false;
+			repRelation.data.joined = true;
+			const repEdit = await this.updateChannelUserRelation(repRelation.data);
+			if (!repEdit.success)
+				throw new Error("Error with database, try later please")
+		} catch (error: any) {
+			throw new Error(error.message);
+		}
+	  }
+    } catch (error: any) {
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
+
+
   public async editChannelType(senderId:number, channelId:number, type:ChannelType)
   :Promise<ReturnData & {password : string}> {
 
@@ -549,7 +602,7 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 
     try {
       // [0] get Channel +  users relation to check channel master rights
-      const channel = await this.getChannelById(senderId);
+      const channel = await this.getChannelById(channelId);
       if (!channel)
         throw new Error(`channel[${channelId}] not found`);
       else if (channel.type === "privateMsg")

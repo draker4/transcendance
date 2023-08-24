@@ -498,13 +498,13 @@ export class ChatGateway implements OnModuleInit {
         .to('channel:' + payload.channelId)
         .emit('editRelation', updatedPayload1);
 		
-      // [3] send Server Notif message into the channel
+      // [3] send Server Notif message into the channel (not privateMsg Channel !)
       const updatedPayload2 = {
         ...payload,
         server: this.server,
         from: req.user.id,
       };
-      this.chatService.sendEditRelationNotif(updatedPayload2);
+      await this.chatService.sendEditRelationNotif(updatedPayload2);
 	  this.log(`SendEditRelationNotif in channel[${payload.channelId}]`); // checking
 	  
 	  // [4] update socket LEAVE room if needed by editRelations
@@ -572,6 +572,33 @@ export class ChatGateway implements OnModuleInit {
 
     return rep;
   }
+
+  @SubscribeMessage('verifyChannelPassword')
+  async verifyChannelPassword(@Request() req, @MessageBody() payload: editChannelPasswordDto)
+  :Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    }
+
+    try {
+      const repVerify: ReturnData = await this.channelService.verifyChannelPassword(req.user.id, payload.channelId, payload.password);
+      if (!repVerify.success) {
+        throw new Error(repVerify.message);
+      }
+
+      rep.success = repVerify.success;
+      if (rep.success)
+        this.channelService.sendUpdateChannelnotif(payload.channelId, this.connectedUsers, this.server);
+    } catch (error: any) {
+      this.log(`verifyChannelPassword error : ${error.message}`);
+      rep.error = error;
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
+
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editChannelType')

@@ -13,6 +13,7 @@ export default function Conversations({
   socket,
   maxWidth,
   openDisplay,
+  clearDisplay,
   myself,
   status,
   display,
@@ -20,6 +21,7 @@ export default function Conversations({
   socket: Socket | undefined;
   maxWidth: string;
   openDisplay: (display: Display) => void;
+  clearDisplay: () => void;
   myself: Profile & { avatar: Avatar };
   status: Map<string, string>;
   display: Display;
@@ -97,9 +99,11 @@ export default function Conversations({
           invited:false,
         }
       }
+
       socket?.emit("editRelation", newRelation);
-      // [+] comment fermer le display seulement si la channel quittée est affichée ?
-	  
+      loadData();
+      if ("name" in display && display.id === channel.id)
+        clearDisplay();  
     } else
       throw new Error(rep.message);
 

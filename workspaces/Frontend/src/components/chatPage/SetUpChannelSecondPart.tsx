@@ -124,7 +124,7 @@ export default function SetUpChannelSecondPart({ channelId, socket }: Props): JS
 		socket?.off("editRelation", loadData);
 	  };
 
-  }, [socket]);
+  }, [socket, channelId]);
 
 
   if (me.userId !== 0 && channelRelation.channel.id !== -1) {

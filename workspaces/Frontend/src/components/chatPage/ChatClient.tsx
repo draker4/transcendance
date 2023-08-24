@@ -41,6 +41,11 @@ export default function ChatClient({
     setDisplay(display);
   };
 
+  const clearDisplay = () => {
+    setOpen(false);
+    setDisplay(undefined);
+  }
+
   const closeDisplay = () => {
     setOpen(false);
   };
@@ -175,6 +180,7 @@ export default function ChatClient({
           socket={socket}
           maxWidth="100%"
           openDisplay={openDisplay}
+          clearDisplay={clearDisplay}
           myself={myself}
           status={status}
           display={display}
@@ -190,9 +196,9 @@ export default function ChatClient({
           socket={socket}
           display={display}
           littleScreen={littleScreen}
-          closeDisplay={closeDisplay}
           myself={myself}
           openDisplay={openDisplay}
+          closeDisplay={closeDisplay}
           status={status}
         />
       </div>
@@ -205,6 +211,7 @@ export default function ChatClient({
         socket={socket}
         maxWidth="350px"
         openDisplay={openDisplay}
+        clearDisplay={clearDisplay}
         myself={myself}
         status={status}
         display={display}
@@ -213,12 +220,11 @@ export default function ChatClient({
         socket={socket}
         display={display}
         littleScreen={littleScreen}
+        openDisplay={openDisplay}
         closeDisplay={closeDisplay}
         myself={myself}
-        openDisplay={openDisplay}
         status={status}
       />
-
 	  {display && "type" in display && display.type !== "privateMsg" && <SetUpChannelSecondPart channelId={display.id} socket={socket}/>}
 	</div>
   );
