@@ -76,7 +76,6 @@
   border-radius: 50%;
   border: 6px solid var(--primary1);
   background-color: var(--notif);
-  overflow: hidden;
   height: 90%;
   aspect-ratio: 1 / 1;
 }
@@ -100,6 +99,15 @@
 .avatar .rounded:hover.disabled {
   cursor: auto;
   scale: 1;
+}
+
+.iconPhoto {
+  height: 70%;
+}
+
+.avatarUser {
+  height: 100%;
+  width: 100%;
 }
 
 /* LOGIN MODULE */

@@ -1,5 +1,4 @@
 import styles from "@/styles/profile/AvatarCard.module.css";
-import Avatar from "./Avatar";
 import ProfileLogin from "./ProfileLogin";
 import { CSSProperties, useEffect, useState } from "react";
 import SettingsCard from "./SettingsCard";
@@ -9,7 +8,11 @@ import { Socket } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import AvatarUser from "@/components/avatarUser/AvatarUser";
+import { CryptoService } from "@/services/Crypto.service";
+import fetchClientSide from "@/lib/fetch/fetchClientSide";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
+import AvatarProfile from "./Avatar";
 
 type Props = {
   login: string;
@@ -19,16 +22,21 @@ type Props = {
   avatars: Avatar[];
 };
 
+const  Crypto = new CryptoService();
+
 export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
-  const [notif, setNotif] = useState<string>("");
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
   const [avatarChosen, setAvatarChosen] = useState<Avatar>(avatar);
   const [avatarUser, setAvatarUser] = useState<Avatar>(avatar);
+  const [avatarsList, setAvatarsList] = useState<Avatar[]>(avatars);
+  const [cloudList, setCloudList] = useState<ImageType[]>([]);
+  const [uploadButton, setuploadButton] = useState<boolean>(false);
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
     "border"
   );
+  const router = useRouter();
 
   const avatarService = new Avatar_Service();
 
@@ -37,7 +45,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   };
 
   const toogleDisplaySettings = () => {
-    if (!isOwner)
+    if (!isOwner || uploadButton)
       return;
     if (displaySettings === true)
       cancelColorChange();
@@ -48,8 +56,14 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     if (!isOwner) return;
 
     try {
+
+      let image = avatarChosen.image;
+
+      if (avatarChosen.decrypt)
+        image = await Crypto.encrypt(avatarChosen.image);
+
       const rep = await avatarService.submitAvatarUser(
-        avatarChosen,
+        {...avatarChosen, image},
         topColor as string,
         botColor as string,
       );
@@ -62,6 +76,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
         backgroundColor: botColor.toString(),
         borderColor: topColor.toString(),
       });
+
       setDisplaySettings(false);
 
       socket?.emit("notif", {
@@ -89,43 +104,43 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     setTopColor(avatarUser.borderColor);
     setBotColor(avatarUser.backgroundColor);
     setAvatarChosen(avatarUser);
+    setuploadButton(false);
   };
 
   const changeAvatar = (dir: string) => {
-    if (avatars.length === 0 || (dir !== "right" && dir !== "left"))
+    if (avatarsList.length === 0 || (dir !== "right" && dir !== "left"))
       return ;
 
     let index = -1;
 
-    for (index; index < avatars.length; index++) {
+    for (index; index < avatarsList.length; index++) {
       if (index === -1)
         continue;
-      console.log(avatars[index], avatarChosen);
       if (avatarChosen.image.length !== 0
-        && avatars[index].image === avatarChosen.image)
+        && avatarsList[index].image === avatarChosen.image)
         break;
-      if (avatarChosen.empty && avatars[index].empty)
+      if (avatarChosen.empty && avatarsList[index].empty)
         break ;
-      if (avatarChosen.image.length === 0 && avatarChosen.text === avatars[index].text)
+      if (avatarChosen.image.length === 0 && avatarChosen.text === avatarsList[index].text)
         break ;
     }
 
-    if (index === 6 || index === -1)
+    if (index === avatarsList.length || index === -1)
       return ;
 
     let newAvatar: Avatar;
     if (dir === "right") {
-      if (index !== avatars.length - 1)
-        newAvatar = avatars[index + 1];
+      if (index !== avatarsList.length - 1)
+        newAvatar = avatarsList[index + 1];
       else
-        newAvatar = avatars[0];
+        newAvatar = avatarsList[0];
     }
     
     else {
       if (index !== 0)
-        newAvatar = avatars[index - 1];
+        newAvatar = avatarsList[index - 1];
       else
-        newAvatar = avatars[avatars.length - 1];
+        newAvatar = avatarsList[avatarsList.length - 1];
     }
 
     if (newAvatar) {
@@ -134,7 +149,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   }
 
   useEffect(() => {
-    avatars.forEach(avatar => {
+    avatarsList.forEach(avatar => {
       if (avatar.text.length !== 0)
         avatar.text = login.toUpperCase().slice(0, 3);
     });
@@ -150,6 +165,30 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     }
   }, [login]);
 
+  useEffect(() => {
+    const getImagesCloud = async () => {
+      try {
+
+        const res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/getImages`);
+
+        if (!res.ok)
+          throw new Error('fetch failed');
+
+        const data: ImageType[] = await res.json();
+
+        setCloudList(prev => [...prev, ...data]);
+      }
+      catch (err: any) {
+        console.log(err.message);
+        if (err.message === "disconnect")
+          await disconnect();
+          router.refresh();
+      }
+    }
+
+    getImagesCloud();
+  }, [[]]);
+
   return (
     <div className={styles.avatarFrame}>
       <div className={styles.avatarCard}>
@@ -158,42 +197,53 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
           {
             displaySettings &&
             <>
-              <FontAwesomeIcon
-                icon={faChevronLeft}
-                className={styles.icon}
-                onClick={() => changeAvatar("left")}
-              />
-                <Avatar
+              {
+                !uploadButton &&
+                <FontAwesomeIcon
+                  icon={faChevronLeft}
+                  className={styles.icon}
+                  onClick={() => changeAvatar("left")}
+                />
+              }
+                <AvatarProfile
                   avatar={avatarChosen}
                   isOwner={isOwner}
                   onClick={toogleDisplaySettings}
                   previewBorder={topColor.toString()}
                   previewBackground={botColor.toString()}
+                  displaySettings={displaySettings}
+                  uploadButton={uploadButton}
+                  setuploadButton={setuploadButton}
                 />
-              <FontAwesomeIcon
-                icon={faChevronRight}
-                className={styles.icon}
-                onClick={() => changeAvatar("right")}
-              />
+              {
+                !uploadButton &&
+                <FontAwesomeIcon
+                  icon={faChevronRight}
+                  className={styles.icon}
+                  onClick={() => changeAvatar("right")}
+                />
+              }
             </>
           }
 
           {
             !displaySettings &&
-            <Avatar
+            <AvatarProfile
               avatar={avatarUser}
               isOwner={isOwner}
               onClick={toogleDisplaySettings}
               previewBorder={topColor.toString()}
               previewBackground={botColor.toString()}
+              displaySettings={displaySettings}
+              uploadButton={uploadButton}
+              setuploadButton={setuploadButton}
             />
           }
 
         </div>
       </div>
       <ProfileLogin name={login} isOwner={isOwner} />
-      {<p className={styles.notif}>{notif}</p>}
-      {displaySettings && (
+      {displaySettings && !uploadButton && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}
           previewChangeBotColor={previewChangeBotColor}

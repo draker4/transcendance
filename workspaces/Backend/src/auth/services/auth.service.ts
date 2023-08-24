@@ -256,6 +256,7 @@ export class AuthService {
 
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
+        console.log('NOT VALID=', refreshToken);
         throw new Error('token not valid!');
       }
 
@@ -266,6 +267,7 @@ export class AuthService {
 
       setTimeout(() => {
         this.usersService.deleteToken(isMatch);
+        console.log("JUST DELETED=", refreshToken);
       }, 20000);
 
       return this.login(user, isMatch.NbOfRefreshes + 1, false);

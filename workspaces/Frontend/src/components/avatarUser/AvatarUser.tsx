@@ -25,7 +25,7 @@ export default function AvatarUser({
             borderStyle: "solid",
             borderColor: `${borderColor}`,
             backgroundColor: `${backgroundColor}`,
-			borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
+			      borderRadius: `${avatar.variant === "rounded" ? "15%" : "50%"}`,
           }}
         ></Avatar>
       ) : (

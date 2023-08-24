@@ -1,5 +1,5 @@
 "use client";
-import Avatar from "@/components/profile/avatar/Avatar";
+import AvatarProfile from "@/components/profile/avatar/Avatar";
 import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
 import SettingsCard from "@/components/profile/avatar/SettingsCard";
 import Avatar_Service from "@/services/Avatar.service";
@@ -47,7 +47,7 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
       const rep = await avatarService.submitAvatarColors(
         topColor.toString(),
         botColor.toString(),
-      channelAndUsersRelation.channel.id,
+        channelAndUsersRelation.channel.id,
       );
 
 	  if (!rep.success)
@@ -85,13 +85,14 @@ export default function ChannelAvatarCard({ channelAndUsersRelation, myRelation,
         <div className={styles.rectangle} style={colorAddedStyle}>
        {/*   <div className={styles.top} style={colorAddedStyle}></div>
           <div className={styles.bot}></div> */}
-		  <Avatar
+		  <AvatarProfile
             avatar={channelAndUsersRelation.channel.avatar}
             isOwner={myRelation.isChanOp || myRelation.isBoss}
             onClick={toogleDisplaySettings}
             displaySettings={displaySettings}
             previewBorder={topColor.toString()}
             previewBackground={botColor.toString()}
+            uploadButton={false}
 			/>
         </div>
 

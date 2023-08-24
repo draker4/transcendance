@@ -138,25 +138,25 @@ export class AvatarService {
 	  };
 	  try {
 
-    const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.isChannel);
+    const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.channelId);
 
     if (!check.isOk)
       throw new Error(rep.error);
 
-		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.isChannel)))?.avatar;
+		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.channelId)))?.avatar;
 
 		if (!avatar)
-			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.isChannel})`);
+			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.channelId})`);
 		avatar.borderColor = updateUserAvatarDto.borderColor;
 		avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
 		await this.avatarRepository.update(avatar.id, avatar);
 
 		this.log(
-			`channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+			`channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
 		  );
 
 		rep.success = true;
-		rep.message = `channel(id: ${updateUserAvatarDto.isChannel}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
+		rep.message = `channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
 
 	} catch (error) {
 		rep.message = error.message;

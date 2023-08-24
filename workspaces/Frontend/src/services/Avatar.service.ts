@@ -55,11 +55,10 @@ export default class Avatar_Service {
   public async submitAvatarColors(
     borderColor: string,
     backgroundColor: string,
-    avatarImage: string,
-    isChannel: number
+    channelId: number,
   ):Promise<ReturnData> {
 	try {
-		const body = JSON.stringify({ borderColor, backgroundColor, avatarImage, isChannel });
+		const body = JSON.stringify({ borderColor, backgroundColor, channelId });
 		const response = await fetchData(undefined, "avatar", "", "PUT", body);
 
 		if (!response.ok)

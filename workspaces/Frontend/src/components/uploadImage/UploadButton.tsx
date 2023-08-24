@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import stylesAvatar from "@/styles/createLogin/ChooseAvatar.module.css";
 import { Avatar, Badge, CircularProgress } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { POST } from "@/app/api/login/route";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";

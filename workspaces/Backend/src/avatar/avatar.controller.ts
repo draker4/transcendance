@@ -49,9 +49,7 @@ export class AvatarController {
     @Request() req,
     @Body() updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-    return updateUserAvatarDto.isChannel > 0
-      ? this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto)
-      : this.avatarService.editUserAvatarColors(req, updateUserAvatarDto);
+    return this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto);
   }
 
   @Put('avatarUser')
