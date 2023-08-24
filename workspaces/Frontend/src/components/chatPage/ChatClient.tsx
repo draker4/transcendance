@@ -225,7 +225,6 @@ export default function ChatClient({
         myself={myself}
         status={status}
       />
-
 	  {display && "type" in display && display.type !== "privateMsg" && <SetUpChannelSecondPart channelId={display.id} socket={socket}/>}
 	</div>
   );
