@@ -12,6 +12,7 @@ import { EditChannelRelationDto } from './dto/EditChannelRelation.dto';
 import { PongColors } from '@/utils/enums/PongColors.enum';
 import { Socket, Server } from 'socket.io';
 import { UsersService } from '@/users/users.service';
+import { CryptoService } from '@/utils/crypto/crypto';
 
 type ChannelAndUsers = {
   channel: Channel;
@@ -28,6 +29,7 @@ export class ChannelService {
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
     private readonly usersService: UsersService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async getChannelByName(name: string, privateMsg: boolean) {
@@ -127,17 +129,20 @@ export class ChannelService {
       relations: ['users', 'users.avatar'],
     });
 
-    const usersRelation: UserChannelRelation[] =
+    let usersRelation: UserChannelRelation[] =
       await this.userChannelRelation.find({
         where: { channelId: channelId },
         relations: ['user', 'user.avatar'],
       });
 
     let hidePassword: boolean = true;
-    usersRelation.forEach((relation) => {
+    usersRelation = await Promise.all(usersRelation.map(async (relation) => {
+      if (relation.user.avatar.decrypt)
+        relation.user.avatar.image = await this.cryptoService.decrypt(relation.user.avatar.image);
       if (relation.userId === userId && relation.isBoss)
         hidePassword = false;
-    });
+      return relation;
+    }));
 
     if (hidePassword && channel && channel.password)
       channel.password = "";

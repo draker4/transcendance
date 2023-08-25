@@ -1273,8 +1273,6 @@ export class ChatService {
 
       if (channelId !== -1)
         channel = await this.channelService.getChannelById(channelId); 
-      if (channel && channel.type === "protected")
-          isProtected = true;
 
       if (!channel) {
 		    isCreation = true;
@@ -1291,8 +1289,10 @@ export class ChatService {
             banned: false,
             channel: null,
           };
-       
       }
+
+      if (channel && channel.type === "protected")
+          isProtected = true;
 
       // check if user already in channel
       let relation = await this.userChannelRelation.findOne({
@@ -1300,6 +1300,7 @@ export class ChatService {
         relations: ['user', 'channel'],
       });
 
+      // if relation does not exist, create it
       if (!relation) {
         this.log(`user[${user.login}] has no relation with channel[${channel.name}][${channel.type}], creating relation`)
         await this.usersService.updateUserChannels(user, channel);
@@ -1307,10 +1308,18 @@ export class ChatService {
           where: { userId: userId, channelId: channel.id },
           relations: ['user', 'channel'],
         });
+        
+        // if channel protected and not just created, joined = false
         if (relation && isProtected && !isCreation) {
           relation.joined = false;
           await this.userChannelRelation.save(relation);
         }
+      }
+
+      // check if channel creation (adding isBoss user trait)
+      if (isCreation) {
+        relation.isBoss = true;
+        await this.userChannelRelation.save(relation);
       }
 
       // check if user banned
@@ -1332,7 +1341,7 @@ export class ChatService {
         };
         
       // check if user is not joined
-      if (!relation.joined && !isProtected) {
+      if (!relation.joined && (!isProtected || relation.isBoss)) {
         relation.joined = true;
         await this.userChannelRelation.save(relation);
 
@@ -1373,13 +1382,7 @@ export class ChatService {
         this.log(`user[${userId}] joined channel ${relation.channel.name}`);
       }
 
-      // check if channel creation (adding isBoss user trait)
-      if (isCreation) {
-        relation.isBoss = true;
-        await this.userChannelRelation.save(relation);
-      }
-
-      if (userSockets.length >= 1 && !isProtected) {
+      if (userSockets.length >= 1 && (!isProtected || relation.isBoss)) {
         for (const socket of userSockets) {
           socket.join('channel:' + channel.id);
           socket.emit('notif', {
@@ -1392,11 +1395,13 @@ export class ChatService {
         ...channel,
 		    isBoss: relation.isBoss,
         isChanOp: relation.isChanOp,
-        joined: !isProtected,
+        joined: relation.joined,
         isBanned: relation.isBanned,
         invited: relation.invited,
         muted: relation.muted,
       }
+
+      console.log(channelRelation)
 
       return {
         success: true,

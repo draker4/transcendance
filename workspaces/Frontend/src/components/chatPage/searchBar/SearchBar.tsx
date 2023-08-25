@@ -131,7 +131,8 @@ export default function SearchBar({ socket, openDisplay }: {
 			channel: Channel;
 		  }) => {
 			if (payload.success) {
-				if (payload.channel.type === "protected")
+				console.log(payload.channel);
+				if (payload.channel.type === "protected" && !payload.channel.joined && !payload.channel.isBoss)
 					openDisplay({...payload.channel, needPassword: true});
 				else
 			  		openDisplay(payload.channel);

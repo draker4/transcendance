@@ -15,14 +15,14 @@ type Props = {
 }
 
 // [+][!] Fichier pour preparer le mecanisme d'invitation dans channel
-// A [modifier pour incoprporer une searchBar] ou [supprimer une fois le code extrait]
+// A [modifier pour incorporer une searchBar] ou [supprimer une fois le code extrait]
 
 export default function InviteInChannel({relation, myRelation, socket}:Props) {
 
   const [notif, setNotif] = useState<string>("");
   const targetIds: number[] = [1,2,3,4,5,6,7];
 
-  const handleClickInvite = async (targetId:number) => {
+  const handleClickInvite = async (targetId: number) => {
     console.log(`Wanna invite in ${relation.channel.name} user[${targetId}]`);
 
     try {
