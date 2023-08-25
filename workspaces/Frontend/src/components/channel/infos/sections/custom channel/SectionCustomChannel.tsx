@@ -21,15 +21,24 @@ export default function SectionCustomChannel({
 
   const [notif, setNotif] = useState<string>("");
   const [channelType, setChannelType] = useState<ChannelType>(relation.channel.type);
+  const [password, setPassword] = useState<string>(relation.channel.password);
 
   const pack :{
     relation: ChannelUsersRelation;
     notif: string,
     setNotif: Dispatch<SetStateAction<string>>,
+    channelType: ChannelType,
+    setChannelType: Dispatch<SetStateAction<ChannelType>>,
+    password:string,
+    setPassword: Dispatch<SetStateAction<string>>,
   } = {
     relation: relation,
     notif: notif,
     setNotif: setNotif,
+    channelType: channelType,
+    setChannelType: setChannelType,
+    password: password,
+    setPassword: setPassword,
   }
 
   const emitEditChannelType = (type:ChannelType, onSuccess: ()=>void, onFail: ()=>void) => {
@@ -92,7 +101,7 @@ export default function SectionCustomChannel({
   const handleSwitchLock = (locked:boolean) => {
 
     if (locked) {
-      if (relation.channel.password !== "") {
+      if (password !== "") {
       emitEditChannelType("protected",
         () => {
           setChannelType("protected");
@@ -144,7 +153,6 @@ export default function SectionCustomChannel({
     );
   }
 
-
   return (
     <div className={styles.sections}>
       {/* //[+] A TESTER AVEC GRAND NOM DE ChANNEL */ }
@@ -164,7 +172,6 @@ export default function SectionCustomChannel({
       { channelType !== "private" && 
         <EditPassword pack={pack} socket={socket} />
       }
-
     </div>
   )
 }

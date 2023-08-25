@@ -513,7 +513,7 @@ private async unMute(channelInfos:EditChannelRelationDto) {
 
     try {
       // [0] get Channel +  users relation to check channel master rights
-      const channel = await this.getChannelById(senderId);
+      const channel = await this.getChannelById(channelId);
       if (!channel)
         throw new Error(`channel[${channelId}] not found`);
       else if (channel.type === "privateMsg")
