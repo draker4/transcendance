@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator";
+import { IsBoolean, IsIn, IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator";
 
 export class JoinDto {
 
@@ -15,6 +15,10 @@ export class JoinDto {
 	@IsNotEmpty()
 	@IsIn(["public", "private", "protected", "privateMsg"])
 	channelType: "public" | "private" | "privateMsg" | "protected";
+
+	@IsOptional()
+	@IsBoolean()
+	isCreation?: boolean;
 
 	@IsOptional()
 	@IsString()

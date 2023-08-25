@@ -15,7 +15,13 @@ export class MessagesService {
     private readonly channelService: ChannelService,
   ) {}
 
-  async addMessage(message: MakeMessage) {
+  async addMessage(message: MakeMessage):Promise<ReturnData> {
+
+    const rep:ReturnData = {
+        success: false,
+        message: ''
+    }
+    
     try {
       // const channel = await this.channelService.getChannelById(message.channelId);
   
@@ -30,9 +36,15 @@ export class MessagesService {
       if (!message.isServerNotif) {
         await this.channelService.saveLastMessage(message.channel.id, messageSaved);
       }
+
+      rep.success = true;
     } catch(error) {
+      rep.error = error;
+      rep.message = error.message;
       this.log(error.message);
     }
+
+    return rep;
   }
 
 

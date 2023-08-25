@@ -1,3 +1,4 @@
+import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/chatPage/ChatChannel/PasswordInput.module.css";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import { ChangeEvent, ReactNode, useState } from "react";
@@ -23,6 +24,43 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
   const handleClickEdit = () => {
     setEditMode(true);
   };
+
+  const afterVerifyPassword = async () => {
+
+    try {
+      const newRelation:EditChannelRelation = {
+        channelId: channel.id,
+        userId: myself.id,
+        senderId: myself.id,
+        newRelation: {
+          joined: true,
+          invited:false,
+        }
+      }
+
+      const channelService = new Channel_Service(undefined);
+      const rep = await channelService.editRelation(channel.id, myself.id, newRelation.newRelation);
+      console.log("verifyPassword => editRelation (API) => REP : ", rep); // checking
+
+      if (rep.success) {
+          socket?.emit("editRelation", newRelation, (repNotif:ReturnData) => {
+            console.log("verifyPassword => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
+            if (repNotif.success) {
+              openDisplay({...channel, needPassword:false })
+            } else {
+              setNotif(repNotif.message ? repNotif.message : "An error occured, please try again later");
+            }
+          });
+      } else { 
+        console.log("afterVerifyPassword => error (object) : ", rep.error); // checking
+        throw new Error(rep.message); 
+    }
+
+
+    } catch(error:any) {
+      setNotif(error.message ? error.message : "An error occured, please try again later");
+    }
+  }
   
    // [+] oblige le type any?
    // [+] réflechir à cette gestion du password, devrait pas etre envoyé avec les infos de channel
@@ -38,23 +76,10 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
           password: submitedPassword,
         }, 
         (rep:ReturnData) => {
-          console.log("handleVerifyPassword => REP : ", rep); // checking
+          console.log("verifyPassword => REP : ", rep); // checking
           if (rep.success) {
             setNotif("");
-
-            const newRelation:EditChannelRelation = {
-              channelId: channel.id,
-              userId: myself.id,
-              senderId: myself.id,
-              newRelation: {
-                joined: true,
-                invited:false,
-              }
-            }
-
-            socket?.emit("editRelation", newRelation);
-            
-            openDisplay({...channel, needPassword:false });
+            afterVerifyPassword();
           } else {
             // [!] Throwing error in this callback won't be caught
             if (rep.message && rep.message !== "")
@@ -66,7 +91,6 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
     } catch(error:any) {
       setNotif(error.message ? error.message : "An error occured, please try again later");
     }
-
     setEditMode(false);
   }
 

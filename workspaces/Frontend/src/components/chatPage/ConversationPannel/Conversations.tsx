@@ -144,7 +144,7 @@ export default function Conversations({
     console.log("Wanna join a recent channel : " + channel.name + " of type [" + channel.type + "]"); // checking
     try {
 
-      if (channel.type === "protected") {
+      if (channel.type === "protected" && !channel.isBoss) {
         openDisplay({...channel, needPassword: true});
         return ;
       }
@@ -163,6 +163,7 @@ export default function Conversations({
         }
         socket?.emit("editRelation", newRelation);
         openDisplay(channel);
+        loadData();
       }
       else
         throw new Error(rep.message);

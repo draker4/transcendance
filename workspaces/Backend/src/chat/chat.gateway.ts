@@ -383,7 +383,13 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('join')
   async join(@MessageBody() payload: JoinDto, @Request() req) {
 
-    if (payload.channelType === "protected"
+    /* [!][+] devrait plus etre necessaire ? Si dans le cas d'une creation ?
+      si channel est protected et que la relation user n'existe pas,
+      on cree la relation avec join false, puis le front affiche de quoi entrer le password
+    */
+    // [!][+] pour le moment créer une protected ne renseigne pas son mdp dans la db
+    // du coup generera des bugs si on laisse ainsi
+    if (payload.channelType === "protected" && payload.isCreation
       && (!payload.password || payload.password.length === 0))
       throw new WsException('no password');
 
@@ -473,49 +479,71 @@ export class ChatGateway implements OnModuleInit {
   async sendEditRelationEvents(
     @MessageBody() payload: EditChannelRelationDto,
     @Request() req,
-  ) {
+  ):Promise<ReturnData> {
 
 	this.log(`editRelation called by user[${req.user.id}]`); // checking
 
-    try {
-      // [0] check permissions in user relation
-      const rep = await this.channelService.checkEditAuthorization(
-        req.user.id,
-        payload,
-      );
-      if (!rep) throw new Error(rep.message);
+  const rep: ReturnData = {
+    success: false,
+    message: ''
+  }
 
-	  // [1] update socket JOIN room if needed by editRelation
-	  const repJoin = await this.chatService.joinLeaveRoomProcByEditRelation(false, payload, this.connectedUsers);
-	  if (!repJoin) throw new Error(repJoin.message);
-	  
-      // [2] follow up to update channel profile + handleEditRelation in <ChatChannel />
-      const updatedPayload1 = {
-        ...payload,
-        senderId: req.user.id,
-      };
-      this.server
-        .to('channel:' + payload.channelId)
-        .emit('editRelation', updatedPayload1);
-		
-      // [3] send Server Notif message into the channel (not privateMsg Channel !)
-      const updatedPayload2 = {
-        ...payload,
-        server: this.server,
-        from: req.user.id,
-      };
-      await this.chatService.sendEditRelationNotif(updatedPayload2);
-	  this.log(`SendEditRelationNotif in channel[${payload.channelId}]`); // checking
-	  
-	  // [4] update socket LEAVE room if needed by editRelations
-	  const repLeave = await this.chatService.joinLeaveRoomProcByEditRelation(true, payload, this.connectedUsers);
-	  if (!repLeave) throw new Error(repLeave.message);
+  try {
+    // [0] check permissions in user relation
+    const repAutho = await this.channelService.checkEditAuthorization(
+      req.user.id,
+      payload,
+    );
+    if (!repAutho.success) throw new Error(repAutho.message ? repAutho.message : "checkEditAuthorization failed");
 
-    } catch (error: any) {
-      this.log(`edit Relation Error : ${error.message}`);
+    // [1] update socket JOIN room if needed by editRelation
+    const repJoin = await this.chatService.joinLeaveRoomProcByEditRelation(false, payload, this.connectedUsers);
+    if (!repJoin.success) 
+        throw new Error(repJoin.message ? repJoin.message : "proc join failed");
+  
+    // [2] follow up to update channel profile + handleEditRelation in <ChatChannel />
+    const updatedPayload1 = {
+      ...payload,
+      senderId: req.user.id,
+    };
+    this.server
+      .to('channel:' + payload.channelId)
+      .emit('editRelation', updatedPayload1);
+  
+    // [3] send Server Notif message into the channel (not privateMsg Channel !)
+    const updatedPayload2 = {
+      ...payload,
+      server: this.server,
+      from: req.user.id,
+    };
 
-      throw new WsException(error.message);
+    const repNotif = await this.chatService.sendEditRelationNotif(updatedPayload2);
+    if (!repNotif.success) {
+        throw new Error(repNotif.message ? repNotif.message : "sendEditRelationNotif failed");
+    } else {
+        this.log(`SendEditRelationNotif in channel[${payload.channelId}]`); // checking
     }
+    
+    // [4] update socket LEAVE room if needed by editRelations
+    const repLeave = await this.chatService.joinLeaveRoomProcByEditRelation(true, payload, this.connectedUsers);
+    if (!repLeave.success)
+        throw new Error(repLeave.message ? repLeave.message : "proc Leave failed");
+
+    rep.success = true;
+
+  } catch (error: any) {
+
+    // [+] mémo : gérer cette error au leave de la channel stop par Kiwi: 
+    // Leave channel error : right-hand side of 'in' should be an object, got undefined
+
+    this.log(`edit Relation Error : ${error.message}`);
+    console.log("error (object) : ", error); // checking
+
+    rep.error = error;
+    rep.message = error.message ? error.message : "unknown error in chatGateway => @SubscribeMessage('editRelation')";
+  }
+
+    return rep;
   }
 
   @UseGuards(ChannelAuthGuard)

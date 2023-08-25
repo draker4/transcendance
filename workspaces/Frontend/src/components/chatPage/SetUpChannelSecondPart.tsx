@@ -75,49 +75,55 @@ export default function SetUpChannelSecondPart({ channelId, socket }: Props): JS
   const [me, setMe] = useState<UserRelation>(myRelation);
 
   const getPongersData = async () => {
-    const avatarService = new Avatar_Service(undefined);
-    const channelService = new Channel_Service(undefined);
-    const profileService = new Profile_Service(undefined);
+    try {
+        const avatarService = new Avatar_Service(undefined);
+        const channelService = new Channel_Service(undefined);
+        const profileService = new Profile_Service(undefined);
 
-    channelAndUsersRelation = await channelService.getChannelAndUsers(
-      channelId
-    );
-    channelAndUsersRelation.channel.avatar =
-      await avatarService.getChannelAvatarById(channelId);
-    const myProfile = await profileService.getProfileByToken();
+        channelAndUsersRelation = await channelService.getChannelAndUsers(
+        channelId
+        );
+        channelAndUsersRelation.channel.avatar =
+        await avatarService.getChannelAvatarById(channelId);
+        const myProfile = await profileService.getProfileByToken();
 
-    const findStatus: UserRelation | undefined =
-      channelAndUsersRelation.usersRelation.find(
-        (relation) => relation.userId === myProfile.id
-      );
+        const findStatus: UserRelation | undefined =
+        channelAndUsersRelation.usersRelation.find(
+            (relation) => relation.userId === myProfile.id
+        );
 
-    if (findStatus !== undefined) myRelation = findStatus;
-    else myRelation.userId = myProfile.id;
+        if (findStatus !== undefined) myRelation = findStatus;
+        else myRelation.userId = myProfile.id;
 
-    if (
-      !channelAndUsersRelation ||
-      !channelAndUsersRelation.channel ||
-      !channelAndUsersRelation.channel.avatar ||
-      channelAndUsersRelation.channel.id === -1 ||
-      channelAndUsersRelation.channel.type === "privateMsg"
-    )
-      throw new Error("getPongersData user relation issue");
+        if (
+        !channelAndUsersRelation ||
+        !channelAndUsersRelation.channel ||
+        !channelAndUsersRelation.channel.avatar ||
+        channelAndUsersRelation.channel.id === -1 ||
+        channelAndUsersRelation.channel.type === "privateMsg"
+        ) {
+        throw new Error("getPongersData user relation issue");
+        }
 
-    setChannelRelation(channelAndUsersRelation);
-    setMe(myRelation);
+        setChannelRelation(channelAndUsersRelation);
+        setMe(myRelation);
+
+    } catch (err) {
+        console.log("SetUpSectionPongers error : ", err); // [+] meilleure gestion de ces deux try catch ?
+    }
   };
 
   const loadData = () => {
 	try {
 		getPongersData();
 	  } catch (err) {
-		console.log("SetUpSectionPongers error : ", err);
+		  console.log("SetUpSectionPongers error : ", err);
 	  }
   };
 
   useEffect(() => {
 	
-	socket.on("editRelation", loadData);
+  socket.on("editRelation", loadData);
   loadData();
 
 	return () => {

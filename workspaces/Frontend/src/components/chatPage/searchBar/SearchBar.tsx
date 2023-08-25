@@ -131,7 +131,10 @@ export default function SearchBar({ socket, openDisplay }: {
 			channel: Channel;
 		  }) => {
 			if (payload.success) {
-			  openDisplay(payload.channel);
+				if (payload.channel.type === "protected")
+					openDisplay({...payload.channel, needPassword: true});
+				else
+			  		openDisplay(payload.channel);
 			} else if (payload.exists) {
 			  setError({
 				id: -1,

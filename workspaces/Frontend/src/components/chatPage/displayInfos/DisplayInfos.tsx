@@ -64,6 +64,7 @@ export default function DisplayInfos({
 							? "private"
 							: "public",
 				password: type === "protected" ? password : undefined,
+				isCreation: true,
 			}, (payload: {
 				success: boolean;
 				exists: boolean;

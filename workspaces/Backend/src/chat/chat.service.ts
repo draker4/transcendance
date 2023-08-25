@@ -1251,6 +1251,7 @@ export class ChatService {
   ) {
 
 	let isCreation:boolean = false;
+  let isProtected:boolean = false;
 
     try {
       // check if user exists
@@ -1261,7 +1262,9 @@ export class ChatService {
       let channel = undefined;
 
       if (channelId !== -1)
-        channel = await this.channelService.getChannelById(channelId);
+        channel = await this.channelService.getChannelById(channelId); 
+      if (channel && channel.type === "protected")
+          isProtected = true;
 
       if (!channel) {
 		    isCreation = true;
@@ -1277,6 +1280,7 @@ export class ChatService {
             banned: false,
             channel: null,
           };
+       
       }
 
       // check if user already in channel
@@ -1286,11 +1290,16 @@ export class ChatService {
       });
 
       if (!relation) {
+        this.log(`user[${user.login}] has no relation with channel[${channel.name}][${channel.type}], creating relation`)
         await this.usersService.updateUserChannels(user, channel);
         relation = await this.userChannelRelation.findOne({
           where: { userId: userId, channelId: channel.id },
           relations: ['user', 'channel'],
         });
+        if (relation && isProtected) {
+          relation.joined = false;
+          await this.userChannelRelation.save(relation);
+        }
       }
 
       // check if user banned
@@ -1312,7 +1321,7 @@ export class ChatService {
         };
         
       // check if user is not joined
-      if (!relation.joined) {
+      if (!relation.joined && !isProtected) {
         relation.joined = true;
         await this.userChannelRelation.save(relation);
 
@@ -1359,7 +1368,7 @@ export class ChatService {
         await this.userChannelRelation.save(relation);
       }
 
-      if (userSockets.length >= 1) {
+      if (userSockets.length >= 1 && !isProtected) {
         for (const socket of userSockets) {
           socket.join('channel:' + channel.id);
           socket.emit('notif', {
@@ -1372,7 +1381,7 @@ export class ChatService {
         ...channel,
 		    isBoss: relation.isBoss,
         isChanOp: relation.isChanOp,
-        joined: true,
+        joined: !isProtected,
         isBanned: relation.isBanned,
         invited: relation.invited,
         muted: relation.muted,
@@ -1601,6 +1610,7 @@ export class ChatService {
 			}
 		}
 
+        rep.success = true;
 	} catch(error:any) {
 		rep.success = false;
 		rep.message = error.message;
@@ -1743,13 +1753,27 @@ export class ChatService {
 
   async sendEditRelationNotif(
     infos: EditChannelRelationDto & { server: Server; from: number },
-  ) {
-    const content: string = await this.makeEditRelationNotifContent(infos);
-    await this.sendServerNotifMsg(
-      infos.channelId,
-      content,
-      infos.server,
-    );
+  ):Promise<ReturnData> {
+
+    const rep:ReturnData = {
+        success: false,
+        message: '',
+    }
+
+    try {
+        const content: string = await this.makeEditRelationNotifContent(infos);
+        await this.sendServerNotifMsg(
+          infos.channelId,
+          content,
+          infos.server,
+        );
+        rep.success = true;
+    } catch(e) {
+        rep.error = e;
+        rep.message = e.message;
+    }
+
+    return rep;
   }
 
   public async sendServerNotifMsgPublic(
@@ -1762,7 +1786,10 @@ export class ChatService {
       const login = (await this.usersService.getUserById(senderId)).login
       const content = login + " " + endContent;
 
-      this.sendServerNotifMsg(channelId, content, server)
+      const rep = await this.sendServerNotifMsg(channelId, content, server);
+      if (!rep.success) {
+        throw new Error(rep.message);
+      }
     } catch(e) {
       this.log(`[sendServerNotifMsgPublic] error : ${e.message}`);
     }
@@ -1774,7 +1801,13 @@ export class ChatService {
     channelId: number,
     content: string,
     server: Server,
-  ) {
+  ):Promise<ReturnData> {
+
+    const rep:ReturnData = {
+        success: false,
+        message: '',
+    }
+
     try {
       const now = new Date();
       const nowtoISOString = now.toISOString();
@@ -1802,11 +1835,19 @@ export class ChatService {
       }
 
       server.to('channel:' + channelId).emit('sendMsg', notif);
-      this.messageService.addMessage(newMessage);
+      const repMsg = await this.messageService.addMessage(newMessage);
+      if (!repMsg.success)
+        throw new Error(repMsg.message)
+
+      rep.success = true;
       
     } catch (e) {
       this.log('Error : ' + e.message);
+      rep.error = e;
+      rep.message = e.message;
     }
+
+    return rep;
   }
 
   async makeEditRelationNotifContent(
