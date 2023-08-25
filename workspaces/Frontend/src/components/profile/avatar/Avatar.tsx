@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
 import Avatar from "@mui/material/Avatar";
-import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useForm } from "react-hook-form";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { CryptoService } from "@/services/Crypto.service";
@@ -24,6 +24,12 @@ type Props = {
   displaySettings: boolean;
   uploadButton: boolean;
   setuploadButton?: Dispatch<SetStateAction<boolean>>;
+  avatarsList?: Avatar[];
+  setAvatarsList?: Dispatch<SetStateAction<Avatar[]>>;
+  setAvatarChosen?: Dispatch<SetStateAction<Avatar>>;
+  cloudList?: ImageType[];
+  setCloudList?: Dispatch<SetStateAction<ImageType[]>>;
+  saveColorChanges?: (avatar: Avatar) => void;
 };
 
 const badgeStylePhoto = {
@@ -88,14 +94,26 @@ export default function AvatarProfile({
   displaySettings,
   uploadButton,
   setuploadButton,
+  avatarsList,
+  setAvatarsList,
+  setAvatarChosen,
+  cloudList,
+  setCloudList,
+  saveColorChanges,
 }: Props) {
 
   const	avatarRef = useRef<HTMLDivElement | null>(null);
 	const	fileInputRef = useRef<HTMLInputElement>(null);
 	const	[imageSrc, setImageSrc] = useState<string>(avatar.image);
 	const	[loading, setLoading] = useState<boolean>(false);
+	const	[invisible, setInvisible] = useState<boolean>(true);
 	const { handleSubmit, setValue } = useForm<FormInputs>();
   const router = useRouter();
+
+  if (invisible && cloudList?.find(image => image.imageUrl === avatar.image))
+    setInvisible(false);
+  else if (!invisible && !cloudList?.find(image => image.imageUrl === avatar.image))
+    setInvisible(true);
 
   const	handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const	reader = new FileReader();
@@ -115,6 +133,8 @@ export default function AvatarProfile({
 	}
 
   const	deleteImage = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
 		if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
 			return ;
 		}
@@ -188,14 +208,130 @@ export default function AvatarProfile({
 			const	imageSaved: ImageType = await saveImage.json();
 			imageSaved.imageUrl = resJson.secure_url;
 			imageSaved.publicId = resJson.public_id;
-					
-			// setAvatar(prev => [...prev, imageSaved]);
-			setLoading(false);
+	
+      // add new avatar to the list
+      if (setAvatarsList && setAvatarChosen && setCloudList) {
+        const newAvatar = {
+            image: resJson.secure_url,
+            variant: "circular",
+            borderColor: previewBorder,
+            backgroundColor: previewBackground,
+            text: avatar.text,
+            empty: false,
+            isChannel: false,
+            decrypt: true,
+        };
+        
+        setAvatarsList(prev => [...prev, newAvatar]);
+        setAvatarChosen(newAvatar);
+        setCloudList(prev => [...prev, imageSaved]);
+      }
 
+			setLoading(false);
+      if (setuploadButton)
+        setuploadButton(false);
 		}
 		catch (error: any) {
 			console.log(error.message);
 			if (error.message === "disconnect") {
+				await disconnect();
+				router.refresh();
+				return ;
+			}
+			toast.error("Oops, something went wrong, please try again!");
+			setLoading(false);
+		}
+	}
+
+  const deleteCloudImage = async (imageUrl: string) => {
+		setLoading(true);
+
+    try {
+        const imageType = cloudList?.find(image => image.imageUrl === imageUrl);
+        if (!imageType)
+          throw new Error('no image found');
+
+        if (!process.env.CLOUD_API_KEY || !process.env.CLOUD_SECRET || !process.env.CLOUD_FOLDER || !process.env.CLOUD_NAME)
+          throw new Error('env var missing');
+    
+        const	getSignature = await fetchClientSide(`http://${process.env.HOST_IP}:3000/api/cloud`, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            publicId: imageType.publicId,
+          }),
+        });
+
+        if (!getSignature.ok)
+          throw new Error('no signature');
+        
+        const	{timestamp, signature} = await getSignature.json();
+
+        if (!timestamp || !signature)
+          throw new Error('no signature');
+
+        //delete image from cloud
+        const	formData = new FormData();
+        formData.set('public_id', imageType.publicId);
+        formData.append("api_key", process.env.CLOUD_API_KEY as string);
+        formData.append("timestamp", timestamp.toString());
+        formData.append('signature', signature);
+
+        const	resCloud = await fetch(`https://api.cloudinary.com/v1_1/${process.env.CLOUD_NAME}/image/destroy`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!resCloud.ok)
+          throw new Error('fetch failed');
+        
+        const resJson = await resCloud.json();
+        
+        if (!resJson.result || resJson.result !== 'ok')
+          throw new Error('cloud result not ok');
+
+        // delete image from db
+        const	res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/deleteImage`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            imageId: imageType.id,
+          }),
+        })
+
+        if (!res.ok)
+          throw new Error('fetch failed');
+      
+        if (cloudList && setCloudList) {
+          const	cloudListUpdates = cloudList.filter(
+            image => image.id !== imageType.id,
+          );
+          setCloudList(cloudListUpdates);
+        }
+
+        if (avatarsList && setAvatarsList && setAvatarChosen) {
+          const	avatarsListUpdates = avatarsList.filter(
+            avatar => avatar.image !== imageType.imageUrl,
+          );
+          setAvatarsList(avatarsListUpdates);
+
+          if (avatarsList.length > 0) {
+            const currentAvatar = {...avatar};
+            setAvatarChosen(avatarsList[0]);
+            if (currentAvatar.image === imageType.imageUrl && saveColorChanges)
+              saveColorChanges(avatarsList[0]);
+          }
+        }
+
+        setLoading(false);
+		}
+		catch (err: any) {
+			console.log(err.message);
+			if (err.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
@@ -255,13 +391,15 @@ export default function AvatarProfile({
       >
 
         {/* user avatar settings, no cloud call */}
+        {/* two badges, one for upload photon one for delete */}
         {
           !uploadButton && avatar.variant === "circular" &&
             <Badge badgeContent={
               <FontAwesomeIcon
                 icon={faImage}
                 className={styles.iconPhoto}
-              />} sx={badgeStylePhoto}
+                />}
+              sx={badgeStylePhoto}
               overlap="circular"
               anchorOrigin={{
                 vertical: 'top',
@@ -269,12 +407,38 @@ export default function AvatarProfile({
               }}
               className={styles.avatarUser}
               onClick={(event) => {
+                console.log('click droit');
                 if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
                   return ;
                 }
                 if (fileInputRef.current)
-			            fileInputRef.current.click();
+                  fileInputRef.current.click();
+                event.stopPropagation();
+                event.preventDefault();
               }}
+            >
+            <Badge badgeContent={
+              <FontAwesomeIcon
+                icon={faTrash}
+                className={styles.iconPhoto}
+                />}
+              sx={badgeStylePhoto}
+              overlap="circular"
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              className={styles.avatarUser}
+              onClick={(event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                console.log('click gauche');
+                if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
+                  return ;
+                }
+                deleteCloudImage(avatar.image);
+              }}
+              invisible={invisible}
             >
               <input
                 type="file"
@@ -286,6 +450,7 @@ export default function AvatarProfile({
                 hidden
                 ref={fileInputRef}
                 onChange={handleOnChange}
+                onClick={(e) => e.stopPropagation()}
               />
               <div
                 ref={avatarRef}
@@ -301,6 +466,7 @@ export default function AvatarProfile({
                 />
               </div>
             </Badge>
+          </Badge>
         }
 
         {/* channel avatar */}
@@ -331,6 +497,8 @@ export default function AvatarProfile({
               if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
                 return ;
               }
+              event.stopPropagation();
+              event.preventDefault();
               handleSubmit(handleOnSubmit)();
             }}
             className={styles.avatarUser}

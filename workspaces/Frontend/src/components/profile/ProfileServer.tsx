@@ -93,34 +93,34 @@ export default async function ProfileServer({ id }: {
 					decrypt: true,
 				});
 			}
-			
-			avatars.unshift({
-				image: "",
-				variant: avatar.variant,
-				borderColor: avatar.borderColor,
-				backgroundColor: avatar.backgroundColor,
-				text: targetProfile.login.toUpperCase().slice(0, 3),
-				empty: false,
-				isChannel: false,
-				decrypt: false,
-			});
-
-			avatars.unshift({
-				image: "",
-				variant: avatar.variant,
-				borderColor: avatar.borderColor,
-				backgroundColor: avatar.backgroundColor,
-				text: "",
-				empty: true,
-				isChannel: false,
-				decrypt: false,
-			});
 		}
 	}
 	catch (error: any) {
 		console.log(error.message);
 		return <ErrorProfile params={{id}}/>;
 	}
+
+	avatars.unshift({
+		image: "",
+		variant: avatar.variant,
+		borderColor: avatar.borderColor,
+		backgroundColor: avatar.backgroundColor,
+		text: targetProfile.login.toUpperCase().slice(0, 3),
+		empty: false,
+		isChannel: false,
+		decrypt: false,
+	});
+
+	avatars.unshift({
+		image: "",
+		variant: avatar.variant,
+		borderColor: avatar.borderColor,
+		backgroundColor: avatar.backgroundColor,
+		text: "",
+		empty: true,
+		isChannel: false,
+		decrypt: false,
+	});
 
 	if (targetProfile.id !== -1)
 		return (

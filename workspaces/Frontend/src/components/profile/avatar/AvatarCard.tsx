@@ -37,7 +37,6 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     "border"
   );
   const router = useRouter();
-
   const avatarService = new Avatar_Service();
 
   const handleArea = (newArea: "border" | "background" | null) => {
@@ -53,18 +52,19 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     setDisplaySettings(!displaySettings);
   };
 
-  const saveColorChanges = async () => {
+  const saveColorChanges = async (avatarCustomed: Avatar) => {
     if (!isOwner) return;
 
     try {
 
-      let image = avatarChosen.image;
+      console.log(avatarCustomed);
+      let image = avatarCustomed.image;
 
-      if (avatarChosen.decrypt)
-        image = await Crypto.encrypt(avatarChosen.image);
+      if (avatarCustomed.decrypt)
+        image = await Crypto.encrypt(avatarCustomed.image);
 
       const rep = await avatarService.submitAvatarUser(
-        {...avatarChosen, image},
+        {...avatarCustomed, image},
         topColor as string,
         botColor as string,
       );
@@ -73,7 +73,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
         throw new Error(rep.message);
 
       setAvatarUser({
-        ...avatarChosen,
+        ...avatarCustomed,
         backgroundColor: botColor.toString(),
         borderColor: topColor.toString(),
       });
@@ -126,8 +126,10 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
         break ;
     }
 
-    if (index === avatarsList.length || index === -1)
+    if (index === avatarsList.length || index === -1) {
+      setAvatarChosen(avatars[0]);
       return ;
+    }
 
     let newAvatar: Avatar;
     if (dir === "right") {
@@ -234,6 +236,12 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
                   displaySettings={displaySettings}
                   uploadButton={uploadButton}
                   setuploadButton={setuploadButton}
+                  avatarsList={avatarsList}
+                  setAvatarsList={setAvatarsList}
+                  setAvatarChosen={setAvatarChosen}
+                  cloudList={cloudList}
+                  setCloudList={setCloudList}
+                  saveColorChanges={saveColorChanges}
                 />
               {
                 !uploadButton &&
@@ -257,6 +265,12 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
               displaySettings={displaySettings}
               uploadButton={uploadButton}
               setuploadButton={setuploadButton}
+              avatarsList={avatarsList}
+              setAvatarsList={setAvatarsList}
+              setAvatarChosen={setAvatarChosen}
+              cloudList={cloudList}
+              setCloudList={setCloudList}
+              saveColorChanges={saveColorChanges}
             />
           }
 
@@ -270,7 +284,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
           handleArea={handleArea}
           selectedArea={selectedArea}
           toogleDisplaySettings={toogleDisplaySettings}
-          saveColorChanges={saveColorChanges}
+          saveColorChanges={() => saveColorChanges(avatarChosen)}
         />
       )}
     </div>
