@@ -384,10 +384,6 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('join')
   async join(@MessageBody() payload: JoinDto, @Request() req) {
 
-    /* [!][+] devrait plus etre necessaire ? Si dans le cas d'une creation ?
-      si channel est protected et que la relation user n'existe pas,
-      on cree la relation avec join false, puis le front affiche de quoi entrer le password
-    */
     // [!][+] pour le moment créer une protected ne renseigne pas son mdp dans la db
     // du coup generera des bugs si on laisse ainsi
     if (payload.channelType === "protected" && payload.isCreation
@@ -422,6 +418,7 @@ export class ChatGateway implements OnModuleInit {
         payload.channelType,
         userSockets,
         this.server,
+        payload.password
       );
   }
 

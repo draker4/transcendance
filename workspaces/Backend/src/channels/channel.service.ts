@@ -45,6 +45,7 @@ export class ChannelService {
   async addChannel(
     channelName: string,
     type: 'public' | 'protected' | 'private' | 'privateMsg',
+    password?: string
   ) {
     const channel = await this.getChannelByName(channelName, false);
 
@@ -74,6 +75,7 @@ export class ChannelService {
       name: channelName,
       avatar: avatar,
       type: type,
+      password:password,
     };
     return await this.channelRepository.save(newChannel);
   }

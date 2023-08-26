@@ -1257,6 +1257,7 @@ export class ChatService {
     channelType: 'public' | 'protected' | 'private' | 'privateMsg',
     userSockets: Socket[],
     server: Server,
+    password?: string,
   ) {
 
 	let isCreation:boolean = false;
@@ -1280,6 +1281,7 @@ export class ChatService {
         channel = await this.channelService.addChannel(
           channelName,
           channelType,
+          password,
         );
 
         if (!channel)
@@ -1305,7 +1307,7 @@ export class ChatService {
           where: { userId: userId, channelId: channel.id },
           relations: ['user', 'channel'],
         });
-        if (relation && isProtected) {
+        if (relation && isProtected && !isCreation) {
           relation.joined = false;
           await this.userChannelRelation.save(relation);
         }

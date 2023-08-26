@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsNotEmpty, IsObject, IsString } from "class-validator";
+import { IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
 import { Avatar } from "src/utils/typeorm/Avatar.entity";
 
 export class ChannelDto {
@@ -15,5 +15,9 @@ export class ChannelDto {
 	@IsString()
 	@IsNotEmpty()
 	type: 'public' | 'protected' | 'private' | 'privateMsg';
+
+  @IsString()
+  @IsOptional()
+  password?:string;
 
 }
