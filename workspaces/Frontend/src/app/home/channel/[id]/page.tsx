@@ -121,7 +121,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
 
 
 
-    if (!findStatus && channelAndUsersRelation && channelAndUsersRelation.channel.type === "private")
+    if ((!findStatus || (!findStatus.isBoss && !findStatus.joined)) && channelAndUsersRelation && channelAndUsersRelation.channel.type === "private")
         throw new Error('channel is private')
   } catch (err:any) {
     console.log(err); // checking
