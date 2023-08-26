@@ -193,6 +193,7 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getLoginWithAvatar(req.user.id);
   }
 
+  // [!] je ne trouve pas ou ce endpoint est utilise depuis notre frontend, virer si inutile
   @SubscribeMessage('getChannel')
   async getChannel(@Req() req, @MessageBody() channelId: number) {
     if (!channelId) throw new WsException('no channel id');

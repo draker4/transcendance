@@ -90,6 +90,8 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
 
+    console.log(`CHECK => channel[${channelAndUsersRelation.channel.name}][${channelAndUsersRelation.channel.type}] => password = [${channelAndUsersRelation.channel.password}]`); // checking
+
     if (channelAndUsersRelation.usersRelation.length > 0) {
       for (const relationUser of channelAndUsersRelation.usersRelation) {
         const avatarUser = relationUser.user.avatar;

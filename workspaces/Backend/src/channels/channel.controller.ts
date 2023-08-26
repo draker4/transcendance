@@ -18,12 +18,10 @@ import { EditChannelRelationDto } from './dto/EditChannelRelation.dto';
 export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
 
-  // [+] l'user req.user.id => filtrer les infos en fonction des boolean de la Relation
-  // > a accorder avec avatarService.editChannelAvatarColors(), mm principe
   @Get(':id')
   async getChannelById(@Request() req, @Param('id', ParseIntPipe) id: number) {
     try {
-      return await this.channelService.getChannelUsersRelations(id);
+      return await this.channelService.getChannelUsersRelations(req.user.id, id);
     }
     catch (error) {
       throw new BadRequestException();
@@ -33,7 +31,10 @@ export class ChannelController {
   @Get('/relation/:id')
   async getSelfChannelRelation(@Request() req, @Param('id', ParseIntPipe) id: number) : Promise<ReturnDataTyped<UserChannelRelation>> {	
 	try {
-		return await this.channelService.getOneChannelUserRelation(req.user.id, id);
+    const repChannelAndRelation = await this.channelService.getOneChannelUserRelation(req.user.id, id);
+		if (repChannelAndRelation.data && repChannelAndRelation.data.channel && repChannelAndRelation.data.channel.password)
+      repChannelAndRelation.data.channel.password = "";
+    return repChannelAndRelation;
 	} catch (e:any) {
 		return ({
 			success: false,

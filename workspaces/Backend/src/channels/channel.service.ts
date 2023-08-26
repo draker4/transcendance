@@ -119,17 +119,26 @@ export class ChannelService {
     });
   }
 
-  public async getChannelUsersRelations(id: number): Promise<ChannelAndUsers> {
+  public async getChannelUsersRelations(userId: number, channelId: number): Promise<ChannelAndUsers> {
     const channel: Channel = await this.channelRepository.findOne({
-      where: { id: id },
+      where: { id: channelId },
       relations: ['users', 'users.avatar'],
     });
 
     const usersRelation: UserChannelRelation[] =
       await this.userChannelRelation.find({
-        where: { channelId: id },
+        where: { channelId: channelId },
         relations: ['user', 'user.avatar'],
       });
+
+    let hidePassword: boolean = true;
+    usersRelation.forEach((relation) => {
+      if (relation.userId === userId && relation.isBoss)
+        hidePassword = false;
+    });
+
+    if (hidePassword && channel && channel.password)
+      channel.password = "";
 
     return {
       channel: channel,
@@ -797,7 +806,7 @@ export class ChannelService {
     userId: number,
     channelId: number,
   ): Promise<UserChannelRelation> {
-    return (await this.getChannelUsersRelations(channelId)).usersRelation.find(
+    return (await this.getChannelUsersRelations(userId, channelId)).usersRelation.find(
       (relation) => relation.userId === userId,
     );
   }

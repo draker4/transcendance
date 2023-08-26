@@ -244,6 +244,9 @@ export class ChatService {
             channel.lastMessage = null;
           }
 
+          if (!relation.isBoss && channel && channel.password)
+            channel.password = "";
+
           return {
             ...channel,
 			      isBoss: relation.isBoss,
@@ -254,9 +257,10 @@ export class ChatService {
             muted: relation.muted,
             statusPongieId: pongieId,
           };
-        }),
+        })
       );
 
+      // [?]
       channels = channels.filter(channel => channel);
 
       return channels;
@@ -484,6 +488,11 @@ export class ChatService {
           for (const socket of userSockets) {
             socket.join('channel:' + channel.id);
           }
+        }
+
+        // Only channel Master can get channel password
+        if (relation && channel && channel.password && !relation.isBoss) {
+          channel.password = ""
         }
 
         const channelRelation = {
