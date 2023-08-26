@@ -57,7 +57,7 @@ export default class Channel_Service {
       invited?: boolean;
       muted?: boolean;
     }
-  ) {
+  ):Promise<ReturnData> {
     let rep: ReturnData = {
       success: false,
       message: "",

@@ -13,6 +13,7 @@ import {
 	IconDefinition,
 	faPersonThroughWindow,
   } from "@fortawesome/free-solid-svg-icons";
+import InviteInChannel from "./inviteInChanel/InviteInChannel";
 
 type Props = {
   relation: ChannelUsersRelation;
@@ -123,6 +124,7 @@ useEffect(() => {
   }
 
   return <div className={styles.sections}>
+  <InviteInChannel relation={relation} myRelation={myRelation} socket={socket}/>
 	<p className={styles.notif}>{notif}</p>
 	{renderRowList(ChannelRoles.boss, faBahai, boss)}
     {renderRowList(ChannelRoles.operator, faCertificate, operators)}
