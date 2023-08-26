@@ -111,11 +111,25 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
       );
 
 
-    if (findStatus !== undefined) myRelation = findStatus;
-    else myRelation.userId = myProfile.id;
-  } catch (err) {
-    console.log(err);
-    return <ErrorChannel params={{ id }} />;
+    if (findStatus !== undefined)
+      myRelation = findStatus;
+    else
+      myRelation.userId = myProfile.id;
+
+    if (findStatus && findStatus.isBanned)
+      throw new Error('you are banned from this channel')
+
+
+
+    if (!findStatus && channelAndUsersRelation && channelAndUsersRelation.channel.type === "private")
+        throw new Error('channel is private')
+  } catch (err:any) {
+    console.log(err); // checking
+
+    if (err.message && typeof err.message === "string")
+      return <ErrorChannel id={id} caughtErrorMsg={err.message} />;
+    else
+    return <ErrorChannel id={id} />;
   }
 
   if (
@@ -127,7 +141,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
   ) {
     // [+] Ajouter conditions dans le cas ou findStatus est undefined ou si myRelation.banned === true
     // [+] ajoutter des param a ErrorChanel, si private par ex
-    return <ErrorChannel params={{ id }} />;
+    return <ErrorChannel id={id} />;
   }
 
   return (

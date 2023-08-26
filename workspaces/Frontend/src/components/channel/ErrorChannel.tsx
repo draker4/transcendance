@@ -4,15 +4,14 @@ import Link from "next/link";
 import styles from "@/styles/profile/Profile.module.css";
 import HelpIcon from '@mui/icons-material/Help';
 
-type Params = {
-	params: {
-	  id: number;
-	};
+type Props = {
+  id: number;
+  caughtErrorMsg?: string;
   };
 
-export default function ErrorChannel({ params: {id}}:Params) {
+export default function ErrorChannel({id, caughtErrorMsg}:Props) {
 
-	const errorMsg:string = `Sorry the channel of id :${id} is private or doesn't exist`;
+	const errorMsg:string = caughtErrorMsg ? caughtErrorMsg : `Sorry the channel of id : ${id} doesn't exist`;
   return (
 	<main className={styles.main}>
 			<p className={styles.icon}><HelpIcon fontSize="inherit"/></p>
