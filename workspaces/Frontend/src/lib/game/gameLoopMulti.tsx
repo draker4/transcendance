@@ -75,8 +75,6 @@ export const gameLoop = (
   const elapsedTime = timestamp - lastTimestampRef.current;
   frameCountRef.current++;
   if (elapsedTime >= 16.67) {
-    //updatePong(game);
-    // Process the oldest update in the queue
     game = updateGame(game);
     drawPong(game, draw);
 
@@ -87,7 +85,6 @@ export const gameLoop = (
   const elapsedFpsTime = currentTime - lastFpsUpdateTimeRef.current;
 
   if (elapsedFpsTime >= 1000) {
-    // Calculate FPS
     fpsRef.current = Math.round(
       (frameCountRef.current * 1000) / elapsedFpsTime
     );

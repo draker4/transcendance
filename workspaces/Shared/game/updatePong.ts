@@ -41,7 +41,7 @@ function handleRound(gameData: GameData) {
       gameData.score.rightRound > gameData.maxRound / 2
     ) {
       gameData.status = "Finished";
-      gameData.actualRound++;
+      if (gameData.actualRound < 8) gameData.actualRound++;
       if (gameData.score.leftRound > gameData.score.rightRound) {
         if (gameData.playerLeft.host) gameData.result = "Host";
         else gameData.result = "Opponent";
@@ -55,8 +55,14 @@ function handleRound(gameData: GameData) {
       gameData.playerRightDynamic.speed++;
       gameData.ball.speed++;
       gameData.timer = defineTimer(TIMER_ROUND, "Round");
-      if (gameData.pause.left < 3) gameData.pause.left++;
-      if (gameData.pause.right < 3) gameData.pause.right++;
+      if (gameData.pause.left < 3) {
+        gameData.pause.left++;
+        gameData.updatePause = true;
+      }
+      if (gameData.pause.right < 3) {
+        gameData.pause.right++;
+        gameData.updatePause = true;
+      }
     }
     gameData.updateScore = true;
     gameData.sendStatus = true;

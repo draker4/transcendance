@@ -1,57 +1,23 @@
-import {
-  IsNumber,
-  IsString,
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-} from 'class-validator';
+import { IsNumber, IsNotEmpty } from 'class-validator';
 
 export class UpdateScoreDTO {
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
-  name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Training';
-
-  @IsString()
-  @IsNotEmpty()
-  mode: 'League' | 'Party' | 'Training';
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @IsNumber()
   @IsNotEmpty()
-  host: number;
-
-  @IsNumber()
-  @IsOptional()
-  opponent: number;
-
-  @IsString()
-  @IsNotEmpty()
-  hostSide: 'Left' | 'Right';
+  left: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @IsNumber()
   @IsNotEmpty()
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  right: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
   @IsNumber()
   @IsNotEmpty()
-  maxRound: 1 | 3 | 5 | 7 | 9;
+  leftRound: 0 | 1 | 2 | 3 | 4 | 5;
 
   @IsNumber()
   @IsNotEmpty()
-  difficulty: 1 | 2 | 3 | 4 | 5;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  push: boolean;
-
-  @IsString()
-  @IsNotEmpty()
-  background: string;
-
-  @IsString()
-  @IsNotEmpty()
-  ball: string;
+  rightRound: 0 | 1 | 2 | 3 | 4 | 5;
 }

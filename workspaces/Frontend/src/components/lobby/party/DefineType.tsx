@@ -9,7 +9,6 @@ import {
   MdQuestionMark,
 } from "react-icons/md";
 
-import SideSelector from "@/components/lobby/selector/SideSelector";
 import Custom from "@/components/lobby/party/Custom";
 
 type Props = {

@@ -27,6 +27,10 @@ export class CreateGameDTO {
   @IsOptional()
   opponent: number;
 
+  @IsNumber()
+  @IsOptional()
+  invite: number;
+
   @IsString()
   @IsNotEmpty()
   hostSide: 'Left' | 'Right';

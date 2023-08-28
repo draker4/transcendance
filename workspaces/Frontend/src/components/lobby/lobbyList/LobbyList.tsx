@@ -33,8 +33,7 @@ export default function LobbyList({ lobbyService, mode }: Props) {
     // Fetch game list initially
     getList();
 
-    // Then fetch it every 10 seconds
-    const interval = setInterval(getList, 10000);
+    const interval = setInterval(getList, 1000);
 
     return () => clearInterval(interval);
   }, []);

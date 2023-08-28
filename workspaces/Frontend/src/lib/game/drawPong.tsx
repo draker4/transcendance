@@ -184,8 +184,10 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   drawRound(draw, gameData, "Right");
 
   // Draw pause
-  drawPause(draw, gameData, "Left");
-  drawPause(draw, gameData, "Right");
+  if (gameData.pause.active) {
+    drawPause(draw, gameData, "Left");
+    drawPause(draw, gameData, "Right");
+  }
 }
 
 function applyBlurEffect(draw: Draw) {

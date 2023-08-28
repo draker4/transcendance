@@ -4,12 +4,12 @@ import {
   Get,
   Param,
   Put,
-  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { ScoreService } from '../service/score.service';
 import { UpdateScoreDTO } from '../dto/UpdateScore.dto';
+import { UpdatePauseDTO } from '../dto/UpdatePause.dto';
 
 @Controller('score')
 export class ScoreController {
@@ -20,9 +20,21 @@ export class ScoreController {
     return this.scoreService.getScoreByGameId(gameId);
   }
 
-  @Put('update')
+  @Put('update/:gameId')
   @UsePipes(new ValidationPipe({ transform: true }))
-  async updateScore(@Req() req, @Body() updateScore: UpdateScoreDTO) {
-    //return this.scoreService.updateScore(req.user.id, updateScore);
+  async updateScore(
+    @Param('gameId') gameId: string,
+    @Body() updateScore: UpdateScoreDTO,
+  ) {
+    return this.scoreService.updateScore(gameId, updateScore);
+  }
+
+  @Put('updatePause/:gameId')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updatePause(
+    @Param('gameId') gameId: string,
+    @Body() updatePause: UpdatePauseDTO,
+  ) {
+    return this.scoreService.updatePause(gameId, updatePause);
   }
 }

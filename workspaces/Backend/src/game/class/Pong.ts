@@ -25,7 +25,10 @@ import { GameService } from '../service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { ColoredLogger } from '../colored-logger';
 
-import { ScoreInfo } from '@transcendence/shared/types/Score.types';
+import {
+  ScoreInfo,
+  ScoreUpdate,
+} from '@transcendence/shared/types/Score.types';
 
 import { updatePong } from '@transcendence/shared/game/updatePong';
 
@@ -37,6 +40,7 @@ import {
   TIMER_START,
 } from '@transcendence/shared/constants/Game.constants';
 import { StatsService } from '@/stats/service/stats.service';
+import { PauseUpdate } from '@transcendence/shared/types/Pause.types';
 
 export class Pong {
   // Game Loop variables
@@ -178,7 +182,6 @@ export class Pong {
       const actualTime = new Date().getTime();
       if (actualTime >= this.data.timer.end) {
         this.data.status = 'Playing';
-        this.data.sendStatus = true;
         this.data.timer = defineTimer(
           TIMER_RESTART,
           'ReStart',
@@ -189,7 +192,6 @@ export class Pong {
         this.data.sendStatus = true;
         this.pauseLoopRunning = null;
       } else {
-        // continue checking every second
         setTimeout(() => {
           this.pauseLoop(side);
         }, 1000);
@@ -199,13 +201,32 @@ export class Pong {
 
   private startPauseLoop(side: 'Left' | 'Right') {
     if (!this.disconnectLoopRunning) {
+      this.data.status = 'Stopped';
+      this.data.sendStatus = true;
+      this.data.updatePause = true;
+      this.data.timer = defineTimer(
+        TIMER_PAUSE,
+        'Pause',
+        side === 'Left'
+          ? this.data.playerLeft.name
+          : this.data.playerRight.name,
+      );
       this.pauseLoopRunning = side;
       this.pauseLoop(side);
     }
   }
 
-  private stopPauseLoop() {
+  private stopPauseLoop(side: 'Left' | 'Right') {
     if (!this.disconnectLoopRunning) {
+      this.data.status = 'Playing';
+      this.data.sendStatus = true;
+      this.data.timer = defineTimer(
+        TIMER_RESTART,
+        'ReStart',
+        side === 'Left'
+          ? this.data.playerLeft.name
+          : this.data.playerRight.name,
+      );
       this.pauseLoopRunning = null;
     }
   }
@@ -225,15 +246,6 @@ export class Pong {
       } else return;
 
       // Pause the game
-      this.data.status = 'Stopped';
-      this.data.sendStatus = true;
-      this.data.timer = defineTimer(
-        TIMER_PAUSE,
-        'Pause',
-        this.playerLeft.id === action.userId
-          ? this.data.playerLeft.name
-          : this.data.playerRight.name,
-      );
       this.startPauseLoop(
         this.playerLeft.id === action.userId ? 'Left' : 'Right',
       );
@@ -252,16 +264,9 @@ export class Pong {
       }
 
       // Restart the game
-      this.data.status = 'Playing';
-      this.data.sendStatus = true;
-      this.data.timer = defineTimer(
-        TIMER_RESTART,
-        'ReStart',
-        this.playerLeft.id === action.userId
-          ? this.data.playerLeft.name
-          : this.data.playerRight.name,
+      this.stopPauseLoop(
+        this.playerLeft.id === action.userId ? 'Left' : 'Right',
       );
-      this.stopPauseLoop();
     }
   }
 
@@ -357,6 +362,10 @@ export class Pong {
         this.updateDBStats();
       }
     }
+    if (this.data.updatePause) {
+      this.updateDBPause();
+      this.data.updatePause = false;
+    }
 
     // Calculate FPS
     this.framesThisSecond++;
@@ -379,29 +388,47 @@ export class Pong {
 
   private async updateDBScore() {
     try {
+      const scoreUpdate: ScoreUpdate = {
+        actualRound: this.data.actualRound,
+        left: 0,
+        right: 0,
+        leftRound: this.data.score.leftRound,
+        rightRound: this.data.score.rightRound,
+      };
       if (
         this.data.actualRound > 0 &&
         this.data.score.round[this.data.actualRound].left === 0 &&
         this.data.score.round[this.data.actualRound].right === 0
       ) {
-        await this.scoreService.updateScore(
-          this.gameId,
-          this.data.score,
-          this.data.actualRound,
-          true,
-        );
-      } else {
-        await this.scoreService.updateScore(
-          this.gameId,
-          this.data.score,
-          this.data.actualRound,
-          false,
-        );
+        scoreUpdate.actualRound--;
       }
+      scoreUpdate.left = this.data.score.round[scoreUpdate.actualRound].left;
+      scoreUpdate.right = this.data.score.round[scoreUpdate.actualRound].right;
+      await this.scoreService.updateScore(this.gameId, scoreUpdate);
     } catch (error) {
       this.logger.error(
         `Error Updating Score: ${error.message}`,
         'Pong - updateDBScore',
+        error,
+      );
+    }
+  }
+
+  private async updateDBPause() {
+    try {
+      const pauseUpdate: PauseUpdate = {
+        left: this.data.pause.left,
+        right: this.data.pause.right,
+      };
+      this.logger.log(
+        `Updating Pause: ${JSON.stringify(pauseUpdate)}`,
+        'Pong - updateDBPause',
+      );
+      await this.scoreService.updatePause(this.gameId, pauseUpdate);
+    } catch (error) {
+      this.logger.error(
+        `Error Updating Pause: ${error.message}`,
+        'Pong - updateDBPause',
         error,
       );
     }

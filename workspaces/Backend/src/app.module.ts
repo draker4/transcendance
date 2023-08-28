@@ -68,7 +68,7 @@ import { Image } from './utils/typeorm/Image.entity';
         NotifMessages,
         Image,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     AvatarModule,

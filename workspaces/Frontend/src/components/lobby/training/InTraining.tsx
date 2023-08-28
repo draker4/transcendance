@@ -22,7 +22,7 @@ export default function InTraining({
 }: Props) {
   const router = useRouter();
   function resumeGame(trainingId: string) {
-    router.push(`/training/${trainingId}`);
+    router.push(`home/training/${trainingId}`);
     toast.success("You are back in training");
   }
   async function quitTraining() {

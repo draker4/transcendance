@@ -6,12 +6,16 @@ import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import { Badge, CircularProgress, Tooltip } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGamepad, faTv, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { MdStar, Md3GMobiledata, Md5G, MdQuestionMark } from "react-icons/md";
 import {
-  MdStar,
-  Md3GMobiledata,
-  Md5G,
-  MdQuestionMark,
-} from "react-icons/md";
+  randomMaxPoint,
+  randomMaxRound,
+  confirmBackground,
+  confirmBall,
+} from "@/lib/game/random";
+import LobbyService from "@/services/Lobby.service";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 type GroupedMsgType = {
   user: User;
@@ -26,13 +30,18 @@ type Props = {
   myself: Profile & { avatar: Avatar };
 };
 
-export default function MessageItem({ groupedMessages, status, myself }: Props) {
-  
+export default function MessageItem({
+  groupedMessages,
+  status,
+  myself,
+}: Props) {
   const [isFocused, setIsFocused] = useState(false);
-  const	[color, setColor] = useState<string>("#edf0f0");
-  const	[textStatus, setTextStatus] = useState<string>("disconnected");
+  const [color, setColor] = useState<string>("#edf0f0");
+  const [textStatus, setTextStatus] = useState<string>("disconnected");
   const [inviteGame, setInviteGame] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
+  const lobbyService = new LobbyService();
 
   const badgeStyleStatus = {
     "& .MuiBadge-badge": {
@@ -42,8 +51,8 @@ export default function MessageItem({ groupedMessages, status, myself }: Props) 
       height: "12px",
       borderRadius: "100%",
       right: "5px",
-    }
-  }
+    },
+  };
 
   const handleFocusOn = () => {
     setIsFocused(true);
@@ -61,26 +70,72 @@ export default function MessageItem({ groupedMessages, status, myself }: Props) 
     setIsFocused(false);
   };
 
-  const sendInvitation = (gameType: "classic" | "best 3" | "best 5" | "random") => {
+  async function sendInvitation(
+    gameType: "Classic" | "Best3" | "Best5" | "Custom"
+  ) {
     setLoading(true);
+    const settings: GameDTO = {
+      name: `${myself.login} vs ${groupedMessages.user.login}`,
+      type: gameType,
+      mode: "Party",
+      host: myself.id,
+      opponent: -1,
+      invite: groupedMessages.user.id,
+      hostSide: "Left",
+      maxPoint: 3,
+      maxRound: 1,
+      difficulty: 2,
+      pause: true,
+      push: true,
+      background: confirmBackground("Random"),
+      ball: confirmBall("Random"),
+    };
 
-    setTimeout(() => {
-        setLoading(false);
-    }, 2000);
-    console.log(gameType);
+    if (gameType === "Classic") {
+      settings.maxPoint = 9;
+      settings.maxRound = 1;
+      settings.pause = false;
+      settings.push = false;
+      settings.background = "Classic";
+      settings.ball = "Classic";
+    } else if (gameType === "Best3") {
+      settings.maxPoint = 7;
+      settings.maxRound = 3;
+    } else if (gameType === "Best5") {
+      settings.maxPoint = 5;
+      settings.maxRound = 5;
+    } else if (gameType === "Custom") {
+      settings.maxPoint = randomMaxPoint();
+      settings.maxRound = randomMaxRound();
+      settings.push = Math.random() < 0.5;
+      settings.pause = Math.random() < 0.5;
+    }
+
+    //Creer la game
+    const res = await lobbyService.createGame(settings);
+    await toast.promise(
+      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
+      {
+        pending: "Creating game...",
+        success: "Game created",
+        error: "Error creating game",
+      }
+    );
+    if (!res.success) {
+      console.log(res.message);
+      return;
+    }
+    router.push("/home/game/" + res.data);
   }
 
   useEffect(() => {
-  
     if (status && status.size > 0 && !groupedMessages.isServerNotif) {
-
       if (status.has(groupedMessages.user.id.toString())) {
-        const	text = status.get(groupedMessages.user.id.toString()) as string;
+        const text = status.get(groupedMessages.user.id.toString()) as string;
         setTextStatus(text);
         setColor(chooseColorStatus(text));
       }
     }
-    
   }, [status]);
 
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
@@ -109,117 +164,129 @@ export default function MessageItem({ groupedMessages, status, myself }: Props) 
 
   // User Message
   return (
-    <div className={styles.msgItem}
+    <div
+      className={styles.msgItem}
       onFocus={handleFocusOn}
       onBlur={handleFocusOff}
       onMouseEnter={handleHover}
-      onMouseLeave={handleMouseLeave}>
-
+      onMouseLeave={handleMouseLeave}
+    >
       {/* Game invitation */}
-      {
-        isFocused && !groupedMessages.isServerNotif && groupedMessages.user.id !== myself.id && !loading &&
-        <>
-          {
-            textStatus === "connected" &&
-            <>
-              {
-                !inviteGame &&
-                <Tooltip title={"game invitation"} arrow placement="top">
-                  <div className={styles.statusButtons} onClick={() => setInviteGame(!inviteGame)}>
-                    <FontAwesomeIcon
-                      icon={faGamepad}
-                      className={styles.icon}
-                    />
-                  </div>
-                </Tooltip>
-              }
-              {
-                inviteGame &&
-                <div className={styles.statusButtons} style={{
-                  width: "30%"
-                }}>
-
-                  <Tooltip title={"classic"} arrow placement="top">
-                    <span className={styles.icon}>
-                      <MdStar className={styles.icon} onClick={() => sendInvitation("classic")} />
-                    </span>
-                  </Tooltip>
-
-                  <Tooltip title={"best 3"} arrow placement="top">
-                    <span className={styles.icon}>
-                      <Md3GMobiledata className={styles.icon} onClick={() => sendInvitation("best 3")} />
-                    </span>
-                  </Tooltip>
-                  
-                  <Tooltip title={"best 5"} arrow placement="top">
-                    <span className={styles.icon}>
-                      <Md5G className={styles.icon} onClick={() => sendInvitation("best 5")} />
-                    </span>
-                  </Tooltip>
-                  
-                  <Tooltip title={"random"} arrow placement="top">
-                    <span className={styles.icon}>
-                      <MdQuestionMark className={styles.icon} onClick={() => sendInvitation("random")} />
-                    </span>
-                  </Tooltip>
-
-                  <Tooltip title={"cancel"} arrow placement="top">
-                    <FontAwesomeIcon
-                      icon={faXmark}
-                      className={styles.icon}
+      {isFocused &&
+        !groupedMessages.isServerNotif &&
+        groupedMessages.user.id !== myself.id &&
+        !loading && (
+          <>
+            {textStatus === "connected" && (
+              <>
+                {!inviteGame && (
+                  <Tooltip title={"game invitation"} arrow placement="top">
+                    <div
+                      className={styles.statusButtons}
                       onClick={() => setInviteGame(!inviteGame)}
-                    />
+                    >
+                      <FontAwesomeIcon
+                        icon={faGamepad}
+                        className={styles.icon}
+                      />
+                    </div>
                   </Tooltip>
+                )}
+                {inviteGame && (
+                  <div
+                    className={styles.statusButtons}
+                    style={{
+                      width: "30%",
+                    }}
+                  >
+                    <Tooltip title={"Classic"} arrow placement="top">
+                      <span className={styles.icon}>
+                        <MdStar
+                          className={styles.icon}
+                          onClick={() => sendInvitation("Classic")}
+                        />
+                      </span>
+                    </Tooltip>
+
+                    <Tooltip title={"Best 3"} arrow placement="top">
+                      <span className={styles.icon}>
+                        <Md3GMobiledata
+                          className={styles.icon}
+                          onClick={() => sendInvitation("Best3")}
+                        />
+                      </span>
+                    </Tooltip>
+
+                    <Tooltip title={"Best 5"} arrow placement="top">
+                      <span className={styles.icon}>
+                        <Md5G
+                          className={styles.icon}
+                          onClick={() => sendInvitation("Best5")}
+                        />
+                      </span>
+                    </Tooltip>
+
+                    <Tooltip title={"Random"} arrow placement="top">
+                      <span className={styles.icon}>
+                        <MdQuestionMark
+                          className={styles.icon}
+                          onClick={() => sendInvitation("Custom")}
+                        />
+                      </span>
+                    </Tooltip>
+
+                    <Tooltip title={"cancel"} arrow placement="top">
+                      <FontAwesomeIcon
+                        icon={faXmark}
+                        className={styles.icon}
+                        onClick={() => setInviteGame(!inviteGame)}
+                      />
+                    </Tooltip>
+                  </div>
+                )}
+              </>
+            )}
+            {textStatus === "in game" && !inviteGame && (
+              <Tooltip title={"watch game"} arrow placement="top">
+                <div className={styles.statusButtons}>
+                  <FontAwesomeIcon icon={faTv} className={styles.icon} />
                 </div>
-              }
-            </>
-          }
-          {
-            textStatus === "in game" && !inviteGame &&
-            <Tooltip title={"watch game"} arrow placement="top">
-              <div className={styles.statusButtons}>
-                <FontAwesomeIcon
-                  icon={faTv}
-                  className={styles.icon}
-                />
-              </div>
-            </Tooltip>
-          }
-        </>
-      }
+              </Tooltip>
+            )}
+          </>
+        )}
 
       {/* Loading */}
-      {
-        loading &&
+      {loading && (
         <div className={styles.loading}>
           <CircularProgress />
         </div>
-      }
+      )}
 
       {/* Avatar Side */}
       {
         <div className={styles.avatarSide}>
           <Tooltip title={textStatus} placement="top" arrow>
-              <Badge
-                overlap="circular"
-                sx={badgeStyleStatus}
-                variant="dot"
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-              >
-                <div className={styles.avatarSlot}>
-                      <AvatarUser
-                        avatar={groupedMessages.user.avatar}
-                        borderSize="3px"
-                        borderColor={groupedMessages.user.avatar.borderColor}
-                        backgroundColor={groupedMessages.user.avatar.backgroundColor}
-                        fontSize="1rem"
-                      />
-                </div>
-              </Badge>
-            </Tooltip>
+            <Badge
+              overlap="circular"
+              sx={badgeStyleStatus}
+              variant="dot"
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <div className={styles.avatarSlot}>
+                <AvatarUser
+                  avatar={groupedMessages.user.avatar}
+                  borderSize="3px"
+                  borderColor={groupedMessages.user.avatar.borderColor}
+                  backgroundColor={groupedMessages.user.avatar.backgroundColor}
+                  fontSize="1rem"
+                />
+              </div>
+            </Badge>
+          </Tooltip>
         </div>
       }
 

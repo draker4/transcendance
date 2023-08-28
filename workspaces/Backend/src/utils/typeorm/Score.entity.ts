@@ -93,6 +93,12 @@ export class Score {
   @Column({ default: 0 })
   rightPlayerRound9: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
+  @Column({ default: 3 })
+  leftPause: 0 | 1 | 2 | 3;
+
+  @Column({ default: 3 })
+  rightPause: 0 | 1 | 2 | 3;
+
   @Column({ default: 'None' })
   rageQuit: 'Left' | 'Right' | '';
 }

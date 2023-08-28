@@ -22,10 +22,7 @@ type Props = {
   userId: number;
 };
 
-export default function CreateParty({
-  lobbyService,
-  userId,
-}: Props) {
+export default function CreateParty({ lobbyService, userId }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
@@ -61,6 +58,7 @@ export default function CreateParty({
       mode: "Party",
       host: userId,
       opponent: -1,
+      invite: -1,
       hostSide: side,
       maxPoint: maxPoint,
       maxRound: maxRound,

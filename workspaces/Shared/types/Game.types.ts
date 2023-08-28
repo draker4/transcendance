@@ -1,4 +1,5 @@
 import { ScoreInfo } from "./Score.types";
+import { Pause } from "./Pause.types";
 
 export enum Action {
   Idle = "Idle",
@@ -24,13 +25,6 @@ export const DirYValues: { [key: string]: DirY } = {
   Up: -1,
   Idle: 0,
   Down: 1,
-};
-
-export type Pause = {
-  active: boolean;
-  left: number;
-  right: number;
-  status: "Left" | "Right" | "None";
 };
 
 export type Timer = {
@@ -130,6 +124,7 @@ export type GameData = {
   result: "Not Finished" | "Host" | "Opponent" | "Deleted";
   sendStatus: boolean;
   updateScore: boolean;
+  updatePause: boolean;
 };
 
 export type InitData = {

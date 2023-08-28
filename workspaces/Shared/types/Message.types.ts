@@ -1,5 +1,6 @@
 import { ScoreInfo } from "./Score.types";
-import { Timer, PlayerDynamic, Ball, Pause, Action } from "./Game.types";
+import { Timer, PlayerDynamic, Ball, Action } from "./Game.types";
+import { Pause } from "./Pause.types";
 
 export type StatusMessage = {
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";

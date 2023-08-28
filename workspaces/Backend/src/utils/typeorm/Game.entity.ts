@@ -41,6 +41,9 @@ export class Game {
   @Column({ default: -1 })
   opponent: number;
 
+  @Column({ default: -1 })
+  invite: number;
+
   @Column()
   hostSide: 'Left' | 'Right';
 
