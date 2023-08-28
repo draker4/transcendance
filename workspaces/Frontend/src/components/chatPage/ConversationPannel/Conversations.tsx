@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import { faCircleDot, faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { Socket } from "socket.io-client";
 import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
@@ -216,6 +216,7 @@ export default function Conversations({
         notifMsg={notifMsg}
         isRecentSection={false}
         status={status}
+        
       />
     ) : null
   ));
@@ -237,11 +238,16 @@ export default function Conversations({
   ));
 
 
-  const makeConversationList = (conversations:(React.JSX.Element | null)[], title:string):React.JSX.Element | null => {
+  const makeConversationList = (conversations:(React.JSX.Element | null)[], title:string, highlight?:boolean):React.JSX.Element | null => {
     if (!conversations || conversations.length === 0) return null;
     return (
+      // ${highlight === true ? styles.highlight : ""}
       <>
-        <p className={styles.tinyTitle}>{title}</p>
+        {highlight === undefined && <p className={`${styles.tinyTitle}`}>{title}</p>}
+        {highlight === true && <p className={`${styles.tinyTitle}`}><FontAwesomeIcon
+            icon={faCircleDot}
+            className={styles.highlight}
+          />&#8201;{title}</p>}
         {conversations}
       </>
     );
@@ -273,7 +279,7 @@ export default function Conversations({
         {makeConversationList(joinedConversations, "Registered Channels")}
         {makeConversationList(pmConversations, "Private messages")}
         {makeConversationList(recentConversations, "Recent Channels")}
-        {makeConversationList(invitedConversations, "Invitations")}
+        {makeConversationList(invitedConversations, "Invitations", true)}
         {/* */}
       </div>
     </div>
