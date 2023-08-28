@@ -124,14 +124,17 @@ useEffect(() => {
   }
 
   return <div className={styles.sections}>
-  <InviteInChannel relation={relation} myRelation={myRelation} socket={socket}/>
-	<p className={styles.notif}>{notif}</p>
-	{renderRowList(ChannelRoles.boss, faBahai, boss)}
-    {renderRowList(ChannelRoles.operator, faCertificate, operators)}
-    {renderRowList(ChannelRoles.ponger, faFaceSmile, pongers)}
-	{putSpliter()}
-    {renderRowList(ChannelRoles.invited, faHandPeace, invited)}
-    {(myRelation.isChanOp || myRelation.isBoss) && renderRowList(ChannelRoles.leaver, faPersonThroughWindow, leavers)}
-    {renderRowList(ChannelRoles.banned, faSkull, banned)}
+    {
+      myRelation.isBoss &&
+      <InviteInChannel relation={relation} myRelation={myRelation} socket={socket}/>
+    }
+    <p className={styles.notif}>{notif}</p>
+    {renderRowList(ChannelRoles.boss, faBahai, boss)}
+      {renderRowList(ChannelRoles.operator, faCertificate, operators)}
+      {renderRowList(ChannelRoles.ponger, faFaceSmile, pongers)}
+    {putSpliter()}
+      {renderRowList(ChannelRoles.invited, faHandPeace, invited)}
+      {(myRelation.isChanOp || myRelation.isBoss) && renderRowList(ChannelRoles.leaver, faPersonThroughWindow, leavers)}
+      {renderRowList(ChannelRoles.banned, faSkull, banned)}
   </div>;
 }

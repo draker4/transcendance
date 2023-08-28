@@ -59,7 +59,7 @@ export class ChannelService {
     const borderColor = colors[random1];
     const backgroundColor = colors[random2];
 
-    const text = channelName.length > 3 ? channelName.slice(0, 3) : channelName;
+    const text = channelName.length > 3 ? channelName.toUpperCase().slice(0, 3) : channelName.toUpperCase();
 
     const avatar = await this.avatarRepository.save({
       name: channelName,

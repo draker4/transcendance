@@ -14,8 +14,6 @@ type Params = {
   };
 };
 
-const Crypto = new CryptoService();
-
 export default async function ChannelprofilePage({ params: { id } }: Params) {
 
   let	token: string = "";
@@ -91,16 +89,6 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
 
     console.log(`CHECK => channel[${channelAndUsersRelation.channel.name}][${channelAndUsersRelation.channel.type}] => password = [${channelAndUsersRelation.channel.password}]`); // checking
-
-    if (channelAndUsersRelation.usersRelation.length > 0) {
-      for (const relationUser of channelAndUsersRelation.usersRelation) {
-        const avatarUser = relationUser.user.avatar;
-
-        if (avatarUser.decrypt) {
-          avatarUser.image = await Crypto.decrypt(avatarUser.image);
-        }
-      }
-    }
 
     channelAndUsersRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
     const myProfile = await profileService.getProfileByToken();
