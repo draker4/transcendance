@@ -95,7 +95,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   }
 
   const handleEditRelation = (edit:EditChannelRelation) => {
-    // console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
+    console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
 
     if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)
@@ -108,8 +108,8 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         setRelNotif({notif:RelationNotif.nothing, edit:edit});
       else if (edit.newRelation.invited === true)
         setRelNotif({notif:RelationNotif.invite, edit:edit});
-	  else if (edit.newRelation.muted !== undefined)
-	    setIsMuted(edit.newRelation.muted);
+      else if (edit.newRelation.muted !== undefined)
+        setIsMuted(edit.newRelation.muted);
     }
   }
 

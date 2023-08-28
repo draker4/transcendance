@@ -527,6 +527,9 @@ export class ChatGateway implements OnModuleInit {
     if (!repLeave.success)
         throw new Error(repLeave.message ? repLeave.message : "proc Leave failed");
 
+    // [5] Force update Channel to targeted user (ie: for invitations)
+    this.chatService.forceUpdateChannel(payload.userId, this.connectedUsers);
+
     rep.success = true;
 
   } catch (error: any) {

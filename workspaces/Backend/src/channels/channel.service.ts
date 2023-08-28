@@ -431,13 +431,29 @@ export class ChannelService {
     )
       throw new Error('need at least one property to edit channel relation');
 
-    const relation: UserChannelRelation =
+    let relation: UserChannelRelation =
       await this.userChannelRelation.findOne({
         where: {
           userId: channelInfos.userId,
           channelId: channelInfos.channelId,
         },
       });
+
+    console.log("newRelation = ", channelInfos.newRelation); // checking
+
+    // If no relation found and it's an invite channel
+    if (!relation && channelInfos.newRelation && channelInfos.newRelation.invited === true) {
+      this.log("channel invitation in progress"); // checking
+      // don't want a force join
+      channelInfos.newRelation.joined = false;
+      const repCreate = await this.createChannelUserRelation(channelInfos);
+
+      if (!repCreate.success)
+        throw new Error(repCreate.message);
+
+    
+      relation = repCreate.data;
+    }
 
     if (!relation)
       throw new Error("can't find the user or the channel requested");
@@ -811,6 +827,59 @@ export class ChannelService {
     return (await this.getChannelUsersRelations(userId, channelId)).usersRelation.find(
       (relation) => relation.userId === userId,
     );
+  }
+
+  private async createChannelUserRelation(channelInfos:EditChannelRelationDto)
+  : Promise<ReturnDataTyped<UserChannelRelation>> {
+    const rep:ReturnDataTyped<UserChannelRelation> = {
+      success: false,
+      message: '',
+    }
+
+    try {
+
+      const repUpdate = await this.usersService.createChannelUserRelation(channelInfos);
+
+      if(!repUpdate.success)
+        throw new Error(repUpdate.message);
+
+      const repRelation = await this.getOneChannelUserRelation(channelInfos.userId, channelInfos.channelId);
+
+      if (!repRelation.success)
+        throw new Error(`relation should be created but can't get it back`);
+
+      const repModify = await this.modifyRelation(repRelation.data, channelInfos.newRelation)
+
+      if (!repModify.success)
+        throw new Error(`relation was created but only with default values`);
+
+      rep.data = repRelation.data;
+      rep.success = true;
+
+    } catch(e) {
+      rep.message = e.message;
+      rep.error = e;
+    }
+
+    return rep;
+  }
+
+  private async modifyRelation(relation: UserChannelRelation, booleans:EditChannelRelationDto["newRelation"]) 
+  :Promise<ReturnData> {
+    if (booleans.joined !== undefined)
+      relation.joined = booleans.joined;
+    if (booleans.isBoss !== undefined)
+      relation.isBoss  = booleans.isBoss;
+    if (booleans.isChanOp !== undefined)
+      relation.isChanOp  = booleans.isChanOp;
+    if (booleans.invited !== undefined)
+      relation.invited  = booleans.invited;
+    if (booleans.muted !== undefined)
+      relation.muted  = booleans.muted;
+    if (booleans.isBanned !== undefined)
+    relation.isBanned  = booleans.isBanned;
+
+    return this.updateChannelUserRelation(relation);
   }
 
   // [+] a affinner avec l'evolution des types de channel, banlist guestlist etc.

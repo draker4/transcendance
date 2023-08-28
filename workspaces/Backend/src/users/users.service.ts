@@ -17,6 +17,7 @@ import { StatsService } from '@/stats/service/stats.service';
 import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 
 @Injectable()
 export class UsersService {
@@ -93,6 +94,12 @@ export class UsersService {
 			where: { id: id },
 		});
 	}
+
+  private async getChannelById(id: number) {
+    return await this.channelRepository.findOne({
+			where: { id: id },
+		});
+  }
 
 	async getUserChannels(id: number) {
 		return await this.userRepository.findOne({
@@ -186,6 +193,7 @@ export class UsersService {
 			.add(channel);
 	}
 
+  
 	async updateUserAvatar(user: User, avatar: Avatar) {
 		await this.userRepository
 			.createQueryBuilder()
@@ -200,17 +208,17 @@ export class UsersService {
 			.relation(User, 'pongies')
 			.of(user.id)
 			.add(pongie);
-	}
-
-	async updateUserBackupCodes(user: User, backupCodes: BackupCode[]) {
-		await this.userRepository
+    }
+    
+    async updateUserBackupCodes(user: User, backupCodes: BackupCode[]) {
+      await this.userRepository
 			.createQueryBuilder()
 			.relation(User, 'backupCodes')
 			.of(user.id)
 			.set(backupCodes);
-	}
+    }
 
-	async getChannelByName(name: string) {
+  async getChannelByName(name: string) {
 		return await this.channelRepository.findOne({
 			where: { name: name },
 			relations: ['users'],
@@ -254,6 +262,34 @@ export class UsersService {
 
 		return rep;
 	}
+
+  public async createChannelUserRelation(channelInfos:EditChannelRelationDto):
+  Promise<ReturnData> {
+    const rep :ReturnData = {
+      success: false,
+      message: ''
+    }
+
+    try {
+      console.log("channelInfos = ", channelInfos); // checking
+
+      const user = await this.getUserById(channelInfos.userId);
+      const channel = await this.getChannelById(channelInfos.channelId);
+
+      if (!user || !channel)
+        throw new Error("user or channel not found");
+
+      await this.updateUserChannels(user, channel);
+
+      rep.success = true;
+
+    } catch(e) {
+      rep.message = e.message;
+      rep.error = e;
+    }
+
+    return rep;
+  }
 
 	// tools
 

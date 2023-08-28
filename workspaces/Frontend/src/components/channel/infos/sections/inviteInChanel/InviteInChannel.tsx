@@ -15,7 +15,7 @@ type Props = {
 }
 
 // [+][!] Fichier pour preparer le mecanisme d'invitation dans channel
-// A modifier pour incoprporer une searchBar ou supprimer une fois le code extrait
+// A [modifier pour incoprporer une searchBar] ou [supprimer une fois le code extrait]
 
 export default function InviteInChannel({relation, myRelation, socket}:Props) {
 
@@ -31,19 +31,34 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
 
       const newRelation:EditChannelRelation = {
         channelId: relation.channel.id,
-        userId: myRelation.userId,
+        userId: targetId,
         senderId: myRelation.userId,
         newRelation: {
           invited: true,
         }
       }
 
-      const repEdit:ReturnData = await channelService.editRelation(relation.channel.id, myRelation.userId, newRelation.newRelation);
+      const repEdit:ReturnData = await channelService.editRelation(relation.channel.id, targetId, newRelation.newRelation);
+
+      console.log("InviteInChannel => repEdit : ", repEdit); // checking
 
       if (!repEdit.success)
         throw new Error(repEdit.message);
 
       // [+] LOUP : CONTINUER ICI
+      socket?.emit("editRelation", 
+        newRelation, 
+        (repNotif:ReturnData) => {
+          console.log("InviteInChannel => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
+          if (!repNotif.success) {
+            setNotif(repNotif.message ? repNotif.message : "An error occured, please try again later");
+          } else {
+            // [+] proc un update a l'user target
+            
+          } 
+      });
+
+
 
 
 

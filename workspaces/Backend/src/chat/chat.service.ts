@@ -1930,6 +1930,23 @@ export class ChatService {
     return content;
   }
 
+  // Memo connected users : Map<socket, user id>
+  public forceUpdateChannel(userId:number, connectedUsers:Map<Socket, string>) {
+
+    const sockets: Socket[] = [];
+    for (const [socket, value] of connectedUsers) {
+      if (value === userId.toString()) sockets.push(socket);
+    }
+
+    sockets.forEach((socket) => {
+      this.log(
+        `forceUpdateChannel emit empty editRelation to user[${userId}]->socket[${socket.id}]`,
+      );
+      socket.emit('editRelation', {});
+    });
+
+  }
+
   // [!][?] virer ce log pour version build ?
   private log(message?: any) {
     const green = '\x1b[32m';
