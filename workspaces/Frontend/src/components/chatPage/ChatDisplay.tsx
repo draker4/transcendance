@@ -28,6 +28,9 @@ export default function ChatDisplay({
   openDisplay: (display: Display) => void;
   status: Map<string, string>;
 }) {
+
+  console.log(display);
+
   const renderIcon = (): ReactNode => {
     if (littleScreen)
       return (
@@ -62,11 +65,11 @@ export default function ChatDisplay({
   if ("needPassword" in display && display.needPassword === true) {
     return (
       <AskPassword 
-      channel={display}
-      myself={myself}
-      socket={socket}
-      openDisplay={openDisplay}
-      icon={renderIcon()}
+        channel={display}
+        myself={myself}
+        socket={socket}
+        openDisplay={openDisplay}
+        icon={renderIcon()}
       />
     );
   }

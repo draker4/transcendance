@@ -10,6 +10,7 @@ type Props = {
   channel: Channel;
   relNotif: RelationNotifPack;
   status: Map<string, string>;
+  myself: Profile & { avatar: Avatar };
 };
 
 type GroupedMsgType = {
@@ -17,7 +18,6 @@ type GroupedMsgType = {
   date: Date;
   messages: Message[];
   isServerNotif: boolean;
-  myself: Profile & { avatar: Avatar };
 }
 
 export default function MessageBoard({ messages, channel, relNotif, status, myself }: Props) {

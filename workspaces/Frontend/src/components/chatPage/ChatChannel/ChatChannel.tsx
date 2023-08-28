@@ -114,9 +114,19 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   }
 
   useEffect(() => {
+    
+    const clearNotifMsg = () => {
+      socket?.emit('clearNotif', {
+        which: "messages",
+        id: channel.id,
+      });
+    }
+
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
       
-      clearNotifMsg();
+      setTimeout(() => {
+        clearNotifMsg();
+      }, 2000);
 
       // to not display ServerNotifMessage from other channels
       if (receivedMsg.channelId !== channel.id)
@@ -133,13 +143,6 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
 
       setMessages((previous) => [...previous, msg]);
     };
-
-    const clearNotifMsg = () => {
-      socket?.emit('clearNotif', {
-        which: "messages",
-        id: channel.id,
-      });
-    }
 
     clearNotifMsg();
 
