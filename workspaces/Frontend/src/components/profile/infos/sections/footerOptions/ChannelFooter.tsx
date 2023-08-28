@@ -42,8 +42,11 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 			private: boolean;
 			channel: Channel;
 		  }) => {
-			if (payload.success)
+			if (payload.success && payload.channel.joined)
 				toast.success(`Welcome to ${channel.name}`);
+
+			else if (payload.success)
+				router.push(`/home/chat/${payload.channel.id}`);
 
 			else if (payload.banned)
 				toast.error("You are banned from this channel!");
@@ -70,7 +73,7 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 		  }) => {
 
 			if (payload.success)
-				router.push(`/home/chat/${payload.channel.id}`)
+				router.push(`/home/chat/${payload.channel.id}`);
 
 			else if (payload.banned)
 				toast.error("You are banned from this channel!");

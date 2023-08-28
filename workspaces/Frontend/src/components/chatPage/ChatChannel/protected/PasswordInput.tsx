@@ -42,6 +42,7 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
       const rep = await channelService.editRelation(channel.id, myself.id, newRelation.newRelation);
       console.log("verifyPassword => editRelation (API) => REP : ", rep); // checking
 
+      console.log(rep);
       if (rep.success) {
           socket?.emit("editRelation", newRelation, (repNotif:ReturnData) => {
             console.log("verifyPassword => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking

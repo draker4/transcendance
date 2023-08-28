@@ -117,8 +117,12 @@ export default function ChatClient({
           console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
           return ;
         }
-        if (payload && payload.error && payload.error === "protected")
+        if (payload && payload.error && payload.error === "protected") {
           toast.info('This channel is protected! You need a password');
+          openDisplay({...payload.channel, needPassword: true});
+          setGetChannel(false);
+          return ;
+        }
         if (payload && payload.error && payload.error === "private")
           toast.info('This channel is private! You cannot see it!');
         if (payload && payload.error && payload.error === "no channel")
@@ -139,6 +143,7 @@ export default function ChatClient({
         Object.entries(payload).forEach(([key, value]) => {
           newStatus.set(key, value);
         });
+        console.log('prev', prevStatus, 'new', newStatus);
         return newStatus;
       });
     }

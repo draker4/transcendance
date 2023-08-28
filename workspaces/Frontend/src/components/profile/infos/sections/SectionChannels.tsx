@@ -67,11 +67,6 @@ export default function SectionChannels({socket, isOwner, profile}: {
 			why: string;
 		}) => {
 			if (payload && payload.why === "updateChannels") {
-				// socket?.emit('getNotif', (payload: Notif) => {
-				// 	if (payload && payload.redChannels) {
-				// 		setNotifIds(payload.redChannels);
-				// 	}
-				// });
 
 				socket?.emit('getChannelsProfile', profile.id, getChannels);
 				
@@ -81,12 +76,6 @@ export default function SectionChannels({socket, isOwner, profile}: {
 		}
 
 		socket?.emit('getChannelsProfile', profile.id, getChannels);
-
-		// socket?.emit('getNotif', (payload: Notif) => {
-		// 	if (payload && payload.redChannels.length > 0) {
-		// 	  setNotifIds(payload.redChannels);
-		// 	}
-		// });
 
 		socket?.on('notif', updateChannels);
 
@@ -100,17 +89,6 @@ export default function SectionChannels({socket, isOwner, profile}: {
 		setChannelSearched(undefined);
 		channelSearchedId.current = undefined;
 	}
-
-	// const	refuseInvitation = (channel: Channel) => {
-	// 	socket?.emit('refuseInvitation', channel.id, (payload: {
-	// 		success: boolean;
-	// 	}) => {
-	// 		if (payload && payload.success)
-	// 			toast('Invitation refused!');
-	// 		else
-	// 			toast.error("Something went wrong, please try again");
-	// 	});
-	// }
 	
 	const	leaveChannel = (channel: Channel) => {
 		socket?.emit('leave', channel.id, (payload: {
