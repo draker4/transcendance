@@ -268,6 +268,7 @@ export default function SectionPongies({socket, isOwner, profile}: {
 					socket={socket}
 					setPongieSearched={setPongieSearched}
 					pongieSearchedId={pongieSearchedId}
+					placeholder="Find pongies..."
 				/>
 
 				{

@@ -2,10 +2,12 @@ import { Socket } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import Search from "./Search";
 
-export default function SearchBarPongies({ socket, setPongieSearched, pongieSearchedId }: {
+export default function SearchBarPongies({ socket, setPongieSearched, pongieSearchedId, handleClickInvite, placeholder }: {
 	socket: Socket | undefined;
-	setPongieSearched: React.Dispatch<React.SetStateAction<Pongie | undefined>>;
-	pongieSearchedId: React.MutableRefObject<number | undefined>;
+	setPongieSearched?: React.Dispatch<React.SetStateAction<Pongie | undefined>>;
+	pongieSearchedId?: React.MutableRefObject<number | undefined>;
+	handleClickInvite?: (targetId: number) => Promise<void>;
+	placeholder: string;
 }) {
 	const	[pongies, setPongies] = useState<Pongie []>([]);
 	const	[list, setList] = useState<(Channel | Pongie | CreateOne) []>([]);
@@ -38,7 +40,8 @@ export default function SearchBarPongies({ socket, setPongieSearched, pongieSear
 	}
 
 	const	getData = (event: React.MouseEvent<HTMLInputElement>) => {
-		setPongieSearched(undefined);
+		if (setPongieSearched)
+			setPongieSearched(undefined);
 		
 		socket?.emit('getAllPongies', (pongies: Pongie[]) => {
 			setPongies(pongies);
@@ -93,8 +96,13 @@ export default function SearchBarPongies({ socket, setPongieSearched, pongieSear
 		setList([]);
 		setError(null);
 
-		setPongieSearched(item);
-		pongieSearchedId.current = item.id;
+		if (setPongieSearched && pongieSearchedId) {
+			setPongieSearched(item);
+			pongieSearchedId.current = item.id;
+		}
+		else if (handleClickInvite) {
+			handleClickInvite(item.id);
+		}
 	};
 
 	return <Search
@@ -102,7 +110,7 @@ export default function SearchBarPongies({ socket, setPongieSearched, pongieSear
 				error={error}
 				getData={getData}
 				setText={setText}
-				placeholder="Find pongies..."
+				placeholder={placeholder}
 				handleClick={handleClick}
 				isDropdownVisible={isDropdownVisible}
 				setDropdownVisible={setDropdownVisible}

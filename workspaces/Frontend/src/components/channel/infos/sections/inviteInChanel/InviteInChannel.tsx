@@ -1,12 +1,8 @@
-import styles from "@/styles/profile/InfoCard.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Socket } from "socket.io-client";
-import {
-	faPlusCircle
-  } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
 import Channel_Service from "@/services/Channel.service";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
+import SearchBarPongies from "@/components/chatPage/searchBar/SearchBarPongies";
+import { toast } from "react-toastify";
 
 type Props = {
   relation: ChannelUsersRelation;
@@ -14,15 +10,9 @@ type Props = {
   socket: Socket | undefined;
 }
 
-// [+][!] Fichier pour preparer le mecanisme d'invitation dans channel
-// A [modifier pour incoprporer une searchBar] ou [supprimer une fois le code extrait]
-
 export default function InviteInChannel({relation, myRelation, socket}:Props) {
 
-  const [notif, setNotif] = useState<string>("");
-  const targetIds: number[] = [1,2,3,4,5,6,7];
-
-  const handleClickInvite = async (targetId:number) => {
+  const handleClickInvite = async (targetId: number) => {
     console.log(`Wanna invite in ${relation.channel.name} user[${targetId}]`);
 
     try {
@@ -51,32 +41,23 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
         (repNotif:ReturnData) => {
           console.log("InviteInChannel => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
           if (!repNotif.success) {
-            setNotif(repNotif.message ? repNotif.message : "An error occured, please try again later");
+            toast.error("An error occured, please try again later!");
           } else {
             // [+] proc un update a l'user target
             
           } 
       });
 
-
-
-
-
     } catch(e:any) {
-      setNotif(e.message ? e.message : `An unknown error occured while inviting user ${targetId}, try later please`);
+      toast.error("An error occured, please try again later!");
     }
 
 
   }
 
-  const makeButtons:JSX.Element[] = targetIds.map((targetId, index) => (
-      <p key={index} onClick={() => handleClickInvite(targetId)} className={styles.tinyTitle} style={{marginBottom:"12px"}}>{`invite user ${targetId}`}&thinsp;<FontAwesomeIcon icon={faPlusCircle} /></p>
-    ));
-
-  return (
-    <>
-      <p className={styles.notif}>{notif}</p>
-      {makeButtons}
-    </>
-  )
+  return <SearchBarPongies
+            socket={socket}
+            handleClickInvite={handleClickInvite}
+            placeholder="Invite someone..."
+          />
 }
