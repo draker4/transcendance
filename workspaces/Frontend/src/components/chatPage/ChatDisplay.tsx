@@ -66,6 +66,7 @@ export default function ChatDisplay({
       myself={myself}
       socket={socket}
       openDisplay={openDisplay}
+      icon={renderIcon()}
       />
     );
   }

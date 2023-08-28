@@ -87,7 +87,7 @@ export default class Channel_Service {
           ...(newRelation.invited !== undefined && {
             invited: newRelation.invited,
           }),
-		  ...(newRelation.muted !== undefined && {
+          ...(newRelation.muted !== undefined && {
             muted: newRelation.muted,
           }),
         },

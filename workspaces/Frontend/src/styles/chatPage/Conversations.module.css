@@ -80,6 +80,10 @@
 	font-size: 0.7rem;
 }
 
+.highlight {
+  color: var(--notif);
+}
+
 .menu {
   height: 20px;
   width: 20px;
