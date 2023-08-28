@@ -5,11 +5,11 @@ import { Injectable } from "@nestjs/common";
 export class StatusService {
 	
 	// Container of user status updates : Map<userId, status>
-	// status = "connected", "disconnected", "in game", "viewer"
+	// status = "connected", "disconnected", "in game"
 	public status: Map<string, string> = new Map<string, string>();
 	public updateStatus: Map<string, string> = new Map<string, string>();
   
-	public add(userId: string, status: string) {
+	public add(userId: string, status: "connected" | "disconnected" | "in game") {
 		if (status === "disconnected" && this.status.has(userId))
 			this.status.delete(userId);
 		else

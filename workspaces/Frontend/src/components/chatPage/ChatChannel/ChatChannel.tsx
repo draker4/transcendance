@@ -180,7 +180,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   return (
     <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} status={status} />
-      <MessageBoard messages={messages} channel={channel} relNotif={relNotif}/>
+      <MessageBoard messages={messages} channel={channel} relNotif={relNotif} status={status} myself={myself} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif} isMuted={isMuted}/>
     </div>
   );

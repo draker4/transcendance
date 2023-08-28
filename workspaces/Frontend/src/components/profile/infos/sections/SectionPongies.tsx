@@ -81,16 +81,14 @@ export default function SectionPongies({socket, isOwner, profile}: {
 		}
 
 		const	updateStatus = (payload: StatusData) => {
-			if (payload) {
-				console.log("here before", status);
-				const	payloadMap = new Map(Object.entries(payload));
-				const	statusMap = new Map(status);
-
-				payloadMap.forEach((value, key) => statusMap.set(key, value));
-				setStatus(statusMap);
-				console.log("here after", statusMap);
-			}
-		}
+			setStatus(prevStatus => {
+			  const newStatus = new Map(prevStatus);
+			  Object.entries(payload).forEach(([key, value]) => {
+				newStatus.set(key, value);
+			  });
+			  return newStatus;
+			});
+		  }
 
 		socket?.emit('getPongies', profile.id, getPongies);
 

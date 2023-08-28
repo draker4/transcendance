@@ -9,6 +9,7 @@ type Props = {
   messages: Message[];
   channel: Channel;
   relNotif: RelationNotifPack;
+  status: Map<string, string>;
 };
 
 type GroupedMsgType = {
@@ -16,9 +17,10 @@ type GroupedMsgType = {
   date: Date;
   messages: Message[];
   isServerNotif: boolean;
-};
+  myself: Profile & { avatar: Avatar };
+}
 
-export default function MessageBoard({ messages, channel, relNotif }: Props) {
+export default function MessageBoard({ messages, channel, relNotif, status, myself }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
     GroupedMsgType[]
   >([]);
@@ -85,7 +87,7 @@ export default function MessageBoard({ messages, channel, relNotif }: Props) {
   return (
     <div className={styles.msgBoard}>
       {messages.length > 0 && groupedMessages.map((group, index) => (
-        <MessageItem key={index} groupedMessages={group} />
+        <MessageItem key={index} groupedMessages={group} status={status} myself={myself} />
       ))}
 	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}
     </div>

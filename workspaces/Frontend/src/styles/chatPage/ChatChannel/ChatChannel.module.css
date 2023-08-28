@@ -101,10 +101,61 @@
   }
 
 .channelMsgFrame .msgBoard .msgItem {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   display: flex;
 
   /* border: 2px dashed var(--accent1); */
+  padding-top: 2px;
+  position: relative;
+  border-top: 1px solid var(--primary1);
+}
+
+.channelMsgFrame .msgBoard .msgItem:hover {
+  border-top: 1px solid var(--accent3);
+}
+
+.channelMsgFrame .msgBoard .msgItem .statusButtons{
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  height: 50%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--tertiary3);
+  margin: 0 10px;
+  /* border: 1px solid red; */
+}
+
+.channelMsgFrame .msgBoard .msgItem .statusButtons .icon{
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  /* border: 2px solid green; */
+}
+
+.channelMsgFrame .msgBoard .msgItem .statusButtons .icon:hover {
+  scale: 1.05;
+}
+
+.channelMsgFrame .msgBoard .msgItem .statusButtons .icon:active {
+  scale: 0.95;
+}
+
+
+.channelMsgFrame .msgBoard .msgItem .loading {
+  position: absolute;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 20px;
 }
 
 .channelMsgFrame .msgBoard .msgItem .avatarSide {

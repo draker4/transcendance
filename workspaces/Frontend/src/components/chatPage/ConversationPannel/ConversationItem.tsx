@@ -85,7 +85,7 @@ export default function ConversationItem({
 
     if (channel.lastMessage?.createdAt) {
       // console.log(channel.lastMessage);
-      const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      // const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
       // console.log(new Date(new Date(channel.lastMessage.createdAt).toLocaleString("en-US", {timeZone: userTimeZone})));
       const diff = (Date.now() - new Date(channel.lastMessage.createdAt).getTime()) / 1000;
       date = diff < 60

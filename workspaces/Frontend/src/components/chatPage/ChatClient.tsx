@@ -134,13 +134,13 @@ export default function ChatClient({
     }
 
     const	updateStatus = (payload: StatusData) => {
-      if (payload) {
-        const	payloadMap = new Map(Object.entries(payload));
-        const	statusMap = new Map(status);
-
-        payloadMap.forEach((value, key) => statusMap.set(key, value));
-        setStatus(statusMap);
-      }
+      setStatus(prevStatus => {
+        const newStatus = new Map(prevStatus);
+        Object.entries(payload).forEach(([key, value]) => {
+          newStatus.set(key, value);
+        });
+        return newStatus;
+      });
     }
     
     socket?.emit('getStatus', (payload: StatusData) => {
