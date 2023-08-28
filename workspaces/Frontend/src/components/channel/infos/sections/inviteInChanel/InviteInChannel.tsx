@@ -30,29 +30,20 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
 
       const repEdit:ReturnData = await channelService.editRelation(relation.channel.id, targetId, newRelation.newRelation);
 
-      console.log("InviteInChannel => repEdit : ", repEdit); // checking
-
       if (!repEdit.success)
         throw new Error(repEdit.message);
 
-      // [+] LOUP : CONTINUER ICI
       socket?.emit("editRelation", 
         newRelation, 
         (repNotif:ReturnData) => {
-          console.log("InviteInChannel => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
           if (!repNotif.success) {
             toast.error("An error occured, please try again later!");
-          } else {
-            // [+] proc un update a l'user target
-            
-          } 
+          }
       });
 
     } catch(e:any) {
-      toast.error("An error occured, please try again later!");
+      toast.error(e.message === "This is already done" ? `This user is already invited in ${relation.channel.name}` : "An error occured, please try again later!");
     }
-
-
   }
 
   return <SearchBarPongies

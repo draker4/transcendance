@@ -426,6 +426,8 @@ export class ChannelService {
       message: '',
     };
 
+    try {
+
     if (
       channelInfos.newRelation.joined === undefined &&
       channelInfos.newRelation.invited === undefined &&
@@ -463,35 +465,55 @@ export class ChannelService {
     if (!relation)
       throw new Error("can't find the user or the channel requested");
 
+    let somethingChanged:boolean = false;
+
     // [+] to extract
     if (channelInfos.newRelation.joined !== undefined) {
-      relation.joined = channelInfos.newRelation.joined;
-      rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`;
+      if (relation.joined !== channelInfos.newRelation.joined) {
+        somethingChanged = true;
+        relation.joined = channelInfos.newRelation.joined;
+        rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`;
+      }
     }
 
     if (channelInfos.newRelation.isBoss !== undefined) {
-      relation.isBoss = channelInfos.newRelation.isBoss;
-      rep.message += `\nChannel Master[${chanOpId}]:put channel master to ${channelInfos.newRelation.isBoss} of user[${channelInfos.userId}]`;
+      if (relation.isBoss !== channelInfos.newRelation.isBoss) {
+        somethingChanged = true;
+        relation.isBoss = channelInfos.newRelation.isBoss;
+        rep.message += `\nChannel Master[${chanOpId}]:put channel master to ${channelInfos.newRelation.isBoss} of user[${channelInfos.userId}]`;
+      }
     }
 
     if (channelInfos.newRelation.isChanOp !== undefined) {
-      relation.isChanOp = channelInfos.newRelation.isChanOp;
-      rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.isChanOp} of user[${channelInfos.userId}]`;
+      if (relation.isChanOp !== channelInfos.newRelation.isChanOp) {
+        somethingChanged = true;
+        relation.isChanOp = channelInfos.newRelation.isChanOp;
+        rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.isChanOp} of user[${channelInfos.userId}]`;
+      }
     }
 
     if (channelInfos.newRelation.invited !== undefined) {
-      relation.invited = channelInfos.newRelation.invited;
-      rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.invited} of user[${channelInfos.userId}]`;
+      if (relation.invited !== channelInfos.newRelation.invited) {
+        somethingChanged = true;
+        relation.invited = channelInfos.newRelation.invited;
+        rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.invited} of user[${channelInfos.userId}]`;
+      }
     }
 
     if (channelInfos.newRelation.isBanned !== undefined) {
-      relation.isBanned = channelInfos.newRelation.isBanned;
-      rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      if(relation.isBanned !== channelInfos.newRelation.isBanned) {
+        somethingChanged = true;
+        relation.isBanned = channelInfos.newRelation.isBanned;
+        rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      }
     }
 
     if (channelInfos.newRelation.muted !== undefined) {
-      relation.muted = channelInfos.newRelation.muted;
-      rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      if (relation.muted !== channelInfos.newRelation.muted) {
+        somethingChanged = true;
+        relation.muted = channelInfos.newRelation.muted;
+        rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      }
     }
 
     const repDatabase: ReturnData = await this.updateChannelUserRelation(
@@ -515,7 +537,15 @@ export class ChannelService {
       );
     }
 
+    if (!somethingChanged) {
+      throw new Error(`This is already done`);
+    }
+
     rep.success = true;
+  } catch(e) {
+    rep.message = e.message;
+    rep.error = e;
+  }
     return rep;
   }
 

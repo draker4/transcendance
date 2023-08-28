@@ -62,6 +62,8 @@ export class ChannelController {
         throw new Error(checkRep.message);
         
       rep = await this.channelService.editRelation(req.user.id, edit);
+      if (!rep.success)
+        throw new Error(rep.message);
 
     } catch (error) {
       rep.success = false;
