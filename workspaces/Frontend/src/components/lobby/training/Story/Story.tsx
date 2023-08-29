@@ -24,7 +24,7 @@ export default function Story({ profile, trainingService }: Props) {
   const storyService = new StoryService();
   const [stories, setStories] = useState<UserStory[]>([]);
   const router = useRouter();
-  const [levelSelected, setLevelSelected] = useState<number>(1);
+  const [levelSelected, setLevelSelected] = useState<number>(0);
   async function createPong() {
     const settings: CreateTrainingDTO = {
       name: stories[levelSelected].name,

@@ -150,116 +150,112 @@ export class StoryService {
 
   private async createStoryData(): Promise<void> {
     try {
-      const story1: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story1);
-      const story2: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story2);
-      const story3: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story3);
-      const story4: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story4);
-      const story5: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story5);
-      const story6: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story6);
-      const story7: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story7);
-      const story8: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story8);
-      const story9: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story9);
-      const story10: CreateStoryDataDTO = {
-        name: 'Want to Be the First',
-        maxPoint: 5,
-        maxRound: 1,
-        difficulty: -2,
-        push: false,
-        pause: false,
-        background: 'Classic',
-        ball: 'Classic',
-      };
-      await this.storyDataRepository.save(story10);
+      const levels: CreateStoryDataDTO[] = [
+        {
+          name: 'Want Be First',
+          maxPoint: 5,
+          maxRound: 1,
+          difficulty: -2,
+          push: false,
+          pause: false,
+          background: 'Classic',
+          ball: 'Volley1',
+        },
+        {
+          name: 'El Classico',
+          maxPoint: 9,
+          maxRound: 1,
+          difficulty: -2,
+          push: false,
+          pause: false,
+          background: 'Classic',
+          ball: 'Classic',
+        },
+        {
+          name: 'Round Up The Pause',
+          maxPoint: 3,
+          maxRound: 3,
+          difficulty: -1,
+          push: false,
+          pause: true,
+          background: 'Earth',
+          ball: 'Basket',
+        },
+        {
+          name: `Let's Push`,
+          maxPoint: 5,
+          maxRound: 3,
+          difficulty: -1,
+          push: true,
+          pause: true,
+          background: 'Island',
+          ball: 'Soccer4',
+        },
+        {
+          name: 'Best Three',
+          maxPoint: 7,
+          maxRound: 3,
+          difficulty: 0,
+          push: true,
+          pause: true,
+          background: 'Winter',
+          ball: 'Bowling2',
+        },
+        {
+          name: 'Best Five',
+          maxPoint: 5,
+          maxRound: 5,
+          difficulty: 0,
+          push: true,
+          pause: true,
+          background: 'Tennis',
+          ball: 'Volley2',
+        },
+        {
+          name: 'Rising Challenge',
+          maxPoint: 5,
+          maxRound: 7,
+          difficulty: 1,
+          push: false,
+          pause: true,
+          background: 'Random',
+          ball: 'Random',
+        },
+        {
+          name: 'Advanced Struggle',
+          maxPoint: 3,
+          maxRound: 9,
+          difficulty: 1,
+          push: true,
+          pause: true,
+          background: 'Football',
+          ball: 'Soccer2',
+        },
+        {
+          name: 'Masterful Test',
+          maxPoint: 9,
+          maxRound: 5,
+          difficulty: 2,
+          push: true,
+          pause: true,
+          background: 'Rugby',
+          ball: 'Football',
+        },
+        {
+          name: 'Transcendence',
+          maxPoint: 9,
+          maxRound: 9,
+          difficulty: 2,
+          push: false,
+          pause: false,
+          background: 'Random',
+          ball: 'Random',
+        },
+      ];
+
+      for (const level of levels) {
+        await this.storyDataRepository.save(level);
+      }
     } catch (error) {
       throw new Error(error.message);
     }

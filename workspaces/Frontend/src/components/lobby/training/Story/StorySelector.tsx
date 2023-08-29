@@ -25,7 +25,7 @@ export default function StorySelector({
   // -------------------------------------Traning-------------------------------------//
   const handleChange = (event: React.MouseEvent<HTMLButtonElement>) => {
     event?.preventDefault();
-    setLevelSelected(level);
+    setLevelSelected(level - 1);
   };
 
   return (
