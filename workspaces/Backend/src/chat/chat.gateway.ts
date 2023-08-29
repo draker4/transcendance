@@ -194,6 +194,7 @@ export class ChatGateway implements OnModuleInit {
   }
 
   // [!] je ne trouve pas ou ce endpoint est utilise depuis notre frontend, virer si inutile
+  // c'est dans le cas ou on veut ouvrir le chat sur une channel directement
   @SubscribeMessage('getChannel')
   async getChannel(@Req() req, @MessageBody() channelId: number) {
     if (!channelId) throw new WsException('no channel id');
@@ -210,6 +211,13 @@ export class ChatGateway implements OnModuleInit {
       userSockets,
       this.server,
     );
+  }
+
+  @SubscribeMessage('getChannelId')
+  async getChannelId(@Req() req, @MessageBody() opponentId: number) {
+    if (!opponentId) throw new WsException('no opponent id');
+
+    return await this.chatService.getChannelId(opponentId, req.user.id);
   }
 
   @SubscribeMessage('getChannels')

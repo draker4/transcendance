@@ -1,3 +1,4 @@
+import InviteButton from "@/components/InviteGame/InviteButton";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import Channel_Service from "@/services/Channel.service";
@@ -5,6 +6,7 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
 import { Badge, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
 
 type Props = {
   icon: ReactNode;
@@ -12,15 +14,18 @@ type Props = {
   myself: Profile & { avatar: Avatar };
   channelCodeName: string;
   status: Map<string, string>;
+  addMsg: (msg: Message) => void;
 };
 
 export default function 
-Header({ icon, channel, myself, channelCodeName, status }: Props) {
+Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
 
 	const channelService = new Channel_Service();
 	let   url:string = "";
   const	[color, setColor] = useState<string>("#edf0f0");
   const	[textStatus, setTextStatus] = useState<string>("disconnected");
+  const [loading, setLoading] = useState<boolean>(false);
+  let   otherId: number = -1;
 
   const badgeStyleStatus = {
     "& .MuiBadge-badge": {
@@ -58,7 +63,7 @@ Header({ icon, channel, myself, channelCodeName, status }: Props) {
 			id2: number;
 		} = channelService.getIdsFromPrivateMsgChannelName(channelCodeName);
 
-		const otherId:number = myself.id === tuple.id1 ? tuple.id2 : tuple.id1;
+		otherId = myself.id === tuple.id1 ? tuple.id2 : tuple.id1;
 		url = "/home/profile/" + otherId;
 	} else {
 		url = "/home/channel/" + channel.id;
@@ -113,6 +118,17 @@ Header({ icon, channel, myself, channelCodeName, status }: Props) {
           }
         </div>
       </Link>
+      {
+        (channel.type !== 'privateMsg' || textStatus === "connected") &&
+        <InviteButton
+          myself={myself}
+          setLoading={setLoading}
+          opponentLogin={channel.name}
+          opponentId={-1}
+          addMsg={addMsg}
+          isChannel={true}
+        />
+      }
     </div>
   );
 }

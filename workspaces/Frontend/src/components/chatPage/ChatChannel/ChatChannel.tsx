@@ -10,6 +10,7 @@ import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation"
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import Channel_Service from "@/services/Channel.service";
+import { toast } from "react-toastify";
 
 type Props = {
   icon: ReactNode;
@@ -27,6 +28,7 @@ type ReceivedMsg = {
   channelName: string;
   channelId: number;
   isServerNotif: boolean;
+  join?: boolean;
 };
 
 // Previous messages loaded from database
@@ -36,6 +38,7 @@ type LoadMsg = {
   user?: User;
   isServerNotif: boolean;
   updatedAt: string;
+  join?: boolean;
 };
 
 export default function ChatChannel({ icon, channel, myself, socket, status }: Props) {
@@ -58,6 +61,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
             sender: item.isServerNotif ? undefined : item.user,
             date: modifiedDate,
             isServerNotif: item.isServerNotif,
+            join: item.join,
           };
           previousMsg.push(msg);
         });
@@ -133,12 +137,12 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         return ;
 
       const receivedDate = new Date(receivedMsg.date);
-      // console.log("la=", receivedDate, receivedMsg.date);
       const msg: Message = {
         content: receivedMsg.content,
         sender: receivedMsg.sender,
         date: receivedDate,
         isServerNotif: receivedMsg.isServerNotif,
+        join: receivedMsg.join,
       };
 
       setMessages((previous) => [...previous, msg]);
@@ -156,7 +160,33 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     
   }, [channel.name, socket]);
 
-  const addMsg = (msg: Message) => {
+  const addMsg = (msg: Message & {
+    opponentId?: number;
+    join?: boolean;
+  }) => {
+
+    console.log(msg);
+
+    if (msg.opponentId && msg.opponentId !== -1) {
+      socket?.emit('getChannelId', msg.opponentId, (payload: number) => {
+        if (payload) {
+          socket?.emit("forceJoinPrivateMsgChannel", 
+          {id: payload},
+          (rep:ReturnData) => {
+            if (rep.success) {
+                socket?.emit("newMsg", {
+                  content: msg.content,
+                  channelId: payload,
+                  join: msg.join ? true : undefined,
+                });
+              } else {
+                // [+] manage privmsg sending error
+              }
+          });
+            }
+      });
+      return ;
+    }
 
   // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {
@@ -167,6 +197,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
             socket?.emit("newMsg", {
               content: msg.content,
               channelId: channel.id,
+              join: msg.join ? true : undefined,
             });
           } else {
             // [+] manage privmsg sending error
@@ -176,14 +207,15 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,
+      join: msg.join ? true : undefined,
     });
   }
   };
 
   return (
     <div className={styles.channelMsgFrame}>
-      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} status={status} />
-      <MessageBoard messages={messages} channel={channel} relNotif={relNotif} status={status} myself={myself} />
+      <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} status={status} addMsg={addMsg} />
+      <MessageBoard messages={messages} channel={channel} relNotif={relNotif} status={status} myself={myself} addMsg={addMsg}/>
       <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif} isMuted={isMuted}/>
     </div>
   );
