@@ -31,6 +31,7 @@ export default function Training({ profile }: Props) {
   const [selected, setSelected] = useState<
     "Classic" | "Best3" | "Best5" | "Random" | "Custom" | "Story"
   >("Classic");
+  const [storyLevel, setStoryLevel] = useState<number>(0);
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [side, setSide] = useState<"Left" | "Right">("Left");
@@ -47,9 +48,13 @@ export default function Training({ profile }: Props) {
 
   async function createPong() {
     const type = selected === "Random" ? "Custom" : selected;
+    if (type !== "Story") {
+      setStoryLevel(0);
+    }
     const settings: CreateTrainingDTO = {
       name: `Training ${selected}`,
       type: type,
+      storyLevel: storyLevel,
       player: profile.id,
       side: side,
       maxPoint: maxPoint,

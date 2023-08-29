@@ -21,6 +21,7 @@ import { BackupCode } from './BackupCode.entity';
 import { Stats } from './Stats.entity';
 import { Notif } from './Notif.entity';
 import { Image } from './Image.entity';
+import { Story } from './Story.entity';
 
 @Entity()
 export class User {
@@ -138,7 +139,7 @@ export class User {
   @JoinColumn()
   avatar: Avatar;
 
-  @OneToOne(() => Notif, {eager: true})
+  @OneToOne(() => Notif, { eager: true })
   @JoinColumn()
   notif: Notif;
 
@@ -154,6 +155,10 @@ export class User {
   @OneToOne(() => Stats)
   @JoinColumn()
   stats: Stats;
+
+  @OneToOne(() => Story)
+  @JoinColumn()
+  trainingStory: Story;
 
   @AfterLoad()
   async nullChecks() {

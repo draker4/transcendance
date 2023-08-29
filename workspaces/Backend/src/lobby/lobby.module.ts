@@ -25,6 +25,9 @@ import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -41,6 +44,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       SocketToken,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   controllers: [LobbyController],
@@ -54,6 +59,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     ScoreService,
     StatsService,
     UsersService,
+    StoryService,
   ],
   exports: [LobbyService],
 })

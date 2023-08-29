@@ -26,6 +26,9 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 
 @Module({
   imports: [
@@ -41,6 +44,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       Stats,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
     JwtModule,
     MailModule,
@@ -57,6 +62,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     LocalStrategy,
     CryptoService,
     StatsService,
+    StoryService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

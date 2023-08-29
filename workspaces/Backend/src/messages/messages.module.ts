@@ -18,6 +18,9 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 
 @Module({
   imports: [
@@ -33,6 +36,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       Stats,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   providers: [
@@ -41,6 +46,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     UsersService,
     CryptoService,
     StatsService,
+    StoryService,
   ],
 })
 export class MessageModule {}

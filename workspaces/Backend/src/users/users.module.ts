@@ -17,6 +17,9 @@ import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { StoryService } from '@/story/service/story.service';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
 
 @Module({
   imports: [
@@ -31,10 +34,19 @@ import { Image } from '@/utils/typeorm/Image.entity';
       Avatar,
       UserChannelRelation,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, CryptoService, StatsService, AvatarService, ChannelService],
+  providers: [
+    UsersService,
+    CryptoService,
+    StatsService,
+    AvatarService,
+    ChannelService,
+    StoryService,
+  ],
   exports: [UsersService],
 })
 export class UsersModule {}

@@ -18,272 +18,284 @@ import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
+import { StoryService } from '@/story/service/story.service';
+import { CreateStoryDTO } from '@/story/dto/CreateStory.dto';
 
 @Injectable()
 export class UsersService {
-	constructor(
-		@InjectRepository(User)
-		private readonly userRepository: Repository<User>,
-		@InjectRepository(Channel)
-		private readonly channelRepository: Repository<Channel>,
-		@InjectRepository(Token)
-		private readonly tokenRepository: Repository<Token>,
-		@InjectRepository(BackupCode)
-		private readonly backupCodeRepository: Repository<BackupCode>,
-		@InjectRepository(SocketToken)
-		private readonly socketTokenRepository: Repository<SocketToken>,
-		@InjectRepository(Notif)
-		private readonly notifRepository: Repository<Notif>,
-		@InjectRepository(Image)
-		private readonly imageRepository: Repository<Image>,
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Channel)
+    private readonly channelRepository: Repository<Channel>,
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
+    @InjectRepository(BackupCode)
+    private readonly backupCodeRepository: Repository<BackupCode>,
+    @InjectRepository(SocketToken)
+    private readonly socketTokenRepository: Repository<SocketToken>,
+    @InjectRepository(Notif)
+    private readonly notifRepository: Repository<Notif>,
+    @InjectRepository(Image)
+    private readonly imageRepository: Repository<Image>,
 
-		private cryptoService: CryptoService,
-		private readonly statsService: StatsService,
-	) { }
+    private readonly cryptoService: CryptoService,
+    private readonly statsService: StatsService,
+    private readonly storyService: StoryService,
+  ) {}
 
-	async addUser(CreateUserDto: CreateUserDto): Promise<User> {
-		const user = await this.userRepository.save(CreateUserDto);
-		const newStats: CreateStatsDTO = {
-			userId: user.id,
-		};
-		const stats = await this.statsService.createStats(newStats);
+  async addUser(CreateUserDto: CreateUserDto): Promise<User> {
+    const user = await this.userRepository.save(CreateUserDto);
+    const newStats: CreateStatsDTO = {
+      userId: user.id,
+    };
 
-		await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'stats')
-			.of(user.id)
-			.set(stats);
+    const stats = await this.statsService.createStats(newStats);
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'stats')
+      .of(user.id)
+      .set(stats);
 
-		const notif = await this.notifRepository.save(new Notif());
-		await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'notif')
-			.of(user.id)
-			.set(notif);
+    const notif = await this.notifRepository.save(new Notif());
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'notif')
+      .of(user.id)
+      .set(notif);
 
-		return user;
-	}
+    const newStory: CreateStoryDTO = {
+      userId: user.id,
+    };
 
-	async saveUserEntity(user: User): Promise<User> {
-		return await this.userRepository.save(user);
-	}
+    const story = await this.storyService.createStory(newStory);
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'trainingStory')
+      .of(user.id)
+      .set(story);
 
-	async getUserByLogin(login: string) {
-		return await this.userRepository.findOne({ where: { login: login } });
-	}
+    return user;
+  }
 
-	async getUserByEmail(email: string, provider: string) {
-		const emailDecrypted = (
-			await this.cryptoService.decrypt(email)
-		).toLowerCase();
-		const clients = await this.userRepository.find();
+  async saveUserEntity(user: User): Promise<User> {
+    return await this.userRepository.save(user);
+  }
 
-		for (const client of clients) {
-			const emailClient = await this.cryptoService.decrypt(client.email);
-			if (
-				emailClient.toLowerCase() === emailDecrypted &&
-				client.provider === provider
-			)
-				return client;
-		}
-		return null;
-	}
+  async getUserByLogin(login: string) {
+    return await this.userRepository.findOne({ where: { login: login } });
+  }
 
-	async getUserById(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-		});
-	}
+  async getUserByEmail(email: string, provider: string) {
+    const emailDecrypted = (
+      await this.cryptoService.decrypt(email)
+    ).toLowerCase();
+    const clients = await this.userRepository.find();
+
+    for (const client of clients) {
+      const emailClient = await this.cryptoService.decrypt(client.email);
+      if (
+        emailClient.toLowerCase() === emailDecrypted &&
+        client.provider === provider
+      )
+        return client;
+    }
+    return null;
+  }
+
+  async getUserById(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+    });
+  }
 
   private async getChannelById(id: number) {
     return await this.channelRepository.findOne({
-			where: { id: id },
-		});
+      where: { id: id },
+    });
   }
 
-	async getUserChannels(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['channels', 'channels.avatar', 'avatar'],
-		});
-	}
+  async getUserChannels(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['channels', 'channels.avatar', 'avatar'],
+    });
+  }
 
-	async getUserPongies(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['pongies', 'pongies.avatar', 'avatar'],
-		});
-	}
+  async getUserPongies(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['pongies', 'pongies.avatar', 'avatar'],
+    });
+  }
 
-	async getUserAvatar(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['avatar'],
-		});
-	}
+  async getUserAvatar(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['avatar'],
+    });
+  }
 
-	async getUserBackupCodes(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['backupCodes'],
-		});
-	}
+  async getUserBackupCodes(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['backupCodes'],
+    });
+  }
 
-	async getUserImages(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['images'],
-		});
-	}
+  async getUserImages(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['images'],
+    });
+  }
 
-	async getUserTokens(id: number) {
-		return await this.userRepository.findOne({
-			where: { id: id },
-			relations: ['tokens'],
-		});
-	}
+  async getUserTokens(id: number) {
+    return await this.userRepository.findOne({
+      where: { id: id },
+      relations: ['tokens'],
+    });
+  }
 
-	async saveToken(token: Token) {
-		await this.tokenRepository.save(token);
-	}
+  async saveToken(token: Token) {
+    await this.tokenRepository.save(token);
+  }
 
-	async saveBackupCode(user: User, backupCode: string) {
-		const backupCodeEntity = new BackupCode();
-		backupCodeEntity.code = backupCode;
-		backupCodeEntity.user = user;
+  async saveBackupCode(user: User, backupCode: string) {
+    const backupCodeEntity = new BackupCode();
+    backupCodeEntity.code = backupCode;
+    backupCodeEntity.user = user;
 
-		return await this.backupCodeRepository.save(backupCodeEntity);
-	}
+    return await this.backupCodeRepository.save(backupCodeEntity);
+  }
 
-	async deleteToken(token: Token) {
-		await this.tokenRepository.remove(token);
-	}
+  async deleteToken(token: Token) {
+    await this.tokenRepository.remove(token);
+  }
 
-	async deleteBackupCode(backupCode: BackupCode) {
-		await this.backupCodeRepository.remove(backupCode);
-	}
+  async deleteBackupCode(backupCode: BackupCode) {
+    await this.backupCodeRepository.remove(backupCode);
+  }
 
-	async deleteAllUserTokens(user: User) {
-		await this.tokenRepository.remove(user.tokens);
-		const socketTokens: SocketToken[] = await this.socketTokenRepository.find({
-			where: { userId: user.id },
-		});
-		await this.socketTokenRepository.remove(socketTokens);
-	}
+  async deleteAllUserTokens(user: User) {
+    await this.tokenRepository.remove(user.tokens);
+    const socketTokens: SocketToken[] = await this.socketTokenRepository.find({
+      where: { userId: user.id },
+    });
+    await this.socketTokenRepository.remove(socketTokens);
+  }
 
-	async deleteBackupCodes(user: User) {
-		await this.backupCodeRepository.remove(user.backupCodes);
-	}
+  async deleteBackupCodes(user: User) {
+    await this.backupCodeRepository.remove(user.backupCodes);
+  }
 
-	async getUserByCode(code: string) {
-		return await this.userRepository.findOne({
-			where: { verifyCode: code, verified: false },
-		});
-	}
+  async getUserByCode(code: string) {
+    return await this.userRepository.findOne({
+      where: { verifyCode: code, verified: false },
+    });
+  }
 
-	async updateUser(id: number, properties: Partial<User>) {
-		await this.userRepository.update(id, properties);
-	}
+  async updateUser(id: number, properties: Partial<User>) {
+    await this.userRepository.update(id, properties);
+  }
 
-	async updateUserChannels(user: User, channel: Channel) {
-		await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'channels')
-			.of(user.id)
-			.add(channel);
-	}
+  async updateUserChannels(user: User, channel: Channel) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'channels')
+      .of(user.id)
+      .add(channel);
+  }
 
-  
-	async updateUserAvatar(user: User, avatar: Avatar) {
-		await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'avatar')
-			.of(user.id)
-			.set(avatar);
-	}
+  async updateUserAvatar(user: User, avatar: Avatar) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'avatar')
+      .of(user.id)
+      .set(avatar);
+  }
 
-	async updateUserPongies(user: User, pongie: User) {
-		await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'pongies')
-			.of(user.id)
-			.add(pongie);
-    }
-    
-    async updateUserBackupCodes(user: User, backupCodes: BackupCode[]) {
-      await this.userRepository
-			.createQueryBuilder()
-			.relation(User, 'backupCodes')
-			.of(user.id)
-			.set(backupCodes);
-    }
+  async updateUserPongies(user: User, pongie: User) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'pongies')
+      .of(user.id)
+      .add(pongie);
+  }
+
+  async updateUserBackupCodes(user: User, backupCodes: BackupCode[]) {
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'backupCodes')
+      .of(user.id)
+      .set(backupCodes);
+  }
 
   async getChannelByName(name: string) {
-		return await this.channelRepository.findOne({
-			where: { name: name },
-			relations: ['users'],
-		});
-	}
+    return await this.channelRepository.findOne({
+      where: { name: name },
+      relations: ['users'],
+    });
+  }
 
-	async editUser(userId: number, properties: EditUserDto) {
-		const rep: repDto = {
-			success: false,
-			message: '',
-		};
-
-		try {
-			const updatedProperties: string[] = [];
-
-			for (const key in properties) {
-				if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
-					updatedProperties.push(key);
-				}
-			}
-
-			if (updatedProperties.length > 0) {
-				if (updatedProperties.indexOf('login') !== -1) {
-					rep.message = 'sorry, editing login is not implemented yet';
-				} else {
-					this.updateUser(userId, properties);
-
-					rep.success = true;
-					rep.message = `Properties : ${updatedProperties.join(
-						', ',
-					)} : successfully updated`;
-
-					this.log(`${rep.message} for user : ${userId}`);
-				}
-			} else {
-				rep.message = 'missing or incorrect properties sent in request';
-			}
-		} catch (error) {
-			rep.message = error.message;
-		}
-
-		return rep;
-	}
-
-  public async createChannelUserRelation(channelInfos:EditChannelRelationDto):
-  Promise<ReturnData> {
-    const rep :ReturnData = {
+  async editUser(userId: number, properties: EditUserDto) {
+    const rep: repDto = {
       success: false,
-      message: ''
-    }
+      message: '',
+    };
 
     try {
-      console.log("channelInfos = ", channelInfos); // checking
+      const updatedProperties: string[] = [];
+
+      for (const key in properties) {
+        if (properties.hasOwnProperty(key) && properties[key] !== undefined) {
+          updatedProperties.push(key);
+        }
+      }
+
+      if (updatedProperties.length > 0) {
+        if (updatedProperties.indexOf('login') !== -1) {
+          rep.message = 'sorry, editing login is not implemented yet';
+        } else {
+          this.updateUser(userId, properties);
+
+          rep.success = true;
+          rep.message = `Properties : ${updatedProperties.join(
+            ', ',
+          )} : successfully updated`;
+
+          this.log(`${rep.message} for user : ${userId}`);
+        }
+      } else {
+        rep.message = 'missing or incorrect properties sent in request';
+      }
+    } catch (error) {
+      rep.message = error.message;
+    }
+
+    return rep;
+  }
+
+  public async createChannelUserRelation(
+    channelInfos: EditChannelRelationDto,
+  ): Promise<ReturnData> {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    };
+
+    try {
+      console.log('channelInfos = ', channelInfos); // checking
 
       const user = await this.getUserById(channelInfos.userId);
       const channel = await this.getChannelById(channelInfos.channelId);
 
-      if (!user || !channel)
-        throw new Error("user or channel not found");
+      if (!user || !channel) throw new Error('user or channel not found');
 
       await this.updateUserChannels(user, channel);
 
       rep.success = true;
-
-    } catch(e) {
+    } catch (e) {
       rep.message = e.message;
       rep.error = e;
     }
@@ -291,134 +303,128 @@ export class UsersService {
     return rep;
   }
 
-	// tools
+  // tools
 
-	// [!][?] virer ce log pour version build ?
-	private log(message?: any) {
-		const yellow = '\x1b[33m';
-		const stop = '\x1b[0m';
+  // [!][?] virer ce log pour version build ?
+  private log(message?: any) {
+    const yellow = '\x1b[33m';
+    const stop = '\x1b[0m';
 
-		process.stdout.write(yellow + '[user service]  ' + stop);
-		console.log(message);
-	}
+    process.stdout.write(yellow + '[user service]  ' + stop);
+    console.log(message);
+  }
 
-	async checkPassword(userId: number, passwordCrypted: string) {
-		try {
-			if (!passwordCrypted) throw new Error('no password');
+  async checkPassword(userId: number, passwordCrypted: string) {
+    try {
+      if (!passwordCrypted) throw new Error('no password');
 
-			const user = await this.getUserById(userId);
+      const user = await this.getUserById(userId);
 
-			if (!user) throw new Error('no user');
+      if (!user) throw new Error('no user');
 
-			const password = await this.cryptoService.decrypt(passwordCrypted);
+      const password = await this.cryptoService.decrypt(passwordCrypted);
 
-			const isMatch = await bcrypt.compare(password, user.passwordHashed);
+      const isMatch = await bcrypt.compare(password, user.passwordHashed);
 
-			if (!isMatch)
-				return {
-					success: false,
-					error: 'wrong',
-				};
+      if (!isMatch)
+        return {
+          success: false,
+          error: 'wrong',
+        };
 
-			return {
-				success: true,
-			};
-		} catch (error) {
-			console.log(error);
-			throw new BadRequestException();
-		}
-	}
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
 
-	async updatePassword(userId: number, password: string) {
-		try {
-			if (!password) throw new Error('no password');
+  async updatePassword(userId: number, password: string) {
+    try {
+      if (!password) throw new Error('no password');
 
-			const user = await this.getUserById(userId);
+      const user = await this.getUserById(userId);
 
-			if (!user) throw new Error('no user');
+      if (!user) throw new Error('no user');
 
-			await this.updateUser(user.id, {
-				passwordHashed: password,
-			});
+      await this.updateUser(user.id, {
+        passwordHashed: password,
+      });
 
-			return {
-				success: true,
-			};
-		} catch (error) {
-			console.log(error);
-			throw new BadRequestException();
-		}
-	}
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
 
-	async addImage(userId: number, imageUrl: string, public_id: string) {
-		try {
-			if (!imageUrl || !public_id)
-				throw new Error('no image url');
+  async addImage(userId: number, imageUrl: string, public_id: string) {
+    try {
+      if (!imageUrl || !public_id) throw new Error('no image url');
 
-			const user = await this.getUserById(userId);
-			
-			if (!user)
-				throw new Error('no user');
+      const user = await this.getUserById(userId);
 
-			const	newImage = new Image();
-			newImage.imageUrl = imageUrl;
-			newImage.user = user;
-			newImage.publicId = public_id;
+      if (!user) throw new Error('no user');
 
-			const	imageSaved = await this.imageRepository.save(newImage);
+      const newImage = new Image();
+      newImage.imageUrl = imageUrl;
+      newImage.user = user;
+      newImage.publicId = public_id;
 
-			if (!imageSaved)
-				throw new Error("cannot save image");
+      const imageSaved = await this.imageRepository.save(newImage);
 
-			return imageSaved;
-		} catch (error) {
-			console.log(error);
-			throw new BadRequestException();
-		}
-	}
+      if (!imageSaved) throw new Error('cannot save image');
 
-	async getImages(userId: number) {
-		try {
-			const user = await this.getUserImages(userId);
-			
-			if (!user)
-				throw new Error('no user');
+      return imageSaved;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
 
-			let	images = user.images;
+  async getImages(userId: number) {
+    try {
+      const user = await this.getUserImages(userId);
 
-			if (!images)
-				return [];
+      if (!user) throw new Error('no user');
 
-			images = await Promise.all(images.map(async (image) => {
-				image.imageUrl = await this.cryptoService.decrypt(image.imageUrl);
-				image.publicId = await this.cryptoService.decrypt(image.publicId);
-				return image;
-			}));
+      let images = user.images;
 
-			return user.images;
-		} catch (error) {
-			console.log(error);
-			throw new BadRequestException();
-		}
-	}
+      if (!images) return [];
 
-	async deleteImage(imageId: number) {
-		try {
-			if (!imageId)
-				throw new Error('no image id');
+      images = await Promise.all(
+        images.map(async (image) => {
+          image.imageUrl = await this.cryptoService.decrypt(image.imageUrl);
+          image.publicId = await this.cryptoService.decrypt(image.publicId);
+          return image;
+        }),
+      );
 
-			const	image = await this.imageRepository.findOne({
-				where: { id: imageId },
-			});
+      return user.images;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
 
-			if (!image)
-				return ;
+  async deleteImage(imageId: number) {
+    try {
+      if (!imageId) throw new Error('no image id');
 
-			await this.imageRepository.remove(image);
+      const image = await this.imageRepository.findOne({
+        where: { id: imageId },
+      });
 
-		} catch (error) {
-			console.log(error);
-			throw new BadRequestException();
-		}
-	}
+      if (!image) return;
+
+      await this.imageRepository.remove(image);
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
+  }
 }

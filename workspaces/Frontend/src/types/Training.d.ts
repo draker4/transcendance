@@ -1,6 +1,7 @@
 type CreateTrainingDTO = {
   name: string;
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
+  storyLevel: number;
   player: number;
   side: "Left" | "Right";
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;

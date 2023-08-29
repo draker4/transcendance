@@ -4,15 +4,11 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
 } from 'typeorm';
-
-import { Score } from './Score.entity';
 
 @Entity()
 export class Story {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   id: string;
 
   @CreateDateColumn({
@@ -26,48 +22,65 @@ export class Story {
   updatedAt: Date;
 
   @Column()
-  name: string;
+  userId: number;
 
-  @Column()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
-
-  @Column()
-  player: number;
-
-  @Column()
-  side: 'Left' | 'Right';
-
-  @OneToOne(() => Score)
-  @JoinColumn()
-  score: Score;
-
-  @Column({ default: 'Not Started' })
-  status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted';
-
-  @Column({ default: 'Not Finished' })
-  result: 'Not Finished' | 'Win' | 'Lose' | 'Deleted';
+  @Column({ default: false })
+  levelCompleted1: boolean;
 
   @Column({ default: 0 })
-  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  levelAttempted1: number;
 
-  @Column()
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  @Column({ default: false })
+  levelCompleted2: boolean;
 
-  @Column()
-  maxRound: 1 | 3 | 5 | 7 | 9;
+  @Column({ default: 0 })
+  levelAttempted2: number;
 
-  @Column()
-  difficulty: -2 | -1 | 0 | 1 | 2;
+  @Column({ default: false })
+  levelCompleted3: boolean;
 
-  @Column()
-  push: boolean;
+  @Column({ default: 0 })
+  levelAttempted3: number;
 
-  @Column()
-  pause: boolean;
+  @Column({ default: false })
+  levelCompleted4: boolean;
 
-  @Column()
-  background: string;
+  @Column({ default: 0 })
+  levelAttempted4: number;
 
-  @Column()
-  ball: string;
+  @Column({ default: false })
+  levelCompleted5: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted5: number;
+
+  @Column({ default: false })
+  levelCompleted6: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted6: number;
+
+  @Column({ default: false })
+  levelCompleted7: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted7: number;
+
+  @Column({ default: false })
+  levelCompleted8: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted8: number;
+
+  @Column({ default: false })
+  levelCompleted9: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted9: number;
+
+  @Column({ default: false })
+  levelCompleted10: boolean;
+
+  @Column({ default: 0 })
+  levelAttempted10: number;
 }

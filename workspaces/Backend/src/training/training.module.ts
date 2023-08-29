@@ -22,6 +22,9 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 
 @Module({
   imports: [
@@ -38,6 +41,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       UserChannelRelation,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   controllers: [TrainingController],
@@ -49,6 +54,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     AvatarService,
     StatsService,
     ChannelService,
+    StoryService,
   ],
   exports: [TrainingService],
 })

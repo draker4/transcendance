@@ -24,6 +24,9 @@ import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { StatusService } from '@/statusService/status.service';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 
 @Module({
   imports: [
@@ -41,6 +44,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       Notif,
       NotifMessages,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   providers: [
@@ -54,6 +59,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     MessagesService,
     StatsService,
     StatusService,
+    StoryService,
   ],
 })
 export class ChatModule {}

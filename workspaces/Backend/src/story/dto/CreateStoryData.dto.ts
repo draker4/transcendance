@@ -1,25 +1,9 @@
-import { IsNumber, IsString, IsBoolean, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 
-export class CreateTrainingDTO {
+export class CreateStoryDataDTO {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
-
-  @IsNumber()
-  @IsNotEmpty()
-  storyLevel: number;
-
-  @IsNumber()
-  @IsNotEmpty()
-  player: number;
-
-  @IsString()
-  @IsNotEmpty()
-  side: 'Left' | 'Right';
 
   @IsNumber()
   @IsNotEmpty()

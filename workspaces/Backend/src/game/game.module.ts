@@ -31,6 +31,9 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { StatusService } from '@/statusService/status.service';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { StoryService } from '@/story/service/story.service';
 
 @Module({
   imports: [
@@ -47,6 +50,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       SocketToken,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   providers: [
@@ -62,6 +67,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     StatsService,
     UsersService,
     StatusService,
+    StoryService,
   ],
 })
 export class GameModule {}

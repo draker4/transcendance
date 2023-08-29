@@ -15,8 +15,11 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
+import { Story } from '@/utils/typeorm/Story.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
+import { StoryService } from '@/story/service/story.service';
+import { StoryData } from '@/utils/typeorm/StoryData.entity';
 
 @Module({
   imports: [
@@ -31,6 +34,8 @@ import { Image } from '@/utils/typeorm/Image.entity';
       Stats,
       Notif,
       Image,
+      Story,
+      StoryData,
     ]),
   ],
   controllers: [AvatarController],
@@ -40,6 +45,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
     ChannelService,
     StatsService,
     UsersService,
+    StoryService,
   ],
 })
 export class AvatarModule {}

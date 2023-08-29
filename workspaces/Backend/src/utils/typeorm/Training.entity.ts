@@ -31,6 +31,9 @@ export class Training {
   @Column()
   type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
 
+  @Column({ default: 0 })
+  storyLevel: number;
+
   @Column()
   player: number;
 

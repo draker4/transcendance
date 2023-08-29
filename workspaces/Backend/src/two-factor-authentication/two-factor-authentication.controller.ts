@@ -1,6 +1,13 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable prettier/prettier */
-import { BadGatewayException, BadRequestException, Body, Controller, Get, HttpCode, Param, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from '@/auth/services/auth.service';
@@ -10,186 +17,183 @@ import { BackupCodeDto } from './dto/BackupCode.dto';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
+  constructor(
+    private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService,
+  ) {}
 
-	constructor(
-		private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
-		private readonly usersService: UsersService,
-		private readonly authService: AuthService,
-	) {}
+  @Get('generate')
+  async register(@Req() req) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-	@Get('generate')
-	async register(@Req() req) {
-		try {
-			const	user = await this.usersService.getUserById(req.user.id);
+      if (!user) throw new Error('no user found');
 
-			if (!user)
-				throw new Error('no user found');
-			
-			return await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(user);
-		}
-		catch (error) {
-			throw new BadGatewayException(error.message);
-		}
-	}
+      return await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(
+        user,
+      );
+    } catch (error) {
+      throw new BadGatewayException(error.message);
+    }
+  }
 
-	@Get('sendCode')
-	async sendCode(@Req() req) {
-		try {
-			const	user = await this.usersService.getUserById(req.user.id);
-		
-			if (!user)
-				throw new Error('no user found');
+  @Get('sendCode')
+  async sendCode(@Req() req) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-			this.twoFactorAuthenticationService.sendMail(user);
-		}
-		catch (error) {
-			console.log(error.message);
-			throw new BadGatewayException();
-		}
-	}
+      if (!user) throw new Error('no user found');
 
-	@Post('verifyCode')
-	async verifyCode(
-		@Body() { code } : VerifYCodeDto,
-		@Req() req) {
-		try {
-			const	user = await this.usersService.getUserById(req.user.id);
+      this.twoFactorAuthenticationService.sendMail(user);
+    } catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
+  }
 
-			if (!user)
-				throw new Error('no user found');
-			
-			if (user.verifyCode !== code) {
-				this.twoFactorAuthenticationService.sendMail(user);
-				return {
-					success: false,
-					error: 'wrong code',
-				}
-			}
-			
-			if (user.expirationCode < Date.now()) {
-				this.twoFactorAuthenticationService.sendMail(user);
-				return {
-					success: false,
-					error: 'time out',
-				}
-			}
+  @Post('verifyCode')
+  async verifyCode(@Body() { code }: VerifYCodeDto, @Req() req) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-			return {
-				success: true,
-			}
-		}
-		catch (error) {
-			console.log(error.message);
-			throw new BadGatewayException();
-		}
-	}
+      if (!user) throw new Error('no user found');
 
-	@Post('activate')
-	async activate(
-		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto,
-		@Req() req) {
-		try {
-			const	user = await this.usersService.getUserBackupCodes(req.user.id);
+      if (user.verifyCode !== code) {
+        this.twoFactorAuthenticationService.sendMail(user);
+        return {
+          success: false,
+          error: 'wrong code',
+        };
+      }
 
-			if (!user)
-				throw new Error('no user found');
-			
-			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-				twoFactorAuthenticationCode, user
-			);
+      if (user.expirationCode < Date.now()) {
+        this.twoFactorAuthenticationService.sendMail(user);
+        return {
+          success: false,
+          error: 'time out',
+        };
+      }
 
-			if (!isCodeValid)
-				return {
-					success: false,
-					error: "wrong code",
-				}
-      
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
+  }
+
+  @Post('activate')
+  async activate(
+    @Body() { twoFactorAuthenticationCode }: TwoFactorAuthenticationCodeDto,
+    @Req() req,
+  ) {
+    try {
+      const user = await this.usersService.getUserBackupCodes(req.user.id);
+
+      if (!user) throw new Error('no user found');
+
+      const isCodeValid =
+        await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+          twoFactorAuthenticationCode,
+          user,
+        );
+
+      if (!isCodeValid)
+        return {
+          success: false,
+          error: 'wrong code',
+        };
+
       this.twoFactorAuthenticationService.updateBackupCodes(user);
-			
-			this.usersService.updateUser(user.id, {
-				isTwoFactorAuthenticationEnabled: true,
-			});
 
-			return {
-				success: true,
-			}
-		}
-		catch (error) {
-			console.log(error.message);
-			throw new BadGatewayException();
-		}
-	}
+      this.usersService.updateUser(user.id, {
+        isTwoFactorAuthenticationEnabled: true,
+      });
 
-	@Post('deactivate')
-	async deactivate(
-		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto,
-		@Req() req) {
-		try {
-			const	user = await this.usersService.getUserById(req.user.id);
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
+  }
 
-      if (!user)
-				throw new Error('no user found');
-			
-			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-				twoFactorAuthenticationCode, user
-			);
+  @Post('deactivate')
+  async deactivate(
+    @Body() { twoFactorAuthenticationCode }: TwoFactorAuthenticationCodeDto,
+    @Req() req,
+  ) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-			if (!isCodeValid)
-				return {
-					success: false,
-					error: "wrong code",
-				}
-			
-			this.usersService.updateUser(user.id, {
-				isTwoFactorAuthenticationEnabled: false,
-			});
+      if (!user) throw new Error('no user found');
 
-			return {
-				success: true,
-			}
-		}
-		catch (error) {
-			console.log(error.message);
-			throw new BadGatewayException();
-		}
-	}
+      const isCodeValid =
+        await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+          twoFactorAuthenticationCode,
+          user,
+        );
 
-	@Post('authenticate')
-	@HttpCode(200)
-	async authenticate(
-		@Req() req,
-		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto
-	) {
-		try {
+      if (!isCodeValid)
+        return {
+          success: false,
+          error: 'wrong code',
+        };
 
-			const	user = await this.usersService.getUserById(req.user.id);
+      this.usersService.updateUser(user.id, {
+        isTwoFactorAuthenticationEnabled: false,
+      });
 
-			if (!user)
-				throw new Error('no user found');
+      return {
+        success: true,
+      };
+    } catch (error) {
+      console.log(error.message);
+      throw new BadGatewayException();
+    }
+  }
 
-			const	isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-				twoFactorAuthenticationCode,
-				user,
-			);
+  @Post('authenticate')
+  @HttpCode(200)
+  async authenticate(
+    @Req() req,
+    @Body() { twoFactorAuthenticationCode }: TwoFactorAuthenticationCodeDto,
+  ) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-			if (!isCodeValid)
-				return {
-					success: false,
-					error: 'wrong code',
-				}
-			
-			const {access_token, refresh_token} = await this.authService.login(user, 0, false);
+      if (!user) throw new Error('no user found');
 
-			return {
-				success: true,
-				access_token,
-				refresh_token,
-			}
-		}
-		catch (error) {
+      const isCodeValid =
+        await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+          twoFactorAuthenticationCode,
+          user,
+        );
+
+      if (!isCodeValid)
+        return {
+          success: false,
+          error: 'wrong code',
+        };
+
+      const { access_token, refresh_token } = await this.authService.login(
+        user,
+        0,
+        false,
+      );
+
+      return {
+        success: true,
+        access_token,
+        refresh_token,
+      };
+    } catch (error) {
       throw new BadRequestException();
-		}
-	}
+    }
+  }
 
   @Get('backupCodes')
   async backupCodes(@Req() req) {
@@ -199,77 +203,71 @@ export class TwoFactorAuthenticationController {
   @Post('verifyAuthCode')
   async verifyAuthCode(
     @Req() req,
-		@Body() { twoFactorAuthenticationCode } : TwoFactorAuthenticationCodeDto
-	) {
-
+    @Body() { twoFactorAuthenticationCode }: TwoFactorAuthenticationCodeDto,
+  ) {
     try {
-
       const user = await this.usersService.getUserById(req.user.id);
 
-      if (!user)
-        throw new Error('no user found');
+      if (!user) throw new Error('no user found');
 
-      const isCodeValid = await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
-        twoFactorAuthenticationCode,
-        user,
-      );
+      const isCodeValid =
+        await this.twoFactorAuthenticationService.isTwoFactorAuthenticationCodeValid(
+          twoFactorAuthenticationCode,
+          user,
+        );
 
       if (!isCodeValid)
         return {
           success: false,
           error: 'wrong code',
-        }
-      
+        };
+
       return {
         success: true,
-      }
-    }
-    catch (error) {
+      };
+    } catch (error) {
       console.log(error);
       throw new BadGatewayException();
     }
   }
 
   @Post('getAccountBack')
-  async getAccountBack(
-    @Req() req,
-		@Body() { backupCode } : BackupCodeDto
-	) {
+  async getAccountBack(@Req() req, @Body() { backupCode }: BackupCodeDto) {
     try {
       const user = await this.usersService.getUserBackupCodes(req.user.id);
 
-      if (!user)
-        throw new Error('no user found');
+      if (!user) throw new Error('no user found');
 
-      const isCodeValid = await this.twoFactorAuthenticationService.isBackupCodeValid(
-        backupCode,
-        user,
-      );
+      const isCodeValid =
+        await this.twoFactorAuthenticationService.isBackupCodeValid(
+          backupCode,
+          user,
+        );
 
       if (!isCodeValid)
         return {
           success: false,
           error: 'no code',
-        }
+        };
 
       this.usersService.updateUser(user.id, {
         isTwoFactorAuthenticationEnabled: false,
       });
 
       const { access_token, refresh_token } = await this.authService.login(
-        user, 0, false
+        user,
+        0,
+        false,
       );
-      
+
       return {
         success: true,
         access_token,
         refresh_token,
-      }
-    }
-    catch(error) {
+      };
+    } catch (error) {
       console.log(error.message);
       throw new BadGatewayException();
     }
   }
-
 }
