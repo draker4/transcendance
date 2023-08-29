@@ -29,6 +29,7 @@ import {
   ScoreInfo,
   ScoreUpdate,
 } from '@transcendence/shared/types/Score.types';
+import { StatsUpdate } from '@transcendence/shared/types/Stats.types';
 
 import { updatePong } from '@transcendence/shared/game/updatePong';
 
@@ -420,10 +421,6 @@ export class Pong {
         left: this.data.pause.left,
         right: this.data.pause.right,
       };
-      this.logger.log(
-        `Updating Pause: ${JSON.stringify(pauseUpdate)}`,
-        'Pong - updateDBPause',
-      );
       await this.scoreService.updatePause(this.gameId, pauseUpdate);
     } catch (error) {
       this.logger.error(
@@ -453,22 +450,16 @@ export class Pong {
 
   private async updateDBStats() {
     try {
-      await this.statsService.updateStats(
-        this.data.playerLeft.id,
-        this.data.type,
-        this.data.mode,
-        'Left',
-        this.data.score,
-        this.data.maxRound,
-      );
-      await this.statsService.updateStats(
-        this.data.playerRight.id,
-        this.data.type,
-        this.data.mode,
-        'Right',
-        this.data.score,
-        this.data.maxRound,
-      );
+      const update: StatsUpdate = {
+        type: this.data.type,
+        mode: this.data.mode,
+        side: 'Left',
+        score: this.data.score,
+        nbRound: this.data.maxRound,
+      };
+      await this.statsService.updateStats(this.data.playerLeft.id, update);
+      update.side = 'Right';
+      await this.statsService.updateStats(this.data.playerRight.id, update);
     } catch (error) {
       this.logger.error(
         `Error Updating Stats: ${error.message}`,

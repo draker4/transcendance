@@ -1,7 +1,5 @@
-import { Controller } from '@nestjs/common';
-import { TrainingService } from 'src/training/service/training.service';
-import { Public } from 'src/utils/decorators/public.decorator';
 import {
+  Controller,
   Get,
   Put,
   Post,
@@ -11,7 +9,8 @@ import {
   ValidationPipe,
   Body,
 } from '@nestjs/common';
-
+import { TrainingService } from 'src/training/service/training.service';
+import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateTrainingDTO } from '@/training/dto/CreateTraining.dto';
 import { UpdateTrainingDTO } from '../dto/UpdateTraining.dto';
 

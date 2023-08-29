@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   Entity,
   Column,
@@ -12,7 +11,7 @@ import {
 import { Score } from './Score.entity';
 
 @Entity()
-export class Game {
+export class Story {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -30,22 +29,13 @@ export class Game {
   name: string;
 
   @Column()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
 
   @Column()
-  mode: 'League' | 'Party';
+  player: number;
 
   @Column()
-  host: number;
-
-  @Column({ default: -1 })
-  opponent: number;
-
-  @Column({ default: -1 })
-  invite: number;
-
-  @Column()
-  hostSide: 'Left' | 'Right';
+  side: 'Left' | 'Right';
 
   @OneToOne(() => Score)
   @JoinColumn()
@@ -55,7 +45,7 @@ export class Game {
   status: 'Not Started' | 'Stopped' | 'Playing' | 'Finished' | 'Deleted';
 
   @Column({ default: 'Not Finished' })
-  result: 'Not Finished' | 'Draw' | 'Draw' | 'Host' | 'Opponent' | 'Deleted';
+  result: 'Not Finished' | 'Win' | 'Lose' | 'Deleted';
 
   @Column({ default: 0 })
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;

@@ -1,3 +1,5 @@
+import { ScoreInfo } from "./Score.types";
+
 export type Stats = {
   // Global
   id: number;
@@ -71,4 +73,12 @@ export type StatsImproved = {
   roundLost: number;
   pointWon: number;
   pointLost: number;
+};
+
+export type StatsUpdate = {
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
+  mode: "League" | "Party" | "Training";
+  side: "Left" | "Right";
+  score: ScoreInfo;
+  nbRound: number;
 };

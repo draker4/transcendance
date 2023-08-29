@@ -38,9 +38,9 @@ export default function CreateParty({ lobbyService, userId }: Props) {
   const [selected, setSelected] = useState<
     "Classic" | "Best3" | "Best5" | "Random" | "Custom"
   >("Classic");
-  const [type, setType] = useState<"Classic" | "Best3" | "Best5" | "Custom">(
-    "Classic"
-  );
+  const [type, setType] = useState<
+    "Classic" | "Best3" | "Best5" | "Custom" | "Story"
+  >("Classic");
   const router = useRouter();
 
   async function createGame() {

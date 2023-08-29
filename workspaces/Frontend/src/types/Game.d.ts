@@ -11,7 +11,7 @@ type Score = {
 
 type GameDTO = {
   name: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom";
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party";
   host: number;
   opponent: number;

@@ -106,7 +106,7 @@ export type GameData = {
     | "Disconnected";
   background: string;
   ballImg: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom";
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party" | "Training";
   hostSide: "Left" | "Right";
   difficulty: -2 | -1 | 0 | 1 | 2;
@@ -130,7 +130,7 @@ export type GameData = {
 export type InitData = {
   id: string;
   name: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom";
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party" | "Training";
   hostSide: "Left" | "Right";
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -147,7 +147,7 @@ export type InitData = {
 export type GameInfo = {
   id: string;
   name: string;
-  type: "Classic" | "Best3" | "Best5" | "Custom";
+  type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party";
   leftPlayer: Player;
   rightPlayer: Player;

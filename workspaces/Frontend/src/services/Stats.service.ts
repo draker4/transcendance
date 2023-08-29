@@ -1,4 +1,5 @@
 import fetchData from "@/lib/fetch/fetchData";
+import { StatsUpdate } from "@transcendence/shared/types/Stats.types";
 
 export default class StatsService {
   private token?: string;
@@ -17,5 +18,10 @@ export default class StatsService {
     );
     const data = await response.json();
     return data;
+  }
+
+  public async updateStats(userId: number, update: StatsUpdate): Promise<void> {
+    const body = JSON.stringify(update);
+    await fetchData(this.token, "stats", `update/${userId}`, "PUT", body);
   }
 }

@@ -35,6 +35,7 @@ export class ScoreController {
     @Param('gameId') gameId: string,
     @Body() updatePause: UpdatePauseDTO,
   ) {
+    console.log('updatePause', updatePause);
     return this.scoreService.updatePause(gameId, updatePause);
   }
 }

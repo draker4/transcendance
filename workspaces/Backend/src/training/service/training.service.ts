@@ -9,6 +9,7 @@ import { ScoreService } from '@/score/service/score.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { UsersService } from '@/users/users.service';
 import { AvatarService } from '@/avatar/avatar.service';
+import { StatsService } from '@/stats/service/stats.service';
 
 import { CreateTrainingDTO } from '../dto/CreateTraining.dto';
 import { CreateScoreDTO } from '@/score/dto/CreateScore.dto';
@@ -18,6 +19,8 @@ import { AI_ID } from '@transcendence/shared/constants/Game.constants';
 import { GameData, Player } from '@transcendence/shared/types/Game.types';
 import { initPong } from '@transcendence/shared/game/initPong';
 import { colorHexToRgb } from '@transcendence/shared/game/pongUtils';
+import { StatsUpdate } from '@transcendence/shared/types/Stats.types';
+import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 
 @Injectable()
 export class TrainingService {
@@ -29,6 +32,7 @@ export class TrainingService {
     private readonly cryptoService: CryptoService,
     private readonly usersService: UsersService,
     private readonly avatarService: AvatarService,
+    private readonly statsService: StatsService,
   ) {}
 
   public async createTraining(
@@ -201,6 +205,17 @@ export class TrainingService {
         return ret;
       }
       training.status = 'Deleted';
+      const score: ScoreInfo = await this.scoreService.getScoreByGameId(
+        training.id,
+      );
+      const update: StatsUpdate = {
+        type: training.type,
+        mode: 'Training',
+        side: training.side === 'Left' ? 'Left' : 'Right',
+        score: score,
+        nbRound: training.maxRound,
+      };
+      await this.statsService.updateStats(training.player, update);
       await this.trainingRepository.save(training);
       ret.success = true;
       ret.message = 'Training deleted';
@@ -224,7 +239,7 @@ export class TrainingService {
   private async definePlayer(
     side: 'Left' | 'Right',
     playerId: number,
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
   ): Promise<Player> {
     if (playerId === AI_ID) {
       const AIPlayer: Player = {

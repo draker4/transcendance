@@ -36,6 +36,9 @@ import { SocketToken } from './utils/typeorm/SocketToken.entity';
 import { Notif } from './utils/typeorm/Notif.entity';
 import { NotifMessages } from './utils/typeorm/NotifMessages.entity';
 import { Image } from './utils/typeorm/Image.entity';
+import { StoryModule } from './story/story.module';
+import { Story } from './utils/typeorm/Story.entity';
+import { StoryData } from './utils/typeorm/StoryData.entity';
 
 @Module({
   imports: [
@@ -50,23 +53,25 @@ import { Image } from './utils/typeorm/Image.entity';
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
       entities: [
-        User,
-        Game,
-        Matchmaking,
         Avatar,
-        Channel,
-        Message,
-        Score,
-        Stats,
-        Training,
-        UserChannelRelation,
-        UserPongieRelation,
-        Token,
         BackupCode,
-        SocketToken,
+        Channel,
+        Game,
+        Image,
+        Matchmaking,
+        Message,
         Notif,
         NotifMessages,
-        Image,
+        Score,
+        SocketToken,
+        Stats,
+        Story,
+        StoryData,
+        Training,
+        Token,
+        User,
+        UserChannelRelation,
+        UserPongieRelation,
       ],
       synchronize: true,
     }),
@@ -75,15 +80,16 @@ import { Image } from './utils/typeorm/Image.entity';
     ChannelModule,
     ChatModule,
     GameModule,
-    MailModule,
     LobbyModule,
+    MailModule,
     MatchmakingModule,
-    StatsModule,
-    TrainingModule,
     MessageModule,
-    UsersModule,
     ScoreModule,
+    StatsModule,
+    StoryModule,
+    TrainingModule,
     TwoFactorAuthenticationModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

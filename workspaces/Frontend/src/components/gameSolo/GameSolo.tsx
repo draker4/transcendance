@@ -58,12 +58,14 @@ export default function Game({ profile, trainingId }: Props) {
   }, []);
 
   async function quitTraining() {
-    const ret = await trainingService.quitTraining(trainingId);
-    await toast.promise(new Promise((resolve) => resolve(ret)), {
-      pending: "Leaving training...",
-      success: "You have left this training",
-      error: "Error leaving training",
-    });
+    if (gameData && gameData.status !== "Finished") {
+      const ret = await trainingService.quitTraining(trainingId);
+      await toast.promise(new Promise((resolve) => resolve(ret)), {
+        pending: "Leaving training...",
+        success: "You have left this training",
+        error: "Error leaving training",
+      });
+    }
     router.push("/home");
   }
 

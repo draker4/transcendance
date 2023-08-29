@@ -119,7 +119,7 @@ export class ScoreService {
         throw new Error('Score not found');
       }
       score.leftPlayerRoundWon = scoreInfo.leftRound;
-
+      score.rightPlayerRoundWon = scoreInfo.rightRound;
       switch (scoreInfo.actualRound) {
         case 0:
           score.leftPlayerRound1 = scoreInfo.left;

@@ -72,23 +72,24 @@ function handleRound(gameData: GameData) {
 function handleMovement(gameData: GameData): void {
   if (!gameData.playerLeft || !gameData.playerRight) return;
   if (gameData.mode === "Training") {
-    if (gameData.playerLeft.id === AI_ID) {
-      moveAI(
-        gameData,
-        gameData.playerLeft,
-        gameData.playerLeftDynamic,
-        gameData.ball
-      );
-      updatePlayer(gameData.playerRight, gameData.playerRightDynamic);
-    } else if (gameData.playerRight.id === AI_ID) {
-      moveAI(
-        gameData,
-        gameData.playerRight,
-        gameData.playerRightDynamic,
-        gameData.ball
-      );
-      updatePlayer(gameData.playerLeft, gameData.playerLeftDynamic);
-    }
+    moveAI(
+      gameData,
+      gameData.playerLeft.id === AI_ID
+        ? gameData.playerLeft
+        : gameData.playerRight,
+      gameData.playerLeft.id === AI_ID
+        ? gameData.playerLeftDynamic
+        : gameData.playerRightDynamic,
+      gameData.ball
+    );
+    updatePlayer(
+      gameData.playerLeft.id === AI_ID
+        ? gameData.playerRight
+        : gameData.playerLeft,
+      gameData.playerLeft.id === AI_ID
+        ? gameData.playerRightDynamic
+        : gameData.playerLeftDynamic
+    );
   } else {
     updatePlayer(gameData.playerLeft, gameData.playerLeftDynamic);
     updatePlayer(gameData.playerRight, gameData.playerRightDynamic);

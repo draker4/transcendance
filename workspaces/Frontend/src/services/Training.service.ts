@@ -35,7 +35,7 @@ export default class TrainingService {
     return data;
   }
 
-  //Recupere l'etat du joueur ( in game or not )
+  //Recupere l'etat du joueur ( in training or not )
   public async isInTraining(): Promise<ReturnData> {
     const response = await fetchData(
       this.token,
@@ -47,7 +47,6 @@ export default class TrainingService {
     return data;
   }
 
-  //Recupere la liste des game en cours
   public async updateTraining(
     id: string,
     update: UpdateTrainingDTO

@@ -4,10 +4,15 @@ import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import {
   TIMER_RESTART,
   TIMER_PAUSE,
+  FRONT_FPS,
 } from "@transcendence/shared/constants/Game.constants";
 import { updatePong } from "@transcendence/shared/game/updatePong";
-
-import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
+import {
+  updateDBScore,
+  updateDBStatus,
+  updateDBStats,
+  updateDBPause,
+} from "./updateDB";
 
 const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };
@@ -35,6 +40,7 @@ export function startPause(side: "Left" | "Right", gameData: GameData) {
   if (!pauseLoopRunning) {
     gameData.status = "Stopped";
     gameData.sendStatus = true;
+    gameData.updatePause = true;
     gameData.timer = defineTimer(
       TIMER_PAUSE,
       "Pause",
@@ -69,17 +75,25 @@ export const gameLoop = (
   if (elapsedTime >= FRONT_FPS) {
     if (updatedGame.status === "Playing") {
       updatePong(updatedGame);
+      if (updatedGame.updateScore) {
+        updateDBScore(updatedGame);
+        updatedGame.updateScore = false;
+      }
     }
     if (pauseLoopRunning) {
       pauseCheck(pauseLoopRunning, updatedGame);
     }
     if (updatedGame.sendStatus) {
-      //updateDBStatus();
+      updateDBStatus(updatedGame);
       updatedGame.sendStatus = false;
       if (updatedGame.status === "Finished") {
         gameLoopRunning = false;
-        //updateDBStats();
+        updateDBStats(updatedGame);
       }
+    }
+    if (updatedGame.updatePause) {
+      updateDBPause(updatedGame);
+      updatedGame.updatePause = false;
     }
     drawPong(updatedGame, draw);
     lastTimestampRef.current = timestamp;

@@ -5,6 +5,7 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { CreateStatsDTO } from '../dto/CreateStats.dto';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import { StatsImproved } from '@transcendence/shared/types/Stats.types';
+import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
 
 @Injectable()
 export class StatsService {
@@ -28,11 +29,7 @@ export class StatsService {
 
   public async updateStats(
     userId: number,
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
-    mode: 'League' | 'Party' | 'Training',
-    side: 'Left' | 'Right',
-    score: ScoreInfo,
-    nbRound: number,
+    update: UpdateStatsDTO,
   ): Promise<Stats> {
     try {
       let stats = await this.statsRepository.findOne({
@@ -41,12 +38,30 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
-      if (mode === 'League') {
-        stats = this.defineLeagueStats(stats, side, type, score, nbRound);
-      } else if (mode === 'Party') {
-        stats = this.definePartyStats(stats, side, type, score, nbRound);
-      } else if (mode === 'Training') {
-        stats = this.defineTrainingStats(stats, side, type, score, nbRound);
+      if (update.mode === 'League') {
+        stats = this.defineLeagueStats(
+          stats,
+          update.side,
+          update.type,
+          update.score,
+          update.nbRound,
+        );
+      } else if (update.mode === 'Party') {
+        stats = this.definePartyStats(
+          stats,
+          update.side,
+          update.type,
+          update.score,
+          update.nbRound,
+        );
+      } else if (update.mode === 'Training') {
+        stats = this.defineTrainingStats(
+          stats,
+          update.side,
+          update.type,
+          update.score,
+          update.nbRound,
+        );
       }
       return await this.statsRepository.save(stats);
     } catch (error) {
@@ -135,7 +150,7 @@ export class StatsService {
   private defineLeagueStats(
     stats: Stats,
     side: 'Left' | 'Right',
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
   ): Stats {
@@ -182,7 +197,7 @@ export class StatsService {
   private definePartyStats(
     stats: Stats,
     side: 'Left' | 'Right',
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
   ): Stats {
@@ -247,7 +262,7 @@ export class StatsService {
   private defineTrainingStats(
     stats: Stats,
     side: 'Left' | 'Right',
-    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
   ) {

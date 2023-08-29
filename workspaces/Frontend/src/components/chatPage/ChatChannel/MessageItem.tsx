@@ -71,7 +71,7 @@ export default function MessageItem({
   };
 
   async function sendInvitation(
-    gameType: "Classic" | "Best3" | "Best5" | "Custom"
+    gameType: "Classic" | "Best3" | "Best5" | "Custom" | "Story"
   ) {
     setLoading(true);
     const settings: GameDTO = {

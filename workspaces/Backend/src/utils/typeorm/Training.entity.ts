@@ -29,7 +29,7 @@ export class Training {
   name: string;
 
   @Column()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
 
   @Column()
   player: number;

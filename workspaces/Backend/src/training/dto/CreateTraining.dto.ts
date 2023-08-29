@@ -7,7 +7,7 @@ export class CreateTrainingDTO {
 
   @IsString()
   @IsNotEmpty()
-  type: 'Classic' | 'Best3' | 'Best5' | 'Custom';
+  type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
 
   @IsNumber()
   @IsNotEmpty()
