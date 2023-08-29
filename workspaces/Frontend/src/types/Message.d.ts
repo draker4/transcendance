@@ -5,5 +5,6 @@ type Message = {
     sender?: User; // le user emetteur -- garder le type Pongie ??
     date: Date;// date d'emmission ?
     isServerNotif: boolean;
+    join?: boolean;
     // destination : channel ou pongie ou channel type privateMsg comme backend ?
 }

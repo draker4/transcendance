@@ -183,6 +183,8 @@ export class MatchmakingService {
 					name: name_1 + ' vs ' + name_2,
 					type: 'Classic',
 					mode: 'League',
+					// bapt jai rajouté invite ca compilait pas [!] [!]
+					invite: -1,
 					host: user1.Player_Id,
 					opponent: user2.Player_Id,
 					hostSide: 'Left',

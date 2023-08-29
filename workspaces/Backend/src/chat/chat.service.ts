@@ -515,6 +515,66 @@ export class ChatService {
     }
   }
 
+  async getChannelId(opponentId: number, userId: number) {
+      try {
+        const	user = await this.usersService.getUserChannels(userId);
+        const	pongie = await this.usersService.getUserChannels(opponentId);
+  
+        if (!pongie || !userId)
+          throw new Error('no user found');
+
+        // find name of the channel (both ids)
+        const channelName = userId < opponentId
+                          ? userId + " " + opponentId
+                          : opponentId + " " + userId;
+
+        let channel = await this.channelService.getChannelByName(
+          channelName, true
+        );
+
+        if (!channel)
+        channel = await this.channelService.addChannel(
+          channelName,
+          'privateMsg',
+        );
+  
+        // check if relation exists for both pongers
+        let relationUser = await this.userChannelRelation.findOne({
+          where: { channelId : channel.id, userId: userId },
+          relations: ["user", "channel"],
+        });
+  
+        if (!relationUser) {
+          await this.usersService.updateUserChannels(user, channel);
+          relationUser = await this.userChannelRelation.findOne({
+            where: { channelId : channel.id, userId: userId },
+            relations: ["user", "channel"]
+          });
+        }
+  
+        let relationPongie = await this.userChannelRelation.findOne({
+          where: { channelId : channel.id, userId: opponentId },
+          relations: ["user", "channel"],
+        });
+  
+        if (!relationPongie) {
+          await this.usersService.updateUserChannels(user, channel);
+          relationPongie = await this.userChannelRelation.findOne({
+            where: { channelId : channel.id, userId: userId },
+            relations: ["user", "channel"]
+          });
+        }
+  
+        if (!relationPongie || !relationUser)
+          throw new Error('cannot create relation');
+
+        return channel.id;
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
+  }
+
   async getAllChannels(id: number): Promise<channelDto[]> {
     try {
       // get all channels
@@ -1648,7 +1708,7 @@ export class ChatService {
   }
 
 
-  async receiveNewMsg(message: {content:string, channelId:number}, reqUserId: number, server: Server) {
+  async receiveNewMsg(message: newMsgDto, reqUserId: number, server: Server) {
     try {
       const now: Date | string = new Date();
       const nowtoISOString = now.toISOString();
@@ -1677,6 +1737,7 @@ export class ChatService {
         channelName: fetchedChannel.name,
         channelId: fetchedChannel.id,
         isServerNotif: false,
+        join: message.join,
       };
 
       const makeMsg: MakeMessage = {
@@ -1684,6 +1745,7 @@ export class ChatService {
         user: sender,
         channel: fetchedChannel,
         isServerNotif: false,
+        join: message.join,
       }
 
       this.log(

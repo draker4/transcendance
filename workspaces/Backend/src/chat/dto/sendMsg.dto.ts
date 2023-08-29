@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsDateString, IsNotEmpty, IsNumber, IsObject, IsString, Length } from 'class-validator';
+import { IsBoolean, IsDateString, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString, Length } from 'class-validator';
 import { User } from 'src/utils/typeorm/User.entity';
 
 export class sendMsgDto {
@@ -27,6 +27,10 @@ export class sendMsgDto {
   @IsNotEmpty()
   @IsBoolean()
   isServerNotif: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  join?: boolean;
 }
 
 /*
