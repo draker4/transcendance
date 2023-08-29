@@ -5,7 +5,7 @@ import { MdLogout, MdPlayArrow } from "react-icons/md";
 
 //Import le service pour les games
 import TrainingService from "@/services/Training.service";
-import styles from "@/styles/lobby/InGame.module.css";
+import styles from "@/styles/lobby/training/InTraining.module.css";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

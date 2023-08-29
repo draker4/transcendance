@@ -94,7 +94,7 @@ export class StoryService {
     }
   }
 
-  public async getUserStory(userId: number): Promise<ReturnData> {
+  public async getUserStories(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -103,79 +103,45 @@ export class StoryService {
       const story = await this.storyRepository.findOne({
         where: { userId: userId },
       });
+
       if (!story) {
         ret.message = 'Story not found';
         return ret;
       }
-      const userData: UserTrainingData[] = [
-        {
-          levelCompleted: story.levelCompleted1,
-          levelAttempted: story.levelAttempted1,
-        },
-        {
-          levelCompleted: story.levelCompleted2,
-          levelAttempted: story.levelAttempted2,
-        },
-        {
-          levelCompleted: story.levelCompleted3,
-          levelAttempted: story.levelAttempted3,
-        },
-        {
-          levelCompleted: story.levelCompleted4,
-          levelAttempted: story.levelAttempted4,
-        },
-        {
-          levelCompleted: story.levelCompleted5,
-          levelAttempted: story.levelAttempted5,
-        },
-        {
-          levelCompleted: story.levelCompleted6,
-          levelAttempted: story.levelAttempted6,
-        },
-        {
-          levelCompleted: story.levelCompleted7,
-          levelAttempted: story.levelAttempted7,
-        },
-        {
-          levelCompleted: story.levelCompleted8,
-          levelAttempted: story.levelAttempted8,
-        },
-        {
-          levelCompleted: story.levelCompleted9,
-          levelAttempted: story.levelAttempted9,
-        },
-        {
-          levelCompleted: story.levelCompleted10,
-          levelAttempted: story.levelAttempted10,
-        },
-      ];
+
+      const userData: UserTrainingData[] = Array.from(
+        { length: 10 },
+        (_, i) => ({
+          levelCompleted: story[`levelCompleted${i + 1}`],
+          levelAttempted: story[`levelAttempted${i + 1}`],
+        }),
+      );
+
       const storyDatas: StoryData[] = await this.storyDataRepository.find();
       if (storyDatas.length === 0) {
         await this.createStoryData();
       }
-      let userStories: UserStory[];
-      for (let i = 0; i < 10; i++) {
-        const userStory: UserStory = {
-          level: i + 1,
-          levelCompleted: userData[0].levelCompleted,
-          levelAttempted: userData[0].levelAttempted,
-          name: storyDatas[i].name,
-          maxPoint: storyDatas[i].maxPoint,
-          maxRound: storyDatas[i].maxRound,
-          difficulty: storyDatas[i].difficulty,
-          push: storyDatas[i].push,
-          pause: storyDatas[i].pause,
-          background: storyDatas[i].background,
-          ball: storyDatas[i].ball,
-        };
-        userStories.push(userStory);
-      }
+
+      const userStories: UserStory[] = userData.map((data, i) => ({
+        level: i + 1,
+        levelCompleted: data.levelCompleted,
+        levelAttempted: data.levelAttempted,
+        name: storyDatas[i].name,
+        maxPoint: storyDatas[i].maxPoint,
+        maxRound: storyDatas[i].maxRound,
+        difficulty: storyDatas[i].difficulty,
+        push: storyDatas[i].push,
+        pause: storyDatas[i].pause,
+        background: storyDatas[i].background,
+        ball: storyDatas[i].ball,
+      }));
+
       ret.success = true;
       ret.message = 'Story found';
       ret.data = userStories;
       return ret;
     } catch (error) {
-      ret.error = error;
+      ret.error = error.message;
       return ret;
     }
   }

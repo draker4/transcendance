@@ -26,7 +26,7 @@ export class StoryController {
   // 01 - api/story/get/:userId
   @Get('get/:userId')
   async GetStoryByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    return this.storyService.getUserStory(userId);
+    return this.storyService.getUserStories(userId);
   }
 
   // 02 - api/story/update/:userId

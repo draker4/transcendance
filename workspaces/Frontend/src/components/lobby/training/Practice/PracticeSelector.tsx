@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/TrainingSelector.module.css";
+import styles from "@/styles/lobby/training/practice/PracticeSelector.module.css";
 import Image from "next/image";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
   setSelected: Function;
 };
 
-export default function TrainingSelector({
+export default function PracticeSelector({
   title,
   points,
   rounds,
@@ -34,7 +34,7 @@ export default function TrainingSelector({
       key={title}
       onClick={(event) => handleChange(event)}
     >
-      <h2>{`${title}`}</h2>
+      <h3>{`${title}`}</h3>
       <div className={styles.info}>
         <p>{`Points: ${points === 0 ? "?" : points}`}</p>
         <p>{`Rounds: ${rounds === 0 ? "?" : rounds}`}</p>

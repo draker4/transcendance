@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/styles/lobby/training/CustomTraining.module.css";
+import styles from "@/styles/lobby/training/practice/CustomPractice.module.css";
 import ImgSelector from "@/components/lobby/selector/ImgSelector";
 import Selector from "@/components/lobby/selector/Selector";
 import Slider from "@/components/lobby/selector/Slider";
@@ -26,7 +26,7 @@ type Props = {
   setBall: Function;
 };
 
-export default function CustomTraining({
+export default function CustomPractice({
   selected,
   setSelected,
   maxPoint,

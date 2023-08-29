@@ -1,6 +1,18 @@
-.training {
+.story {
   display: flex;
   flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: solid var(--secondary1) 3px;
+  margin-top: 20px;
+}
+
+.selector {
+  display: flex;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   width: 100%;
