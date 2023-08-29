@@ -4,6 +4,7 @@ import styles from "@/styles/navbar/Navbar.module.css";
 import { Socket } from "socket.io-client";
 import { Badge } from "@mui/material";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const badgeStyle = {
 	"& .MuiBadge-badge": {
@@ -13,6 +14,17 @@ const badgeStyle = {
 	  right: "1px",
 	}
 }
+
+// Fresh Messages listened by websocket
+type ReceivedMsg = {
+  content: string;
+  date: string;
+  sender: User;
+  channelName: string;
+  channelId: number;
+  isServerNotif: boolean;
+  join?: boolean;
+};
 
 export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
 
@@ -32,12 +44,22 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
       });
     }
 
+    const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
+      if (receivedMsg.join)
+        toast.info(`${receivedMsg.sender.login} invited you to a Pong game!`, {
+          position: 'top-center',
+        }
+      );
+    }
+
     socket?.on('notifMsg', updateNotif);
+    socket?.on("sendMsg", handleReceivedMsg);
 
     updateNotif();
 
     return () => {
       socket?.off('notifMsg', updateNotif);
+      socket?.off("sendMsg", handleReceivedMsg);
     }
 
   }, [socket]);

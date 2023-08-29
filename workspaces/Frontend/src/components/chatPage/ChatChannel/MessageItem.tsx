@@ -176,7 +176,8 @@ export default function MessageItem({
             {isFocused &&
             !groupedMessages.isServerNotif &&
             groupedMessages.user.id !== myself.id &&
-            !loading && (
+            !loading &&
+            !groupedMessages.join && (
               <>
                 {textStatus === "connected" &&
                 <div className={styles.inviteButton}>

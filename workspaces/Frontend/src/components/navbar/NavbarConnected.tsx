@@ -31,7 +31,6 @@ export default function NavbarConnected({
 		}
 
 		const	disconnectClient = async () => {
-			// console.log("socket disconnect force");
 			await disconnect();
 			router.refresh();
 		}
