@@ -5,6 +5,9 @@ import { MdStar, Md3GMobiledata, Md5G, MdQuestionMark } from "react-icons/md";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import { confirmBackground, confirmBall, randomMaxPoint, randomMaxRound } from "@/lib/game/random";
+import { useRouter } from "next/navigation";
+import LobbyService from "@/services/Lobby.service";
+import { toast } from "react-toastify";
 
 export default function InviteButton({
 	setLoading,
@@ -21,7 +24,9 @@ export default function InviteButton({
 	addMsg: (msg: Message) => void;
 	isChannel: boolean;
 }) {
-	const [inviteGame, setInviteGame] = useState<boolean>(false);
+	const	[inviteGame, setInviteGame] = useState<boolean>(false);
+	const	router = useRouter();
+	const	lobbyService = new LobbyService();
 	
 	async function sendInvitation(
 		gameType: "Classic" | "Best3" | "Best5" | "Custom"
@@ -65,19 +70,19 @@ export default function InviteButton({
 		}
 	
 		//Creer la game
-		// const res = await lobbyService.createGame(settings);
-		// await toast.promise(
-		//   new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-		//   {
-		// 	pending: "Creating game...",
-		// 	success: "Game created",
-		// 	error: "Error creating game",
-		//   }
-		// );
-		// if (!res.success) {
-		//   console.log(res.message);
-		//   return;
-		// }
+		const res = await lobbyService.createGame(settings);
+		await toast.promise(
+		  new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
+		  {
+			pending: "Creating game...",
+			success: "Game created",
+			error: "Error creating game",
+		  }
+		);
+		if (!res.success) {
+		  console.log(res.message);
+		  return;
+		}
 
 		// send message
 		const newMsg: Message & {
@@ -91,13 +96,11 @@ export default function InviteButton({
 			opponentId: isChannel ? undefined : opponentId,
 			join: true,
 		  };
-
-		console.log("debutla=", newMsg);
 	
 		addMsg(newMsg);
 		setLoading(false)
 
-		// router.push("/home/game/" + res.data);
+		router.push("/home/game/" + res.data);
 	}
 
 	return (
