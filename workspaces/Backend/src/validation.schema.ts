@@ -29,4 +29,5 @@ export const ValidationSchema = Joi.object({
   CLOUD_SECRET: Joi.string().required(),
   CLOUD_API_ENV_VAR: Joi.string().required(),
   CLOUD_FOLDER: Joi.string().required(),
+  ENVIRONNEMENT: Joi.string().required(),
 });

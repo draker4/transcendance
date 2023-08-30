@@ -59,7 +59,7 @@
   appearance: none;
   min-width: 80px;
   max-width: 130px;
-  min-height: 40px;
+  min-height: 30px;
   max-height: 50px;
   border-radius: 4px;
   font-size: clamp(14px, 2vw, 18px);

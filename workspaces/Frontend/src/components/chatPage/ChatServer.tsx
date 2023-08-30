@@ -8,7 +8,9 @@ export default async function ChatServer({ channelId }: {
 	channelId: number | undefined;
 }) {
 	let		token: string | undefined;
-	let		myself: User;
+	let		myself: Profile & {
+		avatar: Avatar;
+	};
 
 	try {
 		token = cookies().get("crunchy-token")?.value;

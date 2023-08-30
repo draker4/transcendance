@@ -36,6 +36,7 @@ const nextConfig = {
     CLOUD_SECRET: process.env.CLOUD_SECRET,
     CLOUD_API_ENV_VAR: process.env.CLOUD_API_ENV_VAR,
     CLOUD_FOLDER: process.env.CLOUD_FOLDER,
+    ENVIRONNEMENT: process.env.ENVIRONNEMENT,
   },
 
   // Image domains to allow image optimization and usage

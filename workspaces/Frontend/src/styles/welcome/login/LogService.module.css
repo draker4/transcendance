@@ -13,7 +13,7 @@
 .logImg {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   width: clamp(140px, 20vw, 500px);
   margin: 10px;

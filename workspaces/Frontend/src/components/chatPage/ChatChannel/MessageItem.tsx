@@ -1,16 +1,15 @@
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import { Badge, CircularProgress, Tooltip } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTv } from "@fortawesome/free-solid-svg-icons";
 import InviteButton from "@/components/InviteGame/InviteButton";
-import { Socket } from "socket.io-client";
 
 type GroupedMsgType = {
-  user: User;
+  user: Profile & { avatar: Avatar };
   date: Date;
   messages: Message[];
   isServerNotif: boolean;
@@ -34,7 +33,7 @@ export default function MessageItem({
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const [color, setColor] = useState<string>("#edf0f0");
-  const [textStatus, setTextStatus] = useState<string>("disconnected");
+  const [textStatus, setTextStatus] = useState<string>("disconnectedd");
   const [loading, setLoading] = useState<boolean>(false);
 
   const badgeStyleStatus = {
@@ -49,19 +48,19 @@ export default function MessageItem({
   };
 
   const handleFocusOn = () => {
-    setIsFocused(true);
+    // setIsFocused(true);
   };
 
   const handleFocusOff = () => {
-    setIsFocused(false);
+    // setIsFocused(false);
   };
 
   const handleHover = () => {
-    setIsFocused(true);
+    // setIsFocused(true);
   };
 
   const handleMouseLeave = () => {
-    setIsFocused(false);
+    // setIsFocused(false);
   };
 
   useEffect(() => {
@@ -72,7 +71,7 @@ export default function MessageItem({
         setColor(chooseColorStatus(text));
       }
     }
-  }, [status]);
+  }, [status, groupedMessages]);
 
   const mappingMessages = groupedMessages.messages.map((msg, index) => (
     <pre key={index}>{msg.content}</pre>

@@ -59,19 +59,22 @@ export default function LogInComponent({ setTextButton }: Props) {
             className={styles.school}
           />
         </div>
-        <div className={styles.oneClick}>
-          <Image
-            alt="google logo"
-            src="/images/auth/google.png"
-            fill
-            style={{
-              objectFit: "cover",
-            }}
-            sizes="100%"
-            onClick={openGoogle}
-            className={styles.google}
-          />
-        </div>
+        {
+          process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" &&
+          <div className={styles.oneClick}>
+            <Image
+              alt="google logo"
+              src="/images/auth/google.png"
+              fill
+              style={{
+                objectFit: "cover",
+              }}
+              sizes="100%"
+              onClick={openGoogle}
+              className={styles.google}
+            />
+          </div>
+        }
       </div>
     </div>
   );
