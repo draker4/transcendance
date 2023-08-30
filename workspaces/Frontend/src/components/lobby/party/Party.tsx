@@ -13,10 +13,9 @@ type Props = {
 };
 
 export default function Party({ lobbyService, profile }: Props) {
-
   return (
     <div className={styles.party}>
-      {<CreateParty lobbyService={lobbyService} userId={profile.id}/>}
+      {<CreateParty lobbyService={lobbyService} userId={profile.id} />}
       {<PartyList lobbyService={lobbyService} mode={"Party"} />}
     </div>
   );

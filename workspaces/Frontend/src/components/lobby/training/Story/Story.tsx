@@ -14,6 +14,7 @@ import StoryService from "@/services/Story.service";
 import TrainingService from "@/services/Training.service";
 import { confirmBackground, confirmBall } from "@/lib/game/random";
 import StorySelector from "./StorySelector";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   profile: Profile;
@@ -22,6 +23,7 @@ type Props = {
 
 export default function Story({ profile, trainingService }: Props) {
   const storyService = new StoryService();
+  const [loading, setLoading] = useState<boolean>(false);
   const [stories, setStories] = useState<UserStory[]>([]);
   const router = useRouter();
   const [levelSelected, setLevelSelected] = useState<number>(0);
@@ -58,16 +60,24 @@ export default function Story({ profile, trainingService }: Props) {
     storyService.getUserStories(profile.id).then((ret) => {
       if (ret && ret.success) {
         setStories(ret.data);
+        setLoading(true);
       } else if (ret) {
         console.log(ret.message);
       }
     });
   }, []);
+  if (!loading) {
+    return (
+      <div className={styles.story}>
+        <h2>Story</h2>
+        <CircularProgress />
+      </div>
+    );
+  }
   return (
     <div className={styles.story}>
       <h2>Story</h2>
       <div className={styles.selector}>
-        {/* Render details for each story */}
         {stories.map((story) => (
           <StorySelector
             title={story.name}

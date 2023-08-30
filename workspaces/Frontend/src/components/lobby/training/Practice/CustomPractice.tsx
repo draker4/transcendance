@@ -59,7 +59,8 @@ export default function CustomPractice({
         className={styles.inactive}
         onClick={(event) => handleChange(event)}
       >
-        <h2>Custom</h2>
+        <h3>Custom</h3>
+        <p className={styles.details}>It is time for you to decide</p>
       </button>
     );
   }
@@ -69,7 +70,8 @@ export default function CustomPractice({
         className={styles.active}
         onClick={(event) => handleChange(event)}
       >
-        <h2>Custom</h2>
+        <h3>Custom</h3>
+        <p className={styles.details}>It is time for you to decide</p>
       </button>
       <div className={styles.settings}>
         {/* Push */}
@@ -114,7 +116,7 @@ export default function CustomPractice({
       <div className={styles.gameImage}>
         {/* Background */}
         <div className={styles.background}>
-          <label className={styles.section}>Background</label>
+          <h4 className={styles.section}>Practice Field</h4>
           <ImgSelector
             type={"background"}
             value={background}
@@ -128,7 +130,7 @@ export default function CustomPractice({
 
         {/* Ball */}
         <div className={styles.ball}>
-          <label className={styles.section}>Ball</label>
+          <h4 className={styles.section}>Practice Ball</h4>
           <ImgSelector
             type={"ball"}
             value={ball}

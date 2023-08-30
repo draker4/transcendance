@@ -16,24 +16,22 @@
   font-size: 14px;
   margin-top: 5px;
   width: 33%;
-  background-color: var(--primary2);
+  background-color: var(--primary1);
 }
 
 .activeBtn {
-  color: var(--secondary1);
-  background-color: var(--primary2);
-  border: 5px solid var(--accent3);
+  color: var(--secondary2);
+  border: 3px solid var(--secondary2);
   transition: all 0.3s ease-in;
 }
 
 .inactiveBtn {
-  color: var(--secondary1);
-  background-color: var(--primary2);
-  border: 5px solid var(--primary2);
+  color: var(--primary3);
+  border: 3px solid var(--primary2);
   transition: all 0.3s ease-out;
 }
 
 .inactiveBtn:hover {
   color: var(--secondary2);
-  border: 5px solid var(--primary3);
+  border: 3px solid var(--accent1);
 }

@@ -131,6 +131,7 @@ export default function CreateParty({ lobbyService, userId }: Props) {
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <div className={styles.createParty}>
+      <h2>Define Your Party</h2>
       <DefineName
         name={name}
         setName={setName}
@@ -138,7 +139,7 @@ export default function CreateParty({ lobbyService, userId }: Props) {
         setEnterName={setEnterName}
       />
 
-      <label className={styles.section}>Define Party Settings</label>
+      <h3 className={styles.section}>Party Settings</h3>
       <DefineType
         selected={selected}
         setSelected={setSelected}
@@ -157,7 +158,6 @@ export default function CreateParty({ lobbyService, userId }: Props) {
         speed={speed}
         setSpeed={setSpeed}
       />
-      <label className={styles.section}>Define Party Field</label>
       <DefineField
         background={background}
         setBackground={setBackground}

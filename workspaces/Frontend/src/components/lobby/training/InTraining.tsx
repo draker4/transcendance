@@ -36,7 +36,7 @@ export default function InTraining({
   }
   if (!trainingId) return;
   return (
-    <div className={styles.isInTraining}>
+    <div className={styles.inTraining}>
       <h2>You have a current training</h2>
       <div className={styles.inGameChoice}>
         <button

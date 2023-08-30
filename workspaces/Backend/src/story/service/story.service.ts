@@ -121,9 +121,10 @@ export class StoryService {
       if (storyDatas.length === 0) {
         await this.createStoryData();
       }
+      storyDatas.sort((a, b) => a.level - b.level);
 
       const userStories: UserStory[] = userData.map((data, i) => ({
-        level: i + 1,
+        level: storyDatas[i].level,
         levelCompleted: data.levelCompleted,
         levelAttempted: data.levelAttempted,
         name: storyDatas[i].name,
@@ -152,6 +153,7 @@ export class StoryService {
     try {
       const levels: CreateStoryDataDTO[] = [
         {
+          level: 1,
           name: 'Want Be First',
           maxPoint: 5,
           maxRound: 1,
@@ -162,6 +164,7 @@ export class StoryService {
           ball: 'Volley1',
         },
         {
+          level: 2,
           name: 'El Classico',
           maxPoint: 9,
           maxRound: 1,
@@ -172,6 +175,7 @@ export class StoryService {
           ball: 'Classic',
         },
         {
+          level: 3,
           name: 'Round Up The Pause',
           maxPoint: 3,
           maxRound: 3,
@@ -182,6 +186,7 @@ export class StoryService {
           ball: 'Basket',
         },
         {
+          level: 4,
           name: `Let's Push`,
           maxPoint: 5,
           maxRound: 3,
@@ -192,6 +197,7 @@ export class StoryService {
           ball: 'Soccer4',
         },
         {
+          level: 5,
           name: 'Best Three',
           maxPoint: 7,
           maxRound: 3,
@@ -202,6 +208,7 @@ export class StoryService {
           ball: 'Bowling2',
         },
         {
+          level: 6,
           name: 'Best Five',
           maxPoint: 5,
           maxRound: 5,
@@ -212,6 +219,7 @@ export class StoryService {
           ball: 'Volley2',
         },
         {
+          level: 7,
           name: 'Rising Challenge',
           maxPoint: 5,
           maxRound: 7,
@@ -222,6 +230,7 @@ export class StoryService {
           ball: 'Random',
         },
         {
+          level: 8,
           name: 'Advanced Struggle',
           maxPoint: 3,
           maxRound: 9,
@@ -232,6 +241,7 @@ export class StoryService {
           ball: 'Soccer2',
         },
         {
+          level: 9,
           name: 'Masterful Test',
           maxPoint: 9,
           maxRound: 5,
@@ -242,6 +252,7 @@ export class StoryService {
           ball: 'Football',
         },
         {
+          level: 10,
           name: 'Transcendence',
           maxPoint: 9,
           maxRound: 9,

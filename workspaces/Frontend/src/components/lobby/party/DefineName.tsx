@@ -40,7 +40,7 @@ export default function DefineName({
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <div className={styles.name}>
-      <label className={styles.section}>Party Name</label>
+      <h3 className={styles.section}>Party Name</h3>
       <div className={styles.nameContainer}>
         <input
           className={enterName ? styles.nameInputError : styles.nameInput}

@@ -27,7 +27,6 @@
 }
 
 .right {
-  /* border: 1px solid red; */
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -58,7 +57,7 @@
   appearance: none;
   min-width: 80px;
   max-width: 130px;
-  min-height: 30px;
+  min-height: 40px;
   max-height: 50px;
   border-radius: 4px;
   font-size: clamp(14px, 2vw, 18px);
@@ -67,13 +66,16 @@
   color: var(--tertiary1);
   background-color: var(--primary1);
   border: 3px solid var(--accent1);
-  /* transition: all 0.3s ease-in; */
 }
 
 .logInBtn:hover {
   color: var(--accent3);
   border: 3px solid var(--accent3);
   cursor: pointer;
+}
+
+.logInBtn:active {
+  scale: 0.95;
 }
 
 .title {
@@ -85,32 +87,34 @@
 }
 
 .chatBtn {
-  flex-shrink: 0;
-  margin-left: 20px;
-  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: clamp(40px, 3vh, 70px);
   height: clamp(40px, 3vh, 70px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 100%;
   color: var(--secondary1);
-  border: 3px solid var(--accent1);
   background-color: var(--primary1);
-  -webkit-tap-highlight-color: transparent;
+  border: 3px solid var(--secondary1);
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.chatBtn:hover {
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
+}
+
+.chatBtn:active {
+  scale: 0.95;
 }
 
 .menu {
-  /* border: 2px solid red; */
   width: 70%;
   height: 70%;
   margin: 0;
   padding: 0;
   padding-right: 2px;
-}
-
-.chatBtn:hover {
-  border: 3px solid var(--accent3);
-  cursor: pointer;
 }
 
 @media screen and (min-width: 2000px) {

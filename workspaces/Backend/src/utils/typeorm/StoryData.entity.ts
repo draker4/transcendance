@@ -9,7 +9,10 @@ import {
 @Entity()
 export class StoryData {
   @PrimaryGeneratedColumn()
-  level: string;
+  id: string;
+
+  @Column()
+  level: number;
 
   @CreateDateColumn({
     type: 'timestamptz',

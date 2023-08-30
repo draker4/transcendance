@@ -43,6 +43,10 @@ export class TrainingService {
       message: 'Catched an error',
     };
     try {
+      const trainingExist = await this.isInTraining(training.player);
+      if (trainingExist.success) {
+        await this.quitTraining(trainingExist.data, training.player);
+      }
       const newTraining = await this.trainingRepository.save(training);
       const newScore: CreateScoreDTO = {
         gameId: newTraining.id,
@@ -109,6 +113,7 @@ export class TrainingService {
         training.side == 'Right' ? training.player : AI_ID,
         training.type,
       );
+      trainingData.status = training.status;
       ret.success = true;
       ret.message = 'Training found';
       ret.data = trainingData;

@@ -31,19 +31,14 @@
   list-style: none;
   display: flex;
   flex-flow: column nowrap;
-  justify-content: center;
   text-align: center;
   padding: 5px 10px;
-  border: 2px solid var(--accent1);
+  border: 2px solid var(--secondary1);
   font-family: var(--title-font);
   background-color: var(--primary1);
   font-weight: 500;
   font-size: clamp(16px, 2vh, 30px);
   border-radius: 5px;
-}
-
-.profile {
-  /* text-transform: uppercase; */
 }
 
 .list a,

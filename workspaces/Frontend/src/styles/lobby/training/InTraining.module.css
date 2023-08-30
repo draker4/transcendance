@@ -1,14 +1,13 @@
-.isInGame {
-  width: 100%;
-  min-height: 50%;
-  margin-block: 20px;
+.inTraining {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
-  text-align: center;
-  background-color: var(--primary2);
-  border-radius: 10px;
+  justify-content: center;
+  width: 100%;
   padding: 10px;
+  border-radius: 10px;
+  border: solid var(--secondary1) 3px;
+  margin-top: 10px;
 }
 
 .inGameChoice {

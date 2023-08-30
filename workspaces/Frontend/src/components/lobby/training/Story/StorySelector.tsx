@@ -32,7 +32,9 @@ export default function StorySelector({
     <div className={styles.storySelector}>
       <h3>{`Level ${level}`}</h3>
       <button
-        className={level === levelSelected ? styles.active : styles.inactive}
+        className={
+          level - 1 === levelSelected ? styles.active : styles.inactive
+        }
         key={title}
         onClick={(event) => handleChange(event)}
       >

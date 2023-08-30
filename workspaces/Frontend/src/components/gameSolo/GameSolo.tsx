@@ -40,9 +40,14 @@ export default function Game({ profile, trainingId }: Props) {
         if (ret.success == false) {
           setError(true);
         } else {
-          ret.data.status = "Playing";
-          setGameData(ret.data);
-          setIsLoading(false);
+          console.log(ret.data);
+          if (ret.data.status === "Finished") {
+            router.push("/home");
+          } else {
+            ret.data.status = "Playing";
+            setGameData(ret.data);
+            setIsLoading(false);
+          }
           if (ret.data.playerLeft.id === profile.id) {
             setIsPlayer("Left");
           } else if (ret.data.playerRight.id === profile.id) {

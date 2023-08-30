@@ -34,6 +34,7 @@ export default function DefineField({
   return (
     <div className={styles.fieldSelector}>
       {/* Background */}
+      <h3 className={styles.section}>Party Field</h3>
       <ImgSelector
         type={"background"}
         value={background}
@@ -45,7 +46,7 @@ export default function DefineField({
       />
 
       {/* Ball */}
-      <label className={styles.section}>Ball</label>
+      <h3 className={styles.section}>Party Ball</h3>
       <ImgSelector
         type={"ball"}
         value={ball}

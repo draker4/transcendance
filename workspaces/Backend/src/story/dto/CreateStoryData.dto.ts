@@ -3,6 +3,10 @@ import { IsNumber, IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 export class CreateStoryDataDTO {
   @IsString()
   @IsNotEmpty()
+  level: number;
+
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsNumber()
