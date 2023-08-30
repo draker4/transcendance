@@ -12,6 +12,7 @@ import {
   updateDBStatus,
   updateDBStats,
   updateDBPause,
+  updateDBStory,
 } from "./updateDB";
 
 const lastTimestampRef = { current: 0 };
@@ -89,6 +90,9 @@ export const gameLoop = (
       if (updatedGame.status === "Finished") {
         gameLoopRunning = false;
         updateDBStats(updatedGame);
+        if (updatedGame.type === "Story") {
+          updateDBStory(updatedGame);
+        }
       }
     }
     if (updatedGame.updatePause) {

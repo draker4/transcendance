@@ -42,6 +42,7 @@ import {
 } from '@transcendence/shared/constants/Game.constants';
 import { StatsService } from '@/stats/service/stats.service';
 import { PauseUpdate } from '@transcendence/shared/types/Pause.types';
+import { StatusService } from '@/statusService/status.service';
 
 export class Pong {
   // Game Loop variables
@@ -67,6 +68,7 @@ export class Pong {
     private readonly gameService: GameService,
     private readonly scoreService: ScoreService,
     private readonly statsService: StatsService,
+    private readonly statusService: StatusService,
     private readonly logger: ColoredLogger,
     score: ScoreInfo,
   ) {
@@ -148,6 +150,7 @@ export class Pong {
     if (user.id === this.gameDB.host || user.id === this.gameDB.opponent) {
       try {
         await this.joinAsPlayer(user);
+        this.statusService.add(user.id.toString(), 'in game');
         this.logger.log(
           `User ${user.id} joined ${this.gameId} as ${
             user.id === this.gameDB.host ? 'Host' : 'Opponent'

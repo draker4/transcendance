@@ -107,6 +107,7 @@ export type GameData = {
   background: string;
   ballImg: string;
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
+  storyLevel?: number;
   mode: "League" | "Party" | "Training";
   hostSide: "Left" | "Right";
   difficulty: -2 | -1 | 0 | 1 | 2;

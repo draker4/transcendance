@@ -124,10 +124,6 @@ export default function CreateParty({ lobbyService, userId }: Props) {
     }
   }, [selected]);
 
-  useEffect(() => {
-    console.log("Difficulty: ", speed);
-  }, [speed]);
-
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <div className={styles.createParty}>

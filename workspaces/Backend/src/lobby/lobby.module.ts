@@ -28,6 +28,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { StatusService } from '@/statusService/status.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
@@ -58,8 +59,9 @@ import { StoryService } from '@/story/service/story.service';
     MatchmakingService,
     ScoreService,
     StatsService,
-    UsersService,
+    StatusService,
     StoryService,
+    UsersService,
   ],
   exports: [LobbyService],
 })

@@ -110,6 +110,8 @@ export class StatsService {
           stats.trainingBest5Lost,
         customWon: stats.partyCustomWon + stats.trainingCustomWon,
         customLost: stats.partyCustomLost + stats.trainingCustomLost,
+        storyWon: stats.trainingStoryWon,
+        storyLost: stats.trainingStoryLost,
         rageQuitWin: stats.leagueRageQuitWin + stats.partyRageQuitWin,
         rageQuitLost: stats.leagueRageQuitLost + stats.partyRageQuitLost,
         disconnectWin: stats.leagueDisconnectWin + stats.partyDisconnectWin,
@@ -272,11 +274,13 @@ export class StatsService {
         else if (type === 'Best3') stats.trainingBest3Won += 1;
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
+        else if (type === 'Story') stats.trainingStoryWon += 1;
       } else {
         if (type === 'Classic') stats.trainingClassicLost += 1;
         else if (type === 'Best3') stats.trainingBest3Lost += 1;
         else if (type === 'Best5') stats.trainingBest5Lost += 1;
         else if (type === 'Custom') stats.trainingCustomLost += 1;
+        else if (type === 'Story') stats.trainingStoryLost += 1;
       }
     } else {
       if (side === 'Left') {
@@ -284,11 +288,13 @@ export class StatsService {
         else if (type === 'Best3') stats.trainingBest3Lost += 1;
         else if (type === 'Best5') stats.trainingBest5Lost += 1;
         else if (type === 'Custom') stats.trainingCustomLost += 1;
+        else if (type === 'Story') stats.trainingStoryLost += 1;
       } else {
         if (type === 'Classic') stats.trainingClassicWon += 1;
         else if (type === 'Best3') stats.trainingBest3Won += 1;
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
+        else if (type === 'Story') stats.trainingStoryWon += 1;
       }
     }
     stats.trainingRoundWon +=

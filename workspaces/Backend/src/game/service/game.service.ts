@@ -18,6 +18,7 @@ import { Score } from '@/utils/typeorm/Score.entity';
 import { ScoreService } from '@/score/service/score.service';
 import { CreateScoreDTO } from '@/score/dto/CreateScore.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
+import { StatusService } from '@/statusService/status.service';
 
 @Injectable()
 export class GameService {
@@ -30,6 +31,7 @@ export class GameService {
     private readonly usersService: UsersService,
     private readonly avatarService: AvatarService,
     private readonly cryptoService: CryptoService,
+    private readonly statusService: StatusService,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -242,6 +244,7 @@ export class GameService {
         throw new Error('Game already finnished');
       }
       await this.gameRepository.save(game);
+      this.statusService.add(userId.toString(), 'connected');
     } catch (error) {
       throw new Error(error.message);
     }

@@ -114,6 +114,7 @@ export class TrainingService {
         training.type,
       );
       trainingData.status = training.status;
+      trainingData.storyLevel = training.storyLevel;
       ret.success = true;
       ret.message = 'Training found';
       ret.data = trainingData;

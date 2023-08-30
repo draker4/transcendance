@@ -16,3 +16,8 @@ export type UserTrainingData = {
   levelCompleted: boolean;
   levelAttempted: number;
 };
+
+export type StoryUpdate = {
+  level: number;
+  completed: boolean;
+};

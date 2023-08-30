@@ -28,6 +28,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { StatusService } from '@/statusService/status.service';
 
 @Module({
   imports: [
@@ -58,8 +59,9 @@ import { StoryService } from '@/story/service/story.service';
     MatchmakingService,
     ScoreService,
     StatsService,
-    UsersService,
     StoryService,
+    StatusService,
+    UsersService,
   ],
   exports: [MatchmakingService],
 })

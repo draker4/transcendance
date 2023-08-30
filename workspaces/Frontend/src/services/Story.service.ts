@@ -1,4 +1,5 @@
 import fetchData from "@/lib/fetch/fetchData";
+import { StoryUpdate } from "@transcendence/shared/types/Story.types";
 
 export default class StoryService {
   private token?: string;
@@ -21,5 +22,10 @@ export default class StoryService {
     } catch (error) {
       console.log(`Error Getting User Stories: ${error}`);
     }
+  }
+
+  public async updateStory(userId: number, update: StoryUpdate): Promise<void> {
+    const body = JSON.stringify(update);
+    await fetchData(this.token, "story", `update/${userId}`, "PUT", body);
   }
 }

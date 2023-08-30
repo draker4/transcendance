@@ -65,6 +65,8 @@ export type StatsImproved = {
   best5Lost: number;
   customWon: number;
   customLost: number;
+  storyWon: number;
+  storyLost: number;
   rageQuitWin: number;
   rageQuitLost: number;
   disconnectWin: number;

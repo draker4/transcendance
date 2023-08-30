@@ -153,6 +153,12 @@ export class Stats {
   trainingCustomLost: number;
 
   @Column({ default: 0 })
+  trainingStoryWon: number;
+
+  @Column({ default: 0 })
+  trainingStoryLost: number;
+
+  @Column({ default: 0 })
   trainingRoundWon: number;
 
   @Column({ default: 0 })

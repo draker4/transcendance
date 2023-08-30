@@ -20,6 +20,7 @@ import { ColoredLogger } from '../colored-logger';
 import { ScoreService } from '@/score/service/score.service';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import { StatsService } from '@/stats/service/stats.service';
+import { StatusService } from '@/statusService/status.service';
 
 @Injectable()
 export class GameManager {
@@ -34,6 +35,7 @@ export class GameManager {
     private readonly gameService: GameService,
     private readonly scoreService: ScoreService,
     private readonly statsService: StatsService,
+    private readonly statusService: StatusService,
     private readonly logger: ColoredLogger,
   ) {
     this.logger = new ColoredLogger(GameManager.name); // Set the module name for the logger
@@ -145,7 +147,7 @@ export class GameManager {
       this.usersConnected = this.usersConnected.filter(
         (user) => user.id !== userId && user.socket.id !== socket.id,
       );
-
+      this.statusService.add(user.id.toString(), 'connected');
       return { success: true, message: 'User disconnected' };
     } catch (error) {
       this.logger.error(
@@ -181,6 +183,7 @@ export class GameManager {
         this.gameService,
         this.scoreService,
         this.statsService,
+        this.statusService,
         this.logger,
         score,
       );

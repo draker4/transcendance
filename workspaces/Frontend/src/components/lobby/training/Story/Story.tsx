@@ -27,11 +27,12 @@ export default function Story({ profile, trainingService }: Props) {
   const [stories, setStories] = useState<UserStory[]>([]);
   const router = useRouter();
   const [levelSelected, setLevelSelected] = useState<number>(0);
+  const [currentLevel, setCurrentLevel] = useState<number>(0);
   async function createPong() {
     const settings: CreateTrainingDTO = {
       name: stories[levelSelected].name,
       type: "Story",
-      storyLevel: levelSelected,
+      storyLevel: levelSelected + 1,
       player: profile.id,
       side: "Left",
       maxPoint: stories[levelSelected].maxPoint,
@@ -61,6 +62,11 @@ export default function Story({ profile, trainingService }: Props) {
       if (ret && ret.success) {
         setStories(ret.data);
         setLoading(true);
+        let checkLevel: number = 0;
+        while (ret.data[checkLevel].levelCompleted) {
+          checkLevel++;
+        }
+        setCurrentLevel(checkLevel);
       } else if (ret) {
         console.log(ret.message);
       }
@@ -87,6 +93,7 @@ export default function Story({ profile, trainingService }: Props) {
             level={story.level}
             levelSelected={levelSelected}
             setLevelSelected={setLevelSelected}
+            currentLevel={currentLevel}
           />
         ))}
       </div>

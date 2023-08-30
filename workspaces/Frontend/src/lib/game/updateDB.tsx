@@ -6,10 +6,13 @@ import { ScoreUpdate } from "@transcendence/shared/types/Score.types";
 import { PauseUpdate } from "@transcendence/shared/types/Pause.types";
 import { StatsUpdate } from "@transcendence/shared/types/Stats.types";
 import { AI_ID } from "@transcendence/shared/constants/Game.constants";
+import { StoryUpdate } from "@transcendence/shared/types/Story.types";
+import StoryService from "@/services/Story.service";
 
 const scoreService = new ScoreService();
 const trainingService = new TrainingService();
 const statsService = new StatsService();
+const storyService = new StoryService();
 
 export async function updateDBScore(game: GameData) {
   try {
@@ -73,6 +76,31 @@ export async function updateDBStats(game: GameData) {
       game.playerLeft.id === AI_ID ? game.playerRight.id : game.playerLeft.id,
       update
     );
+  } catch (error) {
+    console.log(`Error Updating Stats: ${error}`);
+  }
+}
+
+export async function updateDBStory(game: GameData) {
+  try {
+    if (game.storyLevel === undefined) {
+      console.log("No story level defined");
+      return;
+    }
+    const update: StoryUpdate = {
+      level: game.storyLevel,
+      completed: false,
+    };
+    if (
+      (game.playerLeft.id === AI_ID &&
+        game.score.rightRound > game.maxRound / 2) ||
+      (game.playerRight.id === AI_ID &&
+        game.score.leftRound > game.maxRound / 2)
+    ) {
+      update.completed = true;
+    }
+    console.log("update story", update, game);
+    await storyService.updateStory(game.playerLeft.id, update);
   } catch (error) {
     console.log(`Error Updating Stats: ${error}`);
   }
