@@ -28,14 +28,11 @@ export default function GameLine({
 
   async function joinGame() {
     const res: ReturnData = await lobbyService.joinGame(gameInfo.id);
-    await toast.promise(
-      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-      {
-        pending: "Joing game...",
-        success: "Good Luck !",
-        error: "Error joining game",
-      }
-    );
+    await toast.promise(new Promise((resolve) => resolve(res)), {
+      pending: "Joing game...",
+      success: "Good Luck !",
+      error: "Error joining game",
+    });
     if (!res.success) {
       console.log(res.message);
       console.log(res.error);

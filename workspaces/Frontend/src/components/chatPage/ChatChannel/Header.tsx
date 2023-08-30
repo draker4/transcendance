@@ -1,8 +1,8 @@
-import InviteButton from "@/components/InviteGame/InviteButton";
+import InviteButton from "@/components/chatPage/ChatChannel/GameLink/InviteButton";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import Channel_Service from "@/services/Channel.service";
-import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css"
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import { Badge, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
@@ -17,15 +17,20 @@ type Props = {
   addMsg: (msg: Message) => void;
 };
 
-export default function 
-Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
-
-	const channelService = new Channel_Service();
-	let   url:string = "";
-  const	[color, setColor] = useState<string>("#edf0f0");
-  const	[textStatus, setTextStatus] = useState<string>("disconnected");
+export default function Header({
+  icon,
+  channel,
+  myself,
+  channelCodeName,
+  status,
+  addMsg,
+}: Props) {
+  const channelService = new Channel_Service();
+  let url: string = "";
+  const [color, setColor] = useState<string>("#edf0f0");
+  const [textStatus, setTextStatus] = useState<string>("disconnected");
   const [loading, setLoading] = useState<boolean>(false);
-  let   otherId: number = -1;
+  let otherId: number = -1;
 
   const badgeStyleStatus = {
     "& .MuiBadge-badge": {
@@ -35,48 +40,45 @@ Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
       height: "12px",
       borderRadius: "100%",
       right: "5px",
-    }
-  }
+    },
+  };
 
   useEffect(() => {
-
-    if (status && status.size > 0
-      && channel.type === "privateMsg"
-      && channel.statusPongieId
+    if (
+      status &&
+      status.size > 0 &&
+      channel.type === "privateMsg" &&
+      channel.statusPongieId
     ) {
-
       if (status.has(channel.statusPongieId.toString())) {
-        const	text = status.get(channel.statusPongieId.toString()) as string;
+        const text = status.get(channel.statusPongieId.toString()) as string;
         setTextStatus(text);
         setColor(chooseColorStatus(text));
       }
     }
-    
   }, [status]);
-	
-	// console.log("channelCodeName = ", channelCodeName); [!]
 
-	if (channel.type === "privateMsg" && channelCodeName) {
+  // console.log("channelCodeName = ", channelCodeName); [!]
 
-		const tuple: {
-			id1: number;
-			id2: number;
-		} = channelService.getIdsFromPrivateMsgChannelName(channelCodeName);
+  if (channel.type === "privateMsg" && channelCodeName) {
+    const tuple: {
+      id1: number;
+      id2: number;
+    } = channelService.getIdsFromPrivateMsgChannelName(channelCodeName);
 
-		otherId = myself.id === tuple.id1 ? tuple.id2 : tuple.id1;
-		url = "/home/profile/" + otherId;
-	} else {
-		url = "/home/channel/" + channel.id;
-	}
+    otherId = myself.id === tuple.id1 ? tuple.id2 : tuple.id1;
+    url = "/home/profile/" + otherId;
+  } else {
+    url = "/home/channel/" + channel.id;
+  }
 
   return (
     <div className={styles.header}>
       <div className={styles.icon}>{icon}</div>
 
-	  {/* [+][!] Attention si besoin de changer le link en fonctin du channel.type */}
+      {/* [+][!] Attention si besoin de changer le link en fonctin du channel.type */}
       <Link href={url} className={styles.card}>
-        {
-          channel.type === "privateMsg" &&
+        {channel.type === "privateMsg" && (
           <Tooltip title={textStatus} placement="top" arrow>
             <Badge
               overlap="circular"
@@ -98,9 +100,8 @@ Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
               </div>
             </Badge>
           </Tooltip>
-        }
-        {
-          channel.type !== "privateMsg" &&
+        )}
+        {channel.type !== "privateMsg" && (
           <div className={styles.avatar}>
             <AvatarUser
               avatar={channel.avatar}
@@ -110,16 +111,16 @@ Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
               fontSize="1rem"
             />
           </div>
-        }
+        )}
 
-        <div style={{ color: channel.avatar.borderColor }} className={styles.name}>
-          {
-            channel.name
-          }
+        <div
+          style={{ color: channel.avatar.borderColor }}
+          className={styles.name}
+        >
+          {channel.name}
         </div>
       </Link>
-      {
-        (channel.type !== 'privateMsg' || textStatus === "connected") &&
+      {(channel.type !== "privateMsg" || textStatus === "connected") && (
         <InviteButton
           myself={myself}
           setLoading={setLoading}
@@ -128,7 +129,7 @@ Header({ icon, channel, myself, channelCodeName, status, addMsg }: Props) {
           addMsg={addMsg}
           isChannel={true}
         />
-      }
+      )}
     </div>
   );
 }

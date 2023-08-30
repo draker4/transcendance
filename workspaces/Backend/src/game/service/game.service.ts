@@ -48,7 +48,7 @@ export class GameService {
     }
   }
 
-  async getGameByUserId(userId: number): Promise<any> {
+  public async getGameByUserId(userId: number): Promise<any> {
     try {
       let game = await this.gameRepository.findOne({
         where: {
@@ -68,6 +68,24 @@ export class GameService {
       if (game != null) {
         return game.id;
       }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async getGameInvitePending(inviterId: number): Promise<string> {
+    try {
+      const game = await this.gameRepository.findOne({
+        where: {
+          host: inviterId,
+          opponent: -1,
+          status: 'Not Started',
+        },
+      });
+      if (game != null) {
+        return game.id;
+      }
+      return '';
     } catch (error) {
       throw new Error(error.message);
     }

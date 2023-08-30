@@ -22,7 +22,8 @@ export async function middleware(req: NextRequest) {
   }
 
   if (
-    verifiedToken && verifiedToken.twoFactorAuth &&
+    verifiedToken &&
+    verifiedToken.twoFactorAuth &&
     req.nextUrl.pathname !== "/home/auth/2fa"
   ) {
     return NextResponse.redirect(new URL("/home/auth/2fa", req.url));
@@ -44,8 +45,7 @@ export async function middleware(req: NextRequest) {
           },
         });
 
-        if (!res.ok)
-          throw new Error("error fetch refresh token");
+        if (!res.ok) throw new Error("error fetch refresh token");
 
         const data = await res.json();
         crunchyToken = data.access_token;
@@ -198,7 +198,8 @@ export async function middleware(req: NextRequest) {
   ) {
     // console.log("check if user is in game");
     const lobbyService = new LobbyService(crunchyToken);
-    const ret: ReturnData = await lobbyService.isInGame();
+    if (!verifiedToken) return;
+    const ret: ReturnData = await lobbyService.userInGame();
     if (ret.success) {
       // console.log("redirect to game: " + ret.data);
       const response = NextResponse.redirect(
@@ -219,7 +220,7 @@ export async function middleware(req: NextRequest) {
       return response;
     }
   }
-  
+
   // console.log("nothing redirected");
 
   if (changeCookies && refreshToken) {

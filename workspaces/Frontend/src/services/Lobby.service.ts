@@ -6,15 +6,8 @@ export default class LobbyService {
     if (token) this.token = token;
   }
 
-  //Recupere l'etat du joueur ( in game or not )
-  public async isInGame(): Promise<any> {
-    const response = await fetchData(this.token, "lobby", "isingame", "GET");
-    const data = await response.json();
-    return data;
-  }
-
   //Creer la game
-  public async createGame(gameData: GameDTO): Promise<any> {
+  public async createGame(gameData: GameDTO): Promise<ReturnData> {
     const body = JSON.stringify(gameData);
     const response = await fetchData(
       this.token,
@@ -27,7 +20,37 @@ export default class LobbyService {
     return data;
   }
 
-  public async joinGame(gameId: string): Promise<any> {
+  //Recupere l'etat du joueur ( in game or not )
+  public async userInGame(): Promise<ReturnData> {
+    const response = await fetchData(this.token, "lobby", `userInGame`, "GET");
+    const data = await response.json();
+    return data;
+  }
+
+  //Recupere l'etat du joueur ( in game or not )
+  public async otherInGame(userId: number): Promise<ReturnData> {
+    const response = await fetchData(
+      this.token,
+      "lobby",
+      `otherInGame/${userId}`,
+      "GET"
+    );
+    const data = await response.json();
+    return data;
+  }
+
+  public async ongoingInvite(inviterId: number): Promise<ReturnData> {
+    const response = await fetchData(
+      this.token,
+      "lobby",
+      `ongoingInvite/${inviterId}`,
+      "GET"
+    );
+    const data = await response.json();
+    return data;
+  }
+
+  public async joinGame(gameId: string): Promise<ReturnData> {
     const response = await fetchData(
       this.token,
       "lobby",
@@ -39,7 +62,7 @@ export default class LobbyService {
   }
 
   //Quit la partie en cours
-  public async quitGame(): Promise<any> {
+  public async quitGame(): Promise<void> {
     await fetchData(this.token, "lobby", "quit", "POST");
   }
 

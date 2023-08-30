@@ -15,7 +15,8 @@ type GameDTO = {
   mode: "League" | "Party";
   host: number;
   opponent: number;
-  invite: number;
+  invite?: number;
+  channel?: boolean;
   hostSide: "Left" | "Right";
   maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;

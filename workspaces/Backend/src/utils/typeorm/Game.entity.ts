@@ -44,6 +44,9 @@ export class Game {
   @Column({ default: -1 })
   invite: number;
 
+  @Column({ default: false })
+  channel: boolean;
+
   @Column()
   hostSide: 'Left' | 'Right';
 

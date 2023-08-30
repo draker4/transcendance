@@ -4,10 +4,9 @@ import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 import { useEffect, useState } from "react";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import { Badge, CircularProgress, Tooltip } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTv } from "@fortawesome/free-solid-svg-icons";
-import InviteButton from "@/components/InviteGame/InviteButton";
-import { Socket } from "socket.io-client";
+import InviteButton from "@/components/chatPage/ChatChannel/GameLink/InviteButton";
+import WatchButton from "./GameLink/WatchButton";
+import JoinButton from "./GameLink/JoinButton";
 
 type GroupedMsgType = {
   user: User;
@@ -194,9 +193,7 @@ export default function MessageItem({
                 )}
                 {textStatus === "in game" && (
                   <Tooltip title={"watch game"} arrow placement="top">
-                    <div className={styles.inviteButton}>
-                      <FontAwesomeIcon icon={faTv} className={styles.icon} />
-                    </div>
+                    <WatchButton userId={groupedMessages.user.id} />
                   </Tooltip>
                 )}
               </>
@@ -207,7 +204,7 @@ export default function MessageItem({
         <div className={styles.flexContentMsg}>
           <div className={styles.content}>{mappingMessages}</div>
           {groupedMessages.join && groupedMessages.user.id !== myself.id && (
-            <button type="button">Join</button>
+            <JoinButton myself={myself} inviterId={groupedMessages.user.id} />
           )}
         </div>
       </div>

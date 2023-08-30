@@ -8,6 +8,7 @@ import {
   Body,
   Param,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LobbyService } from '../service/lobby.service';
 import { Public } from 'src/utils/decorators/public.decorator';
@@ -31,33 +32,45 @@ export class LobbyController {
     return this.lobbyService.CreateGame(req.user.id, game);
   }
 
-  // 02 - api/lobby/join
-  @Put('join/:gameId')
-  JoinGame(@Req() req, @Param('gameId') gameId: string) {
-    return this.lobbyService.JoinGame(req.user.id, gameId);
+  // 02 - api/lobby/userInGame
+  @Get('userInGame')
+  userInGame(@Req() req) {
+    return this.lobbyService.IsInGame(req.user.id);
   }
 
-  // 03 - api/lobby/getall
+  // 03 - api/lobby/otherInGame/:userId
+  @Get('otherInGame/:userId')
+  otherInGame(@Param('userId', ParseIntPipe) userId: number) {
+    return this.lobbyService.IsInGame(userId);
+  }
+
+  // 04 - api/lobby/ongoingInvite/:inviterId
+  @Get('ongoingInvite/:inviterId')
+  ongoingInvite(@Param('inviterId', ParseIntPipe) inviterId: number) {
+    return this.lobbyService.OngoingInvite(inviterId);
+  }
+
+  // 05 - api/lobby/getall
   @Get('getall/:mode?')
   GetAllGames(@Param('mode') mode?: 'League' | 'Party') {
     return this.lobbyService.GetAll(mode);
-  }
-
-  // 04 - api/lobby/quit
-  @Post('quit')
-  Quit(@Req() req) {
-    return this.lobbyService.Quit(req.user.id);
-  }
-
-  // 05 - api/lobby/isingame
-  @Get('isingame')
-  IsInGame(@Req() req) {
-    return this.lobbyService.IsInGame(req.user.id);
   }
 
   // 06 - api/lobby/GetLeague
   @Get('getleague')
   GetLeague() {
     return this.lobbyService.GetLeague();
+  }
+
+  // 07 - api/lobby/join
+  @Put('join/:gameId')
+  JoinGame(@Req() req, @Param('gameId') gameId: string) {
+    return this.lobbyService.JoinGame(req.user.id, gameId);
+  }
+
+  // 08 - api/lobby/quit
+  @Post('quit')
+  Quit(@Req() req) {
+    return this.lobbyService.Quit(req.user.id);
   }
 }

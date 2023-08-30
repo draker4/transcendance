@@ -73,7 +73,7 @@ import { StoryData } from './utils/typeorm/StoryData.entity';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     AvatarModule,

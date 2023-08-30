@@ -185,7 +185,6 @@ export class MatchmakingService {
           mode: 'League',
           host: user1.Player_Id,
           opponent: user2.Player_Id,
-          invite: -1,
           hostSide: 'Left',
           maxPoint: 9,
           maxRound: 1,

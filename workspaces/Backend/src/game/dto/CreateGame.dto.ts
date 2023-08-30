@@ -29,7 +29,11 @@ export class CreateGameDTO {
 
   @IsNumber()
   @IsOptional()
-  invite: number;
+  invite?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  channel?: boolean;
 
   @IsString()
   @IsNotEmpty()
