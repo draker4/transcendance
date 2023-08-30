@@ -7,7 +7,7 @@
   margin: 0 auto;
   background-color: var(--primary1);
   border-radius: 10px;
-  border: 3px solid var(--accent1);
+  border: 3px solid var(--secondary1);
   text-align: center;
 }
 
@@ -63,6 +63,10 @@
 .login::placeholder {
   color: var(--tertiary1);
   font-weight: bold;
+}
+
+.login:hover {
+  border: 3px solid var(--accent1);
 }
 
 .login:focus {

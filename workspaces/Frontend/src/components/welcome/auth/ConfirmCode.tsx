@@ -12,19 +12,16 @@ type FormInputs = {
   [key: string]: string;
 };
 
-export default function ConfirmEmailCode({ userId }: {
-  userId: number;
-}) {
+export default function ConfirmEmailCode({ userId }: { userId: number }) {
   const router = useRouter();
   const [msg, setMsg] = useState("");
-  const [textButton, setTextButton] = useState<string>('Verify');
+  const [textButton, setTextButton] = useState<string>("Verify");
   const { handleSubmit, setValue } = useForm<FormInputs>();
   const inputRefs = React.useRef<HTMLInputElement[]>([]);
 
-  
   if (isNaN(userId)) {
-    toast.error("Something went wrong, please log again!")
-    router.replace('/welcome');
+    toast.error("Something went wrong, please log again!");
+    router.replace("/welcome");
   }
 
   const indexes: number[] = [0, 1, 2, 3, 4, 5, 6, 7];
@@ -76,7 +73,7 @@ export default function ConfirmEmailCode({ userId }: {
 
   const onSubmit = async (data: FormInputs) => {
     setMsg("");
-    setTextButton('Loading...');
+    setTextButton("Loading...");
     const code = Object.values(data).join("").toUpperCase();
 
     try {
@@ -84,58 +81,54 @@ export default function ConfirmEmailCode({ userId }: {
         `http://${process.env.HOST_IP}:3000/api/auth/verify?code=${code}&id=${userId}`
       );
 
-      if (!response.ok)
-        throw new Error('fetch failed');
+      if (!response.ok) throw new Error("fetch failed");
 
       const data = await response.json();
 
       if (data.error) {
         toast.error("Something went wrong, please log in again!");
-        router.replace('/welcome/login');
-        return ;
+        router.replace("/welcome/login");
+        return;
       }
 
       if (!data.success) {
         setMsg(data.message);
         setTextButton("Verify");
-        return ;
+        return;
       }
 
       if (data.success) {
         router.push("/home");
-        return ;
+        return;
       }
 
-      throw new Error('no success');
+      throw new Error("no success");
     } catch (err) {
-      toast.info('Something went wrong, please try again!');
+      toast.info("Something went wrong, please try again!");
       setTextButton("Verify");
     }
   };
 
   const sendCode = async () => {
-    setTextButton('Loading...');
-    setMsg('');
+    setTextButton("Loading...");
+    setMsg("");
 
     try {
       const data = await sendNewCode(userId);
 
-      if (!data || !data.success)
-        throw new Error('no success');
+      if (!data || !data.success) throw new Error("no success");
       if (data.success) {
-        toast.success('A new code has been sent to your email address!');
-        setTextButton('Verify');
+        toast.success("A new code has been sent to your email address!");
+        setTextButton("Verify");
       }
+    } catch (error: any) {
+      toast.info("Something went wrong, please try again!");
+      setTextButton("Verify");
     }
-    catch (error: any) {
-      toast.info('Something went wrong, please try again!');
-      setTextButton('Verify');
-    }
-  }
+  };
 
   return (
     <div className={styles.confirmEmail}>
-
       <h1 className={styles.title}>Confirm Email</h1>
       <p className={styles.description}>
         Please enter the verification code sent to your email address!
@@ -152,7 +145,6 @@ export default function ConfirmEmailCode({ userId }: {
         >
           {textButton}
         </button>
-
       </form>
 
       <div className={styles.bottomText}>
@@ -160,18 +152,14 @@ export default function ConfirmEmailCode({ userId }: {
         <button
           className={styles.again}
           onClick={sendCode}
-          disabled={textButton !== 'Verify'}
+          disabled={textButton !== "Verify"}
         >
           Send code again
         </button>
-        <Link
-          className={styles.again}
-          href="/welcome/login"
-        >
+        <Link className={styles.again} href="/welcome/login">
           Log in with an other email
         </Link>
       </div>
-
     </div>
   );
 }

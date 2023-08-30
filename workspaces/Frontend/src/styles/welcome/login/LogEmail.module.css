@@ -31,6 +31,10 @@
   font-weight: bold;
 }
 
+.input:hover {
+  border: 3px solid var(--accent1);
+}
+
 .input:focus {
   outline: none;
   border: 3px solid var(--accent1);
@@ -87,7 +91,9 @@
   height: auto;
   width: 100%;
   opacity: 1;
-  transition: height 1s ease, opacity 0.5s ease;
+  transition:
+    height 1s ease,
+    opacity 0.5s ease;
 }
 
 .closePassword {
@@ -120,7 +126,6 @@
 }
 
 @media screen and (min-height: 2000px) {
-
   .continueBtn {
     margin-bottom: 50px;
   }

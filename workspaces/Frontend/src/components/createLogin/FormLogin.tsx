@@ -92,8 +92,7 @@ export default function FormLogin({
 
         const data = await res.json();
 
-        if (!res.ok || data.error)
-          throw new Error();
+        if (!res.ok || data.error) throw new Error();
 
         router.refresh();
       } catch (error) {
@@ -102,14 +101,12 @@ export default function FormLogin({
       }
     };
 
-    if (access_token && access_token.length > 0)
-      changeCookie();
-    
+    if (access_token && access_token.length > 0) changeCookie();
   }, [access_token, router]);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setTextButton('Loading...');
+    setTextButton("Loading...");
 
     const loginUser = e.target.login.value;
 
@@ -117,9 +114,9 @@ export default function FormLogin({
 
     if (loginBadWords !== loginUser) {
       setTextButton(textButtonInitial);
-      setNotif('What a bad word! 😱');
-      setText('');
-      return ;
+      setNotif("What a bad word! 😱");
+      setText("");
+      return;
     }
 
     const loginChecked = checkLoginFormat(loginUser);
@@ -136,8 +133,7 @@ export default function FormLogin({
       refresh_token: string;
     } = await handleActionServer(loginUser, avatarChosenRef.current, token);
 
-    if (res.access_token.length === 0)
-      setTextButton(textButtonInitial);
+    if (res.access_token.length === 0) setTextButton(textButtonInitial);
 
     setNotif(res.exists);
     setAccessToken(res.access_token);
@@ -164,13 +160,7 @@ export default function FormLogin({
             onChange={handleText}
             className={styles.login}
           />
-          <button
-            className={styles.randomBtn}
-            onClick={
-              generateRandomName
-              // no submit when click on random button
-            }
-          >
+          <button className={styles.randomBtn} onClick={generateRandomName}>
             <MdRefresh />
           </button>
         </div>

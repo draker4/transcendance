@@ -8,7 +8,7 @@
   margin: 0 auto;
   background-color: var(--primary1);
   border-radius: 10px;
-  border: 2px solid var(--accent1);
+  border: 3px solid var(--secondary1);
   text-align: center;
 }
 
@@ -117,10 +117,10 @@
 .popup input {
   outline: none;
   border: none;
-	width: 50%;
-	margin: 10px;
-	border-bottom: 1px solid var(--tertiary1);
-	text-transform: uppercase;
+  width: 50%;
+  margin: 10px;
+  border-bottom: 1px solid var(--tertiary1);
+  text-transform: uppercase;
   background-color: inherit;
 }
 

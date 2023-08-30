@@ -24,7 +24,8 @@
   width: clamp(20px, 3vh, 60px);
   height: clamp(20px, 3vh, 60px);
   border-radius: clamp(20px, 3vh, 60px);
-  margin: 0 10px;
+  margin: 6px;
+  margin-bottom: 8px;
 }
 
 .cercle:first-child {
@@ -36,5 +37,13 @@
 }
 
 .cercle.selected {
-  box-shadow: 0 0 10px 2px var(--accent2);
+  box-shadow: 0 0 5px 4px var(--accent1);
+}
+
+.cercle:hover {
+  box-shadow: 0 0 5px 4px var(--accent1);
+}
+
+.cercle:active {
+  scale: 0.9;
 }
