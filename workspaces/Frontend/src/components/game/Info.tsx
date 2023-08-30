@@ -130,30 +130,24 @@ export default function Info({ gameData, setGameData }: InfoProps) {
   if (!gameData) return <div>Game not found</div>;
   return (
     <div className={styles.info}>
-      <div className={styles.general}>
-        {/* LEFT PLAYER */}
-        {showPlayer(
-          gameData.playerLeft,
-          gameData.playerLeftStatus,
-          "Left",
-          setGameData
-        )}
+      {/* LEFT PLAYER */}
+      {showPlayer(
+        gameData.playerLeft,
+        gameData.playerLeftStatus,
+        "Left",
+        setGameData
+      )}
 
-        {/* GENERAL */}
-        <div className={styles.title}>
-          <h2>{gameData.name}</h2>
-          <p>{gameData.type}</p>
-        </div>
-
-        {/* RIGHT PLAYER */}
-        {showPlayer(
-          gameData.playerRight,
-          gameData.playerRightStatus,
-          "Right",
-          setGameData
-        )}
-      </div>
+      {/* GENERAL */}
       {gameData.score && showScore(gameData)}
+
+      {/* RIGHT PLAYER */}
+      {showPlayer(
+        gameData.playerRight,
+        gameData.playerRightStatus,
+        "Right",
+        setGameData
+      )}
     </div>
   );
 }

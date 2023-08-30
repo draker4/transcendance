@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from "react";
 
 // Import du style
-import styles from "@/styles/game/Pong.module.css";
+import styles from "@/styles/gameSolo/PongSolo.module.css";
 
 // Import des composants
 import Info from "@/components/game/Info";
@@ -16,14 +16,22 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
+import TrainingService from "@/services/Training.service";
+import PongSoloHead from "./PongSoloHead";
 
 type Props = {
   gameData: GameData;
   setGameData: Function;
   isPlayer: "Left" | "Right" | "";
+  trainingService: TrainingService;
 };
 
-export default function Pong({ gameData, setGameData, isPlayer }: Props) {
+export default function Pong({
+  gameData,
+  setGameData,
+  isPlayer,
+  trainingService,
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
@@ -86,6 +94,7 @@ export default function Pong({ gameData, setGameData, isPlayer }: Props) {
 
   return (
     <div className={styles.pong}>
+      <PongSoloHead gameData={gameData} trainingService={trainingService} />
       <div className={styles.canvasContainer}>
         <canvas
           ref={canvasRef}

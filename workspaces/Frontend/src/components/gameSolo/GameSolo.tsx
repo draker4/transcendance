@@ -1,7 +1,7 @@
 "use client";
 
 // Import des composants react
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 // Import du style
@@ -11,9 +11,7 @@ import styles from "@/styles/game/Game.module.css";
 import TrainingService from "@/services/Training.service";
 
 // Import des composants
-import { MdLogout } from "react-icons/md";
 import { GameData } from "@transcendence/shared/types/Game.types";
-import { toast } from "react-toastify";
 import PongSolo from "./PongSolo";
 import ErrorGameSolo from "./ErrorGameSolo";
 
@@ -22,7 +20,8 @@ type Props = {
   trainingId: string;
 };
 
-export default function Game({ profile, trainingId }: Props) {
+export default function GameSolo({ profile, trainingId }: Props) {
+  const pongRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const trainingService = new TrainingService();
 
@@ -62,17 +61,12 @@ export default function Game({ profile, trainingId }: Props) {
     getData();
   }, []);
 
-  async function quitTraining() {
-    if (gameData && gameData.status !== "Finished") {
-      const ret = await trainingService.quitTraining(trainingId);
-      await toast.promise(new Promise((resolve) => resolve(ret)), {
-        pending: "Leaving training...",
-        success: "You have left this training",
-        error: "Error leaving training",
-      });
+  // Scroll to the top when gameData changes
+  useEffect(() => {
+    if (!isLoading && gameData) {
+      pongRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-    router.push("/home");
-  }
+  }, [gameData]);
 
   //------------------------------------RENDU------------------------------------//
 
@@ -92,16 +86,13 @@ export default function Game({ profile, trainingId }: Props) {
 
   if (!isLoading && gameData) {
     return (
-      <div className={styles.game}>
+      <div className={styles.game} ref={pongRef}>
         <PongSolo
           gameData={gameData}
           setGameData={setGameData}
           isPlayer={isPlayer}
+          trainingService={trainingService}
         />
-        <button onClick={quitTraining} className={styles.quitBtn}>
-          <MdLogout />
-          <p className={styles.btnTitle}>Leave</p>
-        </button>
       </div>
     );
   }

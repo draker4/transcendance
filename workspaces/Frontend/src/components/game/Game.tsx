@@ -1,9 +1,8 @@
 "use client";
 
 // Import des composants react
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 // Import du style
 import styles from "@/styles/game/Game.module.css";
@@ -15,9 +14,7 @@ import GameService from "@/services/Game.service";
 
 // Import des composants
 import Pong from "./Pong";
-import { MdLogout } from "react-icons/md";
 import { GameData } from "@transcendence/shared/types/Game.types";
-import { toast } from "react-toastify";
 
 type Props = {
   profile: Profile;
@@ -26,7 +23,7 @@ type Props = {
 };
 
 export default function Game({ profile, token, gameId }: Props) {
-  const router = useRouter();
+  const pongRef = useRef<HTMLDivElement>(null);
   const lobby = new LobbyService();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -34,7 +31,6 @@ export default function Game({ profile, token, gameId }: Props) {
   const [error, setError] = useState<boolean>(false);
   const gameService = new GameService(token as string);
   const [joinEmitter, setJoinEmitter] = useState<boolean>(false);
-  const [quitStatus, setQuitStatus] = useState<boolean>(false);
   const [isPlayer, setIsPlayer] = useState<"Left" | "Right" | "Spectator">(
     "Spectator"
   );
@@ -69,24 +65,12 @@ export default function Game({ profile, token, gameId }: Props) {
     };
   }, [gameId, gameService.socket, profile, joinEmitter]);
 
-  async function quit() {
-    if (quitStatus) return;
-    setQuitStatus(true);
-    if (isPlayer === "Spectator") {
-      console.log("Quit Spectator");
-      router.push("/home");
-      return;
+  // Scroll to the top when gameData changes
+  useEffect(() => {
+    if (!isLoading && gameData) {
+      pongRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-    const res = await lobby.quitGame().then(() => {
-      gameService.socket?.emit("quit");
-      router.push("/home");
-    });
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Leaving game...",
-      success: "You have left the game",
-      error: "Error leaving game",
-    });
-  }
+  }, [gameData]);
 
   //------------------------------------RENDU------------------------------------//
 
@@ -113,18 +97,16 @@ export default function Game({ profile, token, gameId }: Props) {
 
   if (!isLoading && gameData && gameService.socket) {
     return (
-      <div className={styles.game}>
+      <div className={styles.game} ref={pongRef}>
         <Pong
           userId={profile.id}
           gameData={gameData}
           setGameData={setGameData}
           socket={gameService.socket}
           isPlayer={isPlayer}
+          gameService={gameService}
+          lobby={lobby}
         ></Pong>
-        <button onClick={quit} className={styles.quitBtn}>
-          <MdLogout />
-          <p className={styles.btnTitle}>Leave</p>
-        </button>
       </div>
     );
   }

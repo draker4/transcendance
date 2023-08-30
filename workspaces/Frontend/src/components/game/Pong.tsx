@@ -25,6 +25,9 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
+import PongHead from "../game/PongHead";
+import GameService from "@/services/Game.service";
+import LobbyService from "@/services/Lobby.service";
 
 type Props = {
   userId: number;
@@ -32,6 +35,8 @@ type Props = {
   setGameData: Function;
   socket: Socket;
   isPlayer: "Left" | "Right" | "Spectator";
+  gameService: GameService;
+  lobby: LobbyService;
 };
 
 export default function Pong({
@@ -40,6 +45,8 @@ export default function Pong({
   setGameData,
   socket,
   isPlayer,
+  gameService,
+  lobby,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
@@ -127,6 +134,12 @@ export default function Pong({
 
   return (
     <div className={styles.pongSolo}>
+      <PongHead
+        gameData={gameData}
+        gameService={gameService}
+        lobby={lobby}
+        isPlayer={isPlayer}
+      />
       <div className={styles.canvasContainer}>
         <canvas
           ref={canvasRef}

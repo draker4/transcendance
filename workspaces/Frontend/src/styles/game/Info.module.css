@@ -1,12 +1,5 @@
 .info {
   display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.general {
-  display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
   width: 100%;
@@ -27,6 +20,7 @@
 
 .leftPlayer,
 .rightPlayer {
+  appearance: none;
   border: none;
   background-color: transparent;
   cursor: pointer;
@@ -53,16 +47,8 @@
 
 .leftPlayer:active,
 .rightPlayer:active {
+  appearance: none;
   scale: 0.95;
-}
-
-.title {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 32%;
 }
 
 .showScore {
@@ -70,7 +56,6 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  width: 100%;
   text-align: center;
 }
 

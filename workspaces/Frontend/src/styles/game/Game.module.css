@@ -14,7 +14,6 @@
   margin-block: 20px;
   border-radius: 10px;
   width: 90%;
-  padding: 20px;
   margin: 0 auto;
 }
 
@@ -25,28 +24,4 @@
   align-items: center;
   width: 90%;
   margin: 0 auto;
-}
-
-.quitBtn {
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 40px;
-  margin: 10px;
-  font-size: 24px;
-  font-weight: Bold;
-  color: var(--primary1);
-  background-color: var(--secondary1);
-  border: 3px solid var(--accent1);
-  transition: all 0.3s ease-in;
-}
-
-.btnTitle {
-  font-size: 20px;
-}
-
-.quitBtn:hover {
-  color: var(--accent2);
-  border: 3px solid var(--accent2);
 }
