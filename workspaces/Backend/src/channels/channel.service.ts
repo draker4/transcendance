@@ -416,7 +416,6 @@ export class ChannelService {
     return relation ? true : false;
   }
 
-  // [!] to be called within a try-catch block [+] a checker/ ameliorer ca
   public async editRelation(
     chanOpId: number,
     channelInfos: EditChannelRelationDto,
@@ -537,8 +536,8 @@ export class ChannelService {
       );
     }
 
-    if (!somethingChanged) {
-      throw new Error(`This is already done`);
+    if (!somethingChanged && channelInfos.newRelation.invited === true) {
+      throw new Error(`Invitation is already done`);
     }
 
     rep.success = true;
