@@ -33,7 +33,36 @@ export default function Conversations({
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
   const nothing = useRef<boolean>(channelId ? false : true);
 
-  console.log("beginning nothing=", nothing);
+  const loadData = () => {
+    socket?.emit("getChannels", (channels: Channel[]) => {
+      // console.log("Conversation - LOADATA channel : ", channels); // checking
+      setChannels(channels);
+
+      if (channels.length > 0 && nothing.current === true && !littleScreen) {
+        console.log("nothing=", nothing);
+        const joinedChannels = channels
+                .filter(channel => channel.joined === true && channel.isBanned === false)
+                .sort((channelA, channelB) => {
+                  if (channelA.type === "privateMsg" && channelB.type !== "privateMsg")
+                    return 1;
+                  if (channelA.type !== "privateMsg" && channelB.type === "privateMsg")
+                    return -1;
+                  if (!channelA.lastMessage)
+                    return -1;
+                  if (!channelB.lastMessage)
+                    return 1;
+                  const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+                  const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+                  return timeB - timeA;
+                });
+        if (!joinedChannels)
+          return ;
+        nothing.current = false;
+        // console.log("yes its here");
+        openDisplay(joinedChannels[0]);
+      }
+    });
+  }
 
   // if nothing in display, open first channel joined if there is one
   useEffect(() => {
@@ -62,36 +91,6 @@ export default function Conversations({
 
   // ChatWebSocket Management
   useEffect(() => {
-    const loadData = () => {
-      socket?.emit("getChannels", (channels: Channel[]) => {
-        // console.log("Conversation - LOADATA channel : ", channels); // checking
-        setChannels(channels);
-  
-        if (channels.length > 0 && nothing.current === true && !littleScreen) {
-          console.log("nothing=", nothing);
-          const joinedChannels = channels
-                  .filter(channel => channel.joined === true && channel.isBanned === false)
-                  .sort((channelA, channelB) => {
-                    if (channelA.type === "privateMsg" && channelB.type !== "privateMsg")
-                      return 1;
-                    if (channelA.type !== "privateMsg" && channelB.type === "privateMsg")
-                      return -1;
-                    if (!channelA.lastMessage)
-                      return -1;
-                    if (!channelB.lastMessage)
-                      return 1;
-                    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
-                    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
-                    return timeB - timeA;
-                  });
-          if (!joinedChannels)
-            return ;
-          nothing.current = false;
-          // console.log("yes its here");
-          openDisplay(joinedChannels[0]);
-        }
-      });
-    }
 
     const updateNotif = () => {
       socket?.emit('getNotifMsg', (payload: NotifMsg[]) => {
