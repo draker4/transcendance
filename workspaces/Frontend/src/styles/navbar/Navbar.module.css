@@ -24,6 +24,7 @@
   font-family: var(--title-font);
   color: var(--secondary1);
   text-decoration: none;
+  /* border: 1px solid red; */
 }
 
 .right {
@@ -32,6 +33,7 @@
   align-items: center;
   justify-content: space-evenly;
   width: clamp(160px, 12vw, 300px);
+  /* border: 1px solid red; */
 }
 
 .logo {
@@ -114,7 +116,7 @@
   height: 70%;
   margin: 0;
   padding: 0;
-  padding-right: 2px;
+  /* padding-right: 2px; */
 }
 
 @media screen and (min-width: 2000px) {

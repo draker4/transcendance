@@ -504,7 +504,7 @@ export class ChatGateway implements OnModuleInit {
 
     // [1] update socket JOIN room if needed by editRelation
     const repJoin = await this.chatService.joinLeaveRoomProcByEditRelation(false, payload, this.connectedUsers);
-    if (!repJoin.success) 
+    if (!repJoin.success)
         throw new Error(repJoin.message ? repJoin.message : "proc join failed");
   
     // [2] follow up to update channel profile + handleEditRelation in <ChatChannel />

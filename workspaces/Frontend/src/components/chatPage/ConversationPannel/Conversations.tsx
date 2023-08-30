@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/chatPage/Conversations.module.css";
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +17,8 @@ export default function Conversations({
   myself,
   status,
   display,
+  channelId,
+  littleScreen,
 }: {
   socket: Socket | undefined;
   maxWidth: string;
@@ -25,19 +27,72 @@ export default function Conversations({
   myself: Profile & { avatar: Avatar };
   status: Map<string, string>;
   display: Display;
+  channelId: number | undefined;
+  littleScreen: boolean;
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
+  const nothing = useRef<boolean>(channelId ? false : true);
 
-  const loadData = () => {
-    socket?.emit("getChannels", (channels: Channel[]) => {
-      // console.log("Conversation - LOADATA channel : ", channels); // checking
+  console.log("beginning nothing=", nothing);
 
-      setChannels(channels);
-    });
-  }
+  // if nothing in display, open first channel joined if there is one
+  useEffect(() => {
+    if (channels.length > 0 && nothing.current === true && !littleScreen) {
+      const joinedChannels = channels
+              .filter(channel => channel.joined === true && channel.isBanned === false)
+              .sort((channelA, channelB) => {
+                if (channelA.type === "privateMsg" && channelB.type !== "privateMsg")
+                  return 1;
+                if (channelA.type !== "privateMsg" && channelB.type === "privateMsg")
+                  return -1;
+                if (!channelA.lastMessage)
+                  return -1;
+                if (!channelB.lastMessage)
+                  return 1;
+                const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+                const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+                return timeB - timeA;
+              });
+      if (!joinedChannels)
+        return ;
+      nothing.current = false;
+      openDisplay(joinedChannels[0]);
+    }
+  }, [littleScreen]);
 
   // ChatWebSocket Management
   useEffect(() => {
+    const loadData = () => {
+      socket?.emit("getChannels", (channels: Channel[]) => {
+        // console.log("Conversation - LOADATA channel : ", channels); // checking
+        setChannels(channels);
+  
+        if (channels.length > 0 && nothing.current === true && !littleScreen) {
+          console.log("nothing=", nothing);
+          const joinedChannels = channels
+                  .filter(channel => channel.joined === true && channel.isBanned === false)
+                  .sort((channelA, channelB) => {
+                    if (channelA.type === "privateMsg" && channelB.type !== "privateMsg")
+                      return 1;
+                    if (channelA.type !== "privateMsg" && channelB.type === "privateMsg")
+                      return -1;
+                    if (!channelA.lastMessage)
+                      return -1;
+                    if (!channelB.lastMessage)
+                      return 1;
+                    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+                    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+                    return timeB - timeA;
+                  });
+          if (!joinedChannels)
+            return ;
+          nothing.current = false;
+          // console.log("yes its here");
+          openDisplay(joinedChannels[0]);
+        }
+      });
+    }
+
     const updateNotif = () => {
       socket?.emit('getNotifMsg', (payload: NotifMsg[]) => {
         setNotifMsg(payload);
@@ -64,7 +119,6 @@ export default function Conversations({
       socket?.off("editRelation", loadData);
     }
   }, [socket]);
-
 
   // Conversation lists Pannel
   const [channels, setChannels] = useState<Channel[]>([]);
@@ -174,6 +228,15 @@ export default function Conversations({
 
   const joinedConversations = channels
   .filter(channel => channel.type !== "privateMsg" && channel.joined === true && channel.isBanned === false)
+  .sort((channelA, channelB) => {
+    if (!channelA.lastMessage)
+      return -1;
+    if (!channelB.lastMessage)
+      return 1;
+    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+    return timeB - timeA;
+  })
   .map((channel) => (
     channel ? (
       <ConversationItem
@@ -190,6 +253,15 @@ export default function Conversations({
 
   const pmConversations = channels
   .filter(channel => channel.type === "privateMsg" && channel.joined === true)
+  .sort((channelA, channelB) => {
+    if (!channelA.lastMessage)
+      return -1;
+    if (!channelB.lastMessage)
+      return 1;
+    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+    return timeB - timeA;
+  })
   .map((channel) => (
     channel ? (
       <ConversationItem
@@ -206,6 +278,15 @@ export default function Conversations({
 
   const invitedConversations = channels
   .filter(channel => channel.type !== "privateMsg" && channel.joined === false && channel.invited === true)
+  .sort((channelA, channelB) => {
+    if (!channelA.lastMessage)
+      return -1;
+    if (!channelB.lastMessage)
+      return 1;
+    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+    return timeB - timeA;
+  })
   .map((channel) => (
     channel ? (
       <ConversationItem
@@ -223,6 +304,15 @@ export default function Conversations({
 
   const recentConversations = channels
   .filter(channel => channel.type !== "privateMsg" && channel.joined === false && channel.invited === false && channel.isBanned === false)
+  .sort((channelA, channelB) => {
+    if (!channelA.lastMessage)
+      return -1;
+    if (!channelB.lastMessage)
+      return 1;
+    const timeA = new Date(channelA.lastMessage.createdAt).getTime();
+    const timeB = new Date(channelB.lastMessage.createdAt).getTime();
+    return timeB - timeA;
+  })
   .map((channel) => (
     channel ? (
       <ConversationItem

@@ -189,6 +189,8 @@ export default function ChatClient({
           myself={myself}
           status={status}
           display={display}
+          channelId={channelId}
+          littleScreen={littleScreen}
         />
       </div>
     );
@@ -220,6 +222,8 @@ export default function ChatClient({
         myself={myself}
         status={status}
         display={display}
+        channelId={channelId}
+        littleScreen={littleScreen}
       />
       <ChatDisplay
         socket={socket}
