@@ -1,5 +1,7 @@
+import AvatarUser from "@/components/avatarUser/AvatarUser";
 import styles from "@/styles/lobby/league/Leaderboard.module.css";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
 	json: PlayerLeaderBoard[];
@@ -14,8 +16,9 @@ export default function Leaderboard({ json }: Props) {
                 <p className={styles.loading}>Recherche en cours...</p>
             </div>
         )
+    } else {
+      console.log("LEADERBOARD FETCHING => json = ", json);
     }
-    
 
     return (
 
@@ -29,8 +32,10 @@ export default function Leaderboard({ json }: Props) {
                         <p>2</p>
                     </div>
                     {json.length > 1 && json[1] && (
-                        <div >
-                            <Image alt="profile image" src={json[1].avatar} className={styles.avatar} width={100} height={100}/>
+                      <div className={styles.podAvatarlogin}>
+                        <div className={styles.podAvatar}>
+                          <AvatarUser avatar={json[1].user.avatar} borderSize={""} backgroundColor={json[1].user.avatar.backgroundColor} borderColor={json[1].user.avatar.borderColor} fontSize={""} />
+                        </div>
                             <p>{json[1].login}</p>
                         </div>
                     )}
@@ -40,8 +45,10 @@ export default function Leaderboard({ json }: Props) {
                         <p>1</p>
                     </div>
                     {json.length > 0 && json[0] && (
-                        <div >
-                            <Image alt="profile image" src={json[0].avatar} className={styles.avatar} width={100} height={100}/>
+                        <div className={styles.podAvatarlogin}>
+                        <div className={styles.podAvatar}>
+                          <AvatarUser avatar={json[0].user.avatar} borderSize={""} backgroundColor={json[1].user.avatar.backgroundColor} borderColor={json[0].user.avatar.borderColor} fontSize={""} />
+                        </div>
                             <p>{json[0].login}</p>
                         </div>
                     )}
@@ -51,9 +58,11 @@ export default function Leaderboard({ json }: Props) {
                         <p>3</p>
                     </div>
                     {json.length > 2 && json[2] && (
-                        <div >
-                            <Image alt="profile image" src={json[2].avatar} className={styles.avatar} width={100} height={100}/>
-                            <p>{json[2].login}</p>
+                        <div className={styles.podAvatarlogin}>
+                        <div className={styles.podAvatar}>
+                          <AvatarUser avatar={json[2].user.avatar} borderSize={""} backgroundColor={json[2].user.avatar.backgroundColor} borderColor={json[2].user.avatar.borderColor} fontSize={""} />
+                        </div>
+                            <p>{json[0].login}</p>
                         </div>
                     )}
                 </div>
@@ -64,18 +73,24 @@ export default function Leaderboard({ json }: Props) {
                         <div className={styles.avatar_box}>
 							<p>Login</p>
 						</div>
-                        <p>Score</p>
-                        <p>Rank</p>
+                        <p style={{textAlign: "center"}}>Score</p>
+                        <p style={{textAlign: "center"}}>Rank</p>
                 </div>
                 {json.length > 0   && json.map((player: any, index: number) => (
+                    <Link className={styles.links} href={`/home/profile/${player.id}`} key={index}>
                     <div className={styles.player} key={index}>
-                        <div className={styles.avatar_box}>
-							<Image alt="profile image" src={player.avatar} className={styles.avatar} width={50} height={50}/>
-							<p>{player.login}</p>
+                        <div className={styles.avatar_box} style={{height: "100%"}}>
+                          <div style={{width: "50px", height: "50px"}}>
+                            <AvatarUser avatar={player.user.avatar} borderSize={""} backgroundColor={player.user.avatar.backgroundColor} borderColor={player.user.avatar.borderColor} fontSize={""} />
+							            </div>
+                          <p>{player.login}</p>
 						</div>
-                        <p>{player.score}</p>
-                        <p>{player.rank}</p>
+                        <p style={{textAlign: "center"}}>{player.score}</p>
+                        <p style={{textAlign: "center"}}>{player.rank}</p>
                     </div>
+                    </Link>
+
+
                 ))}
             </div>
 
