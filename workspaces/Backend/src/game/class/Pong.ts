@@ -150,6 +150,8 @@ export class Pong {
     if (user.id === this.gameDB.host || user.id === this.gameDB.opponent) {
       try {
         await this.joinAsPlayer(user);
+
+        // [!] bperriol
         this.statusService.add(user.id.toString(), 'in game');
         this.logger.log(
           `User ${user.id} joined ${this.gameId} as ${
