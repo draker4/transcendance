@@ -1,0 +1,11 @@
+.demo {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--secondary3);
+  margin-block: 20px;
+  border-radius: 10px;
+  width: 90%;
+  margin: 0 auto;
+}

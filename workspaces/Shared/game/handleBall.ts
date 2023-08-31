@@ -105,16 +105,28 @@ export function updateBall(ball: Ball, game: GameData): string {
 }
 
 export function handleServe(ball: Ball, game: GameData): void {
+  // Determine the vertical direction of the serve
   ball.moveX = game.playerServe === "Left" ? DirXValues.Right : DirXValues.Left;
   if (Math.random() < 0.5) {
     ball.moveY = DirYValues.Up;
   } else {
     ball.moveY = DirYValues.Down;
   }
-  var pos = Math.random() * (GAME_HEIGHT / 2 - BALL_SIZE);
-  if (Math.random() < 0.5) pos *= -1;
-  const newAngle = calculateBallAngle(ball, pos, GAME_HEIGHT);
-  const newMoveX = Math.cos(newAngle);
+  var newAngle = 1;
+  var newMoveX = 1;
+  while (
+    !(
+      (0.2 < newAngle && newAngle < 0.3) ||
+      (-0.3 < newAngle && newAngle < -0.2)
+    )
+  ) {
+    var pos = Math.random() * (GAME_HEIGHT / 2 - BALL_SIZE);
+    if (Math.random() < 0.5) pos *= -1;
+    newAngle = calculateBallAngle(ball, pos, GAME_HEIGHT);
+    newMoveX = Math.cos(newAngle);
+  }
+
+  // Calculate the new moveX and moveY based on the angle
   if (Math.sign(ball.moveX) === Math.sign(newMoveX)) {
     ball.moveX = -1 * newMoveX;
   } else {

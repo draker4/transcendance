@@ -3,7 +3,7 @@
 import { useRef, useEffect, useMemo } from "react";
 
 // Import du style
-import styles from "@/styles/gameSolo/PongSolo.module.css";
+import styles from "@/styles/demo/PongDemo.module.css";
 
 // Import des composants
 import Info from "@/components/game/Info";

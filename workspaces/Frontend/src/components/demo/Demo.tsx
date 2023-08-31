@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 
 // Import du style
-import styles from "@/styles/game/Game.module.css";
+import styles from "@/styles/demo/Demo.module.css";
 
 // Import des composants
 import { GameData } from "@transcendence/shared/types/Game.types";
@@ -23,12 +23,12 @@ import {
 } from "@transcendence/shared/constants/Game.constants";
 
 type Props = {
-  profile: Profile;
+  login: string;
   demoData: CreateDemo;
   setShowDemo: Function;
 };
 
-export default function Demo({ profile, demoData, setShowDemo }: Props) {
+export default function Demo({ login, demoData, setShowDemo }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
 
@@ -52,21 +52,17 @@ export default function Demo({ profile, demoData, setShowDemo }: Props) {
       score: initScoreDemo(),
     });
     demo.playerLeft = initPlayerDemo(
-      demoData.side === "Left" ? AI_ID : AI_DEMO,
+      demoData.side === "Left" ? AI_DEMO : AI_ID,
       "Left",
-      demoData.side === "Left"
-        ? `Coach ${demoData.type}`
-        : `Futur ${profile.login}`
+      demoData.side === "Left" ? `Futur ${login}` : `Coach ${demoData.type}`
     );
     demo.playerRight = initPlayerDemo(
-      demoData.side === "Right" ? AI_ID : AI_DEMO,
+      demoData.side === "Right" ? AI_DEMO : AI_ID,
       "Right",
-      demoData.side === "Right"
-        ? `Coach ${demoData.type}`
-        : `Futur ${profile.login}`
+      demoData.side === "Right" ? `Futur ${login}` : `Coach ${demoData.type}`
     );
     demo.status = "Playing";
-    demo.timer = defineTimer(TIMER_START, "Start");
+    demo.timer = defineTimer(1, "Start");
     demo.demo = true;
     setGameData(demo);
     setIsLoading(false);

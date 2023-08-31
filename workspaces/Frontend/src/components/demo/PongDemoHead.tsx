@@ -1,7 +1,7 @@
 "use client";
 
 // Import du style
-import styles from "@/styles/gameSolo/PongHeadSolo.module.css";
+import styles from "@/styles/demo/PongDemoHead.module.css";
 
 // Import GameLogic
 import { GameData } from "@transcendence/shared/types/Game.types";

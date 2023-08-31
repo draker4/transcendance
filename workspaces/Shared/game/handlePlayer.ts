@@ -54,27 +54,35 @@ export function moveAI(
   playerDynamic: PlayerDynamic,
   Ball: Ball
 ): void {
-  // Calculate the target position for the paddle
-  const targetY = Ball.posY - PLAYER_HEIGHT / 2;
+  if (game.timer.end > new Date().getTime()) return;
+  // Estimate when the ball will cross the AI's side of the court
+  const timeToReachAI = Math.abs((playerDynamic.posX - Ball.posX) / Ball.moveX);
+  const predictedBallPosY = Ball.posY + Ball.moveY * timeToReachAI;
 
-  // Define the movement speeds based on the player's side
-  const moveSlow = playerDynamic.speed / 2.5;
-  const moveFast = playerDynamic.speed / 1.5;
+  // Calculate the target position considering the predicted ball position
+  const targetYWithPrediction = predictedBallPosY - PLAYER_HEIGHT / 2;
 
-  // Determine the movement direction and speed based on the ball's movement and the player's side
-  let movementSpeed = moveSlow;
-  if (
-    (player.side === "Left" && Ball.moveX < DirXValues.Idle) ||
-    (player.side === "Right" && Ball.moveX > DirXValues.Idle)
-  ) {
-    movementSpeed = moveFast;
-  }
+  // Calculate the distance between the current position and target position
+  const distanceToTarget = Math.abs(playerDynamic.posY - targetYWithPrediction);
+
+  // Calculate a variable movement speed based on the distance
+  const maxSpeed = playerDynamic.speed;
+  const minSpeed = playerDynamic.speed / 3;
+  const movementSpeed =
+    minSpeed +
+    ((maxSpeed - minSpeed) * distanceToTarget) / (GAME_HEIGHT - PLAYER_HEIGHT);
 
   // Move the player's paddle gradually towards the target position
-  if (playerDynamic.posY > targetY + PLAYER_HEIGHT / 4) {
-    playerDynamic.posY -= Math.min(movementSpeed, playerDynamic.posY - targetY);
-  } else if (playerDynamic.posY < targetY - PLAYER_HEIGHT / 4) {
-    playerDynamic.posY += Math.min(movementSpeed, targetY - playerDynamic.posY);
+  if (playerDynamic.posY > targetYWithPrediction + PLAYER_HEIGHT / 3) {
+    playerDynamic.posY -= Math.min(
+      movementSpeed,
+      playerDynamic.posY - targetYWithPrediction
+    );
+  } else if (playerDynamic.posY < targetYWithPrediction - PLAYER_HEIGHT / 3) {
+    playerDynamic.posY += Math.min(
+      movementSpeed,
+      targetYWithPrediction - playerDynamic.posY
+    );
   }
 
   // Handle Push

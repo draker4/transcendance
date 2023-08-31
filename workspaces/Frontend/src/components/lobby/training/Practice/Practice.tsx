@@ -136,7 +136,11 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
   if (showDemo && demoData) {
     return (
       <div className={styles.practice}>
-        <Demo profile={profile} demoData={demoData} setShowDemo={setShowDemo} />
+        <Demo
+          login={profile.login}
+          demoData={demoData}
+          setShowDemo={setShowDemo}
+        />
       </div>
     );
   }

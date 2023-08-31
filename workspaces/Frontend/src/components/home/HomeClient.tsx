@@ -45,7 +45,7 @@ export default function HomeClient({
           setSocket(chatService.socket);
           clearInterval(intervalId);
         }
-        console.log("chatservice reload here", chatService.socket?.id);
+        // console.log("chatservice reload here", chatService.socket?.id);
       }, 500);
     }
 

@@ -90,7 +90,7 @@ export function initPlayerDemo(
       decrypt: false,
     },
     side: side,
-    host: false,
+    host: ai === AI_ID ? false : true,
   };
 }
 

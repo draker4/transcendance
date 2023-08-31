@@ -1,9 +1,44 @@
-.main {
+.welcome {
+  width: 90%;
+  min-height: 80vh;
+  margin: 0 auto;
   display: flex;
+  flex-flow: column nowrap;
+}
+
+.demo {
+  display: flex;
+  flex-flow: row nowrap;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  min-height: 75vh;
-  margin: 0 auto;
-  font-size: 28px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.demoBtn {
+  appearance: none;
+  padding: 6px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.3s ease-in;
+  margin: 2px;
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
+}
+
+.demoBtn:checked {
+  transition: all 0.3s ease-out;
+}
+
+.demoBtn:hover {
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
+}
+
+.demoBtn:active {
+  scale: 0.95;
 }

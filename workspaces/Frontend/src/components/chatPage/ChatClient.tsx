@@ -32,9 +32,11 @@ export default function ChatClient({
   const [display, setDisplay] = useState<Display>();
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const [error, setError] = useState<boolean>(false);
-  const [getChannel, setGetChannel] = useState<boolean>(channelId ? true : false);
-  const	[status, setStatus] = useState<Map<string, string>>(new Map());
-  const  router = useRouter();
+  const [getChannel, setGetChannel] = useState<boolean>(
+    channelId ? true : false
+  );
+  const [status, setStatus] = useState<Map<string, string>>(new Map());
+  const router = useRouter();
 
   const openDisplay = (display: Display) => {
     setOpen(true);
@@ -44,7 +46,7 @@ export default function ChatClient({
   const clearDisplay = () => {
     setOpen(false);
     setDisplay(undefined);
-  }
+  };
 
   const closeDisplay = () => {
     setOpen(false);
@@ -67,31 +69,29 @@ export default function ChatClient({
 
   // WsException Managing
   useEffect(() => {
-
     const handleError = () => {
       setSocket(undefined);
-    }
-    
-		const	disconnectClient = async () => {
-			await disconnect();
-			router.refresh();
-		}
+    };
+
+    const disconnectClient = async () => {
+      await disconnect();
+      router.refresh();
+    };
 
     if (!socket) {
-
       const intervalId = setInterval(() => {
         const chatService = new ChatService(token);
-        
-				if (chatService.disconnectClient) {
-					clearInterval(intervalId);
-					disconnectClient();
-				}
+
+        if (chatService.disconnectClient) {
+          clearInterval(intervalId);
+          disconnectClient();
+        }
 
         if (chatService.socket) {
           setSocket(chatService.socket);
           clearInterval(intervalId);
         }
-        console.log("chatservice reload here", chatService.socket?.id);
+        // console.log("chatservice reload here", chatService.socket?.id);
       }, 500);
     }
 
@@ -99,82 +99,82 @@ export default function ChatClient({
 
     return () => {
       socket?.off("disconnect", handleError);
-    }
+    };
   }, [socket]);
 
   useEffect(() => {
     if (socket && channelId !== undefined) {
       if (channelId !== 0)
-        socket.emit('getChannel', channelId, (payload: {
-          success: boolean;
-          error: string;
-          channel: Channel;
-      }) => {
-        if (payload && payload.success) {
-          openDisplay(payload.channel);
-          setGetChannel(false);
+        socket.emit(
+          "getChannel",
+          channelId,
+          (payload: { success: boolean; error: string; channel: Channel }) => {
+            if (payload && payload.success) {
+              openDisplay(payload.channel);
+              setGetChannel(false);
 
-          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel); //checking
-          return ;
-        }
-        if (payload && payload.error && payload.error === "protected") {
-          toast.info('This channel is protected! You need a password');
-          openDisplay({...payload.channel, needPassword: true});
-          setGetChannel(false);
-          return ;
-        }
-        if (payload && payload.error && payload.error === "private")
-          toast.info('This channel is private! You cannot see it!');
-        if (payload && payload.error && payload.error === "no channel")
-          return ;
-        setError(true);
-      });
-
+              console.log(
+                "ChatClient => emit('getChannel') => channel = ",
+                payload.channel
+              ); //checking
+              return;
+            }
+            if (payload && payload.error && payload.error === "protected") {
+              toast.info("This channel is protected! You need a password");
+              openDisplay({ ...payload.channel, needPassword: true });
+              setGetChannel(false);
+              return;
+            }
+            if (payload && payload.error && payload.error === "private")
+              toast.info("This channel is private! You cannot see it!");
+            if (payload && payload.error && payload.error === "no channel")
+              return;
+            setError(true);
+          }
+        );
       else {
         openDisplay({
-          "button": "new",
+          button: "new",
         });
       }
     }
 
-    const	updateStatus = (payload: StatusData) => {
+    const updateStatus = (payload: StatusData) => {
       console.log(payload);
-      setStatus(prevStatus => {
+      setStatus((prevStatus) => {
         const newStatus = new Map(prevStatus);
         Object.entries(payload).forEach(([key, value]) => {
           newStatus.set(key, value);
         });
         return newStatus;
       });
-    }
-    
-    socket?.emit('getStatus', (payload: StatusData) => {
+    };
+
+    socket?.emit("getStatus", (payload: StatusData) => {
       if (payload) {
         const statusMap = new Map(Object.entries(payload));
         setStatus(statusMap);
       }
     });
 
-		socket?.on('updateStatus', updateStatus);
+    socket?.on("updateStatus", updateStatus);
 
     return () => {
-      socket?.off('updateStatus', updateStatus);
-    }
-
+      socket?.off("updateStatus", updateStatus);
+    };
   }, [socket]);
 
-  if (!socket || (getChannel && !error))
-    return <LoadingSuspense />;
+  if (!socket || (getChannel && !error)) return <LoadingSuspense />;
 
   if (error) {
     return (
-			<div className={stylesError.error}>
-				<h2>Oops... You cannot access this channel!</h2>
-				<Link href={"/home"} className={stylesError.errorLink}>
-					<p>Return to Home Page!</p>
-				</Link>
-			</div>
-		);
+      <div className={stylesError.error}>
+        <h2>Oops... You cannot access this channel!</h2>
+        <Link href={"/home"} className={stylesError.errorLink}>
+          <p>Return to Home Page!</p>
+        </Link>
+      </div>
+    );
   }
 
   // narrow screen width, display not opened
@@ -234,7 +234,9 @@ export default function ChatClient({
         myself={myself}
         status={status}
       />
-	  {display && "type" in display && display.type !== "privateMsg" && <SetUpChannelSecondPart channelId={display.id} socket={socket}/>}
-	</div>
+      {display && "type" in display && display.type !== "privateMsg" && (
+        <SetUpChannelSecondPart channelId={display.id} socket={socket} />
+      )}
+    </div>
   );
 }
