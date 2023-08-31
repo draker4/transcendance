@@ -6,6 +6,7 @@
 	border-radius: 10px;
 	padding: 20px;
 	overflow: hidden;
+	/* margin-left: -3px; */
 }
 
 .noPadding {

@@ -12,10 +12,10 @@ export async function POST(req: NextRequest) {
 		});
 	
 	if (!code)
-	return NextResponse.json({
-		success: false,
-		error: 'no code',
-	});
+		return NextResponse.json({
+			success: false,
+			error: 'no code',
+		});
 
 	try {
 		const	res = await fetch(`http://backend:4000/api/2fa/authenticate`, {
@@ -71,6 +71,6 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({
 			success: false,
 			error: "fail",
-		}); 
+		});
 	}
 }
