@@ -3,10 +3,9 @@ import AvatarUser from "@/components/avatarUser/AvatarUser";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
-import { Badge, Tooltip } from "@mui/material";
+import { Badge, CircularProgress, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
-import { Socket } from "socket.io-client";
 
 type Props = {
   icon: ReactNode;
@@ -120,7 +119,9 @@ export default function Header({
           {channel.name}
         </div>
       </Link>
-      {(channel.type !== "privateMsg" || textStatus === "connected") && (
+
+      {
+        !loading && (channel.type !== "privateMsg" || textStatus === "connected") &&
         <InviteButton
           myself={myself}
           setLoading={setLoading}
@@ -129,7 +130,13 @@ export default function Header({
           addMsg={addMsg}
           isChannel={true}
         />
-      )}
+      }
+
+      {
+        loading &&
+        <CircularProgress />
+      }
+
     </div>
   );
 }

@@ -33,7 +33,7 @@ export default function MessageItem({
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const [color, setColor] = useState<string>("#edf0f0");
-  const [textStatus, setTextStatus] = useState<string>("disconnectedd");
+  const [textStatus, setTextStatus] = useState<string>("disconnected");
   const [loading, setLoading] = useState<boolean>(false);
 
   const badgeStyleStatus = {
@@ -48,19 +48,19 @@ export default function MessageItem({
   };
 
   const handleFocusOn = () => {
-    // setIsFocused(true);
+    setIsFocused(true);
   };
 
   const handleFocusOff = () => {
-    // setIsFocused(false);
+    setIsFocused(false);
   };
 
   const handleHover = () => {
-    // setIsFocused(true);
+    setIsFocused(true);
   };
 
   const handleMouseLeave = () => {
-    // setIsFocused(false);
+    setIsFocused(false);
   };
 
   useEffect(() => {
