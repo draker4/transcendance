@@ -48,6 +48,7 @@ export default function Pong({
   gameService,
   lobby,
 }: Props) {
+  const pongRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
@@ -132,8 +133,13 @@ export default function Pong({
     };
   }, [socket, userId]);
 
+  // Scroll to the top when gameData changes
+  useEffect(() => {
+    pongRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
   return (
-    <div className={styles.pongSolo}>
+    <div className={styles.pongSolo} ref={pongRef}>
       <PongHead
         gameData={gameData}
         gameService={gameService}

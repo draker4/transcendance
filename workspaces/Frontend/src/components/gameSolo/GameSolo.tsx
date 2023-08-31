@@ -14,6 +14,11 @@ import TrainingService from "@/services/Training.service";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import PongSolo from "./PongSolo";
 import ErrorGameSolo from "./ErrorGameSolo";
+import { defineTimer } from "@transcendence/shared/game/pongUtils";
+import {
+  TIMER_START,
+  TIMER_RESTART,
+} from "@transcendence/shared/constants/Game.constants";
 
 type Props = {
   profile: Profile;
@@ -21,7 +26,6 @@ type Props = {
 };
 
 export default function GameSolo({ profile, trainingId }: Props) {
-  const pongRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const trainingService = new TrainingService();
 
@@ -44,6 +48,14 @@ export default function GameSolo({ profile, trainingId }: Props) {
             router.push("/home");
           } else {
             ret.data.status = "Playing";
+            if (
+              ret.data.score.round[0].left === 0 &&
+              ret.data.score.round[0].right === 0
+            ) {
+              ret.data.timer = defineTimer(TIMER_START, "Start");
+            } else {
+              ret.data.timer = defineTimer(TIMER_RESTART, "ReStart");
+            }
             setGameData(ret.data);
             setIsLoading(false);
           }
@@ -60,13 +72,6 @@ export default function GameSolo({ profile, trainingId }: Props) {
     };
     getData();
   }, []);
-
-  // Scroll to the top when gameData changes
-  useEffect(() => {
-    if (!isLoading && gameData) {
-      pongRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [gameData]);
 
   //------------------------------------RENDU------------------------------------//
 
@@ -86,7 +91,7 @@ export default function GameSolo({ profile, trainingId }: Props) {
 
   if (!isLoading && gameData) {
     return (
-      <div className={styles.game} ref={pongRef}>
+      <div className={styles.game}>
         <PongSolo
           gameData={gameData}
           setGameData={setGameData}

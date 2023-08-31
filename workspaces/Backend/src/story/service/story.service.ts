@@ -194,7 +194,7 @@ export class StoryService {
           push: true,
           pause: true,
           background: 'Island',
-          ball: 'Soccer4',
+          ball: 'Football4',
         },
         {
           level: 5,
@@ -238,7 +238,7 @@ export class StoryService {
           push: true,
           pause: true,
           background: 'Football',
-          ball: 'Soccer2',
+          ball: 'Football2',
         },
         {
           level: 9,
@@ -249,7 +249,7 @@ export class StoryService {
           push: true,
           pause: true,
           background: 'Rugby',
-          ball: 'Football',
+          ball: 'Rugby',
         },
         {
           level: 10,

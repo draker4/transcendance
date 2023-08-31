@@ -18,9 +18,7 @@ export default function LobbyList({ lobbyService, mode }: Props) {
   const scoreService = new ScoreService();
   const [gameList, setGameList] = useState<GameInfo[] | undefined>(undefined);
 
-  //Recupere la liste des games regulierement
   useEffect(() => {
-    // Function to fetch the game list
     const getList = async () => {
       try {
         const ret = await lobbyService.getGameList(mode);

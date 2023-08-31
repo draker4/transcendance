@@ -1,4 +1,10 @@
-import { IsNumber, IsString, IsBoolean, IsNotEmpty } from 'class-validator';
+import {
+  IsNumber,
+  IsString,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateTrainingDTO {
   @IsString()
@@ -10,8 +16,8 @@ export class CreateTrainingDTO {
   type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story';
 
   @IsNumber()
-  @IsNotEmpty()
-  storyLevel: number;
+  @IsOptional()
+  storyLevel?: number;
 
   @IsNumber()
   @IsNotEmpty()

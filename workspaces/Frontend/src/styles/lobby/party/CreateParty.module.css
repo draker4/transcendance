@@ -17,8 +17,7 @@
   margin-bottom: 5px;
 }
 
-.save,
-.cancel {
+.save {
   appearance: none;
   padding: 6px 20px;
   border-radius: 4px;
@@ -28,8 +27,7 @@
   margin: 2px;
 }
 
-.save:checked,
-.cancel:checked {
+.save:checked {
   transition: all 0.3s ease-out;
 }
 
@@ -44,15 +42,16 @@
   border: 3px solid var(--accent2);
 }
 
+.save:active {
+  scale: 0.9;
+  color: var(--accent1);
+  border: 3px solid var(--accent2);
+}
+
 .cancel {
   color: var(--secondary3);
   background-color: var(--primary2);
   border: 3px solid var(--secondary3);
-}
-
-.cancel:hover {
-  color: var(--accent2);
-  border: 3px solid var(--accent2);
 }
 
 .confirm {

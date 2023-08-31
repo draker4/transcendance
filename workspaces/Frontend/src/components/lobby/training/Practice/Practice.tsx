@@ -21,6 +21,7 @@ import {
   confirmBall,
 } from "@/lib/game/random";
 import TrainingService from "@/services/Training.service";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   profile: Profile;
@@ -30,7 +31,6 @@ export default function Practice({ profile }: Props) {
   const [selected, setSelected] = useState<
     "Classic" | "Best3" | "Best5" | "Random" | "Custom" | "Story"
   >("Classic");
-  const [storyLevel, setStoryLevel] = useState<number>(0);
   const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(3);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(3);
   const [side, setSide] = useState<"Left" | "Right">("Left");
@@ -41,18 +41,16 @@ export default function Practice({ profile }: Props) {
   const [ball, setBall] = useState<string>("Classic");
   const router = useRouter();
   const trainingService = new TrainingService();
+  const [creatingPractice, setCreatingPractice] = useState<boolean>(false);
 
   // ----------------------------------  CREATE PONG  --------------------------------- //
 
-  async function createPong() {
+  async function createPractice() {
+    setCreatingPractice(true);
     const type = selected === "Random" ? "Custom" : selected;
-    if (type !== "Story") {
-      setStoryLevel(0);
-    }
     const settings: CreateTrainingDTO = {
       name: `Training ${selected}`,
       type: type,
-      storyLevel: storyLevel,
       player: profile.id,
       side: side,
       maxPoint: maxPoint,
@@ -73,6 +71,7 @@ export default function Practice({ profile }: Props) {
     });
     if (!res.success) {
       console.log(res.message);
+      setCreatingPractice(false);
       return;
     }
     router.push("/home/training/" + res.data);
@@ -138,8 +137,9 @@ export default function Practice({ profile }: Props) {
         difficulty={difficulty}
         setDifficulty={setDifficulty}
       />
-      <button className={styles.save} onClick={() => createPong()}>
-        Play
+      <button className={styles.save} onClick={createPractice}>
+        {!creatingPractice && "Play"}
+        {creatingPractice && <CircularProgress />}
       </button>
     </div>
   );

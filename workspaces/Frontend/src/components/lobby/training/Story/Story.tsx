@@ -15,6 +15,7 @@ import TrainingService from "@/services/Training.service";
 import { confirmBackground, confirmBall } from "@/lib/game/random";
 import StorySelector from "./StorySelector";
 import { CircularProgress } from "@mui/material";
+import { set } from "react-hook-form";
 
 type Props = {
   profile: Profile;
@@ -28,7 +29,10 @@ export default function Story({ profile, trainingService }: Props) {
   const router = useRouter();
   const [levelSelected, setLevelSelected] = useState<number>(0);
   const [currentLevel, setCurrentLevel] = useState<number>(0);
-  async function createPong() {
+  const [creatingStory, setCreatingStory] = useState<boolean>(false);
+
+  async function createStory() {
+    setCreatingStory(true);
     const settings: CreateTrainingDTO = {
       name: stories[levelSelected].name,
       type: "Story",
@@ -44,7 +48,6 @@ export default function Story({ profile, trainingService }: Props) {
       ball: confirmBall(stories[levelSelected].ball),
     };
 
-    //Creer la game
     const res = await trainingService.createTraining(settings);
     await toast.promise(new Promise((resolve) => resolve(res)), {
       pending: "Creating training...",
@@ -53,6 +56,7 @@ export default function Story({ profile, trainingService }: Props) {
     });
     if (!res.success) {
       console.log(res.message);
+      setCreatingStory(false);
       return;
     }
     router.push("/home/training/" + res.data);
@@ -97,8 +101,13 @@ export default function Story({ profile, trainingService }: Props) {
           />
         ))}
       </div>
-      <button className={styles.save} onClick={() => createPong()}>
-        Play
+      <button
+        className={styles.save}
+        onClick={createStory}
+        disabled={creatingStory}
+      >
+        {!creatingStory && "Play"}
+        {creatingStory && <CircularProgress />}
       </button>
     </div>
   );

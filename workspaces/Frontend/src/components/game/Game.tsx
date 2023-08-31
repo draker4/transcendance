@@ -23,7 +23,6 @@ type Props = {
 };
 
 export default function Game({ profile, token, gameId }: Props) {
-  const pongRef = useRef<HTMLDivElement>(null);
   const lobby = new LobbyService();
 
   const [isLoading, setIsLoading] = useState(true);
@@ -65,13 +64,6 @@ export default function Game({ profile, token, gameId }: Props) {
     };
   }, [gameId, gameService.socket, profile, joinEmitter]);
 
-  // Scroll to the top when gameData changes
-  useEffect(() => {
-    if (!isLoading && gameData) {
-      pongRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [gameData]);
-
   //------------------------------------RENDU------------------------------------//
 
   //Si une erreur est survenue
@@ -97,7 +89,7 @@ export default function Game({ profile, token, gameId }: Props) {
 
   if (!isLoading && gameData && gameService.socket) {
     return (
-      <div className={styles.game} ref={pongRef}>
+      <div className={styles.game}>
         <Pong
           userId={profile.id}
           gameData={gameData}

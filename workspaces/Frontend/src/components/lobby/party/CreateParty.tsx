@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import styles from "@/styles/lobby/party/CreateParty.module.css";
 
 import LobbyService from "@/services/Lobby.service";
@@ -16,6 +16,8 @@ import {
 } from "@/lib/game/random";
 import GeneralSettings from "./GeneralSettings";
 import DefineName from "./DefineName";
+import { CircularProgress } from "@mui/material";
+import Invite from "./Invite";
 
 type Props = {
   lobbyService: LobbyService;
@@ -42,12 +44,16 @@ export default function CreateParty({ lobbyService, userId }: Props) {
     "Classic" | "Best3" | "Best5" | "Custom" | "Story"
   >("Classic");
   const router = useRouter();
+  const [creatingParty, setCreatingParty] = useState<boolean>(false);
+  const defineNameRef = useRef<HTMLDivElement>(null);
+  const [inviteId, setInviteId] = useState<number>(-1);
 
   async function createGame() {
     // if name is empty, show error message
     if (name.trim() === "") {
       setName("");
       setEnterName(true);
+      defineNameRef.current!.scrollIntoView({ behavior: "smooth" });
       return;
     }
 
@@ -58,7 +64,7 @@ export default function CreateParty({ lobbyService, userId }: Props) {
       mode: "Party",
       host: userId,
       opponent: -1,
-      invite: -1,
+      invite: inviteId,
       hostSide: side,
       maxPoint: maxPoint,
       maxRound: maxRound,
@@ -69,18 +75,16 @@ export default function CreateParty({ lobbyService, userId }: Props) {
       ball: confirmBall(ball),
     };
 
-    //Creer la game
+    setCreatingParty(true);
     const res = await lobbyService.createGame(settings);
-    await toast.promise(
-      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-      {
-        pending: "Creating game...",
-        success: "Game created",
-        error: "Error creating game",
-      }
-    );
+    await toast.promise(new Promise((resolve) => resolve(res)), {
+      pending: "Creating game...",
+      success: "Game created",
+      error: "Error creating game",
+    });
     if (!res.success) {
       console.log(res.message);
+      setCreatingParty(false);
       return;
     }
     router.push("/home/game/" + res.data);
@@ -126,7 +130,7 @@ export default function CreateParty({ lobbyService, userId }: Props) {
 
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
-    <div className={styles.createParty}>
+    <div className={styles.createParty} ref={defineNameRef}>
       <h2>Define Your Party</h2>
       <DefineName
         name={name}
@@ -161,9 +165,16 @@ export default function CreateParty({ lobbyService, userId }: Props) {
         setBall={setBall}
         selected={selected}
       />
+      <Invite inviteId={inviteId} setInviteId={setInviteId} />
       <div className={styles.confirm}>
-        <button className={styles.save} type="button" onClick={createGame}>
-          Create Party
+        <button
+          className={styles.save}
+          type="button"
+          onClick={createGame}
+          disabled={creatingParty}
+        >
+          {!creatingParty && "Create Party"}
+          {creatingParty && <CircularProgress />}
         </button>
       </div>
     </div>
