@@ -449,10 +449,10 @@ export class ChatService {
             return {
               success: false,
               error: 'protected',
-              channel: null,
+              channel: {...channel, password: ""},
             }
 
-        if (channel.type !== "privateMsg") {
+        if (channel.type !== "privateMsg" && !relation.joined) {
           const date = new Date();
           const content = `${user.login} just joined the channel`;
 
@@ -479,10 +479,14 @@ export class ChatService {
 
           server.to('channel:' + channelId).emit('sendMsg', msg);
           'channel:' + channelId;
-          server.to('channel:' + channelId).emit('notif', {
-            why: "updateChannels",
-          });
         }
+
+        relation.joined = true;
+        await this.userChannelRelation.save(relation);
+        
+        server.to('channel:' + channelId).emit('notif', {
+          why: "updateChannels",
+        });
 
         if (userSockets.length >=1) {
           for (const socket of userSockets) {
@@ -497,7 +501,7 @@ export class ChatService {
 
         const channelRelation = {
           ...channel,
-          joined: true,
+          joined: relation.joined,
           isBanned: relation.isBanned,
           invited: relation.invited,
           isChanOp: relation.isChanOp,

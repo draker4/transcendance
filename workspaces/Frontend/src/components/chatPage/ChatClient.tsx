@@ -39,6 +39,7 @@ export default function ChatClient({
   const openDisplay = (display: Display) => {
     setOpen(true);
     setDisplay(display);
+    console.log(display);
   };
 
   const clearDisplay = () => {
