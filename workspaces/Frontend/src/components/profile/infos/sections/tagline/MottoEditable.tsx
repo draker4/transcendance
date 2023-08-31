@@ -63,22 +63,29 @@ export default function MottoEditable({ profile }: Props) {
 
   if (!editMode && motto === "") {
     return (
-      <div onClick={handleClickEdit}>
-        <p className={styles.motto + " " + styles.placeholder}>
-          {" "}
-          set here your crunchy motto{" "}
-        </p>
-      </div>
+      <>
+        {<p className={styles.tinyTitle}>Crunchy motto</p>}
+        <div onClick={handleClickEdit}>
+          <p className={styles.motto + " " + styles.placeholder}>
+            {" "}
+            set here your crunchy motto{" "}
+          </p>
+        </div>
+      </>
     );
   } else if (!editMode && motto !== "") {
     return (
-      <div onClick={handleClickEdit}>
-        <p className={styles.motto}> {motto} </p>
-      </div>
+      <>
+        {<p className={styles.tinyTitle}>Crunchy motto</p>}
+        <div onClick={handleClickEdit}>
+          <p className={styles.motto}> {motto} </p>
+        </div>
+      </>
     );
   } else {
     return (
       <>
+        {<p className={styles.tinyTitle}>Crunchy motto</p>}
         <form onSubmit={handleSubmitMotto}>
           <p className={styles.motto}>
             {" "}
