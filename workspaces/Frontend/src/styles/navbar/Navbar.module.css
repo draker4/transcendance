@@ -8,7 +8,9 @@
   padding: 10px;
   user-select: none;
   background-color: var(--primary1);
-  border-bottom: 1.5px solid var(--secondary1);
+  /* [!] STYLE BORDURES */
+  /* border-bottom: 1.5px solid var(--tertiary1); */
+  border-bottom: 3px solid var(--secondary1);
   margin-left: 5%;
   margin-bottom: 10px;
 }

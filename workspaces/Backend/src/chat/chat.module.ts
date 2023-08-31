@@ -22,11 +22,11 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 import { StatsService } from '@/stats/service/stats.service';
-import { StatusService } from '@/statusService/status.service';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { StatusModule } from '@/statusService/status.module';
 
 @Module({
   imports: [
@@ -47,6 +47,7 @@ import { StoryService } from '@/story/service/story.service';
       Story,
       StoryData,
     ]),
+    StatusModule,
   ],
   providers: [
     ChatGateway,
@@ -58,7 +59,6 @@ import { StoryService } from '@/story/service/story.service';
     ChannelService,
     MessagesService,
     StatsService,
-    StatusService,
     StoryService,
   ],
 })

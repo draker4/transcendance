@@ -114,7 +114,7 @@ export default function ChatClient({
           openDisplay(payload.channel);
           setGetChannel(false);
 
-          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
+          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel); //checking
           return ;
         }
         if (payload && payload.error && payload.error === "protected") {
@@ -138,12 +138,12 @@ export default function ChatClient({
     }
 
     const	updateStatus = (payload: StatusData) => {
+      console.log(payload);
       setStatus(prevStatus => {
         const newStatus = new Map(prevStatus);
         Object.entries(payload).forEach(([key, value]) => {
           newStatus.set(key, value);
         });
-        console.log('prev', prevStatus, 'new', newStatus);
         return newStatus;
       });
     }

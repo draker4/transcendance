@@ -42,7 +42,13 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
       });
 
     } catch(e:any) {
-      toast.error(e.message === "Invitation is already done" ? `This ponger is already invited in ${relation.channel.name}` : "An error occured, please try again later!");
+      if (e.message === "User already in channel")
+        toast.error(`This ponger has already joined ${relation.channel.name}`);
+      else if (e.message === "Invitation is already done") {
+        toast.error(`This ponger is already invited in ${relation.channel.name}`);
+      } else {
+        toast.error("An error occured, please try again later!");
+      }
     }
   }
 

@@ -536,6 +536,10 @@ export class ChannelService {
       );
     }
 
+    if (channelInfos.newRelation.invited === true && relation.joined === true) {
+      throw new Error(`User already in channel`);
+    }
+
     if (!somethingChanged && channelInfos.newRelation.invited === true) {
       throw new Error(`Invitation is already done`);
     }
