@@ -311,4 +311,8 @@ export class StatsService {
     stats.trainingPointLost += side === 'Left' ? rightPointWin : leftPointWin;
     return stats;
   }
+
+  public async getStats() {
+		return await this.statsRepository.find();
+	}
 }
