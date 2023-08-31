@@ -39,6 +39,7 @@ export default function ChatClient({
   const openDisplay = (display: Display) => {
     setOpen(true);
     setDisplay(display);
+    console.log("DISPLAY = ", display);
   };
 
   const clearDisplay = () => {
@@ -114,7 +115,7 @@ export default function ChatClient({
           openDisplay(payload.channel);
           setGetChannel(false);
 
-          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel);
+          console.log("ChatClient => emit('getChannel') => channel = ", payload.channel); //checking
           return ;
         }
         if (payload && payload.error && payload.error === "protected") {
