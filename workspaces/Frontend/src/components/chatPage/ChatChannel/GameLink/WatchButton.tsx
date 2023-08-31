@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LobbyService from "@/services/Lobby.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { Tooltip } from "@mui/material";
+import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 
 type Props = {
   userId: number;
@@ -13,19 +17,23 @@ export default function WatchButton({ userId }: Props) {
 
   function watchGame() {
     if (!gameId) return;
-    const url = "home/game/" + gameId;
+    const url = "/home/game/" + gameId;
     router.push(url);
   }
 
   useEffect(() => {
-    const ret = lobbyService.otherInGame(userId).then((ret) => {
+    lobbyService.otherInGame(userId).then((ret) => {
       setGameId(ret.data);
     });
+
   }, []);
 
   return (
-    <button type="button" onClick={watchGame}>
-      Join
-    </button>
+    <Tooltip title={"watch game"} arrow placement="top">
+      <FontAwesomeIcon icon={faEye} onClick={watchGame} style={{
+          cursor: "pointer"
+        }}
+      />
+    </Tooltip>
   );
 }
