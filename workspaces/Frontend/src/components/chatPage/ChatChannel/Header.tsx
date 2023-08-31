@@ -32,6 +32,8 @@ export default function Header({
   const [loading, setLoading] = useState<boolean>(false);
   let otherId: number = -1;
 
+  console.log("header status=", status);
+
   const badgeStyleStatus = {
     "& .MuiBadge-badge": {
       backgroundColor: color,
@@ -44,6 +46,7 @@ export default function Header({
   };
 
   useEffect(() => {
+    console.log("useeffect status=", status);
     if (
       status &&
       status.size > 0 &&
@@ -56,7 +59,7 @@ export default function Header({
         setColor(chooseColorStatus(text));
       }
     }
-  }, [status]);
+  }, [status, channel]);
 
   // console.log("channelCodeName = ", channelCodeName); [!]
 
