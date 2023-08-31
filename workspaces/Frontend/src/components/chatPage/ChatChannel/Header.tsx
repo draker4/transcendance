@@ -55,9 +55,7 @@ export default function Header({
         setColor(chooseColorStatus(text));
       }
     }
-  }, [status]);
-
-  // console.log("channelCodeName = ", channelCodeName); [!]
+  }, [status, channel]);
 
   if (channel.type === "privateMsg" && channelCodeName) {
     const tuple: {
