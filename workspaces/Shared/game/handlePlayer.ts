@@ -58,8 +58,8 @@ export function moveAI(
   const targetY = Ball.posY - PLAYER_HEIGHT / 2;
 
   // Define the movement speeds based on the player's side
-  const moveSlow = playerDynamic.speed / 1.5;
-  const moveFast = playerDynamic.speed;
+  const moveSlow = playerDynamic.speed / 2.5;
+  const moveFast = playerDynamic.speed / 1.5;
 
   // Determine the movement direction and speed based on the ball's movement and the player's side
   let movementSpeed = moveSlow;
@@ -71,9 +71,9 @@ export function moveAI(
   }
 
   // Move the player's paddle gradually towards the target position
-  if (playerDynamic.posY > targetY) {
+  if (playerDynamic.posY > targetY + PLAYER_HEIGHT / 4) {
     playerDynamic.posY -= Math.min(movementSpeed, playerDynamic.posY - targetY);
-  } else if (playerDynamic.posY < targetY) {
+  } else if (playerDynamic.posY < targetY - PLAYER_HEIGHT / 4) {
     playerDynamic.posY += Math.min(movementSpeed, targetY - playerDynamic.posY);
   }
 

@@ -9,28 +9,24 @@ import styles from "@/styles/gameSolo/PongSolo.module.css";
 import Info from "@/components/game/Info";
 
 // Import GameLogic
-import { pongKeyDown, pongKeyUp } from "../../lib/game/eventHandlersSolo";
 import { gameLoop } from "@/lib/game/gameLoopSolo";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
-import TrainingService from "@/services/Training.service";
-import PongSoloHead from "./PongSoloHead";
+import PongSoloHead from "./PongDemoHead";
 
 type Props = {
   gameData: GameData;
   setGameData: Function;
-  isPlayer: "Left" | "Right" | "";
-  trainingService: TrainingService;
+  setShowDemo: Function;
 };
 
-export default function Pong({
+export default function PongDemo({
   gameData,
   setGameData,
-  isPlayer,
-  trainingService,
+  setShowDemo,
 }: Props) {
   const pongRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -62,7 +58,7 @@ export default function Pong({
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef, false)
+        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef, true)
       );
     }
     return () => {
@@ -74,25 +70,6 @@ export default function Pong({
     };
   }, []);
 
-  useEffect(() => {
-    function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, isPlayer === "Left" ? "Left" : "Right");
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(gameData, isPlayer);
-    }
-    // Add key event listeners when the component mounts
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    // Remove key event listeners when the component unmounts
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, [gameData]);
-
   // Scroll to the top when gameData changes
   useEffect(() => {
     pongRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,7 +77,7 @@ export default function Pong({
 
   return (
     <div className={styles.pong} ref={pongRef}>
-      <PongSoloHead gameData={gameData} trainingService={trainingService} />
+      <PongSoloHead gameData={gameData} setShowDemo={setShowDemo} />
       <div className={styles.canvasContainer}>
         <canvas
           ref={canvasRef}

@@ -19,6 +19,7 @@ import {
   TIMER_START,
   TIMER_RESTART,
 } from "@transcendence/shared/constants/Game.constants";
+import { CircularProgress } from "@mui/material";
 
 type Props = {
   profile: Profile;
@@ -84,7 +85,7 @@ export default function GameSolo({ profile, trainingId }: Props) {
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
-        <h1>Loading...</h1>
+        <CircularProgress />
       </div>
     );
   }

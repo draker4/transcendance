@@ -2,12 +2,12 @@ import { Socket } from "socket.io-client";
 import React, { useEffect, useState } from "react";
 import Search from "@/components/chatPage/searchBar/Search";
 
-export default function SearchInvite({
-  socket,
-}: {
-  socket: Socket | undefined;
-  openDisplay: (display: Display) => void;
-}) {
+type Props = {
+  socket: Socket;
+  profile: Profile;
+};
+
+export default function SearchInvite({ socket, profile }: Props) {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [pongies, setPongies] = useState<Pongie[]>([]);
   const [list, setList] = useState<(Channel | Pongie | CreateOne)[]>([]);
@@ -30,11 +30,35 @@ export default function SearchInvite({
     };
   };
 
+  const verifyLogin = (text: string) => {
+    if (text.includes(" ")) {
+      return {
+        id: -1,
+        error: true,
+        msg: "No space in the login please",
+      };
+    }
+
+    if (!/^(?!.*(?:'|\"|`))[!-~À-ÿ]+/.test(text)) {
+      return {
+        id: -1,
+        error: true,
+        msg: "No quotes in the login please",
+      };
+    }
+
+    return {
+      id: -1,
+      error: false,
+      msg: "",
+    };
+  };
+
   const getData = (event: React.MouseEvent<HTMLInputElement>) => {
-    socket?.emit("getChannelsProfile", (channels: Channel[]) => {
+    socket?.emit("getChannelsProfile", profile.id, (channels: Channel[]) => {
       setChannels(channels);
     });
-    socket?.emit("getPongies", (pongies: Pongie[]) => {
+    socket?.emit("getPongies", profile.id, (pongies: Pongie[]) => {
       setPongies(pongies);
     });
 
@@ -76,6 +100,25 @@ export default function SearchInvite({
           setError(err);
           return;
         }
+      }
+
+      if (list.length === 0) {
+        const err: ListError = verifyLogin(text);
+
+        if (err.error) {
+          setList([]);
+          setError(err);
+          return;
+        }
+      }
+
+      if (list.length === 0) {
+        const error: ListError = {
+          id: -1,
+          error: true,
+          msg: "No pongie found...",
+        };
+        setError(error);
       }
 
       setList(list);

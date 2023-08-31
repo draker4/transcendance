@@ -18,13 +18,21 @@ import GeneralSettings from "./GeneralSettings";
 import DefineName from "./DefineName";
 import { CircularProgress } from "@mui/material";
 import Invite from "./Invite";
+import { Socket } from "socket.io-client";
 
 type Props = {
   lobbyService: LobbyService;
   userId: number;
+  socket: Socket;
+  profile: Profile;
 };
 
-export default function CreateParty({ lobbyService, userId }: Props) {
+export default function CreateParty({
+  lobbyService,
+  userId,
+  socket,
+  profile,
+}: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
   const [name, setName] = useState<string>("");
@@ -165,7 +173,12 @@ export default function CreateParty({ lobbyService, userId }: Props) {
         setBall={setBall}
         selected={selected}
       />
-      <Invite inviteId={inviteId} setInviteId={setInviteId} />
+      <Invite
+        inviteId={inviteId}
+        setInviteId={setInviteId}
+        socket={socket}
+        profile={profile}
+      />
       <div className={styles.confirm}>
         <button
           className={styles.save}

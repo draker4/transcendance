@@ -1,7 +1,7 @@
 "use client";
 
 //Import les composants react
-import { useState , useMemo} from "react";
+import { useState } from "react";
 
 //Import le service pour les games
 import LobbyService from "@/services/Lobby.service";
@@ -11,26 +11,32 @@ import Party from "@/components/lobby/party/Party";
 import Training from "@/components/lobby/training/Training";
 import NavLobby from "./NavLobby";
 import MatchmakingService from "@/services/Matchmaking.service";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
-  avatar: Avatar;
+  socket: Socket;
 };
 
-export default function Lobby({ profile, avatar }: Props) {
-
+export default function Lobby({ profile, socket }: Props) {
   const lobbyService = new LobbyService();
   const matchmakingService = new MatchmakingService();
   const [menu, setMenu] = useState<string>("League");
 
   return (
-	<div className={styles.lobby}>
-		<NavLobby menu={menu} setMenu={setMenu} />
-		<div className={styles.content}>
-			{menu == "League" && (<League Matchmaking={matchmakingService} />)}
-			{menu == "Party" && (<Party lobbyService={lobbyService} profile={profile} />)}
-			{menu == "Training" && <Training profile={profile} />}
-		</div>
-	</div>
-);
+    <div className={styles.lobby}>
+      <NavLobby menu={menu} setMenu={setMenu} />
+      <div className={styles.content}>
+        {menu == "League" && <League Matchmaking={matchmakingService} />}
+        {menu == "Party" && (
+          <Party
+            lobbyService={lobbyService}
+            profile={profile}
+            socket={socket}
+          />
+        )}
+        {menu == "Training" && <Training profile={profile} />}
+      </div>
+    </div>
+  );
 }

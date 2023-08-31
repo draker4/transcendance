@@ -109,6 +109,7 @@ export type GameData = {
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   storyLevel?: number;
   mode: "League" | "Party" | "Training";
+  demo?: boolean;
   hostSide: "Left" | "Right";
   difficulty: -2 | -1 | 0 | 1 | 2;
   push: boolean;

@@ -98,6 +98,7 @@ export default function Story({ profile, trainingService }: Props) {
             levelSelected={levelSelected}
             setLevelSelected={setLevelSelected}
             currentLevel={currentLevel}
+            key={story.level}
           />
         ))}
       </div>

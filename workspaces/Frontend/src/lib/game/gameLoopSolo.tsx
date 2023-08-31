@@ -67,7 +67,8 @@ export const gameLoop = (
   game: GameData,
   setGameData: Function,
   draw: Draw,
-  isMountedRef: React.MutableRefObject<boolean>
+  isMountedRef: React.MutableRefObject<boolean>,
+  demo: boolean
 ) => {
   if (!isMountedRef.current || !gameLoopRunning) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
@@ -77,7 +78,7 @@ export const gameLoop = (
     if (updatedGame.status === "Playing") {
       updatePong(updatedGame);
       if (updatedGame.updateScore) {
-        updateDBScore(updatedGame);
+        if (!demo) updateDBScore(updatedGame);
         updatedGame.updateScore = false;
       }
     }
@@ -85,18 +86,18 @@ export const gameLoop = (
       pauseCheck(pauseLoopRunning, updatedGame);
     }
     if (updatedGame.sendStatus) {
-      updateDBStatus(updatedGame);
+      if (!demo) updateDBStatus(updatedGame);
       updatedGame.sendStatus = false;
       if (updatedGame.status === "Finished") {
         gameLoopRunning = false;
-        updateDBStats(updatedGame);
+        if (!demo) updateDBStats(updatedGame);
         if (updatedGame.type === "Story") {
-          updateDBStory(updatedGame);
+          if (!demo) updateDBStory(updatedGame);
         }
       }
     }
     if (updatedGame.updatePause) {
-      updateDBPause(updatedGame);
+      if (!demo) updateDBPause(updatedGame);
       updatedGame.updatePause = false;
     }
     drawPong(updatedGame, draw);
@@ -125,7 +126,7 @@ export const gameLoop = (
   );
   setTimeout(() => {
     requestAnimationFrame((timestamp) =>
-      gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef)
+      gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)
     );
   }, remainingDelay);
   setGameData(updatedGame);

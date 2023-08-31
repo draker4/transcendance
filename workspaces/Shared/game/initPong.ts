@@ -16,7 +16,10 @@ import {
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
   PLAYER_START_SPEED,
+  AI_DEMO,
+  AI_ID,
 } from "@transcendence/shared/constants/Game.constants";
+import { ScoreInfo } from "../types/Score.types";
 
 export function initPlayerDynamic(
   side: "Left" | "Right",
@@ -62,6 +65,82 @@ export function initPlayer(side: "Left" | "Right"): Player {
     },
     side,
     host: false,
+  };
+}
+
+export function initPlayerDemo(
+  ai: -2 | -3,
+  side: "Left" | "Right",
+  name: string
+): Player {
+  return {
+    id: ai,
+    name: name,
+    color:
+      ai === AI_ID
+        ? { r: 232, g: 26, b: 26, a: 1 }
+        : { r: 15, g: 145, b: 221, a: 1 },
+    avatar: {
+      image: "",
+      variant: "circular",
+      borderColor: ai === AI_ID ? "#e81a1a" : "#0f91dd",
+      backgroundColor: ai === AI_ID ? "#e81a1a" : "#0f91dd",
+      text: "CO",
+      empty: true,
+      decrypt: false,
+    },
+    side: side,
+    host: false,
+  };
+}
+
+export function initScoreDemo(): ScoreInfo {
+  return {
+    id: "Demo",
+    leftRound: 0,
+    rightRound: 0,
+    round: [
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+      {
+        left: 0,
+        right: 0,
+      },
+    ],
+    rageQuit: "",
+    disconnect: "",
+    leftPause: 3,
+    rightPause: 3,
   };
 }
 

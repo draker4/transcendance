@@ -21,6 +21,7 @@ type Props = {
 export default function Training({ profile }: Props) {
   const trainingService = new TrainingService();
   const [trainingId, setTrainingId] = useState<string>("");
+  const [showDemo, setShowDemo] = useState<boolean>(false);
 
   useEffect(() => {
     trainingService.isInTraining().then((ret) => {
@@ -32,13 +33,21 @@ export default function Training({ profile }: Props) {
 
   return (
     <div className={styles.training}>
-      <InTraining
-        trainingService={trainingService}
-        trainingId={trainingId}
-        setTrainingId={setTrainingId}
+      {!showDemo && (
+        <InTraining
+          trainingService={trainingService}
+          trainingId={trainingId}
+          setTrainingId={setTrainingId}
+        />
+      )}
+      {!showDemo && (
+        <StoryTraining profile={profile} trainingService={trainingService} />
+      )}
+      <Practice
+        profile={profile}
+        showDemo={showDemo}
+        setShowDemo={setShowDemo}
       />
-      <StoryTraining profile={profile} trainingService={trainingService} />
-      <Practice profile={profile} />
     </div>
   );
 }

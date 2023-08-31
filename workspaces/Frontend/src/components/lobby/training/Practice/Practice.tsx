@@ -22,12 +22,15 @@ import {
 } from "@/lib/game/random";
 import TrainingService from "@/services/Training.service";
 import { CircularProgress } from "@mui/material";
+import Demo from "@/components/demo/Demo";
 
 type Props = {
   profile: Profile;
+  showDemo: boolean;
+  setShowDemo: Function;
 };
 
-export default function Practice({ profile }: Props) {
+export default function Practice({ profile, showDemo, setShowDemo }: Props) {
   const [selected, setSelected] = useState<
     "Classic" | "Best3" | "Best5" | "Random" | "Custom" | "Story"
   >("Classic");
@@ -42,6 +45,7 @@ export default function Practice({ profile }: Props) {
   const router = useRouter();
   const trainingService = new TrainingService();
   const [creatingPractice, setCreatingPractice] = useState<boolean>(false);
+  const [demoData, setDemoData] = useState<CreateDemo>();
 
   // ----------------------------------  CREATE PONG  --------------------------------- //
 
@@ -109,8 +113,33 @@ export default function Practice({ profile }: Props) {
     }
   }, [selected]);
 
+  function lunchDemo() {
+    const type = selected === "Random" ? "Custom" : selected;
+    const demo: CreateDemo = {
+      name: `Demo ${selected}`,
+      type: selected === "Random" ? "Custom" : selected,
+      side: side,
+      maxPoint: maxPoint,
+      maxRound: maxRound,
+      difficulty: difficulty,
+      push: push,
+      pause: pause,
+      background: confirmBackground(background),
+      ball: confirmBall(ball),
+    };
+    setDemoData(demo);
+    setShowDemo(true);
+  }
+
   // -----------------------------------  PRACTICE  ----------------------------------- //
 
+  if (showDemo && demoData) {
+    return (
+      <div className={styles.practice}>
+        <Demo profile={profile} demoData={demoData} setShowDemo={setShowDemo} />
+      </div>
+    );
+  }
   return (
     <div className={styles.practice}>
       <h2>Practice</h2>
@@ -137,10 +166,15 @@ export default function Practice({ profile }: Props) {
         difficulty={difficulty}
         setDifficulty={setDifficulty}
       />
-      <button className={styles.save} onClick={createPractice}>
-        {!creatingPractice && "Play"}
-        {creatingPractice && <CircularProgress />}
-      </button>
+      <div className={styles.CreateDemo}>
+        <button className={styles.save} onClick={createPractice}>
+          {!creatingPractice && "Play"}
+          {creatingPractice && <CircularProgress />}
+        </button>
+        <button className={styles.save} onClick={lunchDemo}>
+          Demo
+        </button>
+      </div>
     </div>
   );
 }

@@ -72,18 +72,6 @@ export function handlePlayerCollision(
       }
       ball.moveY = -Math.sin(newAngle);
       handlePush(ball, player);
-    } else if (
-      ball.posY + BALL_SIZE >= player.posY - margin &&
-      ball.posY + BALL_SIZE < player.posY &&
-      ball.moveY < DirYValues.Idle
-    ) {
-      ball.moveY *= -1;
-    } else if (
-      ball.posY > player.posY + PLAYER_WIDTH &&
-      ball.posY < player.posY + PLAYER_WIDTH + margin &&
-      ball.moveY > DirYValues.Idle
-    ) {
-      ball.moveY *= -1;
     }
   }
 }

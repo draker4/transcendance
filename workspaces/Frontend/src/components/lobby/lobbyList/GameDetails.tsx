@@ -30,8 +30,8 @@ export default function GameDetails({ scoreService, gameInfo }: Props) {
     // Fetch game list initially
     getScore();
 
-    // Then fetch it every 10 seconds
-    const interval = setInterval(getScore, 10000);
+    // Then fetch it every second
+    const interval = setInterval(getScore, 1000);
 
     return () => clearInterval(interval);
   }, []);

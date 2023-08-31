@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import Lobby from "../lobby/Lobby";
@@ -9,62 +9,59 @@ import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import LoadingSuspense from "../loading/LoadingSuspense";
 
-export default function ChatClient({
-	token,
-	profile,
-	avatar,
-  }: {
-	token: string;
-	profile: Profile;
-	avatar: Avatar;
-  }) {
-	const	[socket, setSocket] = useState<Socket | undefined>(undefined);
-	const	router = useRouter();
+export default function HomeClient({
+  token,
+  profile,
+  avatar,
+}: {
+  token: string;
+  profile: Profile;
+  avatar: Avatar;
+}) {
+  const [socket, setSocket] = useState<Socket | undefined>(undefined);
+  const router = useRouter();
 
-	// handle socket connection
-	useEffect(() => {
+  // handle socket connection
+  useEffect(() => {
+    const handleError = () => {
+      setSocket(undefined);
+    };
 
-		const handleError = () => {
-		  setSocket(undefined);
-		}
-		
-			const	disconnectClient = async () => {
-				await disconnect();
-				router.refresh();
-			}
-	
-		if (!socket) {
-	
-		  const intervalId = setInterval(() => {
-			const chatService = new ChatService(token);
-			
-					if (chatService.disconnectClient) {
-						clearInterval(intervalId);
-						disconnectClient();
-					}
-	
-			if (chatService.socket) {
-			  setSocket(chatService.socket);
-			  clearInterval(intervalId);
-			}
-			console.log("chatservice reload here", chatService.socket?.id);
-		  }, 500);
-		}
-	
-		socket?.on("disconnect", handleError);
-	
-		return () => {
-		  socket?.off("disconnect", handleError);
-		}
-	}, [socket]);
+    const disconnectClient = async () => {
+      await disconnect();
+      router.refresh();
+    };
 
-	if (!socket)
-    	return <LoadingSuspense />;
+    if (!socket) {
+      const intervalId = setInterval(() => {
+        const chatService = new ChatService(token);
 
-	return (
-		<>
-			<HomeProfile profile={profile} avatar={avatar} />
-			<Lobby profile={profile} avatar={avatar} />
-		</>
-	)
-  }
+        if (chatService.disconnectClient) {
+          clearInterval(intervalId);
+          disconnectClient();
+        }
+
+        if (chatService.socket) {
+          setSocket(chatService.socket);
+          clearInterval(intervalId);
+        }
+        console.log("chatservice reload here", chatService.socket?.id);
+      }, 500);
+    }
+
+    socket?.on("disconnect", handleError);
+
+    return () => {
+      socket?.off("disconnect", handleError);
+    };
+  }, [socket]);
+
+  if (!socket) return <LoadingSuspense />;
+
+  return (
+    <>
+      <HomeProfile profile={profile} avatar={avatar} />
+      <Lobby profile={profile} socket={socket} />
+    </>
+  );
+}

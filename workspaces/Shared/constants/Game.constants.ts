@@ -6,11 +6,12 @@ export const PLAYER_HEIGHT = 140;
 export const PLAYER_START_SPEED = 10;
 
 export const BALL_SIZE = 18;
-export const BALL_START_SPEED = 15;
+export const BALL_START_SPEED = 16;
 
 export const PUSH_SIZE = 6;
 
 export const AI_ID = -2;
+export const AI_DEMO = -3;
 
 export const FONT_MENU = "60px Arial";
 export const FONT_SCORE = "50px Arial";
