@@ -1,7 +1,7 @@
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import { Badge, CircularProgress, Tooltip } from "@mui/material";
 import InviteButton from "@/components/chatPage/ChatChannel/GameLink/InviteButton";
@@ -33,7 +33,7 @@ export default function MessageItem({
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const [color, setColor] = useState<string>("#edf0f0");
-  const [textStatus, setTextStatus] = useState<string>("disconnectedd");
+  const [textStatus, setTextStatus] = useState<string>("disconnected");
   const [loading, setLoading] = useState<boolean>(false);
 
   const badgeStyleStatus = {
@@ -48,19 +48,19 @@ export default function MessageItem({
   };
 
   const handleFocusOn = () => {
-    // setIsFocused(true);
+    setIsFocused(true);
   };
 
   const handleFocusOff = () => {
-    // setIsFocused(false);
+    setIsFocused(false);
   };
 
   const handleHover = () => {
-    // setIsFocused(true);
+    setIsFocused(true);
   };
 
   const handleMouseLeave = () => {
-    // setIsFocused(false);
+    setIsFocused(false);
   };
 
   useEffect(() => {
@@ -164,20 +164,22 @@ export default function MessageItem({
       <div className={styles.textSide}>
         {/* Header */}
         <div className={styles.tsheader}>
+
+          <div className={styles.baseline}>
           <div
-            className={styles.name}
-            style={{ color: groupedMessages.user.avatar.borderColor }}
-          >
-            {groupedMessages.user.login}
+              className={styles.name}
+              style={{ color: groupedMessages.user.avatar.borderColor }}
+            >
+              {groupedMessages.user.login}
+            </div>
+            <div className={styles.date}>{formatedDate}</div>
           </div>
-          <div className={styles.date}>{formatedDate}</div>
 
           {/* Game invitation */}
-          {isFocused &&
+          {isFocused && channel.type !== "privateMsg" &&
             !groupedMessages.isServerNotif &&
             groupedMessages.user.id !== myself.id &&
-            !loading &&
-            !groupedMessages.join && (
+            !loading && !groupedMessages.join && (
               <>
                 {textStatus === "connected" && (
                   <div className={styles.inviteButton}>
@@ -191,11 +193,12 @@ export default function MessageItem({
                     />
                   </div>
                 )}
-                {textStatus === "in game" && (
-                  <Tooltip title={"watch game"} arrow placement="top">
+                {
+                  textStatus === "in game" &&
+                  <div className={styles.inviteButton}>
                     <WatchButton userId={groupedMessages.user.id} />
-                  </Tooltip>
-                )}
+                  </div>
+                }
               </>
             )}
         </div>

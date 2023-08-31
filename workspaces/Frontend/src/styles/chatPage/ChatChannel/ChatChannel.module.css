@@ -66,11 +66,16 @@
 /* ----------------- Invite game button ----------------- */
 
 .inviteButton{
-  min-height: 25px;
+  /* min-height: 20px; */
   /* aspect-ratio: 1 / 1; */
   color: var(--tertiary3);
   margin: 0 10px;
   /* border: 1px solid red; */
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
 }
 
 .mainInviteButton {
@@ -198,12 +203,19 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  align-items: baseline;
-  gap: 0.3rem;
+  align-items: center;
   margin-bottom: 4px;
-  /* border: 1px solid red; */
+  height: 25px;
 
   /* background-color: rgb(151, 190, 107); */
+}
+
+.channelMsgFrame .msgBoard .msgItem .textSide .tsheader .baseline {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: baseline;
+  gap: 0.3rem;
+  flex: 1;
 }
 
 .channelMsgFrame .msgBoard .msgItem .textSide .tsheader .name {
@@ -266,7 +278,6 @@
   cursor: pointer;
   color: var(--tertiary1);
 }
-
 
 .flexContentMsg button:hover {
   border-color: var(--accent3);
