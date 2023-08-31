@@ -39,6 +39,7 @@ import { Image } from './utils/typeorm/Image.entity';
 import { StoryModule } from './story/story.module';
 import { Story } from './utils/typeorm/Story.entity';
 import { StoryData } from './utils/typeorm/StoryData.entity';
+import { StatusModule } from './statusService/status.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { StoryData } from './utils/typeorm/StoryData.entity';
     TrainingModule,
     TwoFactorAuthenticationModule,
     UsersModule,
+    StatusModule,
   ],
 })
 export class AppModule {}
