@@ -39,7 +39,6 @@ export default function ChatClient({
   const openDisplay = (display: Display) => {
     setOpen(true);
     setDisplay(display);
-    console.log(display);
   };
 
   const clearDisplay = () => {
@@ -139,12 +138,12 @@ export default function ChatClient({
     }
 
     const	updateStatus = (payload: StatusData) => {
+      console.log(payload);
       setStatus(prevStatus => {
         const newStatus = new Map(prevStatus);
         Object.entries(payload).forEach(([key, value]) => {
           newStatus.set(key, value);
         });
-        console.log('prev', prevStatus, 'new', newStatus);
         return newStatus;
       });
     }

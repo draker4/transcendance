@@ -29,11 +29,11 @@ import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
-import { StatusService } from '@/statusService/status.service';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { StatusModule } from '@/statusService/status.module';
 
 @Module({
   imports: [
@@ -53,6 +53,7 @@ import { StoryService } from '@/story/service/story.service';
       Story,
       StoryData,
     ]),
+    StatusModule,
   ],
   providers: [
     AvatarService,
@@ -66,7 +67,6 @@ import { StoryService } from '@/story/service/story.service';
     ScoreService,
     StatsService,
     UsersService,
-    StatusService,
     StoryService,
   ],
 })

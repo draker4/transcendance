@@ -14,6 +14,7 @@ export class StatusService {
     else this.status.set(userId, status);
 
     this.updateStatus.set(userId, status);
+    console.log("updatestatus here", this.updateStatus);
   }
 
   public remove(updateStatus: Map<string, string>) {
