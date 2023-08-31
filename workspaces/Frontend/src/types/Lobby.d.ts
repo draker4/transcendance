@@ -8,6 +8,7 @@ interface PlayerLeaderBoard {
 	score: number;
 	rank: number;
 	avatar: string;
+  user:User;
 }
 
 interface GameRanked {
