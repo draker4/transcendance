@@ -7,6 +7,7 @@ import { Socket } from "socket.io-client";
 import ChatService from "@/services/Chat.service";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
+import LoadingSuspense from "../loading/LoadingSuspense";
 
 export default function ChatClient({
 	token,
@@ -55,7 +56,10 @@ export default function ChatClient({
 		return () => {
 		  socket?.off("disconnect", handleError);
 		}
-	  }, [socket]);
+	}, [socket]);
+
+	if (!socket)
+    	return <LoadingSuspense />;
 
 	return (
 		<>
