@@ -1,5 +1,7 @@
 .main {
-  border: 1px solid grey;
+  border: 3px solid var(--secondary1);
+  /* [!] STYLE BORDURES */
+	/* border: 1px solid grey; */
   border-radius: 10px;
   padding: 20px;
   display: flex;
