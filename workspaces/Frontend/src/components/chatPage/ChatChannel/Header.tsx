@@ -6,6 +6,7 @@ import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import { Badge, CircularProgress, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
+import WatchButton from "./GameLink/WatchButton";
 
 type Props = {
   icon: ReactNode;
@@ -128,6 +129,13 @@ export default function Header({
           addMsg={addMsg}
           isChannel={true}
         />
+      }
+
+      {
+        !loading && channel.type === "privateMsg" && textStatus === "in game" &&
+        <div className={styles.inviteButton}>
+          <WatchButton userId={otherId} setLoading={setLoading} />
+        </div>
       }
 
       {

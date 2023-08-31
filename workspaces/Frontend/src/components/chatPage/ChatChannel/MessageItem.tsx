@@ -196,7 +196,7 @@ export default function MessageItem({
                 {
                   textStatus === "in game" &&
                   <div className={styles.inviteButton}>
-                    <WatchButton userId={groupedMessages.user.id} />
+                    <WatchButton userId={groupedMessages.user.id} setLoading={setLoading} />
                   </div>
                 }
               </>

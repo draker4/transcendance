@@ -20,7 +20,7 @@ type Props = {
 export default function AskPassword({channel, myself, socket, openDisplay, icon}: Props) {
 
   return (
-    <div className={styleMain.main}>
+    <>
       <div className={styles.channelMsgFrame}>
       <div className={styles.icon}>{icon}</div>
         <div className={styles.popUp}>
@@ -35,6 +35,6 @@ export default function AskPassword({channel, myself, socket, openDisplay, icon}
           />
         </div>
       </div>
-    </div>
+    </>
   )
 }
