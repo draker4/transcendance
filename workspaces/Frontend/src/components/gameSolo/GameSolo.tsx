@@ -1,7 +1,7 @@
 "use client";
 
 // Import des composants react
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // Import du style
@@ -19,7 +19,7 @@ import {
   TIMER_START,
   TIMER_RESTART,
 } from "@transcendence/shared/constants/Game.constants";
-import { CircularProgress } from "@mui/material";
+import LoadingComponent from "../loading/Loading";
 
 type Props = {
   profile: Profile;
@@ -85,7 +85,7 @@ export default function GameSolo({ profile, trainingId }: Props) {
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }

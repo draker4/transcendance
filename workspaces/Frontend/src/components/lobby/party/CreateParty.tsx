@@ -16,9 +16,9 @@ import {
 } from "@/lib/game/random";
 import GeneralSettings from "./GeneralSettings";
 import DefineName from "./DefineName";
-import { CircularProgress } from "@mui/material";
 import Invite from "./Invite";
 import { Socket } from "socket.io-client";
+import LoadingComponent from "@/components/loading/Loading";
 
 type Props = {
   lobbyService: LobbyService;
@@ -187,7 +187,7 @@ export default function CreateParty({
           disabled={creatingParty}
         >
           {!creatingParty && "Create Party"}
-          {creatingParty && <CircularProgress />}
+          {creatingParty && <LoadingComponent />}
         </button>
       </div>
     </div>

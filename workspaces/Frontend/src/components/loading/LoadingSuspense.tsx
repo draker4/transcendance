@@ -1,12 +1,12 @@
 "use client"
 
-import { CircularProgress } from "@mui/material";
 import styles from "@/styles/loading/Loading.module.css";
+import LoadingComponent from "./Loading";
 
 export default function LoadingSuspense() {
 	return (
 		<div className={styles.main}>
-			<CircularProgress />
+			<LoadingComponent />
 			<h2>Loading...</h2>
 		</div>
 	);

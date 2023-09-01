@@ -167,6 +167,10 @@
   background-color: var(--primary2);
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
   margin-bottom: 0.5rem;
+
+  /* [!][+] perte du width 100% */
+  /* width: 400px; */
+  overflow: hidden;
 }
 
 .item .header {

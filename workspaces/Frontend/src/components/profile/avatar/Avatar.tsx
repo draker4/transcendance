@@ -2,7 +2,7 @@
 
 import styles from "@/styles/profile/AvatarCard.module.css";
 import AvatarUser from "../../avatarUser/AvatarUser";
-import { Badge, CircularProgress } from "@mui/material";
+import { Badge } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-regular-svg-icons";
 import { ChangeEvent, Dispatch, SetStateAction, useRef, useState } from "react";
@@ -14,6 +14,7 @@ import { CryptoService } from "@/services/Crypto.service";
 import disconnect from "@/lib/disconnect/disconnect";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import LoadingComponent from "@/components/loading/Loading";
 
 type Props = {
   avatar: Avatar;
@@ -354,7 +355,7 @@ export default function AvatarProfile({
             alignItems: "center"
           }}
         >
-          <CircularProgress />
+          <LoadingComponent />
         </div>
       </div>
   );
@@ -407,7 +408,6 @@ export default function AvatarProfile({
               }}
               className={styles.avatarUser}
               onClick={(event) => {
-                console.log('click droit');
                 if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
                   return ;
                 }
@@ -432,7 +432,6 @@ export default function AvatarProfile({
               onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
-                console.log('click gauche');
                 if (avatarRef.current && avatarRef.current.contains(event.target as Node)) {
                   return ;
                 }

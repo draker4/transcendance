@@ -105,6 +105,7 @@ export default function DisplayInfos({
 				type='text'
 				placeholder="name..."
 				maxLength={100}
+				name="channelName"
 				onChange={(e) => setName(e.currentTarget.value)}
 			/>
 

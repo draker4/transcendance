@@ -14,8 +14,7 @@ import StoryService from "@/services/Story.service";
 import TrainingService from "@/services/Training.service";
 import { confirmBackground, confirmBall } from "@/lib/game/random";
 import StorySelector from "./StorySelector";
-import { CircularProgress } from "@mui/material";
-import { set } from "react-hook-form";
+import LoadingComponent from "@/components/loading/Loading";
 
 type Props = {
   profile: Profile;
@@ -80,7 +79,7 @@ export default function Story({ profile, trainingService }: Props) {
     return (
       <div className={styles.story}>
         <h2>Story</h2>
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }
@@ -108,7 +107,7 @@ export default function Story({ profile, trainingService }: Props) {
         disabled={creatingStory}
       >
         {!creatingStory && "Play"}
-        {creatingStory && <CircularProgress />}
+        {creatingStory && <LoadingComponent />}
       </button>
     </div>
   );

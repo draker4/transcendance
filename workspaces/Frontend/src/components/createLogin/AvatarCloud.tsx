@@ -1,12 +1,13 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Badge, CircularProgress } from "@mui/material";
+import { Avatar, Badge } from "@mui/material";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import styles from "@/styles/createLogin/ChooseAvatar.module.css";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { toast } from "react-toastify";
+import LoadingComponent from "../loading/Loading";
 
 const badgeStyle = {
 	"& .MuiBadge-badge": {
@@ -138,7 +139,7 @@ export default function AvatarCloud({
 	if (loading)
 		return (
 			<div className={styles.loading}>
-				<CircularProgress />
+				<LoadingComponent />
 			</div>
 		);
 

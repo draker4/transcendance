@@ -5,6 +5,7 @@ import LoadingComponent from "@/components/loading/Loading";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";
+import LoadingSuspense from "@/components/loading/LoadingSuspense";
 
 export default function ConnectPage() {
 
@@ -42,7 +43,7 @@ export default function ConnectPage() {
   return (
     <>
       <Refresher />
-      <LoadingComponent />
+      <LoadingSuspense />
     </>
   );
 }

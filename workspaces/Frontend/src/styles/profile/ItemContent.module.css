@@ -1,0 +1,71 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    user-select: none;
+}
+
+.starBox {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    
+}
+
+.star {
+    font-size: 1.6rem;
+}
+
+p.placeholder {
+    margin: 0;
+}
+
+
+.winrateBoard {
+    display: flex;
+    height:80px;
+    gap:0.5rem;
+}
+
+.winrateBoardItem {
+    font-family: var(--title-font);
+    color: var(--primary1);
+    width: 80px;
+    display: flex;
+    gap:0.3rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.winrateBoardItem .number {
+    display: flex;
+    align-items: baseline;
+
+    text-align: center;
+    border-radius: 0.15rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color:var(--accent1);
+}
+
+.winrateBoardItem .number .percentSign {
+    font-size: 0.7rem;
+}
+
+.winrateBoardItem .title {
+    border: 3px solid var(--accent1);
+    padding: 5px 2px;
+    text-align: center;
+    border-radius: 0.15rem;
+    font-size: 0.8rem;
+    font-weight: 900;
+    letter-spacing: 0.15rem;
+    width:100%;
+    background-color: var(--secondary1);
+}
+
+.winrateBoardItem.played {
+    margin-right: 15px;
+}

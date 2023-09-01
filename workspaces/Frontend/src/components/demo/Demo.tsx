@@ -14,21 +14,22 @@ import {
   initScoreDemo,
 } from "@transcendence/shared/game/initPong";
 import PongDemo from "./PongDemo";
-import { CircularProgress } from "@mui/material";
 import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import {
   AI_DEMO,
   AI_ID,
   TIMER_START,
 } from "@transcendence/shared/constants/Game.constants";
+import LoadingComponent from "../loading/Loading";
 
 type Props = {
   login: string;
   demoData: CreateDemo;
   setShowDemo: Function;
+  scrollTop: boolean;
 };
 
-export default function Demo({ login, demoData, setShowDemo }: Props) {
+export default function Demo({ login, demoData, setShowDemo, scrollTop = true }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
 
@@ -72,7 +73,7 @@ export default function Demo({ login, demoData, setShowDemo }: Props) {
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }
@@ -84,6 +85,7 @@ export default function Demo({ login, demoData, setShowDemo }: Props) {
           gameData={gameData}
           setGameData={setGameData}
           setShowDemo={setShowDemo}
+          scrollTop={scrollTop}
         />
       </div>
     );
