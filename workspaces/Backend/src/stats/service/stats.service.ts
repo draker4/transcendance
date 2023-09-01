@@ -313,6 +313,6 @@ export class StatsService {
   }
 
   public async getStats() {
-		return await this.statsRepository.find();
-	}
+    return await this.statsRepository.find();
+  }
 }

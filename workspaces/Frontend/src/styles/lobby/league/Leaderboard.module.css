@@ -195,6 +195,12 @@
   color: var(--tertiary1);
 }
 
+.links.podiumLinks {
+  color: var(--accent3);
+  font-family: var(--title-font);
+  font-weight: 700;
+}
+
 
 @media screen and (max-width: 1200px) {
 

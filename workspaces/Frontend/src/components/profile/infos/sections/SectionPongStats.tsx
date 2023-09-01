@@ -2,28 +2,59 @@ import styles from "@/styles/profile/InfoCard.module.css";
 import Item from "./Item";
 import MottoDisplayOnly from "./tagline/MottoDisplayOnly";
 import StoryDisplayOnly from "./story/StoryDisplayOnly";
+import { useEffect, useState } from "react";
+import StatsService from "@/services/Stats.service";
+import StoryService from "@/services/Story.service";
+import StoryLevel from "./ItemContent/StoryLevel";
 
 type Props = {
   profile: Profile;
 };
 
 export default function SectionPongStats({ profile }: Props) {
-  const crunchyMotto: string = "Give me more paddles, im super-hungry !";
-  // const crunchyMotto: string = "";
 
-  const crunchyBio: string =
-    "Hey there! I'm a passionate player of online CrunchyPong. I've spent countless hours honing my skills and mastering the nuances of this game. My ultimate goal is to become the greatest pong cruncher of all time!";
-  // const crunchyBio: string = "";
+    const [storyLevel, setStoryLevel] = useState<number>(0);
+    const storyService = new StoryService(undefined);
+    const statService = new StatsService(undefined);
+
+    const loadStats = async () => {
+        const rep = await statService.getStatsByUserId(profile.id);
+
+        if (rep.success) {
+            console.log("STATS FETCHING => data : ", rep.data); // checking
+        }
+    }
+
+    const loadStory = async () => {
+        const rep = await storyService.getUserStories(profile.id);
+
+        if (rep !== undefined && rep.success) {
+            console.log("STORY FETCHING => data : ", rep.data);  // checking
+            let checkLevel: number = 0;
+            while (rep.data[checkLevel].levelCompleted) {
+                checkLevel++;
+            }
+            setStoryLevel(checkLevel);
+        }
+    }
+
+    useEffect(() => {
+        loadStats();
+        loadStory();
+      }, [])
 
   return (
     <div className={styles.sections}>
-      {/* MOTTO */}
+
       <MottoDisplayOnly profile={profile} />
 
-      {/* STORY */}
       <StoryDisplayOnly profile={profile} />
 
-      <Item title="Level">
+      <Item title="Story Level">
+        <StoryLevel storyLevel={storyLevel} />
+      </Item>
+
+      <Item title="Recent Achievement">
         <p>items content : customize it with a specific component</p>
       </Item>
 
@@ -34,6 +65,7 @@ export default function SectionPongStats({ profile }: Props) {
       <Item title="Recent games">
         <p>items content : customize it with a specific component</p>
       </Item>
+
     </div>
   );
 }

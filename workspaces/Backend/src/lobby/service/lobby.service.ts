@@ -17,6 +17,7 @@ import { StatsService } from '@/stats/service/stats.service';
 import { AvatarService } from '@/avatar/avatar.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { User } from '@/utils/typeorm/User.entity';
+import { PongColors } from '@/utils/enums/PongColors.enum';
 
 @Injectable()
 export class LobbyService {
@@ -311,38 +312,22 @@ export class LobbyService {
 		try {
 			const stats = await this.statsService.getStats();
 			const playerLeaderBoard = await Promise.all(stats.map(async (stat) => {
-				// let userLogin = "Noone";
-				// let avatar = "/images/avatars/avatar1.png";
-				// let back = "#000000";
-				// let border = "#000000";
-        // let id = -1;
-        // [+][!] je laisse tout commente pour le moment, check si tout est bien securise
         const userWithAvatar:User = await this.userService.getUserAvatar(stat.userId);
         if (!userWithAvatar)
           throw new Error(`user[${stat.userId}] not found`);
 
         if (userWithAvatar.avatar && userWithAvatar.avatar.decrypt)
            userWithAvatar.avatar.image = await this.cryptoService.decrypt(userWithAvatar.avatar.image);
-				// if (stat.userId != -1) {
-					// const user = await this.userService.getUserById(stat.userId);
-					// const userAvatar = await this.avatarService.getAvatarById(stat.userId, false);
-					// if (userWithAvatar != null && user != null && userAvatar != null) {
-					// 	userLogin = userAvatar.login;
-					// 	back = userAvatar.backgroundColor;
-					// 	border = userAvatar.borderColor;
-          //   id = userWithAvatar.id;
-					// }
-				// }
-				const score = this.calculateScore(stat);
-				return {
-          user: userWithAvatar,
+			const score = this.calculateScore(stat);
+			return {
+                    user: userWithAvatar,
 					login: userWithAvatar.login,
 					score: score,
 					rank: 0,
 					avatar: userWithAvatar.avatar,
-					back: userWithAvatar.avatar.backgroundColor,
-					border: userWithAvatar.avatar.borderColor,
-          id: userWithAvatar.id,
+					back: (userWithAvatar.avatar && userWithAvatar.avatar.backgroundColor) ? userWithAvatar.avatar.backgroundColor : PongColors.blue,
+					border: (userWithAvatar.avatar !== null && userWithAvatar.avatar.borderColor ) ? userWithAvatar.avatar.borderColor : PongColors.blue,
+                    id: userWithAvatar.id,
 				};
 			}));
 			playerLeaderBoard.sort((a, b) => b.score - a.score);

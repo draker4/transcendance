@@ -1,6 +1,5 @@
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import styles from "@/styles/lobby/league/Leaderboard.module.css";
-import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
@@ -15,8 +14,6 @@ export default function Leaderboard({ json }: Props) {
         <p className={styles.loading}>Recherche en cours...</p>
       </div>
     );
-  } else {
-    //console.log("LEADERBOARD FETCHING => json = ", json);
   }
 
   return (
@@ -28,7 +25,10 @@ export default function Leaderboard({ json }: Props) {
           <div className={styles.pad}>
             <p>2</p>
           </div>
-          {json.length > 1 && json[1] && (
+          {json.length > 1 && json[1] && json[1].user && json[1].user.avatar && (
+             <Link
+             className={`${styles.links} ${styles.podiumLinks}`}
+             href={`/home/profile/${json[1].user.id}`} >
             <div className={styles.podAvatarlogin}>
               <div className={styles.podAvatar}>
                 <AvatarUser
@@ -41,13 +41,17 @@ export default function Leaderboard({ json }: Props) {
               </div>
               <p>{json[1].login}</p>
             </div>
+            </Link>
           )}
         </div>
         <div className={styles.first}>
           <div className={styles.pad}>
             <p>1</p>
           </div>
-          {json.length > 0 && json[0] && (
+          {json.length > 0 && json[0] && json[0].user && json[0].user.avatar && (
+             <Link
+             className={`${styles.links} ${styles.podiumLinks}`}
+             href={`/home/profile/${json[0].user.id}`} >
             <div className={styles.podAvatarlogin}>
               <div className={styles.podAvatar}>
                 <AvatarUser
@@ -60,13 +64,17 @@ export default function Leaderboard({ json }: Props) {
               </div>
               <p>{json[0].login}</p>
             </div>
+            </Link>
           )}
         </div>
         <div className={styles.third}>
           <div className={styles.pad}>
             <p>3</p>
           </div>
-          {json.length > 2 && json[2] && (
+          {json.length > 2 && json[2] && json[2].user && json[2].user.avatar && (
+            <Link
+            className={`${styles.links} ${styles.podiumLinks}`}
+            href={`/home/profile/${json[2].user.id}`} >
             <div className={styles.podAvatarlogin}>
               <div className={styles.podAvatar}>
                 <AvatarUser
@@ -77,8 +85,9 @@ export default function Leaderboard({ json }: Props) {
                   fontSize={""}
                 />
               </div>
-              <p>{json[0].login}</p>
+              <p>{json[2].login}</p>
             </div>
+            </Link>
           )}
         </div>
       </div>
@@ -93,6 +102,7 @@ export default function Leaderboard({ json }: Props) {
         </div>
         {json.length > 0 &&
           json.map((player: any, index: number) => (
+            player.user && player.user.avatar && (
             <Link
               className={styles.links}
               href={`/home/profile/${player.id}`}
@@ -115,6 +125,7 @@ export default function Leaderboard({ json }: Props) {
                 <p style={{ textAlign: "center" }}>{player.rank}</p>
               </div>
             </Link>
+          )
           ))}
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { Socket } from "socket.io-client";
 import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAddressCard, faFaceLaughBeam, faMessage } from "@fortawesome/free-regular-svg-icons";
-import { faCheck, faPeopleGroup, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faAddressCard, faMessage } from "@fortawesome/free-regular-svg-icons";
+import { faCheck, faPeopleGroup, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";

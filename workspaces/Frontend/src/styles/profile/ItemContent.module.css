@@ -1,0 +1,18 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    user-select: none;
+}
+
+.starBox {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    
+}
+
+.star {
+    font-size: 1.6rem;
+}
