@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import StatsService from "@/services/Stats.service";
 import StoryService from "@/services/Story.service";
 import StoryLevel from "./ItemContent/StoryLevel";
+import Winrate from "./ItemContent/Winrate";
 
 type Props = {
   profile: Profile;
@@ -14,6 +15,7 @@ type Props = {
 export default function SectionPongStats({ profile }: Props) {
 
     const [storyLevel, setStoryLevel] = useState<number>(0);
+    const [winData, setWinData] = useState<{gameWon:number, gameLost:number}>({gameWon: 0, gameLost: 0});
     const storyService = new StoryService(undefined);
     const statService = new StatsService(undefined);
 
@@ -21,7 +23,9 @@ export default function SectionPongStats({ profile }: Props) {
         const rep = await statService.getStatsByUserId(profile.id);
 
         if (rep.success) {
-            console.log("STATS FETCHING => data : ", rep.data); // checking
+            // console.log("STATS FETCHING => data : ", rep.data); // checking
+
+            setWinData({gameWon: rep.data.gameWon, gameLost: rep.data.gameLost});
         }
     }
 
@@ -29,7 +33,7 @@ export default function SectionPongStats({ profile }: Props) {
         const rep = await storyService.getUserStories(profile.id);
 
         if (rep !== undefined && rep.success) {
-            console.log("STORY FETCHING => data : ", rep.data);  // checking
+            // console.log("STORY FETCHING => data : ", rep.data);  // checking
             let checkLevel: number = 0;
             while (rep.data[checkLevel].levelCompleted) {
                 checkLevel++;
@@ -54,15 +58,19 @@ export default function SectionPongStats({ profile }: Props) {
         <StoryLevel storyLevel={storyLevel} />
       </Item>
 
-      <Item title="Recent Achievement">
-        <p>items content : customize it with a specific component</p>
+      <Item title="Global Winrate">
+        <Winrate winData={winData} />
       </Item>
 
-      <Item title="Ranking">
+      <Item title="Recent Achievements">
         <p>items content : customize it with a specific component</p>
       </Item>
 
       <Item title="Recent games">
+        <p>items content : customize it with a specific component</p>
+      </Item>
+
+      <Item title="Ranking">
         <p>items content : customize it with a specific component</p>
       </Item>
 
