@@ -1,7 +1,7 @@
 .logService {
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex;
+  justify-content: center;
   align-items: center;
   margin: 0 auto;
 }
@@ -15,7 +15,7 @@
   flex-flow: row nowrap;
   justify-content: space-around;
   align-items: center;
-  width: clamp(140px, 20vw, 500px);
+  width: clamp(140px, 25vw, 500px);
   margin: 10px;
   margin-top: 5vh;
 }

@@ -45,6 +45,7 @@ export default function Welcome() {
           <button
             onClick={() => setShowClassic(true)}
             className={styles.demoBtn}
+            type="button"
           >
             Show Classic
           </button>
@@ -53,6 +54,7 @@ export default function Welcome() {
           <button
             onClick={() => setShowCrunchy(true)}
             className={styles.demoBtn}
+            type="button"
           >
             Show Crunchy
           </button>

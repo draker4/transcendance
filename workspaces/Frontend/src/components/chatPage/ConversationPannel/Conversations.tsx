@@ -31,7 +31,7 @@ export default function Conversations({
   littleScreen: boolean;
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
-  const nothing = useRef<boolean>(channelId ? false : true);
+  const nothing = useRef<boolean>(channelId !== undefined ? false : true);
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
@@ -39,7 +39,6 @@ export default function Conversations({
       setChannels(channels);
 
       if (channels.length > 0 && nothing.current === true && !littleScreen) {
-        console.log("nothing=", nothing);
         const joinedChannels = channels
                 .filter(channel => channel.joined === true && channel.isBanned === false)
                 .sort((channelA, channelB) => {

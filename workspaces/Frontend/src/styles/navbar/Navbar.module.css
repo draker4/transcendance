@@ -32,7 +32,7 @@
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
   width: clamp(160px, 12vw, 300px);
 }
 
@@ -63,7 +63,7 @@
   max-height: 50px;
   border-radius: 10px;
   font-size: clamp(14px, 2vw, 18px);
-  padding: 10px auto;
+  /* padding: 10px auto; */
   font-weight: bold;
   color: var(--tertiary1);
   background-color: var(--primary1);

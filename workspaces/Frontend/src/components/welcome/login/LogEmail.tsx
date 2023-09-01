@@ -193,8 +193,6 @@ export default function LogEmail({
     }
   };
 
-  console.log(email);
-
   // -------------------------------------  RENDU  ------------------------------------ //
   return (
     <form onSubmit={handleSubmit(submit)} className={styles.logEmail}>

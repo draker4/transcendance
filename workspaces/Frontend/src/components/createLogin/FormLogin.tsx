@@ -145,7 +145,7 @@ export default function FormLogin({
       <h1 className={styles.title}>You are almost there! 😁</h1>
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        <label className={styles.description}>Please choose your login!</label>
+        <label htmlFor="inputId" className={styles.description}>Please choose your login!</label>
         <p className={styles.little}>
           Don&apos;t worry, you can change it later.
         </p>
@@ -159,6 +159,7 @@ export default function FormLogin({
             value={text}
             onChange={handleText}
             className={styles.login}
+            id="inputId"
           />
           <button className={styles.randomBtn} onClick={generateRandomName}>
             <MdRefresh />

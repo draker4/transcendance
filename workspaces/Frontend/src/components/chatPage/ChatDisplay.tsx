@@ -64,7 +64,9 @@ export default function ChatDisplay({
 
   if ("needPassword" in display && display.needPassword === true) {
     return (
-      <div className={styles.main}>
+      <div className={styles.main} style={{
+        marginLeft: littleScreen ? "0" : "-3px",
+      }}>
         <AskPassword 
           channel={display}
           myself={myself}
@@ -78,7 +80,9 @@ export default function ChatDisplay({
 
   if ("button" in display && display.button === "new") {
     return (
-      <div className={styles.main}>
+      <div className={styles.main} style={{
+        marginLeft: littleScreen ? "0" : "-3px",
+      }}>
         <DisplayInfos
           icon={renderIcon()}
           socket={socket}
@@ -90,7 +94,9 @@ export default function ChatDisplay({
 
   if ("name" in display) {
       return (
-        <div className={styles.main + " " + styles.noPadding}>
+        <div className={styles.main + " " + styles.noPadding} style={{
+          marginLeft: littleScreen ? "0" : "-3px",
+        }}>
           <ChatChannel
             icon={renderIcon()}
             channel={display}
