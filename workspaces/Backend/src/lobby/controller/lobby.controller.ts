@@ -50,16 +50,16 @@ export class LobbyController {
     return this.lobbyService.OngoingInvite(inviterId);
   }
 
-  // 05 - api/lobby/getall
-  @Get('getall/:mode?')
-  GetAllGames(@Param('mode') mode?: 'League' | 'Party') {
-    return this.lobbyService.GetAll(mode);
+  // 05 - api/lobby/getCurrentGame/:mode?
+  @Get('getCurrentGame/:mode?')
+  GetCurrentGame(@Param('mode') mode?: 'League' | 'Party') {
+    return this.lobbyService.GetCurrentGame(mode);
   }
 
   // 06 - api/lobby/GetLeague
-  @Get('getleague')
-  GetLeague() {
-    return this.lobbyService.GetLeague();
+  @Get('getLeaderboard')
+  GetLeaderboard() {
+    return this.lobbyService.GetLeaderboard();
   }
 
   // 07 - api/lobby/join

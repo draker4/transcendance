@@ -43,7 +43,7 @@
 }
 
 .save:active {
-  scale: 0.9;
+  scale: 0.8;
   color: var(--accent1);
   border: 3px solid var(--accent2);
 }

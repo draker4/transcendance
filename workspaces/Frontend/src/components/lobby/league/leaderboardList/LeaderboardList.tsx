@@ -2,7 +2,7 @@
 
 // PartyList.tsx
 import { useEffect, useState } from "react";
-import styles from "@/styles/lobby/lobbyList/LobbyList.module.css";
+import styles from "@/styles/lobby/league/leaderboardList/LeaderboardList.module.css";
 
 import LobbyService from "@/services/Lobby.service";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
@@ -14,7 +14,7 @@ type Props = {
   mode?: "League" | "Party";
 };
 
-export default function LobbyList({ lobbyService, mode }: Props) {
+export default function LeaderboardList({ lobbyService, mode }: Props) {
   const scoreService = new ScoreService();
   const [gameList, setGameList] = useState<GameInfo[] | undefined>(undefined);
 
@@ -28,7 +28,6 @@ export default function LobbyList({ lobbyService, mode }: Props) {
       }
     };
 
-    // Fetch game list initially
     getList();
 
     const interval = setInterval(getList, 1000);
@@ -38,7 +37,7 @@ export default function LobbyList({ lobbyService, mode }: Props) {
 
   return (
     <div className={styles.partyList}>
-      <h2 className={styles.listTitle}>{`Current ${mode} Game`}</h2>
+      <h2 className={styles.listTitle}>Leaderboard</h2>
       <div className={styles.list}>
         <div className={styles.listHead}>
           <p className={styles.nameTitle}>Name</p>

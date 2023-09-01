@@ -1,48 +1,52 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 
 import DefineType from "@/components/lobby/league/DefineType";
 import styles from "@/styles/lobby/league/Searching.module.css";
-import Image from "next/image";
 
-type Props = {
-	Matchmaking : any;
-};
+import MatchmakingService from "@/services/Matchmaking.service";
+import { CircularProgress } from "@mui/material";
 
-export default function Searching({Matchmaking}: Props) {
+export default function Searching() {
+  const matchmakingService = new MatchmakingService();
+  const [type, setType] = useState<string>("classic");
+  const [inMatchMaking, setinMatchMake] = useState(false);
 
-	const [type, setType] = useState<string>("classic");
-	const [inMatchMaking, setinMatchMake] = useState(false);
+  const startMatchmake = async () => {
+    const res = await matchmakingService.startMatchmaking(type);
+    setinMatchMake(res);
+  };
 
-	const Start_Matchmake = async () => {
-		const res = await Matchmaking.Start_Matchmaking(type); 
-		setinMatchMake(res);
-	};
+  const stopMatchmake = async () => {
+    await matchmakingService.stopMatchmaking();
+    setinMatchMake(false);
+  };
 
-	const Stop_Matchmake = async () => {
-		await Matchmaking.Stop_Matchmaking();
-		setinMatchMake(false);
-	};
+  // useEffect with a cleanup function to stop matchmaking when the component unmounts
+  useEffect(() => {
+    return () => {
+      stopMatchmake(); // Call stopMatchmake when the component unmounts
+    };
+  }, []);
 
-	return (
-
-		<div className={styles.Searching}>
-
-			<h1>Look for opponent</h1>
-
-			<div className={styles.ImgBox}>
-				{ !inMatchMaking && <DefineType type={type} setType={setType} /> }
-				{  inMatchMaking && <p className={styles.loading} >Looking for opponent...</p> }
-			</div>
-
-			<div className={styles.ButtonBox}>
-				{ !inMatchMaking && <button className={styles.searchBtn} onClick={Start_Matchmake}>
-					<p>Start Search</p>
-				</button> }
-				{  inMatchMaking && <button className={styles.searchBtn} onClick={Stop_Matchmake}>
-					<p>Stop Search</p>
-				</button> }
-			</div>
-
-		</div>
-	)
+  return (
+    <div className={styles.searching}>
+      {!inMatchMaking && <DefineType type={type} setType={setType} />}
+      {inMatchMaking && (
+        <div className={styles.searchingOngoing}>
+          <CircularProgress />
+          <h3 className={styles.section}>Searching...</h3>
+        </div>
+      )}
+      {!inMatchMaking && (
+        <button className={styles.searchBtn} onClick={startMatchmake}>
+          <p>Start Search</p>
+        </button>
+      )}
+      {inMatchMaking && (
+        <button className={styles.searchBtn} onClick={stopMatchmake}>
+          <p>Stop Search</p>
+        </button>
+      )}
+    </div>
+  );
 }

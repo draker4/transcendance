@@ -67,11 +67,11 @@ export default class LobbyService {
   }
 
   //Recupere la liste des game en cours
-  public async getGameList(mode?: "League" | "Party"): Promise<ReturnData> {
+  public async getCurrentGame(mode?: "League" | "Party"): Promise<ReturnData> {
     const response = await fetchData(
       this.token,
       "lobby",
-      mode ? `getall/${mode}` : "getall",
+      mode ? `getCurrentGame/${mode}` : "getCurrentGame",
       "GET"
     );
     const data: ReturnData = await response.json();
