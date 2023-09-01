@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import Footer from "@/components/footer/Footer";
 import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 import Navbar from "@/components/navbar/Navbar";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.min.css";
 
 export const dynamic = "force-dynamic";
 

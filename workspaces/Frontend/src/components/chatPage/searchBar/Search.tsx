@@ -138,6 +138,7 @@ export default function Search({
             getData(e);
             setDropdownVisible(true);
           }}
+          name="searchInput"
           onChange={handleSearch}
         />
         <FontAwesomeIcon icon={faMagnifyingGlass} className={styles.icon} />

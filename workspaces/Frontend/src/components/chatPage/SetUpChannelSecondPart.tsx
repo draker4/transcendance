@@ -10,6 +10,7 @@ import LoadingSuspense from "../loading/LoadingSuspense";
 type Props = {
   channelId: number;
   socket: Socket;
+  littleScreen?: boolean;
 };
 
 let myRelation: UserRelation = {
@@ -70,7 +71,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
   },
 };
 
-export default function SetUpChannelSecondPart({ channelId, socket }: Props): JSX.Element {
+export default function SetUpChannelSecondPart({ channelId, socket, littleScreen = false }: Props): JSX.Element {
   const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
   const [me, setMe] = useState<UserRelation>(myRelation);
 
@@ -136,7 +137,10 @@ export default function SetUpChannelSecondPart({ channelId, socket }: Props): JS
   if (me.userId !== 0 && channelRelation.channel.id !== -1) {
 
     return (
-      <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
+      <div className={styleMain.main + " " + styleMain.noPadding} style={{
+        maxWidth: "350px",
+        marginLeft: littleScreen ? "0" : "-3px",
+      }}>
         <ChannelSecondPart
           relation={channelRelation}
           myRelation={me}

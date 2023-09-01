@@ -136,11 +136,11 @@ export default function ChatClient({
         openDisplay({
           button: "new",
         });
+        setGetChannel(false);
       }
     }
 
     const updateStatus = (payload: StatusData) => {
-      console.log(payload);
       setStatus((prevStatus) => {
         const newStatus = new Map(prevStatus);
         Object.entries(payload).forEach(([key, value]) => {
@@ -235,7 +235,7 @@ export default function ChatClient({
         status={status}
       />
       {display && "type" in display && display.type !== "privateMsg" && (
-        <SetUpChannelSecondPart channelId={display.id} socket={socket} />
+        <SetUpChannelSecondPart channelId={display.id} socket={socket} littleScreen={littleScreen} />
       )}
     </div>
   );
