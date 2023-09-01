@@ -1,6 +1,5 @@
 import styles from "@/styles/profile/Profile.module.css";
 import InfoCard from "./infos/InfoCard";
-import ProfileFooter from "./infos/ProfileFooter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import PongieFooter from "./infos/sections/footerOptions/PongieFooter";
