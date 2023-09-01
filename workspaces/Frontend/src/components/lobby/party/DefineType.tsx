@@ -14,7 +14,7 @@ import Custom from "@/components/lobby/party/Custom";
 type Props = {
   selected: "Classic" | "Best3" | "Best5" | "Random" | "Custom";
   setSelected: Function;
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxPoint: 3 | 5 | 7 | 9;
   setMaxPoint: Function;
   maxRound: 1 | 3 | 5 | 7 | 9;
   setMaxRound: Function;

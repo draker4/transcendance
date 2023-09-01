@@ -24,12 +24,18 @@ export class StatsController {
   }
 
   // 01 - api/stats/get/:userId
-  @Get('get/:userId')
-  async GetStatsByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    return this.statsService.getStatsByUserId(userId);
+  @Get('getResume/:userId')
+  async getResumeStats(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.getResumeStats(userId);
   }
 
-  // 02 - api/stats/update/:userId
+  // 01 - api/stats/get/:userId
+  @Get('getFull/:userId')
+  async getFullStats(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.getFullStats(userId);
+  }
+
+  // 11 - api/stats/update/:userId
   @Put('update/:userId')
   @UsePipes(new ValidationPipe({ transform: true }))
   async UpdateStats(

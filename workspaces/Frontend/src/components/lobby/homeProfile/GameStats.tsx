@@ -13,7 +13,7 @@ export default function GameStats({ profile }: Props) {
   useEffect(() => {
     const getStats = async () => {
       try {
-        const ret = await statsService.getStatsByUserId(profile.id);
+        const ret = await statsService.getFullStats(profile.id);
         setStats(ret.data);
       } catch (error) {
         console.error("Error fetching stats:", error);

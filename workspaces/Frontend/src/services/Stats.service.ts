@@ -9,11 +9,11 @@ export default class StatsService {
   }
 
   //Recupere l'etat du joueur ( in game or not )
-  public async getStatsByUserId(userId: number): Promise<ReturnData> {
+  public async getFullStats(userId: number): Promise<ReturnData> {
     const response = await fetchData(
       this.token,
       "stats",
-      `get/${userId}`,
+      `getFull/${userId}`,
       "GET"
     );
     const data = await response.json();

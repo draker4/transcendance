@@ -77,10 +77,33 @@ export type StatsImproved = {
   pointLost: number;
 };
 
+export type ResumeStats = {
+  userId: number;
+  leagueXp: number;
+  playerXp: number;
+  gameWon: number;
+  gameLost: number;
+  leagueWon: number;
+  leagueLost: number;
+  partyWon: number;
+  partyLost: number;
+  trainingWon: number;
+  trainingLost: number;
+};
+
 export type StatsUpdate = {
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party" | "Training";
   side: "Left" | "Right";
   score: ScoreInfo;
   nbRound: number;
+};
+
+export type UpdateXP = {
+  win: boolean;
+  rageQuit: boolean;
+  roundWin: number;
+  roundLost: number;
+  pointWin: number;
+  pointLost: number;
 };

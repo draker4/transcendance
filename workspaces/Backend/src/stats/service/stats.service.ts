@@ -4,8 +4,20 @@ import { Repository } from 'typeorm';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { CreateStatsDTO } from '../dto/CreateStats.dto';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
-import { StatsImproved } from '@transcendence/shared/types/Stats.types';
+import {
+  ResumeStats,
+  StatsImproved,
+  UpdateXP,
+} from '@transcendence/shared/types/Stats.types';
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
+import {
+  XP_GAME,
+  XP_POINTDIFF,
+  XP_ROUND3,
+  XP_ROUND5,
+  XP_ROUND7,
+  XP_ROUND9,
+} from '@transcendence/shared/constants/Xp.constants';
 
 @Injectable()
 export class StatsService {
@@ -38,6 +50,14 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
+      const result: UpdateXP = {
+        win: false,
+        rageQuit: false,
+        roundWin: 0,
+        roundLost: 0,
+        pointWin: 0,
+        pointLost: 0,
+      };
       if (update.mode === 'League') {
         stats = this.defineLeagueStats(
           stats,
@@ -45,6 +65,7 @@ export class StatsService {
           update.type,
           update.score,
           update.nbRound,
+          result,
         );
       } else if (update.mode === 'Party') {
         stats = this.definePartyStats(
@@ -53,6 +74,7 @@ export class StatsService {
           update.type,
           update.score,
           update.nbRound,
+          result,
         );
       } else if (update.mode === 'Training') {
         stats = this.defineTrainingStats(
@@ -61,7 +83,15 @@ export class StatsService {
           update.type,
           update.score,
           update.nbRound,
+          result,
         );
+      }
+      const xp = this.calculateXP(result, update.maxPoint);
+      if (update.mode === 'League') {
+        stats.leagueXP += xp;
+      }
+      if (result.win) {
+        stats.playerXP += xp;
       }
       return await this.statsRepository.save(stats);
     } catch (error) {
@@ -69,7 +99,137 @@ export class StatsService {
     }
   }
 
-  public async getStatsByUserId(userId: number): Promise<ReturnData> {
+  public async getResumeStats(userId: number): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        ret.message = 'Stats not found';
+        return ret;
+      }
+      ret.success = true;
+      ret.message = 'Stats found';
+      const resumeStats: ResumeStats = {
+        userId: stats.userId,
+        leagueXp: stats.leagueXP,
+        playerXp: stats.playerXP,
+        gameWon: 0,
+        gameLost: 0,
+        leagueWon:
+          stats.leagueClassicWon + stats.leagueBest3Won + stats.leagueBest5Won,
+        leagueLost:
+          stats.leagueClassicLost +
+          stats.leagueBest3Lost +
+          stats.leagueBest5Lost,
+        partyWon:
+          stats.partyClassicWon +
+          stats.partyBest3Won +
+          stats.partyBest5Won +
+          stats.partyCustomWon,
+        partyLost:
+          stats.partyClassicLost +
+          stats.partyBest3Lost +
+          stats.partyBest5Lost +
+          stats.partyCustomLost,
+        trainingWon:
+          stats.trainingClassicWon +
+          stats.trainingBest3Won +
+          stats.trainingBest5Won +
+          stats.trainingCustomWon +
+          stats.trainingStoryWon,
+        trainingLost:
+          stats.trainingClassicLost +
+          stats.trainingBest3Lost +
+          stats.trainingBest5Lost +
+          stats.trainingCustomLost +
+          stats.trainingStoryLost,
+      };
+      resumeStats.gameWon =
+        resumeStats.leagueWon + resumeStats.partyWon + resumeStats.trainingWon;
+      resumeStats.gameLost =
+        resumeStats.leagueLost +
+        resumeStats.partyLost +
+        resumeStats.trainingLost;
+      ret.data = resumeStats;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
+    }
+  }
+
+  public async getAllResumeStats(): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const stats = await this.statsRepository.find();
+      if (!stats) {
+        ret.message = 'Stats not found';
+        return ret;
+      }
+      ret.success = true;
+      ret.message = 'Stats found';
+      const resumeStats: ResumeStats[] = [];
+      for (const stat of stats) {
+        const resumeStat: ResumeStats = {
+          userId: stat.userId,
+          leagueXp: stat.leagueXP,
+          playerXp: stat.playerXP,
+          gameWon: 0,
+          gameLost: 0,
+          leagueWon:
+            stat.leagueClassicWon + stat.leagueBest3Won + stat.leagueBest5Won,
+          leagueLost:
+            stat.leagueClassicLost +
+            stat.leagueBest3Lost +
+            stat.leagueBest5Lost,
+          partyWon:
+            stat.partyClassicWon +
+            stat.partyBest3Won +
+            stat.partyBest5Won +
+            stat.partyCustomWon,
+          partyLost:
+            stat.partyClassicLost +
+            stat.partyBest3Lost +
+            stat.partyBest5Lost +
+            stat.partyCustomLost,
+          trainingWon:
+            stat.trainingClassicWon +
+            stat.trainingBest3Won +
+            stat.trainingBest5Won +
+            stat.trainingCustomWon +
+            stat.trainingStoryWon,
+          trainingLost:
+            stat.trainingClassicLost +
+            stat.trainingBest3Lost +
+            stat.trainingBest5Lost +
+            stat.trainingCustomLost +
+            stat.trainingStoryLost,
+        };
+        resumeStat.gameWon =
+          resumeStat.leagueWon + resumeStat.partyWon + resumeStat.trainingWon;
+        resumeStat.gameLost =
+          resumeStat.leagueLost +
+          resumeStat.partyLost +
+          resumeStat.trainingLost;
+        resumeStats.push(resumeStat);
+      }
+      ret.data = resumeStats;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
+    }
+  }
+
+  public async getFullStats(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -149,18 +309,36 @@ export class StatsService {
 
   // --------------------------------  PRIVATE METHODS  ------------------------------- //
 
+  private calculateXP(result: UpdateXP, maxPoint: 3 | 5 | 7 | 9): number {
+    let xp = 0;
+    xp += result.win ? XP_GAME : -XP_GAME;
+    xp +=
+      (result.roundWin - result.roundLost) *
+      (maxPoint === 9
+        ? XP_ROUND9
+        : maxPoint === 7
+        ? XP_ROUND7
+        : maxPoint === 5
+        ? XP_ROUND5
+        : XP_ROUND3);
+    xp += (result.pointWin - result.pointLost) * XP_POINTDIFF;
+    return xp;
+  }
+
   private defineLeagueStats(
     stats: Stats,
     side: 'Left' | 'Right',
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
+    xp: UpdateXP,
   ): Stats {
     if (score.leftRound > score.rightRound) {
       if (side === 'Left') {
         if (type === 'Classic') stats.leagueClassicWon += 1;
         else if (type === 'Best3') stats.leagueBest3Won += 1;
         else if (type === 'Best5') stats.leagueBest5Won += 1;
+        xp.win = true;
       } else {
         if (type === 'Classic') stats.leagueClassicLost += 1;
         else if (type === 'Best3') stats.leagueBest3Lost += 1;
@@ -175,24 +353,28 @@ export class StatsService {
         if (type === 'Classic') stats.leagueClassicWon += 1;
         else if (type === 'Best3') stats.leagueBest3Won += 1;
         else if (type === 'Best5') stats.leagueBest5Won += 1;
+        xp.win = true;
       }
     }
     if (score.rageQuit) {
       if (side === score.rageQuit) stats.leagueRageQuitLost += 1;
       else stats.leagueRageQuitWin += 1;
+      xp.rageQuit = true;
     }
-    stats.leagueRoundWon +=
-      side === 'Left' ? score.leftRound : score.rightRound;
-    stats.leagueRoundLost +=
-      side === 'Left' ? score.rightRound : score.leftRound;
+    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.leagueRoundWon += xp.roundWin;
+    stats.leagueRoundLost += xp.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    stats.leaguePointWon += side === 'Left' ? leftPointWin : rightPointWin;
-    stats.leaguePointLost += side === 'Left' ? rightPointWin : leftPointWin;
+    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
+    stats.leaguePointWon += xp.pointWin;
+    stats.leaguePointLost += xp.pointLost;
     return stats;
   }
 
@@ -202,6 +384,7 @@ export class StatsService {
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
+    xp: UpdateXP,
   ): Stats {
     if (
       score.rageQuit === 'Right' ||
@@ -215,6 +398,7 @@ export class StatsService {
         else if (type === 'Best3') stats.partyBest3Won += 1;
         else if (type === 'Best5') stats.partyBest5Won += 1;
         else if (type === 'Custom') stats.partyCustomWon += 1;
+        xp.win = true;
       } else {
         if (type === 'Classic') stats.partyClassicLost += 1;
         else if (type === 'Best3') stats.partyBest3Lost += 1;
@@ -238,26 +422,31 @@ export class StatsService {
         else if (type === 'Best3') stats.partyBest3Won += 1;
         else if (type === 'Best5') stats.partyBest5Won += 1;
         else if (type === 'Custom') stats.partyCustomWon += 1;
+        xp.win = true;
       }
     }
     if (score.rageQuit) {
       if (side === score.rageQuit) stats.partyRageQuitLost += 1;
       else stats.partyRageQuitWin += 1;
+      xp.rageQuit = true;
     } else if (score.disconnect) {
       if (side === score.disconnect) stats.partyDisconnectLost += 1;
       else stats.partyDisconnectWin += 1;
     }
-    stats.partyRoundWon += side === 'Left' ? score.leftRound : score.rightRound;
-    stats.partyRoundLost +=
-      side === 'Left' ? score.rightRound : score.leftRound;
+    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.partyRoundWon += xp.roundWin;
+    stats.partyRoundLost += xp.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    stats.partyPointWon += side === 'Left' ? leftPointWin : rightPointWin;
-    stats.partyPointLost += side === 'Left' ? rightPointWin : leftPointWin;
+    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
+    stats.partyPointWon += xp.pointWin;
+    stats.partyPointLost += xp.pointLost;
     return stats;
   }
 
@@ -267,6 +456,7 @@ export class StatsService {
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
+    xp: UpdateXP,
   ) {
     if (score.leftRound > score.rightRound) {
       if (side === 'Left') {
@@ -275,6 +465,7 @@ export class StatsService {
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
         else if (type === 'Story') stats.trainingStoryWon += 1;
+        xp.win = true;
       } else {
         if (type === 'Classic') stats.trainingClassicLost += 1;
         else if (type === 'Best3') stats.trainingBest3Lost += 1;
@@ -295,24 +486,21 @@ export class StatsService {
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
         else if (type === 'Story') stats.trainingStoryWon += 1;
+        xp.win = true;
       }
     }
-    stats.trainingRoundWon +=
-      side === 'Left' ? score.leftRound : score.rightRound;
-    stats.trainingRoundLost +=
-      side === 'Left' ? score.rightRound : score.leftRound;
+    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.trainingRoundWon += xp.roundWin;
+    stats.trainingRoundLost += xp.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    stats.trainingPointWon += side === 'Left' ? leftPointWin : rightPointWin;
-    stats.trainingPointLost += side === 'Left' ? rightPointWin : leftPointWin;
+    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
     return stats;
   }
-
-  public async getStats() {
-		return await this.statsRepository.find();
-	}
 }

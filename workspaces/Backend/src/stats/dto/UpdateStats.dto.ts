@@ -28,4 +28,8 @@ export class UpdateStatsDTO {
   @IsNotEmpty()
   @IsNumber()
   nbRound: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  maxPoint: 3 | 5 | 7 | 9;
 }

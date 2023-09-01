@@ -5,7 +5,7 @@ import Selector from "@/components/lobby/selector/Selector";
 import Slider from "@/components/lobby/selector/Slider";
 
 type Props = {
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxPoint: 3 | 5 | 7 | 9;
   setMaxPoint: Function;
   maxRound: 1 | 3 | 5 | 7 | 9;
   setMaxRound: Function;

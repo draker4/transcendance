@@ -16,6 +16,8 @@ import { ChannelService } from '@/channels/channel.service';
 import { StatsService } from '@/stats/service/stats.service';
 import { AvatarService } from '@/avatar/avatar.service';
 import { CryptoService } from '@/utils/crypto/crypto';
+import { ResumeStats } from '@transcendence/shared/types/Stats.types';
+import { UserLeaderboard } from '@transcendence/shared/types/Leaderboard.types';
 
 @Injectable()
 export class LobbyService {
@@ -168,57 +170,58 @@ export class LobbyService {
   }
 
   public async GetLeaderboard() {
-    const games = await this.gameService.getAllRankedGames();
-    const gamesInfos = await Promise.all(
-      games.map(async (game) => {
-        let hostLogin = 'Noone';
-        const hostAvatarImage = '/images/avatars/avatar1.png';
-        let hostAvatarBack = '#000000';
-        let hostAvatarBorder = '#000000';
-        if (game.host != -1) {
-          const host = await this.userService.getUserById(game.host);
-          const hostAvatar = await this.avatarService.getAvatarById(
-            game.host,
-            false,
-          );
-          if (host != null && hostAvatar != null) {
-            hostLogin = host.login;
-            hostAvatarBack = hostAvatar.backgroundColor;
-            hostAvatarBorder = hostAvatar.borderColor;
-          }
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const usersStats: ResumeStats[] = (
+        await this.statsService.getAllResumeStats()
+      ).data;
+      if (!usersStats) {
+        ret.message = 'No stats found';
+        return ret;
+      }
+      const leaderboard: UserLeaderboard[] = [];
+      for (const userStats of usersStats) {
+        const user = await this.userService.getUserById(userStats.userId);
+        const avatar = await this.avatarService.getAvatarById(
+          userStats.userId,
+          false,
+        );
+        if (avatar?.decrypt && avatar?.image.length > 0) {
+          avatar.image = await this.cryptoService.decrypt(avatar.image);
+          avatar.decrypt = false;
         }
-        let opponentLogin = 'Noone';
-        const opponentAvatarImage = '/images/avatars/avatar1.png';
-        let opponentAvatarBack = '#000000';
-        let opponentAvatarBorder = '#000000';
-        if (game.opponent != -1) {
-          const opponent = await this.userService.getUserById(game.opponent);
-          const opponentAvatar = await this.avatarService.getAvatarById(
-            game.opponent,
-            false,
-          );
-          if (opponent != null && opponentAvatar != null) {
-            opponentLogin = opponent.login;
-            opponentAvatarBack = opponentAvatar.backgroundColor;
-            opponentAvatarBorder = opponentAvatar.borderColor;
-          }
-        }
-        const gameInfo = {
-          name: game.name,
-          hostLogin: hostLogin,
-          hostAvatarImage: hostAvatarImage,
-          hostAvatarBack: hostAvatarBack,
-          hostAvatarBorder: hostAvatarBorder,
-          opponentLogin: opponentLogin,
-          opponentAvatarImage: opponentAvatarImage,
-          opponentAvatarBack: opponentAvatarBack,
-          opponentAvatarBorder: opponentAvatarBorder,
-          Type: game.type,
+        const userLeaderboard: UserLeaderboard = {
+          userId: user.id,
+          login: user.login,
+          avatar: avatar,
+          points: userStats.leagueWon,
+          rank: 0,
+          win: userStats.leagueWon,
+          lost: userStats.leagueLost,
         };
-        return gameInfo;
-      }),
-    );
-    return gamesInfos;
+        leaderboard.push(userLeaderboard);
+      }
+      leaderboard.sort((a, b) => (a.points > b.points ? -1 : 1));
+      for (let i = 0; i < leaderboard.length; i++) {
+        leaderboard[i].rank = i + 1;
+        if (i > 0 && leaderboard[i].points === leaderboard[i - 1].points) {
+          leaderboard[i].rank = leaderboard[i - 1].rank;
+        }
+        if (leaderboard[i].points === 0) {
+          leaderboard[i].rank = 0;
+        }
+      }
+      ret.success = true;
+      ret.message = 'Leaderboard found';
+      ret.data = leaderboard;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
+    }
   }
 
   public async JoinGame(userId: number, gameId: string): Promise<ReturnData> {

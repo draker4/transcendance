@@ -1,5 +1,6 @@
 import { ScoreInfo } from "./Score.types";
 import { Pause } from "./Pause.types";
+import { Avatar } from "./Avatar.types";
 
 export enum Action {
   Idle = "Idle",
@@ -38,16 +39,6 @@ export type RGBA = {
   g: number;
   b: number;
   a: number;
-};
-
-type Avatar = {
-  image: string;
-  variant: string;
-  borderColor: string;
-  backgroundColor: string;
-  text: string;
-  empty: boolean;
-  decrypt: boolean;
 };
 
 export type Player = {
@@ -113,7 +104,7 @@ export type GameData = {
   hostSide: "Left" | "Right";
   difficulty: -2 | -1 | 0 | 1 | 2;
   push: boolean;
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxPoint: 3 | 5 | 7 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
 
   // Dynamic Data
@@ -136,7 +127,7 @@ export type InitData = {
   mode: "League" | "Party" | "Training";
   hostSide: "Left" | "Right";
   actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-  maxPoint: 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  maxPoint: 3 | 5 | 7 | 9;
   maxRound: 1 | 3 | 5 | 7 | 9;
   difficulty: -2 | -1 | 0 | 1 | 2;
   push: boolean;
