@@ -82,7 +82,8 @@ p.icon {
 /* ------------ RESPONSIVE ------------------ */
 
 /* Breakpoint 1 : width > smartphone */
-@media (min-width: 38rem) {
+/* @media (min-width: 38rem) { */
+@media (min-width: 50rem) {
   .main {
     margin-left: 0;
     margin: 0 auto;

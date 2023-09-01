@@ -122,6 +122,20 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: scroll;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+  
+::-webkit-scrollbar-track {
+	display: none;
+}
+  
+::-webkit-scrollbar-thumb {
+	background-color: var(--accent1);
+	border-radius: 5px;
 }
 
 h1,

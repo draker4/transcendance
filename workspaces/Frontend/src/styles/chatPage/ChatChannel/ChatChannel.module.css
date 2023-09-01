@@ -133,19 +133,18 @@
   flex-direction: column-reverse;
 }
 
-
 .channelMsgFrame .msgBoard::-webkit-scrollbar {
 	width: 5px;
-  }
+}
   
 .channelMsgFrame .msgBoard::-webkit-scrollbar-track {
 	display: none;
-  }
+}
   
 .channelMsgFrame .msgBoard::-webkit-scrollbar-thumb {
 	background-color: var(--accent1);
 	border-radius: 5px;
-  }
+}
 
   .channelMsgFrame .msgBoard p.placeholder {
 	color:var(--secondary1);
