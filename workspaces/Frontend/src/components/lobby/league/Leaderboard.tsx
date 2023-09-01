@@ -53,7 +53,7 @@ export default function Leaderboard({ json }: Props) {
                 <AvatarUser
                   avatar={json[0].user.avatar}
                   borderSize={""}
-                  backgroundColor={json[1].user.avatar.backgroundColor}
+                  backgroundColor={json[0].user.avatar.backgroundColor}
                   borderColor={json[0].user.avatar.borderColor}
                   fontSize={""}
                 />
