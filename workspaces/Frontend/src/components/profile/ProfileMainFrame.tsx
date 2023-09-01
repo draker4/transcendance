@@ -44,7 +44,7 @@ export default function ProfileMainFrame({
     if (!socket) {
       const intervalId = setInterval(() => {
         const chatService = new ChatService(token);
-        console.log("profile service reload here", chatService.socket?.id);
+        // console.log("profile service reload here", chatService.socket?.id);
         
 				if (chatService.disconnectClient) {
 					clearInterval(intervalId);
