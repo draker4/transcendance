@@ -26,9 +26,10 @@ type Props = {
   login: string;
   demoData: CreateDemo;
   setShowDemo: Function;
+  scrollTop: boolean;
 };
 
-export default function Demo({ login, demoData, setShowDemo }: Props) {
+export default function Demo({ login, demoData, setShowDemo, scrollTop = true }: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
 
@@ -84,6 +85,7 @@ export default function Demo({ login, demoData, setShowDemo }: Props) {
           gameData={gameData}
           setGameData={setGameData}
           setShowDemo={setShowDemo}
+          scrollTop={scrollTop}
         />
       </div>
     );

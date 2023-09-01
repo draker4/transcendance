@@ -4,6 +4,39 @@
   margin: 0 auto;
   display: flex;
   flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.welcome h2 {
+  padding: 20px;
+}
+
+.welcome span {
+  color: var(--accent1);
+}
+
+.welcome p {
+  text-align: center;
+  padding: 5px;
+}
+
+.signup {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.log {
+  outline: none;
+  text-decoration: none;
+  padding: 10px;
+  padding-right: 0;
+  cursor: pointer;
+  color: var(--accent1);
+  font-weight: bold;
+  font-family: var(--title-font);
 }
 
 .demo {

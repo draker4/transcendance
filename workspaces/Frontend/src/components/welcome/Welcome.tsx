@@ -6,12 +6,12 @@ import DisconnectClient from "../disconnect/DisconnectClient";
 import { confirmBackground, confirmBall } from "@/lib/game/random";
 import { useState } from "react";
 import Demo from "@/components/demo/Demo";
+import Link from "next/link";
 
 export default function Welcome() {
   const notif = useParams().notif;
-  const [showDemo, setShowDemo] = useState<boolean>(true);
   const [showClassic, setShowClassic] = useState<boolean>(false);
-  const [showCrunchy, setShowCrunchy] = useState<boolean>(false);
+  const [showCrunchy, setShowCrunchy] = useState<boolean>(true);
   const classic: CreateDemo = {
     name: `Classic`,
     type: "Custom",
@@ -39,37 +39,70 @@ export default function Welcome() {
 
   return (
     <div className={styles.welcome}>
+
+      {/* Disconnect client if notif in url */}
       {notif && notif[0] === "notif" && <DisconnectClient />}
+
+      {/* Title */}
+      <h2>Welcome To <span>Crunchy Pong!</span></h2>
+
+      {/* Description */}
+      <p>Play against the world and become the number one Ponger! 😎</p>
+      <p>Meet people, make friends and have fun! 🏓</p>
+
+      {/* Signup */}
+      <div className={styles.signup}>
+        <Link href="/welcome/login" className={styles.log}>
+          Log In
+        </Link>
+        <p>and start your journey!</p>
+      </div>
+
       <div className={styles.demo}>
-        {!showCrunchy && !showClassic && (
+        {
+          !showClassic &&
           <button
-            onClick={() => setShowClassic(true)}
+            onClick={() => {
+              setShowClassic(true);
+              setShowCrunchy(false);
+            }}
             className={styles.demoBtn}
             type="button"
           >
-            Show Classic
+            Change to Classic Pong
           </button>
-        )}
-        {!showCrunchy && !showClassic && (
+        }
+        {
+          !showCrunchy &&
           <button
-            onClick={() => setShowCrunchy(true)}
+            onClick={() => {
+              setShowCrunchy(true);
+              setShowClassic(false);
+            }}
             className={styles.demoBtn}
             type="button"
           >
-            Show Crunchy
+            Change to Crunchy Pong
           </button>
-        )}
+        }
+      </div>
         {showClassic && (
           <Demo
             login={"Grandpa"}
             demoData={classic}
             setShowDemo={setShowClassic}
+            scrollTop={false}
           />
         )}
         {showCrunchy && (
-          <Demo login={"You"} demoData={crunchy} setShowDemo={setShowCrunchy} />
+          <Demo
+            login={"You"}
+            demoData={crunchy}
+            setShowDemo={setShowCrunchy}
+            scrollTop={false}
+          />
         )}
-      </div>
+      {/* </div> */}
     </div>
   );
 }

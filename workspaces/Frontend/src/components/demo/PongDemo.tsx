@@ -21,12 +21,14 @@ type Props = {
   gameData: GameData;
   setGameData: Function;
   setShowDemo: Function;
+  scrollTop: boolean;
 };
 
 export default function PongDemo({
   gameData,
   setGameData,
   setShowDemo,
+  scrollTop = true,
 }: Props) {
   const pongRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -72,7 +74,8 @@ export default function PongDemo({
 
   // Scroll to the top when gameData changes
   useEffect(() => {
-    pongRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollTop)
+      pongRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
   return (
