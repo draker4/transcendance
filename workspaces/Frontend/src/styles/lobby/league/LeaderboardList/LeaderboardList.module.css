@@ -3,7 +3,10 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  min-width: 400px;
+  width: 40%;
+  @media screen and (max-width: 1100px) {
+    width: 100%;
+  }
 }
 
 .listTitle {
@@ -19,6 +22,7 @@
   border: 3px solid var(--primary3);
   border-radius: 8px;
   overflow-x: auto;
+  height: 380px;
 }
 
 .listHead {
@@ -42,31 +46,23 @@
   font-family: var(--title-font);
 }
 
-.detailTitle {
-  width: 60px;
+.cruncher {
+  width: 200px;
 }
 
-.nameTitle {
-  width: 150px;
+.rank {
+  width: 100px;
 }
 
-.typeTitle {
-  width: 70px;
+.points {
+  width: 100px;
 }
 
-.playersTitle {
-  width: 250px;
+.win {
+  width: 100px;
 }
 
-.roundTitle {
-  width: 60px;
-}
-
-.statusTitle {
-  width: 90px;
-}
-
-.actionTitle {
+.loss {
   width: 100px;
 }
 
@@ -78,13 +74,12 @@
   width: 100%;
 }
 
-.loading,
-.noGames {
+.loading {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   width: 100%;
-  margin: 10px auto;
+  margin: auto;
 }

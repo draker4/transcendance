@@ -1,8 +1,7 @@
 "use client";
 
 import styles from "@/styles/lobby/league/DefineType.module.css";
-import { MdStar, Md3GMobiledata, Md5G } from "react-icons/md";
-import { useEffect } from "react";
+import PracticeSelector from "../training/Practice/PracticeSelector";
 
 type Props = {
   type: string;
@@ -10,50 +9,40 @@ type Props = {
 };
 
 export default function DefineType({ type, setType }: Props) {
-  useEffect(() => {
-    setType("classic");
-  }, [setType]);
-
-  const setClassic = () => {
-    setType("classic");
-  };
-
-  const setBest3 = () => {
-    setType("3rounds");
-  };
-
-  const setBest5 = () => {
-    setType("5rounds");
-  };
-
   return (
     <div className={styles.defineType}>
       {/* Classic */}
-      <button
-        className={type === "classic" ? styles.activeBtn : styles.inactiveBtn}
-        onClick={setClassic}
-      >
-        <MdStar size={40} />
-        <h3>Classic</h3>
-      </button>
+      <PracticeSelector
+        title="Classic"
+        points={9}
+        rounds={1}
+        img="Classic"
+        type="Classic"
+        selected={type}
+        setSelected={setType}
+      />
 
       {/* Best 3 */}
-      <button
-        className={type === "3rounds" ? styles.activeBtn : styles.inactiveBtn}
-        onClick={setBest3}
-      >
-        <Md3GMobiledata size={40} />
-        <h3>Best 3</h3>
-      </button>
+      <PracticeSelector
+        title="Best of 3"
+        points={7}
+        rounds={3}
+        img="Earth"
+        type="Best3"
+        selected={type}
+        setSelected={setType}
+      />
 
       {/* Best 5 */}
-      <button
-        className={type === "5rounds" ? styles.activeBtn : styles.inactiveBtn}
-        onClick={setBest5}
-      >
-        <Md5G size={40} />
-        <h3>Best 5</h3>
-      </button>
+      <PracticeSelector
+        title="Best of 5"
+        points={5}
+        rounds={5}
+        img="Island"
+        type="Best5"
+        selected={type}
+        setSelected={setType}
+      />
     </div>
   );
 }

@@ -220,6 +220,7 @@ export class TrainingService {
         side: training.side === 'Left' ? 'Left' : 'Right',
         score: score,
         nbRound: training.maxRound,
+        maxPoint: training.maxPoint,
       };
       await this.statsService.updateStats(training.player, update);
       await this.trainingRepository.save(training);

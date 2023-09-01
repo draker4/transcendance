@@ -37,7 +37,7 @@ export default function CreateParty({
   //Pong Settings
   const [name, setName] = useState<string>("");
   const [enterName, setEnterName] = useState<boolean>(false);
-  const [maxPoint, setMaxPoint] = useState<3 | 4 | 5 | 6 | 7 | 8 | 9>(9);
+  const [maxPoint, setMaxPoint] = useState<3 | 5 | 7 | 9>(9);
   const [maxRound, setMaxRound] = useState<1 | 3 | 5 | 7 | 9>(1);
   const [side, setSide] = useState<"Left" | "Right">("Left");
   const [push, setPush] = useState<boolean>(false);

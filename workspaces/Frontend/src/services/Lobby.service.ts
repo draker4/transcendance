@@ -50,6 +50,30 @@ export default class LobbyService {
     return data;
   }
 
+  //Recupere la liste des game en cours
+  public async getCurrentGame(mode?: "League" | "Party"): Promise<ReturnData> {
+    const response = await fetchData(
+      this.token,
+      "lobby",
+      mode ? `getCurrentGame/${mode}` : "getCurrentGame",
+      "GET"
+    );
+    const data: ReturnData = await response.json();
+    return data;
+  }
+
+  //Get leaderboard data
+  public async getLeaderboard(): Promise<any> {
+    const response = await fetchData(
+      this.token,
+      "lobby",
+      "getLeaderboard",
+      "GET"
+    );
+    const data = await response.json();
+    return data;
+  }
+
   public async joinGame(gameId: string): Promise<ReturnData> {
     const response = await fetchData(
       this.token,
@@ -64,24 +88,5 @@ export default class LobbyService {
   //Quit la partie en cours
   public async quitGame(): Promise<void> {
     await fetchData(this.token, "lobby", "quit", "POST");
-  }
-
-  //Recupere la liste des game en cours
-  public async getCurrentGame(mode?: "League" | "Party"): Promise<ReturnData> {
-    const response = await fetchData(
-      this.token,
-      "lobby",
-      mode ? `getCurrentGame/${mode}` : "getCurrentGame",
-      "GET"
-    );
-    const data: ReturnData = await response.json();
-    return data;
-  }
-
-  //Get league data
-  public async getLeague(): Promise<any> {
-    const response = await fetchData(this.token, "lobby", "getleague", "GET");
-    const data = await response.json();
-    return data.data;
   }
 }

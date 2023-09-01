@@ -8,41 +8,40 @@ import { CircularProgress } from "@mui/material";
 
 export default function Searching() {
   const matchmakingService = new MatchmakingService();
-  const [type, setType] = useState<string>("classic");
-  const [inMatchMaking, setinMatchMake] = useState(false);
+  const [type, setType] = useState<string>("Classic");
+  const [searching, setSearching] = useState(false);
 
   const startMatchmake = async () => {
     const res = await matchmakingService.startMatchmaking(type);
-    setinMatchMake(res);
+    setSearching(res);
   };
 
   const stopMatchmake = async () => {
     await matchmakingService.stopMatchmaking();
-    setinMatchMake(false);
+    setSearching(false);
   };
 
-  // useEffect with a cleanup function to stop matchmaking when the component unmounts
   useEffect(() => {
     return () => {
-      stopMatchmake(); // Call stopMatchmake when the component unmounts
+      stopMatchmake();
     };
   }, []);
 
   return (
     <div className={styles.searching}>
-      {!inMatchMaking && <DefineType type={type} setType={setType} />}
-      {inMatchMaking && (
+      {!searching && <DefineType type={type} setType={setType} />}
+      {searching && (
         <div className={styles.searchingOngoing}>
           <CircularProgress />
           <h3 className={styles.section}>Searching...</h3>
         </div>
       )}
-      {!inMatchMaking && (
+      {!searching && (
         <button className={styles.searchBtn} onClick={startMatchmake}>
           <p>Start Search</p>
         </button>
       )}
-      {inMatchMaking && (
+      {searching && (
         <button className={styles.searchBtn} onClick={stopMatchmake}>
           <p>Stop Search</p>
         </button>

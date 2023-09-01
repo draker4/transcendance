@@ -461,6 +461,7 @@ export class Pong {
         side: 'Left',
         score: this.data.score,
         nbRound: this.data.maxRound,
+        maxPoint: this.data.maxPoint,
       };
       await this.statsService.updateStats(this.data.playerLeft.id, update);
       update.side = 'Right';

@@ -1,29 +1,20 @@
-.podium {
+.userLine {
   display: flex;
   flex-flow: row nowrap;
+  align-items: center;
   justify-content: center;
-  align-items: flex-end;
-  width: 300px;
-  margin: 25px;
-}
-
-.avatar {
-  display: flex;
-  border-radius: 100%;
-  width: 60px;
-  height: 60px;
-  color: var(--primary1);
-  margin: 5px;
+  min-width: fit-content;
+  width: 100%;
 }
 
 .cruncher {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: row nowrap;
   align-items: center;
   border: none;
   background-color: transparent;
   cursor: pointer;
-  width: 90px;
+  width: 200px;
   font-size: 16px;
   padding-inline: 5px;
   font-weight: bold;
@@ -39,23 +30,38 @@
   scale: 0.95;
 }
 
-.pad {
+.avatar {
   display: flex;
-  flex-flow: column nowrap;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  color: var(--primary1);
+  margin: 5px;
+}
+
+.typeInfo {
+  width: 70px;
+}
+
+.playersInfo {
+  display: flex;
+  flex-flow: row wrap;
   justify-content: center;
-  align-items: center;
-  background-color: var(--primary3);
+  width: 200px;
+}
+
+.rank {
   width: 100px;
 }
 
-.first .pad {
-  height: 100px;
+.points {
+  width: 100px;
 }
 
-.second .pad {
-  height: 75px;
+.win {
+  width: 100px;
 }
 
-.third .pad {
-  height: 50px;
+.loss {
+  width: 100px;
 }

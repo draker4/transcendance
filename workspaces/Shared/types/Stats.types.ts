@@ -97,6 +97,7 @@ export type StatsUpdate = {
   side: "Left" | "Right";
   score: ScoreInfo;
   nbRound: number;
+  maxPoint: 3 | 5 | 7 | 9;
 };
 
 export type UpdateXP = {
