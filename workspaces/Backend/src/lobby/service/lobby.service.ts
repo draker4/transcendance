@@ -8,8 +8,6 @@ import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
 import { GameService } from '@/game/service/game.service';
 import { UsersService } from '@/users/users.service';
-import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
-import { ScoreService } from '@/score/service/score.service';
 
 import { GameInfo, Player } from '@transcendence/shared/types/Game.types';
 import { ChannelService } from '@/channels/channel.service';
@@ -28,8 +26,6 @@ export class LobbyService {
 
     public readonly gameService: GameService,
     public readonly userService: UsersService,
-    public readonly matchmakingService: MatchmakingService,
-    public readonly scoreService: ScoreService,
     public readonly channelService: ChannelService,
     public readonly statsService: StatsService,
     public readonly avatarService: AvatarService,
@@ -53,14 +49,6 @@ export class LobbyService {
         return ret;
       }
 
-      //Si le joueur recherche deja une partie
-      else if (
-        await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)
-      ) {
-        ret.message = 'You are already in matchmaking';
-        return ret;
-      }
-
       const newGameId = await this.gameService.createGame(newGame);
       ret.success = true;
       ret.message = 'Game created';
@@ -72,19 +60,12 @@ export class LobbyService {
     }
   }
 
-  //Si le joueur est en game renvoie l'id, si le joueur en Matchmaking le retire de la liste
   public async IsInGame(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
     };
     try {
-      //Si le joueur est en matchmaking le retire de la liste
-      if (await this.matchmakingService.CheckIfAlreadyInMatchmaking(userId)) {
-        await this.matchmakingService.RemovePlayerFromMatchmaking(userId);
-      }
-
-      //Si il est dans une game recupere son id
       const gameId = await this.gameService.getGameByUserId(userId);
       if (!gameId) {
         ret.message = 'You are not in a game';
@@ -197,7 +178,7 @@ export class LobbyService {
           userId: user.id,
           login: user.login,
           avatar: avatar,
-          points: userStats.leagueWon,
+          points: userStats.leagueXp,
           rank: 0,
           win: userStats.leagueWon,
           lost: userStats.leagueLost,

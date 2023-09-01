@@ -27,6 +27,13 @@ import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
 import { StatusModule } from '@/statusService/status.module';
+import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { Game } from '@/utils/typeorm/Game.entity';
+import { GameService } from '@/game/service/game.service';
+import { Score } from '@/utils/typeorm/Score.entity';
+import { ScoreService } from '@/score/service/score.service';
+import { AvatarService } from '@/avatar/avatar.service';
 
 @Module({
   imports: [
@@ -46,6 +53,10 @@ import { StatusModule } from '@/statusService/status.module';
       Image,
       Story,
       StoryData,
+      Matchmaking,
+      Game,
+      Score,
+      Avatar,
     ]),
     StatusModule,
   ],
@@ -60,6 +71,10 @@ import { StatusModule } from '@/statusService/status.module';
     MessagesService,
     StatsService,
     StoryService,
+    MatchmakingService,
+    GameService,
+    ScoreService,
+    AvatarService,
   ],
 })
 export class ChatModule {}

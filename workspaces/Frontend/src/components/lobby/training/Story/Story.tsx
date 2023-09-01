@@ -12,7 +12,10 @@ import { toast } from "react-toastify";
 import { UserStory } from "@transcendence/shared/types/Story.types";
 import StoryService from "@/services/Story.service";
 import TrainingService from "@/services/Training.service";
-import { confirmBackground, confirmBall } from "@/lib/game/random";
+import {
+  confirmBackground,
+  confirmBall,
+} from "@transcendence/shared/game/random";
 import StorySelector from "./StorySelector";
 import LoadingComponent from "@/components/loading/Loading";
 

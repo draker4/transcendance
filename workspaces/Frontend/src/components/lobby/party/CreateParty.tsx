@@ -13,7 +13,7 @@ import {
   randomMaxRound,
   confirmBackground,
   confirmBall,
-} from "@/lib/game/random";
+} from "@transcendence/shared/game/random";
 import GeneralSettings from "./GeneralSettings";
 import DefineName from "./DefineName";
 import Invite from "./Invite";

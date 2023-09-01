@@ -19,7 +19,7 @@ import {
   randomMaxRound,
   confirmBackground,
   confirmBall,
-} from "@/lib/game/random";
+} from "@transcendence/shared/game/random";
 import TrainingService from "@/services/Training.service";
 import Demo from "@/components/demo/Demo";
 import LoadingComponent from "@/components/loading/Loading";
@@ -140,6 +140,7 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
           login={profile.login}
           demoData={demoData}
           setShowDemo={setShowDemo}
+          scrollTop={true}
         />
       </div>
     );

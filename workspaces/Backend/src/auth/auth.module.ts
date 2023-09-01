@@ -29,6 +29,13 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { GameService } from '@/game/service/game.service';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
+import { Game } from '@/utils/typeorm/Game.entity';
+import { ScoreService } from '@/score/service/score.service';
+import { StatusService } from '@/statusService/status.service';
+import { Score } from '@/utils/typeorm/Score.entity';
 
 @Module({
   imports: [
@@ -46,6 +53,9 @@ import { StoryService } from '@/story/service/story.service';
       Image,
       Story,
       StoryData,
+      Matchmaking,
+      Game,
+      Score,
     ]),
     JwtModule,
     MailModule,
@@ -63,6 +73,10 @@ import { StoryService } from '@/story/service/story.service';
     CryptoService,
     StatsService,
     StoryService,
+    GameService,
+    MatchmakingService,
+    ScoreService,
+    StatusService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

@@ -3,21 +3,30 @@ import {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
 export class Matchmaking {
   @PrimaryGeneratedColumn()
-  Waiter_Id: number;
-
-  @Column()
-  Player_Id: number;
+  id: number;
 
   @CreateDateColumn({
     type: 'timestamptz',
   })
   createdAt: Date;
 
+  @UpdateDateColumn({
+    type: 'timestamptz',
+  })
+  updatedAt: Date;
+
   @Column()
-  Type: string;
+  userId: number;
+
+  @Column({ default: 'Classic' })
+  type: 'Classic' | 'Best3' | 'Best5';
+
+  @Column({ default: false })
+  searching: boolean;
 }

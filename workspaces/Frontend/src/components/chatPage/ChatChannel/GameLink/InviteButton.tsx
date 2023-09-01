@@ -9,7 +9,7 @@ import {
   confirmBall,
   randomMaxPoint,
   randomMaxRound,
-} from "@/lib/game/random";
+} from "@transcendence/shared/game/random";
 import { useRouter } from "next/navigation";
 import LobbyService from "@/services/Lobby.service";
 import { toast } from "react-toastify";

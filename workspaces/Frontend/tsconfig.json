@@ -35,7 +35,8 @@
     "build/types/**/*.ts",
     "next/types/**/*.ts",
     "_next/types/**/*.ts",
-    "../Shared/types/Stats.types.ts"
+    "../Shared/types/Stats.types.ts",
+    "../Shared/game/random.tsx"
   ],
   "exclude": ["node_modules"]
 }

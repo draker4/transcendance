@@ -89,6 +89,7 @@ export class StatsService {
       const xp = this.calculateXP(result, update.maxPoint);
       if (update.mode === 'League') {
         stats.leagueXP += xp;
+        if (stats.leagueXP < 0) stats.leagueXP = 0;
       }
       if (result.win) {
         stats.playerXP += xp;

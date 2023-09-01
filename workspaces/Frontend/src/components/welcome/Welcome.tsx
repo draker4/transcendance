@@ -3,7 +3,10 @@
 import styles from "@/styles/welcome/Welcome.module.css";
 import { useParams } from "next/navigation";
 import DisconnectClient from "../disconnect/DisconnectClient";
-import { confirmBackground, confirmBall } from "@/lib/game/random";
+import {
+  confirmBackground,
+  confirmBall,
+} from "@transcendence/shared/game/random";
 import { useState } from "react";
 import Demo from "@/components/demo/Demo";
 import Link from "next/link";
@@ -39,12 +42,13 @@ export default function Welcome() {
 
   return (
     <div className={styles.welcome}>
-
       {/* Disconnect client if notif in url */}
       {notif && notif[0] === "notif" && <DisconnectClient />}
 
       {/* Title */}
-      <h2>Welcome To <span>Crunchy Pong!</span></h2>
+      <h2>
+        Welcome To <span>Crunchy Pong!</span>
+      </h2>
 
       {/* Description */}
       <p>Play against the world and become the number one Ponger! 😎</p>
@@ -59,8 +63,7 @@ export default function Welcome() {
       </div>
 
       <div className={styles.demo}>
-        {
-          !showClassic &&
+        {!showClassic && (
           <button
             onClick={() => {
               setShowClassic(true);
@@ -71,9 +74,8 @@ export default function Welcome() {
           >
             Change to Classic Pong
           </button>
-        }
-        {
-          !showCrunchy &&
+        )}
+        {!showCrunchy && (
           <button
             onClick={() => {
               setShowCrunchy(true);
@@ -84,24 +86,24 @@ export default function Welcome() {
           >
             Change to Crunchy Pong
           </button>
-        }
+        )}
       </div>
-        {showClassic && (
-          <Demo
-            login={"Grandpa"}
-            demoData={classic}
-            setShowDemo={setShowClassic}
-            scrollTop={false}
-          />
-        )}
-        {showCrunchy && (
-          <Demo
-            login={"You"}
-            demoData={crunchy}
-            setShowDemo={setShowCrunchy}
-            scrollTop={false}
-          />
-        )}
+      {showClassic && (
+        <Demo
+          login={"Grandpa"}
+          demoData={classic}
+          setShowDemo={setShowClassic}
+          scrollTop={false}
+        />
+      )}
+      {showCrunchy && (
+        <Demo
+          login={"You"}
+          demoData={crunchy}
+          setShowDemo={setShowCrunchy}
+          scrollTop={false}
+        />
+      )}
       {/* </div> */}
     </div>
   );

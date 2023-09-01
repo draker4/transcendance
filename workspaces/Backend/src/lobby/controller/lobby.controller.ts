@@ -18,7 +18,7 @@ import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 export class LobbyController {
   constructor(private readonly lobbyService: LobbyService) {}
 
-  // 00 - api/lobby/status Pour test d'api
+  // 00 - api/lobby/status
   @Public()
   @Get('status')
   Status() {

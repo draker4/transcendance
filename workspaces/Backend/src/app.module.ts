@@ -74,7 +74,7 @@ import { StatusModule } from './statusService/status.module';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AuthModule,
     AvatarModule,

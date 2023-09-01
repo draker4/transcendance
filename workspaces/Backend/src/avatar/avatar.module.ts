@@ -20,9 +20,18 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { StoryService } from '@/story/service/story.service';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { UsersModule } from '@/users/users.module';
+import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
+import { Score } from '@/utils/typeorm/Score.entity';
+import { Game } from '@/utils/typeorm/Game.entity';
+import { StatusService } from '@/statusService/status.service';
+import { GameService } from '@/game/service/game.service';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { ScoreService } from '@/score/service/score.service';
 
 @Module({
   imports: [
+    UsersModule,
     TypeOrmModule.forFeature([
       Avatar,
       User,
@@ -36,6 +45,9 @@ import { StoryData } from '@/utils/typeorm/StoryData.entity';
       Image,
       Story,
       StoryData,
+      Matchmaking,
+      Game,
+      Score,
     ]),
   ],
   controllers: [AvatarController],
@@ -46,6 +58,10 @@ import { StoryData } from '@/utils/typeorm/StoryData.entity';
     StatsService,
     UsersService,
     StoryService,
+    GameService,
+    MatchmakingService,
+    ScoreService,
+    StatusService,
   ],
 })
 export class AvatarModule {}

@@ -34,6 +34,8 @@ import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
 import { StatusModule } from '@/statusService/status.module';
+import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 
 @Module({
   imports: [
@@ -52,6 +54,7 @@ import { StatusModule } from '@/statusService/status.module';
       Image,
       Story,
       StoryData,
+      Matchmaking,
     ]),
     StatusModule,
   ],
@@ -68,6 +71,7 @@ import { StatusModule } from '@/statusService/status.module';
     StatsService,
     UsersService,
     StoryService,
+    MatchmakingService,
   ],
 })
 export class GameModule {}

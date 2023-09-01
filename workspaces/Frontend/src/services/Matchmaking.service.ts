@@ -9,54 +9,30 @@ export default class MatchmakingService {
   }
 
   //Mets le joueur dans la file d'attente
-  public async startMatchmaking(type: string): Promise<any> {
+  public async startSearch(type: "Classic" | "Best3" | "Best5"): Promise<any> {
     const body = JSON.stringify({ type });
     const response = await fetchData(
       this.token,
       "matchmaking",
-      "start ",
-      "POST",
+      "start",
+      "PUT",
       body
     );
     const data = await response.json();
-    this.searching = data.success;
-    this.updateMatchmaking();
-    return data.success;
+    return data;
   }
 
   //Sors le joueur de la file d'attente
-  public async stopMatchmaking(): Promise<any> {
-    const response = await fetchData(
-      this.token,
-      "matchmaking",
-      "stop ",
-      "POST"
-    );
+  public async stopSearch(): Promise<any> {
+    const response = await fetchData(this.token, "matchmaking", "stop", "PuT");
     const data = await response.json();
-    this.searching = false;
-    return data.success;
+    return data;
   }
 
   //Demande si le joueur à trouvé une game
-  public async updateMatchmaking(): Promise<any> {
-    const response = await fetchData(
-      this.token,
-      "matchmaking",
-      "update ",
-      "GET"
-    );
+  public async checkSearch(): Promise<any> {
+    const response = await fetchData(this.token, "matchmaking", "check", "GET");
     const data = await response.json();
-    if (data.success === true) {
-      if (data.message == "Game found") {
-        return false;
-      }
-      if (this.searching === true)
-        setTimeout(() => {
-          this.updateMatchmaking();
-        }, 1000);
-
-      return true;
-    }
-    return false;
+    return data;
   }
 }

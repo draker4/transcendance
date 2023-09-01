@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from "react";
-
 import DefineType from "@/components/lobby/league/DefineType";
 import styles from "@/styles/lobby/league/Searching.module.css";
-
 import MatchmakingService from "@/services/Matchmaking.service";
 import { CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function Searching() {
   const matchmakingService = new MatchmakingService();
-  const [type, setType] = useState<string>("Classic");
+  const [type, setType] = useState<"Classic" | "Best3" | "Best5">("Classic");
   const [searching, setSearching] = useState(false);
+  const [searchTimeoutId, setSearchTimeoutId] = useState<NodeJS.Timeout | null>(
+    null
+  );
+  const router = useRouter();
 
   const startMatchmake = async () => {
-    const res = await matchmakingService.startMatchmaking(type);
-    setSearching(res);
+    const res = await matchmakingService.startSearch(type);
+    if (res.success) {
+      setSearching(true);
+      checkSearch();
+    }
+  };
+
+  const checkSearch = async () => {
+    const res = await matchmakingService.checkSearch();
+    console.log(res);
+    if (res.success) {
+      setSearching(false);
+      if (res.data) router.push(`/home/game/${res.data}`);
+    } else {
+      const timeoutId = setTimeout(() => {
+        checkSearch();
+      }, 1000);
+      setSearchTimeoutId(timeoutId);
+    }
   };
 
   const stopMatchmake = async () => {
-    await matchmakingService.stopMatchmaking();
     setSearching(false);
+    if (searchTimeoutId !== null) {
+      clearTimeout(searchTimeoutId);
+    }
+    await matchmakingService.stopSearch();
   };
 
   useEffect(() => {

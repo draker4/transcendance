@@ -20,6 +20,13 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { StoryService } from '@/story/service/story.service';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
+import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { GameService } from '@/game/service/game.service';
+import { Game } from '@/utils/typeorm/Game.entity';
+import { Score } from '@/utils/typeorm/Score.entity';
+import { ScoreService } from '@/score/service/score.service';
+import { StatusService } from '@/statusService/status.service';
 
 @Module({
   imports: [
@@ -36,6 +43,9 @@ import { StoryData } from '@/utils/typeorm/StoryData.entity';
       Image,
       Story,
       StoryData,
+      Matchmaking,
+      Game,
+      Score,
     ]),
   ],
   controllers: [UsersController],
@@ -46,6 +56,10 @@ import { StoryData } from '@/utils/typeorm/StoryData.entity';
     AvatarService,
     ChannelService,
     StoryService,
+    MatchmakingService,
+    GameService,
+    ScoreService,
+    StatusService,
   ],
   exports: [UsersService],
 })

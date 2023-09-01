@@ -14,7 +14,6 @@ import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import * as bcrypt from 'bcrypt';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
-import { CreateStatsDTO } from '@/stats/dto/CreateStats.dto';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
@@ -46,11 +45,10 @@ export class UsersService {
 
   async addUser(CreateUserDto: CreateUserDto): Promise<User> {
     const user = await this.userRepository.save(CreateUserDto);
-    const newStats: CreateStatsDTO = {
-      userId: user.id,
-    };
 
-    const stats = await this.statsService.createStats(newStats);
+    const stats = await this.statsService.createStats({
+      userId: user.id,
+    });
     await this.userRepository
       .createQueryBuilder()
       .relation(User, 'stats')

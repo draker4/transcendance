@@ -26,7 +26,6 @@ export default function League() {
       }
     };
 
-    // Fetch game list initially
     getLeaderboard();
 
     const interval = setInterval(getLeaderboard, 30000);
