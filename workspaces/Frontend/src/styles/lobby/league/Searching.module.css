@@ -72,7 +72,7 @@
     .Searching {
         display: flex;
         flex-direction: column;
-        justify-content: bottom;
+        justify-content: flex-end;
         min-height: 250px;
         padding-top: 80px;
     }

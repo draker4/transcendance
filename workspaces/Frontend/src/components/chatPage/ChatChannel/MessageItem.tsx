@@ -3,10 +3,11 @@ import AvatarUser from "@/components/avatarUser/AvatarUser";
 import makeHumanDateFormat from "@/lib/chat/makeHumanDateFormat";
 import { useEffect, useState } from "react";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
-import { Badge, CircularProgress, Tooltip } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 import InviteButton from "@/components/chatPage/ChatChannel/GameLink/InviteButton";
 import WatchButton from "./GameLink/WatchButton";
 import JoinButton from "./GameLink/JoinButton";
+import LoadingComponent from "@/components/loading/Loading";
 
 type GroupedMsgType = {
   user: Profile & { avatar: Avatar };
@@ -109,7 +110,7 @@ export default function MessageItem({
       {/* Loading */}
       {loading && (
         <div className={styles.loading}>
-          <CircularProgress />
+          <LoadingComponent />
         </div>
       )}
 

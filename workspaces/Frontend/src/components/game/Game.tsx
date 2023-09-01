@@ -1,7 +1,7 @@
 "use client";
 
 // Import des composants react
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 // Import du style
@@ -15,7 +15,7 @@ import GameService from "@/services/Game.service";
 // Import des composants
 import Pong from "./Pong";
 import { GameData } from "@transcendence/shared/types/Game.types";
-import { CircularProgress } from "@mui/material";
+import LoadingComponent from "../loading/Loading";
 
 type Props = {
   profile: Profile;
@@ -83,7 +83,7 @@ export default function Game({ profile, token, gameId }: Props) {
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }

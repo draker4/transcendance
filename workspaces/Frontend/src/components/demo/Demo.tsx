@@ -14,13 +14,13 @@ import {
   initScoreDemo,
 } from "@transcendence/shared/game/initPong";
 import PongDemo from "./PongDemo";
-import { CircularProgress } from "@mui/material";
 import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import {
   AI_DEMO,
   AI_ID,
   TIMER_START,
 } from "@transcendence/shared/constants/Game.constants";
+import LoadingComponent from "../loading/Loading";
 
 type Props = {
   login: string;
@@ -72,7 +72,7 @@ export default function Demo({ login, demoData, setShowDemo }: Props) {
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
-        <CircularProgress />
+        <LoadingComponent />
       </div>
     );
   }

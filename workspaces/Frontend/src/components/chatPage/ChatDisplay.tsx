@@ -29,8 +29,6 @@ export default function ChatDisplay({
   status: Map<string, string>;
 }) {
 
-  console.log(display);
-
   const renderIcon = (): ReactNode => {
     if (littleScreen)
       return (

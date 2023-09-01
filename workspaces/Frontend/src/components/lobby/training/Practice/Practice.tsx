@@ -21,8 +21,8 @@ import {
   confirmBall,
 } from "@/lib/game/random";
 import TrainingService from "@/services/Training.service";
-import { CircularProgress } from "@mui/material";
 import Demo from "@/components/demo/Demo";
+import LoadingComponent from "@/components/loading/Loading";
 
 type Props = {
   profile: Profile;
@@ -173,7 +173,7 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
       <div className={styles.CreateDemo}>
         <button className={styles.save} onClick={createPractice}>
           {!creatingPractice && "Play"}
-          {creatingPractice && <CircularProgress />}
+          {creatingPractice && <LoadingComponent />}
         </button>
         <button className={styles.save} onClick={lunchDemo}>
           Demo

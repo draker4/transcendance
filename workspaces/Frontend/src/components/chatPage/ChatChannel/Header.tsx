@@ -3,10 +3,11 @@ import AvatarUser from "@/components/avatarUser/AvatarUser";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
-import { Badge, CircularProgress, Tooltip } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { ReactNode, useEffect, useState } from "react";
 import WatchButton from "./GameLink/WatchButton";
+import LoadingComponent from "@/components/loading/Loading";
 
 type Props = {
   icon: ReactNode;
@@ -140,7 +141,7 @@ export default function Header({
 
       {
         loading &&
-        <CircularProgress />
+        <LoadingComponent />
       }
 
     </div>

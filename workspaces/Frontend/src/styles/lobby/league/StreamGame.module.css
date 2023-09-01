@@ -247,7 +247,7 @@
     .StreamGame {
         display: flex;
         flex-direction: column;
-        justify-content: bottom;
+        justify-content: flex-end;
         min-height: 800px;
     }
 

@@ -4,12 +4,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import stylesAvatar from "@/styles/createLogin/ChooseAvatar.module.css";
-import { Avatar, Badge, CircularProgress } from "@mui/material";
+import { Avatar, Badge } from "@mui/material";
 import { useForm } from "react-hook-form";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";
 import { CryptoService } from "@/services/Crypto.service";
+import LoadingComponent from "../loading/Loading";
 
 const badgeStyleRight = {
 	"& .MuiBadge-badge": {
@@ -268,7 +269,7 @@ export default function UploadButton({
 
 			{
 				loading &&
-				<CircularProgress />
+				<LoadingComponent />
 			}
 		</div>
 	);
