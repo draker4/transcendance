@@ -2,7 +2,11 @@ import styles from "@/styles/profile/ItemContent.module.css";
 import WinrateBoard from "./WinrateBoard";
 
 type Props = {
-    winData:{gameWon:number, gameLost:number}
+    winData:{
+      gameWon:number, 
+      gameLost:number,
+      global?:number
+    }
 }
 
 export default function Winrate({winData}:Props) {

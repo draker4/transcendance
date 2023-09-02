@@ -72,7 +72,7 @@ export default function SectionPongStats({ profile }: Props) {
       }
       
       } catch(error:any) {
-        console.log(`loadLeaderboard error : ${error.message}`)
+        console.log(`SectionPongStats => loadLeaderboard error : ${error.message}`)
       }
     }
 
