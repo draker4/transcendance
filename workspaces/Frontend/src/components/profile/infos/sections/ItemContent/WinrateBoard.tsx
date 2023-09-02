@@ -42,9 +42,9 @@ export default function WinrateBoard({winData}:Props) {
   return (
     <div className={styles.winrateBoard}>
        {
-        items.map((item) => {
+        items.map((item, index) => {
             return (
-                <div className={`${styles.winrateBoardItem} ${item.class}`}>
+                <div key={index} className={`${styles.winrateBoardItem} ${item.class}`}>
                     <div className={styles.number}>
                         {item.nb}
                         {item.percent && <div className={styles.percentSign}>%</div>}

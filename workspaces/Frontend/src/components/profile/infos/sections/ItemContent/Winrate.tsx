@@ -24,7 +24,7 @@ const winrateRender = ():JSX.Element => {
 
   return (
     <div className={styles.main}>
-        <div className={""}>{winrateRender()}</div>
+        {winrateRender()}
     </div>
   )
 }
