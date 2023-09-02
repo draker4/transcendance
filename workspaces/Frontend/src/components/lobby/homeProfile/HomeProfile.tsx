@@ -1,6 +1,7 @@
 "use client";
 
 import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
+import Link from "next/link";
 import AvatarUser from "../../avatarUser/AvatarUser";
 import GameStats from "./GameStats";
 
@@ -12,19 +13,21 @@ type Props = {
 export default function HomeProfile({ profile, avatar }: Props) {
   return (
     <div className={styles.homeProfil}>
-      <div className={styles.avatar}>
-        <AvatarUser
-          avatar={avatar}
-          borderSize={"6px"}
-          backgroundColor={avatar.backgroundColor}
-          borderColor={avatar.borderColor}
-          fontSize="3rem"
-        />
+
+    <Link className={styles.links} href={`/home/profile/${profile.id}`}>
+      <div className={styles.avatarAndLogin}>
+        <div className={styles.avatar}>
+          <AvatarUser
+            avatar={avatar}
+            borderSize={"6px"}
+            backgroundColor={avatar.backgroundColor}
+            borderColor={avatar.borderColor}
+            fontSize="3rem"
+          />
+        </div>
+        <div className={styles.login}>{profile.login}</div>
       </div>
-      <div className={styles.profileInfo}>
-        <p>{profile.login}</p>
-        <p>{profile.story}</p>
-      </div>
+    </Link>
       <GameStats profile={profile} />
     </div>
   );

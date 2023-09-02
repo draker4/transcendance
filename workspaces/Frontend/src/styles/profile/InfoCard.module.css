@@ -46,6 +46,13 @@
   /* border: dashed 1px var(--tertiary1); */
 }
 
+.sections .leftAlign {
+  width: 100%;
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+}
+
 .sections .spliter {
 	width:100%;
 	height: 2px;

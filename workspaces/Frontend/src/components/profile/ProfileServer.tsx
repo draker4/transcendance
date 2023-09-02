@@ -77,7 +77,6 @@ export default async function ProfileServer({ id }: {
 						isChannel: false,
 						decrypt: false,
 					}
-					// return "/images/avatars/" + avatar;
 				return avatar;
 			});
 			

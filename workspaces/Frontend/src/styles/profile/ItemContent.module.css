@@ -6,6 +6,12 @@
     user-select: none;
 }
 
+p.placeholder {
+    margin: 0;
+}
+
+/* ---------------------------------------------------------------- */
+
 .starBox {
     display: flex;
     flex-grow: 1;
@@ -17,23 +23,25 @@
     font-size: 1.6rem;
 }
 
-p.placeholder {
-    margin: 0;
-}
 
+/* ---------------------------------------------------------------- */
 
 .winrateBoard {
     display: flex;
+    align-items: center;
+    justify-content: center;
     height:80px;
     gap:0.5rem;
+    width: 100%;
 }
 
 .winrateBoardItem {
     font-family: var(--title-font);
     color: var(--primary1);
-    width: 80px;
+    width: 20%;
+    min-width:60px;
     display: flex;
-    gap:0.3rem;
+
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -44,7 +52,6 @@ p.placeholder {
     align-items: baseline;
 
     text-align: center;
-    border-radius: 0.15rem;
     font-size: 1.5rem;
     font-weight: 800;
     color:var(--accent1);
@@ -68,4 +75,85 @@ p.placeholder {
 
 .winrateBoardItem.played {
     margin-right: 15px;
+}
+
+.global {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.total {
+  
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  
+  width:100%;
+  border-radius: 0.15rem;
+  background-color: var(--secondary1);
+  
+  border: 3px solid var(--accent1);
+}
+
+.total .label {
+  letter-spacing: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--primary1);
+  font-weight: 800;
+}
+
+.total .number {
+  font-size: 1.5rem;
+  color: var(--tertiary1);
+}
+
+/* ---------------------------------------------------------------- */
+
+.rankBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid var(--accent1);
+  border-radius: 0.50rem;
+  color: var(--primary1);
+}
+
+.rankMedal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  font-size: 3rem;
+  padding: 2px;
+  background-color: var(--accent1);
+}
+
+.rankNumber {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-width: 80px;
+  height: 80px;
+  text-align: center;
+  font-size: 3rem;
+  padding: 2px;
+  color: var(--accent1);
+}
+
+.rankLetters {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(-180deg);
+  color: var(--accent2);
+  font-family: var(--title-font);
+  margin-right: -5px;
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.2rem;
 }
