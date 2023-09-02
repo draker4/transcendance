@@ -72,7 +72,8 @@ export default function Welcome() {
             className={styles.demoBtn}
             type="button"
           >
-            Change to Classic Pong
+            {showCrunchy && "Change to Classic"}
+            {!showCrunchy && "Show Classic"}
           </button>
         )}
         {!showCrunchy && (
@@ -84,7 +85,8 @@ export default function Welcome() {
             className={styles.demoBtn}
             type="button"
           >
-            Change to Crunchy Pong
+            {showClassic && "Change to Crunchy Pong"}
+            {!showClassic && "Show Crunchy Pong"}
           </button>
         )}
       </div>

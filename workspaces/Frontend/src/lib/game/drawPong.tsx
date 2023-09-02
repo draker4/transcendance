@@ -162,13 +162,17 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   // Draw Score
   drawScore(
     draw,
-    gameData.score.round[actualRound].left,
+    gameData.score.round[
+      actualRound === gameData.maxRound ? actualRound - 1 : actualRound
+    ].left,
     draw.canvas.width / 4,
     50
   );
   drawScore(
     draw,
-    gameData.score.round[actualRound].right,
+    gameData.score.round[
+      actualRound === gameData.maxRound ? actualRound - 1 : actualRound
+    ].right,
     draw.canvas.width / 4 + draw.canvas.width / 2,
     50
   );
@@ -196,39 +200,39 @@ function applyBlurEffect(draw: Draw) {
   draw.context.fillRect(0, 0, draw.canvas.width, draw.canvas.height);
 }
 
-function startingMenu(gameData: GameData, draw: Draw) {
-  applyBlurEffect(draw);
-  const { r, g, b, a } = COLOR_FONT;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  draw.context.fillText(
-    "Waiting for Player",
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 10
-  );
-}
+// function startingMenu(gameData: GameData, draw: Draw) {
+//   applyBlurEffect(draw);
+//   const { r, g, b, a } = COLOR_FONT;
+//   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+//   draw.context.font = FONT_MENU;
+//   draw.context.textAlign = "center";
+//   draw.context.fillText(
+//     "Waiting for Player",
+//     draw.canvas.width / 2,
+//     draw.canvas.height / 2 + 10
+//   );
+// }
 
-function finishedMenu(gameData: GameData, draw: Draw) {
-  applyBlurEffect(draw);
-  const { r, g, b, a } = COLOR_FONT;
-  draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-  draw.context.font = FONT_MENU;
-  draw.context.textAlign = "center";
-  let winner = "Error";
-  if (gameData.result === "Host") {
-    if (gameData.hostSide === "Left") winner = gameData.playerLeft.name;
-    else winner = gameData.playerRight.name;
-  } else if (gameData.result === "Opponent") {
-    if (gameData.hostSide === "Left") winner = gameData.playerRight.name;
-    else winner = gameData.playerLeft.name;
-  }
-  draw.context.fillText(
-    `${winner} has won!`,
-    draw.canvas.width / 2,
-    draw.canvas.height / 2 + 10
-  );
-}
+// function finishedMenu(gameData: GameData, draw: Draw) {
+//   applyBlurEffect(draw);
+//   const { r, g, b, a } = COLOR_FONT;
+//   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+//   draw.context.font = FONT_MENU;
+//   draw.context.textAlign = "center";
+//   let winner = "Error";
+//   if (gameData.result === "Host") {
+//     if (gameData.hostSide === "Left") winner = gameData.playerLeft.name;
+//     else winner = gameData.playerRight.name;
+//   } else if (gameData.result === "Opponent") {
+//     if (gameData.hostSide === "Left") winner = gameData.playerRight.name;
+//     else winner = gameData.playerLeft.name;
+//   }
+//   draw.context.fillText(
+//     `${winner} has won!`,
+//     draw.canvas.width / 2,
+//     draw.canvas.height / 2 + 10
+//   );
+// }
 
 function drawTimer(timer: Timer, draw: Draw, round: number) {
   // remove 2h from the timer
@@ -304,6 +308,6 @@ export function drawPong(gameData: GameData, draw: Draw) {
   if (gameData.timer) drawTimer(gameData.timer, draw, gameData.actualRound + 1);
 
   // Draw the menu
-  if (gameData.status === "Not Started") startingMenu(gameData, draw);
-  if (gameData.status === "Finished") finishedMenu(gameData, draw);
+  // if (gameData.status === "Not Started") startingMenu(gameData, draw);
+  // if (gameData.status === "Finished") finishedMenu(gameData, draw);
 }

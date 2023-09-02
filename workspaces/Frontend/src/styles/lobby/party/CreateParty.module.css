@@ -25,16 +25,13 @@
   font-weight: bold;
   transition: all 0.3s ease-in;
   margin: 2px;
+  color: var(--primary1);
+  background-color: var(--secondary1);
+  border: 3px solid var(--accent1);
 }
 
 .save:checked {
   transition: all 0.3s ease-out;
-}
-
-.save {
-  color: var(--primary1);
-  background-color: var(--secondary1);
-  border: 3px solid var(--accent1);
 }
 
 .save:hover {

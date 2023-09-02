@@ -1,7 +1,7 @@
 "use client";
 
 // Import des composants react
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { Socket } from "socket.io-client";
 
 // Import du style
@@ -28,6 +28,8 @@ import {
 import PongHead from "../game/PongHead";
 import GameService from "@/services/Game.service";
 import LobbyService from "@/services/Lobby.service";
+import PlayerPreview from "./PlayerPreview";
+import GameEnd from "./GameEnd";
 
 type Props = {
   userId: number;
@@ -52,6 +54,8 @@ export default function Pong({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
+  const [showPreview, setShowPreview] = useState(true);
+  const [showGameEnd, setShowGameEnd] = useState(false);
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
@@ -66,6 +70,7 @@ export default function Pong({
   }, [gameData.ballImg]);
 
   useEffect(() => {
+    if (showPreview) return;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -88,7 +93,7 @@ export default function Pong({
         animationFrameIdRef.current = undefined;
       }
     };
-  }, []);
+  }, [showPreview]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -133,7 +138,28 @@ export default function Pong({
     };
   }, [socket, userId]);
 
-  // Scroll to the top when gameData changes
+  useEffect(() => {
+    if (gameData.status === "Not Started") {
+      setShowPreview(true);
+    } else if (
+      gameData.status === "Playing" &&
+      gameData.timer.end > new Date().getTime() + 3000
+    ) {
+      const delayTimeout = setTimeout(() => {
+        setShowPreview(false);
+      }, 2000);
+      return () => {
+        clearTimeout(delayTimeout);
+      };
+    } else if (gameData.status === "Finished") {
+      setShowGameEnd(true);
+      setShowPreview(false);
+      console.log("show game end");
+    } else {
+      setShowPreview(false);
+    }
+  }, [gameData]);
+
   useEffect(() => {
     pongRef.current?.scrollIntoView({ behavior: "smooth" });
   }, []);
@@ -147,12 +173,16 @@ export default function Pong({
         isPlayer={isPlayer}
       />
       <div className={styles.canvasContainer}>
-        <canvas
-          ref={canvasRef}
-          className={styles.canvas}
-          width={GAME_WIDTH}
-          height={GAME_HEIGHT}
-        />
+        {showPreview && <PlayerPreview gameData={gameData} />}
+        {!showPreview && (
+          <canvas
+            ref={canvasRef}
+            className={styles.canvas}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+          />
+        )}
+        {showGameEnd && <GameEnd gameData={gameData} isPlayer={isPlayer} />}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />
     </div>

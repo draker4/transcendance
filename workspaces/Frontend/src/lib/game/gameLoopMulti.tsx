@@ -19,14 +19,24 @@ const playerMessage: Player[] = [];
 const statusMessage: StatusMessage[] = [];
 
 export const addUpdateMessage = (updateData: UpdateData) => {
+  //replace the last update message
+  if (updateMessage.length > 0) {
+    updateMessage.pop();
+  }
   updateMessage.push(updateData);
 };
 
 export const addPlayerMessage = (playerData: Player) => {
+  if (playerMessage.length > 0) {
+    playerMessage.pop();
+  }
   playerMessage.push(playerData);
 };
 
 export const addStatusMessage = (statusData: StatusMessage) => {
+  if (statusMessage.length > 0) {
+    statusMessage.pop();
+  }
   statusMessage.push(statusData);
 };
 

@@ -7,17 +7,11 @@ import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import {
   ResumeStats,
   StatsImproved,
-  UpdateXP,
+  Result,
+  XP,
 } from '@transcendence/shared/types/Stats.types';
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
-import {
-  XP_GAME,
-  XP_POINTDIFF,
-  XP_ROUND3,
-  XP_ROUND5,
-  XP_ROUND7,
-  XP_ROUND9,
-} from '@transcendence/shared/constants/Xp.constants';
+import { calculateXP } from '@transcendence/shared/game/calculateXP';
 
 @Injectable()
 export class StatsService {
@@ -50,7 +44,7 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
-      const result: UpdateXP = {
+      const result: Result = {
         win: false,
         rageQuit: false,
         roundWin: 0,
@@ -86,13 +80,13 @@ export class StatsService {
           result,
         );
       }
-      const xp = this.calculateXP(result, update.maxPoint);
+      const xp: XP = calculateXP(result, update.maxPoint);
       if (update.mode === 'League') {
-        stats.leagueXP += xp;
+        stats.leagueXP += xp.total;
         if (stats.leagueXP < 0) stats.leagueXP = 0;
       }
       if (result.win) {
-        stats.playerXP += xp;
+        stats.playerXP += xp.total;
       }
       return await this.statsRepository.save(stats);
     } catch (error) {
@@ -310,36 +304,20 @@ export class StatsService {
 
   // --------------------------------  PRIVATE METHODS  ------------------------------- //
 
-  private calculateXP(result: UpdateXP, maxPoint: 3 | 5 | 7 | 9): number {
-    let xp = 0;
-    xp += result.win ? XP_GAME : -XP_GAME;
-    xp +=
-      (result.roundWin - result.roundLost) *
-      (maxPoint === 9
-        ? XP_ROUND9
-        : maxPoint === 7
-        ? XP_ROUND7
-        : maxPoint === 5
-        ? XP_ROUND5
-        : XP_ROUND3);
-    xp += (result.pointWin - result.pointLost) * XP_POINTDIFF;
-    return xp;
-  }
-
   private defineLeagueStats(
     stats: Stats,
     side: 'Left' | 'Right',
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
-    xp: UpdateXP,
+    result: Result,
   ): Stats {
     if (score.leftRound > score.rightRound) {
       if (side === 'Left') {
         if (type === 'Classic') stats.leagueClassicWon += 1;
         else if (type === 'Best3') stats.leagueBest3Won += 1;
         else if (type === 'Best5') stats.leagueBest5Won += 1;
-        xp.win = true;
+        result.win = true;
       } else {
         if (type === 'Classic') stats.leagueClassicLost += 1;
         else if (type === 'Best3') stats.leagueBest3Lost += 1;
@@ -354,28 +332,28 @@ export class StatsService {
         if (type === 'Classic') stats.leagueClassicWon += 1;
         else if (type === 'Best3') stats.leagueBest3Won += 1;
         else if (type === 'Best5') stats.leagueBest5Won += 1;
-        xp.win = true;
+        result.win = true;
       }
     }
     if (score.rageQuit) {
       if (side === score.rageQuit) stats.leagueRageQuitLost += 1;
       else stats.leagueRageQuitWin += 1;
-      xp.rageQuit = true;
+      result.rageQuit = true;
     }
-    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
-    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
-    stats.leagueRoundWon += xp.roundWin;
-    stats.leagueRoundLost += xp.roundLost;
+    result.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    result.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.leagueRoundWon += result.roundWin;
+    stats.leagueRoundLost += result.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
-    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
-    stats.leaguePointWon += xp.pointWin;
-    stats.leaguePointLost += xp.pointLost;
+    result.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    result.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
+    stats.leaguePointWon += result.pointWin;
+    stats.leaguePointLost += result.pointLost;
     return stats;
   }
 
@@ -385,7 +363,7 @@ export class StatsService {
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
-    xp: UpdateXP,
+    result: Result,
   ): Stats {
     if (
       score.rageQuit === 'Right' ||
@@ -399,7 +377,7 @@ export class StatsService {
         else if (type === 'Best3') stats.partyBest3Won += 1;
         else if (type === 'Best5') stats.partyBest5Won += 1;
         else if (type === 'Custom') stats.partyCustomWon += 1;
-        xp.win = true;
+        result.win = true;
       } else {
         if (type === 'Classic') stats.partyClassicLost += 1;
         else if (type === 'Best3') stats.partyBest3Lost += 1;
@@ -423,31 +401,31 @@ export class StatsService {
         else if (type === 'Best3') stats.partyBest3Won += 1;
         else if (type === 'Best5') stats.partyBest5Won += 1;
         else if (type === 'Custom') stats.partyCustomWon += 1;
-        xp.win = true;
+        result.win = true;
       }
     }
     if (score.rageQuit) {
       if (side === score.rageQuit) stats.partyRageQuitLost += 1;
       else stats.partyRageQuitWin += 1;
-      xp.rageQuit = true;
+      result.rageQuit = true;
     } else if (score.disconnect) {
       if (side === score.disconnect) stats.partyDisconnectLost += 1;
       else stats.partyDisconnectWin += 1;
     }
-    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
-    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
-    stats.partyRoundWon += xp.roundWin;
-    stats.partyRoundLost += xp.roundLost;
+    result.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    result.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.partyRoundWon += result.roundWin;
+    stats.partyRoundLost += result.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
-    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
-    stats.partyPointWon += xp.pointWin;
-    stats.partyPointLost += xp.pointLost;
+    result.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    result.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
+    stats.partyPointWon += result.pointWin;
+    stats.partyPointLost += result.pointLost;
     return stats;
   }
 
@@ -457,7 +435,7 @@ export class StatsService {
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
-    xp: UpdateXP,
+    result: Result,
   ) {
     if (score.leftRound > score.rightRound) {
       if (side === 'Left') {
@@ -466,7 +444,7 @@ export class StatsService {
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
         else if (type === 'Story') stats.trainingStoryWon += 1;
-        xp.win = true;
+        result.win = true;
       } else {
         if (type === 'Classic') stats.trainingClassicLost += 1;
         else if (type === 'Best3') stats.trainingBest3Lost += 1;
@@ -487,21 +465,21 @@ export class StatsService {
         else if (type === 'Best5') stats.trainingBest5Won += 1;
         else if (type === 'Custom') stats.trainingCustomWon += 1;
         else if (type === 'Story') stats.trainingStoryWon += 1;
-        xp.win = true;
+        result.win = true;
       }
     }
-    xp.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
-    xp.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
-    stats.trainingRoundWon += xp.roundWin;
-    stats.trainingRoundLost += xp.roundLost;
+    result.roundWin = side === 'Left' ? score.leftRound : score.rightRound;
+    result.roundLost = side === 'Left' ? score.rightRound : score.leftRound;
+    stats.trainingRoundWon += result.roundWin;
+    stats.trainingRoundLost += result.roundLost;
     let leftPointWin = 0;
     let rightPointWin = 0;
     for (let i = 0; i < nbRound; i++) {
       leftPointWin += score.round[i].left;
       rightPointWin += score.round[i].right;
     }
-    xp.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
-    xp.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
+    result.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
+    result.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
     return stats;
   }
 }

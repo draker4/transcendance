@@ -1,6 +1,6 @@
 "use client";
 // Import des composants react
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 
 // Import du style
 import styles from "@/styles/gameSolo/PongSolo.module.css";
@@ -15,9 +15,14 @@ import { GameData, Draw } from "@transcendence/shared/types/Game.types";
 import {
   GAME_HEIGHT,
   GAME_WIDTH,
+  TIMER_START,
+  TIMER_RESTART,
 } from "@transcendence/shared/constants/Game.constants";
+import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import TrainingService from "@/services/Training.service";
 import PongSoloHead from "./PongSoloHead";
+import PlayerPreview from "@/components/game/PlayerPreview";
+import GameEnd from "@/components/game/GameEnd";
 
 type Props = {
   gameData: GameData;
@@ -36,6 +41,8 @@ export default function Pong({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
+  const [showPreview, setShowPreview] = useState(true);
+  const [showGameEnd, setShowGameEnd] = useState(false);
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
@@ -50,6 +57,7 @@ export default function Pong({
   }, [gameData.ballImg]);
 
   useEffect(() => {
+    if (showPreview) return;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -72,7 +80,7 @@ export default function Pong({
         animationFrameIdRef.current = undefined;
       }
     };
-  }, []);
+  }, [showPreview]);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -82,32 +90,78 @@ export default function Pong({
     function handleKeyUp(event: KeyboardEvent) {
       pongKeyUp(gameData, isPlayer);
     }
-    // Add key event listeners when the component mounts
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    // Remove key event listeners when the component unmounts
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
   }, [gameData]);
 
-  // Scroll to the top when gameData changes
   useEffect(() => {
     pongRef.current?.scrollIntoView({ behavior: "smooth" });
+    const delayTimeout = setTimeout(() => {
+      setShowPreview(false);
+      gameData.status = "Playing";
+      if (
+        gameData.score.round[0].left === 0 &&
+        gameData.score.round[0].right === 0
+      ) {
+        gameData.timer = defineTimer(TIMER_START, "Start");
+      } else {
+        gameData.timer = defineTimer(TIMER_RESTART, "ReStart");
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(delayTimeout);
+    };
   }, []);
+
+  useEffect(() => {
+    pongRef.current?.scrollIntoView({ behavior: "smooth" });
+    const delayTimeout = setTimeout(() => {
+      setShowPreview(false);
+      gameData.status = "Playing";
+      if (
+        gameData.score.round[0].left === 0 &&
+        gameData.score.round[0].right === 0
+      ) {
+        gameData.timer = defineTimer(TIMER_START, "Start");
+      } else {
+        gameData.timer = defineTimer(TIMER_RESTART, "ReStart");
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(delayTimeout);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (gameData.status === "Finished") {
+      setShowGameEnd(true);
+      setShowPreview(false);
+    }
+  }, [gameData]);
 
   return (
     <div className={styles.pong} ref={pongRef}>
       <PongSoloHead gameData={gameData} trainingService={trainingService} />
       <div className={styles.canvasContainer}>
-        <canvas
-          ref={canvasRef}
-          className={styles.canvas}
-          width={GAME_WIDTH}
-          height={GAME_HEIGHT}
-        />
+        {showPreview && <PlayerPreview gameData={gameData} />}
+        {!showPreview && (
+          <canvas
+            ref={canvasRef}
+            className={styles.canvas}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+          />
+        )}
+        {showGameEnd && (
+          <GameEnd gameData={gameData} isPlayer={gameData.hostSide} />
+        )}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />
     </div>

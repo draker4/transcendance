@@ -1,6 +1,6 @@
 "use client";
 // Import des composants react
-import { useRef, useEffect, useMemo } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 
 // Import du style
 import styles from "@/styles/demo/PongDemo.module.css";
@@ -15,7 +15,9 @@ import {
   GAME_HEIGHT,
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
+import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import PongSoloHead from "./PongDemoHead";
+import PlayerPreview from "@/components/game/PlayerPreview";
 
 type Props = {
   gameData: GameData;
@@ -34,6 +36,7 @@ export default function PongDemo({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isMountedRef = useRef(true);
   const animationFrameIdRef = useRef<number | undefined>(undefined);
+  const [showPreview, setShowPreview] = useState(true);
 
   const backgroundImage = useMemo(() => {
     const image = new Image();
@@ -48,6 +51,7 @@ export default function PongDemo({
   }, [gameData.ballImg]);
 
   useEffect(() => {
+    if (showPreview) return;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
@@ -70,24 +74,34 @@ export default function PongDemo({
         animationFrameIdRef.current = undefined;
       }
     };
-  }, []);
+  }, [showPreview]);
 
-  // Scroll to the top when gameData changes
   useEffect(() => {
-    if (scrollTop)
-      pongRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (scrollTop) pongRef.current?.scrollIntoView({ behavior: "smooth" });
+    const delayTimeout = setTimeout(() => {
+      setShowPreview(false);
+      gameData.status = "Playing";
+      gameData.timer = defineTimer(1, "Start");
+    }, 2000);
+
+    return () => {
+      clearTimeout(delayTimeout);
+    };
   }, []);
 
   return (
     <div className={styles.pong} ref={pongRef}>
       <PongSoloHead gameData={gameData} setShowDemo={setShowDemo} />
       <div className={styles.canvasContainer}>
-        <canvas
-          ref={canvasRef}
-          className={styles.canvas}
-          width={GAME_WIDTH}
-          height={GAME_HEIGHT}
-        />
+        {!showPreview && (
+          <canvas
+            ref={canvasRef}
+            className={styles.canvas}
+            width={GAME_WIDTH}
+            height={GAME_HEIGHT}
+          />
+        )}
+        {showPreview && <PlayerPreview gameData={gameData} />}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />
     </div>

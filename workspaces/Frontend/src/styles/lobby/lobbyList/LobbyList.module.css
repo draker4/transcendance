@@ -22,7 +22,8 @@
   background-color: var(--primary1);
   border: 3px solid var(--primary3);
   border-radius: 8px;
-  overflow-x: auto; /* Horizontal Scrollbar */
+  overflow-x: auto;
+  max-height: 380px;
 }
 
 .listHead {

@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import DefineType from "@/components/lobby/league/DefineType";
 import styles from "@/styles/lobby/league/Searching.module.css";
 import MatchmakingService from "@/services/Matchmaking.service";
-import { CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
+import LoadingComponent from "@/components/loading/Loading";
 
 export default function Searching() {
   const matchmakingService = new MatchmakingService();
   const [type, setType] = useState<"Classic" | "Best3" | "Best5">("Classic");
   const [searching, setSearching] = useState(false);
+  const [startingGame, setStartingGame] = useState(false);
   const [searchTimeoutId, setSearchTimeoutId] = useState<NodeJS.Timeout | null>(
     null
   );
@@ -24,10 +25,12 @@ export default function Searching() {
 
   const checkSearch = async () => {
     const res = await matchmakingService.checkSearch();
-    console.log(res);
     if (res.success) {
       setSearching(false);
-      if (res.data) router.push(`/home/game/${res.data}`);
+      if (res.data) {
+        router.push(`/home/game/${res.data}`);
+        setStartingGame(true);
+      }
     } else {
       const timeoutId = setTimeout(() => {
         checkSearch();
@@ -52,22 +55,30 @@ export default function Searching() {
 
   return (
     <div className={styles.searching}>
-      {!searching && <DefineType type={type} setType={setType} />}
+      {!searching && !startingGame && (
+        <DefineType type={type} setType={setType} />
+      )}
       {searching && (
         <div className={styles.searchingOngoing}>
-          <CircularProgress />
+          <LoadingComponent />
           <h3 className={styles.section}>Searching...</h3>
         </div>
       )}
-      {!searching && (
+      {!searching && !startingGame && (
         <button className={styles.searchBtn} onClick={startMatchmake}>
           <p>Start Search</p>
         </button>
       )}
-      {searching && (
+      {searching && !startingGame && (
         <button className={styles.searchBtn} onClick={stopMatchmake}>
           <p>Stop Search</p>
         </button>
+      )}
+      {startingGame && (
+        <div className={styles.searchingOngoing}>
+          <LoadingComponent />
+          <h3 className={styles.section}>Starting the Game...</h3>
+        </div>
       )}
     </div>
   );

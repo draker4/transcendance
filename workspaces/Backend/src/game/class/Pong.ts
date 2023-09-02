@@ -187,7 +187,6 @@ export class Pong {
     if (!this.disconnectLoopRunning && this.pauseLoopRunning) {
       const actualTime = new Date().getTime();
       if (actualTime >= this.data.timer.end) {
-        this.data.status = 'Playing';
         this.data.timer = defineTimer(
           TIMER_RESTART,
           'ReStart',
@@ -195,6 +194,7 @@ export class Pong {
             ? this.data.playerLeft.name
             : this.data.playerRight.name,
         );
+        this.data.status = 'Playing';
         this.data.sendStatus = true;
         this.pauseLoopRunning = null;
       } else {
@@ -502,8 +502,8 @@ export class Pong {
       if (this.data.status === 'Not Started') {
         this.data.status = 'Playing';
         this.data.sendStatus = true;
-        this.startGameLoop();
         this.data.timer = defineTimer(TIMER_START, 'Start');
+        this.startGameLoop();
       } else if (this.data.status === 'Stopped') {
         this.data.status = 'Playing';
         this.data.sendStatus = true;
@@ -588,7 +588,11 @@ export class Pong {
   private disconnectLoop(side: 'Left' | 'Right') {
     if (this.disconnectLoopRunning) {
       const actualTime = new Date().getTime();
-      if (actualTime > this.data.timer.end) {
+      if (this.data.timer.reason !== 'Deconnection') {
+        this.stopDisconnectLoop();
+        return;
+      } else if (actualTime > this.data.timer.end) {
+        console.log('Disconnect');
         this.data.status = 'Finished';
         if (side === 'Left') {
           this.data.result =
@@ -653,6 +657,7 @@ export class Pong {
   }
 
   private rageQuit(side: 'Left' | 'Right') {
+    console.log('Rage Quit');
     this.data.status = 'Finished';
     this.data.sendStatus = true;
     if (side === 'Left') {

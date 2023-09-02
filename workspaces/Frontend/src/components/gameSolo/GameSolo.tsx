@@ -14,11 +14,6 @@ import TrainingService from "@/services/Training.service";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import PongSolo from "./PongSolo";
 import ErrorGameSolo from "./ErrorGameSolo";
-import { defineTimer } from "@transcendence/shared/game/pongUtils";
-import {
-  TIMER_START,
-  TIMER_RESTART,
-} from "@transcendence/shared/constants/Game.constants";
 import LoadingComponent from "../loading/Loading";
 
 type Props = {
@@ -48,15 +43,6 @@ export default function GameSolo({ profile, trainingId }: Props) {
           if (ret.data.status === "Finished") {
             router.push("/home");
           } else {
-            ret.data.status = "Playing";
-            if (
-              ret.data.score.round[0].left === 0 &&
-              ret.data.score.round[0].right === 0
-            ) {
-              ret.data.timer = defineTimer(TIMER_START, "Start");
-            } else {
-              ret.data.timer = defineTimer(TIMER_RESTART, "ReStart");
-            }
             setGameData(ret.data);
             setIsLoading(false);
           }

@@ -14,12 +14,7 @@ import {
   initScoreDemo,
 } from "@transcendence/shared/game/initPong";
 import PongDemo from "./PongDemo";
-import { defineTimer } from "@transcendence/shared/game/pongUtils";
-import {
-  AI_DEMO,
-  AI_ID,
-  TIMER_START,
-} from "@transcendence/shared/constants/Game.constants";
+import { AI_DEMO, AI_ID } from "@transcendence/shared/constants/Game.constants";
 import LoadingComponent from "../loading/Loading";
 
 type Props = {
@@ -29,7 +24,12 @@ type Props = {
   scrollTop: boolean;
 };
 
-export default function Demo({ login, demoData, setShowDemo, scrollTop = true }: Props) {
+export default function Demo({
+  login,
+  demoData,
+  setShowDemo,
+  scrollTop = true,
+}: Props) {
   const [isLoading, setIsLoading] = useState(true);
   const [gameData, setGameData] = useState<GameData>();
 
@@ -62,8 +62,6 @@ export default function Demo({ login, demoData, setShowDemo, scrollTop = true }:
       "Right",
       demoData.side === "Right" ? `Futur ${login}` : `Coach ${demoData.type}`
     );
-    demo.status = "Playing";
-    demo.timer = defineTimer(1, "Start");
     demo.demo = true;
     setGameData(demo);
     setIsLoading(false);

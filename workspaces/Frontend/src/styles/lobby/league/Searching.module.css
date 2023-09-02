@@ -15,12 +15,11 @@
 
 .searchingOngoing {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
   margin: 10px;
   margin-top: 5px;
-  height: 151px;
 }
 
 .searchBtn {

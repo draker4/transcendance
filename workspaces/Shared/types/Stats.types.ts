@@ -100,11 +100,19 @@ export type StatsUpdate = {
   maxPoint: 3 | 5 | 7 | 9;
 };
 
-export type UpdateXP = {
+export type Result = {
   win: boolean;
   rageQuit: boolean;
   roundWin: number;
   roundLost: number;
   pointWin: number;
   pointLost: number;
+};
+
+export type XP = {
+  game: number;
+  round: number;
+  point: number;
+  rageQuit: number;
+  total: number;
 };
