@@ -12,7 +12,7 @@ import { MailModule } from 'src/mail/mail.module';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
-import { AvatarService } from 'src/avatar/avatar.service';
+import { AvatarService } from 'src/avatar/service/avatar.service';
 import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
@@ -36,11 +36,16 @@ import { Game } from '@/utils/typeorm/Game.entity';
 import { ScoreService } from '@/score/service/score.service';
 import { StatusService } from '@/statusService/status.service';
 import { Score } from '@/utils/typeorm/Score.entity';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     PassportModule,
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       User,
       Avatar,
       Channel,
@@ -62,6 +67,7 @@ import { Score } from '@/utils/typeorm/Score.entity';
   ],
   controllers: [AuthController],
   providers: [
+    AchievementService,
     AuthService,
     UsersService,
     AvatarService,

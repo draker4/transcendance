@@ -40,6 +40,9 @@ import { StoryModule } from './story/story.module';
 import { Story } from './utils/typeorm/Story.entity';
 import { StoryData } from './utils/typeorm/StoryData.entity';
 import { StatusModule } from './statusService/status.module';
+import { AchievementModule } from './achievement/achievement.module';
+import { Achievement } from './utils/typeorm/Achievement.entity';
+import { AchievementData } from './utils/typeorm/AchievementData.entity';
 
 @Module({
   imports: [
@@ -54,6 +57,8 @@ import { StatusModule } from './statusService/status.module';
       password: process.env.DATA_BASE_PASSWORD,
       database: process.env.DATA_BASE_NAME,
       entities: [
+        Achievement,
+        AchievementData,
         Avatar,
         BackupCode,
         Channel,
@@ -76,6 +81,7 @@ import { StatusModule } from './statusService/status.module';
       ],
       synchronize: true,
     }),
+    AchievementModule,
     AuthModule,
     AvatarModule,
     ChannelModule,

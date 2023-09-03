@@ -24,7 +24,7 @@ import { CryptoService } from '@/utils/crypto/crypto';
 import { ColoredLogger } from './colored-logger';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
@@ -36,10 +36,15 @@ import { StoryService } from '@/story/service/story.service';
 import { StatusModule } from '@/statusService/status.module';
 import { Matchmaking } from '@/utils/typeorm/Matchmaking.entity';
 import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       Avatar,
       BackupCode,
       Channel,
@@ -59,6 +64,7 @@ import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
     StatusModule,
   ],
   providers: [
+    AchievementService,
     AvatarService,
     ChannelService,
     ColoredLogger,

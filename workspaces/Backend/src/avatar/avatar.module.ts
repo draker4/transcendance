@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { AvatarController } from './avatar.controller';
-import { AvatarService } from './avatar.service';
+import { AvatarController } from './controller/avatar.controller';
+import { AvatarService } from './service/avatar.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { UsersService } from 'src/users/users.service';
@@ -28,11 +28,16 @@ import { StatusService } from '@/statusService/status.service';
 import { GameService } from '@/game/service/game.service';
 import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 import { ScoreService } from '@/score/service/score.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     UsersModule,
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       Avatar,
       User,
       Channel,
@@ -52,6 +57,7 @@ import { ScoreService } from '@/score/service/score.service';
   ],
   controllers: [AvatarController],
   providers: [
+    AchievementService,
     AvatarService,
     CryptoService,
     ChannelService,

@@ -8,7 +8,7 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
 import { UsersService } from 'src/users/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
-import { AvatarService } from 'src/avatar/avatar.service';
+import { AvatarService } from 'src/avatar/service/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
 import * as argon2 from 'argon2';
 import * as crypto from 'crypto';
@@ -40,8 +40,7 @@ export class AuthService {
       }),
     });
 
-    if (!response.ok)
-      throw new Error('fetch failed');
+    if (!response.ok) throw new Error('fetch failed');
 
     return await response.json();
   }
@@ -189,8 +188,7 @@ export class AuthService {
 
   async updateAvatarLogin(userId: number, login: string, avatar: Avatar) {
     const user = await this.usersService.getUserById(userId);
-    if (!user)
-      throw new Error('No user found');
+    if (!user) throw new Error('No user found');
 
     user.login = login;
     await this.usersService.updateUser(user.id, {
@@ -267,7 +265,7 @@ export class AuthService {
 
       setTimeout(() => {
         this.usersService.deleteToken(isMatch);
-        console.log("JUST DELETED=", refreshToken);
+        console.log('JUST DELETED=', refreshToken);
       }, 20000);
 
       return this.login(user, isMatch.NbOfRefreshes + 1, false);

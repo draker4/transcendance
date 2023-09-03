@@ -154,7 +154,6 @@ export default function Pong({
     } else if (gameData.status === "Finished") {
       setShowGameEnd(true);
       setShowPreview(false);
-      console.log("show game end");
     } else {
       setShowPreview(false);
     }

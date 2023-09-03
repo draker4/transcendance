@@ -18,7 +18,7 @@ import { UsersService } from './users.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
 import { EditUserDto } from './dto/EditUser.dto';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 
 @Controller('users')
 export class UsersController {
@@ -156,10 +156,8 @@ export class UsersController {
     try {
       const user = await this.usersService.getUserTokens(req.user.id);
 
-      if (user)
-        return await this.usersService.deleteAllUserTokens(user);
-    }
-    catch (error) {
+      if (user) return await this.usersService.deleteAllUserTokens(user);
+    } catch (error) {
       console.log(error.message);
     }
   }
@@ -210,7 +208,11 @@ export class UsersController {
   @Post('addImage')
   async addImage(
     @Req() req,
-    @Body() {imageUrl, public_id}: {
+    @Body()
+    {
+      imageUrl,
+      public_id,
+    }: {
       imageUrl: string;
       public_id: string;
     },

@@ -1,4 +1,4 @@
-import Avatar_Service from "@/services/Avatar.service";
+import Avatar_Service from "@/services/service/avatar.service";
 import Channel_Service from "@/services/Channel.service";
 import Profile_Service from "@/services/Profile.service";
 import styleMain from "@/styles/chatPage/ChatDisplay.module.css";
@@ -14,35 +14,35 @@ type Props = {
 };
 
 let myRelation: UserRelation = {
-	userId: 0,
-	isBoss: false,
-	isChanOp: false,
-	isBanned: false,
-	joined: false,
-	invited: false,
-	muted: false,
-	user: {
-		id: 0,
-		login: "",
-		first_name: "",
-		last_name: "",
-		email: "",
-		phone: "",
-		image: "",
-		provider: "",
-		motto: "",
-		story: "",
-		avatar: {
-			image: "",
-			variant: "",
-			borderColor: "",
-			backgroundColor: "",
-			text: "",
-			empty: true,
-			isChannel: false,
-			decrypt: false,
-		},
-	},
+  userId: 0,
+  isBoss: false,
+  isChanOp: false,
+  isBanned: false,
+  joined: false,
+  invited: false,
+  muted: false,
+  user: {
+    id: 0,
+    login: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    image: "",
+    provider: "",
+    motto: "",
+    story: "",
+    avatar: {
+      image: "",
+      variant: "",
+      borderColor: "",
+      backgroundColor: "",
+      text: "",
+      empty: true,
+      isChannel: false,
+      decrypt: false,
+    },
+  },
 };
 
 let channelAndUsersRelation: ChannelUsersRelation = {
@@ -57,7 +57,7 @@ let channelAndUsersRelation: ChannelUsersRelation = {
     isBoss: false,
     isChanOp: false,
     invited: false,
-	muted: false,
+    muted: false,
     avatar: {
       image: "",
       variant: "",
@@ -71,76 +71,79 @@ let channelAndUsersRelation: ChannelUsersRelation = {
   },
 };
 
-export default function SetUpChannelSecondPart({ channelId, socket, littleScreen = false }: Props): JSX.Element {
-  const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
+export default function SetUpChannelSecondPart({
+  channelId,
+  socket,
+  littleScreen = false,
+}: Props): JSX.Element {
+  const [channelRelation, setChannelRelation] = useState<ChannelUsersRelation>(
+    channelAndUsersRelation
+  );
   const [me, setMe] = useState<UserRelation>(myRelation);
 
   const getPongersData = async () => {
     try {
-        const avatarService = new Avatar_Service(undefined);
-        const channelService = new Channel_Service(undefined);
-        const profileService = new Profile_Service(undefined);
+      const avatarService = new Avatar_Service(undefined);
+      const channelService = new Channel_Service(undefined);
+      const profileService = new Profile_Service(undefined);
 
-        channelAndUsersRelation = await channelService.getChannelAndUsers(
-        channelId
-        );
-        channelAndUsersRelation.channel.avatar =
+      channelAndUsersRelation =
+        await channelService.getChannelAndUsers(channelId);
+      channelAndUsersRelation.channel.avatar =
         await avatarService.getChannelAvatarById(channelId);
-        const myProfile = await profileService.getProfileByToken();
+      const myProfile = await profileService.getProfileByToken();
 
-        const findStatus: UserRelation | undefined =
+      const findStatus: UserRelation | undefined =
         channelAndUsersRelation.usersRelation.find(
-            (relation) => relation.userId === myProfile.id
+          (relation) => relation.userId === myProfile.id
         );
 
-        if (findStatus !== undefined) myRelation = findStatus;
-        else myRelation.userId = myProfile.id;
+      if (findStatus !== undefined) myRelation = findStatus;
+      else myRelation.userId = myProfile.id;
 
-        if (
+      if (
         !channelAndUsersRelation ||
         !channelAndUsersRelation.channel ||
         !channelAndUsersRelation.channel.avatar ||
         channelAndUsersRelation.channel.id === -1 ||
         channelAndUsersRelation.channel.type === "privateMsg"
-        ) {
+      ) {
         throw new Error("getPongersData user relation issue");
-        }
+      }
 
-        setChannelRelation(channelAndUsersRelation);
-        setMe(myRelation);
-
+      setChannelRelation(channelAndUsersRelation);
+      setMe(myRelation);
     } catch (err) {
-        console.log("SetUpSectionPongers error : ", err); // [+] meilleure gestion de ces deux try catch ?
+      console.log("SetUpSectionPongers error : ", err); // [+] meilleure gestion de ces deux try catch ?
     }
   };
 
   const loadData = () => {
-	try {
-		getPongersData();
-	  } catch (err) {
-		  console.log("SetUpSectionPongers error : ", err);
-	  }
+    try {
+      getPongersData();
+    } catch (err) {
+      console.log("SetUpSectionPongers error : ", err);
+    }
   };
 
   useEffect(() => {
-	
-  socket.on("editRelation", loadData);
-  loadData();
+    socket.on("editRelation", loadData);
+    loadData();
 
-	return () => {
-		socket?.off("editRelation", loadData);
-	  };
-
+    return () => {
+      socket?.off("editRelation", loadData);
+    };
   }, [socket, channelId]);
 
-
   if (me.userId !== 0 && channelRelation.channel.id !== -1) {
-
     return (
-      <div className={styleMain.main + " " + styleMain.noPadding} style={{
-        maxWidth: "350px",
-        marginLeft: littleScreen ? "0" : "-3px",
-      }}>
+      <div
+        className={styleMain.main + " " + styleMain.noPadding}
+        style={{
+          maxWidth: "350px",
+          marginLeft: littleScreen ? "0" : "-3px",
+        }}
+      >
         <ChannelSecondPart
           relation={channelRelation}
           myRelation={me}
@@ -150,8 +153,12 @@ export default function SetUpChannelSecondPart({ channelId, socket, littleScreen
     );
   } else {
     return (
-    <div className={styleMain.main + " " + styleMain.noPadding} style={{maxWidth: "350px"}}>
-      <LoadingSuspense />;
-    </div>);
+      <div
+        className={styleMain.main + " " + styleMain.noPadding}
+        style={{ maxWidth: "350px" }}
+      >
+        <LoadingSuspense />;
+      </div>
+    );
   }
 }

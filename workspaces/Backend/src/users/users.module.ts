@@ -12,7 +12,7 @@ import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
 import { StatsService } from '@/stats/service/stats.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
@@ -27,6 +27,9 @@ import { Game } from '@/utils/typeorm/Game.entity';
 import { Score } from '@/utils/typeorm/Score.entity';
 import { ScoreService } from '@/score/service/score.service';
 import { StatusService } from '@/statusService/status.service';
+import { AchievementService } from '@/achievement/service/achievement.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 
 @Module({
   imports: [
@@ -46,6 +49,8 @@ import { StatusService } from '@/statusService/status.service';
       Matchmaking,
       Game,
       Score,
+      Achievement,
+      AchievementData,
     ]),
   ],
   controllers: [UsersController],
@@ -60,6 +65,7 @@ import { StatusService } from '@/statusService/status.service';
     GameService,
     ScoreService,
     StatusService,
+    AchievementService,
   ],
   exports: [UsersService],
 })

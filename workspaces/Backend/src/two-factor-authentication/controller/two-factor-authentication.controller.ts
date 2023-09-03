@@ -8,12 +8,12 @@ import {
   Post,
   Req,
 } from '@nestjs/common';
-import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
+import { TwoFactorAuthenticationService } from '../service/two-factor-authentication.service';
 import { UsersService } from '@/users/users.service';
 import { AuthService } from '@/auth/services/auth.service';
-import { TwoFactorAuthenticationCodeDto } from './dto/TwoFactorAuthenticationCode.dto';
-import { VerifYCodeDto } from './dto/VerifYCode.dto';
-import { BackupCodeDto } from './dto/BackupCode.dto';
+import { TwoFactorAuthenticationCodeDto } from '../dto/TwoFactorAuthenticationCode.dto';
+import { VerifYCodeDto } from '../dto/VerifYCode.dto';
+import { BackupCodeDto } from '../dto/BackupCode.dto';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {

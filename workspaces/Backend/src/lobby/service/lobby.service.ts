@@ -12,7 +12,7 @@ import { UsersService } from '@/users/users.service';
 import { GameInfo, Player } from '@transcendence/shared/types/Game.types';
 import { ChannelService } from '@/channels/channel.service';
 import { StatsService } from '@/stats/service/stats.service';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { ResumeStats } from '@transcendence/shared/types/Stats.types';
 import { UserLeaderboard } from '@transcendence/shared/types/Leaderboard.types';

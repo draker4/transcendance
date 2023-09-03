@@ -33,11 +33,16 @@ import { Game } from '@/utils/typeorm/Game.entity';
 import { GameService } from '@/game/service/game.service';
 import { Score } from '@/utils/typeorm/Score.entity';
 import { ScoreService } from '@/score/service/score.service';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       User,
       Channel,
       Avatar,
@@ -61,6 +66,7 @@ import { AvatarService } from '@/avatar/avatar.service';
     StatusModule,
   ],
   providers: [
+    AchievementService,
     ChatGateway,
     WsJwtGuard,
     ChannelAuthGuard,

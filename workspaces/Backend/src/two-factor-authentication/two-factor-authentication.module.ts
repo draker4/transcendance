@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { TwoFactorAuthenticationService } from './two-factor-authentication.service';
-import { TwoFactorAuthenticationController } from './two-factor-authentication.controller';
+import { TwoFactorAuthenticationService } from './service/two-factor-authentication.service';
+import { TwoFactorAuthenticationController } from './controller/two-factor-authentication.controller';
 import { UsersService } from '@/users/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/utils/typeorm/User.entity';
@@ -10,7 +10,7 @@ import { Token } from '@/utils/typeorm/Token.entity';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { MailService } from '@/mail/mail.service';
 import { AuthService } from '@/auth/services/auth.service';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 import { JwtService } from '@nestjs/jwt';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
 import { ChannelService } from '@/channels/channel.service';
@@ -24,10 +24,15 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       User,
       Channel,
       Token,
@@ -43,6 +48,7 @@ import { StoryService } from '@/story/service/story.service';
     ]),
   ],
   providers: [
+    AchievementService,
     TwoFactorAuthenticationService,
     UsersService,
     CryptoService,

@@ -19,6 +19,9 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
@@ -35,6 +38,8 @@ import { StoryService } from '@/story/service/story.service';
       Image,
       Story,
       StoryData,
+      Achievement,
+      AchievementData,
     ]),
   ],
   controllers: [ChannelController],
@@ -44,6 +49,7 @@ import { StoryService } from '@/story/service/story.service';
     CryptoService,
     StatsService,
     StoryService,
+    AchievementService,
   ],
 })
 export class ChannelModule {}

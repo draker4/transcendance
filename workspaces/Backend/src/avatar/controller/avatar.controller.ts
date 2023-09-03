@@ -9,10 +9,10 @@ import {
   Put,
   Request,
 } from '@nestjs/common';
-import { AvatarService } from './avatar.service';
-import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
+import { AvatarService } from '../service/avatar.service';
+import { UpdateUserAvatarDto } from '../dto/update-user-avatar.dto';
 import { UsersService } from 'src/users/users.service';
-import { AvatarDto } from './dto/Avatar.dto';
+import { AvatarDto } from '../dto/Avatar.dto';
 
 @Controller('avatar')
 export class AvatarController {
@@ -53,10 +53,7 @@ export class AvatarController {
   }
 
   @Put('avatarUser')
-  async updateUserAvatarUser(
-    @Request() req,
-    @Body() avatar: AvatarDto,
-  ) {
+  async updateUserAvatarUser(@Request() req, @Body() avatar: AvatarDto) {
     return this.avatarService.editUserAvatar(req.user.id, avatar);
   }
 }

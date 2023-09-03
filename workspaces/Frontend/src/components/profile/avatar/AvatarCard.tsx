@@ -3,10 +3,13 @@ import ProfileLogin from "./ProfileLogin";
 import { CSSProperties, useEffect, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color } from "react-color";
-import Avatar_Service from "@/services/Avatar.service";
+import Avatar_Service from "@/services/service/avatar.service";
 import { Socket } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { CryptoService } from "@/services/Crypto.service";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
@@ -22,9 +25,15 @@ type Props = {
   avatars: Avatar[];
 };
 
-const  Crypto = new CryptoService();
+const Crypto = new CryptoService();
 
-export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: Props) {
+export default function AvatarCard({
+  login,
+  isOwner,
+  avatar,
+  socket,
+  avatars,
+}: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
   const [topColor, setTopColor] = useState<Color>(avatar.borderColor);
   const [botColor, setBotColor] = useState<Color>(avatar.backgroundColor);
@@ -45,10 +54,8 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   };
 
   const toogleDisplaySettings = () => {
-    if (!isOwner || uploadButton)
-      return;
-    if (displaySettings === true)
-      cancelColorChange();
+    if (!isOwner || uploadButton) return;
+    if (displaySettings === true) cancelColorChange();
     setDisplaySettings(!displaySettings);
   };
 
@@ -56,7 +63,6 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     if (!isOwner) return;
 
     try {
-
       console.log(avatarCustomed);
       let image = avatarCustomed.image;
 
@@ -64,13 +70,12 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
         image = await Crypto.encrypt(avatarCustomed.image);
 
       const rep = await avatarService.submitAvatarUser(
-        {...avatarCustomed, image},
+        { ...avatarCustomed, image },
         topColor as string,
-        botColor as string,
+        botColor as string
       );
 
-      if (!rep.success)
-        throw new Error(rep.message);
+      if (!rep.success) throw new Error(rep.message);
 
       setAvatarUser({
         ...avatarCustomed,
@@ -109,60 +114,56 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   };
 
   const changeAvatar = (dir: string) => {
-    if (avatarsList.length === 0 || (dir !== "right" && dir !== "left"))
-      return ;
+    if (avatarsList.length === 0 || (dir !== "right" && dir !== "left")) return;
 
     let index = -1;
 
     for (index; index < avatarsList.length; index++) {
-      if (index === -1)
-        continue;
-      if (avatarChosen.image.length !== 0
-        && avatarsList[index].image === avatarChosen.image)
+      if (index === -1) continue;
+      if (
+        avatarChosen.image.length !== 0 &&
+        avatarsList[index].image === avatarChosen.image
+      )
         break;
-      if (avatarChosen.empty && avatarsList[index].empty)
-        break ;
-      if (avatarChosen.image.length === 0 && avatarChosen.text === avatarsList[index].text)
-        break ;
+      if (avatarChosen.empty && avatarsList[index].empty) break;
+      if (
+        avatarChosen.image.length === 0 &&
+        avatarChosen.text === avatarsList[index].text
+      )
+        break;
     }
 
     if (index === avatarsList.length || index === -1) {
       setAvatarChosen(avatars[0]);
-      return ;
+      return;
     }
 
     let newAvatar: Avatar;
     if (dir === "right") {
-      if (index !== avatarsList.length - 1)
-        newAvatar = avatarsList[index + 1];
-      else
-        newAvatar = avatarsList[0];
-    }
-    
-    else {
-      if (index !== 0)
-        newAvatar = avatarsList[index - 1];
-      else
-        newAvatar = avatarsList[avatarsList.length - 1];
+      if (index !== avatarsList.length - 1) newAvatar = avatarsList[index + 1];
+      else newAvatar = avatarsList[0];
+    } else {
+      if (index !== 0) newAvatar = avatarsList[index - 1];
+      else newAvatar = avatarsList[avatarsList.length - 1];
     }
 
     if (newAvatar) {
       setAvatarChosen(newAvatar);
     }
-  }
+  };
 
   useEffect(() => {
-    avatarsList.forEach(avatar => {
+    avatarsList.forEach((avatar) => {
       if (avatar.text.length !== 0)
         avatar.text = login.toUpperCase().slice(0, 3);
     });
     if (avatarChosen.text.length !== 0) {
-      const newAvatar = {...avatarChosen};
+      const newAvatar = { ...avatarChosen };
       newAvatar.text = login.toUpperCase().slice(0, 3);
       setAvatarChosen(newAvatar);
     }
     if (avatarUser.text.length !== 0) {
-      const newAvatar = {...avatarChosen};
+      const newAvatar = { ...avatarChosen };
       newAvatar.text = login.toUpperCase().slice(0, 3);
       setAvatarUser(newAvatar);
     }
@@ -171,20 +172,19 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
   useEffect(() => {
     const getImagesCloud = async () => {
       try {
+        const res = await fetchClientSide(
+          `http://${process.env.HOST_IP}:4000/api/users/getImages`
+        );
 
-        const res = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/getImages`);
-
-        if (!res.ok)
-          throw new Error('fetch failed');
+        if (!res.ok) throw new Error("fetch failed");
 
         const data: ImageType[] = await res.json();
 
-        
         if (data && data.length !== 0) {
-          setCloudList(prev => [...prev, ...data]);
+          setCloudList((prev) => [...prev, ...data]);
           const newAvatars = [...avatarsList];
-          data.forEach(image => {
-            if (!newAvatars.find(avatar => avatar.image === image.imageUrl))
+          data.forEach((image) => {
+            if (!newAvatars.find((avatar) => avatar.image === image.imageUrl))
               newAvatars.push({
                 image: image.imageUrl,
                 variant: "circular",
@@ -194,19 +194,17 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
                 empty: false,
                 isChannel: false,
                 decrypt: true,
-            });
+              });
           });
 
           setAvatarsList(newAvatars);
         }
-      }
-      catch (err: any) {
+      } catch (err: any) {
         console.log(err.message);
-        if (err.message === "disconnect")
-          await disconnect();
-          router.refresh();
+        if (err.message === "disconnect") await disconnect();
+        router.refresh();
       }
-    }
+    };
 
     getImagesCloud();
   }, []);
@@ -215,47 +213,42 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
     <div className={styles.avatarFrame}>
       <div className={styles.avatarCard}>
         <div className={styles.rectangle} style={colorAddedStyle}>
-          
-          {
-            displaySettings &&
+          {displaySettings && (
             <>
-              {
-                !uploadButton &&
+              {!uploadButton && (
                 <FontAwesomeIcon
                   icon={faChevronLeft}
                   className={styles.icon}
                   onClick={() => changeAvatar("left")}
                 />
-              }
-                <AvatarProfile
-                  avatar={avatarChosen}
-                  isOwner={isOwner}
-                  onClick={toogleDisplaySettings}
-                  previewBorder={topColor.toString()}
-                  previewBackground={botColor.toString()}
-                  displaySettings={displaySettings}
-                  uploadButton={uploadButton}
-                  setuploadButton={setuploadButton}
-                  avatarsList={avatarsList}
-                  setAvatarsList={setAvatarsList}
-                  setAvatarChosen={setAvatarChosen}
-                  cloudList={cloudList}
-                  setCloudList={setCloudList}
-                  saveColorChanges={saveColorChanges}
-                />
-              {
-                !uploadButton &&
+              )}
+              <AvatarProfile
+                avatar={avatarChosen}
+                isOwner={isOwner}
+                onClick={toogleDisplaySettings}
+                previewBorder={topColor.toString()}
+                previewBackground={botColor.toString()}
+                displaySettings={displaySettings}
+                uploadButton={uploadButton}
+                setuploadButton={setuploadButton}
+                avatarsList={avatarsList}
+                setAvatarsList={setAvatarsList}
+                setAvatarChosen={setAvatarChosen}
+                cloudList={cloudList}
+                setCloudList={setCloudList}
+                saveColorChanges={saveColorChanges}
+              />
+              {!uploadButton && (
                 <FontAwesomeIcon
                   icon={faChevronRight}
                   className={styles.icon}
                   onClick={() => changeAvatar("right")}
                 />
-              }
+              )}
             </>
-          }
+          )}
 
-          {
-            !displaySettings &&
+          {!displaySettings && (
             <AvatarProfile
               avatar={avatarUser}
               isOwner={isOwner}
@@ -272,8 +265,7 @@ export default function AvatarCard({ login, isOwner, avatar, socket, avatars }: 
               setCloudList={setCloudList}
               saveColorChanges={saveColorChanges}
             />
-          }
-
+          )}
         </div>
       </div>
       <ProfileLogin name={login} isOwner={isOwner} />

@@ -7,7 +7,7 @@ import { WsException } from '@nestjs/websockets';
 // import entities
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { UsersService } from '@/users/users.service';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 
 // import Pong game logic
 import { Player } from '@transcendence/shared/types/Game.types';

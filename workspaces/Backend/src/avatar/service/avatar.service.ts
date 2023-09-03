@@ -5,8 +5,8 @@ import { ChannelService } from 'src/channels/channel.service';
 import { UsersService } from 'src/users/users.service';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
-import { AvatarDto } from './dto/Avatar.dto';
-import { UpdateUserAvatarDto } from './dto/update-user-avatar.dto';
+import { AvatarDto } from '../dto/Avatar.dto';
+import { UpdateUserAvatarDto } from '../dto/update-user-avatar.dto';
 
 @Injectable()
 export class AvatarService {
@@ -27,8 +27,7 @@ export class AvatarService {
       if (!isChannel) {
         const user = await this.usersService.getUserAvatar(id);
 
-        if (!user)
-          throw new Error('no user found');
+        if (!user) throw new Error('no user found');
 
         const avatar = user.avatar;
 
@@ -38,8 +37,7 @@ export class AvatarService {
       } else {
         const channel = await this.channelService.getChannelAvatar(id);
 
-        if (!channel)
-          throw new Error('no channel found');
+        if (!channel) throw new Error('no channel found');
 
         const avatar = channel.avatar;
 
@@ -56,7 +54,7 @@ export class AvatarService {
     req: any,
     updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-    const rep:ReturnData = {
+    const rep: ReturnData = {
       success: false,
       message: '',
     };
@@ -89,11 +87,8 @@ export class AvatarService {
     return rep;
   }
 
-  async editUserAvatar(
-    userId: number,
-    avatar: AvatarDto,
-  ) {
-    const rep:ReturnData = {
+  async editUserAvatar(userId: number, avatar: AvatarDto) {
+    const rep: ReturnData = {
       success: false,
       message: '',
     };
@@ -101,8 +96,7 @@ export class AvatarService {
     try {
       const user = await this.usersService.getUserAvatar(userId);
 
-      if (!user)
-        throw new Error('no user');
+      if (!user) throw new Error('no user');
 
       const avatarUser = user.avatar;
 
@@ -113,12 +107,10 @@ export class AvatarService {
         rep.message = 'Avatar successfully updated';
       } else {
         await this.avatarRepository.update(avatarUser.id, {
-          ...avatar
+          ...avatar,
         });
 
-        this.log(
-          `user : ${userId} avatar totally updated`,
-        );
+        this.log(`user : ${userId} avatar totally updated`);
         rep.success = true;
         rep.message = 'Avatar successfully updated';
       }
@@ -132,44 +124,50 @@ export class AvatarService {
     req: any,
     updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-	const rep:ReturnData = {
-		success: false,
-		message: '',
-	  };
-	  try {
+    const rep: ReturnData = {
+      success: false,
+      message: '',
+    };
+    try {
+      const check = await this.channelService.checkChanOpPrivilege(
+        req.user.id,
+        updateUserAvatarDto.channelId,
+      );
 
-    const check = await this.channelService.checkChanOpPrivilege(req.user.id, updateUserAvatarDto.channelId);
+      if (!check.isOk) throw new Error(rep.error);
 
-    if (!check.isOk)
-      throw new Error(rep.error);
+      const avatar: Avatar = (
+        await this.channelService.getChannelAvatar(
+          updateUserAvatarDto.channelId,
+        )
+      )?.avatar;
 
-		const avatar:Avatar = (await (this.channelService.getChannelAvatar(updateUserAvatarDto.channelId)))?.avatar;
+      if (!avatar)
+        throw new Error(
+          `error while fetching avatar of channel(id: ${updateUserAvatarDto.channelId})`,
+        );
+      avatar.borderColor = updateUserAvatarDto.borderColor;
+      avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
+      await this.avatarRepository.update(avatar.id, avatar);
 
-		if (!avatar)
-			throw new Error(`error while fetching avatar of channel(id: ${updateUserAvatarDto.channelId})`);
-		avatar.borderColor = updateUserAvatarDto.borderColor;
-		avatar.backgroundColor = updateUserAvatarDto.backgroundColor;
-		await this.avatarRepository.update(avatar.id, avatar);
+      this.log(
+        `channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
+      );
 
-		this.log(
-			`channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`,
-		  );
+      rep.success = true;
+      rep.message = `channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
+    } catch (error) {
+      rep.message = error.message;
+      rep.error = error;
+    }
 
-		rep.success = true;
-		rep.message = `channel(id: ${updateUserAvatarDto.channelId}) avatar updated by user : ${req.user.login} - border color updated: ${updateUserAvatarDto.borderColor} - background color updated: ${updateUserAvatarDto.backgroundColor}`;
-
-	} catch (error) {
-		rep.message = error.message;
-		rep.error = error;
-	}
-
-	return rep;
+    return rep;
   }
 
   public async updateAvatar(avatarId: number, avatar: Avatar) {
     await this.avatarRepository.update(avatarId, {
       ...avatar,
-    })
+    });
   }
 
   /* ~~~~~~~~~~~~~~~~~~~~~~ tools ~~~~~~~~~~~~~~~~~~~~~~ */

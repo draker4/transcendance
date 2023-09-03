@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import ChatService from "@/services/Chat.service";
 import { useEffect, useState } from "react";
 import LoadingSuspense from "../loading/LoadingSuspense";
-import Avatar_Service from "@/services/Avatar.service";
+import Avatar_Service from "@/services/service/avatar.service";
 import Channel_Service from "@/services/Channel.service";
 
 type Props = {
@@ -27,9 +27,10 @@ export default function ChannelMainFrame({
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const router = useRouter();
   const id = channelAndUsersRelation.channel.id;
-  const [relation, setRelation] = useState<ChannelUsersRelation>(channelAndUsersRelation);
+  const [relation, setRelation] = useState<ChannelUsersRelation>(
+    channelAndUsersRelation
+  );
   const [me, setMe] = useState<UserRelation>(myRelation);
-
 
   // refresh channel user relation
   const reloadData = async () => {
@@ -38,24 +39,23 @@ export default function ChannelMainFrame({
 
     try {
       const updatedRelation = await channelService.getChannelAndUsers(id);
-      updatedRelation.channel.avatar = await avatarService.getChannelAvatarById(id);
+      updatedRelation.channel.avatar =
+        await avatarService.getChannelAvatarById(id);
 
       const findStatus: UserRelation | undefined =
-      updatedRelation.usersRelation.find(
-        (relation) => relation.userId === myRelation.userId
-      );
+        updatedRelation.usersRelation.find(
+          (relation) => relation.userId === myRelation.userId
+        );
 
       if (findStatus && updatedRelation && updatedRelation.channel.avatar) {
         setMe(findStatus);
         setRelation(updatedRelation);
       }
-	  
-    } catch(e:any) {
+    } catch (e: any) {
       console.log("Error while updating channel profile : " + e.message);
       // [+] gestion de l'erreure ?
     }
-  }
-
+  };
 
   // Chat Websocket call
   useEffect(() => {
@@ -104,12 +104,7 @@ export default function ChannelMainFrame({
         channelAndUsersRelation={relation}
         myRelation={me}
       />
-      <ChannelSecondPart
-        socket={socket}
-        relation={relation}
-        myRelation={me}
-      />
+      <ChannelSecondPart socket={socket} relation={relation} myRelation={me} />
     </div>
-
   );
 }

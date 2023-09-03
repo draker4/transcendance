@@ -21,10 +21,15 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       Message,
       Channel,
       Avatar,
@@ -41,6 +46,7 @@ import { StoryService } from '@/story/service/story.service';
     ]),
   ],
   providers: [
+    AchievementService,
     MessagesService,
     ChannelService,
     UsersService,

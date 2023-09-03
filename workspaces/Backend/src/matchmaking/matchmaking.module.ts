@@ -12,7 +12,7 @@ import { GameService } from '@/game/service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { Score } from '@/utils/typeorm/Score.entity';
 import { UsersService } from '@/users/users.service';
-import { AvatarService } from '@/avatar/avatar.service';
+import { AvatarService } from '@/avatar/service/avatar.service';
 import { Channel } from '@/utils/typeorm/Channel.entity';
 import { Token } from '@/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
@@ -29,10 +29,15 @@ import { Story } from '@/utils/typeorm/Story.entity';
 import { StoryData } from '@/utils/typeorm/StoryData.entity';
 import { StoryService } from '@/story/service/story.service';
 import { StatusService } from '@/statusService/status.service';
+import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       Avatar,
       BackupCode,
       Channel,
@@ -52,6 +57,7 @@ import { StatusService } from '@/statusService/status.service';
   ],
   controllers: [MatchmakingController],
   providers: [
+    AchievementService,
     AvatarService,
     ChannelService,
     CryptoService,

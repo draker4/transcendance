@@ -15,22 +15,23 @@ type MyLeague = {
   rank: number;
   won: number;
   lost: number;
-}
+};
 
 export default function GameStats({ profile }: Props) {
   const statsService = new StatsService();
   const lobbyService = new LobbyService();
   const [stats, setStats] = useState<StatsImproved | undefined>(undefined);
-  const [myRank, setMyRank] = useState<MyLeague>({rank:0, won:0, lost:0});
-
+  const [myRank, setMyRank] = useState<MyLeague>({ rank: 0, won: 0, lost: 0 });
 
   const loadLeaderboard = async () => {
     try {
-      const rep:ReturnDataTyped<UserLeaderboard[]> = await lobbyService.getLeaderboard();
+      const rep: ReturnDataTyped<UserLeaderboard[]> =
+        await lobbyService.getLeaderboard();
 
       if (rep.success && rep.data) {
-
-        const myBoard:UserLeaderboard | undefined = rep.data.find((userBoard) => userBoard.userId === profile.id);
+        const myBoard: UserLeaderboard | undefined = rep.data.find(
+          (userBoard) => userBoard.userId === profile.id
+        );
         if (myBoard !== undefined && myBoard.rank > 0) {
           setMyRank({
             rank: myBoard.rank,
@@ -38,15 +39,13 @@ export default function GameStats({ profile }: Props) {
             lost: myBoard.lost,
           });
         }
-
-    } else {
-      throw new Error(rep.message);
+      } else {
+        throw new Error(rep.message);
+      }
+    } catch (error: any) {
+      console.log(`GameStats => loadLeaderboard error : ${error.message}`);
     }
-    
-    } catch(error:any) {
-      console.log(`GameStats => loadLeaderboard error : ${error.message}`)
-    }
-  }
+  };
 
   useEffect(() => {
     const getStats = async () => {
@@ -71,21 +70,20 @@ export default function GameStats({ profile }: Props) {
   return (
     <div className={styles.gameStats}>
       <Rank rank={myRank.rank} />
-      <Winrate winData={{
-        gameWon: myRank.won,
-        gameLost: myRank.lost,
-        global: stats.gameWon + stats.gameLost,
-      }} />
-      {/*
+      <Winrate
+        winData={{
+          gameWon: myRank.won,
+          gameLost: myRank.lost,
+          global: stats.gameWon + stats.gameLost,
+        }}
+      />
+
       <div className={styles.total}>
-          <div className={`${styles.label}`}>
-            {`global games played`}
-          </div>
-          <div className={`${styles.number}`}>
-            {`${stats.gameWon + stats.gameLost}`}
-          </div>
-       </div>
-    */}
+        <div className={`${styles.label}`}>{`global games played`}</div>
+        <div className={`${styles.number}`}>
+          {`${stats.gameWon + stats.gameLost}`}
+        </div>
+      </div>
     </div>
   );
 }

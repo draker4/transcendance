@@ -19,6 +19,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { StoryService } from '@/story/service/story.service';
 import { CreateStoryDTO } from '@/story/dto/CreateStory.dto';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Injectable()
 export class UsersService {
@@ -41,6 +42,7 @@ export class UsersService {
     private readonly cryptoService: CryptoService,
     private readonly statsService: StatsService,
     private readonly storyService: StoryService,
+    private readonly achivementService: AchievementService,
   ) {}
 
   async addUser(CreateUserDto: CreateUserDto): Promise<User> {
