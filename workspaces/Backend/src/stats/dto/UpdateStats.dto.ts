@@ -18,6 +18,10 @@ export class UpdateStatsDTO {
 
   @IsString()
   @IsNotEmpty()
+  winSide: 'Left' | 'Right';
+
+  @IsString()
+  @IsNotEmpty()
   side: 'Left' | 'Right';
 
   @IsNotEmpty()

@@ -63,9 +63,11 @@ const updateGame = (game: GameData) => {
   }
   if (statusMessage.length > 0) {
     const statusData = statusMessage.shift()!;
+    console.log("statusMessage", statusData);
     const newGameData = { ...game };
     newGameData.status = statusData.status;
     newGameData.result = statusData.result;
+    newGameData.winSide = statusData.winSide;
     newGameData.playerLeftStatus = statusData.playerLeft;
     newGameData.playerRightStatus = statusData.playerRight;
     newGameData.timer = statusData.timer;

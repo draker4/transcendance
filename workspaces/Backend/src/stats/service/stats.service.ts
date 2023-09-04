@@ -11,6 +11,7 @@ import {
   LeagueStats,
   ShortStats,
   UserLevel,
+  NextLevel,
 } from '@transcendence/shared/types/Stats.types';
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
 import { calculateXP } from '@transcendence/shared/game/calculateXP';
@@ -61,6 +62,7 @@ export class StatsService {
         stats = this.defineLeagueStats(
           stats,
           update.side,
+          update.winSide,
           update.type,
           update.score,
           update.nbRound,
@@ -70,6 +72,7 @@ export class StatsService {
         stats = this.definePartyStats(
           stats,
           update.side,
+          update.winSide,
           update.type,
           update.score,
           update.nbRound,
@@ -79,6 +82,7 @@ export class StatsService {
         stats = this.defineTrainingStats(
           stats,
           update.side,
+          update.winSide,
           update.type,
           update.score,
           update.nbRound,
@@ -92,6 +96,11 @@ export class StatsService {
       }
       if (result.win) {
         stats.playerXP += xp.total;
+        const nextLevel: NextLevel =
+          await this.experienceService.getNextLevelXp(stats.level);
+        if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
+          stats.level += 1;
+        }
       }
       return await this.statsRepository.save(stats);
     } catch (error) {
@@ -181,10 +190,19 @@ export class StatsService {
         level: stats.level,
         userXp: stats.playerXP,
         nextLevelXP: 0,
+        cumulativeXpToNext: 0,
+        progress: 0,
       };
-      userLevel.nextLevelXP = await this.experienceService.getNextLevelXp(
+      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
         userLevel.level,
       );
+      userLevel.nextLevelXP = nextLevel.nextLevelXP;
+      userLevel.cumulativeXpToNext = nextLevel.cumulativeXpToNext;
+      userLevel.progress =
+        1 -
+        (nextLevel.cumulativeXpToNext - userLevel.userXp) /
+          nextLevel.nextLevelXP;
+      userLevel.progress = Math.round(userLevel.progress * 100);
       ret.success = true;
       ret.message = 'User level found';
       ret.data = userLevel;
@@ -328,12 +346,13 @@ export class StatsService {
   private defineLeagueStats(
     stats: Stats,
     side: 'Left' | 'Right',
+    winSide: 'Left' | 'Right',
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
     result: Result,
   ): Stats {
-    if (score.leftRound > score.rightRound) {
+    if (winSide === 'Left') {
       if (side === 'Left') {
         if (type === 'Classic') stats.leagueClassicWon += 1;
         else if (type === 'Best3') stats.leagueBest3Won += 1;
@@ -381,18 +400,13 @@ export class StatsService {
   private definePartyStats(
     stats: Stats,
     side: 'Left' | 'Right',
+    winSide: 'Left' | 'Right',
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
     result: Result,
   ): Stats {
-    if (
-      score.rageQuit === 'Right' ||
-      score.disconnect === 'Right' ||
-      (score.leftRound > score.rightRound &&
-        !score.rageQuit &&
-        !score.disconnect)
-    ) {
+    if (winSide === 'Left') {
       if (side === 'Left') {
         if (type === 'Classic') stats.partyClassicWon += 1;
         else if (type === 'Best3') stats.partyBest3Won += 1;
@@ -405,13 +419,7 @@ export class StatsService {
         else if (type === 'Best5') stats.partyBest5Lost += 1;
         else if (type === 'Custom') stats.partyCustomLost += 1;
       }
-    } else if (
-      score.rageQuit === 'Left' ||
-      score.disconnect === 'Left' ||
-      (score.leftRound < score.rightRound &&
-        !score.rageQuit &&
-        !score.disconnect)
-    ) {
+    } else {
       if (side === 'Left') {
         if (type === 'Classic') stats.partyClassicLost += 1;
         else if (type === 'Best3') stats.partyBest3Lost += 1;
@@ -453,12 +461,13 @@ export class StatsService {
   private defineTrainingStats(
     stats: Stats,
     side: 'Left' | 'Right',
+    winSide: 'Left' | 'Right',
     type: 'Classic' | 'Best3' | 'Best5' | 'Custom' | 'Story',
     score: ScoreInfo,
     nbRound: number,
     result: Result,
   ) {
-    if (score.leftRound > score.rightRound) {
+    if (winSide === 'Left') {
       if (side === 'Left') {
         if (type === 'Classic') stats.trainingClassicWon += 1;
         else if (type === 'Best3') stats.trainingBest3Won += 1;

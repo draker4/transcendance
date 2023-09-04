@@ -6,6 +6,7 @@ import { calculateXP } from "@transcendence/shared/game/calculateXP";
 type Props = {
   mode: "League" | "Party" | "Training";
   side: "Left" | "Right";
+  winSide: "Left" | "Right";
   score: ScoreInfo;
   nbRound: number;
   maxPoint: 3 | 5 | 7 | 9;
@@ -13,6 +14,7 @@ type Props = {
 
 function defineXP(
   side: "Left" | "Right",
+  winSide: "Left" | "Right",
   score: ScoreInfo,
   nbRound: number
 ): Result {
@@ -24,7 +26,7 @@ function defineXP(
     pointWin: 0,
     pointLost: 0,
   };
-  if (score.leftRound > score.rightRound && side === "Left") {
+  if (winSide === "Left") {
     result.win = true;
   } else if (side === "Right") {
     result.win = true;
@@ -57,11 +59,12 @@ function DisplayItemXP({ title, item }: { title: string; item: number }) {
 export default function DisplayXP({
   mode,
   side,
+  winSide,
   score,
   nbRound,
   maxPoint,
 }: Props) {
-  const result: Result = defineXP(side, score, nbRound);
+  const result: Result = defineXP(side, winSide, score, nbRound);
 
   const xp: XP = calculateXP(result, maxPoint);
   return (

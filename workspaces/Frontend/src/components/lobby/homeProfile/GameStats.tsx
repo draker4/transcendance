@@ -31,6 +31,7 @@ export default function GameStats({ profile }: Props) {
         const ret = await statsService.getShortStats(profile.id);
         if (ret.success) {
           setStats(ret.data);
+          console.log("Stats:", ret.data);
         }
       } catch (error) {
         console.error("Error fetching stats:", error);
@@ -49,6 +50,12 @@ export default function GameStats({ profile }: Props) {
   return (
     <div className={styles.gameStats}>
       <Rank rank={stats.leagueRank} />
+      <div className={styles.leveling}>
+        <h2>{`Level: ${stats.leveling.level} `}</h2>
+
+        <p>{`Xp: ${stats.leveling.userXp} / ${stats.leveling.cumulativeXpToNext} - ${stats.leveling.progress}%`}</p>
+      </div>
+
       <Winrate
         winData={{
           gameWon: stats.gameWon,

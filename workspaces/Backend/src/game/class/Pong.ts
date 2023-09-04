@@ -150,8 +150,6 @@ export class Pong {
     if (user.id === this.gameDB.host || user.id === this.gameDB.opponent) {
       try {
         await this.joinAsPlayer(user);
-
-        // [!] bperriol
         this.statusService.add(user.id.toString(), 'in game');
         this.logger.log(
           `User ${user.id} joined ${this.gameId} as ${
@@ -318,11 +316,13 @@ export class Pong {
     const status: StatusMessage = {
       status: this.data.status,
       result: this.data.result,
+      winSide: this.data.winSide,
       playerLeft: this.data.playerLeftStatus,
       playerRight: this.data.playerRightStatus,
       timer: this.data.timer,
       pause: this.data.pause,
     };
+    console.log(status);
     this.server.to(this.gameId).emit('status', status);
   }
 
@@ -459,6 +459,7 @@ export class Pong {
         type: this.data.type,
         mode: this.data.mode,
         side: 'Left',
+        winSide: this.data.winSide,
         score: this.data.score,
         nbRound: this.data.maxRound,
         maxPoint: this.data.maxPoint,
@@ -592,15 +593,16 @@ export class Pong {
         this.stopDisconnectLoop();
         return;
       } else if (actualTime > this.data.timer.end) {
-        console.log('Disconnect');
         this.data.status = 'Finished';
         if (side === 'Left') {
           this.data.result =
             this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+          this.data.winSide = 'Right';
           this.data.score.disconnect = 'Left';
         } else if (side === 'Right') {
           this.data.result =
             this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+          this.data.winSide = 'Left';
           this.data.score.disconnect = 'Right';
         }
         this.data.sendStatus = true;
@@ -657,15 +659,16 @@ export class Pong {
   }
 
   private rageQuit(side: 'Left' | 'Right') {
-    console.log('Rage Quit');
     this.data.status = 'Finished';
     this.data.sendStatus = true;
     if (side === 'Left') {
       this.data.result = this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+      this.data.winSide = 'Right';
       this.data.score.rageQuit = 'Left';
       this.scoreService.updateRageQuit(this.gameId, 'Left');
     } else if (side === 'Right') {
       this.data.result = this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+      this.data.winSide = 'Left';
       this.data.score.rageQuit = 'Right';
       this.scoreService.updateRageQuit(this.gameId, 'Right');
     }

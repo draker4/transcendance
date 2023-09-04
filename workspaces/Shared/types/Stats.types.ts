@@ -103,6 +103,7 @@ export type StatsUpdate = {
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party" | "Training";
   side: "Left" | "Right";
+  winSide: "Left" | "Right";
   score: ScoreInfo;
   nbRound: number;
   maxPoint: 3 | 5 | 7 | 9;
@@ -129,4 +130,11 @@ export type UserLevel = {
   level: number;
   userXp: number;
   nextLevelXP: number;
+  cumulativeXpToNext: number;
+  progress: number;
+};
+
+export type NextLevel = {
+  nextLevelXP: number;
+  cumulativeXpToNext: number;
 };

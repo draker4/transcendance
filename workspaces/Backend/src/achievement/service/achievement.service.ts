@@ -166,7 +166,7 @@ export class AchievementService {
 
   private async createAchievementData(): Promise<void> {
     try {
-      const levels: CreateAchievementDataDTO[] = [
+      const achivements: CreateAchievementDataDTO[] = [
         {
           name: 'First Blood',
           description: 'Win your first game',
@@ -252,7 +252,7 @@ export class AchievementService {
           xp: 500,
         },
         {
-          name: 'lets try this',
+          name: 'Lets try this',
           description: 'Win your first training game',
           type: 'training',
           xp: 100,
@@ -264,7 +264,7 @@ export class AchievementService {
           xp: 200,
         },
         {
-          name: 'work hard play hard',
+          name: 'Work hard Play hard',
           description: 'Win 100 training games',
           type: 'training',
           xp: 500,
@@ -282,7 +282,7 @@ export class AchievementService {
           xp: 200,
         },
         {
-          name: 'only the middle',
+          name: 'Only half way there',
           description: 'Win the 5th story',
           type: 'training',
           xp: 500,
@@ -342,15 +342,15 @@ export class AchievementService {
           xp: 100,
         },
         {
-          name: 'be like Fort Knox',
+          name: 'Stronger than Fort Knox',
           description: 'Enable double authentication',
           type: 'account',
           xp: 100,
         },
       ];
 
-      for (const level of levels) {
-        await this.achievementDataRepository.save(level);
+      for (const achivement of achivements) {
+        await this.achievementDataRepository.save(achivement);
       }
     } catch (error) {
       throw new Error(error.message);

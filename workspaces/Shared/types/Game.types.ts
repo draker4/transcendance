@@ -122,6 +122,7 @@ export type GameData = {
   pause: Pause;
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
   result: "Not Finished" | "Host" | "Opponent" | "Deleted";
+  winSide: "Left" | "Right" | null;
   sendStatus: boolean;
   updateScore: boolean;
   updatePause: boolean;

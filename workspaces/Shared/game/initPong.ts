@@ -187,6 +187,7 @@ export function initPong(initData: InitData): GameData {
     },
     status: "Not Started",
     result: "Not Finished",
+    winSide: null,
     sendStatus: false,
     updateScore: false,
     updatePause: false,

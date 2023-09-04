@@ -218,6 +218,7 @@ export class TrainingService {
         type: training.type,
         mode: 'Training',
         side: training.side === 'Left' ? 'Left' : 'Right',
+        winSide: training.side === 'Left' ? 'Right' : 'Left',
         score: score,
         nbRound: training.maxRound,
         maxPoint: training.maxPoint,
