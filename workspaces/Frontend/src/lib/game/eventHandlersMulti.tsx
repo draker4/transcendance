@@ -7,6 +7,7 @@ import {
 import {
   StatusMessage,
   UpdateData,
+  ScoreMessage,
 } from "@transcendence/shared/types/Message.types";
 
 import { Socket } from "socket.io-client";
@@ -14,6 +15,7 @@ import {
   addUpdateMessage,
   addPlayerMessage,
   addStatusMessage,
+  addScoreMessage,
 } from "@/lib/game/gameLoopMulti";
 
 export const pongKeyDown = (
@@ -171,8 +173,19 @@ export const handleUpdateMessage =
       newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
       newGameData.playerRightDynamic = updateData.playerRightDynamic;
       newGameData.ball = updateData.ball;
-      newGameData.score = updateData.score;
-      newGameData.actualRound = updateData.actualRound;
+      return newGameData;
+    });
+  };
+
+export const handleScoreMessage =
+  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (scoreData: ScoreMessage) => {
+    if (!isMountedRef.current) return;
+    addScoreMessage(scoreData);
+    setGameData((prevGameData: GameData) => {
+      const newGameData = { ...prevGameData };
+      newGameData.score = scoreData.score;
+      newGameData.actualRound = scoreData.actualRound;
       return newGameData;
     });
   };

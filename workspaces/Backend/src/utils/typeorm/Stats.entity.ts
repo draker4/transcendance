@@ -35,6 +35,9 @@ export class Stats {
   @Column({ default: 1 })
   level: number;
 
+  @Column({ default: false })
+  levelUp: boolean;
+
   // League stats
 
   @Column({ default: 0 })

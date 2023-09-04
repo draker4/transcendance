@@ -1,16 +1,7 @@
-import styles from "@/styles/game/DisplayXP.module.css";
+import styles from "@/styles/game/gameEnd/DisplayXP.module.css";
 import { Result, XP } from "@transcendence/shared/types/Stats.types";
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
 import { calculateXP } from "@transcendence/shared/game/calculateXP";
-
-type Props = {
-  mode: "League" | "Party" | "Training";
-  side: "Left" | "Right";
-  winSide: "Left" | "Right";
-  score: ScoreInfo;
-  nbRound: number;
-  maxPoint: 3 | 5 | 7 | 9;
-};
 
 function defineXP(
   side: "Left" | "Right",
@@ -56,6 +47,15 @@ function DisplayItemXP({ title, item }: { title: string; item: number }) {
   );
 }
 
+type Props = {
+  mode: "League" | "Party" | "Training";
+  side: "Left" | "Right";
+  winSide: "Left" | "Right";
+  score: ScoreInfo;
+  nbRound: number;
+  maxPoint: 3 | 5 | 7 | 9;
+};
+
 export default function DisplayXP({
   mode,
   side,
@@ -65,8 +65,8 @@ export default function DisplayXP({
   maxPoint,
 }: Props) {
   const result: Result = defineXP(side, winSide, score, nbRound);
-
   const xp: XP = calculateXP(result, maxPoint);
+
   return (
     <div className={styles.displayXP}>
       <DisplayItemXP

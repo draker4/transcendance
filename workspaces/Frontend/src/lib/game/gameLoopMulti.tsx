@@ -4,6 +4,7 @@ import { GameData, Draw, Player } from "@transcendence/shared/types/Game.types";
 import {
   UpdateData,
   StatusMessage,
+  ScoreMessage,
 } from "@transcendence/shared/types/Message.types";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
@@ -17,6 +18,7 @@ const showFpsRef = false;
 const updateMessage: UpdateData[] = [];
 const playerMessage: Player[] = [];
 const statusMessage: StatusMessage[] = [];
+const scoreMessage: ScoreMessage[] = [];
 
 export const addUpdateMessage = (updateData: UpdateData) => {
   //replace the last update message
@@ -40,6 +42,13 @@ export const addStatusMessage = (statusData: StatusMessage) => {
   statusMessage.push(statusData);
 };
 
+export const addScoreMessage = (scoreData: ScoreMessage) => {
+  if (scoreMessage.length > 0) {
+    scoreMessage.pop();
+  }
+  scoreMessage.push(scoreData);
+};
+
 const updateGame = (game: GameData) => {
   if (updateMessage.length > 0) {
     const updateData = updateMessage.shift()!;
@@ -47,8 +56,6 @@ const updateGame = (game: GameData) => {
     newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
     newGameData.playerRightDynamic = updateData.playerRightDynamic;
     newGameData.ball = updateData.ball;
-    newGameData.score = updateData.score;
-    newGameData.actualRound = updateData.actualRound;
     game = newGameData;
   }
   if (playerMessage.length > 0) {
@@ -63,7 +70,6 @@ const updateGame = (game: GameData) => {
   }
   if (statusMessage.length > 0) {
     const statusData = statusMessage.shift()!;
-    console.log("statusMessage", statusData);
     const newGameData = { ...game };
     newGameData.status = statusData.status;
     newGameData.result = statusData.result;
@@ -72,6 +78,14 @@ const updateGame = (game: GameData) => {
     newGameData.playerRightStatus = statusData.playerRight;
     newGameData.timer = statusData.timer;
     newGameData.pause = statusData.pause;
+    game = newGameData;
+  }
+  if (scoreMessage.length > 0) {
+    const scoreData = scoreMessage.shift()!;
+    console.log("Score Update", scoreData);
+    const newGameData = { ...game };
+    newGameData.score = scoreData.score;
+    newGameData.actualRound = scoreData.actualRound;
     game = newGameData;
   }
   return game;

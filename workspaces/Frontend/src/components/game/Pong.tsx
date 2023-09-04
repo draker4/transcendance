@@ -18,6 +18,7 @@ import {
   handleStatusMessage,
   handleUpdateMessage,
   handlePing,
+  handleScoreMessage,
 } from "../../lib/game/eventHandlersMulti";
 import { gameLoop } from "@/lib/game/gameLoopMulti";
 import { GameData, Draw } from "@transcendence/shared/types/Game.types";
@@ -29,7 +30,7 @@ import PongHead from "../game/PongHead";
 import GameService from "@/services/Game.service";
 import LobbyService from "@/services/Lobby.service";
 import PlayerPreview from "./PlayerPreview";
-import GameEnd from "./GameEnd";
+import GameEnd from "./gameEnd/GameEnd";
 
 type Props = {
   userId: number;
@@ -86,7 +87,7 @@ export default function Pong({
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
-    
+
     return () => {
       isMountedRef.current = false;
       if (animationFrameIdRef.current !== undefined) {
@@ -120,12 +121,14 @@ export default function Pong({
     socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
     socket.on("status", handleStatusMessage(setGameData, isMountedRef));
     socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
+    socket.on("score", handleScoreMessage(setGameData, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
       socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
       socket.off("status", handleStatusMessage(setGameData, isMountedRef));
       socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
+      socket.off("score", handleScoreMessage(setGameData, isMountedRef));
     };
   }, [socket, setGameData]);
 
@@ -153,6 +156,12 @@ export default function Pong({
         clearTimeout(delayTimeout);
       };
     } else if (gameData.status === "Finished") {
+      //   if (!gameData.winSide) {
+      //     socket?.emit("updateData", gameData.id, (gameData: any) => {
+      //       setGameData(gameData.data);
+      //     }
+      //   )
+      // };
       setShowGameEnd(true);
       setShowPreview(false);
     } else {
@@ -182,7 +191,9 @@ export default function Pong({
             height={GAME_HEIGHT}
           />
         )}
-        {showGameEnd && <GameEnd gameData={gameData} isPlayer={isPlayer} />}
+        {showGameEnd && (
+          <GameEnd gameData={gameData} isPlayer={isPlayer} userId={userId} />
+        )}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />
     </div>

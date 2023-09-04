@@ -3,6 +3,7 @@ import {
   ShortStats,
   StatsImproved,
   StatsUpdate,
+  UserLevel,
 } from "@transcendence/shared/types/Stats.types";
 
 export default class StatsService {
@@ -37,10 +38,7 @@ export default class StatsService {
       rep.data = repStats.data;
       rep.success = true;
     } catch (error: any) {
-      rep.message = error.message
-        ? error.message
-        : `An unkkown error occured while getting full stats of user[${userId}]`;
-      rep.error = error;
+      throw new Error(error.message);
     }
 
     return rep;
@@ -72,10 +70,7 @@ export default class StatsService {
       rep.data = repStats.data;
       rep.success = true;
     } catch (error: any) {
-      rep.message = error.message
-        ? error.message
-        : `An unkkown error occured while getting short stats of user[${userId}]`;
-      rep.error = error;
+      throw new Error(error.message);
     }
 
     return rep;
@@ -83,8 +78,8 @@ export default class StatsService {
 
   public async getUserLevel(
     userId: number
-  ): Promise<ReturnDataTyped<StatsImproved>> {
-    const rep: ReturnDataTyped<StatsImproved> = {
+  ): Promise<ReturnDataTyped<UserLevel>> {
+    const rep: ReturnDataTyped<UserLevel> = {
       success: false,
       message: "",
     };
@@ -107,12 +102,39 @@ export default class StatsService {
       rep.data = repStats.data;
       rep.success = true;
     } catch (error: any) {
-      rep.message = error.message
-        ? error.message
-        : `An unkkown error occured while getting User Level of user[${userId}]`;
-      rep.error = error;
+      throw new Error(error.message);
     }
+    return rep;
+  }
 
+  public async getUserLevelUp(
+    userId: number
+  ): Promise<ReturnDataTyped<number>> {
+    const rep: ReturnDataTyped<number> = {
+      success: false,
+      message: "",
+    };
+
+    try {
+      const response = await fetchData(
+        this.token,
+        "stats",
+        `getUserLevelUp/${userId}`,
+        "GET"
+      );
+
+      if (!response.ok)
+        throw new Error(`fetching User Level Up of user[${userId}] impossible`);
+
+      const repStats = await response.json();
+
+      if (!repStats.success) throw new Error(repStats.messsage);
+      rep.message = repStats.message;
+      rep.data = repStats.data;
+      rep.success = true;
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
     return rep;
   }
 
@@ -120,8 +142,7 @@ export default class StatsService {
     try {
       const body = JSON.stringify(update);
       await fetchData(this.token, "stats", `update/${userId}`, "PUT", body);
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }

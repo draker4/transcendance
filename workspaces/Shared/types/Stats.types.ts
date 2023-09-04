@@ -103,7 +103,7 @@ export type StatsUpdate = {
   type: "Classic" | "Best3" | "Best5" | "Custom" | "Story";
   mode: "League" | "Party" | "Training";
   side: "Left" | "Right";
-  winSide: "Left" | "Right";
+  winSide: "Left" | "Right" | null;
   score: ScoreInfo;
   nbRound: number;
   maxPoint: 3 | 5 | 7 | 9;

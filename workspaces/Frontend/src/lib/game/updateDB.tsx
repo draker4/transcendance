@@ -69,8 +69,10 @@ export async function updateDBStats(game: GameData) {
       type: game.type,
       mode: game.mode,
       side: game.playerLeft.id === AI_ID ? "Right" : "Left",
+      winSide: game.winSide,
       score: game.score,
       nbRound: game.maxRound,
+      maxPoint: game.maxPoint,
     };
     await statsService.updateStats(
       game.playerLeft.id === AI_ID ? game.playerRight.id : game.playerLeft.id,

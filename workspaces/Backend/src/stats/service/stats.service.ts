@@ -100,6 +100,7 @@ export class StatsService {
           await this.experienceService.getNextLevelXp(stats.level);
         if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
           stats.level += 1;
+          stats.levelUp = true;
         }
       }
       return await this.statsRepository.save(stats);
@@ -125,9 +126,11 @@ export class StatsService {
       ret.message = 'Stats found';
       const leagueStats: LeagueStats[] = (await this.getAllLeagueStats()).data;
       const userLevel: UserLevel = (await this.getUserLevel(userId)).data;
+      const userStats: LeagueStats =
+        leagueStats[leagueStats.findIndex((stat) => stat.userId === userId)];
 
       const shortStats: ShortStats = {
-        leagueRank: leagueStats.findIndex((stat) => stat.userId === userId),
+        leagueRank: userStats.rank,
         leaguePoints: stats.leagueXP,
         leveling: userLevel,
         gameWon: 0,
@@ -206,6 +209,35 @@ export class StatsService {
       ret.success = true;
       ret.message = 'User level found';
       ret.data = userLevel;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
+    }
+  }
+
+  public async getUserLevelUp(userId: number): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        throw new Error('Stats not found');
+      }
+      if (!stats.levelUp) {
+        ret.success = true;
+        ret.message = 'User level not up';
+        return ret;
+      }
+      stats.levelUp = false;
+      await this.statsRepository.save(stats);
+      ret.success = true;
+      ret.message = 'User level up';
+      ret.data = stats.level;
       return ret;
     } catch (error) {
       ret.error = error;

@@ -185,7 +185,12 @@ export class LobbyService {
         };
         leaderboard.push(userLeaderboard);
       }
-      leaderboard.sort((a, b) => b.rank - a.rank);
+
+      leaderboard.sort((a, b) => {
+        if (a.rank === 0) return 1;
+        if (b.rank === 0) return -1;
+        return a.rank - b.rank;
+      });
       ret.success = true;
       ret.message = 'Leaderboard found';
       ret.data = leaderboard;

@@ -22,7 +22,7 @@ import { defineTimer } from "@transcendence/shared/game/pongUtils";
 import TrainingService from "@/services/Training.service";
 import PongSoloHead from "./PongSoloHead";
 import PlayerPreview from "@/components/game/PlayerPreview";
-import GameEnd from "@/components/game/GameEnd";
+import GameEnd from "@/components/game/gameEnd/GameEnd";
 
 type Props = {
   gameData: GameData;

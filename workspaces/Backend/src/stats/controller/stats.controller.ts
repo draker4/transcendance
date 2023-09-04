@@ -41,6 +41,12 @@ export class StatsController {
     return this.statsService.getUserLevel(userId);
   }
 
+  // 03 - api/stats/getUserLevelUp/:userId
+  @Get('getUserLevelUp/:userId')
+  async getUserLevelUp(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.getUserLevelUp(userId);
+  }
+
   // 11 - api/stats/update/:userId
   @Put('update/:userId')
   @UsePipes(new ValidationPipe({ transform: true }))

@@ -10,6 +10,7 @@ import {
   InitData,
 } from '@transcendence/shared/types/Game.types';
 import {
+  ScoreMessage,
   StatusMessage,
   UpdateData,
 } from '@transcendence/shared/types/Message.types';
@@ -322,7 +323,6 @@ export class Pong {
       timer: this.data.timer,
       pause: this.data.pause,
     };
-    console.log(status);
     this.server.to(this.gameId).emit('status', status);
   }
 
@@ -331,10 +331,16 @@ export class Pong {
       playerLeftDynamic: this.data.playerLeftDynamic,
       playerRightDynamic: this.data.playerRightDynamic,
       ball: this.data.ball,
+    };
+    this.server.to(this.gameId).emit('update', update);
+  }
+
+  private sendScore() {
+    const score: ScoreMessage = {
       score: this.data.score,
       actualRound: this.data.actualRound,
     };
-    this.server.to(this.gameId).emit('update', update);
+    this.server.to(this.gameId).emit('score', score);
   }
 
   // ---------------------------------  LOOP METHODS  --------------------------------- //
@@ -347,26 +353,27 @@ export class Pong {
     }
   }
 
-  private gameLoop() {
+  private async gameLoop() {
     const timestamp = performance.now();
     this.lastTimestamp = timestamp;
 
     if (this.data.status === 'Playing') {
       updatePong(this.data);
       this.sendUpdate();
-      if (this.data.updateScore) {
-        this.updateDBScore();
-        this.data.updateScore = false;
-      }
+    }
+    if (this.data.updateScore) {
+      this.sendScore();
+      this.updateDBScore();
+      this.data.updateScore = false;
     }
     if (this.data.sendStatus) {
       this.updateDBStatus();
-      this.sendStatus();
-      this.data.sendStatus = false;
       if (this.data.status === 'Finished') {
         this.stopGameLoop();
-        this.updateDBStats();
+        await this.updateDBStats();
       }
+      this.sendStatus();
+      this.data.sendStatus = false;
     }
     if (this.data.updatePause) {
       this.updateDBPause();
@@ -658,19 +665,20 @@ export class Pong {
     }
   }
 
-  private rageQuit(side: 'Left' | 'Right') {
+  private async rageQuit(side: 'Left' | 'Right') {
     this.data.status = 'Finished';
     this.data.sendStatus = true;
+    this.data.updateScore = true;
     if (side === 'Left') {
       this.data.result = this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
       this.data.winSide = 'Right';
       this.data.score.rageQuit = 'Left';
-      this.scoreService.updateRageQuit(this.gameId, 'Left');
+      await this.scoreService.updateRageQuit(this.gameId, 'Left');
     } else if (side === 'Right') {
       this.data.result = this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
       this.data.winSide = 'Left';
       this.data.score.rageQuit = 'Right';
-      this.scoreService.updateRageQuit(this.gameId, 'Right');
+      await this.scoreService.updateRageQuit(this.gameId, 'Right');
     }
   }
 }
