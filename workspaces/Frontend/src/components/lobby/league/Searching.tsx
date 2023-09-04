@@ -4,6 +4,7 @@ import styles from "@/styles/lobby/league/Searching.module.css";
 import MatchmakingService from "@/services/Matchmaking.service";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading/Loading";
+import { toast } from "react-toastify";
 
 export default function Searching() {
   const matchmakingService = new MatchmakingService();
@@ -16,10 +17,18 @@ export default function Searching() {
   const router = useRouter();
 
   const startMatchmake = async () => {
-    const res = await matchmakingService.startSearch(type);
-    if (res.success) {
-      setSearching(true);
-      checkSearch();
+    try {
+      const res = await matchmakingService.startSearch(type);
+      console.log("res=", res);
+      if (res.success) {
+        setSearching(true);
+        checkSearch();
+      }
+      else
+        toast.info("SOmethign went wrong, please try again!");
+    }
+    catch (error: any) {
+      toast.info("SOmethign went wrong, please try again!");
     }
   };
 

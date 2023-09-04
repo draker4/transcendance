@@ -39,12 +39,9 @@ export default async function fetchData(
 			return response;
 		}
 	} catch (error: any) {
-		// if (error.message === 'disconnect') {
-		// 	throw new Error('disconnect');
-		// 	const router = useRouter();
-		// 	await disconnect();
-		// 	router.refresh();
-		// }
+		if (error.message === 'disconnect') {
+			throw new Error('disconnect');
+		}
 		console.log(
 			`Error while fetching api: ${apiName} at url: ${url}. Error log: ${error.message}`
 		);

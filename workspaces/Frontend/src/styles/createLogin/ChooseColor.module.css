@@ -37,11 +37,11 @@
 }
 
 .cercle.selected {
-  box-shadow: 0 0 5px 4px var(--accent1);
+  box-shadow: 0 0 5px 4px var(--accent3);
 }
 
 .cercle:hover {
-  box-shadow: 0 0 5px 4px var(--accent1);
+  box-shadow: 0 0 5px 4px var(--accent3);
 }
 
 .cercle:active {
