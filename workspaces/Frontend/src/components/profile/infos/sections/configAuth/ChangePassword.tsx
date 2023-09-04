@@ -164,6 +164,7 @@ export default function ChangePassword({
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotif('Something went wrong, please try again!');
 			if (emailPassword !== initalEmailPasswordText)

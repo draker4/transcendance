@@ -19,5 +19,5 @@ export default async function GamePage({ params }: any) {
 				<GameServer gameId={gameId} />
 			</Suspense>
 		</>
-	)
+	);
 }

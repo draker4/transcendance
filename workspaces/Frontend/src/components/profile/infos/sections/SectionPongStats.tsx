@@ -98,6 +98,11 @@ export default function SectionPongStats({ profile }: Props) {
       }
       
       } catch(error:any) {
+        if (error.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.log(`SectionPongStats => loadLeaderboard error : ${error.message}`)
       }
     }

@@ -233,12 +233,12 @@ export default function AvatarProfile({
         setuploadButton(false);
 		}
 		catch (error: any) {
-			console.log(error.message);
-			if (error.message === "disconnect") {
-				await disconnect();
+      if (error.message === "disconnect") {
+        await disconnect();
 				router.refresh();
 				return ;
 			}
+      console.log(error.message);
 			toast.error("Oops, something went wrong, please try again!");
 			setLoading(false);
 		}

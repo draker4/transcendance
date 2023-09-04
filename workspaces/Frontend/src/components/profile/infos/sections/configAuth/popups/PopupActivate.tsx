@@ -71,6 +71,7 @@ export default function PopupCodeEmail({
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotifPopup('Something went wrong, please try again!');
 		}

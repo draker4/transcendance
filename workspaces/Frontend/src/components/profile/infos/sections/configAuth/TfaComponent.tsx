@@ -99,6 +99,7 @@ export default function SectionCustom({ profile }: {
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotif1('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
@@ -143,6 +144,7 @@ export default function SectionCustom({ profile }: {
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotif2('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
@@ -191,6 +193,7 @@ export default function SectionCustom({ profile }: {
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotif2('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
