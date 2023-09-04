@@ -2,7 +2,7 @@
 import AvatarProfile from "@/components/profile/avatar/Avatar";
 import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
 import SettingsCard from "@/components/profile/avatar/SettingsCard";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import styles from "@/styles/profile/AvatarCard.module.css";
 import { CSSProperties, useState } from "react";
 import { Color } from "react-color";

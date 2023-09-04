@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import ChatService from "@/services/Chat.service";
 import { useEffect, useState } from "react";
 import LoadingSuspense from "../loading/LoadingSuspense";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import Channel_Service from "@/services/Channel.service";
 
 type Props = {

@@ -23,13 +23,13 @@ export class StatsController {
     return 'Working !';
   }
 
-  // 01 - api/stats/get/:userId
+  // 01 - api/stats/getResume/:userId
   @Get('getResume/:userId')
   async getResumeStats(@Param('userId', ParseIntPipe) userId: number) {
     return this.statsService.getResumeStats(userId);
   }
 
-  // 01 - api/stats/get/:userId
+  // 01 - api/stats/getFull/:userId
   @Get('getFull/:userId')
   async getFullStats(@Param('userId', ParseIntPipe) userId: number) {
     return this.statsService.getFullStats(userId);

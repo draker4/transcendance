@@ -14,10 +14,10 @@ import {
   Req,
   Request,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from '../service/users.service';
 import { Public } from 'src/utils/decorators/public.decorator';
 import 'src/utils/extensions/stringExtension';
-import { EditUserDto } from './dto/EditUser.dto';
+import { EditUserDto } from '../dto/EditUser.dto';
 import { AvatarService } from '@/avatar/service/avatar.service';
 
 @Controller('users')

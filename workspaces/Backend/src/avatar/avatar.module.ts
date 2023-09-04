@@ -4,7 +4,7 @@ import { AvatarController } from './controller/avatar.controller';
 import { AvatarService } from './service/avatar.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { MailService } from '@/mail/mail.service';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { User } from '@/utils/typeorm/User.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';

@@ -29,7 +29,14 @@ export const DirYValues: { [key: string]: DirY } = {
 };
 
 export type Timer = {
-  reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection";
+  reason:
+    | "Start"
+    | "ReStart"
+    | "Round"
+    | "Serve"
+    | "Pause"
+    | "Deconnection"
+    | "Finished";
   end: number;
   playerName?: string;
 };

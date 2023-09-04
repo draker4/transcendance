@@ -196,7 +196,7 @@ export class AchievementService {
           xp: 200,
         },
         {
-          name: 'Seriuosly?',
+          name: 'Seriously?',
           description: 'Lose 100 games',
           type: 'game',
           xp: 500,

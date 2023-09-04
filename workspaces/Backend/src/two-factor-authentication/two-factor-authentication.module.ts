@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { TwoFactorAuthenticationService } from './service/two-factor-authentication.service';
 import { TwoFactorAuthenticationController } from './controller/two-factor-authentication.controller';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@/utils/typeorm/User.entity';
 import { Channel } from 'diagnostics_channel';

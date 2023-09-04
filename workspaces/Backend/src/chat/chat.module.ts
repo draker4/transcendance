@@ -2,7 +2,7 @@
 import { Module } from '@nestjs/common';
 import { ChatGateway } from './chat.gateway';
 import { WsJwtGuard } from './guard/wsJwt.guard';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Channel } from 'src/utils/typeorm/Channel.entity';

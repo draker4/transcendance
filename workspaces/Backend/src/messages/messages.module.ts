@@ -3,7 +3,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChannelService } from 'src/channels/channel.service';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Channel } from 'src/utils/typeorm/Channel.entity';

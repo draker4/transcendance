@@ -19,7 +19,7 @@ import { Pong } from './class/Pong';
 import { GameService } from './service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { StatsService } from '@/stats/service/stats.service';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { ColoredLogger } from './colored-logger';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';

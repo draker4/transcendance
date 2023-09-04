@@ -7,7 +7,7 @@ import { Game } from 'src/utils/typeorm/Game.entity';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
 import { GameService } from '@/game/service/game.service';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 
 import { GameInfo, Player } from '@transcendence/shared/types/Game.types';
 import { ChannelService } from '@/channels/channel.service';

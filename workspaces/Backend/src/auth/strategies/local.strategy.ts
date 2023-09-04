@@ -1,8 +1,13 @@
 /* eslint-disable prettier/prettier */
-import { BadGatewayException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 import * as bcrypt from 'bcrypt';
 import { User } from '@/utils/typeorm/User.entity';
@@ -21,7 +26,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string) {
-
     let user: User;
     let isMatch: boolean = false;
     try {
@@ -29,10 +33,9 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     } catch (error) {
       throw new BadGatewayException();
     }
-    
-    if (!user)
-      throw new NotFoundException();
-      
+
+    if (!user) throw new NotFoundException();
+
     try {
       const passDecrypted = await this.cryptoService.decrypt(password);
       isMatch = await bcrypt.compare(passDecrypted, user.passwordHashed);
@@ -40,8 +43,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new BadGatewayException();
     }
 
-    if (!isMatch)
-      throw new UnauthorizedException();
+    if (!isMatch) throw new UnauthorizedException();
 
     return user;
   }

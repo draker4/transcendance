@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AvatarService } from '../service/avatar.service';
 import { UpdateUserAvatarDto } from '../dto/update-user-avatar.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { AvatarDto } from '../dto/Avatar.dto';
 
 @Controller('avatar')

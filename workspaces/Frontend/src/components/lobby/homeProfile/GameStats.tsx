@@ -77,13 +77,6 @@ export default function GameStats({ profile }: Props) {
           global: stats.gameWon + stats.gameLost,
         }}
       />
-
-      <div className={styles.total}>
-        <div className={`${styles.label}`}>{`global games played`}</div>
-        <div className={`${styles.number}`}>
-          {`${stats.gameWon + stats.gameLost}`}
-        </div>
-      </div>
     </div>
   );
 }

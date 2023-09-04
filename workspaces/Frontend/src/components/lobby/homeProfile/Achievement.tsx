@@ -46,10 +46,11 @@ export default function achievement({ profile }: Props) {
     <div className={styles.achievement}>
       {userachievement.list.map((achievement) => (
         <div className={styles.achievementItem}>
-          <div className={styles.achievementItemTitle}>{achievement.name}</div>
-          <div className={styles.achievementItemDescription}>
+          <h3 className={styles.achievementItemTitle}>{achievement.name}</h3>
+          <p className={styles.achievementItemDescription}>
             {achievement.description}
-          </div>
+          </p>
+          <p></p>
         </div>
       ))}
     </div>

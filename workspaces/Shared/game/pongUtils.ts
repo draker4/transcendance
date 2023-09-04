@@ -21,7 +21,14 @@ export function colorRgbToHex(rgbColor: RGBA): string {
 
 export function defineTimer(
   second: number,
-  reason: "Start" | "ReStart" | "Round" | "Pause" | "Deconnection",
+  reason:
+    | "Start"
+    | "ReStart"
+    | "Round"
+    | "Serve"
+    | "Pause"
+    | "Deconnection"
+    | "Finished",
   playerName?: string
 ): Timer {
   return {

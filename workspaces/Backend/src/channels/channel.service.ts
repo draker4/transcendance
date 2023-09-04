@@ -11,7 +11,7 @@ import { Message } from '@/utils/typeorm/Message.entity';
 import { EditChannelRelationDto } from './dto/EditChannelRelation.dto';
 import { PongColors } from '@/utils/enums/PongColors.enum';
 import { Socket, Server } from 'socket.io';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { CryptoService } from '@/utils/crypto/crypto';
 
 type ChannelAndUsers = {
@@ -47,7 +47,7 @@ export class ChannelService {
   async addChannel(
     channelName: string,
     type: 'public' | 'protected' | 'private' | 'privateMsg',
-    password?: string
+    password?: string,
   ) {
     const channel = await this.getChannelByName(channelName, false);
 
@@ -59,7 +59,10 @@ export class ChannelService {
     const borderColor = colors[random1];
     const backgroundColor = colors[random2];
 
-    const text = channelName.length > 3 ? channelName.toUpperCase().slice(0, 3) : channelName.toUpperCase();
+    const text =
+      channelName.length > 3
+        ? channelName.toUpperCase().slice(0, 3)
+        : channelName.toUpperCase();
 
     const avatar = await this.avatarRepository.save({
       name: channelName,
@@ -77,7 +80,7 @@ export class ChannelService {
       name: channelName,
       avatar: avatar,
       type: type,
-      password:password,
+      password: password,
     };
     return await this.channelRepository.save(newChannel);
   }
@@ -123,7 +126,10 @@ export class ChannelService {
     });
   }
 
-  public async getChannelUsersRelations(userId: number, channelId: number): Promise<ChannelAndUsers> {
+  public async getChannelUsersRelations(
+    userId: number,
+    channelId: number,
+  ): Promise<ChannelAndUsers> {
     const channel: Channel = await this.channelRepository.findOne({
       where: { id: channelId },
       relations: ['users', 'users.avatar'],
@@ -136,16 +142,18 @@ export class ChannelService {
       });
 
     let hidePassword: boolean = true;
-    usersRelation = await Promise.all(usersRelation.map(async (relation) => {
-      if (relation.user.avatar.decrypt)
-        relation.user.avatar.image = await this.cryptoService.decrypt(relation.user.avatar.image);
-      if (relation.userId === userId && relation.isBoss)
-        hidePassword = false;
-      return relation;
-    }));
+    usersRelation = await Promise.all(
+      usersRelation.map(async (relation) => {
+        if (relation.user.avatar.decrypt)
+          relation.user.avatar.image = await this.cryptoService.decrypt(
+            relation.user.avatar.image,
+          );
+        if (relation.userId === userId && relation.isBoss) hidePassword = false;
+        return relation;
+      }),
+    );
 
-    if (hidePassword && channel && channel.password)
-      channel.password = "";
+    if (hidePassword && channel && channel.password) channel.password = '';
 
     return {
       channel: channel,
@@ -184,7 +192,7 @@ export class ChannelService {
       rep.data = relation;
     } catch (e: any) {
       this.log(`getOneChannelUserRelation error : `);
-      console.log("error (object) : ", e);
+      console.log('error (object) : ', e);
       rep.error = e;
       rep.message = e.message;
     }
@@ -205,11 +213,12 @@ export class ChannelService {
 
     try {
       if (userId === edit.userId) {
-        const repSpecial = await this.checkEditRelationSpecialCase(userId, edit);
-        if (!repSpecial.success)
-            throw new Error(repSpecial.message);
-        else
-            isSpecialCase = repSpecial.data;
+        const repSpecial = await this.checkEditRelationSpecialCase(
+          userId,
+          edit,
+        );
+        if (!repSpecial.success) throw new Error(repSpecial.message);
+        else isSpecialCase = repSpecial.data;
       } else isSpecialCase = false;
 
       const check = await this.checkChanOpPrivilege(userId, edit.channelId);
@@ -426,129 +435,132 @@ export class ChannelService {
     };
 
     try {
+      if (
+        channelInfos.newRelation.joined === undefined &&
+        channelInfos.newRelation.invited === undefined &&
+        channelInfos.newRelation.isChanOp === undefined &&
+        channelInfos.newRelation.isBoss === undefined &&
+        channelInfos.newRelation.isBanned === undefined &&
+        channelInfos.newRelation.muted === undefined
+      )
+        throw new Error('need at least one property to edit channel relation');
 
-    if (
-      channelInfos.newRelation.joined === undefined &&
-      channelInfos.newRelation.invited === undefined &&
-      channelInfos.newRelation.isChanOp === undefined &&
-      channelInfos.newRelation.isBoss === undefined &&
-      channelInfos.newRelation.isBanned === undefined &&
-      channelInfos.newRelation.muted === undefined
-    )
-      throw new Error('need at least one property to edit channel relation');
+      let relation: UserChannelRelation =
+        await this.userChannelRelation.findOne({
+          where: {
+            userId: channelInfos.userId,
+            channelId: channelInfos.channelId,
+          },
+        });
 
-    let relation: UserChannelRelation =
-      await this.userChannelRelation.findOne({
-        where: {
-          userId: channelInfos.userId,
-          channelId: channelInfos.channelId,
-        },
-      });
+      console.log('newRelation = ', channelInfos.newRelation); // checking
 
-    console.log("newRelation = ", channelInfos.newRelation); // checking
+      // If no relation found and it's an invite channel
+      if (
+        !relation &&
+        channelInfos.newRelation &&
+        channelInfos.newRelation.invited === true
+      ) {
+        this.log('channel invitation in progress'); // checking
+        // don't want a force join
+        channelInfos.newRelation.joined = false;
+        const repCreate = await this.createChannelUserRelation(channelInfos);
 
-    // If no relation found and it's an invite channel
-    if (!relation && channelInfos.newRelation && channelInfos.newRelation.invited === true) {
-      this.log("channel invitation in progress"); // checking
-      // don't want a force join
-      channelInfos.newRelation.joined = false;
-      const repCreate = await this.createChannelUserRelation(channelInfos);
+        if (!repCreate.success) throw new Error(repCreate.message);
 
-      if (!repCreate.success)
-        throw new Error(repCreate.message);
-
-    
-      relation = repCreate.data;
-    }
-
-    if (!relation)
-      throw new Error("can't find the user or the channel requested");
-
-    let somethingChanged:boolean = false;
-
-    // [+] to extract
-    if (channelInfos.newRelation.joined !== undefined) {
-      if (relation.joined !== channelInfos.newRelation.joined) {
-        somethingChanged = true;
-        relation.joined = channelInfos.newRelation.joined;
-        rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`;
+        relation = repCreate.data;
       }
-    }
 
-    if (channelInfos.newRelation.isBoss !== undefined) {
-      if (relation.isBoss !== channelInfos.newRelation.isBoss) {
-        somethingChanged = true;
-        relation.isBoss = channelInfos.newRelation.isBoss;
-        rep.message += `\nChannel Master[${chanOpId}]:put channel master to ${channelInfos.newRelation.isBoss} of user[${channelInfos.userId}]`;
+      if (!relation)
+        throw new Error("can't find the user or the channel requested");
+
+      let somethingChanged: boolean = false;
+
+      // [+] to extract
+      if (channelInfos.newRelation.joined !== undefined) {
+        if (relation.joined !== channelInfos.newRelation.joined) {
+          somethingChanged = true;
+          relation.joined = channelInfos.newRelation.joined;
+          rep.message += `\nchanOp[${chanOpId}]:put joined to ${channelInfos.newRelation.joined} of user[${channelInfos.userId}]`;
+        }
       }
-    }
 
-    if (channelInfos.newRelation.isChanOp !== undefined) {
-      if (relation.isChanOp !== channelInfos.newRelation.isChanOp) {
-        somethingChanged = true;
-        relation.isChanOp = channelInfos.newRelation.isChanOp;
-        rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.isChanOp} of user[${channelInfos.userId}]`;
+      if (channelInfos.newRelation.isBoss !== undefined) {
+        if (relation.isBoss !== channelInfos.newRelation.isBoss) {
+          somethingChanged = true;
+          relation.isBoss = channelInfos.newRelation.isBoss;
+          rep.message += `\nChannel Master[${chanOpId}]:put channel master to ${channelInfos.newRelation.isBoss} of user[${channelInfos.userId}]`;
+        }
       }
-    }
 
-    if (channelInfos.newRelation.invited !== undefined) {
-      if (relation.invited !== channelInfos.newRelation.invited) {
-        somethingChanged = true;
-        relation.invited = channelInfos.newRelation.invited;
-        rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.invited} of user[${channelInfos.userId}]`;
+      if (channelInfos.newRelation.isChanOp !== undefined) {
+        if (relation.isChanOp !== channelInfos.newRelation.isChanOp) {
+          somethingChanged = true;
+          relation.isChanOp = channelInfos.newRelation.isChanOp;
+          rep.message += `\nchanOp[${chanOpId}]:put isChanOp to ${channelInfos.newRelation.isChanOp} of user[${channelInfos.userId}]`;
+        }
       }
-    }
 
-    if (channelInfos.newRelation.isBanned !== undefined) {
-      if(relation.isBanned !== channelInfos.newRelation.isBanned) {
-        somethingChanged = true;
-        relation.isBanned = channelInfos.newRelation.isBanned;
-        rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      if (channelInfos.newRelation.invited !== undefined) {
+        if (relation.invited !== channelInfos.newRelation.invited) {
+          somethingChanged = true;
+          relation.invited = channelInfos.newRelation.invited;
+          rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.invited} of user[${channelInfos.userId}]`;
+        }
       }
-    }
 
-    if (channelInfos.newRelation.muted !== undefined) {
-      if (relation.muted !== channelInfos.newRelation.muted) {
-        somethingChanged = true;
-        relation.muted = channelInfos.newRelation.muted;
-        rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+      if (channelInfos.newRelation.isBanned !== undefined) {
+        if (relation.isBanned !== channelInfos.newRelation.isBanned) {
+          somethingChanged = true;
+          relation.isBanned = channelInfos.newRelation.isBanned;
+          rep.message += `\nchanOp[${chanOpId}]:put invited to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+        }
       }
+
+      if (channelInfos.newRelation.muted !== undefined) {
+        if (relation.muted !== channelInfos.newRelation.muted) {
+          somethingChanged = true;
+          relation.muted = channelInfos.newRelation.muted;
+          rep.message += `\nchanOp[${chanOpId}]:put muted to ${channelInfos.newRelation.isBanned} of user[${channelInfos.userId}]`;
+        }
+      }
+
+      const repDatabase: ReturnData =
+        await this.updateChannelUserRelation(relation);
+      if (!repDatabase.success)
+        throw new Error(
+          'Error occured while updating user channel relation in database : ' +
+            repDatabase.message,
+        );
+
+      if (
+        channelInfos.newRelation.muted !== undefined &&
+        channelInfos.newRelation.muted === true
+      ) {
+        setTimeout(
+          async () => {
+            await this.unMute(channelInfos);
+          },
+          10 * 60 * 1000,
+        );
+      }
+
+      if (
+        channelInfos.newRelation.invited === true &&
+        relation.joined === true
+      ) {
+        throw new Error(`User already in channel`);
+      }
+
+      if (!somethingChanged && channelInfos.newRelation.invited === true) {
+        throw new Error(`Invitation is already done`);
+      }
+
+      rep.success = true;
+    } catch (e) {
+      rep.message = e.message;
+      rep.error = e;
     }
-
-    const repDatabase: ReturnData = await this.updateChannelUserRelation(
-      relation,
-    );
-    if (!repDatabase.success)
-      throw new Error(
-        'Error occured while updating user channel relation in database : ' +
-          repDatabase.message,
-      );
-
-    if (
-      channelInfos.newRelation.muted !== undefined &&
-      channelInfos.newRelation.muted === true
-    ) {
-      setTimeout(
-        async () => {
-          await this.unMute(channelInfos);
-        },
-        10 * 60 * 1000,
-      );
-    }
-
-    if (channelInfos.newRelation.invited === true && relation.joined === true) {
-      throw new Error(`User already in channel`);
-    }
-
-    if (!somethingChanged && channelInfos.newRelation.invited === true) {
-      throw new Error(`Invitation is already done`);
-    }
-
-    rep.success = true;
-  } catch(e) {
-    rep.message = e.message;
-    rep.error = e;
-  }
     return rep;
   }
 
@@ -564,9 +576,8 @@ export class ChannelService {
       if (relation.muted) {
         relation.muted = false;
 
-        const repDatabase: ReturnData = await this.updateChannelUserRelation(
-          relation,
-        );
+        const repDatabase: ReturnData =
+          await this.updateChannelUserRelation(relation);
         if (!repDatabase.success)
           throw new Error(
             'Error occured while updating user channel relation in database : ' +
@@ -862,39 +873,44 @@ export class ChannelService {
     userId: number,
     channelId: number,
   ): Promise<UserChannelRelation> {
-    return (await this.getChannelUsersRelations(userId, channelId)).usersRelation.find(
-      (relation) => relation.userId === userId,
-    );
+    return (
+      await this.getChannelUsersRelations(userId, channelId)
+    ).usersRelation.find((relation) => relation.userId === userId);
   }
 
-  private async createChannelUserRelation(channelInfos:EditChannelRelationDto)
-  : Promise<ReturnDataTyped<UserChannelRelation>> {
-    const rep:ReturnDataTyped<UserChannelRelation> = {
+  private async createChannelUserRelation(
+    channelInfos: EditChannelRelationDto,
+  ): Promise<ReturnDataTyped<UserChannelRelation>> {
+    const rep: ReturnDataTyped<UserChannelRelation> = {
       success: false,
       message: '',
-    }
+    };
 
     try {
+      const repUpdate =
+        await this.usersService.createChannelUserRelation(channelInfos);
 
-      const repUpdate = await this.usersService.createChannelUserRelation(channelInfos);
+      if (!repUpdate.success) throw new Error(repUpdate.message);
 
-      if(!repUpdate.success)
-        throw new Error(repUpdate.message);
-
-      const repRelation = await this.getOneChannelUserRelation(channelInfos.userId, channelInfos.channelId);
+      const repRelation = await this.getOneChannelUserRelation(
+        channelInfos.userId,
+        channelInfos.channelId,
+      );
 
       if (!repRelation.success)
         throw new Error(`relation should be created but can't get it back`);
 
-      const repModify = await this.modifyRelation(repRelation.data, channelInfos.newRelation)
+      const repModify = await this.modifyRelation(
+        repRelation.data,
+        channelInfos.newRelation,
+      );
 
       if (!repModify.success)
         throw new Error(`relation was created but only with default values`);
 
       rep.data = repRelation.data;
       rep.success = true;
-
-    } catch(e) {
+    } catch (e) {
       rep.message = e.message;
       rep.error = e;
     }
@@ -902,20 +918,16 @@ export class ChannelService {
     return rep;
   }
 
-  private async modifyRelation(relation: UserChannelRelation, booleans:EditChannelRelationDto["newRelation"]) 
-  :Promise<ReturnData> {
-    if (booleans.joined !== undefined)
-      relation.joined = booleans.joined;
-    if (booleans.isBoss !== undefined)
-      relation.isBoss  = booleans.isBoss;
-    if (booleans.isChanOp !== undefined)
-      relation.isChanOp  = booleans.isChanOp;
-    if (booleans.invited !== undefined)
-      relation.invited  = booleans.invited;
-    if (booleans.muted !== undefined)
-      relation.muted  = booleans.muted;
-    if (booleans.isBanned !== undefined)
-    relation.isBanned  = booleans.isBanned;
+  private async modifyRelation(
+    relation: UserChannelRelation,
+    booleans: EditChannelRelationDto['newRelation'],
+  ): Promise<ReturnData> {
+    if (booleans.joined !== undefined) relation.joined = booleans.joined;
+    if (booleans.isBoss !== undefined) relation.isBoss = booleans.isBoss;
+    if (booleans.isChanOp !== undefined) relation.isChanOp = booleans.isChanOp;
+    if (booleans.invited !== undefined) relation.invited = booleans.invited;
+    if (booleans.muted !== undefined) relation.muted = booleans.muted;
+    if (booleans.isBanned !== undefined) relation.isBanned = booleans.isBanned;
 
     return this.updateChannelUserRelation(relation);
   }

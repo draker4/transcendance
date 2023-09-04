@@ -10,7 +10,7 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { GameService } from '@/game/service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { Score } from '@/utils/typeorm/Score.entity';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { Channel } from '@/utils/typeorm/Channel.entity';
 import { Token } from '@/utils/typeorm/Token.entity';

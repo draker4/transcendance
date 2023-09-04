@@ -4,7 +4,7 @@ import { cookies } from "next/dist/client/components/headers";
 //Import le composant pour le lobby
 import styles from "@/styles/lobby/Lobby.module.css";
 import Profile_Service from "@/services/Profile.service";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import Link from "next/link";
 import HomeClient from "./HomeClient";
 
