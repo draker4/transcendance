@@ -4,7 +4,6 @@ import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
 import Link from "next/link";
 import AvatarUser from "../../avatarUser/AvatarUser";
 import GameStats from "./GameStats";
-import { BuildTwoTone } from "@mui/icons-material";
 import { useState } from "react";
 import Achievement from "./Achievement";
 
@@ -35,7 +34,12 @@ export default function HomeProfile({ profile, avatar }: Props) {
       <button onClick={() => setShowAchievement(!showAchievement)}>
         Show achievement
       </button>
-      {showAchievement && <Achievement profile={profile} setShowAchievement={setShowAchievement} />}
+      {showAchievement && (
+        <Achievement
+          profile={profile}
+          setShowAchievement={setShowAchievement}
+        />
+      )}
     </div>
   );
 }
