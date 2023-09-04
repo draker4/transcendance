@@ -1,5 +1,5 @@
 import { cookies, headers } from "next/dist/client/components/headers";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 
 import NavbarFront from "./NavbarFront";
 import { Suspense } from "react";

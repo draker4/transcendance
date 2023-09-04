@@ -3,7 +3,7 @@ import ProfileLogin from "./ProfileLogin";
 import { CSSProperties, useEffect, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color } from "react-color";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import { Socket } from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

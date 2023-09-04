@@ -11,20 +11,25 @@ type Props = {
 export default function Rank({rank}:Props) {
 
   const getIcon = ():IconDefinition => {
-    if (!rank || rank <= 0)
+    if (!rank)
       return faSeedling;
-    if (rank === 1)
-      return faDragon;
-    else if (rank === 2)
-      return faOtter;
-    else if (rank === 3)
-      return faKiwiBird;
-    else if (rank < 6)
-      return faFishFins;
-    else if (rank < 12)
-      return faHippo;
-    else
-      return faCow;
+
+    switch (true) {
+      case rank <= 0:
+        return faSeedling;
+      case rank === 1:
+        return faDragon;
+      case rank === 2:
+        return faOtter; 
+      case rank === 3:  
+        return faKiwiBird;
+      case rank < 6:
+        return faFishFins;
+      case rank < 12:
+        return faHippo; 
+      default:
+        return faCow;
+    }
   }
 
   return (

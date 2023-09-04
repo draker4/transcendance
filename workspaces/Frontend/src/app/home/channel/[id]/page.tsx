@@ -1,7 +1,7 @@
 import ChannelMainFrame from "@/components/channel/ChannelMainFrame";
 import ErrorChannel from "@/components/channel/ErrorChannel";
 import { Refresher } from "@/components/refresher/Refresher";
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import Channel_Service from "@/services/Channel.service";
 import { CryptoService } from "@/services/Crypto.service";
 import Profile_Service from "@/services/Profile.service";

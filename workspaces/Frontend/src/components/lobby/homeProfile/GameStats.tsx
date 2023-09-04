@@ -75,15 +75,20 @@ export default function GameStats({ profile }: Props) {
           gameWon: myRank.won,
           gameLost: myRank.lost,
           global: stats.gameWon + stats.gameLost,
+          showPlaceholder: false,
         }}
       />
 
+        {/* [!][+] Devenu inutile ?
       <div className={styles.total}>
         <div className={`${styles.label}`}>{`global games played`}</div>
         <div className={`${styles.number}`}>
           {`${stats.gameWon + stats.gameLost}`}
         </div>
       </div>
+      */}
+
+
     </div>
   );
 }

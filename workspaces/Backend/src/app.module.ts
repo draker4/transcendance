@@ -79,7 +79,7 @@ import { AchievementData } from './utils/typeorm/AchievementData.entity';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: true,
+      synchronize: false,
     }),
     AchievementModule,
     AuthModule,

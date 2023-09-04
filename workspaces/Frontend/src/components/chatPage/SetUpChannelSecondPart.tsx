@@ -1,4 +1,4 @@
-import Avatar_Service from "@/services/service/avatar.service";
+import Avatar_Service from "@/services/Avatar.service";
 import Channel_Service from "@/services/Channel.service";
 import Profile_Service from "@/services/Profile.service";
 import styleMain from "@/styles/chatPage/ChatDisplay.module.css";
