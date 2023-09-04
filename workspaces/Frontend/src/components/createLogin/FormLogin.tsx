@@ -10,6 +10,8 @@ import { PongColors } from "@/lib/enums/PongColors.enum";
 import { uniqueNamesGenerator, names, Config } from "unique-names-generator";
 import { MdRefresh } from "react-icons/md";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
+import disconnect from "@/lib/disconnect/disconnect";
+import { toast } from "react-toastify";
 
 export default function FormLogin({
   avatars,
@@ -108,36 +110,46 @@ export default function FormLogin({
     e.preventDefault();
     setTextButton("Loading...");
 
-    const loginUser = e.target.login.value;
+    try {
+      const loginUser = e.target.login.value;
 
-    const loginBadWords = filterBadWords(loginUser);
+      const loginBadWords = filterBadWords(loginUser);
 
-    if (loginBadWords !== loginUser) {
-      setTextButton(textButtonInitial);
-      setNotif("What a bad word! 😱");
-      setText("");
-      return;
+      if (loginBadWords !== loginUser) {
+        setTextButton(textButtonInitial);
+        setNotif("What a bad word! 😱");
+        setText("");
+        return;
+      }
+
+      const loginChecked = checkLoginFormat(loginUser);
+      setNotif(loginChecked);
+
+      if (loginChecked.length > 0) {
+        setTextButton(textButtonInitial);
+        return;
+      }
+
+      const res: {
+        exists: string;
+        access_token: string;
+        refresh_token: string;
+      } = await handleActionServer(loginUser, avatarChosenRef.current, token);
+
+      if (res.access_token.length === 0) setTextButton(textButtonInitial);
+
+      setNotif(res.exists);
+      setAccessToken(res.access_token);
+      setRefreshToken(res.refresh_token);
     }
-
-    const loginChecked = checkLoginFormat(loginUser);
-    setNotif(loginChecked);
-
-    if (loginChecked.length > 0) {
-      setTextButton(textButtonInitial);
-      return;
+    catch (err: any) {
+      if (err.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.error('Something went wrong, please try again!')
     }
-
-    const res: {
-      exists: string;
-      access_token: string;
-      refresh_token: string;
-    } = await handleActionServer(loginUser, avatarChosenRef.current, token);
-
-    if (res.access_token.length === 0) setTextButton(textButtonInitial);
-
-    setNotif(res.exists);
-    setAccessToken(res.access_token);
-    setRefreshToken(res.refresh_token);
   };
 
   return (

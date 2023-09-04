@@ -3,6 +3,8 @@ import styles from "@/styles/profile/InfoCard.module.css";
 import { ChangeEvent, useState } from "react";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 import Profile_Service from "@/services/Profile.service";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   profile: Profile;
@@ -18,6 +20,7 @@ export default function StoryEditable({ profile }: Props) {
   const [editedStory, setEditedStory] = useState<string>(story);
   const [notif, setNotif] = useState<string>("");
   const [prof, setProf] = useState<Profile>(profile);
+  const router = useRouter();
 
   const handleClickEdit = () => {
     setEditMode(true);
@@ -54,6 +57,11 @@ export default function StoryEditable({ profile }: Props) {
           setStory(updatedProfile.story);
           setEditMode(false);
         } else {
+          if (rep.message === 'disconnect') {
+            await disconnect();
+            router.refresh();
+            return ;
+          }
           setNotif(rep.message);
           setEditMode(false);
         }

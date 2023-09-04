@@ -23,6 +23,7 @@ import {
 import TrainingService from "@/services/Training.service";
 import Demo from "@/components/demo/Demo";
 import LoadingComponent from "@/components/loading/Loading";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   profile: Profile;
@@ -66,19 +67,28 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
       ball: confirmBall(ball),
     };
 
-    //Creer la game
-    const res = await trainingService.createTraining(settings);
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Creating training...",
-      success: "Training created",
-      error: "Error creating training",
-    });
-    if (!res.success) {
-      console.log(res.message);
-      setCreatingPractice(false);
-      return;
+    try {
+      //Creer la game
+      const res = await trainingService.createTraining(settings);
+      await toast.promise(new Promise((resolve) => resolve(res)), {
+        pending: "Creating training...",
+        success: "Training created",
+        error: "Error creating training",
+      });
+      if (!res.success) {
+        console.log(res.message);
+        setCreatingPractice(false);
+        return;
+      }
+      router.push("/home/training/" + res.data);
     }
-    router.push("/home/training/" + res.data);
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+    }
   }
 
   useEffect(() => {
@@ -114,7 +124,6 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
   }, [selected]);
 
   function lunchDemo() {
-    const type = selected === "Random" ? "Custom" : selected;
     const demo: CreateDemo = {
       name: `Demo ${selected}`,
       type: selected === "Random" ? "Custom" : selected,

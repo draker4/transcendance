@@ -3,6 +3,8 @@ import { ChangeEvent, useState } from "react";
 import { checkMotto } from "@/lib/profile/edit/checkMotto";
 import { filterBadWords } from "@/lib/bad-words/filterBadWords";
 import Profile_Service from "@/services/Profile.service";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   profile: Profile;
@@ -10,6 +12,7 @@ type Props = {
 
 export default function MottoEditable({ profile }: Props) {
   const profileService = new Profile_Service();
+  const router = useRouter();
 
   const [editMode, setEditMode] = useState<boolean>(false);
   const [motto, setMotto] = useState<string>(
@@ -54,9 +57,14 @@ export default function MottoEditable({ profile }: Props) {
           setMotto(updatedProfile.motto);
           setEditMode(false);
         } else {
-			setNotif(rep.message);
-			setEditMode(false);
-		}
+          if (rep.message === 'disconnect') {
+            await disconnect();
+            router.refresh();
+            return ;
+          }
+          setNotif(rep.message);
+          setEditMode(false);
+        }
       }
     }
   };

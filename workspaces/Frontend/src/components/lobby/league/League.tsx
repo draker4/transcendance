@@ -1,27 +1,34 @@
 "use client";
 
 import styles from "@/styles/lobby/league/League.module.css";
-
 import { useEffect, useState } from "react";
 import LobbyService from "@/services/Lobby.service";
-
 import Searching from "@/components/lobby/league/Searching";
 import LobbyList from "@/components/lobby/lobbyList/LobbyList";
 import LeaderboardList from "@/components/lobby/league/leaderboardList/LeaderboardList";
 import LeaderboardPodium from "@/components/lobby/league//LeaderboardPodium";
 import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 export default function League() {
   const lobbyService = new LobbyService();
   const [leaderboardData, setLeadeboardData] = useState<
     UserLeaderboard[] | undefined
   >(undefined);
+  const router = useRouter();
+
   useEffect(() => {
     const getLeaderboard = async () => {
       try {
         const ret = await lobbyService.getLeaderboard();
         setLeadeboardData(ret.data);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.error("Error fetching leaderboard", error);
       }
     };

@@ -118,6 +118,7 @@ export default function TwoFactorAuthClient() {
 			if (err.message === 'disconnect') {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setMsg('Oops... Something went wrong! Please try again!')
 		}
@@ -179,11 +180,12 @@ export default function TwoFactorAuthClient() {
 			}
 		}
 		catch (err: any) {
-			setButtonBackText("Get my account back");
 			if (err.message === 'disconnect') {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
+			setButtonBackText("Get my account back");
 			setNotif('Oops... Something went wrong! Please try again!');
 		}
 	}

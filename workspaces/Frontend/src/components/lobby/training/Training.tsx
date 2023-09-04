@@ -13,6 +13,8 @@ import StoryTraining from "./Story/Story";
 // Other imports
 import TrainingService from "@/services/Training.service";
 import Practice from "./Practice/Practice";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   profile: Profile;
@@ -22,10 +24,18 @@ export default function Training({ profile }: Props) {
   const trainingService = new TrainingService();
   const [trainingId, setTrainingId] = useState<string>("");
   const [showDemo, setShowDemo] = useState<boolean>(false);
+  const router = useRouter();
 
   useEffect(() => {
     trainingService.isInTraining().then((ret) => {
       setTrainingId(ret.data);
+    })
+    .catch (async (err: any) => {
+      if (err.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
     });
   }, []);
 

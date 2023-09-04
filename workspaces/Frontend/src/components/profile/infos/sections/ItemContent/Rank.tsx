@@ -6,9 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 type Props = {
   rank:number;
+  leaguePoints:number;
 }
 
-export default function Rank({rank}:Props) {
+// [+] Fetch les leaguepoint correctement une fois pret
+export default function Rank({rank, leaguePoints}:Props) {
 
   const getIcon = ():IconDefinition => {
     if (!rank)
@@ -41,8 +43,14 @@ export default function Rank({rank}:Props) {
         <div className={styles.rankMedal}>
           <FontAwesomeIcon icon={getIcon()}/>
         </div>
-        <div className={styles.rankNumber} style={{fontSize: (!rank || rank <= 0) ? "1.5rem" : ""}}>
-          {(!rank || rank <= 0) ? "unranked" : rank}
+        <div className={styles.column} style={{backgroundColor : "var(--primary1)", minHeight : "80px"}}>
+          <div className={styles.rankNumber} style={{fontSize: (!rank || rank <= 0) ? "1.5rem" : ""}}>
+            {(!rank || rank <= 0) ? "unranked" : rank}
+          </div>
+          <div className={styles.row} style={{alignItems: "baseline",}}>
+            <div className={styles.leaguePoints}>{leaguePoints}</div>
+            <div className={styles.leaguePointsLabel}>LP</div>
+          </div>
         </div>
       </div>
 

@@ -40,8 +40,8 @@ export default class AchievementService {
         `annonced/${userId}/${achievementId}`,
         "PUT"
       );
-    } catch (error) {
-      console.log(`Error Getting User achievement: ${error}`);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
 }

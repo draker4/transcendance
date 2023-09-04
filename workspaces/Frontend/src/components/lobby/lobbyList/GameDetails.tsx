@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react";
 import styles from "@/styles/lobby/lobbyList/GameDetails.module.css";
-
 import ScoreService from "@/services/Score.service";
 import { ScoreInfo } from "@transcendence/shared/types/Score.types";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   scoreService: ScoreService;
@@ -14,6 +15,7 @@ type Props = {
 
 export default function GameDetails({ scoreService, gameInfo }: Props) {
   const [score, setScore] = useState<ScoreInfo | undefined>(undefined);
+  const router = useRouter();
 
   //Recupere le score de la game regulierement
   useEffect(() => {
@@ -21,8 +23,13 @@ export default function GameDetails({ scoreService, gameInfo }: Props) {
       try {
         const data = await scoreService.getScoreByGameId(gameInfo.id);
         setScore(data);
-      } catch (error) {
+      } catch (error: any) {
         setScore(undefined);
+        if (error.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.log("Error fetching score: " + error);
       }
     };

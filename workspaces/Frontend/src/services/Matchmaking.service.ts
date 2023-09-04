@@ -1,7 +1,6 @@
 import fetchData from "@/lib/fetch/fetchData";
 
 export default class MatchmakingService {
-  private searching: boolean = false;
   private token?: string;
 
   constructor(token?: string) {

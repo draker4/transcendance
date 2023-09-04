@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
 		httpOnly: true,
 		sameSite: "strict",
 		path: "/",
+		secure: false,
 	});
 
 	if (refreshToken)
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
 			httpOnly: true,
 			sameSite: "strict",
 			path: "/",
+			secure: false,
 		});
 
 	return response;

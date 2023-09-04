@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
 			httpOnly: true,
 			sameSite: "strict",
 			path: "/",
+			secure: false,
 		});
 
 		response.cookies.set({
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
 			httpOnly: true,
 			sameSite: "strict",
 			path: "/",
+			secure: false,
 		});
 
 		return response;

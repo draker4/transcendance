@@ -73,6 +73,7 @@ export default function ChooseAvatar({
         if (err.message === "disconnect")
           await disconnect();
           router.refresh();
+          return ;
       }
     }
 

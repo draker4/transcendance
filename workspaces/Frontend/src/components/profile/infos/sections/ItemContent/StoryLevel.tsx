@@ -9,9 +9,9 @@ type Props = {
 
 export default function StoryLevel({storyLevel}:Props) {
 
-/* [!][+] ITEM DISPLAY_TEST ONLY */
+/* [!][+] ITEM DISPLAY_TEST ONLY *
 storyLevel = 7;
-/* */
+* */
 
 const starRender = ():JSX.Element | JSX.Element[] => {
     const stars:JSX.Element[] = [];

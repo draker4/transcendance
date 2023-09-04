@@ -16,6 +16,23 @@ export async function middleware(req: NextRequest) {
   // console.log(url.href);
   // console.log(verifiedToken);
 
+  if (verifiedToken && req.nextUrl.pathname === "/welcome/disconnect") {
+    const response = NextResponse.redirect(new URL("/welcome/login/wrong", req.url));
+    response.cookies.set("crunchy-token", "deleted", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set("refresh-token", "deleted", {
+      httpOnly: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 0,
+    });
+    return response;
+  }
+
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
     // console.log("do nothing go to auth");
     return;

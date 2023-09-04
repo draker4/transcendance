@@ -86,6 +86,7 @@ export default function Pong({
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
+    
     return () => {
       isMountedRef.current = false;
       if (animationFrameIdRef.current !== undefined) {

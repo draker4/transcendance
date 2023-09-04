@@ -11,6 +11,8 @@ import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import Channel_Service from "@/services/Channel.service";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   icon: ReactNode;
@@ -46,6 +48,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   const [codeName, setCodename] = useState<string>("");
   const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
   const [isMuted, setIsMuted] = useState<boolean>(channel.muted);
+  const router = useRouter();
 
   useEffect(() => {
     socket?.emit( "getMessages", {id : channel.id},
@@ -84,18 +87,24 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   }, []);
 
   const checkIfMuted = async () => {
-	try {
-		const channelService = new Channel_Service(undefined);
-		const rep:ReturnDataTyped<UserRelation> = await channelService.getMyChannelRelation(channel.id);
-		
-		if (!rep.success) throw new Error(rep.message);
+    try {
+      const channelService = new Channel_Service(undefined);
+      const rep:ReturnDataTyped<UserRelation> = await channelService.getMyChannelRelation(channel.id);
+      
+      if (!rep.success) throw new Error(rep.message);
 
-		if (rep.success && rep.data) {
-			setIsMuted(rep.data.muted)
+      if (rep.success && rep.data) {
+        setIsMuted(rep.data.muted)
+      }
+    } catch(e:any) {
+      if (e.message === "disconnect") {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      console.log("ChatChannel, checkIfMuted() error : ", e.message);
+      toast.error("Something went wrong, please try again!");
     }
-	} catch(e:any) {
-		console.log("ChatChannel, checkIfMuted() error : ", e.message);
-	}
   }
 
   const handleEditRelation = (edit:EditChannelRelation) => {
@@ -180,7 +189,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
                   join: msg.join ? true : undefined,
                 });
               } else {
-                // [+] manage privmsg sending error
+                toast.error("Something went wrong, please try again!");
               }
           });
             }
@@ -200,7 +209,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
               join: msg.join ? true : undefined,
             });
           } else {
-            // [+] manage privmsg sending error
+            toast.error("Something went wrong, please try again!");
           }
       });
   } else {

@@ -2,6 +2,8 @@ import Profile_Service from "@/services/Profile.service";
 import { cookies } from "next/headers";
 import fs from "fs";
 import FormLogin from "./FormLogin";
+import Link from "next/link";
+import styles from "@/styles/chatPage/ChatPage.module.css";
 
 export default async function CreateServer() {
 
@@ -17,17 +19,22 @@ export default async function CreateServer() {
 		motto: "",
 		story: "",
 	};
-	let token: string | undefined = "";
+	let token: string | undefined = undefined;
 	let avatars: string[] = [];
 	let avatarCrypted: string | undefined = undefined;
 
 	try {
-		token = cookies().get("crunchy-token")?.value;
-		if (!token)
+		const	getToken = cookies().get("crunchy-token")?.value;
+		if (!getToken)
 			throw new Error("No token value");
+
+		token = getToken;
 
 		const profileData = new Profile_Service(token);
 		profile = await profileData.getProfileByToken();
+
+		if (profile.id === -1)
+			throw new Error('no user');
 
 		const directoryPath = "/home/workspaces/Frontend/public/images/avatars";
 		avatars = fs.readdirSync(directoryPath);
@@ -39,7 +46,15 @@ export default async function CreateServer() {
 		});
 
 	} catch (err) {
-		console.log(err);
+
+		return (
+			<div className={styles.error}>
+				<p>An error occured</p>	
+				<Link href='/welcome/disconnect' className={styles.errorLink}>
+					Return to login page
+				</Link>
+			</div>
+		);
 	}
 
   	if (profile.provider === "42")

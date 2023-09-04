@@ -2,10 +2,13 @@
 import AvatarProfile from "@/components/profile/avatar/Avatar";
 import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
 import SettingsCard from "@/components/profile/avatar/SettingsCard";
+import disconnect from "@/lib/disconnect/disconnect";
 import Avatar_Service from "@/services/Avatar.service";
 import styles from "@/styles/profile/AvatarCard.module.css";
+import { useRouter } from "next/navigation";
 import { CSSProperties, useState } from "react";
 import { Color } from "react-color";
+import { toast } from "react-toastify";
 
 type Props = {
   channelAndUsersRelation: ChannelUsersRelation;
@@ -19,7 +22,6 @@ export default function ChannelAvatarCard({
   token,
 }: Props) {
   const [displaySettings, setDisplaySettings] = useState<boolean>(false);
-  const [notif, setNotif] = useState<string>("");
   const [topColor, setTopColor] = useState<Color>(
     channelAndUsersRelation.channel.avatar.borderColor
   );
@@ -29,6 +31,7 @@ export default function ChannelAvatarCard({
   const [selectedArea, setSelectedArea] = useState<"border" | "background">(
     "border"
   );
+  const router = useRouter();
 
   const avatarService = new Avatar_Service(token);
 
@@ -58,7 +61,12 @@ export default function ChannelAvatarCard({
       channelAndUsersRelation.channel.avatar.backgroundColor =
         botColor.toString();
     } catch (e: any) {
-      setNotif("Channel Avatar ColorChanges error : " + e.message);
+      if (e.message === "disconnect") {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.error('Something went wrong, please try again!');
     }
     setDisplaySettings(false);
   };
@@ -101,7 +109,6 @@ export default function ChannelAvatarCard({
         name={channelAndUsersRelation.channel.name}
         isOwner={myRelation.isChanOp || myRelation.isBoss}
       />
-      {<p className={styles.notif}>{notif}</p>}
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

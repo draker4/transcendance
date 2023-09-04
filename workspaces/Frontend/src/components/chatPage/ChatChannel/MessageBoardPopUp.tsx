@@ -29,7 +29,7 @@ export default function MessageBoardPopUp({relNotif}:Props) {
             }
     
             const profileService = new Profile_Service(undefined);
-            const login = (await profileService.getProfileById(relNotif.edit.senderId)).login;
+            const login = (await profileService.getProfileById(relNotif.edit.senderId))?.login;
             setSenderLogin(login);
     
           } catch (e: any) {

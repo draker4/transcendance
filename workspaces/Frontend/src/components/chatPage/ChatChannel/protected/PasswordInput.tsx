@@ -1,6 +1,8 @@
+import disconnect from "@/lib/disconnect/disconnect";
 import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/chatPage/ChatChannel/PasswordInput.module.css";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, ReactNode, useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -16,6 +18,7 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
   const [editMode, setEditMode] = useState<boolean>(false);
   const [editedPassword, setEditedPassword] = useState<string>("");
   const [notif, setNotif] = useState<string>("");
+  const router = useRouter();
 
   const handleEditedPasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
     setEditedPassword(event.target.value);
@@ -42,7 +45,6 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
       const rep = await channelService.editRelation(channel.id, myself.id, newRelation.newRelation);
       console.log("verifyPassword => editRelation (API) => REP : ", rep); // checking
 
-      console.log(rep);
       if (rep.success) {
           socket?.emit("editRelation", newRelation, (repNotif:ReturnData) => {
             console.log("verifyPassword => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
@@ -52,7 +54,12 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
               setNotif(repNotif.message ? repNotif.message : "An error occured, please try again later");
             }
           });
-      } else { 
+      } else {
+        if (rep.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.log("afterVerifyPassword => error (object) : ", rep.error); // checking
         throw new Error(rep.message); 
     }

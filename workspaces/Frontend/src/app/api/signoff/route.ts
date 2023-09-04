@@ -28,24 +28,23 @@ export function GET(req: NextRequest) {
 	}
 	
 	const	response = new NextResponse;
-	
-	const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
 
 	response.cookies.set({
 		name: "crunchy-token",
-		value: "",
+		value: "deleted",
 		httpOnly: true,
 		sameSite: "strict",
-		expires: yesterday,
+		maxAge: 0,
+		secure: false,
 	});
 
 	response.cookies.set({
 		name: "refresh-token",
-		value: "",
+		value: "deleted",
 		httpOnly: true,
 		sameSite: "strict",
-		expires: yesterday,
+		maxAge: 0,
+		secure: false,
 	});
 	
 	return response;

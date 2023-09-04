@@ -18,6 +18,7 @@ import {
 } from "@transcendence/shared/game/random";
 import StorySelector from "./StorySelector";
 import LoadingComponent from "@/components/loading/Loading";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   profile: Profile;
@@ -34,50 +35,73 @@ export default function Story({ profile, trainingService }: Props) {
   const [creatingStory, setCreatingStory] = useState<boolean>(false);
 
   async function createStory() {
-    setCreatingStory(true);
-    const settings: CreateTrainingDTO = {
-      name: stories[levelSelected].name,
-      type: "Story",
-      storyLevel: levelSelected + 1,
-      player: profile.id,
-      side: "Left",
-      maxPoint: stories[levelSelected].maxPoint,
-      maxRound: stories[levelSelected].maxRound,
-      difficulty: stories[levelSelected].difficulty,
-      push: stories[levelSelected].push,
-      pause: stories[levelSelected].pause,
-      background: confirmBackground(stories[levelSelected].background),
-      ball: confirmBall(stories[levelSelected].ball),
-    };
 
-    const res = await trainingService.createTraining(settings);
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Creating training...",
-      success: "Training created",
-      error: "Error creating training",
-    });
-    if (!res.success) {
-      console.log(res.message);
-      setCreatingStory(false);
-      return;
-    }
-    router.push("/home/training/" + res.data);
-  }
-  useEffect(() => {
-    storyService.getUserStories(profile.id).then((ret) => {
-      if (ret && ret.success) {
-        setStories(ret.data);
-        setLoading(true);
-        let checkLevel: number = 0;
-        while (ret.data[checkLevel].levelCompleted) {
-          checkLevel++;
-        }
-        setCurrentLevel(checkLevel);
-      } else if (ret) {
-        console.log(ret.message);
+    try {
+      setCreatingStory(true);
+      const settings: CreateTrainingDTO = {
+        name: stories[levelSelected].name,
+        type: "Story",
+        storyLevel: levelSelected + 1,
+        player: profile.id,
+        side: "Left",
+        maxPoint: stories[levelSelected].maxPoint,
+        maxRound: stories[levelSelected].maxRound,
+        difficulty: stories[levelSelected].difficulty,
+        push: stories[levelSelected].push,
+        pause: stories[levelSelected].pause,
+        background: confirmBackground(stories[levelSelected].background),
+        ball: confirmBall(stories[levelSelected].ball),
+      };
+
+      const res = await trainingService.createTraining(settings);
+      await toast.promise(new Promise((resolve) => resolve(res)), {
+        pending: "Creating training...",
+        success: "Training created",
+        error: "Error creating training",
+      });
+      if (!res.success) {
+        console.log(res.message);
+        setCreatingStory(false);
+        return;
       }
-    });
+      router.push("/home/training/" + res.data);
+    }
+    catch (error: any) {
+      if (error.message === "disconnect") {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.error('Something went wrong, please try again!');
+    }
+  }
+
+  useEffect(() => {
+    storyService.getUserStories(profile.id)
+      .then((ret) => {
+        if (ret && ret.success) {
+          setStories(ret.data);
+          setLoading(true);
+          let checkLevel: number = 0;
+          while (ret.data[checkLevel].levelCompleted) {
+            checkLevel++;
+          }
+          setCurrentLevel(checkLevel);
+        } else if (ret) {
+          console.log(ret.message);
+          toast.error('Something went wrong, please refresh the page!');
+        }
+      })
+      .catch(async (err: any) => {
+        if (err.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
+        toast.error('Something went wrong, please refresh the page!');
+      });
   }, []);
+
   if (!loading) {
     return (
       <div className={styles.story}>
@@ -86,6 +110,7 @@ export default function Story({ profile, trainingService }: Props) {
       </div>
     );
   }
+  
   return (
     <div className={styles.story}>
       <h2>Story</h2>
@@ -108,6 +133,8 @@ export default function Story({ profile, trainingService }: Props) {
         className={styles.save}
         onClick={createStory}
         disabled={creatingStory}
+        type="button"
+        title="story button"
       >
         {!creatingStory && "Play"}
         {creatingStory && <LoadingComponent />}

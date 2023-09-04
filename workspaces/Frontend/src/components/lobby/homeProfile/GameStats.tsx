@@ -1,29 +1,20 @@
 import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
 import StatsService from "@/services/Stats.service";
 import { useState, useEffect } from "react";
-import {
-  ShortStats,
-  StatsImproved,
-} from "@transcendence/shared/types/Stats.types";
+import { ShortStats } from "@transcendence/shared/types/Stats.types";
 import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
-import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
-import LobbyService from "@/services/Lobby.service";
-import Winrate from "@/components/profile/infos/sections/ItemContent/Winrate";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
+import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
 
 type Props = {
   profile: Profile;
 };
 
-type MyLeague = {
-  rank: number;
-  won: number;
-  lost: number;
-};
-
 export default function GameStats({ profile }: Props) {
   const statsService = new StatsService();
-  const lobbyService = new LobbyService();
   const [stats, setStats] = useState<ShortStats | undefined>(undefined);
+  const router = useRouter();
 
   useEffect(() => {
     const getStats = async () => {
@@ -33,7 +24,12 @@ export default function GameStats({ profile }: Props) {
           setStats(ret.data);
           console.log("Stats:", ret.data);
         }
-      } catch (error) {
+      } catch (error: any) {
+        if (error.message === "disconnect") {
+          await disconnect();
+          router.refresh();
+          return;
+        }
         console.error("Error fetching stats:", error);
       }
     };
@@ -49,21 +45,22 @@ export default function GameStats({ profile }: Props) {
 
   return (
     <div className={styles.gameStats}>
-      <Rank rank={stats.leagueRank} />
-      <div className={styles.leveling}>
-        <h2>{`Level: ${stats.leveling.level} `}</h2>
-
-        <p>{`Xp: ${stats.leveling.userXp} / ${stats.leveling.cumulativeXpToNext} - ${stats.leveling.progress}%`}</p>
-      </div>
-
+      {/* [+] Leaguepoint a bien importer */}
+      <Rank
+        rank={stats ? stats.leagueRank : 0}
+        leaguePoints={stats ? stats.leaguePoints : 0}
+      />
+      <XPBar userLevel={stats.leveling} />
+      {/* [+] en trop
       <Winrate
         winData={{
-          gameWon: stats.gameWon,
-          gameLost: stats.gameLost,
-          global: stats.gameWon + stats.gameLost,
+          gameWon: stats ? stats.gameWon : 0,
+          gameLost: stats ? stats.gameLost : 0,
+          global: stats ? stats.gameWon + stats.gameLost : 0,
           showPlaceholder: false,
         }}
       />
+      */}
     </div>
   );
 }

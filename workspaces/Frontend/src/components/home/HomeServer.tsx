@@ -2,7 +2,7 @@
 import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
-import styles from "@/styles/lobby/Lobby.module.css";
+import styles from "@/styles/chatPage/ChatPage.module.css";
 import Profile_Service from "@/services/Profile.service";
 import Avatar_Service from "@/services/Avatar.service";
 import Link from "next/link";
@@ -35,25 +35,29 @@ export default async function HomeServer() {
 
   try {
     const getToken = cookies().get("crunchy-token")?.value;
-    if (!getToken) throw new Error("No token value");
+    if (!getToken)
+      throw new Error("No token value");
 
     token = getToken;
+
     const profileData = new Profile_Service(token);
     profile = await profileData.getProfileByToken();
-    if (profile.id === -1) throw new Error("no user");
+    if (profile.id === -1)
+      throw new Error("no user");
 
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarbyUserId(profile.id);
+
   } catch (error: any) {
     console.log(error.message);
     return (
-      <div className={styles.error}>
-        <h2>Oops... Something went wrong!</h2>
-        <Link href={"/welcome"} className={styles.errorLink}>
-          <p>Please, refresh the page</p>
-        </Link>
-      </div>
-    );
+			<div className={styles.error}>
+				<p>An error occured</p>	
+				<Link href='/welcome/disconnect' className={styles.errorLink}>
+					Return to login page
+				</Link>
+			</div>
+		);
   }
 
   return (
