@@ -25,7 +25,7 @@ export default function Lobby({ profile, socket }: Props) {
     <div className={styles.lobby}>
       <NavLobby menu={menu} setMenu={setMenu} />
       <div className={styles.content}>
-        {menu == "League" && <League />}
+        {menu == "League" && <League profile={profile} />}
         {menu == "Party" && (
           <Party
             lobbyService={lobbyService}
