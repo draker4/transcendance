@@ -40,15 +40,17 @@ export class MatchmakingService {
       message: 'Catched an error',
     };
     try {
+      console.log(userId, search);
       let matchmaking = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });
       if (!matchmaking) {
-        this.createMatchmaking({ userId: userId });
+        await this.createMatchmaking({ userId: userId });
         matchmaking = await this.matchmakingRepository.findOne({
           where: { userId: userId },
         });
       }
+
       matchmaking.searching = true;
       matchmaking.type = search.type;
       await this.matchmakingRepository.save(matchmaking);

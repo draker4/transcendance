@@ -22,7 +22,7 @@ import { Stats } from './Stats.entity';
 import { Notif } from './Notif.entity';
 import { Image } from './Image.entity';
 import { Story } from './Story.entity';
-import { Matchmaking } from './Matchmaking.entity';
+import { Achievement } from './Achievement.entity';
 
 @Entity()
 export class User {
@@ -153,9 +153,9 @@ export class User {
   @OneToMany(() => Token, (token) => token.user)
   tokens: Token[];
 
-  @OneToOne(() => Matchmaking)
+  @OneToOne(() => Achievement)
   @JoinColumn()
-  matchmaking: Matchmaking;
+  achievement: Achievement;
 
   @OneToOne(() => Stats)
   @JoinColumn()

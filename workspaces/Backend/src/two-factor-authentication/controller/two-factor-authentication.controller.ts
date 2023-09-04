@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { TwoFactorAuthenticationService } from '../service/two-factor-authentication.service';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { AuthService } from '@/auth/services/auth.service';
 import { TwoFactorAuthenticationCodeDto } from '../dto/TwoFactorAuthenticationCode.dto';
 import { VerifYCodeDto } from '../dto/VerifYCode.dto';

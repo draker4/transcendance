@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UsersController } from './controller/users.controller';
+import { UsersService } from './service/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
@@ -14,7 +14,7 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { StoryService } from '@/story/service/story.service';
@@ -30,42 +30,46 @@ import { StatusService } from '@/statusService/status.service';
 import { AchievementService } from '@/achievement/service/achievement.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      User,
-      Channel,
-      Token,
-      BackupCode,
-      SocketToken,
-      Stats,
-      Notif,
-      Avatar,
-      UserChannelRelation,
-      Image,
-      Story,
-      StoryData,
-      Matchmaking,
-      Game,
-      Score,
       Achievement,
       AchievementData,
+      Avatar,
+      BackupCode,
+      Channel,
+      ExperienceData,
+      Image,
+      Matchmaking,
+      Notif,
+      Score,
+      SocketToken,
+      Stats,
+      Story,
+      StoryData,
+      Token,
+      Game,
+      User,
+      UserChannelRelation,
     ]),
   ],
   controllers: [UsersController],
   providers: [
-    UsersService,
-    CryptoService,
-    StatsService,
+    AchievementService,
     AvatarService,
     ChannelService,
-    StoryService,
-    MatchmakingService,
+    CryptoService,
+    ExperienceService,
     GameService,
+    MatchmakingService,
     ScoreService,
+    StatsService,
     StatusService,
-    AchievementService,
+    StoryService,
+    UsersService,
   ],
   exports: [UsersService],
 })

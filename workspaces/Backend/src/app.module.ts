@@ -43,6 +43,8 @@ import { StatusModule } from './statusService/status.module';
 import { AchievementModule } from './achievement/achievement.module';
 import { Achievement } from './utils/typeorm/Achievement.entity';
 import { AchievementData } from './utils/typeorm/AchievementData.entity';
+import { ExperienceModule } from './experience/experience.module';
+import { ExperienceData } from './utils/typeorm/ExperienceData.entity';
 
 @Module({
   imports: [
@@ -62,6 +64,7 @@ import { AchievementData } from './utils/typeorm/AchievementData.entity';
         Avatar,
         BackupCode,
         Channel,
+        ExperienceData,
         Game,
         Image,
         Matchmaking,
@@ -79,13 +82,14 @@ import { AchievementData } from './utils/typeorm/AchievementData.entity';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AchievementModule,
     AuthModule,
     AvatarModule,
     ChannelModule,
     ChatModule,
+    ExperienceModule,
     GameModule,
     LobbyModule,
     MailModule,

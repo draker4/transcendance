@@ -1,5 +1,10 @@
-/* eslint-disable prettier/prettier */
-import { IsBoolean, IsHexColor, IsNotEmpty, IsString, Length } from 'class-validator';
+import {
+  IsBoolean,
+  IsHexColor,
+  IsNotEmpty,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class AvatarDto {
   @IsString()

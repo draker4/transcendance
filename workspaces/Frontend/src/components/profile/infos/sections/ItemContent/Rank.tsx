@@ -12,9 +12,6 @@ type Props = {
 // [+] Fetch les leaguepoint correctement une fois pret
 export default function Rank({rank, leaguePoints}:Props) {
 
-  // [+] ONLY TEST
-  rank=2;
-
   const getIcon = ():IconDefinition => {
     if (!rank)
       return faSeedling;
@@ -46,7 +43,7 @@ export default function Rank({rank, leaguePoints}:Props) {
         <div className={styles.rankMedal}>
           <FontAwesomeIcon icon={getIcon()}/>
         </div>
-        <div className={styles.column} style={{backgroundColor : "var(--primary1)"}}>
+        <div className={styles.column} style={{backgroundColor : "var(--primary1)", minHeight : "80px"}}>
           <div className={styles.rankNumber} style={{fontSize: (!rank || rank <= 0) ? "1.5rem" : ""}}>
             {(!rank || rank <= 0) ? "unranked" : rank}
           </div>

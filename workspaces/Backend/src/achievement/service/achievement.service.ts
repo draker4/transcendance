@@ -101,6 +101,7 @@ export class AchievementService {
       const userAchievements = await this.achievementRepository.findOne({
         where: { userId: userId },
       });
+
       if (!userAchievements) {
         ret.message = 'Achievement not found';
         return ret;
@@ -115,10 +116,17 @@ export class AchievementService {
         }),
       );
 
-      const achievementDatas: AchievementData[] =
+      let achievementDatas: AchievementData[] =
         await this.achievementDataRepository.find();
-      if (achievementDatas.length === 0) {
+
+      if (!achievementDatas || achievementDatas.length === 0) {
         await this.createAchievementData();
+        achievementDatas = await this.achievementDataRepository.find();
+
+        if (!achievementDatas || achievementDatas.length === 0) {
+          ret.message = 'Cannot create achievements';
+          return ret;
+        }
       }
 
       const fullachievement: FullAchievement[] = achievementStatus.map(
@@ -196,7 +204,7 @@ export class AchievementService {
           xp: 200,
         },
         {
-          name: 'Seriuosly?',
+          name: 'Seriously?',
           description: 'Lose 100 games',
           type: 'game',
           xp: 500,

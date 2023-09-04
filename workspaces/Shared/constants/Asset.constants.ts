@@ -54,6 +54,7 @@ export const PLAYER_COLOR: PlayerColor[] = [
 ];
 
 export const COLOR_MENU = { r: 0, g: 0, b: 0, a: 0.5 };
-export const COLOR_FONT = { r: 255, g: 255, b: 255, a: 1 };
+export const COLOR_FONT = { r: 255, g: 255, b: 255, a: 1 }; // white
+export const COLOR_FONT_DARK = { r: 0, g: 0, b: 0, a: 1 }; // black
 export const COLOR_ROUND_WON = { r: 0, g: 170, b: 40, a: 1 };
 export const COLOR_PAUSE = { r: 255, g: 0, b: 0, a: 1 };

@@ -1,7 +1,6 @@
 "use client"
 
 import { Refresher } from "@/components/refresher/Refresher";
-import LoadingComponent from "@/components/loading/Loading";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";

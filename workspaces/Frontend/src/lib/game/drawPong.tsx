@@ -21,6 +21,7 @@ import {
   COLOR_FONT,
   COLOR_ROUND_WON,
   COLOR_PAUSE,
+  COLOR_FONT_DARK,
 } from "@transcendence/shared/constants/Asset.constants";
 
 function drawPlayer(draw: Draw, player: Player, playerDynamic: PlayerDynamic) {
@@ -90,9 +91,19 @@ function drawScore(draw: Draw, score: number, posX: number, posY: number) {
 }
 
 function drawRound(draw: Draw, gameData: GameData, side: "Left" | "Right") {
-  const { r: emptyR, g: emptyG, b: emptyB, a: emptyA } = COLOR_FONT;
+  const {
+    r: emptyR,
+    g: emptyG,
+    b: emptyB,
+    a: emptyA,
+  } = gameData.background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
   const { r: wonR, g: wonG, b: wonB, a: wonA } = COLOR_ROUND_WON;
-  const { r: borderR, g: borderG, b: borderB, a: borderA } = COLOR_FONT;
+  const {
+    r: borderR,
+    g: borderG,
+    b: borderB,
+    a: borderA,
+  } = gameData.background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
 
   draw.context.fillStyle = `rgba(${wonR}, ${wonG}, ${wonB}, ${wonA})`;
   draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
@@ -119,9 +130,19 @@ function drawRound(draw: Draw, gameData: GameData, side: "Left" | "Right") {
 }
 
 function drawPause(draw: Draw, gameData: GameData, side: "Left" | "Right") {
-  const { r: emptyR, g: emptyG, b: emptyB, a: emptyA } = COLOR_FONT;
+  const {
+    r: emptyR,
+    g: emptyG,
+    b: emptyB,
+    a: emptyA,
+  } = gameData.background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
   const { r: pauseR, g: pauseG, b: pauseB, a: pauseA } = COLOR_PAUSE;
-  const { r: borderR, g: borderG, b: borderB, a: borderA } = COLOR_FONT;
+  const {
+    r: borderR,
+    g: borderG,
+    b: borderB,
+    a: borderA,
+  } = gameData.background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
 
   draw.context.fillStyle = `rgba(${pauseR}, ${pauseG}, ${pauseB}, ${pauseA})`;
   draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
@@ -149,7 +170,8 @@ function drawPause(draw: Draw, gameData: GameData, side: "Left" | "Right") {
 
 function drawScoreTable(gameData: GameData, draw: Draw) {
   // Set font
-  const { r, g, b, a } = COLOR_FONT;
+  const { r, g, b, a } =
+    gameData.background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
   draw.context.font = FONT_SCORE;
   draw.context.textAlign = "center";
@@ -234,13 +256,19 @@ function applyBlurEffect(draw: Draw) {
 //   );
 // }
 
-function drawTimer(timer: Timer, draw: Draw, round: number) {
+function drawTimer(
+  timer: Timer,
+  draw: Draw,
+  round: number,
+  background: string
+) {
   // remove 2h from the timer
   const actualTime = new Date().getTime();
 
   if (actualTime <= timer.end) {
     applyBlurEffect(draw);
-    const { r, g, b, a } = COLOR_FONT;
+    const { r, g, b, a } =
+      background === "Winter" ? COLOR_FONT_DARK : COLOR_FONT;
     draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
     draw.context.font = FONT_TIMER;
     draw.context.textAlign = "center";
@@ -258,6 +286,8 @@ function drawTimer(timer: Timer, draw: Draw, round: number) {
       reason = `Round ${round} is starting`;
     } else if (timer.reason === "Start") {
       reason = `Game is starting`;
+    } else if (timer.reason === "Serve") {
+      reason = `${timer.playerName} will serve`;
     } else if (timer.reason === "ReStart") {
       reason = `Prepare for Restart`;
     }
@@ -305,7 +335,13 @@ export function drawPong(gameData: GameData, draw: Draw) {
   if (gameData.status === "Playing") drawBall(gameData, draw);
 
   // Draw the Timer
-  if (gameData.timer) drawTimer(gameData.timer, draw, gameData.actualRound + 1);
+  if (gameData.timer)
+    drawTimer(
+      gameData.timer,
+      draw,
+      gameData.actualRound + 1,
+      gameData.background
+    );
 
   // Draw the menu
   // if (gameData.status === "Not Started") startingMenu(gameData, draw);

@@ -32,6 +32,9 @@ export class Stats {
   @Column({ default: 0 })
   playerXP: number;
 
+  @Column({ default: 1 })
+  level: number;
+
   // League stats
 
   @Column({ default: 0 })

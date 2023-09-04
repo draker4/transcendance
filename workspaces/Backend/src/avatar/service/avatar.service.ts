@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChannelService } from 'src/channels/channel.service';
-import { UsersService } from 'src/users/users.service';
+import { ChannelService } from '@/channels/service/channel.service';
+import { UsersService } from 'src/users/service/users.service';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
 import { AvatarDto } from '../dto/Avatar.dto';

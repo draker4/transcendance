@@ -5,13 +5,16 @@ import { Stats } from '@/utils/typeorm/Stats.entity';
 import { CreateStatsDTO } from '../dto/CreateStats.dto';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import {
-  ResumeStats,
   StatsImproved,
   Result,
   XP,
+  LeagueStats,
+  ShortStats,
+  UserLevel,
 } from '@transcendence/shared/types/Stats.types';
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
 import { calculateXP } from '@transcendence/shared/game/calculateXP';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Injectable()
 export class StatsService {
@@ -20,6 +23,8 @@ export class StatsService {
   constructor(
     @InjectRepository(Stats)
     private readonly statsRepository: Repository<Stats>,
+
+    private readonly experienceService: ExperienceService,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -94,7 +99,7 @@ export class StatsService {
     }
   }
 
-  public async getResumeStats(userId: number): Promise<ReturnData> {
+  public async getShortStats(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -109,10 +114,13 @@ export class StatsService {
       }
       ret.success = true;
       ret.message = 'Stats found';
-      const resumeStats: ResumeStats = {
-        userId: stats.userId,
-        leagueXp: stats.leagueXP,
-        playerXp: stats.playerXP,
+      const leagueStats: LeagueStats[] = (await this.getAllLeagueStats()).data;
+      const userLevel: UserLevel = (await this.getUserLevel(userId)).data;
+
+      const shortStats: ShortStats = {
+        leagueRank: leagueStats.findIndex((stat) => stat.userId === userId),
+        leaguePoints: stats.leagueXP,
+        leveling: userLevel,
         gameWon: 0,
         gameLost: 0,
         leagueWon:
@@ -144,13 +152,11 @@ export class StatsService {
           stats.trainingCustomLost +
           stats.trainingStoryLost,
       };
-      resumeStats.gameWon =
-        resumeStats.leagueWon + resumeStats.partyWon + resumeStats.trainingWon;
-      resumeStats.gameLost =
-        resumeStats.leagueLost +
-        resumeStats.partyLost +
-        resumeStats.trainingLost;
-      ret.data = resumeStats;
+      shortStats.gameWon =
+        shortStats.leagueWon + shortStats.partyWon + shortStats.trainingWon;
+      shortStats.gameLost =
+        shortStats.leagueLost + shortStats.partyLost + shortStats.trainingLost;
+      ret.data = shortStats;
       return ret;
     } catch (error) {
       ret.error = error;
@@ -158,7 +164,38 @@ export class StatsService {
     }
   }
 
-  public async getAllResumeStats(): Promise<ReturnData> {
+  public async getUserLevel(userId: number): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        ret.message = 'Stats not found';
+        return ret;
+      }
+      const userLevel: UserLevel = {
+        level: stats.level,
+        userXp: stats.playerXP,
+        nextLevelXP: 0,
+      };
+      userLevel.nextLevelXP = await this.experienceService.getNextLevelXp(
+        userLevel.level,
+      );
+      ret.success = true;
+      ret.message = 'User level found';
+      ret.data = userLevel;
+      return ret;
+    } catch (error) {
+      ret.error = error;
+      return ret;
+    }
+  }
+
+  public async getAllLeagueStats(): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -171,52 +208,36 @@ export class StatsService {
       }
       ret.success = true;
       ret.message = 'Stats found';
-      const resumeStats: ResumeStats[] = [];
+      const leagueStats: LeagueStats[] = [];
       for (const stat of stats) {
-        const resumeStat: ResumeStats = {
+        const leagueStat: LeagueStats = {
           userId: stat.userId,
-          leagueXp: stat.leagueXP,
-          playerXp: stat.playerXP,
-          gameWon: 0,
-          gameLost: 0,
+          rank: 0,
+          leaguePoints: stat.leagueXP,
           leagueWon:
             stat.leagueClassicWon + stat.leagueBest3Won + stat.leagueBest5Won,
           leagueLost:
             stat.leagueClassicLost +
             stat.leagueBest3Lost +
             stat.leagueBest5Lost,
-          partyWon:
-            stat.partyClassicWon +
-            stat.partyBest3Won +
-            stat.partyBest5Won +
-            stat.partyCustomWon,
-          partyLost:
-            stat.partyClassicLost +
-            stat.partyBest3Lost +
-            stat.partyBest5Lost +
-            stat.partyCustomLost,
-          trainingWon:
-            stat.trainingClassicWon +
-            stat.trainingBest3Won +
-            stat.trainingBest5Won +
-            stat.trainingCustomWon +
-            stat.trainingStoryWon,
-          trainingLost:
-            stat.trainingClassicLost +
-            stat.trainingBest3Lost +
-            stat.trainingBest5Lost +
-            stat.trainingCustomLost +
-            stat.trainingStoryLost,
         };
-        resumeStat.gameWon =
-          resumeStat.leagueWon + resumeStat.partyWon + resumeStat.trainingWon;
-        resumeStat.gameLost =
-          resumeStat.leagueLost +
-          resumeStat.partyLost +
-          resumeStat.trainingLost;
-        resumeStats.push(resumeStat);
+        leagueStats.push(leagueStat);
       }
-      ret.data = resumeStats;
+      ret.data = leagueStats;
+      leagueStats.sort((a, b) => (a.leaguePoints > b.leaguePoints ? -1 : 1));
+      for (let i = 0; i < leagueStats.length; i++) {
+        leagueStats[i].rank = i + 1;
+        if (
+          i > 0 &&
+          leagueStats[i].leaguePoints === leagueStats[i - 1].leaguePoints
+        ) {
+          leagueStats[i].rank = leagueStats[i - 1].rank;
+        }
+        if (leagueStats[i].leaguePoints === 0) {
+          leagueStats[i].rank = 0;
+        }
+      }
+
       return ret;
     } catch (error) {
       ret.error = error;

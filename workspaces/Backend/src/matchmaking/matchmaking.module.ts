@@ -11,14 +11,14 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { GameService } from '@/game/service/game.service';
 import { ScoreService } from '@/score/service/score.service';
 import { Score } from '@/utils/typeorm/Score.entity';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { Channel } from '@/utils/typeorm/Channel.entity';
 import { Token } from '@/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { StatsService } from '@/stats/service/stats.service';
@@ -32,6 +32,8 @@ import { StatusService } from '@/statusService/status.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceService } from '@/experience/service/experience.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 
 @Module({
   imports: [
@@ -41,6 +43,7 @@ import { AchievementService } from '@/achievement/service/achievement.service';
       Avatar,
       BackupCode,
       Channel,
+      ExperienceData,
       Game,
       Matchmaking,
       Score,
@@ -61,6 +64,7 @@ import { AchievementService } from '@/achievement/service/achievement.service';
     AvatarService,
     ChannelService,
     CryptoService,
+    ExperienceService,
     GameService,
     MatchmakingService,
     ScoreService,

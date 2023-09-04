@@ -2,8 +2,8 @@
 
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ChannelService } from 'src/channels/channel.service';
-import { UsersService } from 'src/users/users.service';
+import { ChannelService } from '@/channels/service/channel.service';
+import { UsersService } from 'src/users/service/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
@@ -24,35 +24,39 @@ import { StoryService } from '@/story/service/story.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceService } from '@/experience/service/experience.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Achievement,
       AchievementData,
-      Message,
-      Channel,
       Avatar,
-      User,
-      UserChannelRelation,
-      Token,
       BackupCode,
-      SocketToken,
-      Stats,
+      Channel,
+      ExperienceData,
+      Message,
       Notif,
       Image,
+      SocketToken,
+      Stats,
       Story,
       StoryData,
+      Token,
+      User,
+      UserChannelRelation,
     ]),
   ],
   providers: [
     AchievementService,
-    MessagesService,
     ChannelService,
-    UsersService,
     CryptoService,
+    ExperienceService,
+    MessagesService,
     StatsService,
     StoryService,
+    UsersService,
   ],
 })
 export class MessageModule {}

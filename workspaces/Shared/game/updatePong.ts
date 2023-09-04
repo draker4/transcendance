@@ -8,6 +8,7 @@ import { GameData } from "@transcendence/shared/types/Game.types";
 import {
   AI_ID,
   TIMER_ROUND,
+  TIMER_SERVE,
 } from "@transcendence/shared/constants/Game.constants";
 import { defineTimer } from "./pongUtils";
 
@@ -18,9 +19,20 @@ function resetTurn(winner: "Left" | "Right", gameData: GameData) {
   const actualRound = gameData.actualRound;
   if (winner === "Left") {
     gameData.score.round[actualRound].left++;
+    gameData.timer = defineTimer(
+      TIMER_SERVE,
+      "Serve",
+      gameData.playerRight.name
+    );
   } else if (winner === "Right") {
     gameData.score.round[actualRound].right++;
+    gameData.timer = defineTimer(
+      TIMER_SERVE,
+      "Serve",
+      gameData.playerLeft.name
+    );
   }
+  gameData.sendStatus = true;
   gameData.updateScore = true;
 }
 
@@ -49,6 +61,7 @@ function handleRound(gameData: GameData) {
         if (gameData.playerLeft.host) gameData.result = "Opponent";
         else gameData.result = "Host";
       }
+      gameData.timer = defineTimer(0, "Finished");
     } else {
       gameData.actualRound++;
       gameData.playerLeftDynamic.speed++;

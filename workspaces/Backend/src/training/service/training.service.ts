@@ -7,7 +7,7 @@ import { Score } from '@/utils/typeorm/Score.entity';
 
 import { ScoreService } from '@/score/service/score.service';
 import { CryptoService } from '@/utils/crypto/crypto';
-import { UsersService } from '@/users/users.service';
+import { UsersService } from '@/users/service/users.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { StatsService } from '@/stats/service/stats.service';
 

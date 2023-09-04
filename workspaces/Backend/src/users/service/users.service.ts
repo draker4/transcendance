@@ -3,12 +3,12 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Repository } from 'typeorm';
-import { CreateUserDto } from './dto/CreateUser.dto';
+import { CreateUserDto } from '../dto/CreateUser.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
-import { EditUserDto } from './dto/EditUser.dto';
-import { repDto } from './dto/rep.dto';
+import { EditUserDto } from '../dto/EditUser.dto';
+import { repDto } from '../dto/rep.dto';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import * as bcrypt from 'bcrypt';
@@ -18,7 +18,6 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
 import { Image } from '@/utils/typeorm/Image.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { StoryService } from '@/story/service/story.service';
-import { CreateStoryDTO } from '@/story/dto/CreateStory.dto';
 import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Injectable()
@@ -42,40 +41,52 @@ export class UsersService {
     private readonly cryptoService: CryptoService,
     private readonly statsService: StatsService,
     private readonly storyService: StoryService,
-    private readonly achivementService: AchievementService,
+    private readonly achievementService: AchievementService,
   ) {}
 
   async addUser(CreateUserDto: CreateUserDto): Promise<User> {
-    const user = await this.userRepository.save(CreateUserDto);
+    try {
+      const user = await this.userRepository.save(CreateUserDto);
 
-    const stats = await this.statsService.createStats({
-      userId: user.id,
-    });
-    await this.userRepository
-      .createQueryBuilder()
-      .relation(User, 'stats')
-      .of(user.id)
-      .set(stats);
+      const achievement = await this.achievementService.createAchievement({
+        userId: user.id,
+      });
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'achievement')
+        .of(user.id)
+        .set(achievement);
 
-    const notif = await this.notifRepository.save(new Notif());
-    await this.userRepository
-      .createQueryBuilder()
-      .relation(User, 'notif')
-      .of(user.id)
-      .set(notif);
+      const stats = await this.statsService.createStats({
+        userId: user.id,
+      });
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'stats')
+        .of(user.id)
+        .set(stats);
 
-    const newStory: CreateStoryDTO = {
-      userId: user.id,
-    };
+      const notif = await this.notifRepository.save(new Notif());
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'notif')
+        .of(user.id)
+        .set(notif);
 
-    const story = await this.storyService.createStory(newStory);
-    await this.userRepository
-      .createQueryBuilder()
-      .relation(User, 'trainingStory')
-      .of(user.id)
-      .set(story);
+      const story = await this.storyService.createStory({
+        userId: user.id,
+      });
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'trainingStory')
+        .of(user.id)
+        .set(story);
 
-    return user;
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new BadRequestException();
+    }
   }
 
   async saveUserEntity(user: User): Promise<User> {

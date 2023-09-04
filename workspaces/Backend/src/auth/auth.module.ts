@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { JwtModule } from '@nestjs/jwt';
@@ -17,7 +17,7 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
-import { ChannelService } from 'src/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { AuthService } from './services/auth.service';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
@@ -39,6 +39,8 @@ import { Score } from '@/utils/typeorm/Score.entity';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceService } from '@/experience/service/experience.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 
 @Module({
   imports: [
@@ -46,21 +48,22 @@ import { AchievementService } from '@/achievement/service/achievement.service';
     TypeOrmModule.forFeature([
       Achievement,
       AchievementData,
-      User,
       Avatar,
-      Channel,
-      Token,
-      UserChannelRelation,
       BackupCode,
+      Channel,
+      ExperienceData,
+      Game,
+      Image,
+      Matchmaking,
+      Notif,
+      Score,
       SocketToken,
       Stats,
-      Notif,
-      Image,
       Story,
       StoryData,
-      Matchmaking,
-      Game,
-      Score,
+      Token,
+      User,
+      UserChannelRelation,
     ]),
     JwtModule,
     MailModule,
@@ -69,20 +72,21 @@ import { AchievementService } from '@/achievement/service/achievement.service';
   providers: [
     AchievementService,
     AuthService,
-    UsersService,
     AvatarService,
     ChannelService,
+    CryptoService,
+    ExperienceService,
+    GameService,
+    GoogleStrategy,
     JwtStrategy,
     JwtRefreshStrategy,
-    GoogleStrategy,
     LocalStrategy,
-    CryptoService,
+    MatchmakingService,
     StatsService,
     StoryService,
-    GameService,
-    MatchmakingService,
     ScoreService,
     StatusService,
+    UsersService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

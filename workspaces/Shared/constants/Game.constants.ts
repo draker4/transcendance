@@ -28,7 +28,8 @@ export const BACK_FPS = 1000 / 30;
 
 export const BLUR_INTENSITY = 100;
 
-export const TIMER_ROUND = 3;
+export const TIMER_ROUND = 5;
+export const TIMER_SERVE = 3;
 export const TIMER_START = 5;
 export const TIMER_RESTART = 5;
 export const TIMER_PAUSE = 15;

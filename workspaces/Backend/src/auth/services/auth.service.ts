@@ -6,7 +6,7 @@ import dataAPI42 from 'src/utils/interfaces/dataAPI42.interface';
 import { MailService } from 'src/mail/mail.service';
 import { User } from 'src/utils/typeorm/User.entity';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/service/users.service';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { AvatarService } from 'src/avatar/service/avatar.service';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';

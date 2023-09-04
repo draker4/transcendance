@@ -201,6 +201,7 @@ export default function UploadButton({
 					className={styles.upload}
 					style={{border: isFocused ? "4px solid var(--accent3)" : "4px solid var(--accent1)"}}
 				>
+					<label htmlFor="fileImage" hidden></label>
 					<input
 						type="file"
 						name=""
@@ -209,6 +210,8 @@ export default function UploadButton({
 						multiple={false}
 						accept=".png, .jpg, .jpeg, .webp"
 						hidden
+						title="choose a file"
+						placeholder="choose a file"
 						ref={fileInputRef}
 						onChange={handleOnChange}
 					/>
