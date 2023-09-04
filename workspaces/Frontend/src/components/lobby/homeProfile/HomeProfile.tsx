@@ -35,7 +35,7 @@ export default function HomeProfile({ profile, avatar }: Props) {
       <button onClick={() => setShowAchievement(!showAchievement)}>
         Show achievement
       </button>
-      {showAchievement && <Achievement profile={profile} />}
+      {showAchievement && <Achievement profile={profile} setShowAchievement={setShowAchievement} />}
     </div>
   );
 }

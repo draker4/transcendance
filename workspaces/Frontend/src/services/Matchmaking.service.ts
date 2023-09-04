@@ -10,29 +10,44 @@ export default class MatchmakingService {
 
   //Mets le joueur dans la file d'attente
   public async startSearch(type: "Classic" | "Best3" | "Best5"): Promise<any> {
-    const body = JSON.stringify({ type });
-    const response = await fetchData(
-      this.token,
-      "matchmaking",
-      "start",
-      "PUT",
-      body
-    );
-    const data = await response.json();
-    return data;
+    try {
+      const body = JSON.stringify({ type });
+      const response = await fetchData(
+        this.token,
+        "matchmaking",
+        "start",
+        "PUT",
+        body
+      );
+      const data = await response.json();
+      return data;
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   //Sors le joueur de la file d'attente
   public async stopSearch(): Promise<any> {
-    const response = await fetchData(this.token, "matchmaking", "stop", "PuT");
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetchData(this.token, "matchmaking", "stop", "PUT");
+      const data = await response.json();
+      return data;
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   //Demande si le joueur à trouvé une game
   public async checkSearch(): Promise<any> {
-    const response = await fetchData(this.token, "matchmaking", "check", "GET");
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetchData(this.token, "matchmaking", "check", "GET");
+      const data = await response.json();
+      return data;
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }

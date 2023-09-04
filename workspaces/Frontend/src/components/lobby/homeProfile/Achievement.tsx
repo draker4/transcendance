@@ -2,32 +2,43 @@
 
 import AchievementService from "@/services/Achievement.service";
 import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import LoadingComponent from "@/components/loading/Loading";
+import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   profile: Profile;
+  setShowAchievement: Dispatch<SetStateAction<boolean>>
+
 };
 
-export default function achievement({ profile }: Props) {
+export default function achievement({ profile, setShowAchievement }: Props) {
   const achievementService = new AchievementService();
   const [userachievement, setUserachievement] = useState<
     UserAchievement | undefined
   >(undefined);
+  const router = useRouter();
 
   useEffect(() => {
     const getachievement = async () => {
       try {
         const ret = await achievementService.getUserAchievement(profile.id);
-        console.log("ret", ret);
-        if (ret.success) {
+        if (ret.success)
           setUserachievement(ret.data);
-        } else {
-          console.log("Error fetching achievement:", ret);
+        else
+          throw new Error('get achievement failed');
+      } catch (error:any) {
+        if (error.message === "disconnect") {
+          await disconnect();
+          router.refresh();
+          return ;
         }
-      } catch (error) {
-        console.error("Error fetching achievement:", error);
+        console.error("Error fetching achievement:", error.message);
+        toast.error("Something went wrong, please try again!");
+        setShowAchievement(false);
       }
     };
 

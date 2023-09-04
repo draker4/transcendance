@@ -161,7 +161,12 @@ export default function FormLogin({
             className={styles.login}
             id="inputId"
           />
-          <button className={styles.randomBtn} onClick={generateRandomName}>
+          <button
+            className={styles.randomBtn}
+            onClick={generateRandomName}
+            type="button"
+            title="random login"
+          >
             <MdRefresh />
           </button>
         </div>
@@ -185,6 +190,7 @@ export default function FormLogin({
 
         <button
           title="Create avatar"
+          type="submit"
           className={styles.confirmBtn}
           disabled={textButton !== textButtonInitial}
         >

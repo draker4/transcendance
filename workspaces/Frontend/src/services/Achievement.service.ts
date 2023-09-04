@@ -18,7 +18,9 @@ export default class AchievementService {
       );
       const data: ReturnData = await response.json();
       return data;
-    } catch (error) {
+    } catch (error: any) {
+      if (error.message === 'disconnect')
+        throw new Error('disconnect');
       console.log(`Error Getting User achievement: ${error}`);
       return {
         success: false,
