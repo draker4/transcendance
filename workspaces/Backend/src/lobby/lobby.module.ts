@@ -17,7 +17,7 @@ import { Token } from '@/utils/typeorm/Token.entity';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { CryptoService } from '@/utils/crypto/crypto';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { Stats } from '@/utils/typeorm/Stats.entity';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { StatsService } from '@/stats/service/stats.service';
@@ -32,34 +32,39 @@ import { StatusService } from '@/statusService/status.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceService } from '@/experience/service/experience.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Achievement,
+      AchievementData,
       Avatar,
       BackupCode,
       Channel,
       Game,
+      ExperienceData,
+      Image,
       Matchmaking,
+      Notif,
       Score,
+      SocketToken,
       Stats,
+      Story,
+      StoryData,
       Token,
       User,
       UserChannelRelation,
-      SocketToken,
-      Notif,
-      Image,
-      Story,
-      StoryData,
-      Achievement,
-      AchievementData,
     ]),
   ],
   controllers: [LobbyController],
   providers: [
+    AchievementService,
     AvatarService,
     ChannelService,
     CryptoService,
     GameService,
+    ExperienceService,
     LobbyService,
     MatchmakingService,
     ScoreService,
@@ -67,7 +72,6 @@ import { AchievementService } from '@/achievement/service/achievement.service';
     StatusService,
     StoryService,
     UsersService,
-    AchievementService,
   ],
   exports: [LobbyService],
 })

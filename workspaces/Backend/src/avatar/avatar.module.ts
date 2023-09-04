@@ -9,7 +9,7 @@ import { User } from 'src/utils/typeorm/User.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Token } from 'src/utils/typeorm/Token.entity';
-import { ChannelService } from 'src/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
@@ -31,6 +31,8 @@ import { ScoreService } from '@/score/service/score.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Module({
   imports: [
@@ -39,20 +41,21 @@ import { AchievementService } from '@/achievement/service/achievement.service';
       Achievement,
       AchievementData,
       Avatar,
-      User,
-      Channel,
-      Token,
-      UserChannelRelation,
       BackupCode,
+      Channel,
+      ExperienceData,
+      Game,
+      Image,
+      Matchmaking,
+      Notif,
+      Score,
       SocketToken,
       Stats,
-      Notif,
-      Image,
       Story,
       StoryData,
-      Matchmaking,
-      Game,
-      Score,
+      Token,
+      User,
+      UserChannelRelation,
     ]),
   ],
   controllers: [AvatarController],
@@ -61,13 +64,14 @@ import { AchievementService } from '@/achievement/service/achievement.service';
     AvatarService,
     CryptoService,
     ChannelService,
-    StatsService,
-    UsersService,
-    StoryService,
+    ExperienceService,
     GameService,
     MatchmakingService,
     ScoreService,
+    StatsService,
     StatusService,
+    StoryService,
+    UsersService,
   ],
 })
 export class AvatarModule {}

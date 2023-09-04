@@ -23,16 +23,22 @@ export class StatsController {
     return 'Working !';
   }
 
-  // 01 - api/stats/getResume/:userId
-  @Get('getResume/:userId')
-  async getResumeStats(@Param('userId', ParseIntPipe) userId: number) {
-    return this.statsService.getResumeStats(userId);
+  // 01 - api/stats/getShort/:userId
+  @Get('getShort/:userId')
+  async getShortStats(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.getShortStats(userId);
   }
 
-  // 01 - api/stats/getFull/:userId
+  // 02 - api/stats/getFull/:userId
   @Get('getFull/:userId')
   async getFullStats(@Param('userId', ParseIntPipe) userId: number) {
     return this.statsService.getFullStats(userId);
+  }
+
+  // 03 - api/stats/userLevel/:userId
+  @Get('getUserLevel/:userId')
+  async getUserLevel(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.getUserLevel(userId);
   }
 
   // 11 - api/stats/update/:userId

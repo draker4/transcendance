@@ -1,5 +1,8 @@
 import fetchData from "@/lib/fetch/fetchData";
-import { StatsImproved, StatsUpdate } from "@transcendence/shared/types/Stats.types";
+import {
+  StatsImproved,
+  StatsUpdate,
+} from "@transcendence/shared/types/Stats.types";
 
 export default class StatsService {
   private token?: string;
@@ -8,13 +11,48 @@ export default class StatsService {
     if (token) this.token = token;
   }
 
-  //Recupere l'etat du joueur ( in game or not )
-  public async getFullStats(userId: number): Promise<ReturnDataTyped<StatsImproved>> {
-
-    const rep:ReturnDataTyped<StatsImproved> = {
+  public async getShortStats(
+    userId: number
+  ): Promise<ReturnDataTyped<StatsImproved>> {
+    const rep: ReturnDataTyped<StatsImproved> = {
       success: false,
-      message: ""
+      message: "",
+    };
+
+    try {
+      const response = await fetchData(
+        this.token,
+        "stats",
+        `getShort/${userId}`,
+        "GET"
+      );
+
+      if (!response.ok)
+        throw new Error(`fetching Short stats of user[${userId}] impossible`);
+
+      const repStats = await response.json();
+
+      if (!repStats.success) throw new Error(repStats.messsage);
+
+      rep.data = repStats.data;
+      rep.success = true;
+    } catch (error: any) {
+      rep.message = error.message
+        ? error.message
+        : `An unkkown error occured while getting full stats of user[${userId}]`;
+      rep.error = error;
     }
+
+    return rep;
+  }
+
+  public async getFullStats(
+    userId: number
+  ): Promise<ReturnDataTyped<StatsImproved>> {
+    const rep: ReturnDataTyped<StatsImproved> = {
+      success: false,
+      message: "",
+    };
 
     try {
       const response = await fetchData(
@@ -29,14 +67,49 @@ export default class StatsService {
 
       const repStats = await response.json();
 
-      if (!repStats.success)
-        throw new Error(repStats.messsage);
+      if (!repStats.success) throw new Error(repStats.messsage);
 
       rep.data = repStats.data;
       rep.success = true;
+    } catch (error: any) {
+      rep.message = error.message
+        ? error.message
+        : `An unkkown error occured while getting short stats of user[${userId}]`;
+      rep.error = error;
+    }
 
-    } catch(error:any) {
-      rep.message = error.message ? error.message : `An unkkown error occured while getting full stats of user[${userId}]`;
+    return rep;
+  }
+
+  public async getUserLevel(
+    userId: number
+  ): Promise<ReturnDataTyped<StatsImproved>> {
+    const rep: ReturnDataTyped<StatsImproved> = {
+      success: false,
+      message: "",
+    };
+
+    try {
+      const response = await fetchData(
+        this.token,
+        "stats",
+        `getUserLevel/${userId}`,
+        "GET"
+      );
+
+      if (!response.ok)
+        throw new Error(`fetching User Level of user[${userId}] impossible`);
+
+      const repStats = await response.json();
+
+      if (!repStats.success) throw new Error(repStats.messsage);
+
+      rep.data = repStats.data;
+      rep.success = true;
+    } catch (error: any) {
+      rep.message = error.message
+        ? error.message
+        : `An unkkown error occured while getting User Level of user[${userId}]`;
       rep.error = error;
     }
 

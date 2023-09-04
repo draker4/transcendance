@@ -26,8 +26,8 @@ import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { JoinDto } from './dto/join.dto';
 import { ClearNotifDto } from './dto/clearNotif.dto';
-import { ChatService } from './chat.service';
-import { ChannelService } from '@/channels/channel.service';
+import { ChatService } from './service/chat.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { StatusService } from '@/statusService/status.service';
 import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
 import { editChannelTypeDto } from './dto/editChannelType.dto';
@@ -50,7 +50,7 @@ export class ChatGateway implements OnModuleInit {
 
   // Container of connected users : Map<socket, user id>
   private connectedUsers: Map<Socket, string> = new Map<Socket, string>();
-  
+
   @WebSocketServer()
   server: Server;
 
@@ -67,7 +67,7 @@ export class ChatGateway implements OnModuleInit {
         }
 
         this.connectedUsers.set(socket, payload.sub.toString());
-        this.statusService.add(payload.sub.toString(), "connected");
+        this.statusService.add(payload.sub.toString(), 'connected');
 
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
@@ -87,7 +87,7 @@ export class ChatGateway implements OnModuleInit {
             }
 
             if (!connected)
-              this.statusService.add(payload.sub.toString(), "disconnected");
+              this.statusService.add(payload.sub.toString(), 'disconnected');
           }
 
           this.log(`User with ID ${payload.sub} disconnected`); // [?]
@@ -113,14 +113,12 @@ export class ChatGateway implements OnModuleInit {
     });
 
     setInterval(() => {
-
       const updateStatus = this.statusService.updateStatus;
 
       if (updateStatus.size > 0)
         this.server.emit('updateStatus', Object.fromEntries(updateStatus));
 
       this.statusService.remove(updateStatus);
-
     }, 1000);
   }
 
@@ -131,13 +129,9 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('disconnectClient')
-  async disconnectClient(
-    @Request() req,
-    @ConnectedSocket() socket: Socket,
-  ) {
+  async disconnectClient(@Request() req, @ConnectedSocket() socket: Socket) {
     for (const [key, val] of this.connectedUsers) {
-      if (val === req.user.id.toString() && key !== socket)
-        key.disconnect();
+      if (val === req.user.id.toString() && key !== socket) key.disconnect();
     }
   }
 
@@ -226,10 +220,7 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('getChannelProfile')
-  async getChannelProfile(
-    @Request() req,
-    @MessageBody() channelId: number,
-  ) {
+  async getChannelProfile(@Request() req, @MessageBody() channelId: number) {
     if (!channelId) throw new WsException('no channel id');
 
     return await this.chatService.getChannelProfile(req.user.id, channelId);
@@ -391,11 +382,13 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(@MessageBody() payload: JoinDto, @Request() req) {
-
     // [!][+] pour le moment créer une protected ne renseigne pas son mdp dans la db
     // du coup generera des bugs si on laisse ainsi
-    if (payload.channelType === "protected" && payload.isCreation
-      && (!payload.password || payload.password.length === 0))
+    if (
+      payload.channelType === 'protected' &&
+      payload.isCreation &&
+      (!payload.password || payload.password.length === 0)
+    )
       throw new WsException('no password');
 
     const userSockets: Socket[] = [];
@@ -417,8 +410,7 @@ export class ChatGateway implements OnModuleInit {
         userSockets,
         pongieSockets,
       );
-    }
-    else
+    } else
       return await this.chatService.joinChannel(
         req.user.id,
         payload.id,
@@ -426,7 +418,7 @@ export class ChatGateway implements OnModuleInit {
         payload.channelType,
         userSockets,
         this.server,
-        payload.password
+        payload.password,
       );
   }
 
@@ -485,88 +477,108 @@ export class ChatGateway implements OnModuleInit {
   async sendEditRelationEvents(
     @MessageBody() payload: EditChannelRelationDto,
     @Request() req,
-  ):Promise<ReturnData> {
+  ): Promise<ReturnData> {
+    this.log(`editRelation called by user[${req.user.id}]`); // checking
 
-	this.log(`editRelation called by user[${req.user.id}]`); // checking
-
-  const rep: ReturnData = {
-    success: false,
-    message: ''
-  }
-
-  try {
-    // [0] check permissions in user relation
-    const repAutho = await this.channelService.checkEditAuthorization(
-      req.user.id,
-      payload,
-    );
-    if (!repAutho.success) throw new Error(repAutho.message ? repAutho.message : "checkEditAuthorization failed");
-
-    // [1] update socket JOIN room if needed by editRelation
-    const repJoin = await this.chatService.joinLeaveRoomProcByEditRelation(false, payload, this.connectedUsers);
-    if (!repJoin.success)
-        throw new Error(repJoin.message ? repJoin.message : "proc join failed");
-  
-    // [2] follow up to update channel profile + handleEditRelation in <ChatChannel />
-    const updatedPayload1 = {
-      ...payload,
-      senderId: req.user.id,
-    };
-    this.server
-      .to('channel:' + payload.channelId)
-      .emit('editRelation', updatedPayload1);
-  
-    // [3] send Server Notif message into the channel (not privateMsg Channel !)
-    const updatedPayload2 = {
-      ...payload,
-      server: this.server,
-      from: req.user.id,
+    const rep: ReturnData = {
+      success: false,
+      message: '',
     };
 
-    const repNotif = await this.chatService.sendEditRelationNotif(updatedPayload2);
-    if (!repNotif.success) {
-        throw new Error(repNotif.message ? repNotif.message : "sendEditRelationNotif failed");
-    } else {
+    try {
+      // [0] check permissions in user relation
+      const repAutho = await this.channelService.checkEditAuthorization(
+        req.user.id,
+        payload,
+      );
+      if (!repAutho.success)
+        throw new Error(
+          repAutho.message ? repAutho.message : 'checkEditAuthorization failed',
+        );
+
+      // [1] update socket JOIN room if needed by editRelation
+      const repJoin = await this.chatService.joinLeaveRoomProcByEditRelation(
+        false,
+        payload,
+        this.connectedUsers,
+      );
+      if (!repJoin.success)
+        throw new Error(repJoin.message ? repJoin.message : 'proc join failed');
+
+      // [2] follow up to update channel profile + handleEditRelation in <ChatChannel />
+      const updatedPayload1 = {
+        ...payload,
+        senderId: req.user.id,
+      };
+      this.server
+        .to('channel:' + payload.channelId)
+        .emit('editRelation', updatedPayload1);
+
+      // [3] send Server Notif message into the channel (not privateMsg Channel !)
+      const updatedPayload2 = {
+        ...payload,
+        server: this.server,
+        from: req.user.id,
+      };
+
+      const repNotif =
+        await this.chatService.sendEditRelationNotif(updatedPayload2);
+      if (!repNotif.success) {
+        throw new Error(
+          repNotif.message ? repNotif.message : 'sendEditRelationNotif failed',
+        );
+      } else {
         this.log(`SendEditRelationNotif in channel[${payload.channelId}]`); // checking
+      }
+
+      // [4] update socket LEAVE room if needed by editRelations
+      const repLeave = await this.chatService.joinLeaveRoomProcByEditRelation(
+        true,
+        payload,
+        this.connectedUsers,
+      );
+      if (!repLeave.success)
+        throw new Error(
+          repLeave.message ? repLeave.message : 'proc Leave failed',
+        );
+
+      // [5] Force update Channel to targeted user (ie: for invitations)
+      this.chatService.forceUpdateChannel(payload.userId, this.connectedUsers);
+
+      rep.success = true;
+    } catch (error: any) {
+      // [+] mémo : gérer cette error au leave de la channel stop par Kiwi:
+      // Leave channel error : right-hand side of 'in' should be an object, got undefined
+
+      this.log(`edit Relation Error : ${error.message}`);
+      console.log('error (object) : ', error); // checking
+
+      rep.error = error;
+      rep.message = error.message
+        ? error.message
+        : "unknown error in chatGateway => @SubscribeMessage('editRelation')";
     }
-    
-    // [4] update socket LEAVE room if needed by editRelations
-    const repLeave = await this.chatService.joinLeaveRoomProcByEditRelation(true, payload, this.connectedUsers);
-    if (!repLeave.success)
-        throw new Error(repLeave.message ? repLeave.message : "proc Leave failed");
-
-    // [5] Force update Channel to targeted user (ie: for invitations)
-    this.chatService.forceUpdateChannel(payload.userId, this.connectedUsers);
-
-    rep.success = true;
-
-  } catch (error: any) {
-
-    // [+] mémo : gérer cette error au leave de la channel stop par Kiwi: 
-    // Leave channel error : right-hand side of 'in' should be an object, got undefined
-
-    this.log(`edit Relation Error : ${error.message}`);
-    console.log("error (object) : ", error); // checking
-
-    rep.error = error;
-    rep.message = error.message ? error.message : "unknown error in chatGateway => @SubscribeMessage('editRelation')";
-  }
 
     return rep;
   }
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('forceJoinPrivateMsgChannel')
-  async forceJoinPrivateMsgChannel(@Request() req, @MessageBody() payload: channelIdDto,
-  ):Promise<ReturnData> {
-
+  async forceJoinPrivateMsgChannel(
+    @Request() req,
+    @MessageBody() payload: channelIdDto,
+  ): Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
-      message: ''
-    }
+      message: '',
+    };
 
     try {
-      const repJoin = await this.channelService.forceJoinPrivateMsgChannel(req.user.id, payload.id, this.connectedUsers);
+      const repJoin = await this.channelService.forceJoinPrivateMsgChannel(
+        req.user.id,
+        payload.id,
+        this.connectedUsers,
+      );
       if (!repJoin.success) {
         throw new Error(repJoin.message);
       }
@@ -582,22 +594,35 @@ export class ChatGateway implements OnModuleInit {
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editChannelPassword')
-  async editChannelPassword(@Request() req, @MessageBody() payload: editChannelPasswordDto)
-  :Promise<ReturnData> {
+  async editChannelPassword(
+    @Request() req,
+    @MessageBody() payload: editChannelPasswordDto,
+  ): Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
       message: '',
-    }
+    };
 
     try {
-      const repEdit: ReturnData & {isProtected:boolean} = await this.channelService.editChannelPassword(req.user.id, payload.channelId, payload.password);
+      const repEdit: ReturnData & { isProtected: boolean } =
+        await this.channelService.editChannelPassword(
+          req.user.id,
+          payload.channelId,
+          payload.password,
+        );
       if (!repEdit.success) {
         throw new Error(repEdit.message);
       }
 
       if (repEdit.isProtected) {
-        const endContent:string = "changed the channel password to " + payload.password;
-        this.chatService.sendServerNotifMsgPublic(payload.channelId, req.user.id, endContent, this.server);
+        const endContent: string =
+          'changed the channel password to ' + payload.password;
+        this.chatService.sendServerNotifMsgPublic(
+          payload.channelId,
+          req.user.id,
+          endContent,
+          this.server,
+        );
       }
 
       rep.success = repEdit.success;
@@ -611,22 +636,33 @@ export class ChatGateway implements OnModuleInit {
   }
 
   @SubscribeMessage('verifyChannelPassword')
-  async verifyChannelPassword(@Request() req, @MessageBody() payload: editChannelPasswordDto)
-  :Promise<ReturnData> {
+  async verifyChannelPassword(
+    @Request() req,
+    @MessageBody() payload: editChannelPasswordDto,
+  ): Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
       message: '',
-    }
+    };
 
     try {
-      const repVerify: ReturnData = await this.channelService.verifyChannelPassword(req.user.id, payload.channelId, payload.password);
+      const repVerify: ReturnData =
+        await this.channelService.verifyChannelPassword(
+          req.user.id,
+          payload.channelId,
+          payload.password,
+        );
       if (!repVerify.success) {
         throw new Error(repVerify.message);
       }
 
       rep.success = repVerify.success;
       if (rep.success)
-        this.channelService.sendUpdateChannelnotif(payload.channelId, this.connectedUsers, this.server);
+        this.channelService.sendUpdateChannelnotif(
+          payload.channelId,
+          this.connectedUsers,
+          this.server,
+        );
     } catch (error: any) {
       this.log(`verifyChannelPassword error : ${error.message}`);
       rep.error = error;
@@ -636,32 +672,46 @@ export class ChatGateway implements OnModuleInit {
     return rep;
   }
 
-
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('editChannelType')
-  async editChannelType(@Request() req, @MessageBody() payload: editChannelTypeDto)
-  :Promise<ReturnData> {
+  async editChannelType(
+    @Request() req,
+    @MessageBody() payload: editChannelTypeDto,
+  ): Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
       message: '',
-    }
+    };
 
     try {
-      const repEdit = await this.channelService.editChannelType(req.user.id, payload.channelId, payload.type);
+      const repEdit = await this.channelService.editChannelType(
+        req.user.id,
+        payload.channelId,
+        payload.type,
+      );
       if (!repEdit.success) {
         throw new Error(repEdit.message);
       }
 
-      let endContent:string = "changed channel type to " + payload.type;
+      let endContent: string = 'changed channel type to ' + payload.type;
       if (payload.type === 'protected') {
-          endContent += ", password is " + repEdit.password;
+        endContent += ', password is ' + repEdit.password;
       }
 
-      this.chatService.sendServerNotifMsgPublic(payload.channelId, req.user.id, endContent, this.server);
-      
+      this.chatService.sendServerNotifMsgPublic(
+        payload.channelId,
+        req.user.id,
+        endContent,
+        this.server,
+      );
+
       // [+] send notif to update channel to all user in relation
       // Container of connected users : Map<socket, user id>
-      this.channelService.sendUpdateChannelnotif(payload.channelId, this.connectedUsers, this.server);
+      this.channelService.sendUpdateChannelnotif(
+        payload.channelId,
+        this.connectedUsers,
+        this.server,
+      );
 
       rep.success = repEdit.success;
     } catch (error: any) {

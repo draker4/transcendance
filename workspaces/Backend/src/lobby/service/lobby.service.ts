@@ -10,11 +10,11 @@ import { GameService } from '@/game/service/game.service';
 import { UsersService } from '@/users/service/users.service';
 
 import { GameInfo, Player } from '@transcendence/shared/types/Game.types';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { StatsService } from '@/stats/service/stats.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { CryptoService } from '@/utils/crypto/crypto';
-import { ResumeStats } from '@transcendence/shared/types/Stats.types';
+import { LeagueStats } from '@transcendence/shared/types/Stats.types';
 import { UserLeaderboard } from '@transcendence/shared/types/Leaderboard.types';
 
 @Injectable()
@@ -156,8 +156,8 @@ export class LobbyService {
       message: 'Catched an error',
     };
     try {
-      const usersStats: ResumeStats[] = (
-        await this.statsService.getAllResumeStats()
+      const usersStats: LeagueStats[] = (
+        await this.statsService.getAllLeagueStats()
       ).data;
       if (!usersStats) {
         ret.message = 'No stats found';
@@ -178,23 +178,14 @@ export class LobbyService {
           userId: user.id,
           login: user.login,
           avatar: avatar,
-          points: userStats.leagueXp,
-          rank: 0,
+          points: userStats.leaguePoints,
+          rank: userStats.rank,
           win: userStats.leagueWon,
           lost: userStats.leagueLost,
         };
         leaderboard.push(userLeaderboard);
       }
-      leaderboard.sort((a, b) => (a.points > b.points ? -1 : 1));
-      for (let i = 0; i < leaderboard.length; i++) {
-        leaderboard[i].rank = i + 1;
-        if (i > 0 && leaderboard[i].points === leaderboard[i - 1].points) {
-          leaderboard[i].rank = leaderboard[i - 1].rank;
-        }
-        if (leaderboard[i].points === 0) {
-          leaderboard[i].rank = 0;
-        }
-      }
+      leaderboard.sort((a, b) => b.rank - a.rank);
       ret.success = true;
       ret.message = 'Leaderboard found';
       ret.data = leaderboard;

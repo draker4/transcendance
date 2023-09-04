@@ -7,8 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { CryptoService } from 'src/utils/crypto/crypto';
-import { ChatService } from './chat.service';
-import { ChannelService } from 'src/channels/channel.service';
+import { ChatService } from './service/chat.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { UserPongieRelation } from 'src/utils/typeorm/UserPongieRelation';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
@@ -37,50 +37,53 @@ import { AvatarService } from '@/avatar/service/avatar.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Achievement,
       AchievementData,
-      User,
-      Channel,
       Avatar,
-      UserPongieRelation,
-      UserChannelRelation,
-      Message,
-      Token,
       BackupCode,
-      SocketToken,
-      Stats,
+      Channel,
+      Game,
+      ExperienceData,
+      Image,
+      Message,
+      Matchmaking,
       Notif,
       NotifMessages,
-      Image,
+      Score,
+      SocketToken,
+      Stats,
       Story,
       StoryData,
-      Matchmaking,
-      Game,
-      Score,
-      Avatar,
+      Token,
+      User,
+      UserChannelRelation,
+      UserPongieRelation,
     ]),
     StatusModule,
   ],
   providers: [
     AchievementService,
-    ChatGateway,
-    WsJwtGuard,
+    AvatarService,
     ChannelAuthGuard,
-    UsersService,
+    ChatGateway,
     CryptoService,
     ChatService,
     ChannelService,
+    GameService,
+    ExperienceService,
+    MatchmakingService,
     MessagesService,
     StatsService,
     StoryService,
-    MatchmakingService,
-    GameService,
     ScoreService,
-    AvatarService,
+    UsersService,
+    WsJwtGuard,
   ],
 })
 export class ChatModule {}

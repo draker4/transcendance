@@ -13,7 +13,7 @@ import { AuthService } from '@/auth/services/auth.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { JwtService } from '@nestjs/jwt';
 import { Avatar } from '@/utils/typeorm/Avatar.entity';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import { BackupCode } from '@/utils/typeorm/BackupCode.entity';
 import { SocketToken } from '@/utils/typeorm/SocketToken.entity';
@@ -27,38 +27,42 @@ import { StoryService } from '@/story/service/story.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Achievement,
       AchievementData,
-      User,
-      Channel,
-      Token,
       Avatar,
-      UserChannelRelation,
       BackupCode,
+      Channel,
+      ExperienceData,
+      Image,
+      Notif,
       SocketToken,
       Stats,
-      Notif,
-      Image,
       Story,
       StoryData,
+      Token,
+      User,
+      UserChannelRelation,
     ]),
   ],
   providers: [
     AchievementService,
-    TwoFactorAuthenticationService,
-    UsersService,
-    CryptoService,
-    MailService,
-    JwtService,
     AuthService,
     AvatarService,
     ChannelService,
+    CryptoService,
+    ExperienceService,
+    JwtService,
+    MailService,
     StatsService,
     StoryService,
+    TwoFactorAuthenticationService,
+    UsersService,
   ],
   controllers: [TwoFactorAuthenticationController],
 })

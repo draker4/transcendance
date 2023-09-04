@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { Module } from '@nestjs/common';
-import { ChannelController } from './channel.controller';
-import { ChannelService } from './channel.service';
+import { ChannelController } from './controller/channel.controller';
+import { ChannelService } from './service/channel.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
@@ -22,34 +22,38 @@ import { StoryService } from '@/story/service/story.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Channel,
-      Avatar,
-      UserChannelRelation,
-      User,
-      BackupCode,
-      SocketToken,
-      Notif,
-      Token,
-      Stats,
-      Image,
-      Story,
-      StoryData,
       Achievement,
       AchievementData,
+      Avatar,
+      BackupCode,
+      Channel,
+      ExperienceData,
+      Image,
+      Notif,
+      SocketToken,
+      Stats,
+      Story,
+      StoryData,
+      Token,
+      User,
+      UserChannelRelation,
     ]),
   ],
   controllers: [ChannelController],
   providers: [
+    AchievementService,
     ChannelService,
-    UsersService,
     CryptoService,
+    ExperienceService,
     StatsService,
     StoryService,
-    AchievementService,
+    UsersService,
   ],
 })
 export class ChannelModule {}

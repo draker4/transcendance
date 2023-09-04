@@ -77,10 +77,18 @@ export type StatsImproved = {
   pointLost: number;
 };
 
-export type ResumeStats = {
+export type LeagueStats = {
   userId: number;
-  leagueXp: number;
-  playerXp: number;
+  rank: number;
+  leaguePoints: number;
+  leagueWon: number;
+  leagueLost: number;
+};
+
+export type ShortStats = {
+  leagueRank: number;
+  leaguePoints: number;
+  leveling: UserLevel;
   gameWon: number;
   gameLost: number;
   leagueWon: number;
@@ -115,4 +123,10 @@ export type XP = {
   point: number;
   rageQuit: number;
   total: number;
+};
+
+export type UserLevel = {
+  level: number;
+  userXp: number;
+  nextLevelXP: number;
 };

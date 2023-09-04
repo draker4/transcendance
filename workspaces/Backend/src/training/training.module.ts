@@ -8,7 +8,7 @@ import { CryptoService } from '@/utils/crypto/crypto';
 import { UsersService } from '@/users/service/users.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
 import { StatsService } from '@/stats/service/stats.service';
-import { ChannelService } from '@/channels/channel.service';
+import { ChannelService } from '@/channels/service/channel.service';
 
 import { Training } from 'src/utils/typeorm/Training.entity';
 import { Score } from '@/utils/typeorm/Score.entity';
@@ -28,39 +28,43 @@ import { StoryService } from '@/story/service/story.service';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
 import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
+import { ExperienceService } from '@/experience/service/experience.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Achievement,
       AchievementData,
-      Training,
-      Score,
-      User,
       Avatar,
-      Channel,
-      Token,
       BackupCode,
+      Channel,
+      ExperienceData,
+      Image,
+      Notif,
+      Score,
       SocketToken,
       Stats,
-      UserChannelRelation,
-      Notif,
-      Image,
       Story,
       StoryData,
+      Token,
+      Training,
+      User,
+      UserChannelRelation,
     ]),
   ],
   controllers: [TrainingController],
   providers: [
     AchievementService,
-    TrainingService,
-    ScoreService,
-    CryptoService,
-    UsersService,
     AvatarService,
-    StatsService,
     ChannelService,
+    CryptoService,
+    ExperienceService,
+    ScoreService,
+    StatsService,
     StoryService,
+    TrainingService,
+    UsersService,
   ],
   exports: [TrainingService],
 })

@@ -2,13 +2,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
-import { ChannelDto } from './dto/Channel.dto';
+import { ChannelDto } from '../dto/Channel.dto';
 import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Channel } from 'src/utils/typeorm/Channel.entity';
 import { User } from 'src/utils/typeorm/User.entity';
 import { UserChannelRelation } from 'src/utils/typeorm/UserChannelRelation';
 import { Message } from '@/utils/typeorm/Message.entity';
-import { EditChannelRelationDto } from './dto/EditChannelRelation.dto';
+import { EditChannelRelationDto } from '../dto/EditChannelRelation.dto';
 import { PongColors } from '@/utils/enums/PongColors.enum';
 import { Socket, Server } from 'socket.io';
 import { UsersService } from '@/users/service/users.service';
