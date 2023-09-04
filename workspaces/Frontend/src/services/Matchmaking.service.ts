@@ -27,9 +27,9 @@ export default class MatchmakingService {
   }
 
   //Sors le joueur de la file d'attente
-  public async stopSearch(): Promise<any> {
+  public async stopSearch(userId: number): Promise<any> {
     try {
-      const response = await fetchData(this.token, "matchmaking", "stop", "PUT");
+      const response = await fetchData(this.token, "matchmaking", `stop/${userId}`, "PUT");
       const data = await response.json();
       return data;
     }

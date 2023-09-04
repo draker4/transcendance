@@ -6,6 +6,8 @@ import {
   UsePipes,
   ValidationPipe,
   Body,
+  Param,
+  ParseIntPipe,
 } from '@nestjs/common';
 
 import { MatchmakingService } from '../service/matchmaking.service';
@@ -31,9 +33,10 @@ export class MatchmakingController {
   }
 
   // 02 - api/matchmaking/stop
-  @Put('stop')
-  stopSearch(@Req() req) {
-    return this.matchmakingService.stopSearch(req.user.id);
+  @Public()
+  @Put('stop/:id')
+  stopSearch(@Param('id', ParseIntPipe) id: number) {
+    return this.matchmakingService.stopSearch(id);
   }
 
   // 03 - api/matchmaking/check

@@ -11,7 +11,9 @@ import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 
-export default function League() {
+export default function League({ profile }: {
+  profile: Profile;
+}) {
   const lobbyService = new LobbyService();
   const [leaderboardData, setLeadeboardData] = useState<
     UserLeaderboard[] | undefined
@@ -44,7 +46,7 @@ export default function League() {
     <div className={styles.league}>
       <div className={styles.displayLeague}>
         <div className={styles.resume}>
-          <Searching />
+          <Searching profile={profile} />
           <LeaderboardPodium leaderboardData={leaderboardData} />
         </div>
         <LeaderboardList leaderboardData={leaderboardData} />

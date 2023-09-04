@@ -7,7 +7,9 @@ import LoadingComponent from "@/components/loading/Loading";
 import { toast } from "react-toastify";
 import disconnect from "@/lib/disconnect/disconnect";
 
-export default function Searching() {
+export default function Searching({ profile }: {
+  profile: Profile;
+}) {
   const matchmakingService = new MatchmakingService();
   const [type, setType] = useState<"Classic" | "Best3" | "Best5">("Classic");
   const [searching, setSearching] = useState(false);
@@ -69,7 +71,8 @@ export default function Searching() {
       clearTimeout(searchTimeoutId);
     }
     try {
-      await matchmakingService.stopSearch();
+      if (profile.id !== -1)
+        await matchmakingService.stopSearch(profile.id);
     }
     catch (error: any) {
       if (error.message === 'disconnect') {
