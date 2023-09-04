@@ -25,10 +25,10 @@ export default function Searching() {
         checkSearch();
       }
       else
-        toast.info("SOmethign went wrong, please try again!");
+        throw new Error('search failed');
     }
     catch (error: any) {
-      toast.info("SOmethign went wrong, please try again!");
+      toast.info("Somethign went wrong, please try again!");
     }
   };
 

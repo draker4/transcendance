@@ -10,16 +10,21 @@ export default class MatchmakingService {
 
   //Mets le joueur dans la file d'attente
   public async startSearch(type: "Classic" | "Best3" | "Best5"): Promise<any> {
-    const body = JSON.stringify({ type });
-    const response = await fetchData(
-      this.token,
-      "matchmaking",
-      "start",
-      "PUT",
-      body
-    );
-    const data = await response.json();
-    return data;
+    try {
+      const body = JSON.stringify({ type });
+      const response = await fetchData(
+        this.token,
+        "matchmaking",
+        "start",
+        "PUT",
+        body
+      );
+      const data = await response.json();
+      return data;
+    }
+    catch (error: any) {
+      console.log(error.message);
+    }
   }
 
   //Sors le joueur de la file d'attente

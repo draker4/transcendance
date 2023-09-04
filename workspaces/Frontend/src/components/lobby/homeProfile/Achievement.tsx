@@ -34,6 +34,7 @@ export default function achievement({ profile, setShowAchievement }: Props) {
         if (error.message === "disconnect") {
           await disconnect();
           router.refresh();
+          return ;
         }
         console.error("Error fetching achievement:", error.message);
         toast.error("Something went wrong, please try again!");
