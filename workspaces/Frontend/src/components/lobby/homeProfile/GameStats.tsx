@@ -75,6 +75,7 @@ export default function GameStats({ profile }: Props) {
           gameWon: myRank.won,
           gameLost: myRank.lost,
           global: stats.gameWon + stats.gameLost,
+          showPlaceholder: false,
         }}
       />
     </div>

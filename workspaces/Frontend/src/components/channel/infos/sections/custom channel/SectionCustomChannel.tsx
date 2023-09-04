@@ -155,7 +155,6 @@ export default function SectionCustomChannel({
 
   return (
     <div className={styles.sections}>
-      {/* //[+] A TESTER AVEC GRAND NOM DE ChANNEL */ }
       <p className={`${styles.tinyTitle} ${styles.marginTop}`}>{relation.channel.name}</p>
       <ResumeChannel type={channelType} />
 

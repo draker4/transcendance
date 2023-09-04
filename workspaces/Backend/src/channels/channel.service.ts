@@ -583,8 +583,6 @@ export class ChannelService {
             'Error occured while updating user channel relation in database : ' +
               repDatabase.message,
           );
-
-        // [+] notifier le retour ou forcer update ... hum ?
       }
     } catch (timeErr) {
       this.log(`unMute auto timer error : ${timeErr.message}`);
@@ -752,7 +750,6 @@ export class ChannelService {
         channelId,
       );
       if (!repRelation)
-        // [+] continuer => si pas de relation la créer
         throw new Error(
           `relation not found channel[${channelId}] user[${senderId}]`,
         );
@@ -868,7 +865,6 @@ export class ChannelService {
 
   // ------------------- PRIVATE ---------------------------------- //
 
-  // [!][+] Doublon avec la version public : getOneChannelUserRelation
   private async privateGetOneChannelUserRelation(
     userId: number,
     channelId: number,
@@ -932,7 +928,6 @@ export class ChannelService {
     return this.updateChannelUserRelation(relation);
   }
 
-  // [+] a affinner avec l'evolution des types de channel, banlist guestlist etc.
   private verifyPermissions(
     userId: number,
     channelId: number,

@@ -1,7 +1,6 @@
 .homeProfil {
   display: flex;
-  /* [?][+] toujours utile ? */
-  /* flex-flow: row wrap-reverse; */
+  flex-flow: row wrap;
   justify-content: space-evenly;
   align-items: center;
   
@@ -34,9 +33,6 @@
 .avatar {
   width:100%;
   aspect-ratio: 1;
-  /*
-    [!][+] tester avec image !
-  */
 }
 
 .login {

@@ -56,7 +56,7 @@ export default function SectionPongStats({ profile }: Props) {
         const rep:ReturnDataTyped<UserLeaderboard[]> = await lobbyService.getLeaderboard();
 
         if (rep.success && rep.data) {
-          console.log("LEADERBOARD FETCHING => data : ", rep.data); // checking
+          // console.log("LEADERBOARD FETCHING => data : ", rep.data); // checking
 
           const myBoard:UserLeaderboard | undefined = rep.data.find((userBoard) => userBoard.userId === profile.id);
           if (myBoard !== undefined && myBoard.rank > 0) {
@@ -114,7 +114,7 @@ export default function SectionPongStats({ profile }: Props) {
       
 
       <Item title="League Winrate">
-        <Winrate winData={{gameWon:winData.leagueWon, gameLost:winData.leagueLost}} />
+        <Winrate winData={{gameWon:winData.leagueWon, gameLost:winData.leagueLost, showPlaceholder: true}} />
       </Item>
 
       <p className={styles.tinyTitle}>Play for fun</p>
@@ -123,7 +123,7 @@ export default function SectionPongStats({ profile }: Props) {
       </Item>
 
       <Item title="Global Winrate">
-        <Winrate winData={{gameWon:winData.gameWon, gameLost:winData.gameLost}} />
+        <Winrate winData={{gameWon:winData.gameWon, gameLost:winData.gameLost, showPlaceholder: true}} />
       </Item>
 
 
