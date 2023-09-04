@@ -38,7 +38,6 @@ export default async function ProfileServer({ id }: { id: number }) {
     if (!id) throw new Error("no id");
 
     const getToken = cookies().get("crunchy-token")?.value;
-
     if (!getToken) throw new Error("no token");
 
     token = getToken;
@@ -53,7 +52,6 @@ export default async function ProfileServer({ id }: { id: number }) {
     if (targetProfile.id < 0) throw new Error(`user id : ${targetProfile.id}`);
 
     const avatarService = new Avatar_Service(token);
-
     avatar = await avatarService.getAvatarbyUserId(targetProfile.id);
 
     if (isProfilOwner) {

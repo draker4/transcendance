@@ -20,7 +20,6 @@ export default function MottoEditable({ profile }: Props) {
   );
   const [editedMotto, setEditedMotto] = useState<string>(motto);
   const [notif, setNotif] = useState<string>("");
-  const [prof, setProf] = useState<Profile>(profile);
 
   const handleClickEdit = () => {
     setEditMode(true);
@@ -53,7 +52,6 @@ export default function MottoEditable({ profile }: Props) {
           const updatedProfile = profile;
           updatedProfile.motto = filterBadWords(submitedMotto);
 
-          setProf(updatedProfile);
           setMotto(updatedProfile.motto);
           setEditMode(false);
         } else {

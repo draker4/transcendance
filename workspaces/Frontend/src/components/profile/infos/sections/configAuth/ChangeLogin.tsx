@@ -92,6 +92,7 @@ export default function ChangeLogin({
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
+				return ;
 			}
 			setNotif('Something went wrong, please try again!');
 			setTextButton("Validate");

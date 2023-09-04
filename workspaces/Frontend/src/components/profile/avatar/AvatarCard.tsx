@@ -63,7 +63,6 @@ export default function AvatarCard({
     if (!isOwner) return;
 
     try {
-      console.log(avatarCustomed);
       let image = avatarCustomed.image;
 
       if (avatarCustomed.decrypt)
@@ -72,7 +71,7 @@ export default function AvatarCard({
       const rep = await avatarService.submitAvatarUser(
         { ...avatarCustomed, image },
         topColor as string,
-        botColor as string
+        botColor as string,
       );
 
       if (!rep.success) throw new Error(rep.message);
@@ -204,9 +203,12 @@ export default function AvatarCard({
           setAvatarsList(newAvatars);
         }
       } catch (err: any) {
+        if (err.message === "disconnect") {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.log(err.message);
-        if (err.message === "disconnect") await disconnect();
-        router.refresh();
       }
     };
 

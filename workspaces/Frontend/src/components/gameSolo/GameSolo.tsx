@@ -15,6 +15,7 @@ import { GameData } from "@transcendence/shared/types/Game.types";
 import PongSolo from "./PongSolo";
 import ErrorGameSolo from "./ErrorGameSolo";
 import LoadingComponent from "../loading/Loading";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   profile: Profile;
@@ -34,29 +35,38 @@ export default function GameSolo({ profile, trainingId }: Props) {
 
   useEffect(() => {
     const getData = async () => {
-      if (isLoading) {
-        const ret = await trainingService.getTrainingData(trainingId);
-        if (ret.success == false) {
-          setError(true);
-        } else {
-          console.log(ret.data);
-          if (ret.data.status === "Finished") {
-            router.push("/home");
-          } else {
-            setGameData(ret.data);
-            setIsLoading(false);
-          }
-          if (ret.data.playerLeft.id === profile.id) {
-            setIsPlayer("Left");
-          } else if (ret.data.playerRight.id === profile.id) {
-            setIsPlayer("Right");
-          } else {
-            setIsPlayer("");
+      try {
+
+        if (isLoading) {
+          const ret = await trainingService.getTrainingData(trainingId);
+          if (ret.success == false) {
             setError(true);
+          } else {
+            console.log(ret.data);
+            if (ret.data.status === "Finished") {
+              router.push("/home");
+            } else {
+              setGameData(ret.data);
+              setIsLoading(false);
+            }
+            if (ret.data.playerLeft.id === profile.id) {
+              setIsPlayer("Left");
+            } else if (ret.data.playerRight.id === profile.id) {
+              setIsPlayer("Right");
+            } else {
+              setIsPlayer("");
+              setError(true);
+            }
           }
         }
       }
+      catch (error: any) {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
     };
+    
     getData();
   }, []);
 
