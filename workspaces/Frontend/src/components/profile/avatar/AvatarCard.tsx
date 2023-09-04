@@ -89,7 +89,11 @@ export default function AvatarCard({
         why: "updateProfile",
       });
     } catch (e: any) {
-      // setNotif("Profile Avatar ColorChanges error : " + e.message);
+      if (e.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       toast.error("Something went wrong, please try again!");
     }
   };

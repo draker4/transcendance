@@ -3,6 +3,8 @@ import Channel_Service from "@/services/Channel.service";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import SearchBarPongies from "@/components/chatPage/searchBar/SearchBarPongies";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   relation: ChannelUsersRelation;
@@ -11,6 +13,8 @@ type Props = {
 }
 
 export default function InviteInChannel({relation, myRelation, socket}:Props) {
+
+  const router = useRouter();
 
   const handleClickInvite = async (targetId: number) => {
     console.log(`Wanna invite in ${relation.channel.name} user[${targetId}]`);
@@ -42,6 +46,11 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
       });
 
     } catch(e:any) {
+      if (e.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       if (e.message === "User already in channel")
         toast.error(`This ponger has already joined ${relation.channel.name}`);
       else if (e.message === "Invitation is already done") {

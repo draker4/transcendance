@@ -11,44 +11,54 @@ export default class Profile_Service {
 	}
 
 	public async getProfileByToken(): Promise<Profile> {
-		const profile = await fetchData(this.token, "users", "me", "GET");
+		try {
+			const profile = await fetchData(this.token, "users", "me", "GET");
 
-		if (!profile.ok) {
-			throw new Error("Profil cannot be found");
+			if (!profile.ok) {
+				throw new Error("Profil cannot be found");
+			}
+
+			const data: Profile = await profile.json();
+
+			data.first_name = (await Crypto.decrypt(data.first_name)).toString();
+			data.last_name = (await Crypto.decrypt(data.last_name)).toString();
+			data.email = (await Crypto.decrypt(data.email)).toString();
+			data.phone = (await Crypto.decrypt(data.phone)).toString();
+			data.image = (await Crypto.decrypt(data.image)).toString();
+
+			return data;
 		}
-
-		const data: Profile = await profile.json();
-
-		data.first_name = (await Crypto.decrypt(data.first_name)).toString();
-		data.last_name = (await Crypto.decrypt(data.last_name)).toString();
-		data.email = (await Crypto.decrypt(data.email)).toString();
-		data.phone = (await Crypto.decrypt(data.phone)).toString();
-		data.image = (await Crypto.decrypt(data.image)).toString();
-
-		return data;
+		catch (error: any) {
+		  throw new Error(error.message);
+		}
 	}
 
 	public async getProfileById(id: number): Promise<Profile> {
-		const profile = await fetchData(
-			this.token,
-			"users",
-			`profile/${id.toString()}`,
-			"GET"
-		);
+		try {
+			const profile = await fetchData(
+				this.token,
+				"users",
+				`profile/${id.toString()}`,
+				"GET"
+			);
 
-		if (!profile.ok) {
-			throw new Error("Profil cannot be found");
+			if (!profile.ok) {
+				throw new Error("Profil cannot be found");
+			}
+
+			const data: Profile = await profile.json();
+
+			data.first_name = (await Crypto.decrypt(data.first_name)).toString();
+			data.last_name = (await Crypto.decrypt(data.last_name)).toString();
+			data.email = (await Crypto.decrypt(data.email)).toString();
+			data.phone = (await Crypto.decrypt(data.phone)).toString();
+			data.image = (await Crypto.decrypt(data.image)).toString();
+
+			return data;
 		}
-
-		const data: Profile = await profile.json();
-
-		data.first_name = (await Crypto.decrypt(data.first_name)).toString();
-		data.last_name = (await Crypto.decrypt(data.last_name)).toString();
-		data.email = (await Crypto.decrypt(data.email)).toString();
-		data.phone = (await Crypto.decrypt(data.phone)).toString();
-		data.image = (await Crypto.decrypt(data.image)).toString();
-
-		return data;
+		catch (error: any) {
+		  throw new Error(error.message);
+		}
 	}
 
 	public async editUser(properties: Record<string, string>) {
@@ -66,30 +76,38 @@ export default class Profile_Service {
 			} else {
 				rep.message = "error response from server, try it later please";
 			}
-		} catch (error) {
-			rep.message = "error occured while editUser process";
+		} catch (error: any) {
+			if (error.message === 'disconnect')
+				rep.message = 'disconnect';
+			else
+				rep.message = "error occured while editUser process";
 		}
 
 		return rep;
 	}
 
 	public async getProfileAndAvatar(): Promise<Profile & { avatar: Avatar }> {
-		const profile = await fetchData(
-			this.token,
-			"users",
-			"myAvatar",
-			"GET",
-			null
-		);
+		try {
+			const profile = await fetchData(
+				this.token,
+				"users",
+				"myAvatar",
+				"GET",
+				null
+			);
 
-		const data: Profile & { avatar: Avatar } = await profile.json();
+			const data: Profile & { avatar: Avatar } = await profile.json();
 
-		data.first_name = (await Crypto.decrypt(data.first_name)).toString();
-		data.last_name = (await Crypto.decrypt(data.last_name)).toString();
-		data.email = (await Crypto.decrypt(data.email)).toString();
-		data.phone = (await Crypto.decrypt(data.phone)).toString();
-		data.image = (await Crypto.decrypt(data.image)).toString();
+			data.first_name = (await Crypto.decrypt(data.first_name)).toString();
+			data.last_name = (await Crypto.decrypt(data.last_name)).toString();
+			data.email = (await Crypto.decrypt(data.email)).toString();
+			data.phone = (await Crypto.decrypt(data.phone)).toString();
+			data.image = (await Crypto.decrypt(data.image)).toString();
 
-		return data;
+			return data;
+		}
+		catch (error: any) {
+			throw new Error(error.message);
+		}
 	}
 }

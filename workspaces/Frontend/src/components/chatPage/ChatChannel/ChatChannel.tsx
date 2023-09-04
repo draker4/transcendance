@@ -11,6 +11,8 @@ import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import Channel_Service from "@/services/Channel.service";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   icon: ReactNode;
@@ -46,6 +48,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   const [codeName, setCodename] = useState<string>("");
   const [relNotif, setRelNotif] = useState<RelationNotifPack>({notif:RelationNotif.nothing, edit:undefined});
   const [isMuted, setIsMuted] = useState<boolean>(channel.muted);
+  const router = useRouter();
 
   useEffect(() => {
     socket?.emit( "getMessages", {id : channel.id},
@@ -94,7 +97,13 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
 			setIsMuted(rep.data.muted)
     }
 	} catch(e:any) {
+    if (e.message === "disconnect") {
+      await disconnect();
+      router.refresh();
+      return ;
+    }
 		console.log("ChatChannel, checkIfMuted() error : ", e.message);
+    toast.error("Something went wrong, please try again!");
 	}
   }
 

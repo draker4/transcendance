@@ -19,13 +19,18 @@ export default class StoryService {
       );
       const data: ReturnData = await response.json();
       return data;
-    } catch (error) {
-      console.log(`Error Getting User Stories: ${error}`);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   }
 
   public async updateStory(userId: number, update: StoryUpdate): Promise<void> {
-    const body = JSON.stringify(update);
-    await fetchData(this.token, "story", `update/${userId}`, "PUT", body);
+    try {
+      const body = JSON.stringify(update);
+      await fetchData(this.token, "story", `update/${userId}`, "PUT", body);
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }
