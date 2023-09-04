@@ -18,37 +18,47 @@ export default class Avatar_Service {
   /* ----------------------------- PUBLIC METHODS ---------------------------- */
 
   public async getAvatarbyUserId(id: number): Promise<Avatar> {
-    const response: Response = await fetchData(
-      this.token,
-      "avatar",
-      this.makeUrl(id, false),
-      "GET"
-    );
-    const data: Avatar = await response.json();
+    try {
+      const response: Response = await fetchData(
+        this.token,
+        "avatar",
+        this.makeUrl(id, false),
+        "GET"
+      );
+      const data: Avatar = await response.json();
 
-    if (data?.decrypt && data?.image.length > 0) {
-      data.image = await Crypto.decrypt(data.image);
-      data.decrypt = false;
+      if (data?.decrypt && data?.image.length > 0) {
+        data.image = await Crypto.decrypt(data.image);
+        data.decrypt = false;
+      }
+
+      return data;
     }
-
-    return data;
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   public async getChannelAvatarById(id: number): Promise<Avatar> {
-    const response: Response = await fetchData(
-      this.token,
-      "avatar",
-      this.makeUrl(id, true),
-      "GET"
-    );
-    const avatar: Avatar = await response.json();
+    try {
+      const response: Response = await fetchData(
+        this.token,
+        "avatar",
+        this.makeUrl(id, true),
+        "GET"
+      );
+      const avatar: Avatar = await response.json();
 
-    if (avatar?.decrypt && avatar?.image.length > 0) {
-      avatar.image = await Crypto.decrypt(avatar.image);
-      avatar.decrypt = false;
+      if (avatar?.decrypt && avatar?.image.length > 0) {
+        avatar.image = await Crypto.decrypt(avatar.image);
+        avatar.decrypt = false;
+      }
+
+      return avatar;
     }
-
-    return avatar;
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   // isChannel value is the channelId, 0 mean it's not a channel but an user's.
@@ -67,11 +77,7 @@ export default class Avatar_Service {
 		const data:ReturnData = await response.json();
 		return (data);
 	} catch(e:any) {
-		return ({
-			success: false,
-			message: e.message,
-			error: e,
-		});
+		throw new Error(e.message);
 	}
   }
 
@@ -81,25 +87,21 @@ export default class Avatar_Service {
     topColor: string,
     botColor: string,
   ):Promise<ReturnData> {
-	try {
-    const {isChannel, ...avatarBackend} = avatar;
-    avatarBackend.backgroundColor = botColor;
-    avatarBackend.borderColor = topColor;
-		const body = JSON.stringify({ ...avatarBackend });
-		const response = await fetchData(undefined, "avatar", "avatarUser", "PUT", body);
+    try {
+      const {isChannel, ...avatarBackend} = avatar;
+      avatarBackend.backgroundColor = botColor;
+      avatarBackend.borderColor = topColor;
+      const body = JSON.stringify({ ...avatarBackend });
+      const response = await fetchData(undefined, "avatar", "avatarUser", "PUT", body);
 
-		if (!response.ok)
-			throw new Error("submitAvatarColors error");
+      if (!response.ok)
+        throw new Error("submitAvatarColors error");
 
-		const data:ReturnData = await response.json();
-    console.log(data);
-		return (data);
-	} catch(e:any) {
-		return ({
-			success: false,
-			message: e.message,
-			error: e,
-		});
-	}
+      const data:ReturnData = await response.json();
+      console.log(data);
+      return (data);
+    } catch(e:any) {
+      throw new Error(e.message);
+    }
   }
 }

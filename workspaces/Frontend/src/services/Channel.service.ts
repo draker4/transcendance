@@ -8,42 +8,47 @@ export default class Channel_Service {
   }
 
   public async getChannelAndUsers(id: number): Promise<ChannelUsersRelation> {
-    const response: Response = await fetchData(
-      this.token,
-      "channel",
-      id.toString(),
-      "GET",
-    );
-    const data: ChannelUsersRelation = await response.json();
+    try {
+      const response: Response = await fetchData(
+        this.token,
+        "channel",
+        id.toString(),
+        "GET",
+      );
+      const data: ChannelUsersRelation = await response.json();
 
-    return data;
+      return data;
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   public async getMyChannelRelation(id: number): Promise<ReturnDataTyped<UserRelation>> {
-	let rep: ReturnDataTyped<UserRelation> = {
-		success: false,
-		message: "",
-	  };
-	try {
-		const response: Response = await fetchData(
-			this.token,
-			"channel",
-			"relation/" + id.toString(),
-			"GET"
-		  );
+    let rep: ReturnDataTyped<UserRelation> = {
+      success: false,
+      message: "",
+      };
+    try {
+      const response: Response = await fetchData(
+        this.token,
+        "channel",
+        "relation/" + id.toString(),
+        "GET"
+        );
 
-		if (!response.ok) throw new Error("Can't fetch user relation");
+      if (!response.ok) throw new Error("Can't fetch user relation");
 
-		const repRelation:ReturnDataTyped<UserRelation> = await response.json();
-    if (!repRelation.success)
-      throw new Error(repRelation.message);
-		rep.success = true;
-		rep.data = repRelation.data;
-	} catch(e:any) {
-		rep.error = e;
-		rep.message = e.message;
-	}
-	return rep;
+      const repRelation:ReturnDataTyped<UserRelation> = await response.json();
+      if (!repRelation.success)
+        throw new Error(repRelation.message);
+      rep.success = true;
+      rep.data = repRelation.data;
+
+    } catch(e:any) {
+      throw new Error(e.message);
+    }
+    return rep;
   }
 
   public async editRelation(

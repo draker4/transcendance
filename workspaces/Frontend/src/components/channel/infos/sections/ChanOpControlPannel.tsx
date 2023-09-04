@@ -14,6 +14,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Socket } from "socket.io-client";
 import ConfirmationPannel from "./ConfirmationPannel";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   channelId: number;
@@ -51,6 +53,7 @@ export default function ChanOpControlPannel({
   socket,
 }: Props) {
   const channelService = new Channel_Service();
+  const router = useRouter();
 
   const [waitingConfirmation, setWaitingConfirmation] =
     useState<boolean>(false);
@@ -102,6 +105,11 @@ export default function ChanOpControlPannel({
     });
 	  
     } else {
+      if (rep.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       lists.setNotif("Error : " + rep.message + " ...try later please");
     }
   };

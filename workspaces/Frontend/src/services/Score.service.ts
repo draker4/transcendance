@@ -14,29 +14,44 @@ export default class ScoreService {
 
   //Recupere l'etat du joueur ( in game or not )
   public async getScoreByGameId(gameId: string): Promise<ScoreInfo> {
-    const response = await fetchData(
-      this.token,
-      "score",
-      `game/${gameId}`,
-      "GET"
-    );
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetchData(
+        this.token,
+        "score",
+        `game/${gameId}`,
+        "GET"
+      );
+      const data = await response.json();
+      return data;
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   public async updateScore(gameId: string, update: ScoreUpdate): Promise<void> {
-    const body = JSON.stringify(update);
-    const response = await fetchData(
-      this.token,
-      "score",
-      `update/${gameId}`,
-      "PUT",
-      body
-    );
+    try {
+      const body = JSON.stringify(update);
+      await fetchData(
+        this.token,
+        "score",
+        `update/${gameId}`,
+        "PUT",
+        body
+      );
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   public async updatePause(gameId: string, update: PauseUpdate): Promise<void> {
-    const body = JSON.stringify(update);
-    await fetchData(this.token, "score", `updatePause/${gameId}`, "PUT", body);
+    try {
+      const body = JSON.stringify(update);
+      await fetchData(this.token, "score", `updatePause/${gameId}`, "PUT", body);
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }

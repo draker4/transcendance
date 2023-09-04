@@ -8,6 +8,8 @@ import SearchBar from "../searchBar/SearchBar";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import ConversationItem from "./ConversationItem";
 import Channel_Service from "@/services/Channel.service";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 export default function Conversations({
   socket,
@@ -32,6 +34,7 @@ export default function Conversations({
 }) {
   const [notifMsg, setNotifMsg] = useState<NotifMsg[]>([]);
   const nothing = useRef<boolean>(channelId !== undefined ? false : true);
+  const router = useRouter();
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
@@ -161,6 +164,11 @@ export default function Conversations({
 
 	console.log("Conversations => handleLeave => Successfully done"); // checking
     } catch(e:any) {
+      if (e.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       console.log("Leave channel error : " + e.message);
     }
   };
@@ -188,6 +196,11 @@ export default function Conversations({
     else
       throw new Error(rep.message);
     } catch(e:any) {
+      if (e.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       console.log("JoinRecent channel error : " + e.message);
     }
   };
@@ -220,6 +233,11 @@ export default function Conversations({
       else
         throw new Error(rep.message);
     } catch(e:any) {
+      if (e.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
       console.log("JoinRecent channel error : " + e.message);
     }
   };

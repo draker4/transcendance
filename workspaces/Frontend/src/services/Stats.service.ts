@@ -117,7 +117,12 @@ export default class StatsService {
   }
 
   public async updateStats(userId: number, update: StatsUpdate): Promise<void> {
-    const body = JSON.stringify(update);
-    await fetchData(this.token, "stats", `update/${userId}`, "PUT", body);
+    try {
+      const body = JSON.stringify(update);
+      await fetchData(this.token, "stats", `update/${userId}`, "PUT", body);
+    }
+    catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 }

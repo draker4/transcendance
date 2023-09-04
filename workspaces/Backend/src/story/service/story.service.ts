@@ -117,9 +117,16 @@ export class StoryService {
         }),
       );
 
-      const storyDatas: StoryData[] = await this.storyDataRepository.find();
-      if (storyDatas.length === 0) {
+      let storyDatas: StoryData[] = await this.storyDataRepository.find();
+
+      if (!storyDatas || storyDatas.length === 0) {
         await this.createStoryData();
+        storyDatas = await this.storyDataRepository.find();
+
+        if (!storyDatas || storyDatas.length === 0) {
+          ret.message = 'cannot create story';
+          return ret;
+        }
       }
       storyDatas.sort((a, b) => a.level - b.level);
 
