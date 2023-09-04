@@ -3,7 +3,6 @@
 // PartyInfo.tsx
 import { useState } from "react";
 import styles from "@/styles/lobby/lobbyList/GameLine.module.css";
-
 import ScoreService from "@/services/Score.service";
 import LobbyService from "@/services/Lobby.service";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
@@ -11,6 +10,7 @@ import GameDetails from "./GameDetails";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import PlayerInfo from "./PlayerInfo";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   lobbyService: LobbyService;
@@ -27,19 +27,28 @@ export default function GameLine({
   const [showDetail, setShowDetail] = useState(false);
 
   async function joinGame() {
-    const res: ReturnData = await lobbyService.joinGame(gameInfo.id);
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Joing game...",
-      success: "Good Luck !",
-      error: "Error joining game",
-    });
-    if (!res.success) {
-      console.log(res.message);
-      console.log(res.error);
-      return;
+    try {
+      const res: ReturnData = await lobbyService.joinGame(gameInfo.id);
+      await toast.promise(new Promise((resolve) => resolve(res)), {
+        pending: "Joing game...",
+        success: "Good Luck !",
+        error: "Error joining game",
+      });
+      if (!res.success) {
+        console.log(res.message);
+        console.log(res.error);
+        return;
+      }
+      const url = "home/game/" + res.data;
+      router.push(url);
     }
-    const url = "home/game/" + res.data;
-    router.push(url);
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+    }
   }
 
   function watchGame() {

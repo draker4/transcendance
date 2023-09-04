@@ -3,7 +3,6 @@ import StatsService from "@/services/Stats.service";
 import { useState, useEffect } from "react";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
 import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
-import Winrate from "@/components/profile/infos/sections/ItemContent/Winrate";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";

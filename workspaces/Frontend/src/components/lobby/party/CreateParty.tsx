@@ -19,6 +19,7 @@ import DefineName from "./DefineName";
 import Invite from "./Invite";
 import { Socket } from "socket.io-client";
 import LoadingComponent from "@/components/loading/Loading";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   lobbyService: LobbyService;
@@ -57,45 +58,55 @@ export default function CreateParty({
   const [inviteId, setInviteId] = useState<number>(-1);
 
   async function createGame() {
-    // if name is empty, show error message
-    if (name.trim() === "") {
-      setName("");
-      setEnterName(true);
-      defineNameRef.current!.scrollIntoView({ behavior: "smooth" });
-      return;
-    }
 
-    //Creer un objet avec les settings
-    const settings: GameDTO = {
-      name: name,
-      type: type,
-      mode: "Party",
-      host: userId,
-      opponent: -1,
-      invite: inviteId,
-      hostSide: side,
-      maxPoint: maxPoint,
-      maxRound: maxRound,
-      difficulty: speed,
-      pause: pause,
-      push: push,
-      background: confirmBackground(background),
-      ball: confirmBall(ball),
-    };
+    try {
+      // if name is empty, show error message
+      if (name.trim() === "") {
+        setName("");
+        setEnterName(true);
+        defineNameRef.current!.scrollIntoView({ behavior: "smooth" });
+        return;
+      }
 
-    setCreatingParty(true);
-    const res = await lobbyService.createGame(settings);
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Creating game...",
-      success: "Game created",
-      error: "Error creating game",
-    });
-    if (!res.success) {
-      console.log(res.message);
-      setCreatingParty(false);
-      return;
+      //Creer un objet avec les settings
+      const settings: GameDTO = {
+        name: name,
+        type: type,
+        mode: "Party",
+        host: userId,
+        opponent: -1,
+        invite: inviteId,
+        hostSide: side,
+        maxPoint: maxPoint,
+        maxRound: maxRound,
+        difficulty: speed,
+        pause: pause,
+        push: push,
+        background: confirmBackground(background),
+        ball: confirmBall(ball),
+      };
+
+      setCreatingParty(true);
+      const res = await lobbyService.createGame(settings);
+      await toast.promise(new Promise((resolve) => resolve(res)), {
+        pending: "Creating game...",
+        success: "Game created",
+        error: "Error creating game",
+      });
+      if (!res.success) {
+        console.log(res.message);
+        setCreatingParty(false);
+        return;
+      }
+      router.push("/home/game/" + res.data);
     }
-    router.push("/home/game/" + res.data);
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+    }
   }
 
   useEffect(() => {

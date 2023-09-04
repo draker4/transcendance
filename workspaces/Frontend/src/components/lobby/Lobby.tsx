@@ -10,7 +10,6 @@ import League from "@/components/lobby/league/League";
 import Party from "@/components/lobby/party/Party";
 import Training from "@/components/lobby/training/Training";
 import NavLobby from "./NavLobby";
-import MatchmakingService from "@/services/Matchmaking.service";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -20,7 +19,6 @@ type Props = {
 
 export default function Lobby({ profile, socket }: Props) {
   const lobbyService = new LobbyService();
-  const matchmakingService = new MatchmakingService();
   const [menu, setMenu] = useState<string>("League");
 
   return (

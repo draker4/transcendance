@@ -3,11 +3,12 @@
 // PartyList.tsx
 import { useEffect, useState } from "react";
 import styles from "@/styles/lobby/lobbyList/LobbyList.module.css";
-
 import LobbyService from "@/services/Lobby.service";
 import { GameInfo } from "@transcendence/shared/types/Game.types";
 import GameLine from "./GameLine";
 import ScoreService from "@/services/Score.service";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
   lobbyService: LobbyService;
@@ -17,13 +18,19 @@ type Props = {
 export default function LobbyList({ lobbyService, mode }: Props) {
   const scoreService = new ScoreService();
   const [gameList, setGameList] = useState<GameInfo[] | undefined>(undefined);
+  const router = useRouter();
 
   useEffect(() => {
     const getList = async () => {
       try {
         const ret = await lobbyService.getCurrentGame(mode);
         setGameList(ret.data);
-      } catch (error) {
+      } catch (error: any) {
+        if (error.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
         console.error("Error fetching game list:", error);
       }
     };

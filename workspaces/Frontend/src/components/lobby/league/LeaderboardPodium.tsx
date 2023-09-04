@@ -1,6 +1,5 @@
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import styles from "@/styles/lobby/league/LeaderboardPodium.module.css";
-import { Avatar } from "@transcendence/shared/types/Avatar.types";
 import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
