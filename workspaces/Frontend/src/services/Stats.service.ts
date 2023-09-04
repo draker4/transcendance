@@ -1,5 +1,6 @@
 import fetchData from "@/lib/fetch/fetchData";
 import {
+  ShortStats,
   StatsImproved,
   StatsUpdate,
 } from "@transcendence/shared/types/Stats.types";
@@ -13,8 +14,8 @@ export default class StatsService {
 
   public async getShortStats(
     userId: number
-  ): Promise<ReturnDataTyped<StatsImproved>> {
-    const rep: ReturnDataTyped<StatsImproved> = {
+  ): Promise<ReturnDataTyped<ShortStats>> {
+    const rep: ReturnDataTyped<ShortStats> = {
       success: false,
       message: "",
     };
@@ -31,7 +32,6 @@ export default class StatsService {
         throw new Error(`fetching Short stats of user[${userId}] impossible`);
 
       const repStats = await response.json();
-
       if (!repStats.success) throw new Error(repStats.messsage);
 
       rep.data = repStats.data;
