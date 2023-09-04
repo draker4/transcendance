@@ -1,8 +1,16 @@
 .displayXp {
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.xpItem {
+  display: flex;
+  flex-flow: column wrap;
   align-items: center;
   justify-content: center;
+  height: 80px;
 }
 
 .details {
@@ -10,8 +18,11 @@
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
-  margin: 5px;
   width: 120px;
+  color: var(--primary1);
+  @media screen and (max-width: 550px) {
+    font-size: 12px;
+  }
 }
 
 .total {
@@ -20,7 +31,11 @@
   align-items: center;
   justify-content: space-between;
   margin: 5px;
-  padding-top: 10px;
+  padding-top: 5px;
   width: 120px;
   border-top: 3px solid var(--accent1);
+  color: var(--primary1);
+  @media screen and (max-width: 550px) {
+    font-size: 14px;
+  }
 }

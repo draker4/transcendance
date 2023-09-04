@@ -3,6 +3,24 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
+  min-width: 400px;
+  @media screen and (max-width: 550px) {
+    min-width: 300px;
+  }
+}
+
+.congrats {
+  display: flex;
+  margin: 5px;
+  width: 120px;
+  color: var(--primary1);
+}
+
+.detail {
+  display: flex;
+  margin: 5px;
+  width: 150px;
+  color: var(--primary1);
 }
 
 .confirmBtn {

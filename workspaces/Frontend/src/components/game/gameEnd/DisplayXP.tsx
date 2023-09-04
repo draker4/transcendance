@@ -69,26 +69,32 @@ export default function DisplayXP({
 
   return (
     <div className={styles.displayXP}>
-      <DisplayItemXP
-        title="Game"
-        item={mode === "League" ? xp.game : xp.game > 0 ? xp.game : 0}
-      />
-      <DisplayItemXP
-        title="Round"
-        item={mode === "League" ? xp.round : xp.round > 0 ? xp.round : 0}
-      />
-      <DisplayItemXP
-        title="Point"
-        item={mode === "League" ? xp.point : xp.point > 0 ? xp.point : 0}
-      />
-      {xp.rageQuit !== 0 && (
+      <div className={styles.xpItem}>
         <DisplayItemXP
-          title="Rage Quit"
-          item={
-            mode === "League" ? xp.rageQuit : xp.rageQuit > 0 ? xp.rageQuit : 0
-          }
+          title="Game"
+          item={mode === "League" ? xp.game : xp.game > 0 ? xp.game : 0}
         />
-      )}
+        <DisplayItemXP
+          title="Round"
+          item={mode === "League" ? xp.round : xp.round > 0 ? xp.round : 0}
+        />
+        <DisplayItemXP
+          title="Point"
+          item={mode === "League" ? xp.point : xp.point > 0 ? xp.point : 0}
+        />
+        {xp.rageQuit !== 0 && (
+          <DisplayItemXP
+            title="Rage Quit"
+            item={
+              mode === "League"
+                ? xp.rageQuit
+                : xp.rageQuit > 0
+                ? xp.rageQuit
+                : 0
+            }
+          />
+        )}
+      </div>
       <div className={styles.total}>
         <h3 className={styles.totalTitle}>Total</h3>
         <p className={styles.totalItem}>
