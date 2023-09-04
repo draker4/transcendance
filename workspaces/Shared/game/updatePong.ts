@@ -57,9 +57,11 @@ function handleRound(gameData: GameData) {
       if (gameData.score.leftRound > gameData.score.rightRound) {
         if (gameData.playerLeft.host) gameData.result = "Host";
         else gameData.result = "Opponent";
+        gameData.winSide = "Left";
       } else if (gameData.score.leftRound < gameData.score.rightRound) {
         if (gameData.playerLeft.host) gameData.result = "Opponent";
         else gameData.result = "Host";
+        gameData.winSide = "Right";
       }
       gameData.timer = defineTimer(0, "Finished");
     } else {

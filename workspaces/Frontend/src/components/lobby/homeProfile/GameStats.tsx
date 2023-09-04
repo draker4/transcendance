@@ -22,12 +22,13 @@ export default function GameStats({ profile }: Props) {
         const ret = await statsService.getShortStats(profile.id);
         if (ret.success) {
           setStats(ret.data);
+          console.log("Stats:", ret.data);
         }
-      } catch (error:any) {
-        if (error.message === 'disconnect') {
+      } catch (error: any) {
+        if (error.message === "disconnect") {
           await disconnect();
           router.refresh();
-          return ;
+          return;
         }
         console.error("Error fetching stats:", error);
       }
@@ -45,8 +46,11 @@ export default function GameStats({ profile }: Props) {
   return (
     <div className={styles.gameStats}>
       {/* [+] Leaguepoint a bien importer */}
-      <Rank rank={stats ? stats.leagueRank : 0} leaguePoints={stats ? stats.leaguePoints : 0} />
-      <XPBar userLevel={stats !== undefined && stats.leveling ? stats.leveling : {level:1, userXp:0, nextLevelXP:100}} />
+      <Rank
+        rank={stats ? stats.leagueRank : 0}
+        leaguePoints={stats ? stats.leaguePoints : 0}
+      />
+      <XPBar userLevel={stats.leveling} />
       {/* [+] en trop
       <Winrate
         winData={{

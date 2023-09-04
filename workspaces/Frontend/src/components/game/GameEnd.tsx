@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import styles from "@/styles/game/GameEnd.module.css";
 import { useRouter } from "next/navigation";
@@ -11,9 +11,14 @@ type Props = {
 };
 
 export default function GameEnd({ gameData, isPlayer }: Props) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  gameData.winSide =
+    gameData.result === "Host"
+      ? gameData.hostSide
+      : gameData.hostSide === "Left"
+      ? "Right"
+      : "Left";
 
   function backHome() {
     router.push("/home");
@@ -32,10 +37,11 @@ export default function GameEnd({ gameData, isPlayer }: Props) {
         }
          won the game !`}
       </h2>
-      {isPlayer !== "Spectator" && (
+      {isPlayer !== "Spectator" && gameData.winSide && (
         <DisplayXP
           mode={gameData.mode}
           side={isPlayer}
+          winSide={gameData.winSide}
           score={gameData.score}
           nbRound={gameData.actualRound}
           maxPoint={gameData.maxPoint}

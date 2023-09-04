@@ -5,6 +5,7 @@ import { Pause } from "./Pause.types";
 export type StatusMessage = {
   status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
   result: "Not Finished" | "Host" | "Opponent" | "Deleted";
+  winSide: "Left" | "Right";
   playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   timer: Timer;
