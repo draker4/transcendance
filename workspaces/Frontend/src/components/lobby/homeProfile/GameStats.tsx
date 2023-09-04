@@ -69,7 +69,8 @@ export default function GameStats({ profile }: Props) {
 
   return (
     <div className={styles.gameStats}>
-      <Rank rank={myRank.rank} />
+      {/* [+] Leaguepoint a bien importer */}
+      <Rank rank={myRank.rank} leaguePoints={8997} />
       <Winrate
         winData={{
           gameWon: myRank.won,
@@ -78,17 +79,6 @@ export default function GameStats({ profile }: Props) {
           showPlaceholder: false,
         }}
       />
-
-        {/* [!][+] Devenu inutile ?
-      <div className={styles.total}>
-        <div className={`${styles.label}`}>{`global games played`}</div>
-        <div className={`${styles.number}`}>
-          {`${stats.gameWon + stats.gameLost}`}
-        </div>
-      </div>
-      */}
-
-
     </div>
   );
 }

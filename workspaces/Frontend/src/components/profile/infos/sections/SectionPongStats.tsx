@@ -10,6 +10,7 @@ import Winrate from "./ItemContent/Winrate";
 import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
 import LobbyService from "@/services/Lobby.service";
 import Rank from "./ItemContent/Rank";
+import XPBar from "./ItemContent/XPBar";
 
 type Props = {
   profile: Profile;
@@ -51,6 +52,7 @@ export default function SectionPongStats({ profile }: Props) {
       }
     }
 
+    // [+] Charger les donnees resumees + Leaguepoints
     const loadLeaderboard = async () => {
       try {
         const rep:ReturnDataTyped<UserLeaderboard[]> = await lobbyService.getLeaderboard();
@@ -108,10 +110,16 @@ export default function SectionPongStats({ profile }: Props) {
 
       <StoryDisplayOnly profile={profile} />
 
+      <p className={styles.tinyTitle}>Level</p>
+      <XPBar xpData={{
+        xp: 1000,
+        level: 7,
+        xpToUp: 200,
+      }} />
+
       <p className={styles.tinyTitle}>League</p>
-      
-        <Rank rank={winData.rank} />
-      
+      {/* [+]  importer les leaguepoints */}
+      <Rank rank={winData.rank} leaguePoints={527} />
 
       <Item title="League Winrate">
         <Winrate winData={{gameWon:winData.leagueWon, gameLost:winData.leagueLost, showPlaceholder: true}} />
@@ -130,11 +138,6 @@ export default function SectionPongStats({ profile }: Props) {
       <Item title="Recent Achievements">
         <p>items content : customize it with a specific component</p>
       </Item>
-
-      <Item title="Recent games">
-        <p>items content : customize it with a specific component</p>
-      </Item>
-
 
     </div>
   );
