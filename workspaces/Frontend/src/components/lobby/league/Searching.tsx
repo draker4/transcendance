@@ -5,6 +5,7 @@ import MatchmakingService from "@/services/Matchmaking.service";
 import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading/Loading";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function Searching() {
   const matchmakingService = new MatchmakingService();
@@ -19,7 +20,6 @@ export default function Searching() {
   const startMatchmake = async () => {
     try {
       const res = await matchmakingService.startSearch(type);
-      console.log("res=", res);
       if (res.success) {
         setSearching(true);
         checkSearch();
@@ -28,23 +28,38 @@ export default function Searching() {
         throw new Error('search failed');
     }
     catch (error: any) {
-      toast.info("Somethign went wrong, please try again!");
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.info("Something went wrong, please try again!");
     }
   };
 
   const checkSearch = async () => {
-    const res = await matchmakingService.checkSearch();
-    if (res.success) {
-      setSearching(false);
-      if (res.data) {
-        router.push(`/home/game/${res.data}`);
-        setStartingGame(true);
+    try {
+      const res = await matchmakingService.checkSearch();
+      if (res.success) {
+        setSearching(false);
+        if (res.data) {
+          router.push(`/home/game/${res.data}`);
+          setStartingGame(true);
+        }
+      } else {
+        const timeoutId = setTimeout(() => {
+          checkSearch();
+        }, 1000);
+        setSearchTimeoutId(timeoutId);
       }
-    } else {
-      const timeoutId = setTimeout(() => {
-        checkSearch();
-      }, 1000);
-      setSearchTimeoutId(timeoutId);
+    }
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.info("No game found, please try again!");
     }
   };
 
@@ -53,7 +68,17 @@ export default function Searching() {
     if (searchTimeoutId !== null) {
       clearTimeout(searchTimeoutId);
     }
-    await matchmakingService.stopSearch();
+    try {
+      await matchmakingService.stopSearch();
+    }
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      console.log(error.message);
+    }
   };
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export default function achievement({ profile, setShowAchievement }: Props) {
         if (ret.success)
           setUserachievement(ret.data);
         else
-          throw new Error('get achchievement failed');
+          throw new Error('get achievement failed');
       } catch (error:any) {
         if (error.message === "disconnect") {
           await disconnect();
