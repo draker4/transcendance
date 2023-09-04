@@ -15,6 +15,7 @@ export async function GET() {
 				httpOnly: true,
 				sameSite: "strict",
 				path: "/",
+				secure: false,
 			});
 
 			if (refreshToken)
@@ -24,6 +25,7 @@ export async function GET() {
 					httpOnly: true,
 					sameSite: "strict",
 					path: "/",
+					secure: false,
 				});
 
 			return response;

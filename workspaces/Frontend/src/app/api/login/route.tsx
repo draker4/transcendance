@@ -19,6 +19,7 @@ export async function POST(
 			httpOnly: true,
 			sameSite: "strict",
 			path: "/",
+			secure: false,
 		});
 
 		if (refresh_token)
@@ -28,6 +29,7 @@ export async function POST(
 				httpOnly: true,
 				sameSite: "strict",
 				path: "/",
+				secure: false,
 			});
 			
 		return response;

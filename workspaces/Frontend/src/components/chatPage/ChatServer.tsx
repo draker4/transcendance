@@ -13,12 +13,16 @@ export default async function ChatServer({ channelId }: {
 	};
 
 	try {
-		token = cookies().get("crunchy-token")?.value;
-		if (!token)
+		const	getToken = cookies().get("crunchy-token")?.value;
+		if (!getToken)
 			throw new Error("No token value");
+
+		token = getToken;
 
 		const profilService = new Profile_Service(token);
 		myself = await profilService.getProfileAndAvatar();
+		if (myself.id === -1)
+			throw new Error('no user');
 
 	} catch (err) {
 		console.log(err);

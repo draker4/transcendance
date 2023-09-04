@@ -53,7 +53,9 @@ export async function handleActionServer(
       access_token: data.access_token,
       refresh_token: data.refresh_token,
     };
-  } catch (err) {
+  } catch (err: any) {
+    if (err.message)
+      throw new Error('disconnect');
     return {
       exists: "Something went wrong, please try again!",
       access_token: "",

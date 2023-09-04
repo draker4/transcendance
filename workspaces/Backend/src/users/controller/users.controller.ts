@@ -28,12 +28,17 @@ export class UsersController {
   ) {}
 
   @Get('me')
-  getUserProfile(@Request() req) {
-    const user = this.usersService.getUserById(req.user.id);
+  async getUserProfile(@Request() req) {
+    try {
+      const user = await this.usersService.getUserById(req.user.id);
 
-    if (!user) throw new NotFoundException();
+      if (!user) throw new Error('no user');
 
-    return user;
+      return user;
+    }
+    catch (error) {
+      throw new NotFoundException();
+    }
   }
 
   // GET user + his dependency avatar

@@ -57,12 +57,14 @@ export class AuthController {
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
+        secure: false,
       });
 
       res.cookie('refresh-token', refresh_token, {
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
+        secure: false,
       });
 
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
@@ -71,11 +73,6 @@ export class AuthController {
       console.log(error);
       return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
     }
-    // return this.authService.login(
-    //   user42logged,
-    //   0,
-    //   user42logged.isTwoFactorAuthenticationEnabled,
-    // );
   }
 
   @Public()
@@ -189,12 +186,14 @@ export class AuthController {
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
+        secure: false,
       });
 
       res.cookie('refresh-token', refresh_token, {
         path: '/',
         httpOnly: true,
         sameSite: 'lax',
+        secure: false,
       });
 
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);

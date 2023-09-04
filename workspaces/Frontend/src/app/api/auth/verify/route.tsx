@@ -17,6 +17,7 @@ export async function GET(req: NextRequest) {
 					httpOnly: true,
 					sameSite: "strict",
 					path: "/",
+					secure: false,
 				});
 
 				if (data.refresh_token)
@@ -26,6 +27,7 @@ export async function GET(req: NextRequest) {
 						httpOnly: true,
 						sameSite: "strict",
 						path: "/",
+						secure: false,
 					});
 			}
 			return response;

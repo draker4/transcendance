@@ -1,28 +1,16 @@
 import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
 import StatsService from "@/services/Stats.service";
 import { useState, useEffect } from "react";
-import {
-  ShortStats,
-  StatsImproved,
-} from "@transcendence/shared/types/Stats.types";
+import { ShortStats } from "@transcendence/shared/types/Stats.types";
 import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
-import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
-import LobbyService from "@/services/Lobby.service";
 import Winrate from "@/components/profile/infos/sections/ItemContent/Winrate";
 
 type Props = {
   profile: Profile;
 };
 
-type MyLeague = {
-  rank: number;
-  won: number;
-  lost: number;
-};
-
 export default function GameStats({ profile }: Props) {
   const statsService = new StatsService();
-  const lobbyService = new LobbyService();
   const [stats, setStats] = useState<ShortStats | undefined>(undefined);
 
   useEffect(() => {
