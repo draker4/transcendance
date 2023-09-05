@@ -8,6 +8,7 @@ import ChatService from "@/services/Chat.service";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import LoadingSuspense from "../loading/LoadingSuspense";
+import styles from "@/styles/lobby/Lobby.module.css";
 
 export default function HomeClient({
   token,
@@ -59,9 +60,9 @@ export default function HomeClient({
   if (!socket) return <LoadingSuspense />;
 
   return (
-    <>
+    <div className={styles.home}>
       <HomeProfile profile={profile} avatar={avatar} />
       <Lobby profile={profile} socket={socket} />
-    </>
+    </div>
   );
 }

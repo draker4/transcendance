@@ -92,6 +92,7 @@ export default function Welcome() {
       </div>
       {showClassic && (
         <Demo
+          userId={undefined}
           login={"Grandpa"}
           demoData={classic}
           setShowDemo={setShowClassic}
@@ -100,6 +101,7 @@ export default function Welcome() {
       )}
       {showCrunchy && (
         <Demo
+          userId={undefined}
           login={"You"}
           demoData={crunchy}
           setShowDemo={setShowCrunchy}

@@ -81,12 +81,11 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
         return;
       }
       router.push("/home/training/" + res.data);
-    }
-    catch (error: any) {
-      if (error.message === 'disconnect') {
+    } catch (error: any) {
+      if (error.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
     }
   }
@@ -146,6 +145,7 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
     return (
       <div className={styles.practice}>
         <Demo
+          userId={profile.id}
           login={profile.login}
           demoData={demoData}
           setShowDemo={setShowDemo}

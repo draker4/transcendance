@@ -41,7 +41,7 @@ export class StatsController {
     return this.statsService.getUserLevel(userId);
   }
 
-  // 03 - api/stats/getUserLevelUp/:userId
+  // 04 - api/stats/getUserLevelUp/:userId
   @Get('getUserLevelUp/:userId')
   async getUserLevelUp(@Param('userId', ParseIntPipe) userId: number) {
     return this.statsService.getUserLevelUp(userId);
@@ -55,5 +55,11 @@ export class StatsController {
     @Body() update: UpdateStatsDTO,
   ) {
     return this.statsService.updateStats(userId, update);
+  }
+
+  // 12 - api/stats/updateDemoWatched/:userId
+  @Put('updateDemoWatched/:userId')
+  async UpdateDemoWatched(@Param('userId', ParseIntPipe) userId: number) {
+    return this.statsService.updateDemoWatched(userId);
   }
 }

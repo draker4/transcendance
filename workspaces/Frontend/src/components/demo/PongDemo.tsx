@@ -16,10 +16,11 @@ import {
   GAME_WIDTH,
 } from "@transcendence/shared/constants/Game.constants";
 import { defineTimer } from "@transcendence/shared/game/pongUtils";
-import PongSoloHead from "./PongDemoHead";
+import PongDemoHead from "./PongDemoHead";
 import PlayerPreview from "@/components/game/PlayerPreview";
 
 type Props = {
+  userId: number | undefined;
   gameData: GameData;
   setGameData: Function;
   setShowDemo: Function;
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export default function PongDemo({
+  userId,
   gameData,
   setGameData,
   setShowDemo,
@@ -91,7 +93,11 @@ export default function PongDemo({
 
   return (
     <div className={styles.pong} ref={pongRef}>
-      <PongSoloHead gameData={gameData} setShowDemo={setShowDemo} />
+      <PongDemoHead
+        userId={userId}
+        gameData={gameData}
+        setShowDemo={setShowDemo}
+      />
       <div className={styles.canvasContainer}>
         {!showPreview && (
           <canvas

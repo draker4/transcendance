@@ -112,6 +112,30 @@ export class StatsService {
     }
   }
 
+  public async updateDemoWatched(userId: number): Promise<Stats> {
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        throw new Error('Stats not found');
+      }
+      stats.demoWatched += 1;
+      if (
+        stats.demoWatched === 1 ||
+        stats.demoWatched === 10 ||
+        stats.demoWatched === 100
+      ) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `DEMO_${stats.demoWatched}`,
+        });
+      }
+      return await this.statsRepository.save(stats);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   public async getShortStats(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,

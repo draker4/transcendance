@@ -146,4 +146,17 @@ export default class StatsService {
       throw new Error(error.message);
     }
   }
+
+  public async updateDemoWatched(userId: number): Promise<void> {
+    try {
+      await fetchData(
+        this.token,
+        "stats",
+        `updateDemoWatched/${userId}`,
+        "PUT"
+      );
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
+  }
 }

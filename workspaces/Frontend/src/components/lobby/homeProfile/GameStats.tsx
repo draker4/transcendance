@@ -6,6 +6,7 @@ import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
+import Achievement from "@/components/lobby/homeProfile/Achievement";
 
 type Props = {
   profile: Profile;
@@ -44,45 +45,35 @@ export default function GameStats({ profile }: Props) {
   }
 
   return (
-
-<div className={styles.statsSide}>
-    {/* STATSBOX1 */}
-    <div className={styles.boxItem}>
-        
-          <div className={styles.boxLabel}>
-            <p className={styles.tinyTitle}>Play for glory</p>
-          </div>
-          <div className={styles.statsBox1}>
-        
-        <Rank
+    <div className={styles.statsSide}>
+      {/* STATSBOX1 */}
+      <div className={styles.boxItem}>
+        <div className={styles.boxLabel}>
+          <p className={styles.tinyTitle}>Play for glory</p>
+        </div>
+        <div className={styles.statsBox1}>
+          <Rank
             rank={stats ? stats.leagueRank : 0}
             leaguePoints={stats ? stats.leaguePoints : 0}
           />
           <XPBar userLevel={stats.leveling} />
-
         </div>
+      </div>
 
-    </div>
-
-    {/* STATSBOX2 */}
-     <div className={styles.boxItem}>
-        
-          <div className={styles.boxLabel}>
-            <p className={styles.tinyTitle}>Play for fun</p>
-          </div>
-          <div className={styles.statsBox2}>
-        
-        <Rank
+      {/* STATSBOX2 */}
+      <div className={styles.boxItem}>
+        <div className={styles.boxLabel}>
+          <p className={styles.tinyTitle}>Play for fun</p>
+        </div>
+        <div className={styles.statsBox2}>
+          <Rank
             rank={stats ? stats.leagueRank : 0}
             leaguePoints={stats ? stats.leaguePoints : 0}
           />
           <XPBar userLevel={stats.leveling} />
-          
         </div>
-
-    </div>
-
-
+      </div>
+      <Achievement profile={profile} />
     </div>
   );
 }
