@@ -1,0 +1,7 @@
+.annonceAchievement {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}

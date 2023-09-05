@@ -6,6 +6,7 @@ export type FullAchievement = {
   type: string;
   xp: number;
   completed: boolean;
+  toBeAnnounced: boolean;
   date: Date;
   icone: string;
   value: number;
@@ -21,5 +22,5 @@ export type AchievementStatus = {
 export type UserAchievement = {
   list: FullAchievement[];
   lastThree: FullAchievement[];
-  toBeAnnounced: string[];
+  toBeAnnounced: FullAchievement[];
 };

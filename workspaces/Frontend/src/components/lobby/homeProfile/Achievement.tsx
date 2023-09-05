@@ -1,8 +1,8 @@
 "use client";
 
 import AchievementService from "@/services/Achievement.service";
-import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import styles from "@/styles/lobby/homeProfile/Achievement.module.css";
+import { useEffect, useState } from "react";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import LoadingComponent from "@/components/loading/Loading";
 import { toast } from "react-toastify";
@@ -13,7 +13,7 @@ type Props = {
   profile: Profile;
 };
 
-export default function achievement({ profile }: Props) {
+export default function Achievement({ profile }: Props) {
   const achievementService = new AchievementService();
   const [userachievement, setUserachievement] = useState<
     UserAchievement | undefined
@@ -25,7 +25,7 @@ export default function achievement({ profile }: Props) {
       try {
         const ret = await achievementService.getUserAchievement(profile.id);
         if (ret.success) setUserachievement(ret.data);
-        else throw new Error("get achievement failed");
+        else throw new Error(ret.message);
       } catch (error: any) {
         if (error.message === "disconnect") {
           await disconnect();

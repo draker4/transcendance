@@ -140,35 +140,21 @@ export class AchievementService {
           type: achievementDatas[i].type,
           xp: achievementDatas[i].xp,
           completed: data.completed,
+          toBeAnnounced: data.toBeAnnounced,
           date: data.date,
           icone: achievementDatas[i].icone,
           value: achievementDatas[i].value,
         }),
       );
 
-      const toBeAnnounced: string[] = [];
-      for (const achievement of achievementStatus) {
-        if (achievement.toBeAnnounced) {
-          toBeAnnounced.push(achievement.id);
-        }
-      }
-
-      const lastThree: FullAchievement[] = achievementStatus
+      const lastThree: FullAchievement[] = fullachievement
         .filter((data) => data.completed)
         .sort((a, b) => b.date.getTime() - a.date.getTime())
-        .slice(0, 3)
-        .map((data) => ({
-          id: achievementDatas[parseInt(data.id) - 1].id,
-          code: achievementDatas[parseInt(data.id) - 1].code,
-          name: achievementDatas[parseInt(data.id) - 1].name,
-          description: achievementDatas[parseInt(data.id) - 1].description,
-          type: achievementDatas[parseInt(data.id) - 1].type,
-          xp: achievementDatas[parseInt(data.id) - 1].xp,
-          completed: data.completed,
-          date: data.date,
-          icone: achievementDatas[parseInt(data.id) - 1].icone,
-          value: achievementDatas[parseInt(data.id) - 1].value,
-        }));
+        .slice(0, 3);
+
+      const toBeAnnounced: FullAchievement[] = fullachievement
+        .filter((data) => data.toBeAnnounced)
+        .sort((a, b) => b.date.getTime() - a.date.getTime());
 
       const userAchievement: UserAchievement = {
         list: fullachievement,
