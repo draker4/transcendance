@@ -188,48 +188,71 @@ p.placeholder {
 
 .xpFrame {
   width:100%;
-  padding: 5px 15px 5px 15px;
+  height: 40px;
+  padding: 0px 15px 0px 15px;
   margin-bottom: 10px;
   user-select: none;
+
+  /* border: 1px solid chartreuse; */
 }
 
 .xpLevel {
   display: flex;
   align-items: center;
   justify-content: center;
-  border:  3px solid var(--accent1);
-  border-radius: 50%;
+  border: solid var(--secondary1) 3px;
+  border-radius: 10px;
 
-  min-width: 40px;
-  min-height: 40px;
+  height:100%;
+  aspect-ratio: 1/1;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 900;
-  color: var(--accent3);
-}
+  font-family: var(--title-font);
 
-.xpCapsuleAndXp {
-  width:100%;
-  height: 100%;
+  color: var(--tertiary1);
+  background-color: var(--primary2);
+
 }
 
 .xpCapsule {
   width:100%;
-  min-height: 20px;
+  height: 100%;
   border-radius: 10px;
   border: solid var(--secondary1) 3px;
   overflow: hidden;
   background-color: var(--primary2);
-  margin-left: 10px;
+  margin-left: 8px;
+
+  position:relative;
+}
+
+.xpCapsule:hover {
+  cursor:pointer;
+  border: solid  3px var(--accent1);
 }
 
 .xpBar {
-  background-color: var(--accent3);
-  color: var(--accent3);
+  background-color: var(--accent2);
+  color: var(--accent2);
+  min-width:0px;
+  min-height: 100%;
+  
+  z-index:1;
+  position:relative;
 }
 
 
 .xpDigits {
-  font-size: 0.5rem;
+  font-size: 0.8rem;
   letter-spacing: 0.1rem;
+  
+  z-index:5;
+  position:absolute;
+  top:25%;
+  left: 15%;
+
+  color: var(--tertiary1);
+
+  /* border: 1px dashed hotpink; */
 }

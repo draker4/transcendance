@@ -10,6 +10,7 @@ import {
   UserStory,
   UserTrainingData,
 } from '@transcendence/shared/types/Story.types';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Injectable()
 export class StoryService {
@@ -20,6 +21,8 @@ export class StoryService {
     private readonly storyRepository: Repository<Story>,
     @InjectRepository(StoryData)
     private readonly storyDataRepository: Repository<StoryData>,
+
+    private readonly achievementService: AchievementService,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -44,49 +47,22 @@ export class StoryService {
       if (!story) {
         throw new Error('Story not found');
       }
-      switch (update.level) {
-        case 1:
-          if (update.completed) story.levelCompleted1 = update.completed;
-          story.levelAttempted1++;
-          break;
-        case 2:
-          if (update.completed) story.levelCompleted2 = update.completed;
-          story.levelAttempted2++;
-          break;
-        case 3:
-          if (update.completed) story.levelCompleted3 = update.completed;
-          story.levelAttempted3++;
-          break;
-        case 4:
-          if (update.completed) story.levelCompleted4 = update.completed;
-          story.levelAttempted4++;
-          break;
-        case 5:
-          if (update.completed) story.levelCompleted5 = update.completed;
-          story.levelAttempted5++;
-          break;
-        case 6:
-          if (update.completed) story.levelCompleted6 = update.completed;
-          story.levelAttempted6++;
-          break;
-        case 7:
-          if (update.completed) story.levelCompleted7 = update.completed;
-          story.levelAttempted7++;
-          break;
-        case 8:
-          if (update.completed) story.levelCompleted8 = update.completed;
-          story.levelAttempted8++;
-          break;
-        case 9:
-          if (update.completed) story.levelCompleted9 = update.completed;
-          story.levelAttempted9++;
-          break;
-        case 10:
-          if (update.completed) story.levelCompleted10 = update.completed;
-          story.levelAttempted10++;
-          break;
-        default:
-          break;
+      if (!story[`levelCompleted${update.level}`]) {
+        if (update.completed) {
+          story[`levelCompleted${update.level}`] = update.completed;
+          if (
+            update.level === 1 ||
+            update.level === 3 ||
+            update.level === 5 ||
+            update.level === 7 ||
+            update.level === 10
+          ) {
+            await this.achievementService.achievementCompleted(userId, {
+              code: `STORY_${update.level}`,
+            });
+          }
+        }
+        story[`levelAttempted${update.level}`]++;
       }
       return await this.storyRepository.save(story);
     } catch (error) {

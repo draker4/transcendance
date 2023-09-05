@@ -44,23 +44,45 @@ export default function GameStats({ profile }: Props) {
   }
 
   return (
-    <div className={styles.gameStats}>
-      {/* [+] Leaguepoint a bien importer */}
-      <Rank
-        rank={stats ? stats.leagueRank : 0}
-        leaguePoints={stats ? stats.leaguePoints : 0}
-      />
-      <XPBar userLevel={stats.leveling} />
-      {/* [+] en trop
-      <Winrate
-        winData={{
-          gameWon: stats ? stats.gameWon : 0,
-          gameLost: stats ? stats.gameLost : 0,
-          global: stats ? stats.gameWon + stats.gameLost : 0,
-          showPlaceholder: false,
-        }}
-      />
-      */}
+
+<div className={styles.statsSide}>
+    {/* STATSBOX1 */}
+    <div className={styles.boxItem}>
+        
+          <div className={styles.boxLabel}>
+            <p className={styles.tinyTitle}>Play for glory</p>
+          </div>
+          <div className={styles.statsBox1}>
+        
+        <Rank
+            rank={stats ? stats.leagueRank : 0}
+            leaguePoints={stats ? stats.leaguePoints : 0}
+          />
+          <XPBar userLevel={stats.leveling} />
+
+        </div>
+
+    </div>
+
+    {/* STATSBOX2 */}
+     <div className={styles.boxItem}>
+        
+          <div className={styles.boxLabel}>
+            <p className={styles.tinyTitle}>Play for fun</p>
+          </div>
+          <div className={styles.statsBox2}>
+        
+        <Rank
+            rank={stats ? stats.leagueRank : 0}
+            leaguePoints={stats ? stats.leaguePoints : 0}
+          />
+          <XPBar userLevel={stats.leveling} />
+          
+        </div>
+
+    </div>
+
+
     </div>
   );
 }

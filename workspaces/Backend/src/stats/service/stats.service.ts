@@ -16,6 +16,7 @@ import {
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
 import { calculateXP } from '@transcendence/shared/game/calculateXP';
 import { ExperienceService } from '@/experience/service/experience.service';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Injectable()
 export class StatsService {
@@ -25,6 +26,7 @@ export class StatsService {
     @InjectRepository(Stats)
     private readonly statsRepository: Repository<Stats>,
 
+    private readonly achievementService: AchievementService,
     private readonly experienceService: ExperienceService,
   ) {}
 
@@ -103,6 +105,7 @@ export class StatsService {
           stats.levelUp = true;
         }
       }
+      await this.checkAchievement(stats, userId);
       return await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -543,5 +546,80 @@ export class StatsService {
     result.pointWin = side === 'Left' ? leftPointWin : rightPointWin;
     result.pointLost = side === 'Left' ? rightPointWin : leftPointWin;
     return stats;
+  }
+
+  // --------------------------------  PUBLIC METHODS  -------------------------------- //
+
+  public async checkAchievement(stats: Stats, userId: number): Promise<void> {
+    try {
+      const winLeague =
+        stats.leagueClassicWon + stats.leagueBest3Won + stats.leagueBest5Won;
+      const winParty =
+        stats.partyClassicWon +
+        stats.partyBest3Won +
+        stats.partyBest5Won +
+        stats.partyCustomWon;
+      const winTraining =
+        stats.trainingClassicWon +
+        stats.trainingBest3Won +
+        stats.trainingBest5Won +
+        stats.trainingCustomWon +
+        stats.trainingStoryWon;
+      const winGame = winLeague + winParty + winTraining;
+
+      if (
+        winGame === 1 ||
+        winGame === 10 ||
+        winGame === 100 ||
+        winGame === 1000
+      ) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `GAME_WIN_${winGame}`,
+        });
+      }
+      if (winLeague === 1 || winLeague === 10 || winLeague === 100) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `LEAGUE_WIN_${winLeague}`,
+        });
+      }
+      if (winParty === 1 || winParty === 10 || winParty === 100) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `PARTY_WIN_${winParty}`,
+        });
+      }
+      if (winTraining === 1 || winTraining === 10 || winTraining === 100) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `TRAINING_WIN_${winTraining}`,
+        });
+      }
+
+      const loseLeague =
+        stats.leagueClassicLost + stats.leagueBest3Lost + stats.leagueBest5Lost;
+      const loseParty =
+        stats.partyClassicLost +
+        stats.partyBest3Lost +
+        stats.partyBest5Lost +
+        stats.partyCustomLost;
+      const loseTraining =
+        stats.trainingClassicLost +
+        stats.trainingBest3Lost +
+        stats.trainingBest5Lost +
+        stats.trainingCustomLost +
+        stats.trainingStoryLost;
+      const loseGame = loseLeague + loseParty + loseTraining;
+
+      if (
+        loseGame === 1 ||
+        loseGame === 10 ||
+        loseGame === 100 ||
+        loseGame === 1000
+      ) {
+        await this.achievementService.achievementCompleted(userId, {
+          code: `GAME_LOSE_${loseGame}`,
+        });
+      }
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

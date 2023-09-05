@@ -22,6 +22,9 @@ export class AchievementData {
   updatedAt: Date;
 
   @Column()
+  code: string;
+
+  @Column()
   name: string;
 
   @Column()

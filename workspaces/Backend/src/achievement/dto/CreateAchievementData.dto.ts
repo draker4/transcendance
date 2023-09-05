@@ -3,6 +3,10 @@ import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 export class CreateAchievementDataDTO {
   @IsString()
   @IsNotEmpty()
+  code: string;
+
+  @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsString()
