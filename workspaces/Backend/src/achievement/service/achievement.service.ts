@@ -99,7 +99,6 @@ export class AchievementService {
       message: 'Catched an error',
     };
     try {
-
       const userAchievements = await this.achievementRepository.findOne({
         where: { userId: userId },
       });
