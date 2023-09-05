@@ -7,6 +7,7 @@ import {
   faGear,
   faMessage,
   faTableTennisPaddleBall,
+  faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "@/styles/profile/InfoCard.module.css";
@@ -85,14 +86,16 @@ export default function NavbarProfilInfo({
   const buttonData: ButtonData[] = isOwner
     ? [
         { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Pongies", icon: faFaceSmileWink },
-        { id: 2, name: "Channels", icon: faMessage },
-        { id: 3, name: "Custom", icon: faGear },
+        { id: 1, name: "Achievements", icon: faTrophy },
+        { id: 2, name: "Pongies", icon: faFaceSmileWink },
+        { id: 3, name: "Channels", icon: faMessage },
+        { id: 4, name: "Custom", icon: faGear },
       ]
     : [
         { id: 0, name: "PongStats", icon: faTableTennisPaddleBall },
-        { id: 1, name: "Pongies", icon: faFaceSmileWink },
-        { id: 2, name: "Channels", icon: faMessage },
+        { id: 1, name: "Achievements", icon: faTrophy },
+        { id: 2, name: "Pongies", icon: faFaceSmileWink },
+        { id: 3, name: "Channels", icon: faMessage },
       ];
 
   return (

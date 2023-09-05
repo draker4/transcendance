@@ -7,6 +7,7 @@ import SectionCustom from "./sections/SectionCustom";
 import { Socket } from "socket.io-client";
 import SectionPongies from "./sections/SectionPongies";
 import SectionChannels from "./sections/SectionChannels";
+import SectionAchievements from "./sections/achievements/SectionAchievements";
 
 type Props = {
   profile: Profile;
@@ -31,10 +32,12 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 0:
             return <SectionPongStats profile={profile} />;
           case 1:
-            return <SectionPongies socket={socket} isOwner={isOwner} profile={profile} />
+            return <SectionAchievements />;
           case 2:
-            return <SectionChannels socket={socket} isOwner={isOwner} profile={profile} />
+            return <SectionPongies socket={socket} isOwner={isOwner} profile={profile} />;
           case 3:
+            return <SectionChannels socket={socket} isOwner={isOwner} profile={profile} />;
+          case 4:
             return <SectionCustom profile={profile} setLogin={setLogin} socket={socket}/>;
           default:
             return <SectionPongStats profile={profile} />;

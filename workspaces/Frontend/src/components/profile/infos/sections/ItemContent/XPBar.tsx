@@ -44,7 +44,6 @@ export default function XPBar({ userLevel }: Props) {
     }
   }
 
-
   /* [!][+] ITEM DISPLAY_TEST ONLY */
   userLevel.progress = 36;
   userLevel.level = 19;
@@ -53,9 +52,6 @@ export default function XPBar({ userLevel }: Props) {
   userLevel.userXp = 25000;
   /* */
 
-  
-
-  
 
   return (
     <div className={`${styles.xpFrame} ${styles.row}`}>

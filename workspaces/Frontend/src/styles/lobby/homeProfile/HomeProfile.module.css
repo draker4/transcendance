@@ -5,7 +5,8 @@
   align-items: center;
   
   width: 100%;
-  padding: 10px;
+  min-height: 300px;
+  padding: 15px;
   margin-top: 10px;
   font-weight: 500;
   font-size: 20px;
@@ -15,12 +16,129 @@
   border: solid var(--secondary1) 3px;
 }
 
-.loginRotate {
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  transform: rotate(-180deg);
+.links {
+  text-decoration: none;
 }
 
+p.tinyTitle {
+  font-family: var(--title-font);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent1);
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+
+/* --------------------------------- */
+
+/* memo : background added inline with avatar border color */
+.faceSide {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  height: 100%;
+
+  border: 3px solid  rgb(138, 79, 255);
+  border: solid var(--secondary1) 3px;
+  border-radius: 10px;
+}
+
+.avatar {
+  width:100%;
+  aspect-ratio: 1;
+  border: 6px solid var(--primary1);
+  border-radius: 50%;
+}
+
+.login {
+  color: var(--accent3);
+  font-family: var(--title-font);
+  margin-top: 5px;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+/* --------------------------------- */
+
+.statsSide {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-evenly;
+
+  /* [+] dimension tmpo */
+  width: 1000px;
+  min-height: 300px;
+  
+  border: solid var(--secondary1) 3px;
+  border-radius: 10px;
+}
+
+.statsBox1 {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-flow: column nowrap;
+  width:100%;
+
+  /* border: 1px solid rgba(63, 233, 91, 0.839); */
+}
+
+.statsBox2 {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: flex-start;
+  width:100%;
+
+  /* border: 1px solid rgba(239, 136, 19, 0.839); */
+}
+
+.boxItem {
+  display: flex;
+  
+  align-items: flex-start;
+  flex-direction: column;
+  width:100%;
+}
+
+
+/* Breakpoint 1 : width > smartphone */
+/* */
+@media (min-width: 50rem) {
+  .statsBox1 {
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  .statsBox2 {
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+}
+/* */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 .avatarAndLogin {
   display: flex;
   flex-direction: column;
@@ -29,20 +147,10 @@
   width: 100%;
   max-width: 150px;
 }
+*/
 
-.avatar {
-  width:100%;
-  aspect-ratio: 1;
-}
 
-.login {
-  color: var(--accent3);
-  font-family: var(--title-font);
-  margin-right: 5px;
-  font-size: 1.2rem;
-  font-weight: 900;
-}
-
+/*
 .gameStats {
   width: 70%;
 
@@ -52,14 +160,14 @@
   align-items: center;
 
 }
+*/
 
-.links {
-  text-decoration: none;
-}
 
+/*
 @media (min-width: 50rem) {
 
   .gameStats {
     flex-direction: row;
   }
 }
+*/
