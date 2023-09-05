@@ -4,9 +4,7 @@ import AchievementService from "@/services/Achievement.service";
 import disconnect from "@/lib/disconnect/disconnect";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { FullAchievement, UserAchievement } from "@transcendence/shared/types/Achievement.types";
-import { LinearProgress, linearProgressClasses } from "@mui/material";
-import { styled } from '@mui/material/styles';
+import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import HeaderAchievement from "./HeaderAchievement";
 import AchievementItem from "./AchievementItem";
 
@@ -16,21 +14,21 @@ type Props = {
 
 export default function SectionAchievements({ profile }: Props) {
 
-  const [achievements, setAchievements] = useState<FullAchievement[]>([]);
+  const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const achievementService = new AchievementService();
   const router = useRouter();
 
   useEffect(() => {
     const getUserAchievements = async () => {
       try {
-        const res = await achievementService.getUserAchievement(profile.id);
+        const res = await achievementService.getAllAchievement(profile.id);
 
         if (!res.success)
           throw new Error('cannot get achievements');
 
-        const data: UserAchievement = res.data;
+        const data: UserAchievement[] = res.data;
 
-        setAchievements(data.list);
+        setAchievements(data);
       }
       catch (error: any) {
         if (error.message === 'disconnect') {
