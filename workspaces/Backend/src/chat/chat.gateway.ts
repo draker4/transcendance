@@ -125,8 +125,7 @@ export class ChatGateway implements OnModuleInit {
     setInterval(() => {
       const achievementAnnonce = this.achievementService.achivementAnnonce;
 
-      if (achievementAnnonce.length > 0) {
-        console.log('achievementAnnonce', achievementAnnonce);
+      while (achievementAnnonce.length > 0) {
         const achievement = achievementAnnonce.shift();
         this.connectedUsers.forEach((value, key) => {
           if (value === achievement.userId) {

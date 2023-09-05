@@ -78,7 +78,6 @@ export class AchievementService {
         userId: userId.toString(),
         achievement: annonce,
       });
-      console.log('Annonce', this.achivementAnnonce);
       await this.achievementRepository.save(userAchievement);
     } catch (error) {
       throw new Error(error.message);
