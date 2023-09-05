@@ -35,4 +35,10 @@ export class AchievementData {
 
   @Column()
   xp: number;
+
+  @Column()
+  icone: string;
+
+  @Column({ default: 0 })
+  value: number;
 }

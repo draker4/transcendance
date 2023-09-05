@@ -1,4 +1,4 @@
-import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString, IsOptional } from 'class-validator';
 
 export class CreateAchievementDataDTO {
   @IsString()
@@ -20,4 +20,12 @@ export class CreateAchievementDataDTO {
   @IsNumber()
   @IsNotEmpty()
   xp: number;
+
+  @IsString()
+  @IsNotEmpty()
+  icone: string;
+
+  @IsNumber()
+  @IsOptional()
+  value?: number;
 }

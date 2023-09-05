@@ -7,6 +7,8 @@ export type FullAchievement = {
   xp: number;
   completed: boolean;
   date: Date;
+  icone: string;
+  value: number;
 };
 
 export type AchievementStatus = {
