@@ -199,7 +199,7 @@ export class AchievementService {
           description: 'Win your first game',
           type: 'game',
           xp: 100,
-          icone: '',
+          icone: 'faHandPeace',
           value: 1,
         },
         {
@@ -208,7 +208,7 @@ export class AchievementService {
           description: 'Win 10 games',
           type: 'game',
           xp: 200,
-          icone: '',
+          icone: 'faHandPeace',
           value: 10,
         },
         {
@@ -217,7 +217,7 @@ export class AchievementService {
           description: 'Win 100 games',
           type: 'game',
           xp: 500,
-          icone: '',
+          icone: 'faHandPeace',
           value: 100,
         },
         {
@@ -226,7 +226,7 @@ export class AchievementService {
           description: 'Win 1000 games',
           type: 'game',
           xp: 1000,
-          icone: '',
+          icone: 'faHandPeace',
           value: 1000,
         },
         {
@@ -235,7 +235,7 @@ export class AchievementService {
           description: 'Lose your first games',
           type: 'game',
           xp: 100,
-          icone: '',
+          icone: 'faPoo',
           value: 1,
         },
         {
@@ -244,7 +244,7 @@ export class AchievementService {
           description: 'Lose 10 games',
           type: 'game',
           xp: 200,
-          icone: '',
+          icone: 'faPoo',
           value: 10,
         },
         {
@@ -253,7 +253,7 @@ export class AchievementService {
           description: 'Lose 100 games',
           type: 'game',
           xp: 500,
-          icone: '',
+          icone: 'faPoo',
           value: 100,
         },
         {
@@ -262,7 +262,7 @@ export class AchievementService {
           description: 'Lose 1000 games',
           type: 'game',
           xp: 1000,
-          icone: '',
+          icone: 'faPoo',
           value: 1000,
         },
         {
@@ -271,7 +271,7 @@ export class AchievementService {
           description: 'Win your first league game',
           type: 'league',
           xp: 100,
-          icone: '',
+          icone: 'faRankingStar',
           value: 1,
         },
         {
@@ -280,7 +280,7 @@ export class AchievementService {
           description: 'Win 10 league games',
           type: 'league',
           xp: 200,
-          icone: '',
+          icone: 'faRankingStar',
           value: 10,
         },
         {
@@ -289,7 +289,7 @@ export class AchievementService {
           description: 'Win 100 league games',
           type: 'league',
           xp: 500,
-          icone: '',
+          icone: 'faRankingStar',
           value: 100,
         },
         {
@@ -298,7 +298,7 @@ export class AchievementService {
           description: 'Win your first party game',
           type: 'party',
           xp: 100,
-          icone: '',
+          icone: 'faPeopleGroup',
           value: 1,
         },
         {
@@ -307,7 +307,7 @@ export class AchievementService {
           description: 'Win 10 party games',
           type: 'party',
           xp: 200,
-          icone: '',
+          icone: 'faPeopleGroup',
           value: 10,
         },
         {
@@ -316,7 +316,7 @@ export class AchievementService {
           description: 'Win 100 games party games',
           type: 'party',
           xp: 500,
-          icone: '',
+          icone: 'faPeopleGroup',
           value: 100,
         },
         {
@@ -325,7 +325,7 @@ export class AchievementService {
           description: 'Win your first training game',
           type: 'training',
           xp: 100,
-          icone: '',
+          icone: 'faDumbbell',
           value: 1,
         },
         {
@@ -334,7 +334,7 @@ export class AchievementService {
           description: 'Win 10 training games',
           type: 'training',
           xp: 200,
-          icone: '',
+          icone: 'faDumbbell',
           value: 10,
         },
         {
@@ -343,7 +343,7 @@ export class AchievementService {
           description: 'Win 100 training games',
           type: 'training',
           xp: 500,
-          icone: '',
+          icone: 'faDumbbell',
           value: 100,
         },
         {
@@ -352,7 +352,7 @@ export class AchievementService {
           description: 'Win the first story',
           type: 'training',
           xp: 100,
-          icone: '',
+          icone: 'faScroll',
           value: 1,
         },
         {
@@ -361,7 +361,7 @@ export class AchievementService {
           description: 'Win the 3rd story',
           type: 'training',
           xp: 200,
-          icone: '',
+          icone: 'faScroll',
           value: 3,
         },
         {
@@ -370,7 +370,7 @@ export class AchievementService {
           description: 'Win the 5th story',
           type: 'training',
           xp: 500,
-          icone: '',
+          icone: 'faScroll',
           value: 5,
         },
         {
@@ -379,7 +379,7 @@ export class AchievementService {
           description: 'Win the 7th story',
           type: 'training',
           xp: 500,
-          icone: '',
+          icone: 'faScroll',
           value: 7,
         },
         {
@@ -388,7 +388,7 @@ export class AchievementService {
           description: 'Win the 10th story',
           type: 'training',
           xp: 1000,
-          icone: '',
+          icone: 'faScroll',
           value: 10,
         },
         {
@@ -397,7 +397,7 @@ export class AchievementService {
           description: 'Watch a demo',
           type: 'demo',
           xp: 100,
-          icone: '',
+          icone: 'faVideo',
           value: 1,
         },
         {
@@ -406,7 +406,7 @@ export class AchievementService {
           description: 'Watch 10 demos',
           type: 'demo',
           xp: 200,
-          icone: '',
+          icone: 'faVideo',
           value: 10,
         },
         {
@@ -415,7 +415,7 @@ export class AchievementService {
           description: 'Watch 100 demos',
           type: 'demo',
           xp: 500,
-          icone: '',
+          icone: 'faVideo',
           value: 100,
         },
         {
@@ -424,7 +424,7 @@ export class AchievementService {
           description: 'Login with 42',
           type: 'account',
           xp: 100,
-          icone: '',
+          icone: 'faGraduationCap',
         },
         {
           code: 'LOGIN_GOOGLE',
@@ -432,7 +432,7 @@ export class AchievementService {
           description: 'Login with Google',
           type: 'account',
           xp: 100,
-          icone: '',
+          icone: 'faGoogle',
         },
         {
           code: 'UPLOAD_PICTURE',
@@ -440,7 +440,7 @@ export class AchievementService {
           description: 'Upload your profile picture',
           type: 'account',
           xp: 100,
-          icone: '',
+          icone: 'faCloudArrowUp',
         },
         {
           code: 'VERIFY_EMAIL',
@@ -448,7 +448,7 @@ export class AchievementService {
           description: 'Verify your email',
           type: 'account',
           xp: 100,
-          icone: '',
+          icone: 'faEnvelope',
         },
         {
           code: 'DOUBLE_AUTH',
@@ -456,7 +456,7 @@ export class AchievementService {
           description: 'Enable double authentication',
           type: 'account',
           xp: 100,
-          icone: '',
+          icone: 'faShieldHalved',
         },
       ];
 

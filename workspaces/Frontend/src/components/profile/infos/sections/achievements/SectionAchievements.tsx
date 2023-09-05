@@ -1,4 +1,3 @@
-import stylesInfoCard from "@/styles/profile/InfoCard.module.css";
 import styles from "@/styles/profile/Achievements/Achievements.module.css";
 import { useEffect, useState } from "react";
 import AchievementService from "@/services/Achievement.service";
@@ -6,6 +5,10 @@ import disconnect from "@/lib/disconnect/disconnect";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { FullAchievement, UserAchievement } from "@transcendence/shared/types/Achievement.types";
+import { LinearProgress, linearProgressClasses } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import HeaderAchievement from "./HeaderAchievement";
+import AchievementItem from "./AchievementItem";
 
 type Props = {
   profile: Profile;
@@ -43,16 +46,21 @@ export default function SectionAchievements({ profile }: Props) {
   }, []);
 
   const list = achievements.map(achievement => {
-		return <div className={styles.gridItem}>
-      {achievement.code}
+		return <div className={styles.gridItem} key={achievement.id} >
+      <AchievementItem achievement={achievement} />
     </div>
 	});
 
   return (
-    <div className={stylesInfoCard.sections}>
-				<p className={stylesInfoCard.tinyTitle} style={{fontSize: "0.9rem"}}>
-					All my Pongies 😎
-				</p>
+    <div className={styles.main}>
+
+      {/* Header */}
+			<HeaderAchievement />
+
+      {/* Separator */}
+      <div className={styles.line}></div>
+
+      {/* achievements list */}
         <div className={styles.grid}>
           {list}
         </div>
