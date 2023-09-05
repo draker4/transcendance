@@ -4,7 +4,6 @@ import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
 import Link from "next/link";
 import AvatarUser from "../../avatarUser/AvatarUser";
 import GameStats from "./GameStats";
-import { useState } from "react";
 import Achievement from "./Achievement";
 
 type Props = {
@@ -13,7 +12,6 @@ type Props = {
 };
 
 export default function HomeProfile({ profile, avatar }: Props) {
-  const [showAchievement, setShowAchievement] = useState<boolean>(false);
   return (
     <div className={styles.homeProfil}>
       <Link className={styles.links} href={`/home/profile/${profile.id}`}>
@@ -31,15 +29,7 @@ export default function HomeProfile({ profile, avatar }: Props) {
         </div>
       </Link>
       <GameStats profile={profile} />
-      <button onClick={() => setShowAchievement(!showAchievement)}>
-        Show achievement
-      </button>
-      {showAchievement && (
-        <Achievement
-          profile={profile}
-          setShowAchievement={setShowAchievement}
-        />
-      )}
+      <Achievement profile={profile} />
     </div>
   );
 }
