@@ -89,6 +89,7 @@ p.icon {
   .main {
     margin-left: 0;
     width: 90%;
+    max-width: 1500px;
     margin: 0 auto;
   }
 
