@@ -1,6 +1,8 @@
 .main {
   min-height: 75vh;
   background: var(--primary1);
+  width: 90%;
+  margin: 0 auto;
   /* overflow-y: scroll; */
   /* overflow-x: hidden; */
   /* overflow: hidden; */
@@ -86,6 +88,7 @@ p.icon {
 @media (min-width: 50rem) {
   .main {
     margin-left: 0;
+    width: 90%;
     margin: 0 auto;
   }
 
