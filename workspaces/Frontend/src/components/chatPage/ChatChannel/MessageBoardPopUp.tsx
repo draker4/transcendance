@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import Profile_Service from "@/services/Profile.service";
 import { useEffect, useState } from "react";
+import disconnect from "@/lib/disconnect/disconnect";
+import { useRouter } from "next/navigation";
 
 type Props = {
     relNotif: RelationNotifPack;
@@ -20,6 +22,7 @@ type Props = {
 
 export default function MessageBoardPopUp({relNotif}:Props) {
     const [senderLogin, setSenderLogin] = useState<string>("------");
+    const router = useRouter();
 
     useEffect(() => {
         async function recupSenderLogin() {
@@ -34,6 +37,11 @@ export default function MessageBoardPopUp({relNotif}:Props) {
     
           } catch (e: any) {
             setSenderLogin("");
+            if (e.message === 'disconnect') {
+              await disconnect();
+              router.refresh();
+              return ;
+            }
           }
         }
     
