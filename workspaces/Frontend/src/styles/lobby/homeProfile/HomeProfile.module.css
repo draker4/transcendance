@@ -2,11 +2,12 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: space-evenly;
-  align-items: center;
+  align-items: space-evenly;
   
   width: 100%;
   min-height: 300px;
-  padding: 15px;
+  padding: 10px 10px 0px 10px;
+  
   margin-top: 10px;
   font-weight: 500;
   font-size: 20px;
@@ -40,6 +41,7 @@ p.tinyTitle {
   align-items: center;
   padding: 50px;
   height: 100%;
+  margin-bottom: 10px;
 
   border: 3px solid  rgb(138, 79, 255);
   border: solid var(--secondary1) 3px;
@@ -47,6 +49,7 @@ p.tinyTitle {
 }
 
 .avatar {
+  max-width: 200px;
   width:100%;
   aspect-ratio: 1;
   border: 6px solid var(--primary1);
@@ -69,8 +72,9 @@ p.tinyTitle {
   justify-content: space-evenly;
 
   /* [+] dimension tmpo */
-  width: 1000px;
+  width: clamp(600px, 50%, 1000px);
   min-height: 300px;
+  margin-bottom: 10px;
   
   border: solid var(--secondary1) 3px;
   border-radius: 10px;
@@ -107,7 +111,7 @@ p.tinyTitle {
 
 /* Breakpoint 1 : width > smartphone */
 /* */
-@media (min-width: 50rem) {
+@media (min-width: 38rem) {
   .statsBox1 {
     flex-flow: row nowrap;
     align-items: center;

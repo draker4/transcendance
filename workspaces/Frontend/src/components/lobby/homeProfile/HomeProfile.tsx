@@ -41,9 +41,7 @@ export default function HomeProfile({ profile, avatar }: Props) {
 
       {/* STATS SIDE */}
       <GameStats profile={profile} />
-
     </div>
-
 
   );
 
