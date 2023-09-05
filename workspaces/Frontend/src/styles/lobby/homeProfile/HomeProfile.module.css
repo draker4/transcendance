@@ -27,7 +27,8 @@ p.tinyTitle {
   font-weight: 600;
   color: var(--accent1);
   margin-bottom: 0;
-  padding-left: 0;
+  margin-left: 20px;
+  
 }
 
 
@@ -43,8 +44,8 @@ p.tinyTitle {
   height: 100%;
   margin-bottom: 10px;
 
-  border: 3px solid  rgb(138, 79, 255);
-  border: solid var(--secondary1) 3px;
+  /* border: 3px solid  rgb(138, 79, 255); */
+  /* border: solid var(--secondary1) 3px; */
   border-radius: 10px;
 }
 
@@ -76,8 +77,8 @@ p.tinyTitle {
   min-height: 300px;
   margin-bottom: 10px;
   
-  border: solid var(--secondary1) 3px;
-  border-radius: 10px;
+  /* border: solid var(--secondary1) 3px; */
+  /* border-radius: 10px; */
 }
 
 .statsBox1 {

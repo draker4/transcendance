@@ -31,6 +31,7 @@ import { ChannelService } from '@/channels/service/channel.service';
 import { StatusService } from '@/statusService/status.service';
 import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
 import { editChannelTypeDto } from './dto/editChannelType.dto';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -46,6 +47,7 @@ export class ChatGateway implements OnModuleInit {
     private readonly chatService: ChatService,
     private readonly channelService: ChannelService,
     private readonly statusService: StatusService,
+    private readonly achievementService: AchievementService,
   ) {}
 
   // Container of connected users : Map<socket, user id>
@@ -120,12 +122,30 @@ export class ChatGateway implements OnModuleInit {
 
       this.statusService.remove(updateStatus);
     }, 1000);
+    setInterval(() => {
+      const achievementAnnonce = this.achievementService.achivementAnnonce;
+
+      if (achievementAnnonce.length > 0) {
+        console.log('achievementAnnonce', achievementAnnonce);
+        const achievement = achievementAnnonce.shift();
+        this.connectedUsers.forEach((value, key) => {
+          if (value === achievement.userId) {
+            this.server.to(key.id).emit('achievement', achievement.achievement);
+          }
+        });
+      }
+    }, 1000);
   }
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('newMsg')
   async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
-    await this.chatService.receiveNewMsg(message, req.user.id, this.server, this.connectedUsers);
+    await this.chatService.receiveNewMsg(
+      message,
+      req.user.id,
+      this.server,
+      this.connectedUsers,
+    );
   }
 
   @SubscribeMessage('disconnectClient')

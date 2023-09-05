@@ -6,7 +6,10 @@ import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
-import Achievement from "@/components/lobby/homeProfile/Achievement";
+import Achievement from "@/components/lobby/homeProfile/LastAchievement";
+import Item from "@/components/profile/infos/sections/Item";
+import StoryLevel from "@/components/profile/infos/sections/ItemContent/StoryLevel";
+import StoryService from "@/services/Story.service";
 
 type Props = {
   profile: Profile;
@@ -14,8 +17,37 @@ type Props = {
 
 export default function GameStats({ profile }: Props) {
   const statsService = new StatsService();
+  const storyService = new StoryService();
   const [stats, setStats] = useState<ShortStats | undefined>(undefined);
+  const [storyLevel, setStoryLevel] = useState<number>(0);
   const router = useRouter();
+
+  const loadStory = async () => {
+    try {
+      const rep = await storyService.getUserStories(profile.id);
+
+      if (rep !== undefined && rep.success) {
+        let checkLevel: number = 0;
+        while (rep.data[checkLevel].levelCompleted) {
+          checkLevel++;
+        }
+        setStoryLevel(checkLevel);
+      } else {
+        throw new Error(
+          rep !== undefined
+            ? rep.message
+            : "loadStory error : response undefined"
+        );
+      }
+    } catch (error: any) {
+      if (error.message === "disconnect") {
+        await disconnect();
+        router.refresh();
+        return;
+      }
+      console.log(`loadStory error : ${error.message}`);
+    }
+  };
 
   useEffect(() => {
     const getStats = async () => {
@@ -35,6 +67,7 @@ export default function GameStats({ profile }: Props) {
       }
     };
 
+    loadStory();
     getStats();
     const interval = setInterval(getStats, 300000);
     return () => clearInterval(interval);
@@ -66,14 +99,12 @@ export default function GameStats({ profile }: Props) {
           <p className={styles.tinyTitle}>Play for fun</p>
         </div>
         <div className={styles.statsBox2}>
-          <Rank
-            rank={stats ? stats.leagueRank : 0}
-            leaguePoints={stats ? stats.leaguePoints : 0}
-          />
-          <XPBar userLevel={stats.leveling} />
+          <Item title="Story Level">
+            <StoryLevel storyLevel={storyLevel} />
+          </Item>
+          <Achievement profile={profile} />
         </div>
       </div>
-      <Achievement profile={profile} />
     </div>
   );
 }

@@ -1,25 +1,25 @@
-export type FullAchievement = {
-  id: string;
+export type UserAchievement = {
+  id: number;
   code: string;
   name: string;
   description: string;
   type: string;
   xp: number;
   completed: boolean;
+  collected: boolean;
   date: Date;
   icone: string;
   value: number;
 };
 
 export type AchievementStatus = {
-  id: string;
+  id: number;
   completed: boolean;
-  toBeAnnounced: boolean;
+  collected: boolean;
   date: Date;
 };
 
-export type UserAchievement = {
-  list: FullAchievement[];
-  lastThree: FullAchievement[];
-  toBeAnnounced: string[];
+export type AchievementAnnonce = {
+  userId: string;
+  achievement: UserAchievement;
 };

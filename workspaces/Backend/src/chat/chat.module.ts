@@ -34,17 +34,13 @@ import { GameService } from '@/game/service/game.service';
 import { Score } from '@/utils/typeorm/Score.entity';
 import { ScoreService } from '@/score/service/score.service';
 import { AvatarService } from '@/avatar/service/avatar.service';
-import { Achievement } from '@/utils/typeorm/Achievement.entity';
-import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
-import { AchievementService } from '@/achievement/service/achievement.service';
 import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 import { ExperienceService } from '@/experience/service/experience.service';
+import { AchievementModule } from '@/achievement/achievement.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-      Achievement,
-      AchievementData,
       Avatar,
       BackupCode,
       Channel,
@@ -66,9 +62,9 @@ import { ExperienceService } from '@/experience/service/experience.service';
       UserPongieRelation,
     ]),
     StatusModule,
+    AchievementModule,
   ],
   providers: [
-    AchievementService,
     AvatarService,
     ChannelAuthGuard,
     ChatGateway,

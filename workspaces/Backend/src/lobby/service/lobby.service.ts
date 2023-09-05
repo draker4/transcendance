@@ -1,8 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
 
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Game } from 'src/utils/typeorm/Game.entity';
 import { CreateGameDTO } from '@/game/dto/CreateGame.dto';
 
@@ -21,9 +19,6 @@ import { UserLeaderboard } from '@transcendence/shared/types/Leaderboard.types';
 export class LobbyService {
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
   constructor(
-    @InjectRepository(Game)
-    public readonly gameRepository: Repository<Game>,
-
     public readonly gameService: GameService,
     public readonly userService: UsersService,
     public readonly channelService: ChannelService,

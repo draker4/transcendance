@@ -9,7 +9,7 @@ import { CreateAchievementDataDTO } from '../dto/CreateAchievementData.dto';
 import {
   UserAchievement,
   AchievementStatus,
-  FullAchievement,
+  AchievementAnnonce,
 } from '@transcendence/shared/types/Achievement.types';
 
 @Injectable()
@@ -22,6 +22,8 @@ export class AchievementService {
     @InjectRepository(AchievementData)
     private readonly achievementDataRepository: Repository<AchievementData>,
   ) {}
+
+  public achivementAnnonce: AchievementAnnonce[] = [];
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
@@ -55,21 +57,35 @@ export class AchievementService {
         throw new Error('User achievement not found');
       }
 
-      const achievementProperty = `achv${achievement.id}Completed`;
-
-      if (!userAchievement[achievementProperty]) {
-        userAchievement[achievementProperty] = true;
-        userAchievement[`achv${achievement.id}TBA`] = true;
+      if (!userAchievement[`achv${achievement.id}Completed`]) {
+        userAchievement[`achv${achievement.id}Completed`] = true;
         userAchievement[`achv${achievement.id}Date`] = new Date();
       } else return;
-
+      const annonce: UserAchievement = {
+        id: achievement.id,
+        code: achievement.code,
+        name: achievement.name,
+        description: achievement.description,
+        type: achievement.type,
+        xp: achievement.xp,
+        completed: true,
+        collected: false,
+        date: new Date(),
+        icone: achievement.icone,
+        value: achievement.value,
+      };
+      this.achivementAnnonce.push({
+        userId: userId.toString(),
+        achievement: annonce,
+      });
+      console.log('Annonce', this.achivementAnnonce);
       await this.achievementRepository.save(userAchievement);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  public async achievementAnnonced(
+  public async collectAchievement(
     userId: number,
     achievementId: string,
   ): Promise<void> {
@@ -83,17 +99,20 @@ export class AchievementService {
 
       const achievementProperty = `achv${achievementId}Completed`;
 
-      if (userAchievement[achievementProperty]) {
-        userAchievement[`achv${achievementId}TBA`] = false;
-      } else return;
-
+      if (!userAchievement[achievementProperty]) {
+        throw new Error('Achievement not completed');
+      } else if (userAchievement[`achv${achievementId}Collected`]) {
+        throw new Error('Achievement already collected');
+      } else {
+        userAchievement[`achv${achievementId}Collected`] = true;
+      }
       await this.achievementRepository.save(userAchievement);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  public async getUserAchievement(userId: number): Promise<ReturnData> {
+  public async getAllByUserId(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -111,9 +130,9 @@ export class AchievementService {
       const achievementStatus: AchievementStatus[] = Array.from(
         { length: 30 },
         (_, i) => ({
-          id: (i + 1).toString(),
+          id: userAchievements.id,
           completed: userAchievements[`achv${i + 1}Completed`],
-          toBeAnnounced: userAchievements[`achv${i + 1}TBA`],
+          collected: userAchievements[`achv${i + 1}Collected`],
           date: userAchievements[`achv${i + 1}Date`],
         }),
       );
@@ -131,7 +150,7 @@ export class AchievementService {
         }
       }
 
-      const fullachievement: FullAchievement[] = achievementStatus.map(
+      const fullachievement: UserAchievement[] = achievementStatus.map(
         (data, i) => ({
           id: achievementDatas[i].id,
           code: achievementDatas[i].code,
@@ -140,46 +159,88 @@ export class AchievementService {
           type: achievementDatas[i].type,
           xp: achievementDatas[i].xp,
           completed: data.completed,
+          collected: data.collected,
           date: data.date,
           icone: achievementDatas[i].icone,
           value: achievementDatas[i].value,
         }),
       );
 
-      const toBeAnnounced: string[] = [];
-      for (const achievement of achievementStatus) {
-        if (achievement.toBeAnnounced) {
-          toBeAnnounced.push(achievement.id);
+      ret.success = true;
+      ret.message = 'Achievement found';
+      ret.data = fullachievement
+        .sort((a, b) => b.id - a.id)
+        .sort((a, b) => {
+          if (a.completed && !b.completed) return -1;
+          if (!a.completed && b.completed) return 1;
+          return 0;
+        });
+      return ret;
+    } catch (error) {
+      console.log(error.message);
+      ret.error = error.message;
+      return ret;
+    }
+  }
+
+  public async getLastThreeByUserId(userId: number): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'Catched an error',
+    };
+    try {
+      const userAchievements = await this.achievementRepository.findOne({
+        where: { userId: userId },
+      });
+
+      if (!userAchievements) {
+        ret.message = 'Achievement not found';
+        return ret;
+      }
+
+      const achievementStatus: AchievementStatus[] = Array.from(
+        { length: 30 },
+        (_, i) => ({
+          id: userAchievements.id,
+          completed: userAchievements[`achv${i + 1}Completed`],
+          collected: userAchievements[`achv${i + 1}Collected`],
+          date: userAchievements[`achv${i + 1}Date`],
+        }),
+      );
+
+      let achievementDatas: AchievementData[] =
+        await this.achievementDataRepository.find();
+
+      if (!achievementDatas || achievementDatas.length === 0) {
+        await this.createAchievementData();
+        achievementDatas = await this.achievementDataRepository.find();
+
+        if (!achievementDatas || achievementDatas.length === 0) {
+          ret.message = 'Cannot create achievements';
+          return ret;
         }
       }
 
-      const lastThree: FullAchievement[] = achievementStatus
-        .filter((data) => data.completed)
-        .sort((a, b) => b.date.getTime() - a.date.getTime())
-        .slice(0, 3)
-        .map((data) => ({
-          id: achievementDatas[parseInt(data.id) - 1].id,
-          code: achievementDatas[parseInt(data.id) - 1].code,
-          name: achievementDatas[parseInt(data.id) - 1].name,
-          description: achievementDatas[parseInt(data.id) - 1].description,
-          type: achievementDatas[parseInt(data.id) - 1].type,
-          xp: achievementDatas[parseInt(data.id) - 1].xp,
-          completed: data.completed,
-          date: data.date,
-          icone: achievementDatas[parseInt(data.id) - 1].icone,
-          value: achievementDatas[parseInt(data.id) - 1].value,
-        }));
-
-      const userAchievement: UserAchievement = {
-        list: fullachievement,
-        lastThree: lastThree,
-        toBeAnnounced: toBeAnnounced,
-      };
+      const lastThree: UserAchievement[] = achievementStatus.map((data, i) => ({
+        id: achievementDatas[i].id,
+        code: achievementDatas[i].code,
+        name: achievementDatas[i].name,
+        description: achievementDatas[i].description,
+        type: achievementDatas[i].type,
+        xp: achievementDatas[i].xp,
+        completed: data.completed,
+        collected: data.collected,
+        date: data.date,
+        icone: achievementDatas[i].icone,
+        value: achievementDatas[i].value,
+      }));
 
       ret.success = true;
       ret.message = 'Achievement found';
-      ret.data = userAchievement;
-
+      ret.data = lastThree
+        .filter((data) => data.completed)
+        .sort((a, b) => b.date.getTime() - a.date.getTime())
+        .slice(0, 3);
       return ret;
     } catch (error) {
       console.log(error.message);

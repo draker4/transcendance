@@ -167,6 +167,8 @@
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
   margin-bottom: 0.5rem;
   overflow: hidden;
+  min-width: 350px;
+  max-width:800px;
 }
 
 .item .header {
@@ -180,6 +182,12 @@
   color: var(--primary1);
   font-family: var(--title-font);
   font-size: 0.7rem;
+}
+
+.leagueContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 /* ----------------------------------- */

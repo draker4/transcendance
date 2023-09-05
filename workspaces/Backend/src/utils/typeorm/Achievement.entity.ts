@@ -9,7 +9,7 @@ import {
 @Entity()
 export class Achievement {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn({
     type: 'timestamptz',
@@ -28,7 +28,7 @@ export class Achievement {
   achv1Completed: boolean;
 
   @Column({ default: false })
-  achv1TBA: boolean;
+  achv1Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -40,7 +40,7 @@ export class Achievement {
   achv2Completed: boolean;
 
   @Column({ default: false })
-  achv2TBA: boolean;
+  achv2Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -52,7 +52,7 @@ export class Achievement {
   achv3Completed: boolean;
 
   @Column({ default: false })
-  achv3TBA: boolean;
+  achv3Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -64,7 +64,7 @@ export class Achievement {
   achv4Completed: boolean;
 
   @Column({ default: false })
-  achv4TBA: boolean;
+  achv4Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -76,7 +76,7 @@ export class Achievement {
   achv5Completed: boolean;
 
   @Column({ default: false })
-  achv5TBA: boolean;
+  achv5Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -88,7 +88,7 @@ export class Achievement {
   achv6Completed: boolean;
 
   @Column({ default: false })
-  achv6TBA: boolean;
+  achv6Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -100,7 +100,7 @@ export class Achievement {
   achv7Completed: boolean;
 
   @Column({ default: false })
-  achv7TBA: boolean;
+  achv7Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -112,7 +112,7 @@ export class Achievement {
   achv8Completed: boolean;
 
   @Column({ default: false })
-  achv8TBA: boolean;
+  achv8Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -124,7 +124,7 @@ export class Achievement {
   achv9Completed: boolean;
 
   @Column({ default: false })
-  achv9TBA: boolean;
+  achv9Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -136,7 +136,7 @@ export class Achievement {
   achv10Completed: boolean;
 
   @Column({ default: false })
-  achv10TBA: boolean;
+  achv10Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -148,7 +148,7 @@ export class Achievement {
   achv11Completed: boolean;
 
   @Column({ default: false })
-  achv11TBA: boolean;
+  achv11Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -160,7 +160,7 @@ export class Achievement {
   achv12Completed: boolean;
 
   @Column({ default: false })
-  achv12TBA: boolean;
+  achv12Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -172,7 +172,7 @@ export class Achievement {
   achv13Completed: boolean;
 
   @Column({ default: false })
-  achv13TBA: boolean;
+  achv13Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -184,7 +184,7 @@ export class Achievement {
   achv14Completed: boolean;
 
   @Column({ default: false })
-  achv14TBA: boolean;
+  achv14Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -196,7 +196,7 @@ export class Achievement {
   achv15Completed: boolean;
 
   @Column({ default: false })
-  achv15TBA: boolean;
+  achv15Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -208,7 +208,7 @@ export class Achievement {
   achv16Completed: boolean;
 
   @Column({ default: false })
-  achv16TBA: boolean;
+  achv16Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -220,7 +220,7 @@ export class Achievement {
   achv17Completed: boolean;
 
   @Column({ default: false })
-  achv17TBA: boolean;
+  achv17Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -232,7 +232,7 @@ export class Achievement {
   achv18Completed: boolean;
 
   @Column({ default: false })
-  achv18TBA: boolean;
+  achv18Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -244,7 +244,7 @@ export class Achievement {
   achv19Completed: boolean;
 
   @Column({ default: false })
-  achv19TBA: boolean;
+  achv19Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -256,7 +256,7 @@ export class Achievement {
   achv20Completed: boolean;
 
   @Column({ default: false })
-  achv20TBA: boolean;
+  achv20Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -268,7 +268,7 @@ export class Achievement {
   achv21Completed: boolean;
 
   @Column({ default: false })
-  achv21TBA: boolean;
+  achv21Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -280,7 +280,7 @@ export class Achievement {
   achv22Completed: boolean;
 
   @Column({ default: false })
-  achv22TBA: boolean;
+  achv22Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -292,7 +292,7 @@ export class Achievement {
   achv23Completed: boolean;
 
   @Column({ default: false })
-  achv23TBA: boolean;
+  achv23Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -304,7 +304,7 @@ export class Achievement {
   achv24Completed: boolean;
 
   @Column({ default: false })
-  achv24TBA: boolean;
+  achv24Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -316,7 +316,7 @@ export class Achievement {
   achv25Completed: boolean;
 
   @Column({ default: false })
-  achv25TBA: boolean;
+  achv25Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -328,7 +328,7 @@ export class Achievement {
   achv26Completed: boolean;
 
   @Column({ default: false })
-  achv26TBA: boolean;
+  achv26Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -340,7 +340,7 @@ export class Achievement {
   achv27Completed: boolean;
 
   @Column({ default: false })
-  achv27TBA: boolean;
+  achv27Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -352,7 +352,7 @@ export class Achievement {
   achv28Completed: boolean;
 
   @Column({ default: false })
-  achv28TBA: boolean;
+  achv28Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -364,7 +364,7 @@ export class Achievement {
   achv29Completed: boolean;
 
   @Column({ default: false })
-  achv29TBA: boolean;
+  achv29Collected: boolean;
 
   @Column({
     type: 'timestamptz',
@@ -376,7 +376,7 @@ export class Achievement {
   achv30Completed: boolean;
 
   @Column({ default: false })
-  achv30TBA: boolean;
+  achv30Collected: boolean;
 
   @Column({
     type: 'timestamptz',

@@ -9,7 +9,7 @@ import {
 @Entity()
 export class AchievementData {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @CreateDateColumn({
     type: 'timestamptz',
