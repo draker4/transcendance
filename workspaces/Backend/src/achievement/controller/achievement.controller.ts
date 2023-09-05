@@ -14,17 +14,25 @@ export class AchievementController {
   }
 
   // 01 - api/achievement/get/:userId
-  @Get('get/:userId')
-  async getAchievementByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    return this.achievementService.getUserAchievement(userId);
+  @Get('getAll/:userId')
+  async getAllByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.achievementService.getAllByUserId(userId);
   }
 
-  // 02 - api/achievement/annonced/:userId/:achievementId
-  @Put('updateAnnonce/:userId/:annonceId/:achievementId')
-  async achievementAnnonced(
+  // 02 - api/achievement/get/:userId
+  @Get('getLastThree/:userId')
+  async getLastThreeByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return this.achievementService.getLastThreeByUserId(userId);
+  }
+
+  @Get('get/:userId/:achievementId')
+
+  // 03 - api/achievement/collected/:userId/:achievementId
+  @Put('collected/:userId/:achievementId')
+  async collectAchievement(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('achievementId') achievementId: string,
   ) {
-    return this.achievementService.achievementAnnonced(userId, achievementId);
+    return this.achievementService.collectAchievement(userId, achievementId);
   }
 }

@@ -97,11 +97,11 @@ import { ExperienceData } from './utils/typeorm/ExperienceData.entity';
     MessageModule,
     ScoreModule,
     StatsModule,
+    StatusModule,
     StoryModule,
     TrainingModule,
     TwoFactorAuthenticationModule,
     UsersModule,
-    StatusModule,
   ],
 })
 export class AppModule {}

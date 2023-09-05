@@ -13,18 +13,18 @@ type Props = {
   profile: Profile;
 };
 
-export default function Achievement({ profile }: Props) {
+export default function LastAchievement({ profile }: Props) {
   const achievementService = new AchievementService();
-  const [userachievement, setUserachievement] = useState<
-    UserAchievement | undefined
+  const [userAchievement, setUserAchievement] = useState<
+    UserAchievement[] | undefined
   >(undefined);
   const router = useRouter();
 
   useEffect(() => {
     const getachievement = async () => {
       try {
-        const ret = await achievementService.getUserAchievement(profile.id);
-        if (ret.success) setUserachievement(ret.data);
+        const ret = await achievementService.getLastThree(profile.id);
+        if (ret.success) setUserAchievement(ret.data);
         else throw new Error(ret.message);
       } catch (error: any) {
         if (error.message === "disconnect") {
@@ -40,7 +40,7 @@ export default function Achievement({ profile }: Props) {
     getachievement();
   }, []);
 
-  if (!userachievement) {
+  if (!userAchievement) {
     return (
       <div className={styles.achievement}>
         <LoadingComponent />
@@ -48,7 +48,7 @@ export default function Achievement({ profile }: Props) {
     );
   }
 
-  if (userachievement.lastThree.length === 0) {
+  if (userAchievement.length === 0) {
     return (
       <div className={styles.achievement}>
         <h3 className={styles.achievementItemTitle}>No achievement yet</h3>
@@ -58,7 +58,7 @@ export default function Achievement({ profile }: Props) {
 
   return (
     <div className={styles.achievement}>
-      {userachievement.lastThree.map((achievement) => (
+      {userAchievement.map((achievement) => (
         <div className={styles.achievementItem}>
           <h3 className={styles.achievementItemTitle}>{achievement.name}</h3>
           <p className={styles.achievementItemDescription}>

@@ -5,21 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Stats } from 'src/utils/typeorm/Stats.entity';
 import { ExperienceService } from '@/experience/service/experience.service';
 import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
-import { AchievementService } from '@/achievement/service/achievement.service';
-import { AchievementData } from '@/utils/typeorm/AchievementData.entity';
-import { Achievement } from '@/utils/typeorm/Achievement.entity';
+import { AchievementModule } from '@/achievement/achievement.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Achievement,
-      AchievementData,
-      ExperienceData,
-      Stats,
-    ]),
+    TypeOrmModule.forFeature([ExperienceData, Stats]),
+    AchievementModule,
   ],
   controllers: [StatsController],
-  providers: [AchievementService, ExperienceService, StatsService],
+  providers: [ExperienceService, StatsService],
   exports: [StatsService],
 })
 export class StatsModule {}

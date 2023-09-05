@@ -7,20 +7,19 @@ export default class AchievementService {
     if (token) this.token = token;
   }
 
-  //Recupere la liste des game en cours
-  public async getUserAchievement(userId: number): Promise<ReturnData> {
+  //Recupere la liste des achievements de l'utilisateur
+  public async getAllAchievement(userId: number): Promise<ReturnData> {
     try {
       const response = await fetchData(
         this.token,
         "achievement",
-        `get/${userId}`,
+        `getAll/${userId}`,
         "GET"
       );
       const data: ReturnData = await response.json();
       return data;
     } catch (error: any) {
-      if (error.message === 'disconnect')
-        throw new Error('disconnect');
+      if (error.message === "disconnect") throw new Error("disconnect");
       console.log(`Error Getting User achievement: ${error}`);
       return {
         success: false,
@@ -29,7 +28,28 @@ export default class AchievementService {
     }
   }
 
-  public async achievementAnnonced(
+  //Recupere les derniers achievements de l'utilisateur jusqu'a 3 (peut etre null)
+  public async getLastThree(userId: number): Promise<ReturnData> {
+    try {
+      const response = await fetchData(
+        this.token,
+        "achievement",
+        `getLastThree/${userId}`,
+        "GET"
+      );
+      const data: ReturnData = await response.json();
+      return data;
+    } catch (error: any) {
+      if (error.message === "disconnect") throw new Error("disconnect");
+      console.log(`Error Getting User achievement: ${error}`);
+      return {
+        success: false,
+        message: "Error Getting User achievement",
+      };
+    }
+  }
+
+  public async collectAchievement(
     userId: number,
     achievementId: string
   ): Promise<void> {
@@ -37,7 +57,7 @@ export default class AchievementService {
       await fetchData(
         this.token,
         "achievement",
-        `annonced/${userId}/${achievementId}`,
+        `collected/${userId}/${achievementId}`,
         "PUT"
       );
     } catch (error: any) {

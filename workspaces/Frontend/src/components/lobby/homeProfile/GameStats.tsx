@@ -6,7 +6,7 @@ import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
-import Achievement from "@/components/lobby/homeProfile/Achievement";
+import Achievement from "@/components/lobby/homeProfile/LastAchievement";
 
 type Props = {
   profile: Profile;
