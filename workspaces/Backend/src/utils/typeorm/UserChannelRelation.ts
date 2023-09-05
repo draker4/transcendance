@@ -46,6 +46,6 @@ export class UserChannelRelation {
 	@Column({ default: false })
 	muted: boolean;
 
-	@Column({ default: true })
-  joined: boolean;
+	@Column({ default: false })
+  	joined: boolean;
 }

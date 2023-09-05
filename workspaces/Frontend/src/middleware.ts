@@ -214,27 +214,32 @@ export async function middleware(req: NextRequest) {
     !req.nextUrl.pathname.startsWith("/home/game")
   ) {
     // console.log("check if user is in game");
-    const lobbyService = new LobbyService(crunchyToken);
-    if (!verifiedToken) return;
-    const ret: ReturnData = await lobbyService.userInGame();
-    if (ret.success) {
-      // console.log("redirect to game: " + ret.data);
-      const response = NextResponse.redirect(
-        new URL("/home/game/" + ret.data, req.url)
-      );
-      if (changeCookies && refreshToken) {
-        response.cookies.set("crunchy-token", crunchyToken as string, {
-          httpOnly: true,
-          sameSite: "strict",
-          path: "/",
-        });
-        response.cookies.set("refresh-token", refreshToken, {
-          httpOnly: true,
-          sameSite: "strict",
-          path: "/",
-        });
+    
+    try {
+      const lobbyService = new LobbyService(crunchyToken);
+      const ret: ReturnData = await lobbyService.userInGame();
+      if (ret.success) {
+        // console.log("redirect to game: " + ret.data);
+        const response = NextResponse.redirect(
+          new URL("/home/game/" + ret.data, req.url)
+        );
+        if (changeCookies && refreshToken) {
+          response.cookies.set("crunchy-token", crunchyToken as string, {
+            httpOnly: true,
+            sameSite: "strict",
+            path: "/",
+          });
+          response.cookies.set("refresh-token", refreshToken, {
+            httpOnly: true,
+            sameSite: "strict",
+            path: "/",
+          });
+        }
+        return response;
       }
-      return response;
+    }
+    catch (error: any) {
+      
     }
   }
 

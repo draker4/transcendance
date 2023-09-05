@@ -125,7 +125,7 @@ export class ChatGateway implements OnModuleInit {
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('newMsg')
   async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
-    await this.chatService.receiveNewMsg(message, req.user.id, this.server);
+    await this.chatService.receiveNewMsg(message, req.user.id, this.server, this.connectedUsers);
   }
 
   @SubscribeMessage('disconnectClient')
@@ -442,8 +442,8 @@ export class ChatGateway implements OnModuleInit {
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
-  async getMessages(@MessageBody() payload: channelIdDto) {
-    return (await this.chatService.getMessages(payload.id)).messages;
+  async getMessages(@MessageBody() payload: channelIdDto, @Req() req) {
+    return await this.chatService.getMessages(payload.id, req.user.id);
   }
 
   @UseGuards(ChannelAuthGuard)

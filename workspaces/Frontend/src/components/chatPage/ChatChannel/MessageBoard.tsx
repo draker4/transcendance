@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import MessageBoardPopUp from "./MessageBoardPopUp";
-import { Socket } from "socket.io-client";
 
 type Props = {
   messages: Message[];

@@ -38,7 +38,7 @@ export default function Conversations({
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
-      // console.log("Conversation - LOADATA channel : ", channels); // checking
+      console.log("Conversation - LOADATA channel : ", channels); // checking
       setChannels(channels);
 
       if (channels.length > 0 && nothing.current === true && !littleScreen) {

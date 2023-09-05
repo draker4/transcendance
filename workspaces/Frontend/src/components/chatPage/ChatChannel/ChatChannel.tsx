@@ -50,7 +50,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   const [isMuted, setIsMuted] = useState<boolean>(channel.muted);
   const router = useRouter();
 
-  useEffect(() => {
+  const getMessages = () => {
     socket?.emit( "getMessages", {id : channel.id},
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
@@ -69,20 +69,26 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
           previousMsg.push(msg);
         });
 
-		if (channel.type === "privateMsg") {
-			socket?.emit("getChannelName", {id : channel.id}, (response: Rep) => {
-				if (response.success) {
-					setCodename(response.message);
-				}
-			});
-		}
+    if (channel.type === "privateMsg") {
+      socket?.emit("getChannelName", {id : channel.id}, (response: Rep) => {
+        if (response.success) {
+          setCodename(response.message);
+        }
+      });
+    }
         setMessages(previousMsg);
       }
     );
+  }
+
+  useEffect(() => {
+
+    getMessages();
+
   }, [channel, socket]);
 
   useEffect(() => { 
-	 checkIfMuted()
+	 checkIfMuted();
 
   }, []);
 
@@ -124,6 +130,9 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
       else if (edit.newRelation.muted !== undefined)
         setIsMuted(edit.newRelation.muted);
     }
+
+    // update messages (banned or not)
+    getMessages();
   }
 
   useEffect(() => {
