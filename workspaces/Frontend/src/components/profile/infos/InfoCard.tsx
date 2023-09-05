@@ -32,7 +32,7 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 0:
             return <SectionPongStats profile={profile} />;
           case 1:
-            return <SectionAchievements />;
+            return <SectionAchievements profile={profile} />;
           case 2:
             return <SectionPongies socket={socket} isOwner={isOwner} profile={profile} />;
           case 3:

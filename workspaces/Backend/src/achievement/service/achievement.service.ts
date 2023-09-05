@@ -165,8 +165,10 @@ export class AchievementService {
       ret.success = true;
       ret.message = 'Achievement found';
       ret.data = userAchievement;
+
       return ret;
     } catch (error) {
+      console.log(error.message);
       ret.error = error.message;
       return ret;
     }
