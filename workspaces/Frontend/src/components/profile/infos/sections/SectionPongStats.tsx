@@ -37,7 +37,9 @@ export default function SectionPongStats({ profile }: Props) {
         leveling:  {
           level: 1,
           userXp: 0,
-          nextLevelXP: 0,
+          nextLevelXP: 100,
+          cumulativeXpToNext: 0,
+          progress: 0,
         },
         gameWon:  0,
         gameLost:  0,
@@ -147,7 +149,13 @@ export default function SectionPongStats({ profile }: Props) {
       <StoryDisplayOnly profile={profile} />
 
       <p className={styles.tinyTitle}>Level</p>
-      <XPBar userLevel={shortStats.leveling ? shortStats.leveling : {level:1, nextLevelXP:100, userXp:0}} />
+      <XPBar userLevel={shortStats.leveling ? shortStats.leveling : {
+          level: 1,
+          userXp: 0,
+          nextLevelXP: 100,
+          cumulativeXpToNext: 0,
+          progress: 0,
+        }} />
 
       <p className={styles.tinyTitle}>League</p>
       <Rank rank={shortStats.leagueRank} leaguePoints={shortStats.leaguePoints} />

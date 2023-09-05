@@ -1,28 +1,76 @@
 import styles from "@/styles/profile/ItemContent.module.css";
 import { UserLevel } from "@transcendence/shared/types/Stats.types";
+import { useState } from "react";
 
 type Props = {
   userLevel: UserLevel;
 };
 
+type DisplayMode = "percent" | "needToUp" | "totalXp";
+
 export default function XPBar({ userLevel }: Props) {
-  const ratio = userLevel.progress;
+
+
+  const [mode, setMode] = useState<DisplayMode>("percent");
+
+
+  const whatToDisplay = (mode:DisplayMode):string => {
+    switch (mode) {
+      case "percent":
+        return `${userLevel.progress}% of level completion`;
+      case "needToUp":
+        return `${userLevel.nextLevelXP} xp to reach level ${userLevel.level + 1}`;
+      case "totalXp":
+        return `${userLevel.userXp} total xp`;
+      default:
+        return `${userLevel.progress}% of level completion`;
+    }
+  }
+
+  const swapMode = () => {
+    switch (mode) {
+        case "percent":
+          setMode("needToUp");
+          break;
+        case "needToUp":
+          setMode("totalXp");
+          break;
+        case "totalXp":
+          setMode("percent");
+          break;
+        default:
+          setMode("percent");
+          break;
+    }
+  }
+
+
+  /* [!][+] ITEM DISPLAY_TEST ONLY */
+  userLevel.progress = 36;
+  userLevel.level = 19;
+  userLevel.nextLevelXP = 2589;
+  userLevel.cumulativeXpToNext = 10589;
+  userLevel.userXp = 25000;
+  /* */
+
+  
+
+  
 
   return (
     <div className={`${styles.xpFrame} ${styles.row}`}>
       <div className={`${styles.xpLevel} ${styles.row}`}>{userLevel.level}</div>
 
-      <div className={`${styles.xpCapsuleAndXp} ${styles.column}`}>
-        <div className={styles.xpCapsule}>
+      
+        <div className={styles.xpCapsule} onClick={swapMode}>
           <div
             className={`${styles.xpBar}`}
             style={{ width: `${userLevel.progress}%` }}
           >
-            0
           </div>
+          <div className={styles.xpDigits}>{whatToDisplay(mode)}</div>
         </div>
-        <p>{`${userLevel.progress}% of level completion`}</p>
       </div>
-    </div>
+    
   );
 }
