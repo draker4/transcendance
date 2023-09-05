@@ -42,7 +42,7 @@ export class AchievementService {
   ): Promise<void> {
     try {
       const achievement = await this.achievementDataRepository.findOne({
-        where: { name: update.name },
+        where: { code: update.code },
       });
       if (!achievement) {
         throw new Error('Achievement not found');
@@ -60,6 +60,7 @@ export class AchievementService {
       if (!userAchievement[achievementProperty]) {
         userAchievement[achievementProperty] = true;
         userAchievement[`achv${achievement.id}TBA`] = true;
+        userAchievement[`achv${achievement.id}Date`] = new Date();
       } else return;
 
       await this.achievementRepository.save(userAchievement);
@@ -111,8 +112,9 @@ export class AchievementService {
         { length: 30 },
         (_, i) => ({
           id: (i + 1).toString(),
-          completed: userAchievements[`achv${i + 1}`],
+          completed: userAchievements[`achv${i + 1}Completed`],
           toBeAnnounced: userAchievements[`achv${i + 1}TBA`],
+          date: userAchievements[`achv${i + 1}Date`],
         }),
       );
 
@@ -132,11 +134,13 @@ export class AchievementService {
       const fullachievement: FullAchievement[] = achievementStatus.map(
         (data, i) => ({
           id: achievementDatas[i].id,
+          code: achievementDatas[i].code,
           name: achievementDatas[i].name,
           description: achievementDatas[i].description,
           type: achievementDatas[i].type,
           xp: achievementDatas[i].xp,
           completed: data.completed,
+          date: data.date,
         }),
       );
 
@@ -147,8 +151,24 @@ export class AchievementService {
         }
       }
 
+      const lastThree: FullAchievement[] = achievementStatus
+        .filter((data) => data.completed)
+        .sort((a, b) => b.date.getTime() - a.date.getTime())
+        .slice(0, 3)
+        .map((data) => ({
+          id: achievementDatas[parseInt(data.id) - 1].id,
+          code: achievementDatas[parseInt(data.id) - 1].code,
+          name: achievementDatas[parseInt(data.id) - 1].name,
+          description: achievementDatas[parseInt(data.id) - 1].description,
+          type: achievementDatas[parseInt(data.id) - 1].type,
+          xp: achievementDatas[parseInt(data.id) - 1].xp,
+          completed: data.completed,
+          date: data.date,
+        }));
+
       const userAchievement: UserAchievement = {
         list: fullachievement,
+        lastThree: lastThree,
         toBeAnnounced: toBeAnnounced,
       };
 
@@ -168,180 +188,210 @@ export class AchievementService {
     try {
       const achivements: CreateAchievementDataDTO[] = [
         {
+          code: 'GAME_WIN_1',
           name: 'First Blood',
           description: 'Win your first game',
           type: 'game',
           xp: 100,
         },
         {
+          code: 'GAME_WIN_10',
           name: 'Love to Win',
           description: 'Win 10 games',
           type: 'game',
           xp: 200,
         },
         {
+          code: 'GAME_WIN_100',
           name: 'Master of Win',
           description: 'Win 100 games',
           type: 'game',
           xp: 500,
         },
         {
+          code: 'GAME_WIN_1000',
           name: 'The Winner',
           description: 'Win 1000 games',
           type: 'game',
           xp: 1000,
         },
         {
+          code: 'GAME_LOSE_1',
           name: "Next time, I'll win",
           description: 'Lose your first games',
           type: 'game',
           xp: 100,
         },
         {
+          code: 'GAME_LOSE_10',
           name: 'This is not my day',
           description: 'Lose 10 games',
           type: 'game',
           xp: 200,
         },
         {
+          code: 'GAME_LOSE_100',
           name: 'Seriously?',
           description: 'Lose 100 games',
           type: 'game',
           xp: 500,
         },
         {
+          code: 'GAME_LOSE_1000',
           name: 'I give up',
           description: 'Lose 1000 games',
           type: 'game',
           xp: 1000,
         },
         {
+          code: 'LEAGUE_WIN_1',
           name: 'The start of a journey',
           description: 'Win your first league game',
           type: 'league',
           xp: 100,
         },
         {
+          code: 'LEAGUE_WIN_10',
           name: 'The journey continues',
           description: 'Win 10 league games',
           type: 'league',
           xp: 200,
         },
         {
+          code: 'LEAGUE_WIN_100',
           name: 'The journey is endless',
           description: 'Win 100 league games',
           type: 'league',
           xp: 500,
         },
         {
+          code: 'PARTY_WIN_1',
           name: 'Lets play my friends',
-          description: 'Play your first party game',
+          description: 'Win your first party game',
           type: 'party',
           xp: 100,
         },
         {
+          code: 'PARTY_WIN_10',
           name: 'Is that all you got?',
-          description: 'Play 10 party games',
+          description: 'Win 10 party games',
           type: 'party',
           xp: 200,
         },
         {
+          code: 'PARTY_WIN_100',
           name: 'I am the best',
-          description: 'Play 100 games party games',
+          description: 'Win 100 games party games',
           type: 'party',
           xp: 500,
         },
         {
+          code: 'TRAINING_WIN_1',
           name: 'Lets try this',
           description: 'Win your first training game',
           type: 'training',
           xp: 100,
         },
         {
+          code: 'TRAINING_WIN_10',
           name: 'I am getting better',
           description: 'Win 10 training games',
           type: 'training',
           xp: 200,
         },
         {
+          code: 'TRAINING_WIN_100',
           name: 'Work hard Play hard',
           description: 'Win 100 training games',
           type: 'training',
           xp: 500,
         },
         {
+          code: 'STORY_1',
           name: 'The first but not the last',
           description: 'Win the first story',
           type: 'training',
           xp: 100,
         },
         {
+          code: 'STORY_3',
           name: 'Just the basics',
           description: 'Win the 3rd story',
           type: 'training',
           xp: 200,
         },
         {
+          code: 'STORY_5',
           name: 'Only half way there',
           description: 'Win the 5th story',
           type: 'training',
           xp: 500,
         },
         {
+          code: 'STORY_7',
           name: 'This just got serious',
           description: 'Win the 7th story',
           type: 'training',
           xp: 500,
         },
         {
+          code: 'STORY_10',
           name: 'Transcendence has been achieved',
           description: 'Win the 10th story',
           type: 'training',
           xp: 1000,
         },
         {
+          code: 'DEMO_1',
           name: 'So that is how you do it',
           description: 'Watch a demo',
           type: 'demo',
           xp: 100,
         },
         {
+          code: 'DEMO_10',
           name: 'I am a fan',
           description: 'Watch 10 demos',
           type: 'demo',
           xp: 200,
         },
         {
+          code: 'DEMO_100',
           name: 'I am a super fan',
           description: 'Watch 100 demos',
           type: 'demo',
           xp: 500,
         },
         {
+          code: 'LOGIN_42',
           name: 'Embrace the darkness',
           description: 'Login with 42',
           type: 'account',
           xp: 100,
         },
         {
+          code: 'LOGIN_GOOGLE',
           name: 'What is up Google?',
           description: 'Login with Google',
           type: 'account',
           xp: 100,
         },
         {
+          code: 'UPLOAD_PICTURE',
           name: 'I am so beautiful',
           description: 'Upload your profile picture',
           type: 'account',
           xp: 100,
         },
         {
+          code: 'VERIFY_EMAIL',
           name: 'I am a real person',
           description: 'Verify your email',
           type: 'account',
           xp: 100,
         },
         {
+          code: 'DOUBLE_AUTH',
           name: 'Stronger than Fort Knox',
           description: 'Enable double authentication',
           type: 'account',
