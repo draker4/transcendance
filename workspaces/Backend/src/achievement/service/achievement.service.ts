@@ -77,15 +77,6 @@ export class AchievementService implements OnModuleInit {
         userAchievement[`achv${achievement.id}Completed`] = true;
         userAchievement[`achv${achievement.id}Date`] = new Date();
       } else return;
-
-      // update red notif in navbar in front
-      const user = await this.usersService.getUserById(userId);
-
-      if (user && !user.notif.redAchievements)
-        await this.notifRepository.update(user.notif.id, {
-          redAchievements: true,
-        });
-
       const annonce: UserAchievement = {
         id: achievement.id,
         code: achievement.code,
@@ -104,6 +95,14 @@ export class AchievementService implements OnModuleInit {
         achievement: annonce,
       });
       await this.achievementRepository.save(userAchievement);
+
+      // update red notif in navbar in front
+      const user = await this.usersService.getUserById(userId);
+
+      if (user && !user.notif.redAchievements)
+        await this.notifRepository.update(user.notif.id, {
+          redAchievements: true,
+        });
     } catch (error) {
       throw new Error(error.message);
     }
@@ -130,14 +129,13 @@ export class AchievementService implements OnModuleInit {
       } else {
         userAchievement[`achv${achievementId}Collected`] = true;
       }
-      const achievementForStatus =
-        await this.achievementRepository.save(userAchievement);
       const achievement = await this.achievementDataRepository.findOne({
         where: { id: achievementId },
       });
       await this.statsService.updateXP(userId, achievement.xp);
 
-      // delete notif in navbar in front
+      const achievementForStatus =
+        await this.achievementRepository.save(userAchievement);
       const achievementStatus: AchievementStatus[] = Array.from(
         { length: 30 },
         (_, i) => ({
@@ -147,7 +145,6 @@ export class AchievementService implements OnModuleInit {
           date: achievementForStatus[`achv${i + 1}Date`],
         }),
       );
-
       let deleteNotif = true;
 
       achievementStatus.forEach((achievement) => {
@@ -227,6 +224,13 @@ export class AchievementService implements OnModuleInit {
             if (a.completed && !b.completed) return -1;
             if (!a.completed && b.completed) return 1;
             return 0;
+          })
+          .sort((a, b) => {
+            if (a.completed && a.collected && b.completed && !b.collected)
+              return 1;
+            if (a.completed && !a.collected && b.completed && b.collected)
+              return -1;
+            return 0;
           }),
         stats: (await this.statsService.getShortStats(userId)).data,
       };
@@ -242,7 +246,7 @@ export class AchievementService implements OnModuleInit {
     }
   }
 
-  public async getLastThreeByUserId(userId: number): Promise<ReturnData> {
+  public async getLastByUserId(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,
       message: 'Catched an error',
@@ -274,7 +278,7 @@ export class AchievementService implements OnModuleInit {
         throw new Error('Achievement not found');
       }
 
-      const lastThree: UserAchievement[] = achievementStatus.map((data, i) => ({
+      const last: UserAchievement[] = achievementStatus.map((data, i) => ({
         id: achievementDatas[i].id,
         code: achievementDatas[i].code,
         name: achievementDatas[i].name,
@@ -290,10 +294,14 @@ export class AchievementService implements OnModuleInit {
 
       ret.success = true;
       ret.message = 'Achievement found';
-      ret.data = lastThree
+      ret.data = last
         .filter((data) => data.completed)
         .sort((a, b) => b.date.getTime() - a.date.getTime())
-        .slice(0, 3);
+        .sort((a, b) => {
+          if (a.collected && !b.collected) return 1;
+          if (!a.collected && b.collected) return -1;
+        })
+        .slice(0, 5);
       return ret;
     } catch (error) {
       console.log(error.message);

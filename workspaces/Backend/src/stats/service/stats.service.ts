@@ -12,6 +12,7 @@ import {
   ShortStats,
   UserLevel,
   NextLevel,
+  LevelUpAnnonce,
 } from '@transcendence/shared/types/Stats.types';
 import { UpdateStatsDTO } from '../dto/UpdateStats.dto';
 import { calculateXP } from '@transcendence/shared/game/calculateXP';
@@ -29,6 +30,8 @@ export class StatsService {
     private readonly achievementService: AchievementService,
     private readonly experienceService: ExperienceService,
   ) {}
+
+  public levelUpAnnonce: LevelUpAnnonce[] = [];
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
@@ -98,12 +101,7 @@ export class StatsService {
       }
       if (result.win) {
         stats.playerXP += xp.total;
-        const nextLevel: NextLevel =
-          await this.experienceService.getNextLevelXp(stats.level);
-        if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
-          stats.level += 1;
-          stats.levelUp = true;
-        }
+        stats.levelUp = await this.checkLevelUp(stats);
       }
       await this.checkAchievement(stats, userId);
       return await this.statsRepository.save(stats);
@@ -165,13 +163,7 @@ export class StatsService {
         throw new Error('Stats not found');
       }
       stats.playerXP += xp;
-      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
-        stats.level,
-      );
-      if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
-        stats.level += 1;
-        stats.levelUp = true;
-      }
+      stats.levelUp = await this.checkLevelUp(stats);
       await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -616,9 +608,9 @@ export class StatsService {
     return stats;
   }
 
-  // --------------------------------  PUBLIC METHODS  -------------------------------- //
+  // --------------------------------  PRIVATE METHODS  -------------------------------- //
 
-  public async checkAchievement(stats: Stats, userId: number): Promise<void> {
+  private async checkAchievement(stats: Stats, userId: number): Promise<void> {
     try {
       const winLeague =
         stats.leagueClassicWon + stats.leagueBest3Won + stats.leagueBest5Won;
@@ -686,6 +678,27 @@ export class StatsService {
           code: `GAME_LOSE_${loseGame}`,
         });
       }
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  private async checkLevelUp(stats: Stats): Promise<boolean> {
+    try {
+      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
+        stats.level,
+      );
+      if (!nextLevel)
+        throw new Error('Error while getting next level experience');
+      if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
+        stats.level += 1;
+        this.levelUpAnnonce.push({
+          userId: stats.userId.toString(),
+          level: stats.level,
+        });
+        return true;
+      }
+      return false;
     } catch (error) {
       throw new Error(error.message);
     }

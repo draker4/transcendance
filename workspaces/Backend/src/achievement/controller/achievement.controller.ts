@@ -19,10 +19,10 @@ export class AchievementController {
     return this.achievementService.getAllByUserId(userId);
   }
 
-  // 02 - api/achievement/get/:userId
-  @Get('getLastThree/:userId')
+  // 02 - api/achievement/getLast/:userId
+  @Get('getLast/:userId')
   async getLastThreeByUserId(@Param('userId', ParseIntPipe) userId: number) {
-    return this.achievementService.getLastThreeByUserId(userId);
+    return this.achievementService.getLastByUserId(userId);
   }
 
   // 03 - api/achievement/collected/:userId/:achievementId

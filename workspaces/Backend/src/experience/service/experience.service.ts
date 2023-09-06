@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
@@ -6,13 +6,17 @@ import { CreateExperienceDataDTO } from '../dto/CreateExperienceData.dto';
 import { NextLevel } from '@transcendence/shared/types/Stats.types';
 
 @Injectable()
-export class ExperienceService {
+export class ExperienceService implements OnModuleInit {
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
   constructor(
     @InjectRepository(ExperienceData)
     private readonly experienceDataRepository: Repository<ExperienceData>,
   ) {}
+
+  onModuleInit() {
+    this.createExperienceData();
+  }
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
@@ -32,14 +36,11 @@ export class ExperienceService {
 
   public async getNextLevelXp(level: number): Promise<NextLevel> {
     try {
-      let experienceData = await this.experienceDataRepository.findOne({
+      const experienceData = await this.experienceDataRepository.findOne({
         where: { level },
       });
       if (!experienceData) {
-        await this.createExperienceData();
-        experienceData = await this.experienceDataRepository.findOne({
-          where: { level },
-        });
+        throw new Error('Level not found');
       }
       const nextLevelXP: NextLevel = {
         nextLevelXP: experienceData.levelXp,
@@ -55,6 +56,10 @@ export class ExperienceService {
 
   private async createExperienceData(): Promise<void> {
     try {
+      const experienceDatas = await this.experienceDataRepository.find();
+      if (experienceDatas && experienceDatas.length > 0) {
+        return;
+      }
       const levels: CreateExperienceDataDTO[] = [];
       for (let i: number = 0; i <= 100; i++) {
         const level: CreateExperienceDataDTO = {

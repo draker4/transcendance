@@ -7,20 +7,17 @@ import { useRouter } from "next/navigation";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import ShortAchievementItem from "./ShortAchievementItem";
 import StatsService from "@/services/Stats.service";
-import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
   setStats: Function;
   statsService: StatsService;
-  socket: Socket | undefined;
 };
 
 export default function LastAchievements({
   profile,
   setStats,
   statsService,
-  socket,
 }: Props) {
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const achievementService = new AchievementService();
@@ -28,7 +25,7 @@ export default function LastAchievements({
 
   const getUserAchievements = async () => {
     try {
-      const res = await achievementService.getLastThree(profile.id);
+      const res = await achievementService.getLast(profile.id);
 
       if (!res.success) throw new Error("cannot get achievements");
 
@@ -58,11 +55,6 @@ export default function LastAchievements({
         achievement.id.toString()
       );
       await getUserAchievements();
-
-      socket?.emit('notif', {
-        why: "updateAchievements",
-      });
-
       const res = await statsService.getShortStats(profile.id);
       if (res.success) setStats(res.data);
       toast.info(`${achievement.xp}xp collected!`);
@@ -104,5 +96,5 @@ export default function LastAchievements({
     );
   });
 
-  return <div className={styles.grid}>{list}</div>;
+  return <div className={styles.lastAchievements}>{list}</div>;
 }

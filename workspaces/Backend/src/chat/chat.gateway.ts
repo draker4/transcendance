@@ -32,6 +32,8 @@ import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
 import { editChannelTypeDto } from './dto/editChannelType.dto';
 import { AchievementService } from '@/achievement/service/achievement.service';
 import { AchievementAnnonce } from '@transcendence/shared/types/Achievement.types';
+import { LevelUpAnnonce } from '@transcendence/shared/types/Stats.types';
+import { StatsService } from '@/stats/service/stats.service';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -47,12 +49,14 @@ export class ChatGateway implements OnModuleInit {
     private readonly achievementService: AchievementService,
     private readonly chatService: ChatService,
     private readonly channelService: ChannelService,
+    private readonly statsService: StatsService,
     private readonly statusService: StatusService,
   ) {}
 
   // Container of connected users : Map<socket, user id>
   private connectedUsers: Map<Socket, string> = new Map<Socket, string>();
   private notSendAchivementAnnonce: AchievementAnnonce[] = [];
+  private notSendLevelUpAnnonce: LevelUpAnnonce[] = [];
 
   @WebSocketServer()
   server: Server;
@@ -82,6 +86,17 @@ export class ChatGateway implements OnModuleInit {
                 .emit('achievement', achievement.achievement);
               this.notSendAchivementAnnonce.splice(
                 this.notSendAchivementAnnonce.indexOf(achievement),
+                1,
+              );
+            }
+          });
+        }
+        if (this.notSendLevelUpAnnonce.length > 0) {
+          this.notSendLevelUpAnnonce.forEach((levelUp) => {
+            if (levelUp.userId === payload.sub.toString()) {
+              this.server.to(socket.id).emit('levelUp', levelUp.level);
+              this.notSendLevelUpAnnonce.splice(
+                this.notSendLevelUpAnnonce.indexOf(levelUp),
                 1,
               );
             }
@@ -151,6 +166,24 @@ export class ChatGateway implements OnModuleInit {
         });
         if (!send) {
           this.notSendAchivementAnnonce.push(achievement);
+        }
+      }
+    }, 1000);
+
+    setInterval(() => {
+      const levelUpAnnonce = this.statsService.levelUpAnnonce;
+
+      while (levelUpAnnonce.length > 0) {
+        const levelUp = levelUpAnnonce.shift();
+        let send = false;
+        this.connectedUsers.forEach((value, key) => {
+          if (value === levelUp.userId) {
+            this.server.to(key.id).emit('levelUp', levelUp.level);
+            send = true;
+          }
+        });
+        if (!send) {
+          this.notSendLevelUpAnnonce.push(levelUp);
         }
       }
     }, 1000);
@@ -566,7 +599,6 @@ export class ChatGateway implements OnModuleInit {
 
       rep.success = true;
     } catch (error: any) {
-
       this.log(`edit Relation Error : ${error.message}`);
 
       rep.error = error;
@@ -743,7 +775,12 @@ export class ChatGateway implements OnModuleInit {
     const green = '\x1b[32m';
     const stop = '\x1b[0m';
 
-    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+    if (
+      !process.env &&
+      !process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT !== 'dev'
+    )
+      return;
 
     process.stdout.write(green + '[chat gateway]  ' + stop);
     console.log(message);

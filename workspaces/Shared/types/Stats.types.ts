@@ -140,3 +140,8 @@ export type NextLevel = {
   nextLevelXP: number;
   cumulativeXpToNext: number;
 };
+
+export type LevelUpAnnonce = {
+  userId: string;
+  level: number;
+};

@@ -16,6 +16,7 @@ import { MessageModule } from '@/messages/messages.module';
 import { UsersModule } from '@/users/users.module';
 import { StatusModule } from '@/statusService/status.module';
 import { AchievementModule } from '@/achievement/achievement.module';
+import { StatsModule } from '@/stats/stats.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { AchievementModule } from '@/achievement/achievement.module';
     AchievementModule,
     ChannelModule,
     MessageModule,
+    StatsModule,
     StatusModule,
     UsersModule,
   ],

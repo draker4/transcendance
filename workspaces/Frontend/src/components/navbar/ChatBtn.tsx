@@ -57,15 +57,25 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
       });
     };
 
+    const handleLevelUp = (level: number) => {
+      console.log("Level up:", level);
+      toast.info(`You reached level ${level}!`, {
+        autoClose: 5000,
+      });
+    };
+
     socket?.on("notifMsg", updateNotif);
     socket?.on("sendMsg", handleReceivedMsg);
     socket?.on("achievement", handleAchievement);
+    socket?.on("levelUp", handleLevelUp);
 
     updateNotif();
 
     return () => {
       socket?.off("notifMsg", updateNotif);
       socket?.off("sendMsg", handleReceivedMsg);
+      socket?.off("achievement", handleAchievement);
+      socket?.off("levelUp", handleLevelUp);
     };
   }, [socket]);
 
