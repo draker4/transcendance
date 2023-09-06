@@ -9,7 +9,6 @@ type Props = {
   leaguePoints:number;
 }
 
-// [+] Fetch les leaguepoint correctement une fois pret
 export default function Rank({rank, leaguePoints}:Props) {
 
   const getIcon = ():IconDefinition => {

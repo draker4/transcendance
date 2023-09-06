@@ -75,8 +75,6 @@ export default function Header({
   return (
     <div className={styles.header}>
       <div className={styles.icon}>{icon}</div>
-
-      {/* [+][!] Attention si besoin de changer le link en fonctin du channel.type */}
       <Link href={url} className={styles.card}>
         {channel.type === "privateMsg" && (
           <Tooltip title={textStatus} placement="top" arrow>

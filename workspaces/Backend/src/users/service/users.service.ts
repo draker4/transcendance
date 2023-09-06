@@ -307,8 +307,6 @@ export class UsersService {
     };
 
     try {
-      console.log('channelInfos = ', channelInfos); // checking
-
       const user = await this.getUserById(channelInfos.userId);
       const channel = await this.getChannelById(channelInfos.channelId);
 

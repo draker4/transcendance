@@ -35,6 +35,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
       provider: "",
       motto: "",
       story: "",
+      gameKey: "Arrow",
       avatar: {
         image: "",
         variant: "",
@@ -115,7 +116,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
       throw new Error("channel is private");
   } catch (err: any) {
 
-    if (process.env && process.env.ENVIRONNEMENT === "dev")
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
       console.log(err);
 
     if (err.message && typeof err.message === "string")

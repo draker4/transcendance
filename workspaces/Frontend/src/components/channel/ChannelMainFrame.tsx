@@ -52,7 +52,7 @@ export default function ChannelMainFrame({
         setRelation(updatedRelation);
       }
     } catch (e: any) {
-      if (process.env && process.env.ENVIRONNEMENT === "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log("Error while updating channel profile : " + e.message);
     }
   };

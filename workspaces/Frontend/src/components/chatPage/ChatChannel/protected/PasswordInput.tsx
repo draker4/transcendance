@@ -3,7 +3,7 @@ import Channel_Service from "@/services/Channel.service";
 import styles from "@/styles/chatPage/ChatChannel/PasswordInput.module.css";
 import { EditChannelRelation } from "@/types/Channel-linked/EditChannelRelation";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, ReactNode, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Socket } from "socket.io-client";
 
 type Props = {
@@ -43,11 +43,9 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
 
       const channelService = new Channel_Service(undefined);
       const rep = await channelService.editRelation(channel.id, myself.id, newRelation.newRelation);
-      console.log("verifyPassword => editRelation (API) => REP : ", rep); // checking
 
       if (rep.success) {
           socket?.emit("editRelation", newRelation, (repNotif:ReturnData) => {
-            console.log("verifyPassword => editRelation => editRelation (WebSocket) => REP : ", repNotif); // checking
             if (repNotif.success) {
               openDisplay({...channel, needPassword:false })
             } else {
@@ -60,7 +58,8 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
           router.refresh();
           return ;
         }
-        console.log("afterVerifyPassword => error (object) : ", rep.error); // checking
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log("afterVerifyPassword => error (object) : ", rep.error);
         throw new Error(rep.message); 
     }
 
@@ -69,9 +68,7 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
       setNotif(error.message ? error.message : "An error occured, please try again later");
     }
   }
-  
-   // [+] oblige le type any?
-   // [+] réflechir à cette gestion du password, devrait pas etre envoyé avec les infos de channel
+
    const handleVerifyPassword = async (event: any) => {
     event.preventDefault();
 
@@ -84,12 +81,12 @@ export default function PasswordInput({channel, myself, socket, openDisplay}: Pr
           password: submitedPassword,
         }, 
         (rep:ReturnData) => {
-          console.log("verifyPassword => REP : ", rep); // checking
+          if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+            console.log("verifyPassword => REP : ", rep);
           if (rep.success) {
             setNotif("");
             afterVerifyPassword();
           } else {
-            // [!] Throwing error in this callback won't be caught
             if (rep.message && rep.message !== "")
               setNotif(rep.message);
             else

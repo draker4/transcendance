@@ -13,6 +13,8 @@ import {
   FullAchivement,
 } from '@transcendence/shared/types/Achievement.types';
 import { StatsService } from '@/stats/service/stats.service';
+import { Notif } from '@/utils/typeorm/Notif.entity';
+import { UsersService } from '@/users/service/users.service';
 
 @Injectable()
 export class AchievementService implements OnModuleInit {
@@ -23,8 +25,14 @@ export class AchievementService implements OnModuleInit {
     private readonly achievementRepository: Repository<Achievement>,
     @InjectRepository(AchievementData)
     private readonly achievementDataRepository: Repository<AchievementData>,
+    @InjectRepository(Notif)
+    private readonly notifRepository: Repository<Notif>,
+
     @Inject(forwardRef(() => StatsService))
     private readonly statsService: StatsService,
+
+    @Inject(forwardRef(() => UsersService))
+    private readonly usersService: UsersService,
   ) {}
 
   public achivementAnnonce: AchievementAnnonce[] = [];
@@ -87,6 +95,14 @@ export class AchievementService implements OnModuleInit {
         achievement: annonce,
       });
       await this.achievementRepository.save(userAchievement);
+
+      // update red notif in navbar in front
+      const user = await this.usersService.getUserById(userId);
+
+      if (user && !user.notif.redAchievements)
+        await this.notifRepository.update(user.notif.id, {
+          redAchievements: true,
+        });
     } catch (error) {
       throw new Error(error.message);
     }

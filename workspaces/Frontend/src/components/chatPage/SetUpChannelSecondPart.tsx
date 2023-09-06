@@ -32,6 +32,7 @@ let myRelation: UserRelation = {
     provider: "",
     motto: "",
     story: "",
+    gameKey: "Arrow",
     avatar: {
       image: "",
       variant: "",
@@ -114,7 +115,8 @@ export default function SetUpChannelSecondPart({
       setChannelRelation(channelAndUsersRelation);
       setMe(myRelation);
     } catch (err) {
-      console.log("SetUpSectionPongers error : ", err); // [+] meilleure gestion de ces deux try catch ?
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("SetUpSectionPongers error : ", err);
     }
   };
 

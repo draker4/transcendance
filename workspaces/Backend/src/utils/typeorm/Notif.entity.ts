@@ -11,8 +11,8 @@ export class Notif {
 	@Column("int", { array: true, default: {} })
 	redPongies: number[];
 
-	@Column("int", { array: true, default: {} })
-	redChannels: number[];
+	@Column({ default: false })
+	redAchievements: boolean;
 
 	@OneToMany(() => NotifMessages, notifMessages => notifMessages.notif, {
 		eager: true,

@@ -38,7 +38,6 @@ export default function Conversations({
 
   const loadData = () => {
     socket?.emit("getChannels", (channels: Channel[]) => {
-      console.log("Conversation - LOADATA channel : ", channels); // checking
       setChannels(channels);
 
       if (channels.length > 0 && nothing.current === true && !littleScreen) {
@@ -136,7 +135,8 @@ export default function Conversations({
     });
 
     if (channel.joined === false && channel.invited === false) {
-      console.log("[+] Feature keepTrack channel [?]"); // [!][+]
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("no feature keepTrack channel yet");
       return ;
     }
 
@@ -161,8 +161,6 @@ export default function Conversations({
         clearDisplay();  
     } else
       throw new Error(rep.message);
-
-	console.log("Conversations => handleLeave => Successfully done"); // checking
     } catch(e:any) {
       if (e.message === 'disconnect') {
         await disconnect();
@@ -174,8 +172,6 @@ export default function Conversations({
   };
 
   const handleClickAcceptInvite = async (channel: Channel) => {
-    console.log("invitation to channel " +  channel.name + "accepted"); // checking
-
     try {
     const channelService = new Channel_Service(undefined);
     const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: true});
@@ -206,7 +202,6 @@ export default function Conversations({
   };
 
   const handleClickJoinRecent = async (channel: Channel) => {
-    console.log("Wanna join a recent channel : " + channel.name + " of type [" + channel.type + "]"); // checking
     try {
 
       if (channel.type === "protected" && !channel.isBoss) {
@@ -347,7 +342,6 @@ export default function Conversations({
   const makeConversationList = (conversations:(React.JSX.Element | null)[], title:string, highlight?:boolean):React.JSX.Element | null => {
     if (!conversations || conversations.length === 0) return null;
     return (
-      // ${highlight === true ? styles.highlight : ""}
       <>
         {highlight === undefined && <p className={`${styles.tinyTitle}`}>{title}</p>}
         {highlight === true && <p className={`${styles.tinyTitle}`}><FontAwesomeIcon
@@ -381,12 +375,10 @@ export default function Conversations({
         </div>
       </div>
       <div className={styles.scroll}>
-        {/* */}
         {makeConversationList(joinedConversations, "Registered Channels")}
         {makeConversationList(pmConversations, "Private messages")}
         {makeConversationList(recentConversations, "Recent Channels")}
         {makeConversationList(invitedConversations, "Invitations", true)}
-        {/* */}
       </div>
     </div>
   );

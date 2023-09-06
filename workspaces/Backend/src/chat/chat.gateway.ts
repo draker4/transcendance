@@ -227,8 +227,6 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getLoginWithAvatar(req.user.id);
   }
 
-  // [!] je ne trouve pas ou ce endpoint est utilise depuis notre frontend, virer si inutile
-  // c'est dans le cas ou on veut ouvrir le chat sur une channel directement
   @SubscribeMessage('getChannel')
   async getChannel(@Req() req, @MessageBody() channelId: number) {
     if (!channelId) throw new WsException('no channel id');
@@ -487,7 +485,7 @@ export class ChatGateway implements OnModuleInit {
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getChannelName')
   async getChannelName(@MessageBody() payload: channelIdDto) {
-    this.log(`'getChannelName' event, with channelId: ${payload.id}`); // checking
+    this.log(`'getChannelName' event, with channelId: ${payload.id}`);
     const channel: Channel = await this.chatService.getChannelById(payload.id);
     return {
       success: channel ? true : false,
@@ -495,28 +493,12 @@ export class ChatGateway implements OnModuleInit {
     };
   }
 
-  // [!] au final pas utilisé dans <ChatChannel />
-  @UseGuards(ChannelAuthGuard)
-  @SubscribeMessage('getChannelUsers')
-  async getChannelUsers(@MessageBody() payload: channelIdDto) {
-    const id: number = payload.id;
-    console.log('getChannelUsers proc --> ChannelId : ', id);
-
-    const users: User[] = await this.chatService.getChannelUsers(payload.id);
-    console.log(users);
-    // [!] je laisse ces console log car pas pu tester cette fonction encore,
-    // une fois qu'elle sera validée, retourner directement le resultat sans
-    // variable intermédiaire
-
-    return users;
-  }
-
   @SubscribeMessage('editRelation')
   async sendEditRelationEvents(
     @MessageBody() payload: EditChannelRelationDto,
     @Request() req,
   ): Promise<ReturnData> {
-    this.log(`editRelation called by user[${req.user.id}]`); // checking
+    this.log(`editRelation called by user[${req.user.id}]`);
 
     const rep: ReturnData = {
       success: false,

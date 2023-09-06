@@ -54,38 +54,3 @@ export default function ColorSelector({ handleColorSelection }: Props) {
     </div>
   );
 }
-
-// checking
-// [?] [!] save mon propre type / classe ColorResult
-/*
-
-class ColorResult {
-  constructor(public red: number, public green: number, public blue: number) {}
-}
-
-function createColorFromHex(hexValue: string): ColorResult | null {
-  const hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-  const result = hexRegex.exec(hexValue);
-
-  if (result) {
-    const red = parseInt(result[1], 16);
-    const green = parseInt(result[2], 16);
-    const blue = parseInt(result[3], 16);
-    return new ColorResult(red, green, blue);
-  }
-
-  return null; // Retourner null si la chaîne hexadécimale n'est pas valide
-}
-
-// Exemple d'utilisation
-const hexValue = "#f44336";
-const color = createColorFromHex(hexValue);
-
-if (color) {
-  console.log(color.red, color.green, color.blue);
-} else {
-  console.log("La valeur hexadécimale est invalide.");
-}
-
-
-*/
