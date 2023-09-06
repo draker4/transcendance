@@ -1,5 +1,5 @@
 .main {
-  height: 85vh;
+  min-height: 85vh;
   background: var(--primary1);
   width: 90%;
 
