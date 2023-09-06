@@ -1,8 +1,8 @@
 import styles from "@/styles/profile/Achievements/Achievements.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
-import { faArrowPointer, faCloudArrowUp, faDumbbell, faG, faGraduationCap, faPen, faPeopleGroup, faPoo, faQuestion, faRankingStar, faScroll, faShieldHalved, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faArrowPointer, faCheck, faCloudArrowUp, faDumbbell, faG, faGraduationCap, faPen, faPeopleGroup, faPoo, faQuestion, faRankingStar, faScroll, faShieldHalved, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faEnvelope, faHandPeace } from "@fortawesome/free-regular-svg-icons";
+import { faCheckCircle, faEnvelope, faHandPeace } from "@fortawesome/free-regular-svg-icons";
 import { PongColors } from "@/lib/enums/PongColors.enum";
 import { Badge, LinearProgress, linearProgressClasses, styled } from "@mui/material";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
@@ -30,9 +30,6 @@ export default function AchievementItem({
 		"faShieldHalved": faShieldHalved,
 		"faCloudArrowUp": faCloudArrowUp,
 	};
-
-	// [!] test
-	// achievement.completed = false;
 
 	let		icon: IconProp | undefined = iconMapping[achievement.icone];
 
@@ -121,7 +118,8 @@ export default function AchievementItem({
 				{
 					achievement.completed && !achievement.collected &&
 					<div className={styles.collect}>
-						<h3>Collect {achievement.xp}xp!</h3>
+						<h4>Completed!</h4>
+						<h4><span>Click</span> to collect {achievement.xp}xp!</h4>
 					</div>
 				}
 				{
@@ -148,9 +146,19 @@ export default function AchievementItem({
 			{/* xp */}
 			<div className={styles.right}>
 				{
-					(!achievement.completed || (achievement.completed && achievement.collected)) &&
+					!achievement.completed &&
 					<div className={styles.xp}>
 						<pre>{achievement.xp}xp</pre>
+					</div>
+				}
+				{
+					achievement.completed && achievement.collected &&
+					<div className={styles.xp}>
+						<FontAwesomeIcon
+							icon={faCheckCircle}
+							className={styles.icon}
+							color={color}
+						/>
 					</div>
 				}
 			</div>

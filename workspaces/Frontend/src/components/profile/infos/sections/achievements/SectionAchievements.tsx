@@ -18,30 +18,52 @@ export default function SectionAchievements({ profile }: Props) {
   const achievementService = new AchievementService();
   const router = useRouter();
 
-  useEffect(() => {
-    const getUserAchievements = async () => {
-      try {
-        const res = await achievementService.getAllAchievement(profile.id);
+  const getUserAchievements = async () => {
+    try {
+      const res = await achievementService.getAllAchievement(profile.id);
 
-        if (!res.success)
-          throw new Error('cannot get achievements');
+      if (!res.success)
+        throw new Error('cannot get achievements');
 
-        const data: FullAchivement = res.data;
+      const data: FullAchivement = res.data;
 
-        setAchievements(data.achievement);
-      }
-      catch (error: any) {
-        if (error.message === 'disconnect') {
-          await disconnect();
-          router.refresh();
-          return ;
-        }
-        toast.error("Something went wrong, please refresh the page!");
-      }
+      setAchievements(data.achievement);
     }
+    catch (error: any) {
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.error("Something went wrong, please refresh the page!");
+    }
+  }
 
+  useEffect(() => {
     getUserAchievements();
   }, []);
+
+  const  collectXP = async (achievement: UserAchievement) => {
+    if (achievement.collected || !achievement.completed)
+      return ;
+
+    try {
+      await achievementService.collectAchievement(
+        profile.id, achievement.id.toString()
+      );
+      await getUserAchievements();
+      toast.info(`${achievement.xp}xp collected!`);
+    }
+    catch (error: any) {
+      console.log(error);
+      if (error.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+      toast.error('Something went wrong, please try again!');
+    }
+  }
 
   const list = achievements.map(achievement => {
 		return (
@@ -60,6 +82,7 @@ export default function SectionAchievements({ profile }: Props) {
                     ? "var(--achievement)"
                     : "var(--tertiary3)",
         }}
+        onClick={() => collectXP(achievement)}
       >
         <AchievementItem achievement={achievement} />
       </div>

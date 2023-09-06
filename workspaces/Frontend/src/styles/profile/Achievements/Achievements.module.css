@@ -144,8 +144,17 @@
 	color: var(--achievement);
 	letter-spacing: 1px;
 	display: flex;
-	flex-flow: row nowrap;
+	flex-flow: column nowrap;
 	justify-content: center;
 	align-items: center;
 	text-transform: uppercase;
+}
+
+.collect h4 {
+	margin: 0;
+	padding: 0;
+}
+
+.collect span {
+	color: var(--notif);
 }

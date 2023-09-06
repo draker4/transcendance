@@ -25,8 +25,6 @@ export class AchievementController {
     return this.achievementService.getLastThreeByUserId(userId);
   }
 
-  @Get('get/:userId/:achievementId')
-
   // 03 - api/achievement/collected/:userId/:achievementId
   @Put('collected/:userId/:achievementId')
   async collectAchievement(
