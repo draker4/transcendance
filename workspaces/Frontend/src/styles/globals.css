@@ -35,6 +35,8 @@
 
   --notif-light: rgba(255, 85, 85, 1);
 
+  --achievement-light: #FCA65F;
+
   /* COLOR DEFINES - DARK*/
 
   --primary1-dark: rgb(40, 44, 52);
@@ -58,6 +60,7 @@
   --bubble-dark: rgb(71, 72, 85);
 
   --notif-dark: rgba(255, 85, 85, 1);
+  --achievement-dark: #FCA65F;
 
   /* FONT DEFINES*/
   --title-font: "Quicksand", sans-serif;
@@ -92,6 +95,8 @@
   --notif: var(--notif-light);
 
   --bubble: var(--bubble-light);
+
+  --achievement: var(--achievement-light);
 }
 
 [color-scheme="dark"] {
@@ -116,6 +121,8 @@
   --notif: var(--notif-dark);
 
   --bubble: var(--bubble-dark);
+
+  --achievement: var(--achievement-dark);
 }
 
 html,

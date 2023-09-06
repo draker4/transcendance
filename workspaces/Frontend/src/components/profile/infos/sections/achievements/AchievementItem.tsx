@@ -1,17 +1,20 @@
 import styles from "@/styles/profile/Achievements/Achievements.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"; 
-import { faCloudArrowUp, faDumbbell, faG, faGraduationCap, faPen, faPeopleGroup, faPoo, faQuestion, faRankingStar, faScroll, faShieldHalved, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faArrowPointer, faCloudArrowUp, faDumbbell, faG, faGraduationCap, faPen, faPeopleGroup, faPoo, faQuestion, faRankingStar, faScroll, faShieldHalved, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faCheckCircle, faEnvelope, faHandPeace } from "@fortawesome/free-regular-svg-icons";
+import { faEnvelope, faHandPeace } from "@fortawesome/free-regular-svg-icons";
 import { PongColors } from "@/lib/enums/PongColors.enum";
-import { LinearProgress, linearProgressClasses, styled } from "@mui/material";
+import { Badge, LinearProgress, linearProgressClasses, styled } from "@mui/material";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
+import StatsService from "@/services/Stats.service";
+import { useEffect } from "react";
 
 export default function AchievementItem({
 	achievement,
 }: {
 	achievement: UserAchievement;
 }) {
+
 	// Define a mapping from achievement.icone to FontAwesome icons
 	const iconMapping: { [key: string]: IconProp } = {
 		"faHandPeace": faHandPeace,
@@ -29,13 +32,15 @@ export default function AchievementItem({
 	};
 
 	// [!] test
-	// achievement.completed = true;
-	achievement.date = new Date();
+	// achievement.completed = false;
 
 	let		icon: IconProp | undefined = iconMapping[achievement.icone];
-	const	date: string = achievement.date
-						? achievement.date.toLocaleDateString()
-						: "";
+
+	const	content: number | string = achievement.value
+									? achievement.value === 1000
+									? '1K'
+									: achievement.value
+									: 0;
 
 	if (!icon)
 		icon = faQuestion;
@@ -44,7 +49,7 @@ export default function AchievementItem({
 
 	switch (achievement.type) {
 		case "game":
-			color = PongColors.canaryYellow;
+			color = PongColors.fuschia;
 			break ;
 		case "league":
 			color = PongColors.tangerine;
@@ -75,58 +80,79 @@ export default function AchievementItem({
 		},
 		[`& .${linearProgressClasses.bar}`]: {
 		  borderRadius: 5,
-		  backgroundColor: "var(--accent2)",
+		  backgroundColor: color,
 		},
-	  }));
+	}));
+
+	const badgeStyle = {
+		"& .MuiBadge-badge": {
+			color: "var(--tertiary1)",
+			backgroundColor: "var(--primary1)",
+			border: `2px solid ${color}`,
+			right: '-3px',
+			top: '-3px',
+		},
+	};
+
+	const	background = `linear-gradient(to bottom, ${color} 55%, var(--primary1) 45%)`;
 	
 	return (
 		<>
 			{/* icon */}
-			<div className={styles.left}>
-				<div className={styles.circle}>
-					<FontAwesomeIcon
-						icon={icon}
-						color={color}
-					/>
+			<div className={styles.left} style={{
+				background: background,
+			}}>
+				<div className={styles.circleAround}>
+					<div className={styles.circleInside} style={{backgroundColor: color}}>
+						<Badge badgeContent={content} overlap="circular" sx={badgeStyle} max={1000}>
+							<FontAwesomeIcon
+								icon={icon}
+								color="var(--primary1)"
+								className={styles.icon}
+							/>
+						</Badge>
+					</div>
 				</div>
 			</div>
 			
 			{/* text part */}
 			<div className={styles.middle}>
-				<h5>{achievement.name}</h5>
-				<div>{achievement.description}</div>
+				
+				{
+					achievement.completed && !achievement.collected &&
+					<div className={styles.collect}>
+						<h3>Collect {achievement.xp}xp!</h3>
+					</div>
+				}
+				{
+					(!achievement.completed || (achievement.completed && achievement.collected)) &&
+					<div></div>
+				}
+				<div>
+					<h5 style={{color: color}}>{achievement.name}</h5>
+					<div>{achievement.description}</div>
+				</div>
 
 			{/* load bar */}
 			{
 				!achievement.completed && achievement.value > 0 &&
 				<div className={styles.bottom}>
-					<pre>{10} / {30} </pre>
 					<BorderLinearProgress variant="determinate" value={10/30 * 100} />
 				</div>
 			}
-
-			{/* date */}
 			{
-				achievement.completed &&
-				<div className={styles.bottom}>
-					<div className={styles.icon}>
-						<FontAwesomeIcon icon={faCheckCircle} className={styles.check} />
-						<div className={styles.achieved}>
-							<h5>Achieved!</h5>
-							<pre>{date}</pre>
-						</div>
-					</div>
-				</div>
+				(achievement.completed || achievement.value === 0) && <div></div>
 			}
-
 			</div>
 
 			{/* xp */}
 			<div className={styles.right}>
-				<div className={styles.xp}>
-					<pre>{achievement.xp}</pre>
-					<pre>xp</pre>
-				</div>
+				{
+					(!achievement.completed || (achievement.completed && achievement.collected)) &&
+					<div className={styles.xp}>
+						<pre>{achievement.xp}xp</pre>
+					</div>
+				}
 			</div>
 		</>
 	)
