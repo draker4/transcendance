@@ -456,15 +456,13 @@ export class ChannelService {
           },
         });
 
-      console.log('newRelation = ', channelInfos.newRelation); // checking
-
       // If no relation found and it's an invite channel
       if (
         !relation &&
         channelInfos.newRelation &&
         channelInfos.newRelation.invited === true
       ) {
-        this.log('channel invitation in progress'); // checking
+        this.log('channel invitation in progress');
         // don't want a force join
         channelInfos.newRelation.joined = false;
         const repCreate = await this.createChannelUserRelation(channelInfos);

@@ -271,14 +271,6 @@
   font-size: 0.7rem;
 }
 
-/* -------------------- footer ------------------------- */
-
-.profileFooter {
-  background-color: var(--accent1);
-  color: var(--primary1);
-  padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
-}
-
 /* -------------------- section content ------------------------- */
 
 .sections .marginTop {

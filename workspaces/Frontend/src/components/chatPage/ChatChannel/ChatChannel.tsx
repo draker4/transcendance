@@ -114,8 +114,6 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   }
 
   const handleEditRelation = (edit:EditChannelRelation) => {
-    console.log("Chatchannel - EditChannelRelation reçu :", edit); // checking
-
     if (edit !== undefined && edit.userId === myself.id && edit.channelId === channel.id) {
       if (edit.newRelation.isBanned === true)
         setRelNotif({notif:RelationNotif.ban, edit:edit});

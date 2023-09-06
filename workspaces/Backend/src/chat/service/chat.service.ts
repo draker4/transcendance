@@ -1982,7 +1982,7 @@ export class ChatService {
 
       this.log(
         `[${reqUserId}] sending : [${sendMsg.content}] to : [${fetchedChannel.name}]`,
-      ); // checking
+      );
 
       await this.messageService.addMessage(makeMsg);
 

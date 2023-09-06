@@ -48,7 +48,6 @@ export default function SectionCustomChannel({
         type: type,
       },
       (rep:ReturnData) => {
-        console.log("emitEditChannelType => Rep =", rep); // checking
         if (rep.success)
           onSuccess()
         else
@@ -77,7 +76,6 @@ export default function SectionCustomChannel({
   const makeChannelTypeButton = (type:ChannelType, name:string, onClick:(type:ChannelType) => void):JSX.Element => {
     const handleClick = () => {
       if ((type === "public" || "private") && type !== channelType) {
-          console.log("SectionCustomChannel => publicPrivButton => wanna set channel to " + type); // checking
           onClick(type)
         }
     };
@@ -132,7 +130,6 @@ export default function SectionCustomChannel({
 
     const handleClick = () => {
       if ((channelType === "public" && locked) || (channelType === "protected" && !locked)) {
-        console.log(`SectionCustomChannel => LockButtons => wanna set channel to ${locked ? "protected" : "public"}`); // checking
         onClick(locked)
       }
     };

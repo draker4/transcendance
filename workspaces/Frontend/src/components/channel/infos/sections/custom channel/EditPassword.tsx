@@ -27,7 +27,6 @@ export default function EditPassword({pack, socket}:Props) {
     setEditMode(true);
   };
 
-  // [+] oblige le type any?
   const handleSubmitPassword = async (e: any) => {
     e.preventDefault();
     const submitedPassword:string = e.target.password.value;
@@ -46,7 +45,6 @@ export default function EditPassword({pack, socket}:Props) {
           password: submitedPassword,
         }, 
         (rep:ReturnData) => {
-          console.log("handleSubmitPassword => REP : ", rep); // checking
           if (rep.success) {
             pack.setPassword(submitedPassword);
             pack.setNotif("");
