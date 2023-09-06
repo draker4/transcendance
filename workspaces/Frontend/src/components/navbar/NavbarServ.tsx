@@ -27,6 +27,7 @@ export default async function NavbarServ() {
     provider: "",
     motto: "",
     story: "",
+    gameKey: "Arrow",
   };
 
   try {

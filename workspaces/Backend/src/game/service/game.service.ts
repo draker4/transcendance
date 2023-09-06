@@ -1,5 +1,5 @@
 // import standard package froms nest
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
@@ -28,6 +28,7 @@ export class GameService {
     private readonly gameRepository: Repository<Game>,
 
     private readonly scoreService: ScoreService,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly avatarService: AvatarService,
     private readonly cryptoService: CryptoService,

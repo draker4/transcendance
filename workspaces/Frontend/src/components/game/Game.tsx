@@ -92,7 +92,7 @@ export default function Game({ profile, token, gameId }: Props) {
     return (
       <div className={styles.game}>
         <Pong
-          userId={profile.id}
+          profile={profile}
           gameData={gameData}
           setGameData={setGameData}
           socket={gameService.socket}

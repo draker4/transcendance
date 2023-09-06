@@ -1,15 +1,22 @@
 import { Action, GameData } from "@transcendence/shared/types/Game.types";
 import { ActionSolo } from "@transcendence/shared/types/Message.types";
 import { startPause, stopPause } from "./gameLoopSolo";
+import { profile } from "console";
 
 export const pongKeyDown = (
+  profile: Profile,
   event: KeyboardEvent,
   gameData: GameData,
   isPlayer: "Left" | "Right" | ""
 ) => {
   if (gameData.status === "Playing") {
     // handle player move Up
-    if (event.key === "ArrowUp") {
+    if (
+      (profile.gameKey === "Arrow" && event.key === "ArrowUp") ||
+      (profile.gameKey === "ZQSD" &&
+        (event.key === "z" || event.key === "Z")) ||
+      (profile.gameKey === "WASD" && (event.key === "w" || event.key === "W"))
+    ) {
       event.preventDefault();
       if (isPlayer === "Left" && gameData.playerLeftDynamic.move !== "Up") {
         gameData.playerLeftDynamic.move = Action.Up;
@@ -21,7 +28,12 @@ export const pongKeyDown = (
       }
 
       // handle player move Down
-    } else if (event.key === "ArrowDown") {
+    } else if (
+      (profile.gameKey === "Arrow" && event.key === "ArrowDown") ||
+      (profile.gameKey === "ZQSD" &&
+        (event.key === "s" || event.key === "S")) ||
+      (profile.gameKey === "WASD" && (event.key === "s" || event.key === "S"))
+    ) {
       const action: ActionSolo = {
         action: Action.Down,
         side: "",

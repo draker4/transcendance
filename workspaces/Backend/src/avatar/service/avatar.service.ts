@@ -1,5 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ChannelService } from '@/channels/service/channel.service';
 import { UsersService } from 'src/users/service/users.service';
@@ -14,6 +19,7 @@ export class AvatarService {
     @InjectRepository(Avatar)
     private readonly avatarRepository: Repository<Avatar>,
 
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
   ) {}

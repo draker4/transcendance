@@ -23,6 +23,7 @@ import { Notif } from './Notif.entity';
 import { Image } from './Image.entity';
 import { Story } from './Story.entity';
 import { Achievement } from './Achievement.entity';
+import { Matchmaking } from './Matchmaking.entity';
 
 @Entity()
 export class User {
@@ -89,6 +90,9 @@ export class User {
 
   @Column({ nullable: true })
   twoFactorAuthenticationSecret: string;
+
+  @Column({ default: 'Arrow' })
+  gameKey: 'Arrow' | 'ZQSD' | 'WASD';
 
   @ManyToMany(() => Channel, (channel) => channel.users)
   @JoinTable({
@@ -164,6 +168,10 @@ export class User {
   @OneToOne(() => Story)
   @JoinColumn()
   trainingStory: Story;
+
+  @OneToOne(() => Matchmaking)
+  @JoinColumn()
+  matchmaking: Matchmaking;
 
   @AfterLoad()
   async nullChecks() {

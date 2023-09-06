@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
 import { ChannelDto } from '../dto/Channel.dto';
@@ -28,6 +28,7 @@ export class ChannelService {
     private readonly avatarRepository: Repository<Avatar>,
     @InjectRepository(UserChannelRelation)
     private readonly userChannelRelation: Repository<UserChannelRelation>,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly cryptoService: CryptoService,
   ) {}

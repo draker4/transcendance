@@ -31,33 +31,31 @@ export default async function HomeServer() {
     provider: "",
     motto: "",
     story: "",
+    gameKey: "Arrow",
   };
 
   try {
     const getToken = cookies().get("crunchy-token")?.value;
-    if (!getToken)
-      throw new Error("No token value");
+    if (!getToken) throw new Error("No token value");
 
     token = getToken;
 
     const profileData = new Profile_Service(token);
     profile = await profileData.getProfileByToken();
-    if (profile.id === -1)
-      throw new Error("no user");
+    if (profile.id === -1) throw new Error("no user");
 
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarbyUserId(profile.id);
-
   } catch (error: any) {
     console.log(error.message);
     return (
-			<div className={styles.error}>
-				<p>An error occured</p>	
-				<Link href='/welcome/disconnect' className={styles.errorLink}>
-					Return to login page
-				</Link>
-			</div>
-		);
+      <div className={styles.error}>
+        <p>An error occured</p>
+        <Link href="/welcome/disconnect" className={styles.errorLink}>
+          Return to login page
+        </Link>
+      </div>
+    );
   }
 
   return (

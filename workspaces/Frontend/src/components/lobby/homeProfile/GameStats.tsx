@@ -1,4 +1,4 @@
-import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
+import styles from "@/styles/lobby/homeProfile/GameStats.module.css";
 import StatsService from "@/services/Stats.service";
 import { useState, useEffect } from "react";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
@@ -6,7 +6,7 @@ import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
-import Achievement from "@/components/lobby/homeProfile/LastAchievement";
+import LastAchievement from "@/components/profile/infos/sections/ItemContent/LastAchievement";
 import Item from "@/components/profile/infos/sections/Item";
 import StoryLevel from "@/components/profile/infos/sections/ItemContent/StoryLevel";
 import StoryService from "@/services/Story.service";
@@ -78,31 +78,33 @@ export default function GameStats({ profile }: Props) {
   }
 
   return (
-    <div className={styles.statsSide}>
+    <div className={styles.gameStats}>
       {/* STATSBOX1 */}
       <div className={styles.boxItem}>
-        <div className={styles.boxLabel}>
-          <p className={styles.tinyTitle}>Play for glory</p>
-        </div>
-        <div className={styles.statsBox1}>
+        <h3 className={styles.tinyTitle}>Play for glory</h3>
+        <div className={styles.statsBox}>
           <Rank
             rank={stats ? stats.leagueRank : 0}
             leaguePoints={stats ? stats.leaguePoints : 0}
           />
-          <XPBar userLevel={stats.leveling} />
+          <div className={styles.xpBar}>
+            <XPBar userLevel={stats.leveling} />
+          </div>
         </div>
       </div>
 
       {/* STATSBOX2 */}
       <div className={styles.boxItem}>
-        <div className={styles.boxLabel}>
-          <p className={styles.tinyTitle}>Play for fun</p>
-        </div>
-        <div className={styles.statsBox2}>
-          <Item title="Story Level">
-            <StoryLevel storyLevel={storyLevel} />
-          </Item>
-          <Achievement profile={profile} />
+        <h3 className={styles.tinyTitle}>Play for fun</h3>
+        <div className={styles.statsBox}>
+          <div className={styles.storyBar}>
+            <Item title="Story Level">
+              <StoryLevel storyLevel={storyLevel} />
+            </Item>
+          </div>
+          <div className={styles.storyBar}>
+            <LastAchievement profile={profile} />
+          </div>
         </div>
       </div>
     </div>

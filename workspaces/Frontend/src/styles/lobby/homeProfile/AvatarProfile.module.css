@@ -1,0 +1,43 @@
+.avatarProfile {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  min-width: 300px;
+  padding-top: 50px;
+  height: 100%;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+.links {
+  text-decoration: none;
+}
+
+.avatar {
+  max-width: 200px;
+  width: 100%;
+  aspect-ratio: 1;
+  border: 6px solid var(--primary1);
+  border-radius: 50%;
+}
+
+.avatar:hover {
+  scale: 1.1;
+}
+
+.login {
+  color: var(--accent1);
+  font-family: var(--title-font);
+  margin-top: 5px;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+@media (min-width: 65rem) {
+  .avatarProfile {
+    width: 30%;
+  }
+}

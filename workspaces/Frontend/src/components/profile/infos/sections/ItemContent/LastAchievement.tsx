@@ -1,7 +1,7 @@
 "use client";
 
 import AchievementService from "@/services/Achievement.service";
-import styles from "@/styles/lobby/homeProfile/Achievement.module.css";
+import styles from "@/styles/profile/LastAchievement.module.css";
 import { useEffect, useState } from "react";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import LoadingComponent from "@/components/loading/Loading";

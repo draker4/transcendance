@@ -11,6 +11,7 @@ import {
   UserTrainingData,
 } from '@transcendence/shared/types/Story.types';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Injectable()
 export class StoryService {
@@ -23,6 +24,7 @@ export class StoryService {
     private readonly storyDataRepository: Repository<StoryData>,
 
     private readonly achievementService: AchievementService,
+    private readonly statsService: StatsService,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -61,6 +63,10 @@ export class StoryService {
               code: `STORY_${update.level}`,
             });
           }
+          await this.statsService.updateStoryLevelCompleted(
+            userId,
+            update.level,
+          );
         }
         story[`levelAttempted${update.level}`]++;
       }

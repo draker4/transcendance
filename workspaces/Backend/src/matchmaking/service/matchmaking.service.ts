@@ -41,14 +41,11 @@ export class MatchmakingService {
     };
     try {
       console.log(userId, search);
-      let matchmaking = await this.matchmakingRepository.findOne({
+      const matchmaking = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });
       if (!matchmaking) {
-        await this.createMatchmaking({ userId: userId });
-        matchmaking = await this.matchmakingRepository.findOne({
-          where: { userId: userId },
-        });
+        throw new Error('Matchmaking not found');
       }
 
       matchmaking.searching = true;

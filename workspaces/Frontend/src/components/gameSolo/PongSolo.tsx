@@ -25,6 +25,7 @@ import PlayerPreview from "@/components/game/PlayerPreview";
 import GameEnd from "@/components/game/gameEnd/GameEnd";
 
 type Props = {
+  profile: Profile;
   gameData: GameData;
   setGameData: Function;
   isPlayer: "Left" | "Right" | "";
@@ -32,6 +33,7 @@ type Props = {
 };
 
 export default function Pong({
+  profile,
   gameData,
   setGameData,
   isPlayer,
@@ -84,7 +86,12 @@ export default function Pong({
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, isPlayer === "Left" ? "Left" : "Right");
+      pongKeyDown(
+        profile,
+        event,
+        gameData,
+        isPlayer === "Left" ? "Left" : "Right"
+      );
     }
 
     function handleKeyUp(event: KeyboardEvent) {
@@ -160,7 +167,11 @@ export default function Pong({
           />
         )}
         {showGameEnd && (
-          <GameEnd gameData={gameData} isPlayer={gameData.hostSide} />
+          <GameEnd
+            gameData={gameData}
+            isPlayer={gameData.hostSide}
+            userId={profile.id}
+          />
         )}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />

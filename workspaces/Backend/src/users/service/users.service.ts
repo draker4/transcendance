@@ -19,6 +19,7 @@ import { Image } from '@/utils/typeorm/Image.entity';
 import { EditChannelRelationDto } from '@/channels/dto/EditChannelRelation.dto';
 import { StoryService } from '@/story/service/story.service';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { MatchmakingService } from '@/matchmaking/service/matchmaking.service';
 
 @Injectable()
 export class UsersService {
@@ -38,10 +39,11 @@ export class UsersService {
     @InjectRepository(Image)
     private readonly imageRepository: Repository<Image>,
 
+    private readonly achievementService: AchievementService,
     private readonly cryptoService: CryptoService,
+    private readonly matchmakingService: MatchmakingService,
     private readonly statsService: StatsService,
     private readonly storyService: StoryService,
-    private readonly achievementService: AchievementService,
   ) {}
 
   async addUser(CreateUserDto: CreateUserDto): Promise<User> {
@@ -56,6 +58,15 @@ export class UsersService {
         .relation(User, 'achievement')
         .of(user.id)
         .set(achievement);
+
+      const matchmaking = await this.matchmakingService.createMatchmaking({
+        userId: user.id,
+      });
+      await this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'matchmaking')
+        .of(user.id)
+        .set(matchmaking);
 
       const stats = await this.statsService.createStats({
         userId: user.id,
