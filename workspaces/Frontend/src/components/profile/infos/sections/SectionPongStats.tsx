@@ -95,7 +95,7 @@ export default function SectionPongStats({ profile }: Props) {
       }, [])
 
   return (
-    <div className={styles.sections}>
+    <div className={`${styles.sections} ${styles.columnStart}`}>
 
       <MottoDisplayOnly profile={profile} />
 
@@ -113,12 +113,13 @@ export default function SectionPongStats({ profile }: Props) {
       <p className={styles.tinyTitle}>League</p>
       <div  className={styles.leagueContainer}>
         <Rank rank={shortStats.leagueRank} leaguePoints={shortStats.leaguePoints} />
+        <div className={styles.subLeagueContainer}>
+          <Item title="League Winrate">
+            <Winrate winData={{gameWon:shortStats.leagueWon, gameLost:shortStats.leagueLost, showPlaceholder: true}} />
+          </Item>
+        </div>
       </div>
 
-        <Item title="League Winrate">
-          <Winrate winData={{gameWon:shortStats.leagueWon, gameLost:shortStats.leagueLost, showPlaceholder: true}} />
-        </Item>
-      
 
       <p className={styles.tinyTitle}>Play for fun</p>
       <Item title="Story Level">

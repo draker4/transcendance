@@ -33,9 +33,19 @@
 /* ----------------------------------- */
 
 .sections {
-  min-height: 500px;
+  min-height: 400px;
   min-width: 250px;
   padding: clamp(0.25rem, 0.5rem + 5vw, 1rem);
+
+}
+
+.columnStart {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  /* border: 1px solid hotpink; */
 }
 
 .sections .leftAlign {
@@ -169,6 +179,7 @@
   overflow: hidden;
   min-width: 350px;
   max-width:800px;
+  width:100%;
 }
 
 .item .header {
@@ -186,8 +197,15 @@
 
 .leagueContainer {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  width:100%;
+  max-width:800px;
+}
+
+.leagueContainer .subLeagueContainer {
+  flex-grow:1;
+  /* border: 1px solid chartreuse; */
 }
 
 /* ----------------------------------- */
