@@ -96,10 +96,10 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
             setAvatarUpdated(payload.avatar);
             setLogin(payload.login);
           }
-        );
+      );
       else if (payload && payload.why && payload.why === "updatePongies")
         socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
+          if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
             setInvisible(false);
             setNotif(true);
           }
@@ -107,11 +107,22 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
             setInvisible(true);
             setNotif(false);
           }
-        });
+      });
+      else if (payload && payload.why && payload.why === "updateAchievements")
+        socket?.emit('getNotif', (payload: Notif) => {
+          if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
+            setInvisible(false);
+            setNotif(true);
+          }
+          else {
+            setInvisible(true);
+            setNotif(false);
+          }
+      });
     };
 
     socket?.emit('getNotif', (payload: Notif) => {
-      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0)) {
+      if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
         setInvisible(false);
         setNotif(true);
       }
