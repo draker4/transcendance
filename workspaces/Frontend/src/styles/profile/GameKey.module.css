@@ -3,3 +3,19 @@
   flex-flow: column nowrap;
   margin-top: 20px;
 }
+
+.dropdown {
+  font-size: 0.85rem;
+  font-family: var(--text-font);
+  background-color: var(--primary1);
+  border: 3px solid var(--accent1);
+  width: 70%;
+  border-radius: 4px;
+  padding: 3px;
+  text-align: center;
+  margin-block: 10px;
+}
+
+.dropdown:hover {
+  color: var(--accent3);
+}
