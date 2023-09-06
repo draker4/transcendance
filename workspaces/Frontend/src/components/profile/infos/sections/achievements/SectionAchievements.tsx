@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { FullAchivement, UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import HeaderAchievement from "./HeaderAchievement";
 import AchievementItem from "./AchievementItem";
+import { ShortStats } from "@transcendence/shared/types/Stats.types";
 
 type Props = {
   profile: Profile;
@@ -15,6 +16,7 @@ type Props = {
 export default function SectionAchievements({ profile }: Props) {
 
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
+  const [stats, setstats] = useState<ShortStats | undefined>(undefined);
   const achievementService = new AchievementService();
   const router = useRouter();
 
@@ -28,6 +30,7 @@ export default function SectionAchievements({ profile }: Props) {
       const data: FullAchivement = res.data;
 
       setAchievements(data.achievement);
+      setstats(data.stats);
     }
     catch (error: any) {
       if (error.message === 'disconnect') {
@@ -84,7 +87,7 @@ export default function SectionAchievements({ profile }: Props) {
         }}
         onClick={() => collectXP(achievement)}
       >
-        <AchievementItem achievement={achievement} />
+        <AchievementItem achievement={achievement} stats={stats} />
       </div>
     );
 	});

@@ -4,15 +4,16 @@ import { faArrowPointer, faCheck, faCloudArrowUp, faDumbbell, faG, faGraduationC
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faCheckCircle, faEnvelope, faHandPeace } from "@fortawesome/free-regular-svg-icons";
 import { PongColors } from "@/lib/enums/PongColors.enum";
-import { Badge, LinearProgress, linearProgressClasses, styled } from "@mui/material";
+import { Badge, LinearProgress, Tooltip, linearProgressClasses, styled } from "@mui/material";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
-import StatsService from "@/services/Stats.service";
-import { useEffect } from "react";
+import { ShortStats } from "@transcendence/shared/types/Stats.types";
 
 export default function AchievementItem({
 	achievement,
+	stats,
 }: {
 	achievement: UserAchievement;
+	stats: ShortStats | undefined;
 }) {
 
 	// Define a mapping from achievement.icone to FontAwesome icons
@@ -92,6 +93,42 @@ export default function AchievementItem({
 	};
 
 	const	background = `linear-gradient(to bottom, ${color} 55%, var(--primary1) 45%)`;
+
+	// get stats
+	let		value: number = 0;
+
+	if (stats) {
+		switch (achievement.type) {
+			case "game":
+				if (achievement.description.startsWith("Win"))
+					value = stats.gameWon;
+				else
+					value = stats.gameLost;
+				break ;
+			case "party":
+				if (achievement.description.startsWith("Win"))
+					value = stats.partyWon;
+				else
+					value = stats.partyLost;
+				break ;
+			case "league":
+				if (achievement.description.startsWith("Win"))
+					value = stats.leagueWon;
+				else
+					value = stats.leagueLost;
+				break ;
+			case "training":
+				if (achievement.description.startsWith("Win"))
+					value = stats.trainingWon;
+				else
+					value = stats.trainingLost;
+				break ;
+			case "demo":
+				value = stats.demoWatched;
+			default:
+				break ;
+		}
+	}
 	
 	return (
 		<>
@@ -134,9 +171,11 @@ export default function AchievementItem({
 			{/* load bar */}
 			{
 				!achievement.completed && achievement.value > 0 &&
-				<div className={styles.bottom}>
-					<BorderLinearProgress variant="determinate" value={10/30 * 100} />
-				</div>
+				<Tooltip title={`${value} / ${achievement.value}`} placement="left" arrow>
+					<div className={styles.bottom}>
+							<BorderLinearProgress variant="determinate" value={value/achievement.value * 100} />
+					</div>
+				</Tooltip>
 			}
 			{
 				(achievement.completed || achievement.value === 0) && <div></div>
