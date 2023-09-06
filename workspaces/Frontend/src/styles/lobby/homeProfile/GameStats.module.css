@@ -1,22 +1,11 @@
 .gameStats {
   display: flex;
-  flex-flow: column nowrap;
-  justify-content: space-evenly;
-
-  /* [+] dimension tmpo */
-  width: clamp(600px, 50%, 1000px);
-  min-height: 300px;
-  margin-bottom: 10px;
-
-  /* border: solid var(--secondary1) 3px; */
-  /* border-radius: 10px; */
-}
-
-.glory {
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  min-width: 300px;
   width: 100%;
+  margin: 5px;
 }
 
 .boxItem {
@@ -27,48 +16,28 @@
 }
 
 .tinyTitle {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: flex-start;
-  align-items: center;
-  font-family: var(--title-font);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent1);
-  margin-bottom: 0;
   margin-left: 20px;
+  margin-bottom: 5px;
+  color: var(--accent1);
+  font-size: 0.8rem;
+  font-weight: 600;
 }
 
-.statsBox1 {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  flex-flow: row wrap;
-  width: 100%;
-
-  /* border: 1px solid rgba(63, 233, 91, 0.839); */
-}
-
-.statsBox2 {
+.statsBox {
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   width: 100%;
-
-  /* border: 1px solid rgba(239, 136, 19, 0.839); */
 }
 
-/* Breakpoint 1 : width > smartphone */
-/* */
-@media (min-width: 38rem) {
-  .statsBox1 {
-    flex-flow: row nowrap;
-    align-items: center;
-  }
+.xpBar {
+  width: 80%;
+  max-width: 600px;
+}
 
-  .statsBox2 {
-    flex-flow: row nowrap;
-    align-items: center;
+@media (min-width: 65rem) {
+  .gameStats {
+    width: 65%;
   }
 }
