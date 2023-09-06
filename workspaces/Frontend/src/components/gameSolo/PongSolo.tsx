@@ -155,7 +155,11 @@ export default function Pong({
 
   return (
     <div className={styles.pong} ref={pongRef}>
-      <PongSoloHead gameData={gameData} trainingService={trainingService} />
+      <PongSoloHead
+        profile={profile}
+        gameData={gameData}
+        trainingService={trainingService}
+      />
       <div className={styles.canvasContainer}>
         {showPreview && <PlayerPreview gameData={gameData} />}
         {!showPreview && (

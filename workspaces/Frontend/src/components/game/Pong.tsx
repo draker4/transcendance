@@ -176,6 +176,7 @@ export default function Pong({
   return (
     <div className={styles.pongSolo} ref={pongRef}>
       <PongHead
+        profile={profile}
         gameData={gameData}
         gameService={gameService}
         lobby={lobby}
