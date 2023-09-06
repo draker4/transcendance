@@ -1,4 +1,4 @@
-import styles from "@/styles/lobby/homeProfile/HomeProfile.module.css";
+import styles from "@/styles/lobby/homeProfile/GameStats.module.css";
 import StatsService from "@/services/Stats.service";
 import { useState, useEffect } from "react";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
@@ -78,12 +78,10 @@ export default function GameStats({ profile }: Props) {
   }
 
   return (
-    <div className={styles.statsSide}>
+    <div className={styles.gameStats}>
       {/* STATSBOX1 */}
       <div className={styles.boxItem}>
-        <div className={styles.boxLabel}>
-          <p className={styles.tinyTitle}>Play for glory</p>
-        </div>
+        <p className={styles.tinyTitle}>Play for glory</p>
         <div className={styles.statsBox1}>
           <Rank
             rank={stats ? stats.leagueRank : 0}
@@ -95,9 +93,7 @@ export default function GameStats({ profile }: Props) {
 
       {/* STATSBOX2 */}
       <div className={styles.boxItem}>
-        <div className={styles.boxLabel}>
-          <p className={styles.tinyTitle}>Play for fun</p>
-        </div>
+        <p className={styles.tinyTitle}>Play for fun</p>
         <div className={styles.statsBox2}>
           <Item title="Story Level">
             <StoryLevel storyLevel={storyLevel} />

@@ -168,7 +168,7 @@ export class AchievementService {
       ret.success = true;
       ret.message = 'Achievement found';
       ret.data = fullachievement
-        .sort((a, b) => b.id - a.id)
+        .sort((a, b) => a.id - b.id)
         .sort((a, b) => {
           if (a.completed && !b.completed) return -1;
           if (!a.completed && b.completed) return 1;
