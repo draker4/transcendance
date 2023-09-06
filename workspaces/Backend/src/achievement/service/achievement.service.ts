@@ -129,11 +129,43 @@ export class AchievementService implements OnModuleInit {
       } else {
         userAchievement[`achv${achievementId}Collected`] = true;
       }
-      await this.achievementRepository.save(userAchievement);
+      const achievementForStatus =
+        await this.achievementRepository.save(userAchievement);
       const achievement = await this.achievementDataRepository.findOne({
         where: { id: achievementId },
       });
       await this.statsService.updateXP(userId, achievement.xp);
+
+      // delete notif in navbar in front
+      const achievementStatus: AchievementStatus[] = Array.from(
+        { length: 30 },
+        (_, i) => ({
+          id: i + 1,
+          completed: achievementForStatus[`achv${i + 1}Completed`],
+          collected: achievementForStatus[`achv${i + 1}Collected`],
+          date: achievementForStatus[`achv${i + 1}Date`],
+        }),
+      );
+
+      let deleteNotif = true;
+
+      achievementStatus.forEach((achievement) => {
+        if (
+          achievement.completed &&
+          !achievement.collected &&
+          achievement.id !== achievementId
+        )
+          deleteNotif = false;
+      });
+
+      if (deleteNotif) {
+        const user = await this.usersService.getUserById(userId);
+
+        if (user)
+          await this.notifRepository.update(user.notif.id, {
+            redAchievements: false,
+          });
+      }
     } catch (error) {
       throw new Error(error.message);
     }
@@ -157,7 +189,7 @@ export class AchievementService implements OnModuleInit {
       const achievementStatus: AchievementStatus[] = Array.from(
         { length: 30 },
         (_, i) => ({
-          id: userAchievements.id,
+          id: i + 1,
           completed: userAchievements[`achv${i + 1}Completed`],
           collected: userAchievements[`achv${i + 1}Collected`],
           date: userAchievements[`achv${i + 1}Date`],
@@ -227,7 +259,7 @@ export class AchievementService implements OnModuleInit {
       const achievementStatus: AchievementStatus[] = Array.from(
         { length: 30 },
         (_, i) => ({
-          id: userAchievements.id,
+          id: i + 1,
           completed: userAchievements[`achv${i + 1}Completed`],
           collected: userAchievements[`achv${i + 1}Collected`],
           date: userAchievements[`achv${i + 1}Date`],

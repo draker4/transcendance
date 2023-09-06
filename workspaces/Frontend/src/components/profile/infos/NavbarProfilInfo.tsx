@@ -44,6 +44,7 @@ export default function NavbarProfilInfo({
 }: Props) {
   const [selectedItem, setSelectedItem] = useState(0);
   const [invisible, setInvisible] = useState<boolean>(true);
+  const [invisibleAchievement, setInvisibleAchievement] = useState<boolean>(true);
   const idRef = useRef<boolean>(false);
 
   useEffect(() => {
@@ -52,16 +53,26 @@ export default function NavbarProfilInfo({
     }) => {
       if (payload && payload.why && payload.why === "updatePongies") {
         socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && !idRef.current && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+          if (payload && !idRef.current && payload.redPongies.length > 0)
             setInvisible(false);
           else
             setInvisible(true);
         });
       }
+      if (payload && payload.why && payload.why === "updateAchievements") {
+        socket?.emit('getNotif', (payload: Notif) => {
+          if (payload && !idRef.current && payload.redAchievements)
+            setInvisibleAchievement(false);
+          else
+            setInvisibleAchievement(true);
+        });
+      }
     };
 
     socket?.emit('getNotif', (payload: Notif) => {
-      if (payload && (payload.redChannels.length > 0 || payload.redPongies.length > 0))
+      if (payload && payload.redAchievements)
+        setInvisibleAchievement(false);
+      if (payload && payload.redPongies.length > 0)
         setInvisible(false);
     });
 
@@ -74,6 +85,10 @@ export default function NavbarProfilInfo({
 
   const handleClick = (buttonId: number) => {
     if (buttonId === 1) {
+      setInvisibleAchievement(true);
+      idRef.current = true;
+    }
+    else if (buttonId === 2) {
       setInvisible(true);
       idRef.current = true;
     }
@@ -109,7 +124,7 @@ export default function NavbarProfilInfo({
           onClick={() => handleClick(button.id)}
         >
           {
-            (!isOwner || button.name !== "Pongies") &&
+            (!isOwner || (button.name !== "Pongies" && button.name !== "Achievements")) &&
             <FontAwesomeIcon icon={button.icon} />
           }
           {
@@ -119,6 +134,17 @@ export default function NavbarProfilInfo({
               sx={badgeStyle}
               variant="dot"
               invisible={invisible}
+            >
+               <FontAwesomeIcon icon={button.icon} />
+            </Badge>
+          }
+          {
+            isOwner && button.name === "Achievements" &&
+            <Badge
+              overlap="rectangular"
+              sx={badgeStyle}
+              variant="dot"
+              invisible={invisibleAchievement}
             >
                <FontAwesomeIcon icon={button.icon} />
             </Badge>
