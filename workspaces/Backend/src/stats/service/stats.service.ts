@@ -112,7 +112,7 @@ export class StatsService {
     }
   }
 
-  public async updateDemoWatched(userId: number): Promise<Stats> {
+  public async updateDemoWatched(userId: number): Promise<void> {
     try {
       const stats = await this.statsRepository.findOne({
         where: { userId: userId },
@@ -130,7 +130,27 @@ export class StatsService {
           code: `DEMO_${stats.demoWatched}`,
         });
       }
-      return await this.statsRepository.save(stats);
+      await this.statsRepository.save(stats);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
+  public async updateStoryLevelCompleted(
+    userId: number,
+    storyLevelCompleted: number,
+  ): Promise<void> {
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        throw new Error('Stats not found');
+      }
+      if (stats.storyLevelCompleted < storyLevelCompleted) {
+        stats.storyLevelCompleted = storyLevelCompleted;
+        await this.statsRepository.save(stats);
+      }
     } catch (error) {
       throw new Error(error.message);
     }
@@ -190,6 +210,8 @@ export class StatsService {
           stats.trainingBest5Lost +
           stats.trainingCustomLost +
           stats.trainingStoryLost,
+        demoWatched: stats.demoWatched,
+        storyLevelCompleted: stats.storyLevelCompleted,
       };
       shortStats.gameWon =
         shortStats.leagueWon + shortStats.partyWon + shortStats.trainingWon;

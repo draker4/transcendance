@@ -6,11 +6,12 @@ import { Stats } from 'src/utils/typeorm/Stats.entity';
 import { ExperienceService } from '@/experience/service/experience.service';
 import { ExperienceData } from '@/utils/typeorm/ExperienceData.entity';
 import { AchievementModule } from '@/achievement/achievement.module';
+import { forwardRef } from '@nestjs/common';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ExperienceData, Stats]),
-    AchievementModule,
+    forwardRef(() => AchievementModule),
   ],
   controllers: [StatsController],
   providers: [ExperienceService, StatsService],

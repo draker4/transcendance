@@ -36,7 +36,6 @@ export default function GameSolo({ profile, trainingId }: Props) {
   useEffect(() => {
     const getData = async () => {
       try {
-
         if (isLoading) {
           const ret = await trainingService.getTrainingData(trainingId);
           if (ret.success == false) {
@@ -59,14 +58,13 @@ export default function GameSolo({ profile, trainingId }: Props) {
             }
           }
         }
-      }
-      catch (error: any) {
+      } catch (error: any) {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
     };
-    
+
     getData();
   }, []);
 
@@ -90,6 +88,7 @@ export default function GameSolo({ profile, trainingId }: Props) {
     return (
       <div className={styles.game}>
         <PongSolo
+          profile={profile}
           gameData={gameData}
           setGameData={setGameData}
           isPlayer={isPlayer}

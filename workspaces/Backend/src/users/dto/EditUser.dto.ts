@@ -16,4 +16,8 @@ export class EditUserDto {
   @IsOptional()
   @Length(0, 350)
   story?: string;
+
+  @IsString()
+  @IsOptional()
+  gameKey?: 'Arrow' | 'ZQSD' | 'WASD';
 }

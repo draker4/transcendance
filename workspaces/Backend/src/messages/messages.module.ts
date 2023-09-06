@@ -9,5 +9,6 @@ import { ChannelModule } from '@/channels/channel.module';
 @Module({
   imports: [TypeOrmModule.forFeature([Message]), ChannelModule],
   providers: [MessagesService],
+  exports: [MessagesService],
 })
 export class MessageModule {}

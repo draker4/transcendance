@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
@@ -10,7 +10,9 @@ import {
   UserAchievement,
   AchievementStatus,
   AchievementAnnonce,
+  FullAchivement,
 } from '@transcendence/shared/types/Achievement.types';
+import { StatsService } from '@/stats/service/stats.service';
 
 @Injectable()
 export class AchievementService {
@@ -21,6 +23,8 @@ export class AchievementService {
     private readonly achievementRepository: Repository<Achievement>,
     @InjectRepository(AchievementData)
     private readonly achievementDataRepository: Repository<AchievementData>,
+    @Inject(forwardRef(() => StatsService))
+    private readonly statsService: StatsService,
   ) {}
 
   public achivementAnnonce: AchievementAnnonce[] = [];
@@ -149,7 +153,7 @@ export class AchievementService {
         }
       }
 
-      const fullachievement: UserAchievement[] = achievementStatus.map(
+      const userAchievement: UserAchievement[] = achievementStatus.map(
         (data, i) => ({
           id: achievementDatas[i].id,
           code: achievementDatas[i].code,
@@ -165,15 +169,20 @@ export class AchievementService {
         }),
       );
 
+      const fullAchievement: FullAchivement = {
+        achievement: userAchievement
+          .sort((a, b) => a.id - b.id)
+          .sort((a, b) => {
+            if (a.completed && !b.completed) return -1;
+            if (!a.completed && b.completed) return 1;
+            return 0;
+          }),
+        stats: (await this.statsService.getShortStats(userId)).data,
+      };
+
       ret.success = true;
       ret.message = 'Achievement found';
-      ret.data = fullachievement
-        .sort((a, b) => a.id - b.id)
-        .sort((a, b) => {
-          if (a.completed && !b.completed) return -1;
-          if (!a.completed && b.completed) return 1;
-          return 0;
-        });
+      ret.data = fullAchievement;
       return ret;
     } catch (error) {
       console.log(error.message);

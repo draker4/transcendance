@@ -38,6 +38,12 @@ export class Stats {
   @Column({ default: false })
   levelUp: boolean;
 
+  @Column({ default: 0 })
+  demoWatched: number;
+
+  @Column({ default: 0 })
+  storyLevelCompleted: number;
+
   // League stats
 
   @Column({ default: 0 })
@@ -175,9 +181,4 @@ export class Stats {
 
   @Column({ default: 0 })
   trainingPointLost: number;
-
-  // Demo stats
-
-  @Column({ default: 0 })
-  demoWatched: number;
 }

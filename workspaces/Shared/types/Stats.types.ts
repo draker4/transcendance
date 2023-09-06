@@ -97,6 +97,8 @@ export type ShortStats = {
   partyLost: number;
   trainingWon: number;
   trainingLost: number;
+  demoWatched: number;
+  storyLevelCompleted: number;
 };
 
 export type StatsUpdate = {

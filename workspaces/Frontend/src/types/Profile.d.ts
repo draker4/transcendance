@@ -10,4 +10,5 @@ type Profile = {
   motto: string;
   story: string;
   isTwoFactorAuthenticationEnabled?: boolean;
+  gameKey: "Arrow" | "ZQSD" | "WASD";
 };

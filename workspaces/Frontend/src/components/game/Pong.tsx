@@ -33,7 +33,7 @@ import PlayerPreview from "./PlayerPreview";
 import GameEnd from "./gameEnd/GameEnd";
 
 type Props = {
-  userId: number;
+  profile: Profile;
   gameData: GameData;
   setGameData: Function;
   socket: Socket;
@@ -43,7 +43,7 @@ type Props = {
 };
 
 export default function Pong({
-  userId,
+  profile,
   gameData,
   setGameData,
   socket,
@@ -99,11 +99,11 @@ export default function Pong({
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, socket, userId, isPlayer);
+      pongKeyDown(event, gameData, socket, profile, isPlayer);
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, socket, userId, isPlayer);
+      pongKeyUp(event, gameData, socket, profile, isPlayer);
     }
     // Add key event listeners when the component mounts
     window.addEventListener("keydown", handleKeyDown);
@@ -114,7 +114,7 @@ export default function Pong({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [socket, userId, isPlayer, gameData]);
+  }, [socket, profile, isPlayer, gameData]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -134,13 +134,13 @@ export default function Pong({
 
   useEffect(() => {
     isMountedRef.current = true;
-    socket.on("ping", handlePing(socket, userId, isMountedRef));
+    socket.on("ping", handlePing(socket, profile.id, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, userId, isMountedRef));
+      socket.off("ping", handlePing(socket, profile.id, isMountedRef));
     };
-  }, [socket, userId]);
+  }, [socket, profile]);
 
   useEffect(() => {
     if (gameData.status === "Not Started") {
@@ -192,7 +192,11 @@ export default function Pong({
           />
         )}
         {showGameEnd && (
-          <GameEnd gameData={gameData} isPlayer={isPlayer} userId={userId} />
+          <GameEnd
+            gameData={gameData}
+            isPlayer={isPlayer}
+            userId={profile.id}
+          />
         )}
       </div>
       <Info gameData={gameData} setGameData={setGameData} />

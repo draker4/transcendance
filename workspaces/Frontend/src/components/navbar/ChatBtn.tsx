@@ -52,7 +52,7 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
 
     const handleAchievement = (achievement: UserAchievement) => {
       console.log("Achievement unlocked:", achievement);
-      toast.success(`You unlocked the achievement ${achievement.name}!`, {
+      toast.info(`You unlocked the achievement ${achievement.name}!`, {
         autoClose: 5000,
       });
     };

@@ -22,15 +22,20 @@ export const pongKeyDown = (
   event: KeyboardEvent,
   game: GameData,
   socket: Socket,
-  userId: number,
+  profile: Profile,
   isPlayer: "Left" | "Right" | "Spectator"
 ) => {
   if (game.status === "Playing") {
     // handle player move Up
-    if (event.key === "ArrowUp") {
+    if (
+      (profile.gameKey === "Arrow" && event.key === "ArrowUp") ||
+      (profile.gameKey === "ZQSD" &&
+        (event.key === "z" || event.key === "Z")) ||
+      (profile.gameKey === "WASD" && (event.key === "w" || event.key === "W"))
+    ) {
       event.preventDefault();
       const action: ActionDTO = {
-        userId: userId,
+        userId: profile.id,
         gameId: game.id,
         move: Action.Up,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
@@ -42,10 +47,15 @@ export const pongKeyDown = (
       }
 
       // handle player move Down
-    } else if (event.key === "ArrowDown") {
+    } else if (
+      (profile.gameKey === "Arrow" && event.key === "ArrowDown") ||
+      (profile.gameKey === "ZQSD" &&
+        (event.key === "s" || event.key === "S")) ||
+      (profile.gameKey === "WASD" && (event.key === "s" || event.key === "S"))
+    ) {
       event.preventDefault();
       const action: ActionDTO = {
-        userId: userId,
+        userId: profile.id,
         gameId: game.id,
         move: Action.Down,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
@@ -67,7 +77,7 @@ export const pongKeyDown = (
       event.preventDefault();
       if (game.push) {
         const action: ActionDTO = {
-          userId: userId,
+          userId: profile.id,
           gameId: game.id,
           move: Action.Push,
           playerSide: isPlayer === "Left" ? "Left" : "Right",
@@ -86,7 +96,7 @@ export const pongKeyDown = (
     event.preventDefault();
     if (game.status === "Stopped" || game.status === "Playing") {
       const action: ActionDTO = {
-        userId: userId,
+        userId: profile.id,
         gameId: game.id,
         move: Action.Stop,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
@@ -110,11 +120,11 @@ export const pongKeyUp = (
   event: KeyboardEvent,
   game: GameData,
   socket: Socket,
-  userId: number,
+  profile: Profile,
   isPlayer: "Left" | "Right" | "Spectator"
 ) => {
   const action: ActionDTO = {
-    userId: userId,
+    userId: profile.id,
     gameId: game.id,
     move: Action.Idle,
     playerSide: isPlayer === "Left" ? "Left" : "Right",

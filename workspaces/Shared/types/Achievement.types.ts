@@ -1,3 +1,5 @@
+import { ShortStats } from "./Stats.types";
+
 export type UserAchievement = {
   id: number;
   code: string;
@@ -22,4 +24,9 @@ export type AchievementStatus = {
 export type AchievementAnnonce = {
   userId: string;
   achievement: UserAchievement;
+};
+
+export type FullAchivement = {
+  achievement: UserAchievement[];
+  stats: ShortStats;
 };

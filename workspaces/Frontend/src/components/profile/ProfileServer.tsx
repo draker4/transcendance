@@ -31,6 +31,7 @@ export default async function ProfileServer({ id }: { id: number }) {
     provider: "",
     motto: "",
     story: "",
+    gameKey: "Arrow",
   };
   let avatars: Avatar[] = [];
 

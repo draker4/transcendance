@@ -15,6 +15,7 @@ import { AchievementModule } from '@/achievement/achievement.module';
 import { StatsModule } from '@/stats/stats.module';
 import { StoryModule } from '@/story/story.module';
 import { AvatarModule } from '@/avatar/avatar.module';
+import { MatchmakingModule } from '@/matchmaking/matchmaking.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AvatarModule } from '@/avatar/avatar.module';
     ]),
     AchievementModule,
     AvatarModule,
+    MatchmakingModule,
     StatsModule,
     StoryModule,
   ],

@@ -1,5 +1,5 @@
 // import standard nest packages
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // import entities
@@ -27,7 +27,7 @@ import { GameGateway } from './gateway/game.gateway';
     ScoreModule,
     StatsModule,
     StatusModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   providers: [
     ColoredLogger,

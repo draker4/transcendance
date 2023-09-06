@@ -32,6 +32,7 @@ import { StatusService } from '@/statusService/status.service';
 import { editChannelPasswordDto } from './dto/editChannelPassword.dto';
 import { editChannelTypeDto } from './dto/editChannelType.dto';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { AchievementAnnonce } from '@transcendence/shared/types/Achievement.types';
 
 @UseGuards(WsJwtGuard)
 @UsePipes(new ValidationPipe())
@@ -44,14 +45,15 @@ import { AchievementService } from '@/achievement/service/achievement.service';
 })
 export class ChatGateway implements OnModuleInit {
   constructor(
+    private readonly achievementService: AchievementService,
     private readonly chatService: ChatService,
     private readonly channelService: ChannelService,
     private readonly statusService: StatusService,
-    private readonly achievementService: AchievementService,
   ) {}
 
   // Container of connected users : Map<socket, user id>
   private connectedUsers: Map<Socket, string> = new Map<Socket, string>();
+  private notSendAchivementAnnonce: AchievementAnnonce[] = [];
 
   @WebSocketServer()
   server: Server;
@@ -73,6 +75,19 @@ export class ChatGateway implements OnModuleInit {
 
         this.chatService.joinAllMyChannels(socket, payload.sub);
         this.chatService.saveToken(token, payload.sub);
+        if (this.notSendAchivementAnnonce.length > 0) {
+          this.notSendAchivementAnnonce.forEach((achievement) => {
+            if (achievement.userId === payload.sub.toString()) {
+              this.server
+                .to(socket.id)
+                .emit('achievement', achievement.achievement);
+              this.notSendAchivementAnnonce.splice(
+                this.notSendAchivementAnnonce.indexOf(achievement),
+                1,
+              );
+            }
+          });
+        }
 
         socket.on('disconnect', () => {
           this.connectedUsers.delete(socket);
@@ -122,16 +137,22 @@ export class ChatGateway implements OnModuleInit {
 
       this.statusService.remove(updateStatus);
     }, 1000);
+
     setInterval(() => {
       const achievementAnnonce = this.achievementService.achivementAnnonce;
 
       while (achievementAnnonce.length > 0) {
         const achievement = achievementAnnonce.shift();
+        let send = false;
         this.connectedUsers.forEach((value, key) => {
           if (value === achievement.userId) {
             this.server.to(key.id).emit('achievement', achievement.achievement);
+            send = true;
           }
         });
+        if (!send) {
+          this.notSendAchivementAnnonce.push(achievement);
+        }
       }
     }, 1000);
   }
