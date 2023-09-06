@@ -60,6 +60,7 @@ export default async function CreateServer() {
         token={token as string}
         avatars={avatars}
         avatarCrypted={avatarCrypted}
+        profile={profile}
       />
     </div>
   );

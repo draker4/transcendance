@@ -31,7 +31,19 @@ export default function SectionAchievements({ profile, socket }: Props) {
 
       const data: FullAchivement = res.data;
 
-      setAchievements(data.achievement);
+      let newAchievements = data.achievement
+          .map(achievement => {
+            if (profile.provider === '42' && (achievement.code === "VERIFY_EMAIL" || achievement.code === "LOGIN_GOOGLE"))
+              return null;
+            if (profile.provider === 'google' && (achievement.code === "VERIFY_EMAIL" || achievement.code === "LOGIN_42"))
+              return null;
+            if (profile.provider === 'email' && (achievement.code === "LOGIN_42" || achievement.code === "LOGIN_GOOGLE"))
+              return null;
+            return achievement;
+          })
+          .filter(achievement => achievement !== null) as UserAchievement[];
+
+      setAchievements(newAchievements);
       setstats(data.stats);
     }
     catch (error: any) {

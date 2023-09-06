@@ -57,7 +57,7 @@ export class AuthService {
 
     const user: CreateUserDto = {
       email: await this.cryptoService.encrypt(content?.email),
-      first_name: await this.cryptoService.encrypt(content?.first_name),
+      first_name: await this.cryptoService.encrypt(content?.login),
       last_name: await this.cryptoService.encrypt(content?.last_name),
       phone: await this.cryptoService.encrypt(content?.phone),
       image: await this.cryptoService.encrypt(content?.image?.versions.large),

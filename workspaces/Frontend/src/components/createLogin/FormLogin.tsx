@@ -17,10 +17,12 @@ export default function FormLogin({
   avatars,
   token,
   avatarCrypted,
+  profile,
 }: {
   avatars: string[];
   token: string;
   avatarCrypted: string | undefined;
+  profile: Profile;
 }) {
   const textButtonInitial = "Let's go!";
   const [notif, setNotif] = useState<string>("");
@@ -45,6 +47,11 @@ export default function FormLogin({
     isChannel: false,
     decrypt: false,
   });
+
+  useEffect(() => {
+    if (profile.provider === '42' && profile.first_name && profile.first_name.length !== 0)
+      setText(profile.first_name);
+  }, []);
 
   const selectAvatar = (avatar: Avatar) => {
     avatar.text = avatar.text.toUpperCase().slice(0, 3);
