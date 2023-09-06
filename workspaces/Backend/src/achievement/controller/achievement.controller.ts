@@ -29,7 +29,7 @@ export class AchievementController {
   @Put('collected/:userId/:achievementId')
   async collectAchievement(
     @Param('userId', ParseIntPipe) userId: number,
-    @Param('achievementId') achievementId: string,
+    @Param('achievementId', ParseIntPipe) achievementId: number,
   ) {
     return this.achievementService.collectAchievement(userId, achievementId);
   }

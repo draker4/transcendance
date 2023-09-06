@@ -12,6 +12,7 @@ import XPBar from "./ItemContent/XPBar";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
+import LastAchievement from "./lastAchievement/LastAchievement";
 
 type Props = {
   profile: Profile;
@@ -37,6 +38,8 @@ export default function SectionPongStats({ profile }: Props) {
     partyLost: 0,
     trainingWon: 0,
     trainingLost: 0,
+    demoWatched: 0,
+    storyLevelCompleted: 0,
   });
   const storyService = new StoryService(undefined);
   const statService = new StatsService(undefined);
@@ -149,7 +152,11 @@ export default function SectionPongStats({ profile }: Props) {
       </Item>
 
       <Item title="Recent Achievements">
-        <p>items content : customize it with a specific component</p>
+        <LastAchievement
+          profile={profile}
+          setStats={setShortStats}
+          statsService={statService}
+        />
       </Item>
     </div>
   );

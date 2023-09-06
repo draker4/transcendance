@@ -7,7 +7,7 @@ import SectionCustom from "./sections/SectionCustom";
 import { Socket } from "socket.io-client";
 import SectionPongies from "./sections/SectionPongies";
 import SectionChannels from "./sections/SectionChannels";
-import SectionAchievements from "./sections/achievements/SectionAchievements";
+import SectionAchievements from "./sections/fullAchievement/SectionAchievements";
 
 type Props = {
   profile: Profile;
@@ -16,7 +16,12 @@ type Props = {
   socket: Socket | undefined;
 };
 
-export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) {
+export default function InfoCard({
+  profile,
+  isOwner,
+  setLogin,
+  socket,
+}: Props) {
   const [activeButton, setActiveButton] = useState(0);
 
   return (
@@ -34,11 +39,29 @@ export default function InfoCard({ profile, isOwner, setLogin, socket }: Props) 
           case 1:
             return <SectionAchievements profile={profile} />;
           case 2:
-            return <SectionPongies socket={socket} isOwner={isOwner} profile={profile} />;
+            return (
+              <SectionPongies
+                socket={socket}
+                isOwner={isOwner}
+                profile={profile}
+              />
+            );
           case 3:
-            return <SectionChannels socket={socket} isOwner={isOwner} profile={profile} />;
+            return (
+              <SectionChannels
+                socket={socket}
+                isOwner={isOwner}
+                profile={profile}
+              />
+            );
           case 4:
-            return <SectionCustom profile={profile} setLogin={setLogin} socket={socket}/>;
+            return (
+              <SectionCustom
+                profile={profile}
+                setLogin={setLogin}
+                socket={socket}
+              />
+            );
           default:
             return <SectionPongStats profile={profile} />;
         }

@@ -156,6 +156,28 @@ export class StatsService {
     }
   }
 
+  public async updateXP(userId: number, xp: number): Promise<void> {
+    try {
+      const stats = await this.statsRepository.findOne({
+        where: { userId: userId },
+      });
+      if (!stats) {
+        throw new Error('Stats not found');
+      }
+      stats.playerXP += xp;
+      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
+        stats.level,
+      );
+      if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
+        stats.level += 1;
+        stats.levelUp = true;
+      }
+      await this.statsRepository.save(stats);
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+
   public async getShortStats(userId: number): Promise<ReturnData> {
     const ret: ReturnData = {
       success: false,

@@ -1,4 +1,4 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
+import { Injectable, Inject, forwardRef, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Achievement } from '@/utils/typeorm/Achievement.entity';
@@ -15,7 +15,7 @@ import {
 import { StatsService } from '@/stats/service/stats.service';
 
 @Injectable()
-export class AchievementService {
+export class AchievementService implements OnModuleInit {
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
   constructor(
@@ -28,6 +28,10 @@ export class AchievementService {
   ) {}
 
   public achivementAnnonce: AchievementAnnonce[] = [];
+
+  onModuleInit() {
+    this.createAchievementData();
+  }
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
@@ -90,7 +94,7 @@ export class AchievementService {
 
   public async collectAchievement(
     userId: number,
-    achievementId: string,
+    achievementId: number,
   ): Promise<void> {
     try {
       const userAchievement = await this.achievementRepository.findOne({
@@ -110,6 +114,10 @@ export class AchievementService {
         userAchievement[`achv${achievementId}Collected`] = true;
       }
       await this.achievementRepository.save(userAchievement);
+      const achievement = await this.achievementDataRepository.findOne({
+        where: { id: achievementId },
+      });
+      await this.statsService.updateXP(userId, achievement.xp);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -140,17 +148,11 @@ export class AchievementService {
         }),
       );
 
-      let achievementDatas: AchievementData[] =
+      const achievementDatas: AchievementData[] =
         await this.achievementDataRepository.find();
 
-      if (!achievementDatas || achievementDatas.length === 0) {
-        await this.createAchievementData();
-        achievementDatas = await this.achievementDataRepository.find();
-
-        if (!achievementDatas || achievementDatas.length === 0) {
-          ret.message = 'Cannot create achievements';
-          return ret;
-        }
+      if (!achievementDatas) {
+        throw new Error('Achievement not found');
       }
 
       const userAchievement: UserAchievement[] = achievementStatus.map(
@@ -216,17 +218,11 @@ export class AchievementService {
         }),
       );
 
-      let achievementDatas: AchievementData[] =
+      const achievementDatas: AchievementData[] =
         await this.achievementDataRepository.find();
 
-      if (!achievementDatas || achievementDatas.length === 0) {
-        await this.createAchievementData();
-        achievementDatas = await this.achievementDataRepository.find();
-
-        if (!achievementDatas || achievementDatas.length === 0) {
-          ret.message = 'Cannot create achievements';
-          return ret;
-        }
+      if (!achievementDatas) {
+        throw new Error('Achievement not found');
       }
 
       const lastThree: UserAchievement[] = achievementStatus.map((data, i) => ({
@@ -261,7 +257,10 @@ export class AchievementService {
 
   private async createAchievementData(): Promise<void> {
     try {
-      const achivements: CreateAchievementDataDTO[] = [
+      const achievements = await this.achievementDataRepository.find();
+      if (achievements.length > 0) return;
+      console.log('Creating achievements data');
+      const standardAchievements: CreateAchievementDataDTO[] = [
         {
           code: 'GAME_WIN_1',
           name: 'First Blood',
@@ -529,7 +528,7 @@ export class AchievementService {
         },
       ];
 
-      for (const achivement of achivements) {
+      for (const achivement of standardAchievements) {
         await this.achievementDataRepository.save(achivement);
       }
     } catch (error) {

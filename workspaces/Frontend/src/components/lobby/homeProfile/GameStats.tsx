@@ -6,7 +6,7 @@ import Rank from "@/components/profile/infos/sections/ItemContent/Rank";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import XPBar from "@/components/profile/infos/sections/ItemContent/XPBar";
-import LastAchievement from "@/components/profile/infos/sections/ItemContent/LastAchievement";
+import LastAchievement from "@/components/profile/infos/sections/lastAchievement/LastAchievement";
 import Item from "@/components/profile/infos/sections/Item";
 import StoryLevel from "@/components/profile/infos/sections/ItemContent/StoryLevel";
 import StoryService from "@/services/Story.service";
@@ -103,7 +103,11 @@ export default function GameStats({ profile }: Props) {
             </Item>
           </div>
           <div className={styles.storyBar}>
-            <LastAchievement profile={profile} />
+            <LastAchievement
+              profile={profile}
+              setStats={setStats}
+              statsService={statsService}
+            />
           </div>
         </div>
       </div>
