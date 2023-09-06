@@ -29,12 +29,12 @@ export default class AchievementService {
   }
 
   //Recupere les derniers achievements de l'utilisateur jusqu'a 3 (peut etre null)
-  public async getLastThree(userId: number): Promise<ReturnData> {
+  public async getLast(userId: number): Promise<ReturnData> {
     try {
       const response = await fetchData(
         this.token,
         "achievement",
-        `getLastThree/${userId}`,
+        `getLast/${userId}`,
         "GET"
       );
       const data: ReturnData = await response.json();

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Story } from '@/utils/typeorm/Story.entity';
@@ -14,7 +14,7 @@ import { AchievementService } from '@/achievement/service/achievement.service';
 import { StatsService } from '@/stats/service/stats.service';
 
 @Injectable()
-export class StoryService {
+export class StoryService implements OnModuleInit {
   // ----------------------------------  CONSTRUCTOR  --------------------------------- //
 
   constructor(
@@ -26,6 +26,10 @@ export class StoryService {
     private readonly achievementService: AchievementService,
     private readonly statsService: StatsService,
   ) {}
+
+  onModuleInit() {
+    this.createStoryData();
+  }
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
 
@@ -99,16 +103,11 @@ export class StoryService {
         }),
       );
 
-      let storyDatas: StoryData[] = await this.storyDataRepository.find();
+      const storyDatas: StoryData[] = await this.storyDataRepository.find();
 
-      if (!storyDatas || storyDatas.length === 0) {
-        await this.createStoryData();
-        storyDatas = await this.storyDataRepository.find();
-
-        if (!storyDatas || storyDatas.length === 0) {
-          ret.message = 'cannot create story';
-          return ret;
-        }
+      if (!storyDatas) {
+        ret.message = 'Story data not found';
+        return ret;
       }
       storyDatas.sort((a, b) => a.level - b.level);
 
@@ -140,6 +139,10 @@ export class StoryService {
 
   private async createStoryData(): Promise<void> {
     try {
+      const storyData = await this.storyDataRepository.find();
+      if (storyData.length > 0) {
+        return;
+      }
       const levels: CreateStoryDataDTO[] = [
         {
           level: 1,
