@@ -99,6 +99,7 @@ export type ShortStats = {
   trainingLost: number;
   demoWatched: number;
   storyLevelCompleted: number;
+  userLevel: number;
 };
 
 export type StatsUpdate = {

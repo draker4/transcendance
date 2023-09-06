@@ -11,6 +11,7 @@ import {
   faRankingStar,
   faScroll,
   faShieldHalved,
+  faStar,
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -38,6 +39,7 @@ export default function ShortAchievementItem({
     faEnvelope: faEnvelope,
     faShieldHalved: faShieldHalved,
     faCloudArrowUp: faCloudArrowUp,
+    faStar: faStar,
   };
 
   let icon: IconProp | undefined = iconMapping[achievement.icone];
@@ -70,6 +72,9 @@ export default function ShortAchievementItem({
       break;
     case "account":
       color = PongColors.turquoise;
+      break;
+    case "level":
+      color = PongColors.mustardYellow;
       break;
     default:
       color = "var(--tertiary1)";

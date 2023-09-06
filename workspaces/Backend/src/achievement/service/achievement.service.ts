@@ -15,6 +15,7 @@ import {
 import { StatsService } from '@/stats/service/stats.service';
 import { Notif } from '@/utils/typeorm/Notif.entity';
 import { UsersService } from '@/users/service/users.service';
+import { ACHIEVEMENT_NB } from '@transcendence/shared/constants/Achievement.constants';
 
 @Injectable()
 export class AchievementService implements OnModuleInit {
@@ -137,7 +138,7 @@ export class AchievementService implements OnModuleInit {
       const achievementForStatus =
         await this.achievementRepository.save(userAchievement);
       const achievementStatus: AchievementStatus[] = Array.from(
-        { length: 30 },
+        { length: ACHIEVEMENT_NB },
         (_, i) => ({
           id: i + 1,
           completed: achievementForStatus[`achv${i + 1}Completed`],
@@ -185,7 +186,7 @@ export class AchievementService implements OnModuleInit {
       }
 
       const achievementStatus: AchievementStatus[] = Array.from(
-        { length: 30 },
+        { length: ACHIEVEMENT_NB },
         (_, i) => ({
           id: i + 1,
           completed: userAchievements[`achv${i + 1}Completed`],
@@ -262,7 +263,7 @@ export class AchievementService implements OnModuleInit {
       }
 
       const achievementStatus: AchievementStatus[] = Array.from(
-        { length: 30 },
+        { length: ACHIEVEMENT_NB },
         (_, i) => ({
           id: i + 1,
           completed: userAchievements[`achv${i + 1}Completed`],
@@ -316,7 +317,6 @@ export class AchievementService implements OnModuleInit {
     try {
       const achievements = await this.achievementDataRepository.find();
       if (achievements.length > 0) return;
-      console.log('Creating achievements data');
       const standardAchievements: CreateAchievementDataDTO[] = [
         {
           code: 'GAME_WIN_1',
@@ -582,6 +582,113 @@ export class AchievementService implements OnModuleInit {
           type: 'account',
           xp: 100,
           icone: 'faShieldHalved',
+        },
+        {
+          code: 'LEVEL_2',
+          name: 'Love to Level Up',
+          description: 'Level up',
+          type: 'level',
+          xp: 100,
+          icone: 'faStar',
+        },
+        {
+          code: 'LEVEL_5',
+          name: 'First step to Greatness',
+          description: 'Reach level 5',
+          type: 'level',
+          xp: 200,
+          icone: 'faStar',
+          value: 5,
+        },
+        {
+          code: 'LEVEL_10',
+          name: 'Paddle Prodigy',
+          description: 'Reach level 10',
+          type: 'level',
+          xp: 500,
+          icone: 'faStar',
+          value: 10,
+        },
+        {
+          code: 'LEVEL_20',
+          name: 'Rally Maestro',
+          description: 'Reach level 20',
+          type: 'level',
+          xp: 600,
+          icone: 'faStar',
+          value: 20,
+        },
+        {
+          code: 'LEVEL_30',
+          name: 'Matchpoint Master',
+          description: 'Reach level 30',
+          type: 'level',
+          xp: 700,
+          icone: 'faStar',
+          value: 30,
+        },
+        {
+          code: 'LEVEL_40',
+          name: 'Pong Virtuoso',
+          description: 'Reach level 40',
+          type: 'level',
+          xp: 800,
+          icone: 'faStar',
+          value: 40,
+        },
+        {
+          code: 'LEVEL_50',
+          name: 'Doubles Dominator',
+          description: 'Reach level 50',
+          type: 'level',
+          xp: 1000,
+          icone: 'faStar',
+          value: 50,
+        },
+        {
+          code: 'LEVEL_60',
+          name: 'Ping Pong Paladin',
+          description: 'Reach level 60',
+          type: 'level',
+          xp: 1200,
+          icone: 'faStar',
+          value: 60,
+        },
+        {
+          code: 'LEVEL_70',
+          name: 'Paddle Paragon',
+          description: 'Reach level 70',
+          type: 'level',
+          xp: 1400,
+          icone: 'faStar',
+          value: 70,
+        },
+        {
+          code: 'LEVEL_80',
+          name: 'Net Ninja Ponger',
+          description: 'Reach level 80',
+          type: 'level',
+          xp: 1600,
+          icone: 'faStar',
+          value: 80,
+        },
+        {
+          code: 'LEVEL_90',
+          name: 'Multiplayer Ace',
+          description: 'Reach level 90',
+          type: 'level',
+          xp: 1800,
+          icone: 'faStar',
+          value: 90,
+        },
+        {
+          code: 'LEVEL_100',
+          name: 'Pong Champion',
+          description: 'Reach level 100',
+          type: 'level',
+          xp: 2000,
+          icone: 'faStar',
+          value: 100,
         },
       ];
 

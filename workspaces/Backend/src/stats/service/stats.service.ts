@@ -226,6 +226,7 @@ export class StatsService {
           stats.trainingStoryLost,
         demoWatched: stats.demoWatched,
         storyLevelCompleted: stats.storyLevelCompleted,
+        userLevel: stats.level,
       };
       shortStats.gameWon =
         shortStats.leagueWon + shortStats.partyWon + shortStats.trainingWon;
@@ -696,6 +697,24 @@ export class StatsService {
           userId: stats.userId.toString(),
           level: stats.level,
         });
+        switch (stats.level) {
+          case 2 ||
+            5 ||
+            10 ||
+            20 ||
+            30 ||
+            40 ||
+            50 ||
+            60 ||
+            70 ||
+            80 ||
+            90 ||
+            100:
+            await this.achievementService.achievementCompleted(stats.userId, {
+              code: `LEVEL_${stats.level}`,
+            });
+            break;
+        }
         return true;
       }
       return false;

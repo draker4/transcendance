@@ -383,4 +383,244 @@ export class Achievement {
     nullable: true,
   })
   achv30Date: Date;
+
+  @Column({ default: false })
+  achv31Completed: boolean;
+
+  @Column({ default: false })
+  achv31Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv31Date: Date;
+
+  @Column({ default: false })
+  achv32Completed: boolean;
+
+  @Column({ default: false })
+  achv32Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv32Date: Date;
+
+  @Column({ default: false })
+  achv33Completed: boolean;
+
+  @Column({ default: false })
+  achv33Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv33Date: Date;
+
+  @Column({ default: false })
+  achv34Completed: boolean;
+
+  @Column({ default: false })
+  achv34Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv34Date: Date;
+
+  @Column({ default: false })
+  achv35Completed: boolean;
+
+  @Column({ default: false })
+  achv35Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv35Date: Date;
+
+  @Column({ default: false })
+  achv36Completed: boolean;
+
+  @Column({ default: false })
+  achv36Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv36Date: Date;
+
+  @Column({ default: false })
+  achv37Completed: boolean;
+
+  @Column({ default: false })
+  achv37Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv37Date: Date;
+
+  @Column({ default: false })
+  achv38Completed: boolean;
+
+  @Column({ default: false })
+  achv38Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv38Date: Date;
+
+  @Column({ default: false })
+  achv39Completed: boolean;
+
+  @Column({ default: false })
+  achv39Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv39Date: Date;
+
+  @Column({ default: false })
+  achv40Completed: boolean;
+
+  @Column({ default: false })
+  achv40Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv40Date: Date;
+
+  @Column({ default: false })
+  achv41Completed: boolean;
+
+  @Column({ default: false })
+  achv41Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv41Date: Date;
+
+  @Column({ default: false })
+  achv42Completed: boolean;
+
+  @Column({ default: false })
+  achv42Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv42Date: Date;
+
+  @Column({ default: false })
+  achv43Completed: boolean;
+
+  @Column({ default: false })
+  achv43Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv43Date: Date;
+
+  @Column({ default: false })
+  achv44Completed: boolean;
+
+  @Column({ default: false })
+  achv44Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv44Date: Date;
+
+  @Column({ default: false })
+  achv45Completed: boolean;
+
+  @Column({ default: false })
+  achv45Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv45Date: Date;
+
+  @Column({ default: false })
+  achv46Completed: boolean;
+
+  @Column({ default: false })
+  achv46Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv46Date: Date;
+
+  @Column({ default: false })
+  achv47Completed: boolean;
+
+  @Column({ default: false })
+  achv47Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv47Date: Date;
+
+  @Column({ default: false })
+  achv48Completed: boolean;
+
+  @Column({ default: false })
+  achv48Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv48Date: Date;
+
+  @Column({ default: false })
+  achv49Completed: boolean;
+
+  @Column({ default: false })
+  achv49Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv49Date: Date;
+
+  @Column({ default: false })
+  achv50Completed: boolean;
+
+  @Column({ default: false })
+  achv50Collected: boolean;
+
+  @Column({
+    type: 'timestamptz',
+    nullable: true,
+  })
+  achv50Date: Date;
 }
