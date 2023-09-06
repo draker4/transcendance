@@ -12,6 +12,7 @@ import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { Repository } from 'typeorm';
 import { AvatarDto } from '../dto/Avatar.dto';
 import { UpdateUserAvatarDto } from '../dto/update-user-avatar.dto';
+import { CryptoService } from '@/utils/crypto/crypto';
 
 @Injectable()
 export class AvatarService {
@@ -22,6 +23,7 @@ export class AvatarService {
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
     private readonly channelService: ChannelService,
+    private readonly cryptoService: CryptoService,
   ) {}
 
   async createAvatar(avatarDto: AvatarDto) {
@@ -112,6 +114,8 @@ export class AvatarService {
         rep.success = true;
         rep.message = 'Avatar successfully updated';
       } else {
+        if (avatarUser.decrypt)
+          avatarUser.image = await this.cryptoService.encrypt(avatarUser.image);
         await this.avatarRepository.update(avatarUser.id, {
           ...avatar,
         });

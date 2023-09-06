@@ -380,10 +380,13 @@ export class UsersService {
 
       if (!user) throw new Error('no user');
 
+			const	imageUrlCrypted = await this.cryptoService.encrypt(imageUrl);
+			const	publicIdCrypted = await this.cryptoService.encrypt(public_id);
+
       const newImage = new Image();
-      newImage.imageUrl = imageUrl;
+      newImage.imageUrl = imageUrlCrypted;
       newImage.user = user;
-      newImage.publicId = public_id;
+      newImage.publicId = publicIdCrypted;
 
       const imageSaved = await this.imageRepository.save(newImage);
 

@@ -127,16 +127,16 @@ export default function UploadButton({
 			
 			const resJson = await res.json();
 
-			const	urlCrypted = await Crypto.encrypt(resJson.secure_url);
-			const	publicIdCrypted = await Crypto.encrypt(resJson.public_id);
+			// const	urlCrypted = await Crypto.encrypt(resJson.secure_url);
+			// const	publicIdCrypted = await Crypto.encrypt(resJson.public_id);
 			const	saveImage = await fetchClientSide(`http://${process.env.HOST_IP}:4000/api/users/addImage`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json"
 				},
 				body: JSON.stringify({
-					imageUrl: urlCrypted,
-					public_id: publicIdCrypted,
+					imageUrl: resJson.secure_url,
+					public_id: resJson.public_id,
 				}),
 			})
 

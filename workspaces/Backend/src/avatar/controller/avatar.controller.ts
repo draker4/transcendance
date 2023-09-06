@@ -49,11 +49,11 @@ export class AvatarController {
     @Request() req,
     @Body() updateUserAvatarDto: UpdateUserAvatarDto,
   ) {
-    return this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto);
+    return await this.avatarService.editChannelAvatarColors(req, updateUserAvatarDto);
   }
 
   @Put('avatarUser')
   async updateUserAvatarUser(@Request() req, @Body() avatar: AvatarDto) {
-    return this.avatarService.editUserAvatar(req.user.id, avatar);
+    return await this.avatarService.editUserAvatar(req.user.id, avatar);
   }
 }

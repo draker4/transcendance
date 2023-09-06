@@ -200,6 +200,8 @@ export class AuthService {
   }
 
   async createAvatar(avatar: AvatarDto) {
+    if (avatar.decrypt)
+      avatar.image = await this.cryptoService.encrypt(avatar.image);
     return await this.avatarService.createAvatar(avatar);
   }
 

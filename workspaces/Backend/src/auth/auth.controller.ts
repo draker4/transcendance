@@ -241,6 +241,7 @@ export class AuthController {
     try {
       if (login.length < 4) throw new Error('Login too short');
 
+
       const avatarCreated = await this.authService.createAvatar(avatar);
 
       const user = await this.authService.updateAvatarLogin(

@@ -65,9 +65,6 @@ export default function AvatarCard({
     try {
       let image = avatarCustomed.image;
 
-      if (avatarCustomed.decrypt)
-        image = await Crypto.encrypt(avatarCustomed.image);
-
       const rep = await avatarService.submitAvatarUser(
         { ...avatarCustomed, image },
         topColor as string,

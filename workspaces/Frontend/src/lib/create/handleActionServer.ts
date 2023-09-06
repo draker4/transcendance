@@ -25,10 +25,6 @@ export async function handleActionServer(
         refresh_token: "",
       };
 
-    if (avatarChosen.decrypt && avatarChosen.image !== "") {
-      avatarChosen.image = await Crypto.encrypt(avatarChosen.image);
-    }
-
     const register = await fetchClientSide(
       `http://${process.env.HOST_IP}:4000/api/auth/firstLogin`,
       {

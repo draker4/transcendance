@@ -7,6 +7,7 @@ import { Avatar } from 'src/utils/typeorm/Avatar.entity';
 import { UsersModule } from '@/users/users.module';
 import { ChannelModule } from '@/channels/channel.module';
 import { forwardRef } from '@nestjs/common';
+import { CryptoService } from '@/utils/crypto/crypto';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { forwardRef } from '@nestjs/common';
     forwardRef(() => UsersModule),
   ],
   controllers: [AvatarController],
-  providers: [AvatarService],
+  providers: [AvatarService, CryptoService],
   exports: [AvatarService],
 })
 export class AvatarModule {}
