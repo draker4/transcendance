@@ -391,6 +391,13 @@ export class UsersService {
 
       if (!imageSaved) throw new Error('cannot save image');
 
+      // Achievement completed
+      await this.achievementService.achievementCompleted(
+        user.id, {
+          code: "UPLOAD_PICTURE",
+        },
+      );
+
       return imageSaved;
     } catch (error) {
       console.log(error);

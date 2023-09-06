@@ -24,10 +24,14 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './services/auth.service';
 import { HttpExceptionFilter } from '@/utils/filter/http-exception.filter';
 import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly achievementService: AchievementService,
+  ) {}
 
   @Public()
   @Get('42')
@@ -46,6 +50,13 @@ export class AuthController {
       const user42logged = await this.authService.logUser(dataToken);
       if (!user42logged)
         throw new Error('no 42 user');
+
+      // Achievement completed
+      await this.achievementService.achievementCompleted(
+        user42logged.id, {
+          code: "LOGIN_42",
+        },
+      );
 
       const { access_token, refresh_token } = await this.authService.login(
         user42logged,
@@ -126,6 +137,13 @@ export class AuthController {
         verified: true,
       });
 
+      // complete achievement
+      await this.achievementService.achievementCompleted(
+        userCode.id, {
+          code: "VERIFY_EMAIL",
+        },
+      );
+
       const { access_token, refresh_token } = await this.authService.login(
         userCode,
         0,
@@ -175,6 +193,16 @@ export class AuthController {
   async googleOauthCallback(@Req() req, @Res() res: Response) {
     try {
       const user = await this.authService.loginWithGoogle(req.user);
+
+      if (!user)
+        throw new Error('cannot create user');
+
+      // Achievement completed
+      await this.achievementService.achievementCompleted(
+        user.id, {
+          code: "LOGIN_GOOGLE",
+        },
+      );
 
       const { access_token, refresh_token } = await this.authService.login(
         user,
