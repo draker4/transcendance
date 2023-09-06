@@ -12,11 +12,6 @@ type Props = {
 
 export default function Winrate({ winData }: Props) {
 
-  /* [!][+] ITEM DISPLAY_TEST ONLY */
-  winData.gameWon = 5;
-  winData.gameLost = 8;
-  /* */
-
   const winrateRender = (): JSX.Element => {
     if (winData.gameWon === 0 && winData.gameLost === 0) {
       return (

@@ -44,13 +44,13 @@ export default function XPBar({ userLevel }: Props) {
     }
   }
 
-  /* [!][+] ITEM DISPLAY_TEST ONLY */
+  /* [!][+] ITEM DISPLAY_TEST ONLY *
   userLevel.progress = 36;
   userLevel.level = 19;
   userLevel.nextLevelXP = 2589;
   userLevel.cumulativeXpToNext = 10589;
   userLevel.userXp = 25000;
-  /* */
+  * */
 
 
   return (

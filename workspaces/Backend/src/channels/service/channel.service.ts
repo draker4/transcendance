@@ -434,6 +434,8 @@ export class ChannelService {
       message: '',
     };
 
+    let somethingChanged: boolean = false;
+
     try {
       if (
         channelInfos.newRelation.joined === undefined &&
@@ -465,6 +467,7 @@ export class ChannelService {
         // don't want a force join
         channelInfos.newRelation.joined = false;
         const repCreate = await this.createChannelUserRelation(channelInfos);
+        somethingChanged = true;
 
         if (!repCreate.success) throw new Error(repCreate.message);
 
@@ -474,9 +477,6 @@ export class ChannelService {
       if (!relation)
         throw new Error("can't find the user or the channel requested");
 
-      let somethingChanged: boolean = false;
-
-      // [+] to extract
       if (channelInfos.newRelation.joined !== undefined) {
         if (relation.joined !== channelInfos.newRelation.joined) {
           somethingChanged = true;
@@ -980,10 +980,11 @@ export class ChannelService {
 
   // tools
 
-  // [!][?] virer ce log pour version build ?
   private log(message?: any) {
     const cyan = '\x1b[36m';
     const stop = '\x1b[0m';
+
+    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(cyan + '[channel service]  ' + stop);
     console.log(message);

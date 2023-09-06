@@ -52,8 +52,8 @@ export default function ChannelMainFrame({
         setRelation(updatedRelation);
       }
     } catch (e: any) {
-      console.log("Error while updating channel profile : " + e.message);
-      // [+] gestion de l'erreure ?
+      if (process.env && process.env.ENVIRONNEMENT === "dev")
+        console.log("Error while updating channel profile : " + e.message);
     }
   };
 

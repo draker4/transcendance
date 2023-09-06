@@ -6,6 +6,7 @@ import Channel_Service from "@/services/Channel.service";
 import Profile_Service from "@/services/Profile.service";
 import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
+import { findDOMNode } from "react-dom";
 
 type Params = {
   params: {
@@ -83,16 +84,17 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     const channelService = new Channel_Service(token);
     const profileService = new Profile_Service(token);
 
-    // [+] possible Pas en cascade les 3 await ?! + verifier si retourne undefined
     channelAndUsersRelation = await channelService.getChannelAndUsers(id);
-
-    console.log(
-      `CHECK => channel[${channelAndUsersRelation.channel.name}][${channelAndUsersRelation.channel.type}] => password = [${channelAndUsersRelation.channel.password}]`
-    ); // checking
+    if (!channelAndUsersRelation) 
+      throw new Error("channel not found");
 
     channelAndUsersRelation.channel.avatar =
       await avatarService.getChannelAvatarById(id);
+    if (!channelAndUsersRelation.channel || !channelAndUsersRelation.channel.avatar)
+      throw new Error("channel avatar not found");
+    
     const myProfile = await profileService.getProfileByToken();
+    if (!myProfile) throw new Error("profile not found");
 
     const findStatus: UserRelation | undefined =
       channelAndUsersRelation.usersRelation.find(
@@ -112,7 +114,9 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     )
       throw new Error("channel is private");
   } catch (err: any) {
-    console.log(err); // checking
+
+    if (process.env && process.env.ENVIRONNEMENT === "dev")
+      console.log(err);
 
     if (err.message && typeof err.message === "string")
       return <ErrorChannel id={id} caughtErrorMsg={err.message} />;
@@ -126,8 +130,6 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     channelAndUsersRelation.channel.id === -1 ||
     channelAndUsersRelation.channel.type === "privateMsg"
   ) {
-    // [+] Ajouter conditions dans le cas ou findStatus est undefined ou si myRelation.banned === true
-    // [+] ajoutter des param a ErrorChanel, si private par ex
     return <ErrorChannel id={id} />;
   }
 

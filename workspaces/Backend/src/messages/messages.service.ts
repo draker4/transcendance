@@ -48,10 +48,12 @@ export class MessagesService {
     return rep;
   }
 
-  // [!][?] virer ce log pour version build ?
+
   private log(message?: any) {
     const gray = '\x1b[90m';
     const stop = '\x1b[0m';
+
+    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(gray + '[MessageService]  ' + stop);
     console.log(message);

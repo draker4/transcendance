@@ -401,8 +401,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('join')
   async join(@MessageBody() payload: JoinDto, @Request() req) {
-    // [!][+] pour le moment créer une protected ne renseigne pas son mdp dans la db
-    // du coup generera des bugs si on laisse ainsi
     if (
       payload.channelType === 'protected' &&
       payload.isCreation &&
@@ -547,7 +545,7 @@ export class ChatGateway implements OnModuleInit {
           repNotif.message ? repNotif.message : 'sendEditRelationNotif failed',
         );
       } else {
-        this.log(`SendEditRelationNotif in channel[${payload.channelId}]`); // checking
+        this.log(`SendEditRelationNotif in channel[${payload.channelId}]`);
       }
 
       // [4] update socket LEAVE room if needed by editRelations
@@ -566,11 +564,8 @@ export class ChatGateway implements OnModuleInit {
 
       rep.success = true;
     } catch (error: any) {
-      // [+] mémo : gérer cette error au leave de la channel stop par Kiwi:
-      // Leave channel error : right-hand side of 'in' should be an object, got undefined
 
       this.log(`edit Relation Error : ${error.message}`);
-      console.log('error (object) : ', error); // checking
 
       rep.error = error;
       rep.message = error.message
@@ -724,8 +719,6 @@ export class ChatGateway implements OnModuleInit {
         this.server,
       );
 
-      // [+] send notif to update channel to all user in relation
-      // Container of connected users : Map<socket, user id>
       this.channelService.sendUpdateChannelnotif(
         payload.channelId,
         this.connectedUsers,
@@ -744,10 +737,11 @@ export class ChatGateway implements OnModuleInit {
 
   // tools
 
-  // [!][?] virer ce log pour version build ?
   private log(message?: any) {
     const green = '\x1b[32m';
     const stop = '\x1b[0m';
+
+    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(green + '[chat gateway]  ' + stop);
     console.log(message);

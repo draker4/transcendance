@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable prettier/prettier */
 import { UserChannelRelation } from '@/utils/typeorm/UserChannelRelation';
 import {
   BadRequestException,
@@ -66,7 +64,6 @@ export class ChannelController {
         req.user.id,
         edit,
       );
-      // console.log("channelControler => editRelation => checkEditAuthorization : ", checkRep); // checking
       if (!checkRep.success) throw new Error(checkRep.message);
 
       rep = await this.channelService.editRelation(req.user.id, edit);

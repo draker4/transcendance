@@ -314,17 +314,7 @@ export class UsersService {
     return rep;
   }
 
-  // tools
-
-  // [!][?] virer ce log pour version build ?
-  private log(message?: any) {
-    const yellow = '\x1b[33m';
-    const stop = '\x1b[0m';
-
-    process.stdout.write(yellow + '[user service]  ' + stop);
-    console.log(message);
-  }
-
+  
   async checkPassword(userId: number, passwordCrypted: string) {
     try {
       if (!passwordCrypted) throw new Error('no password');
@@ -355,15 +345,15 @@ export class UsersService {
   async updatePassword(userId: number, password: string) {
     try {
       if (!password) throw new Error('no password');
-
+      
       const user = await this.getUserById(userId);
-
+      
       if (!user) throw new Error('no user');
 
       await this.updateUser(user.id, {
         passwordHashed: password,
       });
-
+      
       return {
         success: true,
       };
@@ -437,5 +427,16 @@ export class UsersService {
       console.log(error);
       throw new BadRequestException();
     }
+  }
+
+  // tools
+  private log(message?: any) {
+    const yellow = '\x1b[33m';
+    const stop = '\x1b[0m';
+
+    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+
+    process.stdout.write(yellow + '[user service]  ' + stop);
+    console.log(message);
   }
 }

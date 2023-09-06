@@ -256,15 +256,13 @@ export default function ChanOpControlPannel({
 	}
   }
 
-
-  // [+] ameliorer : regarder si besoin de tableau de fonction
   const handleValidate = () => {
     if (confirmationList === "boss") handleBoss();
-	else if (confirmationList === "chanOp") handleChanOp();
+	  else if (confirmationList === "chanOp") handleChanOp();
     else if (confirmationList === "kick") handleKick();
     else if (confirmationList === "ban") handleBan();
     else if (confirmationList === "invite") handleInvite();
-	else if (confirmationList === "mute") handleMute();
+	  else if (confirmationList === "mute") handleMute();
     handleCancel();
   };
 

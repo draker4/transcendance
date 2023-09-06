@@ -116,7 +116,7 @@ export default function ChatClient({
               console.log(
                 "ChatClient => emit('getChannel') => channel = ",
                 payload.channel
-              ); //checking
+              ); // checking
               return;
             }
             if (payload && payload.error && payload.error === "protected") {
