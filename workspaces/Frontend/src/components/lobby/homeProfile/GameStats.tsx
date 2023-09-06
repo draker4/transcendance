@@ -10,12 +10,14 @@ import LastAchievement from "@/components/profile/infos/sections/lastAchievement
 import Item from "@/components/profile/infos/sections/Item";
 import StoryLevel from "@/components/profile/infos/sections/ItemContent/StoryLevel";
 import StoryService from "@/services/Story.service";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
+  socket: Socket | undefined;
 };
 
-export default function GameStats({ profile }: Props) {
+export default function GameStats({ profile, socket }: Props) {
   const statsService = new StatsService();
   const storyService = new StoryService();
   const [stats, setStats] = useState<ShortStats | undefined>(undefined);
@@ -107,6 +109,7 @@ export default function GameStats({ profile }: Props) {
               profile={profile}
               setStats={setStats}
               statsService={statsService}
+              socket={socket}
             />
           </div>
         </div>

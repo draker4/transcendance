@@ -46,8 +46,18 @@ export default function NavbarProfilInfo({
   const [invisible, setInvisible] = useState<boolean>(true);
   const [invisibleAchievement, setInvisibleAchievement] = useState<boolean>(true);
   const idRef = useRef<boolean>(false);
+  const idRefAchievement = useRef<boolean>(false);
 
   useEffect(() => {
+    const updateAchievements = () => {
+      socket?.emit('getNotif', (payload: Notif) => {
+        if (payload && !idRefAchievement.current && payload.redAchievements)
+          setInvisibleAchievement(false);
+        else
+          setInvisibleAchievement(true);
+      });
+    }
+
     const updateProfile = (payload: {
       why: string;
     }) => {
@@ -59,14 +69,8 @@ export default function NavbarProfilInfo({
             setInvisible(true);
         });
       }
-      if (payload && payload.why && payload.why === "updateAchievements") {
-        socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && !idRef.current && payload.redAchievements)
-            setInvisibleAchievement(false);
-          else
-            setInvisibleAchievement(true);
-        });
-      }
+      if (payload && payload.why && payload.why === "updateAchievements")
+        updateAchievements();
     };
 
     socket?.emit('getNotif', (payload: Notif) => {
@@ -77,23 +81,27 @@ export default function NavbarProfilInfo({
     });
 
     socket?.on("notif", updateProfile);
+    socket?.on("achievements", updateAchievements);
 
     return () => {
       socket?.off("notif", updateProfile);
+      socket?.off("achievements", updateAchievements);
     };
   }, [socket]);
 
   const handleClick = (buttonId: number) => {
     if (buttonId === 1) {
       setInvisibleAchievement(true);
-      idRef.current = true;
+      idRefAchievement.current = true;
     }
     else if (buttonId === 2) {
       setInvisible(true);
       idRef.current = true;
     }
-    else
+    else {
       idRef.current = false;
+      idRefAchievement.current = false;
+    }
     setActiveButton(buttonId);
     setSelectedItem(buttonId);
   };

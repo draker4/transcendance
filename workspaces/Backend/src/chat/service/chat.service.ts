@@ -152,17 +152,6 @@ export class ChatService {
             });
           }
         }
-      } else if (toClear.which === 'redAchievements') {
-        await this.notifRepository.update(user.notif.id, {
-          redAchievements: false,
-        });
-        if (userSockets.length !== 0) {
-          for (const socket of userSockets) {
-            server.to(socket.id).emit('notif', {
-              why: 'updateAchievements',
-            });
-          }
-        }
       } else if (toClear.which === 'messages') {
         const notifUser = user.notif;
 

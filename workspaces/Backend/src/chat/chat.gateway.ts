@@ -19,7 +19,6 @@ import { Server, Socket } from 'socket.io';
 import { WsJwtGuard } from './guard/wsJwt.guard';
 import { verify } from 'jsonwebtoken';
 import { newMsgDto } from './dto/newMsg.dto';
-import { User } from 'src/utils/typeorm/User.entity';
 import { ChannelAuthGuard } from './guard/channelAuthGuard';
 import { channelIdDto } from './dto/channelId.dto';
 import { Channel } from 'src/utils/typeorm/Channel.entity';

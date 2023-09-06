@@ -61,7 +61,7 @@ export default function HomeClient({
 
   return (
     <div className={styles.home}>
-      <HomeProfile profile={profile} avatar={avatar} />
+      <HomeProfile profile={profile} avatar={avatar} socket={socket} />
       <Lobby profile={profile} socket={socket} />
     </div>
   );

@@ -77,6 +77,15 @@ export class AchievementService implements OnModuleInit {
         userAchievement[`achv${achievement.id}Completed`] = true;
         userAchievement[`achv${achievement.id}Date`] = new Date();
       } else return;
+
+      // update red notif in navbar in front
+      const user = await this.usersService.getUserById(userId);
+
+      if (user && !user.notif.redAchievements)
+        await this.notifRepository.update(user.notif.id, {
+          redAchievements: true,
+        });
+
       const annonce: UserAchievement = {
         id: achievement.id,
         code: achievement.code,
@@ -95,14 +104,6 @@ export class AchievementService implements OnModuleInit {
         achievement: annonce,
       });
       await this.achievementRepository.save(userAchievement);
-
-      // update red notif in navbar in front
-      const user = await this.usersService.getUserById(userId);
-
-      if (user && !user.notif.redAchievements)
-        await this.notifRepository.update(user.notif.id, {
-          redAchievements: true,
-        });
     } catch (error) {
       throw new Error(error.message);
     }

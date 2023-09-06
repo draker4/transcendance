@@ -8,12 +8,14 @@ import { FullAchivement, UserAchievement } from "@transcendence/shared/types/Ach
 import HeaderAchievement from "./HeaderAchievement";
 import AchievementItem from "./AchievementItem";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
+  socket: Socket | undefined;
 };
 
-export default function SectionAchievements({ profile }: Props) {
+export default function SectionAchievements({ profile, socket }: Props) {
 
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const [stats, setstats] = useState<ShortStats | undefined>(undefined);
@@ -44,7 +46,22 @@ export default function SectionAchievements({ profile }: Props) {
 
   useEffect(() => {
     getUserAchievements();
-  }, []);
+
+    const updateNotif = (payload: {
+      why: string;
+    }) => {
+      if (payload && payload.why && payload.why === "updateAchievements")
+        getUserAchievements();
+    };
+
+    socket?.on('achievements', getUserAchievements);
+    socket?.on('notif', updateNotif);
+
+    return () => {
+      socket?.off('achievements', getUserAchievements);
+      socket?.off('notif', updateNotif);
+    }
+  }, [socket]);
 
   const  collectXP = async (achievement: UserAchievement) => {
     if (achievement.collected || !achievement.completed)
@@ -54,8 +71,10 @@ export default function SectionAchievements({ profile }: Props) {
       await achievementService.collectAchievement(
         profile.id, achievement.id.toString()
       );
-      await getUserAchievements();
       toast.info(`${achievement.xp}xp collected!`);
+      socket?.emit('notif', {
+        why: "updateAchievements",
+      });
     }
     catch (error: any) {
       console.log(error);

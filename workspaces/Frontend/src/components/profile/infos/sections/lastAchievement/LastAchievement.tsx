@@ -7,17 +7,20 @@ import { useRouter } from "next/navigation";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import ShortAchievementItem from "./ShortAchievementItem";
 import StatsService from "@/services/Stats.service";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
   setStats: Function;
   statsService: StatsService;
+  socket: Socket | undefined;
 };
 
 export default function LastAchievements({
   profile,
   setStats,
   statsService,
+  socket,
 }: Props) {
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const achievementService = new AchievementService();
@@ -55,6 +58,11 @@ export default function LastAchievements({
         achievement.id.toString()
       );
       await getUserAchievements();
+
+      socket?.emit('notif', {
+        why: "updateAchievements",
+      });
+
       const res = await statsService.getShortStats(profile.id);
       if (res.success) setStats(res.data);
       toast.info(`${achievement.xp}xp collected!`);

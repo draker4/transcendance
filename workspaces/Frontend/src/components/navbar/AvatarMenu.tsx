@@ -86,6 +86,19 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
   }, []);
 
   useEffect(() => {
+    const updateNotif = () => {
+      socket?.emit('getNotif', (payload: Notif) => {
+        if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
+          setInvisible(false);
+          setNotif(true);
+        }
+        else {
+          setInvisible(true);
+          setNotif(false);
+        }
+      });
+    }
+    
     const updateProfile = (payload: {
       why: string;
     }) => {
@@ -97,45 +110,18 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
             setLogin(payload.login);
           }
       );
-      else if (payload && payload.why && payload.why === "updatePongies")
-        socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
-            setInvisible(false);
-            setNotif(true);
-          }
-          else {
-            setInvisible(true);
-            setNotif(false);
-          }
-      });
-      else if (payload && payload.why && payload.why === "updateAchievements")
-        socket?.emit('getNotif', (payload: Notif) => {
-          if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
-            setInvisible(false);
-            setNotif(true);
-          }
-          else {
-            setInvisible(true);
-            setNotif(false);
-          }
-      });
+      else if (payload && payload.why && (payload.why === "updatePongies" || payload.why === "updateAchievements"))
+        updateNotif();
     };
 
-    socket?.emit('getNotif', (payload: Notif) => {
-      if (payload && (payload.redAchievements || payload.redPongies.length > 0)) {
-        setInvisible(false);
-        setNotif(true);
-      }
-      else {
-        setInvisible(true);
-        setNotif(false);
-      }
-    });
+    updateNotif();
 
     socket?.on("notif", updateProfile);
+    socket?.on("achievement", updateNotif);
 
     return () => {
       socket?.off("notif", updateProfile);
+      socket?.off("notif", updateNotif);
     };
   }, [socket]);
 

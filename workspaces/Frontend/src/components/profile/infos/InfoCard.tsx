@@ -37,7 +37,7 @@ export default function InfoCard({
           case 0:
             return <SectionPongStats profile={profile} />;
           case 1:
-            return <SectionAchievements profile={profile} />;
+            return <SectionAchievements profile={profile} socket={socket} />;
           case 2:
             return (
               <SectionPongies
