@@ -1,4 +1,4 @@
 type Notif = {
 	redPongies: number[];
-	redChannels: number[];
+	redAchievements: boolean;
 }

@@ -13,9 +13,17 @@ import { AuthService } from './services/auth.service';
 import { JwtRefreshStrategy } from './strategies/jwtRefresh.strategy';
 import { UsersModule } from '@/users/users.module';
 import { AvatarModule } from '@/avatar/avatar.module';
+import { AchievementModule } from '@/achievement/achievement.module';
 
 @Module({
-  imports: [AvatarModule, JwtModule, PassportModule, MailModule, UsersModule],
+  imports: [
+    AchievementModule,
+    AvatarModule,
+    JwtModule,
+    PassportModule,
+    MailModule,
+    UsersModule,
+  ],
   controllers: [AuthController],
   providers: [
     AuthService,

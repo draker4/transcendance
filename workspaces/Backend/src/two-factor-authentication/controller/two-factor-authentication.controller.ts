@@ -14,6 +14,7 @@ import { AuthService } from '@/auth/services/auth.service';
 import { TwoFactorAuthenticationCodeDto } from '../dto/TwoFactorAuthenticationCode.dto';
 import { VerifYCodeDto } from '../dto/VerifYCode.dto';
 import { BackupCodeDto } from '../dto/BackupCode.dto';
+import { AchievementService } from '@/achievement/service/achievement.service';
 
 @Controller('2fa')
 export class TwoFactorAuthenticationController {
@@ -21,6 +22,7 @@ export class TwoFactorAuthenticationController {
     private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
+    private readonly achievementService: AchievementService,
   ) {}
 
   @Get('generate')
@@ -110,6 +112,11 @@ export class TwoFactorAuthenticationController {
 
       this.usersService.updateUser(user.id, {
         isTwoFactorAuthenticationEnabled: true,
+      });
+
+      // Achievement completed
+      await this.achievementService.achievementCompleted(user.id, {
+        code: 'DOUBLE_AUTH',
       });
 
       return {

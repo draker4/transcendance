@@ -9,7 +9,7 @@ import PopupDownloadCodes from "./popups/PopupDownloadCodes";
 import disconnect from "@/lib/disconnect/disconnect";
 
 export default function SectionCustom({ profile }: {
-	profile: Profile
+	profile: Profile,
 }) {
 
 	const	router = useRouter();
@@ -250,6 +250,7 @@ export default function SectionCustom({ profile }: {
 					setTfa={setTfa}
 					setPopup2={setPopup2}
 					setPopup4={setPopup4}
+					profile={profile}
 				/>
 			}
 
@@ -263,6 +264,7 @@ export default function SectionCustom({ profile }: {
 					code={code}
 					setTfa={setTfa}
 					setPopup3={setPopup3}
+					profile={profile}
 				/>
 			}
 
@@ -282,7 +284,7 @@ export default function SectionCustom({ profile }: {
 						Your backup codes are the only way to get back your account if you loose your authentification application. Keep them safe!
 					</p>
 					<button onClick={() => setPopup5(!popup5)} className={styles.button}>
-						"Download my backup codes"
+						Download my backup codes
 					</button>
 				</div>
 			}

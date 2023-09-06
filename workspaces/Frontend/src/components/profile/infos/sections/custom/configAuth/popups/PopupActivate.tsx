@@ -18,6 +18,7 @@ export default function PopupCodeEmail({
 	setTfa,
 	setPopup2,
 	setPopup4,
+	profile,
 }: {
 	closePopup: () => void;
 	otpauthUrl: string;
@@ -29,6 +30,7 @@ export default function PopupCodeEmail({
 	setTfa: Dispatch<SetStateAction<boolean>>;
 	setPopup2: Dispatch<SetStateAction<boolean>>;
 	setPopup4: Dispatch<SetStateAction<boolean>>;
+	profile: Profile;
 }) {
 
 	const	router = useRouter();
@@ -63,6 +65,7 @@ export default function PopupCodeEmail({
 			}
 
 			setTfa(true);
+			profile.isTwoFactorAuthenticationEnabled = true;
 			setPopup2(false);
 			setPopup4(true);
 		}
