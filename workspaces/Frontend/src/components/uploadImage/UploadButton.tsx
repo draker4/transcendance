@@ -3,13 +3,11 @@ import styles from "@/styles/uploadImage/UploadButton.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
-import stylesAvatar from "@/styles/createLogin/ChooseAvatar.module.css";
 import { Avatar, Badge } from "@mui/material";
 import { useForm } from "react-hook-form";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
 import { useRouter } from "next/navigation";
 import disconnect from "@/lib/disconnect/disconnect";
-import { CryptoService } from "@/services/Crypto.service";
 import LoadingComponent from "../loading/Loading";
 
 const badgeStyleRight = {
@@ -19,7 +17,7 @@ const badgeStyleRight = {
 	  border: "2px solid var(--accent1)",
 	  cursor: "pointer",
 	  width: "6px",
-	  right: "15px",
+	  right: "5px",
 	}
 }
 
@@ -37,16 +35,18 @@ type FormInputs = {
 	[key: string]: File | null;
 };
 
-const	Crypto = new CryptoService();
-
 export default function UploadButton({
 	setAvatar,
 	borderColor,
 	backgroundColor,
+	handleSelectAvatar,
+	text,
 }: {
 	setAvatar: Dispatch<SetStateAction<ImageType[]>>;
 	borderColor: string;
 	backgroundColor: string;
+	handleSelectAvatar: (key: string, avatar: Avatar) => void;
+	text: string;
 }) {
 
 	const	[colorIcon, setColorIcon] = useState<string>('var(--tertiary1)');
@@ -148,8 +148,17 @@ export default function UploadButton({
 			imageSaved.publicId = resJson.public_id;
 					
 			setAvatar(prev => [...prev, imageSaved]);
+			handleSelectAvatar(imageSaved.imageUrl, {
+				image: imageSaved.imageUrl,
+				variant: "circular",
+				borderColor: borderColor,
+				backgroundColor: backgroundColor,
+				text: text,
+				empty: false,
+				isChannel: false,
+				decrypt: true,
+			});
 			setLoading(false);
-
 		}
 		catch (error: any) {
 			console.log(error.message);
@@ -252,7 +261,7 @@ export default function UploadButton({
 					>
 					
 					<Avatar
-						className={stylesAvatar.avatar}
+						className={styles.avatar}
 						key="uploadedAvatar"
 						srcSet={imageSrc}
 						alt="uploadedAvatar"
@@ -272,7 +281,9 @@ export default function UploadButton({
 
 			{
 				loading &&
-				<LoadingComponent />
+				<div className={styles.avatar}>
+					<LoadingComponent />
+				</div>	
 			}
 		</div>
 	);

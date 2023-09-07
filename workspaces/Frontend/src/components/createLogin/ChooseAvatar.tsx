@@ -227,6 +227,8 @@ export default function ChooseAvatar({
             setAvatar={setAvatarsAdded}
             borderColor={colorBorder}
             backgroundColor={backgroundColor}
+            handleSelectAvatar={handleSelectAvatar}
+            text={text}
           />
         </div>
 

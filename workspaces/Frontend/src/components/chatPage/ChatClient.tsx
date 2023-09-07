@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "@/styles/chatPage/ChatClient.module.css";
-import stylesError from "@/styles/chatPage/ChatPage.module.css";
+import stylesError from "@/styles/chatPage/ChatClient.module.css";
 import Conversations from "./ConversationPannel/Conversations";
 import ChatDisplay from "./ChatDisplay";
 import ChatService from "@/services/Chat.service";
@@ -175,7 +175,7 @@ export default function ChatClient({
   // narrow screen width, display not opened
   if (littleScreen && !open)
     return (
-      <div className={styles.main}>
+      <div className={styles.chatFrame}>
         <Conversations
           socket={socket}
           maxWidth="100%"
@@ -193,7 +193,7 @@ export default function ChatClient({
   // narrow screen width, display opened
   if (littleScreen && open)
     return (
-      <div className={styles.main}>
+      <div className={styles.chatFrame}>
         <ChatDisplay
           socket={socket}
           display={display}
@@ -208,7 +208,7 @@ export default function ChatClient({
 
   // wide screen width, open both
   return (
-    <div className={styles.main}>
+    <div className={styles.chatFrame}>
       <Conversations
         socket={socket}
         maxWidth="350px"
@@ -220,6 +220,7 @@ export default function ChatClient({
         channelId={channelId}
         littleScreen={littleScreen}
       />
+      <div className={styles.margin}></div>
       <ChatDisplay
         socket={socket}
         display={display}
@@ -230,7 +231,14 @@ export default function ChatClient({
         status={status}
       />
       {display && "type" in display && display.type !== "privateMsg" && (
-        <SetUpChannelSecondPart channelId={display.id} socket={socket} littleScreen={littleScreen} />
+        <>
+          <div className={styles.margin}></div>
+          <SetUpChannelSecondPart
+            channelId={display.id}
+            socket={socket}
+            littleScreen={littleScreen}
+          />
+        </>
       )}
     </div>
   );

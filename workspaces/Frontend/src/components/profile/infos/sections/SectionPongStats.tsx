@@ -13,12 +13,14 @@ import { ShortStats } from "@transcendence/shared/types/Stats.types";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import LastAchievement from "./lastAchievement/LastAchievement";
+import { Socket } from "socket.io-client";
 
 type Props = {
   profile: Profile;
+  socket: Socket | undefined;
 };
 
-export default function SectionPongStats({ profile }: Props) {
+export default function SectionPongStats({ profile, socket }: Props) {
   const [storyLevel, setStoryLevel] = useState<number>(0);
   const [shortStats, setShortStats] = useState<ShortStats>({
     leagueRank: 0,
@@ -158,6 +160,7 @@ export default function SectionPongStats({ profile }: Props) {
           profile={profile}
           setStats={setShortStats}
           statsService={statService}
+          socket={socket}
         />
       </Item>
     </div>

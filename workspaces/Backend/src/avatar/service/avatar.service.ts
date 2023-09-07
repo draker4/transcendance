@@ -114,8 +114,8 @@ export class AvatarService {
         rep.success = true;
         rep.message = 'Avatar successfully updated';
       } else {
-        if (avatarUser.decrypt)
-          avatarUser.image = await this.cryptoService.encrypt(avatarUser.image);
+        if (avatar.decrypt)
+          avatar.image = await this.cryptoService.encrypt(avatar.image);
         await this.avatarRepository.update(avatarUser.id, {
           ...avatar,
         });

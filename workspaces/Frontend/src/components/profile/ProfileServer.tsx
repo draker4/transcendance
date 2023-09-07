@@ -126,7 +126,6 @@ export default async function ProfileServer({ id }: { id: number }) {
       />
     );
   else {
-    console.log("salut");
     return <ErrorProfile params={{ id }} />;
   }
 }

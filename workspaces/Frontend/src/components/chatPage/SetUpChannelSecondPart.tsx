@@ -115,7 +115,11 @@ export default function SetUpChannelSecondPart({
       setChannelRelation(channelAndUsersRelation);
       setMe(myRelation);
     } catch (err) {
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      if (
+        process.env &&
+        process.env.ENVIRONNEMENT &&
+        process.env.ENVIRONNEMENT === "dev"
+      )
         console.log("SetUpSectionPongers error : ", err);
     }
   };
@@ -140,7 +144,7 @@ export default function SetUpChannelSecondPart({
   if (me.userId !== 0 && channelRelation.channel.id !== -1) {
     return (
       <div
-        className={styleMain.main + " " + styleMain.noPadding}
+        className={styleMain.channelSecondPart + " " + styleMain.noPadding}
         style={{
           maxWidth: "350px",
           marginLeft: littleScreen ? "0" : "-3px",
@@ -156,7 +160,7 @@ export default function SetUpChannelSecondPart({
   } else {
     return (
       <div
-        className={styleMain.main + " " + styleMain.noPadding}
+        className={styleMain.channelSecondPart + " " + styleMain.noPadding}
         style={{ maxWidth: "350px" }}
       >
         <LoadingSuspense />;
