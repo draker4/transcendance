@@ -1,9 +1,15 @@
-import styles from "@/styles/footer/footer.module.css";
+import { Suspense } from "react";
+import FooterFront from "./FooterFront";
+import FooterServer from "./FooterServer";
 
-export default function Footer() {
+export default function Navbar() {
   return (
-    <footer className={styles.footer}>
-      <div className={styles.copyright}>&copy;CrunchyPong 2023</div>
-    </footer>
+    <Suspense
+      fallback={
+        <FooterFront  profile={undefined} />
+      }
+    >
+      <FooterServer />
+    </Suspense>
   );
 }
