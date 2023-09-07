@@ -1,12 +1,11 @@
 import ChannelMainFrame from "@/components/channel/ChannelMainFrame";
-import ErrorChannel from "@/components/channel/ErrorChannel";
+import ErrorHandler from "@/components/error/ErrorHandler";
 import { Refresher } from "@/components/refresher/Refresher";
 import Avatar_Service from "@/services/Avatar.service";
 import Channel_Service from "@/services/Channel.service";
 import Profile_Service from "@/services/Profile.service";
 import styles from "@/styles/profile/Profile.module.css";
 import { cookies } from "next/dist/client/components/headers";
-import { findDOMNode } from "react-dom";
 
 type Params = {
   params: {
@@ -74,6 +73,8 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
       },
     },
   };
+  const errorTitle = "Unavailable Channel Page";
+  const defaultNotif = `Sorry the channel of id : ${id} doesn't exist`;
 
   try {
     const tryToken = cookies().get("crunchy-token")?.value;
@@ -119,9 +120,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
       console.log(err);
 
-    if (err.message && typeof err.message === "string")
-      return <ErrorChannel id={id} caughtErrorMsg={err.message} />;
-    else return <ErrorChannel id={id} />;
+    return <ErrorHandler errorTitle={errorTitle} errorNotif={err.message ? err.message : defaultNotif} />;
   }
 
   if (
@@ -131,7 +130,7 @@ export default async function ChannelprofilePage({ params: { id } }: Params) {
     channelAndUsersRelation.channel.id === -1 ||
     channelAndUsersRelation.channel.type === "privateMsg"
   ) {
-    return <ErrorChannel id={id} />;
+    <ErrorHandler errorTitle={errorTitle} />;;
   }
 
   return (

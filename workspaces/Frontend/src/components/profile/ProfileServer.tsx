@@ -1,10 +1,10 @@
 import Profile_Service from "@/services/Profile.service";
-import ErrorProfile from "./ErrorProfile";
 import ProfileMainFrame from "./ProfileMainFrame";
 import { cookies } from "next/headers";
 import Avatar_Service from "@/services/Avatar.service";
 import { verifyAuth } from "@/lib/auth/auth";
 import fs from "fs";
+import ErrorHandler from "../error/ErrorHandler";
 
 export default async function ProfileServer({ id }: { id: number }) {
   let token: string = "";
@@ -88,9 +88,17 @@ export default async function ProfileServer({ id }: { id: number }) {
       }
     }
   } catch (error: any) {
-    console.log(error.message);
-    console.log("error");
-    return <ErrorProfile params={{ id }} />;
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev") {
+      console.log(error.message);
+      console.log("error");
+    }
+
+    const errorMsg = error.message  ? error.message : `The given id : ${id} is not a valid ponger id`;
+
+    return <ErrorHandler 
+      errorTitle={"Oops, we could not find this profile..."}
+      errorNotif={errorMsg}
+    />;
   }
 
   avatars.unshift({
@@ -126,6 +134,9 @@ export default async function ProfileServer({ id }: { id: number }) {
       />
     );
   else {
-    return <ErrorProfile params={{ id }} />;
+    return <ErrorHandler 
+      errorTitle={"Oops, we could not find this profile..."}
+      errorNotif={`The given id : ${id} is not a valid ponger id`}
+      />;
   }
 }
