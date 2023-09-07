@@ -92,7 +92,7 @@ export default function Demo({
   //------------------------------------RENDU------------------------------------//
   if (isLoading) {
     return (
-      <div className={styles.gameLoading}>
+      <div className={userId === undefined ? styles.gameLoading : ""}>
         <LoadingComponent />
       </div>
     );
@@ -100,7 +100,7 @@ export default function Demo({
 
   if (!isLoading && gameData) {
     return (
-      <div className={styles.demo}>
+      <div className={userId === undefined ? styles.demo : ""}>
         <PongDemo
           userId={userId}
           gameData={gameData}

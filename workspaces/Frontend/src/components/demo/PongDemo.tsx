@@ -92,7 +92,7 @@ export default function PongDemo({
   }, []);
 
   return (
-    <div className={styles.pong} ref={pongRef}>
+    <div className={userId === undefined ? styles.pong : ""} ref={pongRef}>
       <PongDemoHead
         userId={userId}
         gameData={gameData}

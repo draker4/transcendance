@@ -77,7 +77,15 @@ export class AchievementService implements OnModuleInit {
       if (!userAchievement[`achv${achievement.id}Completed`]) {
         userAchievement[`achv${achievement.id}Completed`] = true;
         userAchievement[`achv${achievement.id}Date`] = new Date();
+        await this.achievementRepository.update(
+          { userId: userId },
+          {
+            [`achv${achievement.id}Completed`]: true,
+            [`achv${achievement.id}Date`]: new Date(),
+          },
+        );
       } else return;
+
       const annonce: UserAchievement = {
         id: achievement.id,
         code: achievement.code,
@@ -95,7 +103,6 @@ export class AchievementService implements OnModuleInit {
         userId: userId.toString(),
         achievement: annonce,
       });
-      await this.achievementRepository.save(userAchievement);
 
       // update red notif in navbar in front
       const user = await this.usersService.getUserById(userId);
@@ -104,6 +111,7 @@ export class AchievementService implements OnModuleInit {
         await this.notifRepository.update(user.notif.id, {
           redAchievements: true,
         });
+      console.log('notif updated');
     } catch (error) {
       throw new Error(error.message);
     }
@@ -129,21 +137,25 @@ export class AchievementService implements OnModuleInit {
         throw new Error('Achievement already collected');
       } else {
         userAchievement[`achv${achievementId}Collected`] = true;
+        await this.achievementRepository.update(
+          { userId: userId },
+          {
+            [`achv${achievementId}Collected`]: true,
+          },
+        );
       }
       const achievement = await this.achievementDataRepository.findOne({
         where: { id: achievementId },
       });
       await this.statsService.updateXP(userId, achievement.xp);
 
-      const achievementForStatus =
-        await this.achievementRepository.save(userAchievement);
       const achievementStatus: AchievementStatus[] = Array.from(
         { length: ACHIEVEMENT_NB },
         (_, i) => ({
           id: i + 1,
-          completed: achievementForStatus[`achv${i + 1}Completed`],
-          collected: achievementForStatus[`achv${i + 1}Collected`],
-          date: achievementForStatus[`achv${i + 1}Date`],
+          completed: userAchievement[`achv${i + 1}Completed`],
+          collected: userAchievement[`achv${i + 1}Collected`],
+          date: userAchievement[`achv${i + 1}Date`],
         }),
       );
       let deleteNotif = true;
@@ -605,7 +617,16 @@ export class AchievementService implements OnModuleInit {
           name: 'Paddle Prodigy',
           description: 'Reach level 10',
           type: 'level',
-          xp: 500,
+          xp: 300,
+          icone: 'faStar',
+          value: 10,
+        },
+        {
+          code: 'LEVEL_15',
+          name: 'Ball Bouncer',
+          description: 'Reach level 15',
+          type: 'level',
+          xp: 400,
           icone: 'faStar',
           value: 10,
         },
@@ -619,11 +640,20 @@ export class AchievementService implements OnModuleInit {
           value: 20,
         },
         {
+          code: 'LEVEL_25',
+          name: 'Paddle Wizard',
+          description: 'Reach level 25',
+          type: 'level',
+          xp: 700,
+          icone: 'faStar',
+          value: 20,
+        },
+        {
           code: 'LEVEL_30',
           name: 'Matchpoint Master',
           description: 'Reach level 30',
           type: 'level',
-          xp: 700,
+          xp: 800,
           icone: 'faStar',
           value: 30,
         },
@@ -632,7 +662,7 @@ export class AchievementService implements OnModuleInit {
           name: 'Pong Virtuoso',
           description: 'Reach level 40',
           type: 'level',
-          xp: 800,
+          xp: 900,
           icone: 'faStar',
           value: 40,
         },
