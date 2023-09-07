@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
   // console.log(verifiedToken);
 
   if (verifiedToken && req.nextUrl.pathname === "/welcome/disconnect") {
-    const response = NextResponse.redirect(new URL("/welcome/login/wrong", req.url));
+    const response = NextResponse.redirect(new URL("/welcome/login", req.url));
     response.cookies.set("crunchy-token", "deleted", {
       httpOnly: true,
       sameSite: "strict",
