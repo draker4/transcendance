@@ -2,12 +2,20 @@
 
 import styles from "@/styles/footer/footer.module.css";
 import Link from "next/link";
-import { usePathname, useSelectedLayoutSegment } from "next/navigation";
+import { usePathname, useRouter, useSelectedLayoutSegment } from "next/navigation";
 import FooterConnected from "./FooterConnected";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function Footer({ profile }: { profile: Profile | undefined }) {
   const segment = useSelectedLayoutSegment();
   const pathName = usePathname();
+  const router = useRouter();
+
+  const signoff = async () => {
+    await disconnect();
+    router.replace("/welcome/login");
+    return ;
+  }
 
   if (segment === "welcome") {
     return (
@@ -50,9 +58,9 @@ export default function Footer({ profile }: { profile: Profile | undefined }) {
           </div>
 
           <div className={styles.ref}>
-            <Link href={"/welcome/disconnect"} className={styles.link}>
+            <div className={styles.link} onClick={signoff}>
               Log Out
-            </Link>
+            </div>
           </div>
         </div>
       </footer>

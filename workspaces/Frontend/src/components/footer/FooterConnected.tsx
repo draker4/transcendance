@@ -1,7 +1,18 @@
+import disconnect from "@/lib/disconnect/disconnect";
 import styles from "@/styles/footer/footer.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function FooterConnected({ profile }: { profile: Profile }) {
+
+	const	router = useRouter();
+
+	const signoff = async () => {
+		await disconnect();
+		router.replace("/welcome/login");
+		return ;
+	}
+
   return (
     <footer className={styles.footer}>
       <div className={styles.line}></div>
@@ -22,9 +33,9 @@ export default function FooterConnected({ profile }: { profile: Profile }) {
           <Link href={"/home/chat"} className={styles.link}>
             Chat
           </Link>
-          <Link href={"/welcome/disconnect"} className={styles.link}>
+          <div className={styles.link} onClick={signoff}>
             Log Out
-          </Link>
+          </div>
         </div>
       </div>
     </footer>

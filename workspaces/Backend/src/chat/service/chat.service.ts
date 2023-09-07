@@ -1567,13 +1567,6 @@ export class ChatService {
         };
 
       // check if user is not joined
-      console.log(relation.joined);
-      console.log(isProtected);
-      console.log(relation.isBoss);
-      console.log(
-        'boolean=',
-        !relation.joined && (!isProtected || relation.isBoss),
-      );
       if (!relation.joined && (!isProtected || relation.isBoss)) {
         relation.joined = true;
         await this.userChannelRelation.save(relation);

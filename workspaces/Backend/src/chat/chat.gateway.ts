@@ -121,21 +121,25 @@ export class ChatGateway implements OnModuleInit {
               this.statusService.add(payload.sub.toString(), 'disconnected');
           }
 
-          this.log(`User with ID ${payload.sub} disconnected`); // [?]
+          if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
+            this.log(`User with ID ${payload.sub} disconnected`); // [?]
+            for (const connect of this.connectedUsers) {
+              console.log(
+                'Socket id: ',
+                connect[0].id + ' , user id : ' + connect[1],
+              );
+            }
+          }
+        });
+
+        if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
+          this.log('connected users = '); // [?]
           for (const connect of this.connectedUsers) {
             console.log(
               'Socket id: ',
               connect[0].id + ' , user id : ' + connect[1],
             );
           }
-        });
-
-        this.log('connected users = '); // [?]
-        for (const connect of this.connectedUsers) {
-          console.log(
-            'Socket id: ',
-            connect[0].id + ' , user id : ' + connect[1],
-          );
         }
       } catch (error) {
         console.log(error);

@@ -49,4 +49,6 @@
   color: var(--secondary1);
   text-transform: none;
   margin: 4px 6px;
+  cursor: pointer;
+  text-decoration: underline;
 }

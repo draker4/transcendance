@@ -57,6 +57,7 @@
 
 .errorLink {
   text-decoration: none;
+  cursor: pointer;
 }
 
 .errorNotif {
