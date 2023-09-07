@@ -87,7 +87,8 @@ export default function Story({ profile, trainingService }: Props) {
           }
           setCurrentLevel(checkLevel);
         } else if (ret) {
-          console.log(ret.message);
+          if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+            console.log(ret.message);
           toast.error("Something went wrong, please refresh the page!");
         }
       })
@@ -97,6 +98,8 @@ export default function Story({ profile, trainingService }: Props) {
           router.refresh();
           return;
         }
+        if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+          console.log(err.message);
         toast.error("Something went wrong, please refresh the page!");
       });
   }, []);

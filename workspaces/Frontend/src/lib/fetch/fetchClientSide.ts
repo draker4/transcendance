@@ -42,17 +42,16 @@ export default async function fetchClientSide(
         }
       );
 
-	  // [!][!][!] Use "disconnect" for build versions
       if (!res.ok) {
-        if (process.env.DISCONNECT)
-		  		throw new Error("disconnect");
-        throw new Error("should disconnect here, change .env file");
+        // throw new Error("disconnect");
+        console.log("DICONNECT");
       }
 
       const data = await res.json();
       const token = data.access_token;
       const refreshToken = data.refresh_token;
-      fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
+
+      await fetch(`http://${process.env.HOST_IP}:3000/api/auth/setCookies`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -76,19 +75,16 @@ export default async function fetchClientSide(
 
       const resAgain = await fetch(url, fetchOptions);
       if (resAgain.status === 401) {
-        if (process.env.DISCONNECT)
-          throw new Error("disconnect");
-        throw new Error("should disconnect here, change .env file");
+        // throw new Error("disconnect");
+        console.log("DICONNECT");
       }
 
       return resAgain;
     }
     return response;
   } catch (error: any) {
-    console.log("fetchClientSide function: ", error.message);
-    console.log(url);
     console.log(
-      `Error while fetching api on ClientSide: ${url}. Error log: ${error}`
+      `Error while fetching api on ClientSide: ${url}. Error log: ${error.message}`
     );
     throw new Error(error.message);
   }

@@ -27,7 +27,7 @@ export default function FooterConnected({ profile }: {
 						<Link href={"/home/chat"} className={styles.link}>
 							My Chat
 						</Link>
-						<Link href={"/welcome/disconnect"} className={styles.link}>
+						<Link href={"/welcome/disconnect"} className={styles.link} prefetch={false} >
 							Log Out
 						</Link>
 					</div>

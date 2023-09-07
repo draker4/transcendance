@@ -41,6 +41,8 @@ export default function LastAchievements({
         router.refresh();
         return;
       }
+      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+        console.log(error.message);
       toast.error("Something went wrong, please refresh the page!");
     }
   };

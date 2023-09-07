@@ -59,10 +59,8 @@ export default class ChatService {
 		  
 		this.socket.on('disconnect', async () => {
 			// console.log('WebSocket disconnected id=', this.socket?.id);
-			if (process.env.DISCONNECT) {
-				this.disconnect();
-		  		await this.refreshSocket();
-			}
+			this.disconnect();
+		  	await this.refreshSocket();
 		});
 	
 		// Catching error or exception will force disconnect then reconnect

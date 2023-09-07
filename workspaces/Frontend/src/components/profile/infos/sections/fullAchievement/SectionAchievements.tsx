@@ -64,6 +64,8 @@ export default function SectionAchievements({ profile, socket }: Props) {
         router.refresh();
         return;
       }
+      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+        console.log(error.message);
       toast.error("Something went wrong, please refresh the page!");
     }
   };
@@ -98,7 +100,8 @@ export default function SectionAchievements({ profile, socket }: Props) {
         why: "updateAchievements",
       });
     } catch (error: any) {
-      console.log(error);
+      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+        console.log(error);
       if (error.message === "disconnect") {
         await disconnect();
         router.refresh();

@@ -12,7 +12,7 @@ export default function ServerError() {
         <div className={styles.error}>
           <FontAwesomeIcon icon={faQuestionCircle} className={styles.icon} />
           <h2 className={styles.errorTitle}>Sorry, an error has occured...</h2>
-          <Link href="/welcome/disconnect" className={styles.errorLink}>
+          <Link href="/welcome/disconnect" className={styles.errorLink} prefetch={false}>
             <h3 className={styles.errorReturn}>Return to login page</h3>
           </Link>
         </div>

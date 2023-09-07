@@ -55,7 +55,7 @@ export default function Footer({ profile }: {
 						</div>
 
 						<div className={styles.ref}>
-							<Link href={"/welcome/disconnect"} className={styles.link}>
+							<Link href={"/welcome/disconnect"} className={styles.link} prefetch={false} >
 								Log Out
 							</Link>
 						</div>
