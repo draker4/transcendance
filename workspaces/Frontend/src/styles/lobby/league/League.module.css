@@ -10,6 +10,7 @@
     clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
     clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
   margin-top: 15px;
+  padding: 15px;
 }
 
 .displayLeague {
