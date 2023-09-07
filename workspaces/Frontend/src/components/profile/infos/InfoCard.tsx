@@ -63,7 +63,7 @@ export default function InfoCard({
               />
             );
           default:
-            return <SectionPongStats profile={profile} />;
+            return <SectionPongStats profile={profile} socket={socket} />;
         }
       })()}
     </div>
