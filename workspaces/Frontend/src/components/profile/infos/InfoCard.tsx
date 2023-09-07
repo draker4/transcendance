@@ -35,7 +35,7 @@ export default function InfoCard({
       {(() => {
         switch (activeButton) {
           case 0:
-            return <SectionPongStats profile={profile} />;
+            return <SectionPongStats profile={profile} socket={socket} />;
           case 1:
             return <SectionAchievements profile={profile} socket={socket} />;
           case 2:
