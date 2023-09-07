@@ -14,7 +14,7 @@ type Props = {
 
 export default function SectionCustom({ profile, setLogin, socket }: Props) {
   return (
-    <div className={styles.sections}>
+    <div className={`${styles.sections} ${styles.columnStart}`}>
       <MottoEditable profile={profile} />
       <StoryEditable profile={profile} />
       <ConfigAuthEditable

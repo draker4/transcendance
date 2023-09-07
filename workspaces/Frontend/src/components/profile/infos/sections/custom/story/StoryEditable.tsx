@@ -70,12 +70,12 @@ export default function StoryEditable({ profile }: Props) {
   };
 
   return (
-    <div>
+    <>
       <p className={styles.tinyTitle}>Crunchy story</p>
 
       {!editMode && story !== "" && (
         <div
-          className={styles.story + " " + styles.display}
+          className={styles.story}
           onClick={handleClickEdit}
         >
           <textarea value={story} rows={6} readOnly />
@@ -92,7 +92,7 @@ export default function StoryEditable({ profile }: Props) {
       )}
 
       {editMode && (
-        <div>
+        <>
           <form onSubmit={handleSubmitStory}>
             <div className={styles.story}>
               <textarea
@@ -112,8 +112,8 @@ export default function StoryEditable({ profile }: Props) {
               confirm changes
             </button>
           </form>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

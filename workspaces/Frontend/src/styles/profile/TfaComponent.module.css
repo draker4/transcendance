@@ -1,5 +1,23 @@
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-start;
+  width: 100%;
+  max-width: 800px;
+
+  /* border: 1px dashed whitesmoke; */
+}
+
 .main p {
   max-width: 350px;
+  width: 100%;
+  max-width: 800px;
+  margin-top: 12px;
+  margin-bottom: 0;
+
+  /* border: 1px dashed chartreuse; */
 }
 
 .button,
@@ -12,9 +30,13 @@
   color: var(--tertiary1);
   background-color: var(--primary1);
   border: 3px solid var(--accent1);
-  width: 70%;
   margin-right: 10px;
   min-height: 30px;
+  
+  padding: 0px 5px;
+  min-width: 180px;
+
+  /* border: 3px solid hotpink; */
 }
 
 .button:hover {
@@ -25,6 +47,17 @@
 
 .notif {
   color: var(--notif);
+}
+
+.popup1 {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-start;
+
+  /* border: 1px solid hotpink; */
 }
 
 .popup2 {
@@ -67,6 +100,7 @@
 .popup1 input,
 .popup5 input {
   width: 70%;
+  max-width: 300px;
   margin: 10px;
   border-bottom: 1px solid var(--tertiary1);
   text-transform: uppercase;
@@ -123,8 +157,11 @@
 
 .flexButtons {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  flex-flow: row wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+
   /* border: 1px solid red; */
 }
 

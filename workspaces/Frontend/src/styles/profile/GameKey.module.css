@@ -1,6 +1,9 @@
 .gameKey {
+  width: 100%;
+  max-width: 800px;
   display: flex;
   flex-flow: column nowrap;
+  align-items: center;
   margin-top: 20px;
 }
 
@@ -12,9 +15,11 @@
   color: var(--tertiary1);
   width: 70%;
   border-radius: 4px;
-  padding: 3px;
+  padding: 3px 15px;
   text-align: center;
   margin-block: 10px;
+
+  max-width: fit-content;
 }
 
 .dropdown:hover {

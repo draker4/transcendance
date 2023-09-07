@@ -6,7 +6,7 @@ export default function PopupCodeEmail({ setCode }: {
 }) {
 	return (
 		<div className={styles.popup1}>
-			<p>
+			<p style={{marginTop: "20px"}}>
 				Please enter the code you get by email to verify your identity:
 			</p>
 			<input
