@@ -27,7 +27,7 @@ export default function AvatarProfile({ profile, avatar }: Props) {
             fontSize="3rem"
           />
         </div>
-        <div className={styles.login}>{profile.login}</div>
+        <h2 className={styles.login}>{profile.login}</h2>
       </Link>
     </div>
   );

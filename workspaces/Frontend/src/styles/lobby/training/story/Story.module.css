@@ -4,9 +4,6 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 10px;
-  border-radius: 10px;
-  border: solid var(--secondary1) 3px;
   margin-top: 10px;
 }
 
@@ -44,4 +41,13 @@
   scale: 0.9;
   color: var(--accent1);
   border: 3px solid var(--accent2);
+}
+
+.barBottom {
+  width: 90%;
+  height: 3px;
+  background-color: var(--secondary2);
+  border-radius: 20px;
+  margin: 0 auto;
+  margin-block: 10px;
 }

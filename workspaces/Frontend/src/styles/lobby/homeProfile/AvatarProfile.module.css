@@ -29,11 +29,17 @@
 }
 
 .login {
-  color: var(--accent1);
-  font-family: var(--title-font);
-  margin-top: 5px;
-  font-size: 1.5rem;
-  font-weight: 900;
+  color: var(--primary1);
+  background-color: var(--accent1);
+  border-radius: 8px;
+  width: fit-content;
+  padding: 5px;
+  margin: 0 auto;
+  margin-top: 10px;
+}
+
+.login:hover {
+  scale: 1.1;
 }
 
 @media (min-width: 65rem) {

@@ -82,7 +82,10 @@ export default function GameStats({ profile, socket }: Props) {
     <div className={styles.gameStats}>
       {/* STATSBOX1 */}
       <div className={styles.boxItem}>
-        <h3 className={styles.tinyTitle}>Play for glory</h3>
+        <div className={styles.sectionTitle}>
+          <h3 className={styles.tinyTitle}>Play for glory</h3>
+          <div className={styles.barBottom}></div>
+        </div>
         <div className={styles.statsBox}>
           <Rank
             rank={stats ? stats.leagueRank : 0}
@@ -96,7 +99,10 @@ export default function GameStats({ profile, socket }: Props) {
 
       {/* STATSBOX2 */}
       <div className={styles.boxItem}>
-        <h3 className={styles.tinyTitle}>Play for fun</h3>
+        <div className={styles.sectionTitle}>
+          <h3 className={styles.tinyTitle}>Play for fun</h3>
+          <div className={styles.barBottom}></div>
+        </div>
         <div className={styles.statsBox}>
           <div className={styles.storyBar}>
             <Item title="Story Level">

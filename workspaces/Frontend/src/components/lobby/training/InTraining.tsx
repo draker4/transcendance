@@ -37,12 +37,11 @@ export default function InTraining({
         error: "Error leaving training",
       });
       setTrainingId("");
-    }
-    catch (err: any) {
-      if (err.message === 'disconnect') {
+    } catch (err: any) {
+      if (err.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
     }
   }
@@ -65,6 +64,7 @@ export default function InTraining({
           Quit
         </button>
       </div>
+      <div className={styles.barBottom}></div>
     </div>
   );
 }
