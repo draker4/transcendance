@@ -2,8 +2,7 @@ import Profile_Service from "@/services/Profile.service";
 import { cookies } from "next/headers";
 import fs from "fs";
 import FormLogin from "./FormLogin";
-import Link from "next/link";
-import styles from "@/styles/chatPage/ChatPage.module.css";
+import ServerError from "../error/ServerError";
 
 export default async function CreateServer() {
   let profile: Profile = {
@@ -42,14 +41,7 @@ export default async function CreateServer() {
       return avatar;
     });
   } catch (err) {
-    return (
-      <div className={styles.error}>
-        <p>An error occured</p>
-        <Link href="/welcome/disconnect" className={styles.errorLink}>
-          Return to login page
-        </Link>
-      </div>
-    );
+    return <ServerError />;
   }
 
   if (profile.provider === "42") avatarCrypted = profile.image;
