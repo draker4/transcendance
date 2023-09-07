@@ -1,16 +1,14 @@
 "use client";
-
 import styles from "@/styles/scrollBtn/ScrollBtn.module.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { MdKeyboardArrowUp } from "react-icons/md";
-import { useState } from "react";
 
-const ScrollBtn = () => {
+export default function ScrollBtn() {
   const [showBtn, setShowBtn] = useState<boolean>(false);
 
   useEffect(() => {
     const handleScrollBtn = () => {
-      if (window.scrollY > 100) {
+      if (window.scrollY > 50) {
         setShowBtn(true);
       } else {
         setShowBtn(false);
@@ -37,6 +35,4 @@ const ScrollBtn = () => {
       )}
     </div>
   );
-};
-
-export default ScrollBtn;
+}

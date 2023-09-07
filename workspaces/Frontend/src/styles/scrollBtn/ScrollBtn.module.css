@@ -1,7 +1,7 @@
 .scroll {
   position: fixed;
-  bottom: 2%;
-  right: 5%;
+  bottom: 60px;
+  right: 1%;
   display: flex;
   width: clamp(40px, 3vh, 50px);
   height: clamp(40px, 3vh, 50px);
