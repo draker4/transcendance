@@ -35,7 +35,6 @@ export default function Story({ profile, trainingService }: Props) {
   const [creatingStory, setCreatingStory] = useState<boolean>(false);
 
   async function createStory() {
-
     try {
       setCreatingStory(true);
       const settings: CreateTrainingDTO = {
@@ -65,19 +64,19 @@ export default function Story({ profile, trainingService }: Props) {
         return;
       }
       router.push("/home/training/" + res.data);
-    }
-    catch (error: any) {
+    } catch (error: any) {
       if (error.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
-      toast.error('Something went wrong, please try again!');
+      toast.error("Something went wrong, please try again!");
     }
   }
 
   useEffect(() => {
-    storyService.getUserStories(profile.id)
+    storyService
+      .getUserStories(profile.id)
       .then((ret) => {
         if (ret && ret.success) {
           setStories(ret.data);
@@ -89,16 +88,16 @@ export default function Story({ profile, trainingService }: Props) {
           setCurrentLevel(checkLevel);
         } else if (ret) {
           console.log(ret.message);
-          toast.error('Something went wrong, please refresh the page!');
+          toast.error("Something went wrong, please refresh the page!");
         }
       })
       .catch(async (err: any) => {
-        if (err.message === 'disconnect') {
+        if (err.message === "disconnect") {
           await disconnect();
           router.refresh();
-          return ;
+          return;
         }
-        toast.error('Something went wrong, please refresh the page!');
+        toast.error("Something went wrong, please refresh the page!");
       });
   }, []);
 
@@ -110,7 +109,7 @@ export default function Story({ profile, trainingService }: Props) {
       </div>
     );
   }
-  
+
   return (
     <div className={styles.story}>
       <h2>Story</h2>
@@ -139,6 +138,7 @@ export default function Story({ profile, trainingService }: Props) {
         {!creatingStory && "Play"}
         {creatingStory && <LoadingComponent />}
       </button>
+      <div className={styles.barBottom}></div>
     </div>
   );
 }

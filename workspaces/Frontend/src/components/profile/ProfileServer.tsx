@@ -88,6 +88,7 @@ export default async function ProfileServer({ id }: { id: number }) {
     }
   } catch (error: any) {
     console.log(error.message);
+    console.log("error");
     return <ErrorProfile params={{ id }} />;
   }
 
@@ -123,5 +124,8 @@ export default async function ProfileServer({ id }: { id: number }) {
         avatars={avatars}
       />
     );
-  else return <ErrorProfile params={{ id }} />;
+  else {
+    console.log("salut");
+    return <ErrorProfile params={{ id }} />;
+  }
 }
