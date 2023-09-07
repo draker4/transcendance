@@ -1,4 +1,4 @@
-.serverErrorPage {
+.errorPage {
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
@@ -9,7 +9,7 @@
   background: var(--primary1);
 }
 
-.serverErrorFrame {
+.errorFrame {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -41,21 +41,25 @@
   margin-bottom: 10px;
 }
 
-.errorBackHome {
+.errorReturn {
   color: var(--accent2);
   margin-bottom: 10px;
 }
 
-.errorBackHome:hover {
+.errorReturn:hover {
   color: var(--accent1);
 }
 
-.errorBackHome:active {
+.errorReturn:active {
   scale: 0.9;
 }
 
 .errorLink {
   text-decoration: none;
+}
+
+.errorNotif {
+  color: var(--notif);
 }
 
 .icon {
