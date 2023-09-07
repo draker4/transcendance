@@ -17,16 +17,15 @@ export default function ProfileLogin({ name, isOwner }: Props) {
 
   const fontsize = name.length > 12 ? "small" : "medium";
 
-
-  
   return (
     <div className={styles.loginCard}>
       <div className={styles.login}>
-      {slices.map((slice, index) => (
-          <h1 key={index} className={styles[fontsize]}>{slice}</h1>
+        {slices.map((slice, index) => (
+          <h2 key={index} className={styles[fontsize]}>
+            {slice}
+          </h2>
         ))}
       </div>
-      {/* {isOwner && <EditButton />} */}
     </div>
   );
 }

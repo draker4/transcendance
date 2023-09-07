@@ -3,21 +3,20 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
-  padding-bottom: 20px;
+  margin: 15px;
+  min-width: 300px;
 }
 
 /* SETTINGS CARD */
 .settingsCard {
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding-left: 12vw;
-  padding-bottom: 8vw;
-  padding-top: 20px;
+  margin-top: 20px;
   gap: 1rem;
 }
 
@@ -26,14 +25,14 @@
 .avatarCard {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-direction: row;
+  justify-content: center;
+  flex-flow: column;
   width: 100%;
 }
 
 .icon {
   /* border: 1px solid red; */
-  height: 20%;
+  height: 30px;
   cursor: pointer;
   color: var(--primary3);
 }
@@ -46,27 +45,23 @@
   scale: 0.95;
 }
 
-.avatarCard h1 {
-  font-family: var(--title-font);
-  font-weight: 700;
-  font-size: clamp(0.5rem, 0.2rem + 2.3vw, 3rem);
-}
-
 .avatarCard .rectangle {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 200px;
+  max-height: 200px;
+  padding-top: 100px;
+  margin-bottom: 18px;
   background-color: var(--shadow);
-  margin-bottom: clamp(8px, 3px + 3vw, 25px);
+  border-radius: 10px;
 }
 
 /* AVATAR MODULE */
 
 .avatar {
-  height: 80%;
-  aspect-ratio: 1;
+  width: 200px;
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,8 +71,8 @@
   border-radius: 50%;
   border: 6px solid var(--primary1);
   background-color: var(--notif);
-  height: 90%;
-  aspect-ratio: 1 / 1;
+  width: 200px;
+  height: 200px;
 }
 
 .avatar .rounded {
@@ -85,14 +80,14 @@
   border: 6px solid var(--primary1);
   background-color: var(--notif);
   overflow: hidden;
-  height: 90%;
-  aspect-ratio: 1 / 1;
+  width: 200px;
+  height: 200px;
 }
 
 .avatar .circular:hover,
 .avatar .rounded:hover {
   cursor: pointer;
-  scale: 1.03;
+  scale: 1.05;
 }
 
 .avatar .circular:hover.disabled,
@@ -116,50 +111,16 @@
 }
 
 .loginCard .login {
-  padding: 4px 12px;
-  border-radius: 5px;
-  background-color: var(--accent1);
-  text-align: center;
   color: var(--primary1);
+  background-color: var(--accent1);
+  margin-top: 42px;
+  padding: 5px;
+  border-radius: 8px;
+  width: fit-content;
 }
 
 p.notif {
   font-size: 0.8rem;
   color: var(--notif);
   text-align: left;
-}
-
-.small {
-  font-size: 1.1rem;
-}
-
-.medium {
-  font-size: 1.8rem;
-}
-
-/* RESPONSIVE */
-
-/* Breakpoint 1 : width > smartphone */
-@media (min-width: 38rem) {
-  .avatarFrame {
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  .settingsCard {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding-left: 0;
-    padding-bottom: 0;
-
-    padding-top: 20px;
-    gap: 1rem;
-  }
-}
-
-/* Breakpoint 2 : width > smartphone & pads */
-@media (min-width: 992px) {
 }

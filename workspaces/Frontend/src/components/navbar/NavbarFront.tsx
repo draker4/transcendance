@@ -59,7 +59,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
       <header>
         <nav className={styles.nav}>
           <NavbarLogo link="/home" />
-          <div className={styles.right}>
+          <div className={styles.rightAlone}>
             <Theme />
           </div>
         </nav>
