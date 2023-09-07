@@ -70,6 +70,8 @@ const Theme = () => {
         autoClose={2000}
         newestOnTop={true}
         pauseOnFocusLoss={false}
+        pauseOnHover={false}
+        limit={2}
         theme={theme === "light" ? "light" : "dark"}
       />
     </div>

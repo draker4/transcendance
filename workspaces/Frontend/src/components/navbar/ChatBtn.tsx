@@ -4,8 +4,9 @@ import styles from "@/styles/navbar/Navbar.module.css";
 import { Socket } from "socket.io-client";
 import { Badge } from "@mui/material";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { Zoom, toast } from "react-toastify";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
+import ShortAchievementItem from "../profile/infos/sections/lastAchievement/ShortAchievementItem";
 
 const badgeStyle = {
   "& .MuiBadge-badge": {
@@ -51,13 +52,27 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
     };
 
     const handleAchievement = (achievement: UserAchievement) => {
-      toast.info(`You unlocked the achievement ${achievement.name}!`, {
-        autoClose: 5000,
-      });
+      toast(
+        <div className={styles.toast}>
+          <div className={styles.toastAchievement}>
+            <ShortAchievementItem achievement={achievement} invisible={true} />
+          </div>
+          <div className={styles.toastText}>
+            <h4>Achievement unlocked!</h4>
+            <p>{achievement.name}</p>
+          </div>
+        </div>, {
+          position: "top-center",
+          transition: Zoom,
+          autoClose: 10000,
+        }
+      );
     };
 
     const handleLevelUp = (level: number) => {
       toast.info(`You reached level ${level}!`, {
+        position: "top-center",
+        transition: Zoom,
         autoClose: 5000,
       });
     };

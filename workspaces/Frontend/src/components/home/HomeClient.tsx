@@ -9,6 +9,7 @@ import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import LoadingSuspense from "../loading/LoadingSuspense";
 import styles from "@/styles/lobby/Lobby.module.css";
+import { toast } from "react-toastify";
 
 export default function HomeClient({
   token,
