@@ -22,8 +22,10 @@ import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 
 export default function ShortAchievementItem({
   achievement,
+  invisible = false,
 }: {
   achievement: UserAchievement;
+  invisible?: boolean;
 }) {
   // Define a mapping from achievement.icone to FontAwesome icons
   const iconMapping: { [key: string]: IconProp } = {
@@ -86,7 +88,7 @@ export default function ShortAchievementItem({
       backgroundColor: "var(--primary1)",
       border: `2px solid ${color}`,
       right: "-3px",
-      top: "-3px",
+      top: "-5px",
     },
   };
 
@@ -109,7 +111,8 @@ export default function ShortAchievementItem({
               badgeContent={content}
               overlap="circular"
               sx={badgeStyle}
-              max={1000}
+              max={999}
+              invisible={invisible}
             >
               <FontAwesomeIcon
                 icon={icon}
