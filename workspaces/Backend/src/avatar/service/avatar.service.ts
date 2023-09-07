@@ -200,7 +200,7 @@ export class AvatarService {
     const cyan = '\x1b[36m';
     const stop = '\x1b[0m';
 
-    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+    if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(cyan + '[Avatar service]  ' + stop);
     console.log(message);

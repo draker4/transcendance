@@ -60,7 +60,7 @@ export default function LogInComponent({ setTextButton }: Props) {
           />
         </div>
         {
-          process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" &&
+          process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" &&
           <div className={styles.oneClick}>
             <Image
               alt="google logo"

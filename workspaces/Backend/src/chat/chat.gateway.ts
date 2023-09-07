@@ -776,8 +776,8 @@ export class ChatGateway implements OnModuleInit {
     const stop = '\x1b[0m';
 
     if (
-      !process.env &&
-      !process.env.ENVIRONNEMENT &&
+      !process.env ||
+      !process.env.ENVIRONNEMENT ||
       process.env.ENVIRONNEMENT !== 'dev'
     )
       return;

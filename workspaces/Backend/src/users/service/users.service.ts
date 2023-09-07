@@ -453,7 +453,7 @@ export class UsersService {
     const yellow = '\x1b[33m';
     const stop = '\x1b[0m';
 
-    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+    if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(yellow + '[user service]  ' + stop);
     console.log(message);
