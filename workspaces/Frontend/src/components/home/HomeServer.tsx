@@ -5,8 +5,8 @@ import { cookies } from "next/dist/client/components/headers";
 import styles from "@/styles/lobby/Lobby.module.css";
 import Profile_Service from "@/services/Profile.service";
 import Avatar_Service from "@/services/Avatar.service";
-import Link from "next/link";
 import HomeClient from "./HomeClient";
+import ErrorComponent from "../error/ServerError";
 
 export default async function HomeServer() {
   let token: string;
@@ -49,11 +49,10 @@ export default async function HomeServer() {
   } catch (error: any) {
     console.log(error.message);
     return (
-      <div className={styles.error}>
-        <p>An error occured</p>
-        <Link href="/welcome/disconnect" className={styles.errorLink}>
-          Return to login page
-        </Link>
+      <div className={styles.lobbyPage}>
+        <div className={styles.lobbyFrame}>
+          <ErrorComponent />
+        </div>
       </div>
     );
   }
