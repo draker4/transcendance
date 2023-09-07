@@ -55,7 +55,7 @@ export default async function CreateServer() {
   if (profile.provider === "42") avatarCrypted = profile.image;
 
   return (
-    <div style={{ width: "100%", height: "100%" }}>
+    <div>
       <FormLogin
         token={token as string}
         avatars={avatars}

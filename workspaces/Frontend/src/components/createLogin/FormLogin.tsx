@@ -49,7 +49,11 @@ export default function FormLogin({
   });
 
   useEffect(() => {
-    if (profile.provider === '42' && profile.first_name && profile.first_name.length !== 0)
+    if (
+      profile.provider === "42" &&
+      profile.first_name &&
+      profile.first_name.length !== 0
+    )
       setText(profile.first_name);
   }, []);
 
@@ -148,74 +152,79 @@ export default function FormLogin({
       setNotif(res.exists);
       setAccessToken(res.access_token);
       setRefreshToken(res.refresh_token);
-    }
-    catch (err: any) {
-      if (err.message === 'disconnect') {
+    } catch (err: any) {
+      if (err.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
-      toast.error('Something went wrong, please try again!')
+      toast.error("Something went wrong, please try again!");
     }
   };
 
   return (
-    <div className={styles.formLogin}>
-      <h1 className={styles.title}>You are almost there! 😁</h1>
+    <main className={styles.formLoginPage}>
+      <div className={styles.formLoginFrame}>
+        <div className={styles.formLogin}>
+          <h1 className={styles.title}>You are almost there! 😁</h1>
 
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label htmlFor="inputId" className={styles.description}>Please choose your login!</label>
-        <p className={styles.little}>
-          Don&apos;t worry, you can change it later.
-        </p>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label htmlFor="inputId" className={styles.description}>
+              Please choose your login!
+            </label>
+            <p className={styles.little}>
+              Don&apos;t worry, you can change it later.
+            </p>
 
-        <div className={styles.nameContainer}>
-          <input
-            type="text"
-            name="login"
-            placeholder="login"
-            maxLength={10}
-            value={text}
-            onChange={handleText}
-            className={styles.login}
-            id="inputId"
-          />
-          <button
-            className={styles.randomBtn}
-            onClick={generateRandomName}
-            type="button"
-            title="random login"
-          >
-            <MdRefresh />
-          </button>
+            <div className={styles.nameContainer}>
+              <input
+                type="text"
+                name="login"
+                placeholder="login"
+                maxLength={10}
+                value={text}
+                onChange={handleText}
+                className={styles.login}
+                id="inputId"
+              />
+              <button
+                className={styles.randomBtn}
+                onClick={generateRandomName}
+                type="button"
+                title="random login"
+              >
+                <MdRefresh />
+              </button>
+            </div>
+
+            {notif.length > 0 && <div className={styles.notif}>{notif}</div>}
+            <p className={styles.choose}>Make you pretty:</p>
+
+            <div className={styles.avatars}>
+              <ChooseAvatar
+                selectBorder={borderColor}
+                selectBackground={backgroundColor}
+                selectAvatar={selectAvatar}
+                text={text}
+                avatars={avatars}
+                avatarCrypted={avatarCrypted}
+                fontSize="1rem"
+                textButton={textButton}
+                textButtonInitial={textButtonInitial}
+              />
+            </div>
+
+            <button
+              title="Create avatar"
+              type="submit"
+              className={styles.confirmBtn}
+              disabled={textButton !== textButtonInitial}
+            >
+              {textButton}
+            </button>
+          </form>
         </div>
-
-        {notif.length > 0 && <div className={styles.notif}>{notif}</div>}
-        <p className={styles.choose}>Make you pretty:</p>
-
-        <div className={styles.avatars}>
-          <ChooseAvatar
-            selectBorder={borderColor}
-            selectBackground={backgroundColor}
-            selectAvatar={selectAvatar}
-            text={text}
-            avatars={avatars}
-            avatarCrypted={avatarCrypted}
-            fontSize="1rem"
-            textButton={textButton}
-            textButtonInitial={textButtonInitial}
-          />
-        </div>
-
-        <button
-          title="Create avatar"
-          type="submit"
-          className={styles.confirmBtn}
-          disabled={textButton !== textButtonInitial}
-        >
-          {textButton}
-        </button>
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }

@@ -2,7 +2,7 @@
 import { cookies } from "next/dist/client/components/headers";
 
 //Import le composant pour le lobby
-import styles from "@/styles/chatPage/ChatPage.module.css";
+import styles from "@/styles/lobby/Lobby.module.css";
 import Profile_Service from "@/services/Profile.service";
 import Avatar_Service from "@/services/Avatar.service";
 import Link from "next/link";
@@ -59,7 +59,7 @@ export default async function HomeServer() {
   }
 
   return (
-    <main className={styles.home}>
+    <main className={styles.lobbyPage}>
       <HomeClient profile={profile} avatar={avatar} token={token} />
     </main>
   );

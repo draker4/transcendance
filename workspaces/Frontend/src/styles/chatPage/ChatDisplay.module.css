@@ -1,32 +1,34 @@
 .main {
   border: 3px solid var(--secondary1);
   /* [!] STYLE BORDURES */
-	/* border: 1px solid grey; */
-	width: 100%;
-	border-radius: 10px;
-	padding: 20px;
-	overflow: hidden;
-	/* margin-left: -3px; */
+  /* border: 1px solid grey; */
+  width: 100%;
+  border-radius: 10px;
+  padding: 20px;
+  overflow: hidden;
+  margin-right: 5px;
+  /* margin-left: -3px; */
 }
 
 .noPadding {
-	padding: 0;
+  padding: 0;
 }
 
-.icon, .iconArrow {
-	/* border: 1px solid red; */
-	width: 30px;
-	height: 30px;
+.icon,
+.iconArrow {
+  /* border: 1px solid red; */
+  width: 30px;
+  height: 30px;
 }
 
 .iconArrow {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .iconArrow:hover {
-	scale: 1.05;
+  scale: 1.05;
 }
 
 .iconArrow:active {
-	scale: 0.95;
+  scale: 0.95;
 }

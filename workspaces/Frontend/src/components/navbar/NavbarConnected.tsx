@@ -71,6 +71,7 @@ export default function NavbarConnected({
           <AvatarMenu avatar={avatar} profile={profile} socket={socket} />
         </div>
       </nav>
+      <div className={styles.barBottom}></div>
     </header>
   );
 }

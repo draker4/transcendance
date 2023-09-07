@@ -56,17 +56,12 @@
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  /* transition: all 0.3s ease-in; */
   margin: 2px;
   color: var(--tertiary1);
   background-color: var(--primary1);
   border: 3px solid var(--tertiary1);
   cursor: pointer;
 }
-
-/* .demoBtn:checked {
-  transition: all 0.3s ease-out;
-} */
 
 .demoBtn:hover {
   color: var(--accent1);

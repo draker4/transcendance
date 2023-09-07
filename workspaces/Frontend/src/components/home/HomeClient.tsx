@@ -60,7 +60,7 @@ export default function HomeClient({
   if (!socket) return <LoadingSuspense />;
 
   return (
-    <div className={styles.home}>
+    <div className={styles.lobbyFrame}>
       <HomeProfile profile={profile} avatar={avatar} socket={socket} />
       <Lobby profile={profile} socket={socket} />
     </div>

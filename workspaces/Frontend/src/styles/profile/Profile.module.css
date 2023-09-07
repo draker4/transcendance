@@ -1,21 +1,12 @@
 .main {
-  min-height: 85vh;
-  background: var(--primary1);
-  width: 90%;
-
-  display:flex;
-  flex-direction: column;
+  display: flex;
+  flex-flow: column nowrap;
   justify-content: flex-start;
   align-items: center;
-
-  
-
+  width: 90%;
   margin: 0 auto;
-  /* overflow-y: scroll; */
-  /* overflow-x: hidden; */
-  /* overflow: hidden; */
-
-  /* border: 1px dashed chartreuse; */
+  min-height: 80vh;
+  background: var(--primary1);
 }
 
 /* -------------PROFILE MAIN FRAME----------------- */
@@ -26,27 +17,21 @@
   flex-direction: row;
   padding: 1rem;
 
-  width:100%;
+  width: 100%;
 
   background-color: var(--primary2);
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
   box-shadow: inset clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
     clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) rgba(67, 80, 126, 0.22);
-
-  /* border: 1px dashed hotpink; */
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
 }
 
 .profileMainFrame .both {
+  background-color: var(--primary1);
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
   box-shadow: clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-  clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
-  clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) rgba(67, 80, 126, 0.22);
-  background-color: var(--primary1);
-
-  /* [!] padding deplacer vers sous comp pour placer le footer 
-         dans le ficheir infocard.module.css */
-  /* padding: clamp(0.25rem, 0.5rem + 5vw, 1rem); */
+    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
 }
 
 .profileMainFrame .first {
@@ -68,7 +53,7 @@
   flex-direction: column;
   justify-content: space-between;
 
-    /* border: 1px dashed hotpink; */
+  /* border: 1px dashed hotpink; */
 }
 
 /* -------------- ERROR PAGE ---------------- */

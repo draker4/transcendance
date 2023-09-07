@@ -1,18 +1,19 @@
 .main {
   border: 3px solid var(--secondary1);
   /* [!] STYLE BORDURES */
-	/* border: 1px solid grey; */
+  /* border: 1px solid grey; */
   border-radius: 10px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-right: 5px;
 }
 
 .avatar {
-	height: 45px;
-	width: 45px;
-	flex-shrink: 0;
+  height: 45px;
+  width: 45px;
+  flex-shrink: 0;
 }
 
 .scroll {
@@ -22,15 +23,15 @@
 }
 
 .list {
-	cursor: pointer;
-	display: flex;
-	flex-flow: row nowrap;
-	align-items: center;
-	border-radius: 5px;
-	padding: 5px 10px;
-	font-size: 1.2rem;
-	overflow: hidden;
-	user-select: none;
+  cursor: pointer;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 1.2rem;
+  overflow: hidden;
+  user-select: none;
 }
 
 .list:hover {
@@ -38,32 +39,32 @@
 }
 
 .name {
-	margin-left: 30px;
-	overflow-wrap: break-word;
-	word-break: break-word;
-	flex-grow: 1;
-	min-width: 0;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+  margin-left: 30px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .name p {
-	padding-top: 5px;
-	font-size: 0.9rem;
-	white-space: nowrap;
-	/* flex: 1; */
-	text-overflow: ellipsis;
-	/* width: 100px; */
-	overflow: hidden;
-	color:var(--secondary1);
+  padding-top: 5px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  /* flex: 1; */
+  text-overflow: ellipsis;
+  /* width: 100px; */
+  overflow: hidden;
+  color: var(--secondary1);
 }
 
 .name h4 {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	/* width: 100px; */
-	overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* width: 100px; */
+  overflow: hidden;
 }
 
 .title {
@@ -77,9 +78,9 @@
 }
 
 .tinyTitle {
-	color: var(--accent1);
-	font-family: var(--title);
-	font-size: 0.7rem;
+  color: var(--accent1);
+  font-family: var(--title);
+  font-size: 0.7rem;
 }
 
 .highlight {
@@ -111,19 +112,19 @@
 }
 
 .time {
-	font-size: 0.8rem;
-	padding-left: 10px;
-	color:var(--secondary1);
+  font-size: 0.8rem;
+  padding-left: 10px;
+  color: var(--secondary1);
 }
 
 /* conversation item */
 
 .list .xMark {
-	font-size: 1.5rem;
-	color: var(--secondary1);
+  font-size: 1.5rem;
+  color: var(--secondary1);
 }
 
 .list .xMark:hover {
-	color: var(--tertiary1);
-	scale:1.2;
+  color: var(--tertiary1);
+  scale: 1.2;
 }

@@ -128,38 +128,42 @@ export default function ConfirmEmailCode({ userId }: { userId: number }) {
   };
 
   return (
-    <div className={styles.confirmEmail}>
-      <h1 className={styles.title}>Confirm Email</h1>
-      <p className={styles.description}>
-        Please enter the verification code sent to your email address!
-      </p>
+    <main className={styles.confirmEmailPage}>
+      <div className={styles.confirmEmailFrame}>
+        <div className={styles.confirmEmail}>
+          <h1 className={styles.title}>Confirm Email</h1>
+          <p className={styles.description}>
+            Please enter the verification code sent to your email address!
+          </p>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.code}>
-        <div className={styles.inputCode}>{inputs}</div>
-        <p className={styles.msg}>{msg}</p>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.code}>
+            <div className={styles.inputCode}>{inputs}</div>
+            <p className={styles.msg}>{msg}</p>
 
-        <button
-          type="submit"
-          className={styles.submitBtn}
-          disabled={textButton !== "Verify"}
-        >
-          {textButton}
-        </button>
-      </form>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={textButton !== "Verify"}
+            >
+              {textButton}
+            </button>
+          </form>
 
-      <div className={styles.bottomText}>
-        <p>Did not receive any code?</p>
-        <button
-          className={styles.again}
-          onClick={sendCode}
-          disabled={textButton !== "Verify"}
-        >
-          Send code again
-        </button>
-        <Link className={styles.again} href="/welcome/login">
-          Log in with an other email
-        </Link>
+          <div className={styles.bottomText}>
+            <p>Did not receive any code?</p>
+            <button
+              className={styles.again}
+              onClick={sendCode}
+              disabled={textButton !== "Verify"}
+            >
+              Send code again
+            </button>
+            <Link className={styles.again} href="/welcome/login">
+              Log in with an other email
+            </Link>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

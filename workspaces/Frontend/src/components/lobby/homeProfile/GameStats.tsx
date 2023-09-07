@@ -57,7 +57,6 @@ export default function GameStats({ profile, socket }: Props) {
         const ret = await statsService.getShortStats(profile.id);
         if (ret.success) {
           setStats(ret.data);
-          console.log("Stats:", ret.data);
         }
       } catch (error: any) {
         if (error.message === "disconnect") {
@@ -109,7 +108,6 @@ export default function GameStats({ profile, socket }: Props) {
               profile={profile}
               setStats={setStats}
               statsService={statsService}
-              socket={socket}
             />
           </div>
         </div>

@@ -1,17 +1,41 @@
+.logInPage {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  min-height: 80vh;
+  background: var(--primary1);
+}
+
+.logInFrame {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary2);
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+  box-shadow: inset clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
+}
+
 .logIn {
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  min-height: 80vh;
-  margin: 0 auto;
-  margin-top: 10px;
+  text-align: center;
+  width: 100%;
   padding: clamp(20px, 5vh, 100px);
   background-color: var(--primary1);
-  border: 3px solid var(--secondary1);
-  border-radius: 10px;
-  text-align: center;
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+  box-shadow: clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
 }
 
 .title {
