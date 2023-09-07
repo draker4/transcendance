@@ -174,7 +174,7 @@ export default function Pong({
   }, []);
 
   return (
-    <div className={styles.pongSolo} ref={pongRef}>
+    <div className={styles.pong} ref={pongRef}>
       <PongHead
         profile={profile}
         gameData={gameData}

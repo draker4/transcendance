@@ -110,7 +110,7 @@ export default function GameStats({ profile, socket }: Props) {
               <StoryLevel storyLevel={storyLevel} />
             </Item>
           </div>
-          <div className={styles.storyBar}>
+          <div className={styles.achievementBar}>
             <LastAchievement
               profile={profile}
               setStats={setStats}

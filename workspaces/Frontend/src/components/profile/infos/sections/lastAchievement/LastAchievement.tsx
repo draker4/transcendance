@@ -72,7 +72,7 @@ export default function LastAchievements({
         profile.id,
         achievement.id.toString()
       );
-      socket?.emit('notif', {
+      socket?.emit("notif", {
         why: "updateAchievements",
       });
       const res = await statsService.getShortStats(profile.id);
@@ -98,7 +98,7 @@ export default function LastAchievements({
           opacity: achievement.completed ? 1 : 0.4,
           boxShadow:
             achievement.completed && !achievement.collected
-              ? "0px 0px 50px var(--achievement)"
+              ? "0px 0px 30px var(--achievement)"
               : undefined,
           cursor:
             achievement.completed && !achievement.collected
