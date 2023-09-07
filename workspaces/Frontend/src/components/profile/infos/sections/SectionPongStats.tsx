@@ -23,6 +23,7 @@ export default function SectionPongStats({ profile }: Props) {
   const [shortStats, setShortStats] = useState<ShortStats>({
     leagueRank: 0,
     leaguePoints: 0,
+
     leveling: {
       level: 1,
       userXp: 0,
@@ -40,6 +41,7 @@ export default function SectionPongStats({ profile }: Props) {
     trainingLost: 0,
     demoWatched: 0,
     storyLevelCompleted: 0,
+    userLevel: 1,
   });
   const storyService = new StoryService(undefined);
   const statService = new StatsService(undefined);

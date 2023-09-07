@@ -16,7 +16,7 @@ export default function ConfigAuthEditable({ profile, setLogin, socket }: {
 	const	[changePassword, setChangePassword] = useState<boolean>(false);
 
 	return (
-		<div>
+		<>
 			<p className={stylesInfoCard.tinyTitle}>Account Settings</p>
 			
 			{
@@ -55,6 +55,6 @@ export default function ConfigAuthEditable({ profile, setLogin, socket }: {
 
 			<TfaComponent profile={profile}/>
 
-		</div>
+		</>
 	)
 }
