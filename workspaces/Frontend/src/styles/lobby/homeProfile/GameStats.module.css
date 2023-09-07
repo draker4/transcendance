@@ -39,13 +39,12 @@
 .xpBar {
   width: 80%;
   max-width: 600px;
-  margin: 10px;
 }
 
 .statsBox {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   width: 100%;
 }

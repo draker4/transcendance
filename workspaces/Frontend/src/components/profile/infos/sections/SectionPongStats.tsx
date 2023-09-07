@@ -21,8 +21,7 @@ type Props = {
 };
 
 export default function SectionPongStats({ profile, socket }: Props) {
-  const [storyLevel, setStoryLevel] = useState<number>(0);
-  const [shortStats, setShortStats] = useState<ShortStats>({
+  const [stats, setStats] = useState<ShortStats>({
     leagueRank: 0,
     leaguePoints: 0,
 
@@ -54,7 +53,7 @@ export default function SectionPongStats({ profile, socket }: Props) {
       const rep = await statService.getShortStats(profile.id);
 
       if (rep.success && rep.data) {
-        setShortStats(rep.data);
+        setStats(rep.data);
       } else {
         throw new Error(rep.message);
       }
@@ -68,36 +67,8 @@ export default function SectionPongStats({ profile, socket }: Props) {
     }
   };
 
-  const loadStory = async () => {
-    try {
-      const rep = await storyService.getUserStories(profile.id);
-
-      if (rep !== undefined && rep.success) {
-        let checkLevel: number = 0;
-        while (rep.data[checkLevel].levelCompleted) {
-          checkLevel++;
-        }
-        setStoryLevel(checkLevel);
-      } else {
-        throw new Error(
-          rep !== undefined
-            ? rep.message
-            : "loadStory error : response undefined"
-        );
-      }
-    } catch (error: any) {
-      if (error.message === "disconnect") {
-        await disconnect();
-        router.refresh();
-        return;
-      }
-      console.log(`loadStory error : ${error.message}`);
-    }
-  };
-
   useEffect(() => {
     loadStats();
-    loadStory();
   }, []);
 
   return (
@@ -109,8 +80,8 @@ export default function SectionPongStats({ profile, socket }: Props) {
       <p className={styles.tinyTitle}>Level</p>
       <XPBar
         userLevel={
-          shortStats.leveling
-            ? shortStats.leveling
+          stats.leveling
+            ? stats.leveling
             : {
                 level: 1,
                 userXp: 0,
@@ -123,16 +94,13 @@ export default function SectionPongStats({ profile, socket }: Props) {
 
       <p className={styles.tinyTitle}>League</p>
       <div className={styles.leagueContainer}>
-        <Rank
-          rank={shortStats.leagueRank}
-          leaguePoints={shortStats.leaguePoints}
-        />
+        <Rank rank={stats.leagueRank} leaguePoints={stats.leaguePoints} />
         <div className={styles.subLeagueContainer}>
           <Item title="League Winrate">
             <Winrate
               winData={{
-                gameWon: shortStats.leagueWon,
-                gameLost: shortStats.leagueLost,
+                gameWon: stats.leagueWon,
+                gameLost: stats.leagueLost,
                 showPlaceholder: true,
               }}
             />
@@ -142,14 +110,14 @@ export default function SectionPongStats({ profile, socket }: Props) {
 
       <p className={styles.tinyTitle}>Play for fun</p>
       <Item title="Story Level">
-        <StoryLevel storyLevel={storyLevel} />
+        <StoryLevel storyLevel={stats.storyLevelCompleted} />
       </Item>
 
       <Item title="Global Winrate">
         <Winrate
           winData={{
-            gameWon: shortStats.gameWon,
-            gameLost: shortStats.gameLost,
+            gameWon: stats.gameWon,
+            gameLost: stats.gameLost,
             showPlaceholder: true,
           }}
         />
@@ -158,7 +126,7 @@ export default function SectionPongStats({ profile, socket }: Props) {
       <Item title="Recent Achievements">
         <LastAchievement
           profile={profile}
-          setStats={setShortStats}
+          setStats={setStats}
           statsService={statService}
           socket={socket}
         />

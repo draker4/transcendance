@@ -4,20 +4,20 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  padding: 10px;
   width: 90%;
   color: var(--secondary1);
+  margin-block: 10px;
 }
 
 .line {
-  height: 0;
-  border-top: 1px solid var(--secondary3);
-  margin: 10px 0;
+  height: 3px;
+  border-radius: 5px;
+  background-color: var(--secondary3);
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .horizontal {
-  /* border: 1px solid red; */
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
@@ -28,68 +28,25 @@
 .title {
   padding-left: 20px;
   font-size: 0.7rem;
+  min-width: 190px;
 }
 
-.title h5 {
+.copyright {
   font-size: 0.8rem;
   letter-spacing: 2px;
   padding-bottom: 5px;
 }
 
-.copyright {
-  font-size: 0.8rem;
-  color: var(--secondary1);
-  padding-top: 10px;
-}
-
-.refs {
-  /* border: 1px solid red; */
-  font-size: 0.8rem;
-  width: 40vw;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-around;
-  padding-right: 20px;
-}
-
-.refsConnected {
-  /* border: 1px solid red; */
-  font-size: 0.8rem;
-  width: 50vw;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-around;
-  padding-right: 20px;
-}
-
 .ref {
-  font-size: 0.8rem;
-  width: 15vw;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: space-around;
-  padding-right: 20px;
+  font-size: 0.8rem;
 }
 
 .link {
   color: var(--secondary1);
   text-transform: none;
-  /* text-decoration: none; */
-}
-
-@media screen and (min-width: 1000px) {
-  .refs {
-    width: 30vw;
-  }
-
-  .refsConnected {
-    width: 30vw;
-  }
-
-  .ref {
-    width: 10vw;
-  }
+  margin: 4px 6px;
 }

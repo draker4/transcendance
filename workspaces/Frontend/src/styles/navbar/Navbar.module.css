@@ -70,12 +70,10 @@
 
 .logInBtn {
   appearance: none;
-  min-width: 80px;
-  max-width: 130px;
-  min-height: 40px;
-  max-height: 50px;
+  width: 100px;
+  height: 40px;
   border-radius: 10px;
-  font-size: clamp(14px, 2vw, 18px);
+  font-size: 16px;
   font-weight: bold;
   color: var(--tertiary1);
   background-color: var(--primary1);
@@ -144,17 +142,6 @@
   margin: 0;
   padding: 0;
   /* padding-right: 2px; */
-}
-
-@media screen and (min-width: 2000px) {
-  .title {
-    font-size: 2rem;
-  }
-}
-@media screen and (min-width: 1500px) {
-  .logInBtn {
-    padding: 5px 30px;
-  }
 }
 
 .toast {

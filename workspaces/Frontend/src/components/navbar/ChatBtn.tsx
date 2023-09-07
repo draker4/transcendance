@@ -47,7 +47,7 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
       if (receivedMsg.join)
         toast.info(`${receivedMsg.sender.login} invited you to a Pong game!`, {
-          position: "top-center",
+          position: "top-right",
         });
     };
 
@@ -58,20 +58,21 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
             <ShortAchievementItem achievement={achievement} invisible={true} />
           </div>
           <div className={styles.toastText}>
-            <h4>Achievement unlocked!</h4>
-            <p>{achievement.name}</p>
+            <h3>{achievement.name}</h3>
+            <p>{achievement.description}</p>
           </div>
-        </div>, {
-          position: "top-center",
+        </div>,
+        {
+          position: "top-right",
           transition: Zoom,
-          autoClose: 10000,
+          autoClose: 5000,
         }
       );
     };
 
     const handleLevelUp = (level: number) => {
       toast.success(`You reached level ${level}!`, {
-        position: "top-center",
+        position: "top-right",
         transition: Zoom,
         autoClose: 5000,
       });

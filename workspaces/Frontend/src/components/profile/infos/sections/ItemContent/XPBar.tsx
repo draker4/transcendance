@@ -16,9 +16,9 @@ export default function XPBar({ userLevel }: Props) {
       case "percent":
         return `${userLevel.progress}% of level completion`;
       case "needToUp":
-        return `${userLevel.nextLevelXP} xp to reach level ${
-          userLevel.level + 1
-        }`;
+        return `${
+          userLevel.cumulativeXpToNext - userLevel.userXp
+        } xp to reach level ${userLevel.level + 1}`;
       case "totalXp":
         return `${userLevel.userXp} total xp`;
       default:
@@ -41,7 +41,7 @@ export default function XPBar({ userLevel }: Props) {
         setMode("percent");
         break;
     }
-  }
+  };
 
   return (
     <div className={`${styles.xpFrame} ${styles.row}`}>
