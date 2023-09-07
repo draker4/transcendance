@@ -19,38 +19,8 @@ type Props = {
 
 export default function GameStats({ profile, socket }: Props) {
   const statsService = new StatsService();
-  const storyService = new StoryService();
   const [stats, setStats] = useState<ShortStats | undefined>(undefined);
-  const [storyLevel, setStoryLevel] = useState<number>(0);
   const router = useRouter();
-
-  const loadStory = async () => {
-    try {
-      const rep = await storyService.getUserStories(profile.id);
-
-      if (rep !== undefined && rep.success) {
-        let checkLevel: number = 0;
-        while (rep.data[checkLevel].levelCompleted) {
-          checkLevel++;
-        }
-        setStoryLevel(checkLevel);
-      } else {
-        throw new Error(
-          rep !== undefined
-            ? rep.message
-            : "loadStory error : response undefined"
-        );
-      }
-    } catch (error: any) {
-      if (error.message === "disconnect") {
-        await disconnect();
-        router.refresh();
-        return;
-      }
-      if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
-        console.log(`loadStory error : ${error.message}`);
-    }
-  };
 
   useEffect(() => {
     const getStats = async () => {
@@ -69,7 +39,6 @@ export default function GameStats({ profile, socket }: Props) {
       }
     };
 
-    loadStory();
     getStats();
     const interval = setInterval(getStats, 300000);
     return () => clearInterval(interval);
@@ -107,7 +76,7 @@ export default function GameStats({ profile, socket }: Props) {
         <div className={styles.statsBox}>
           <div className={styles.storyBar}>
             <Item title="Story Level">
-              <StoryLevel storyLevel={storyLevel} />
+              <StoryLevel storyLevel={stats.storyLevelCompleted} />
             </Item>
           </div>
           <div className={styles.achievementBar}>

@@ -1,13 +1,15 @@
 import { Refresher } from "@/components/refresher/Refresher";
 import TwoFactorAuthClient from "@/components/twoFactorAuthPage/TwoFactorAuthClient";
-import styles from "@/styles/twoFactorAuth/TwoFactorAuth.module.css";
+import { Suspense } from "react";
+import LoadingSuspense from "@/components/loading/LoadingSuspense";
 
 export default function TwoFactorAuthPage() {
-
   return (
-    <div className={styles.main}>
+    <>
       <Refresher />
-      <TwoFactorAuthClient />
-    </div>
+      <Suspense fallback={<LoadingSuspense />}>
+        <TwoFactorAuthClient />
+      </Suspense>
+    </>
   );
 }
