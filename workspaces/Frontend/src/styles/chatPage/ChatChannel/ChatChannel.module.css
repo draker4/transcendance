@@ -65,7 +65,7 @@
 
 /* ----------------- Invite game button ----------------- */
 
-.inviteButton{
+.inviteButton {
   /* min-height: 20px; */
   /* aspect-ratio: 1 / 1; */
   color: var(--tertiary3);
@@ -97,7 +97,7 @@
   /* border: 1px solid red; */
 }
 
-.iconInviteGame{
+.iconInviteGame {
   cursor: pointer;
   width: 30px;
   height: 20px;
@@ -134,22 +134,22 @@
 }
 
 .channelMsgFrame .msgBoard::-webkit-scrollbar {
-	width: 5px;
-}
-  
-.channelMsgFrame .msgBoard::-webkit-scrollbar-track {
-	display: none;
-}
-  
-.channelMsgFrame .msgBoard::-webkit-scrollbar-thumb {
-	background-color: var(--accent1);
-	border-radius: 5px;
+  width: 5px;
 }
 
-  .channelMsgFrame .msgBoard p.placeholder {
-	color:var(--secondary1);
-	text-align: center;
-  }
+.channelMsgFrame .msgBoard::-webkit-scrollbar-track {
+  display: none;
+}
+
+.channelMsgFrame .msgBoard::-webkit-scrollbar-thumb {
+  background-color: var(--accent1);
+  border-radius: 5px;
+}
+
+.channelMsgFrame .msgBoard p.placeholder {
+  color: var(--secondary1);
+  text-align: center;
+}
 
 .channelMsgFrame .msgBoard .msgItem {
   margin-bottom: 15px;
@@ -172,7 +172,7 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  align-items:flex-start;
+  align-items: flex-start;
   padding: 0 20px;
   /* border: 1px solid red; */
 }
@@ -230,13 +230,13 @@
 
 .channelMsgFrame .msgBoard .msgItem .notifDate {
   color: var(--accent1);
-  font-size: 0.70rem;
+  font-size: 0.7rem;
   text-align: center;
 }
 
 .channelMsgFrame .msgBoard .msgItem .textSide .tsheader .date {
   color: var(--secondary1);
-  font-size: 0.70rem;
+  font-size: 0.7rem;
   flex: 1;
   /* background-color: rgb(151, 190, 107); */
 }
@@ -245,14 +245,12 @@
   min-width: 0;
 }
 
-
 .channelMsgFrame .msgBoard .msgItem .textSide .content pre {
   overflow-wrap: break-word;
   white-space: pre-wrap;
   font-family: var(--text);
   font-size: 1rem;
 }
-
 
 .flexContentMsg {
   /* border: 1px solid red; */
@@ -283,7 +281,6 @@
 }
 
 .channelMsgFrame .msgBoard .msgItem .textSide .content.serverNotif pre {
-
   font-size: 0.8rem;
   color: var(--secondary1);
 }

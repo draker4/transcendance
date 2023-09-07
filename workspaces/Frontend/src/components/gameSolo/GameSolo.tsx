@@ -78,8 +78,10 @@ export default function GameSolo({ profile, trainingId }: Props) {
   //Si la page n'est pas chargé
   if (isLoading) {
     return (
-      <div className={styles.gameLoading}>
-        <LoadingComponent />
+      <div className={styles.game}>
+        <div className={styles.gameLoading}>
+          <LoadingComponent />
+        </div>
       </div>
     );
   }

@@ -28,6 +28,7 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
             <NavbarLogInBtn />
           </div>
         </nav>
+        <div className={styles.barBottom}></div>
       </header>
     );
   }
@@ -39,28 +40,32 @@ export default function NavbarFront({ avatar, profile, token }: Props) {
           <NavbarLogo link="/welcome" />
           <div className={styles.right}>
             <Theme />
-            <NavbarLogOutBtn profile={profile}/>
+            <NavbarLogOutBtn profile={profile} />
           </div>
         </nav>
+        <div className={styles.barBottom}></div>
       </header>
     );
   }
 
-  if (!token || !profile || !profile.login || !avatar || pathName === "/home/auth/connect")
+  if (
+    !token ||
+    !profile ||
+    !profile.login ||
+    !avatar ||
+    pathName === "/home/auth/connect"
+  )
     return (
       <header>
         <nav className={styles.nav}>
           <NavbarLogo link="/home" />
-          <div>
+          <div className={styles.right}>
             <Theme />
           </div>
         </nav>
+        <div className={styles.barBottom}></div>
       </header>
     );
 
-  return <NavbarConnected
-            avatar={avatar}
-            token={token}
-            profile={profile}
-          />;
+  return <NavbarConnected avatar={avatar} token={token} profile={profile} />;
 }

@@ -1,50 +1,55 @@
-.home {
-  width: 90%;
-  min-height: 80vh;
-  margin: 0 auto;
+.lobbyPage {
   display: flex;
   flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto;
+  min-height: 80vh;
+  background: var(--primary1);
+}
+
+.lobbyFrame {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--primary2);
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+  box-shadow: inset clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
 }
 
 .loading {
-  width: 100%;
-  min-height: 50%;
-  margin-block: 20px;
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   align-items: center;
+  justify-content: flex-start;
   text-align: center;
-  font-size: 18px;
-  color: var(--primary1);
-  background-color: var(--primary3);
+  width: 100%;
+  background-color: var(--primary1);
+  border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
+  box-shadow: clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.15rem, 0.08rem + 0.15vw, 0.3rem)
+    clamp(0.2rem, 0.1rem + 0.25vw, 0.4rem) var(--shadow);
 }
 
 .lobby {
-  width: 100%;
-  min-height: 50%;
-  margin-block: 10px;
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
   align-items: center;
+  justify-content: flex-start;
   text-align: center;
-}
-
-.menu {
   width: 100%;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .content {
   width: 100%;
-  min-height: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  border-top: none;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
 }

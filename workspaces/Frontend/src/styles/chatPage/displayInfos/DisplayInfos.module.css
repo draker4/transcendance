@@ -118,11 +118,13 @@
   /* border: 1px solid red; */
 }
 
-.icon:hover, .main button:hover {
+.icon:hover,
+.main button:hover {
   scale: 1.05;
 }
 
-.icon:active, .main button:active {
+.icon:active,
+.main button:active {
   scale: 0.95;
 }
 

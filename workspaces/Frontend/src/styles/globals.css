@@ -32,10 +32,9 @@
   --accent3-light: rgb(102, 174, 223);
 
   --bubble-light: rgb(254, 254, 254);
-
   --notif-light: rgba(255, 85, 85, 1);
-
-  --achievement-light: #FCA65F;
+  --achievement-light: rgba(252, 166, 95, 1);
+  --shadow-light: rgba(67, 80, 126, 0.22);
 
   /* COLOR DEFINES - DARK*/
 
@@ -58,9 +57,9 @@
   --accent3-dark: rgb(102, 174, 223);
 
   --bubble-dark: rgb(71, 72, 85);
-
   --notif-dark: rgba(255, 85, 85, 1);
-  --achievement-dark: #FCA65F;
+  --achievement-dark: rgba(252, 166, 95, 1);
+  --shadow-dark: rgba(67, 80, 126, 0.22);
 
   /* FONT DEFINES*/
   --title-font: "Quicksand", sans-serif;
@@ -93,10 +92,9 @@
   --accent3: var(--accent3-light);
 
   --notif: var(--notif-light);
-
   --bubble: var(--bubble-light);
-
   --achievement: var(--achievement-light);
+  --shadow: var(--shadow-light);
 }
 
 [color-scheme="dark"] {
@@ -119,10 +117,9 @@
   --accent3: var(--accent3-dark);
 
   --notif: var(--notif-dark);
-
   --bubble: var(--bubble-dark);
-
   --achievement: var(--achievement-dark);
+  --shadow: var(--shadow-dark);
 }
 
 html,

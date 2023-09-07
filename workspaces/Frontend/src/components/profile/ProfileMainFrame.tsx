@@ -28,28 +28,27 @@ export default function ProfileMainFrame({
   const [login, setLogin] = useState<string>(profile.login);
   const [socket, setSocket] = useState<Socket | undefined>(undefined);
   const router = useRouter();
-  
+
   // WsException Managing
   useEffect(() => {
-
     const handleError = () => {
       setSocket(undefined);
-    }
+    };
 
-    const	disconnectClient = async () => {
-			await disconnect();
-			router.refresh();
-		}
+    const disconnectClient = async () => {
+      await disconnect();
+      router.refresh();
+    };
 
     if (!socket) {
       const intervalId = setInterval(() => {
         const chatService = new ChatService(token);
         // console.log("profile service reload here", chatService.socket?.id);
-        
-				if (chatService.disconnectClient) {
-					clearInterval(intervalId);
-					disconnectClient();
-				}
+
+        if (chatService.disconnectClient) {
+          clearInterval(intervalId);
+          disconnectClient();
+        }
 
         if (chatService.socket) {
           setSocket(chatService.socket);
@@ -62,15 +61,13 @@ export default function ProfileMainFrame({
 
     return () => {
       socket?.off("disconnect", handleError);
-    }
+    };
   }, [socket]);
 
-  
-  if (!socket)
-    return <LoadingSuspense />
+  if (!socket) return <LoadingSuspense />;
 
   return (
-		<main className={styles.main}>
+    <main className={styles.main}>
       <div className={styles.profileMainFrame}>
         <ProfileFirstPart
           login={login}

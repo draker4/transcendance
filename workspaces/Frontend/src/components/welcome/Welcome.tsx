@@ -108,7 +108,6 @@ export default function Welcome() {
           scrollTop={false}
         />
       )}
-      {/* </div> */}
     </div>
   );
 }
