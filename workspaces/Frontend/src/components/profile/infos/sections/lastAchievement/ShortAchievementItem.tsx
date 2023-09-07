@@ -46,7 +46,7 @@ export default function ShortAchievementItem({
 
   const content: number | string = achievement.value
     ? achievement.value === 1000
-      ? "1K"
+      ? "1k"
       : achievement.value
     : 0;
 

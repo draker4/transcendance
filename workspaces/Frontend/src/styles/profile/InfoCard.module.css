@@ -44,7 +44,7 @@
   justify-content: flex-start;
   align-items: center;
 
-  border: 1px solid hotpink;
+  /* border: 1px solid hotpink; */
 }
 
 .sections .leftAlign {
@@ -117,7 +117,7 @@
   width:100%;
   max-width: 800px;
 
-  border: 1px solid yellow;
+  /* border: 1px solid yellow; */
 }
 
 .sections input {
