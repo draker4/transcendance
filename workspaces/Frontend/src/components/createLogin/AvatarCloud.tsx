@@ -2,7 +2,8 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar, Badge } from "@mui/material";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import styles from "@/styles/createLogin/ChooseAvatar.module.css";
+import styles from "@/styles/uploadImage/UploadButton.module.css";
+import stylesAvatar from "@/styles/createLogin/ChooseAvatar.module.css";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 import fetchClientSide from "@/lib/fetch/fetchClientSide";
@@ -16,7 +17,7 @@ const badgeStyle = {
 	  border: "2px solid var(--accent1)",
 	  cursor: "pointer",
 	  width: "6px",
-	  right: "15px",
+	  right: "5px",
 	}
 }
 
@@ -57,7 +58,6 @@ export default function AvatarCloud({
 			isChannel: false,
 			decrypt: false,
 		});
-		console.log(text);
 
 	  	try {
 
@@ -162,7 +162,7 @@ export default function AvatarCloud({
 		>
 		  <Avatar
 			className={`${styles.avatar} ${
-				imageType.imageUrl === selectedAvatar ? styles.selected : ""
+				imageType.imageUrl === selectedAvatar ? stylesAvatar.selected : ""
 			}`}
 			src={imageType.imageUrl}
 			alt={text}
