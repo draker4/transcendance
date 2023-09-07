@@ -47,7 +47,8 @@ export default function GameStats({ profile, socket }: Props) {
         router.refresh();
         return;
       }
-      console.log(`loadStory error : ${error.message}`);
+      if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(`loadStory error : ${error.message}`);
     }
   };
 

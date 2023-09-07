@@ -70,7 +70,7 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
     };
 
     const handleLevelUp = (level: number) => {
-      toast.info(`You reached level ${level}!`, {
+      toast.success(`You reached level ${level}!`, {
         position: "top-center",
         transition: Zoom,
         autoClose: 5000,

@@ -47,7 +47,22 @@ export default function LastAchievements({
 
   useEffect(() => {
     getUserAchievements();
-  }, []);
+
+    const updateNotif = (payload: {
+      why: string;
+    }) => {
+      if (payload && payload.why && payload.why === "updateAchievements")
+        getUserAchievements();
+    };
+
+    socket?.on('achievement', getUserAchievements);
+    socket?.on('notif', updateNotif);
+
+    return () => {
+      socket?.off('achievement', getUserAchievements);
+      socket?.off('notif', updateNotif);
+    }
+  }, [socket]);
 
   const collectXP = async (achievement: UserAchievement) => {
     if (achievement.collected || !achievement.completed) return;
@@ -60,7 +75,6 @@ export default function LastAchievements({
       socket?.emit('notif', {
         why: "updateAchievements",
       });
-      await getUserAchievements();
       const res = await statsService.getShortStats(profile.id);
       if (res.success) setStats(res.data);
       toast.info(`${achievement.xp}xp collected!`);

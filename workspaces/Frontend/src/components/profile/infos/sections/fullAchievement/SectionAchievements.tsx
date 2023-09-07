@@ -66,11 +66,11 @@ export default function SectionAchievements({ profile, socket }: Props) {
         getUserAchievements();
     };
 
-    socket?.on('achievements', getUserAchievements);
+    socket?.on('achievement', getUserAchievements);
     socket?.on('notif', updateNotif);
 
     return () => {
-      socket?.off('achievements', getUserAchievements);
+      socket?.off('achievement', getUserAchievements);
       socket?.off('notif', updateNotif);
     }
   }, [socket]);
