@@ -35,7 +35,7 @@
 }
 
 .profileMainFrame .first {
-  margin-bottom: 5vw;
+  margin-bottom: 15px;
   display: flex;
   justify-content: left;
   gap: 1rem;

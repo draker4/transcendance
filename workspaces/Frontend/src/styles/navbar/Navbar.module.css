@@ -41,6 +41,14 @@
   width: clamp(160px, 12vw, 300px);
 }
 
+.rightAlone {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  width: clamp(160px, 12vw, 300px);
+}
+
 .logo {
   width: clamp(40px, 3vh, 50px);
   height: clamp(40px, 3vh, 50px);
