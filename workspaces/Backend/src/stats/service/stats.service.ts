@@ -101,7 +101,7 @@ export class StatsService {
       }
       if (result.win) {
         stats.playerXP += xp.total;
-        stats.levelUp = await this.checkLevelUp(stats);
+        stats.levelUp = await this.checkLevelUp(stats, userId);
       }
       await this.checkAchievement(stats, userId);
       return await this.statsRepository.save(stats);
@@ -163,7 +163,7 @@ export class StatsService {
         throw new Error('Stats not found');
       }
       stats.playerXP += xp;
-      stats.levelUp = await this.checkLevelUp(stats);
+      stats.levelUp = await this.checkLevelUp(stats, userId);
       await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -684,7 +684,7 @@ export class StatsService {
     }
   }
 
-  private async checkLevelUp(stats: Stats): Promise<boolean> {
+  private async checkLevelUp(stats: Stats, userId: number): Promise<boolean> {
     try {
       const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
         stats.level,
@@ -697,23 +697,24 @@ export class StatsService {
           userId: stats.userId.toString(),
           level: stats.level,
         });
-        switch (stats.level) {
-          case 2 ||
-            5 ||
-            10 ||
-            20 ||
-            30 ||
-            40 ||
-            50 ||
-            60 ||
-            70 ||
-            80 ||
-            90 ||
-            100:
-            await this.achievementService.achievementCompleted(stats.userId, {
-              code: `LEVEL_${stats.level}`,
-            });
-            break;
+        const level = stats.level;
+        if (
+          level === 2 ||
+          level === 5 ||
+          level === 10 ||
+          level === 20 ||
+          level === 30 ||
+          level === 40 ||
+          level === 50 ||
+          level === 60 ||
+          level === 70 ||
+          level === 80 ||
+          level === 90 ||
+          level === 100
+        ) {
+          await this.achievementService.achievementCompleted(userId, {
+            code: `LEVEL_${level}`,
+          });
         }
         return true;
       }
