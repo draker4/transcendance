@@ -1,7 +1,7 @@
 .homeProfil {
   display: flex;
   flex-flow: row wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: space-evenly;
   width: 100%;
   background-color: var(--primary1);
