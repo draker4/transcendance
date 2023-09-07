@@ -2,6 +2,7 @@
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   overflow-x: auto;
   white-space: nowrap;
@@ -114,7 +115,7 @@
   margin-bottom: 0;
   padding-left: 0;
 
-  width:100%;
+  width: 100%;
   max-width: 800px;
 
   /* border: 1px solid yellow; */
@@ -131,7 +132,7 @@
 }
 
 .sections .story {
-  width:100%;
+  width: 100%;
   max-width: 800px;
 }
 
@@ -139,7 +140,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width:100%;
+  width: 100%;
   max-width: 800px;
 
   /* border: 1px dashed hotpink; */
@@ -346,12 +347,16 @@
   font-size: 1rem;
 }
 
-
 /* ----------------------------------- */
 
-@media (min-width: 80rem) {
+@media (min-width: 50rem) {
+  .navbar {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 66rem) {
   .navbar {
     justify-content: center;
   }
- 
 }

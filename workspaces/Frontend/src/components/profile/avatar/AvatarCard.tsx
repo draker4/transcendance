@@ -61,13 +61,12 @@ export default function AvatarCard({
     if (!isOwner) return;
 
     try {
-
       console.log(avatarCustomed);
 
       const rep = await avatarService.submitAvatarUser(
         avatarCustomed,
         topColor as string,
-        botColor as string,
+        botColor as string
       );
 
       if (!rep.success) throw new Error(rep.message);
@@ -84,17 +83,17 @@ export default function AvatarCard({
         why: "updateProfile",
       });
     } catch (e: any) {
-      if (e.message === 'disconnect') {
+      if (e.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
       toast.error("Something went wrong, please try again!");
     }
   };
 
   const colorAddedStyle: CSSProperties = {
-    background: `linear-gradient(to bottom, ${topColor.toString()} 60%, var(--primary1) 40%)`,
+    background: `linear-gradient(to bottom, ${topColor.toString()} 67.5%, var(--primary1) 33%)`,
   };
 
   const previewChangeTopColor = (color: string) => {
@@ -202,7 +201,7 @@ export default function AvatarCard({
         if (err.message === "disconnect") {
           await disconnect();
           router.refresh();
-          return ;
+          return;
         }
         console.log(err.message);
       }
