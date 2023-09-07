@@ -53,7 +53,7 @@ export class MessagesService {
     const gray = '\x1b[90m';
     const stop = '\x1b[0m';
 
-    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+    if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(gray + '[MessageService]  ' + stop);
     console.log(message);

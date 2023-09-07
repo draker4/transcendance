@@ -2268,7 +2268,7 @@ export class ChatService {
     const green = '\x1b[32m';
     const stop = '\x1b[0m';
 
-    if (!process.env && !process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT !== "dev") return;
+    if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev") return;
 
     process.stdout.write(green + '[chat service]  ' + stop);
     console.log(message);
