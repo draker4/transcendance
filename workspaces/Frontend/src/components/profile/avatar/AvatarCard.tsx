@@ -25,8 +25,6 @@ type Props = {
   avatars: Avatar[];
 };
 
-const Crypto = new CryptoService();
-
 export default function AvatarCard({
   login,
   isOwner,
@@ -63,10 +61,11 @@ export default function AvatarCard({
     if (!isOwner) return;
 
     try {
-      let image = avatarCustomed.image;
+
+      console.log(avatarCustomed);
 
       const rep = await avatarService.submitAvatarUser(
-        { ...avatarCustomed, image },
+        avatarCustomed,
         topColor as string,
         botColor as string,
       );

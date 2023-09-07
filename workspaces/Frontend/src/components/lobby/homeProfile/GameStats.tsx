@@ -114,6 +114,7 @@ export default function GameStats({ profile, socket }: Props) {
               profile={profile}
               setStats={setStats}
               statsService={statsService}
+              socket={socket}
             />
           </div>
         </div>
