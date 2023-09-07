@@ -6,7 +6,7 @@ import styles from "@/styles/lobby/Lobby.module.css";
 import Profile_Service from "@/services/Profile.service";
 import Avatar_Service from "@/services/Avatar.service";
 import HomeClient from "./HomeClient";
-import ErrorComponent from "../error/ServerError";
+import ServerError from "../error/ServerError";
 
 export default async function HomeServer() {
   let token: string;
@@ -48,13 +48,7 @@ export default async function HomeServer() {
     avatar = await Avatar.getAvatarbyUserId(profile.id);
   } catch (error: any) {
     console.log(error.message);
-    return (
-      <div className={styles.lobbyPage}>
-        <div className={styles.lobbyFrame}>
-          <ErrorComponent />
-        </div>
-      </div>
-    );
+    return <ServerError />;
   }
 
   return (
