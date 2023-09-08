@@ -16,18 +16,10 @@ const badgeStyleRight = {
 	  backgroundColor: 'var(--primary1)',
 	  border: "2px solid var(--accent1)",
 	  cursor: "pointer",
-	  width: "6px",
-	  right: "5px",
-	}
-}
-
-const badgeStyleLeft = {
-	"& .MuiBadge-badge": {
-		color: 'var(--tertiary1)',
-		backgroundColor: 'var(--primary1)',
-		border: "2px solid var(--accent1)",
-		cursor: "pointer",
-		width: "6px",
+	  width: "30%",
+	  height: "30%",
+	  top: "1px",
+	  borderRadius: "100%",
 	}
 }
 
@@ -235,6 +227,7 @@ export default function UploadButton({
 				<Badge badgeContent={
 					<FontAwesomeIcon
 						icon={faCheck}
+						className={styles.icon}
 					/>} sx={badgeStyleRight}
 					overlap="circular"
 					anchorOrigin={{
@@ -251,7 +244,8 @@ export default function UploadButton({
 					<Badge badgeContent={
 						<FontAwesomeIcon
 							icon={faXmark}
-						/>} sx={badgeStyleLeft}
+							className={styles.icon}
+						/>}
 						overlap="circular"
 						anchorOrigin={{
 							vertical: 'top',

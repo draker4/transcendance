@@ -16,8 +16,10 @@ const badgeStyle = {
 	  backgroundColor: 'var(--primary1)',
 	  border: "2px solid var(--accent1)",
 	  cursor: "pointer",
-	  width: "6px",
-	  right: "5px",
+	  width: "30%",
+	  height: "30%",
+	  top: "1px",
+	  borderRadius: "100%",
 	}
 }
 
@@ -147,6 +149,7 @@ export default function AvatarCloud({
 		<Badge badgeContent={
 		  <FontAwesomeIcon
 			icon={faTrash}
+			className={styles.icon}
 		  />} sx={badgeStyle}
 		  overlap="circular"
 		  anchorOrigin={{
