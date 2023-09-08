@@ -13,9 +13,10 @@
    C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
  - [!] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
 
-> Pour qui veut s'en charger
+> Pour qui veut s'en charger ou pour tous
  - [~] Affichage bouton "log out" sur une ligne au lieu de deux
  - [!] Se renseigner sur commment creer la db sans passer par le synchronize a switch
+ - [!] Nettoyer ou n'afficher qu'en build tous les consoles.log
 
 > Bperriol
  - [ ] CSS du badge a agrandir
