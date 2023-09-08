@@ -7,12 +7,12 @@ import ServerError from "@/components/error/ServerError";
 
 export default async function SignUpPage() {
   if (
-    !process.env.ENVIRONNEMENT ||
+    !process.env.ENVIRONNEMENT || !process.env.HOST_IP ||
     (process.env.ENVIRONNEMENT !== "dev" &&
       process.env.ENVIRONNEMENT !== "build")
   )
     return <ServerError />;
-  else if (process.env.ENVIRONNEMENT === "dev")
+  else if (process.env.ENVIRONNEMENT === "dev" && process.env.HOST_IP === "localhost")
     return (
       <>
         <Refresher />
