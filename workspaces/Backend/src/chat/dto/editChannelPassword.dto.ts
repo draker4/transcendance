@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class editChannelPasswordDto {
   @IsNumber()
@@ -8,4 +14,8 @@ export class editChannelPasswordDto {
   @IsString()
   @Length(0, 20)
   password: string;
+
+  @IsString()
+  @IsOptional()
+  source?: string;
 }

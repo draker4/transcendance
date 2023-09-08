@@ -515,14 +515,14 @@ export class ChatGateway implements OnModuleInit {
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getMessages')
   async getMessages(@MessageBody() payload: channelIdDto, @Req() req) {
-    return await this.chatService.getMessages(payload.id, req.user.id);
+    return await this.chatService.getMessages(payload.channelId, req.user.id);
   }
 
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('getChannelName')
   async getChannelName(@MessageBody() payload: channelIdDto) {
-    this.log(`'getChannelName' event, with channelId: ${payload.id}`);
-    const channel: Channel = await this.chatService.getChannelById(payload.id);
+    this.log(`'getChannelName' event, with channelId: ${payload.channelId}`);
+    const channel: Channel = await this.chatService.getChannelById(payload.channelId);
     return {
       success: channel ? true : false,
       message: channel ? channel.name : '',
@@ -628,7 +628,7 @@ export class ChatGateway implements OnModuleInit {
     try {
       const repJoin = await this.channelService.forceJoinPrivateMsgChannel(
         req.user.id,
-        payload.id,
+        payload.channelId,
         this.connectedUsers,
       );
       if (!repJoin.success) {
@@ -771,6 +771,19 @@ export class ChatGateway implements OnModuleInit {
     }
 
     return rep;
+  }
+
+  @SubscribeMessage('isUserInChannel')
+  async isUserInChannel(@Request() req, @MessageBody() payload: channelIdDto) {
+    try {
+      this.log(`isUserInChannel called by user[${req.user.id}] with channelId[${payload.channelId}]`);
+      const isInto = await this.channelService.isUserInChannel(req.user.id, payload.channelId);
+      this.log(`isInto = ${isInto}`);
+      return isInto;
+    } catch (e: any) {
+      this.log(`isUserInChannel error : ${e.message}`);
+      return false;
+    }
   }
 
   // tools

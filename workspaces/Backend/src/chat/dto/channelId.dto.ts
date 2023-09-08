@@ -1,7 +1,11 @@
-import { IsNotEmpty, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class channelIdDto {
   @IsNumber()
   @IsNotEmpty()
-  id: number;
+  channelId: number;
+
+  @IsString()
+  @IsOptional()
+  source?: string;
 }
