@@ -39,6 +39,7 @@ devip	:
 	@make write-env-ip
 	@make write-env-dev
 	@make start
+	@echo "ipAddress: $(HOST_IP)"
 
 start :
 	@echo "----Starting all Docker----"
