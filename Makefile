@@ -3,6 +3,8 @@
 DOCKER_COMPOSE = docker compose
 DOCKER_COMPOSE_FILE = ./docker-compose.yml
 ENV_FILE = .env
+BUILD=build
+DEV=dev
 
 .phony : start down re clean log reback refront redata rebuild cleandata rmvolumes
 
@@ -16,6 +18,8 @@ export HOST_IP
 all : start
 
 ip	: write-env-ip start ipAddress
+
+dev	: write-env-dev start
 
 start :
 	@echo "----Starting all Docker----"
@@ -58,7 +62,7 @@ rmNetwork :
 	fi
 	@echo "----All Networks deleted-----"
 
-clean : down write-env-localhost
+clean : down write-env-localhost write-env-build
 	@echo "----Cleaning all Docker----"
 	@containers=$$(docker ps -qa); \
 	if [ "$$containers" ]; then \
@@ -95,7 +99,9 @@ redata :
 	@echo "----Restarting Database----"
 	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) restart database
 
-re : clean start
+re : clean all
+
+redev : clean dev
 
 ipAddress:
 	@echo "Host IP: $(HOST_IP)"
@@ -132,6 +138,33 @@ write-env-localhost:
 		echo "Created IP address in $(ENV_FILE) file"; \
 	fi
 
+write-env-dev:
+	@if [ -f $(ENV_FILE) ]; then \
+		if grep -q "ENVIRONNEMENT=" $(ENV_FILE); then \
+			grep -v "ENVIRONNEMENT=" $(ENV_FILE) > $(ENV_FILE).tmp; \
+			mv $(ENV_FILE).tmp $(ENV_FILE); \
+		fi; \
+		echo "ENVIRONNEMENT=$(DEV)" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		echo "Updated ENVIRONNEMENT to $(DEV) in $(ENV_FILE) file"; \
+	else \
+		echo "ENVIRONNEMENT=$(DEV)" >> $(ENV_FILE); \
+		echo "Created ENVIRONNEMENT=$(DEV) in $(ENV_FILE) file"; \
+	fi
+
+write-env-build:
+	@if [ -f $(ENV_FILE) ]; then \
+		if grep -q "ENVIRONNEMENT=" $(ENV_FILE); then \
+			grep -v "ENVIRONNEMENT=" $(ENV_FILE) > $(ENV_FILE).tmp; \
+			mv $(ENV_FILE).tmp $(ENV_FILE); \
+		fi; \
+		echo "ENVIRONNEMENT=$(BUILD)" | cat - $(ENV_FILE) > $(ENV_FILE).tmp; \
+		mv $(ENV_FILE).tmp $(ENV_FILE); \
+		echo "Updated ENVIRONNEMENT to $(BUILD) in $(ENV_FILE) file"; \
+	else \
+		echo "ENVIRONNEMENT=$(BUILD)" >> $(ENV_FILE); \
+		echo "Created ENVIRONNEMENT=$(BUILD) in $(ENV_FILE) file"; \
+	fi
 
 install-deps:
 	@echo "----Downloading Project Dependencies----"
