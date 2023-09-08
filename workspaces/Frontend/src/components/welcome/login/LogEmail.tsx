@@ -93,7 +93,8 @@ export default function LogEmail({
 
     try {
       
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev"
+        && process.env.HOST_IP && process.env.HOST_IP === "localhost")
         await handleCaptcha();
 
       // if user has forgotten his password
