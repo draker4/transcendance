@@ -15,4 +15,8 @@ export class newMsgDto {
   @IsOptional()
   @IsBoolean()
   join?: boolean;
+
+  @IsString()
+  @IsOptional()
+  source?: string;
 }

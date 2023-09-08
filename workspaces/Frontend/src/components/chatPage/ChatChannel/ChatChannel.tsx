@@ -51,7 +51,8 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   const router = useRouter();
 
   const getMessages = () => {
-    socket?.emit( "getMessages", {id : channel.id},
+
+    socket?.emit("getMessages", {channelId : channel.id, source:"getMessages"},
       (response: LoadMsg[]) => {
         const previousMsg: Message[] = [];
 
@@ -70,7 +71,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         });
 
     if (channel.type === "privateMsg") {
-      socket?.emit("getChannelName", {id : channel.id}, (response: Rep) => {
+      socket?.emit("getChannelName", {channelId : channel.id, source:"getChannelName"}, (response: Rep) => {
         if (response.success) {
           setCodename(response.message);
         }
@@ -81,9 +82,28 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     );
   }
 
-  useEffect(() => {
+  const checkThenGetMessages = async () => {
+    try {
+      const isInto = await isUserstillInChannel();
+      if (isInto) {
+        getMessages();
+      }
+    } catch (error:any) {
+      if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
+        console.error("checkThenGetMessages error :", error.message);
+    }
+  }
 
-    getMessages();
+  const isUserstillInChannel = (): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
+      socket?.emit("isUserInChannel", { channelId: channel.id, source: "isUserInChannel" }, (isInto: boolean) => {
+        resolve(isInto);
+      });
+    });
+  };
+
+  useEffect(() => {
+    checkThenGetMessages();
 
   }, [channel, socket]);
 
@@ -130,7 +150,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     }
 
     // update messages (banned or not)
-    getMessages();
+    checkThenGetMessages();
   }
 
   useEffect(() => {
@@ -187,13 +207,14 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
       socket?.emit('getChannelId', msg.opponentId, (payload: number) => {
         if (payload) {
           socket?.emit("forceJoinPrivateMsgChannel", 
-          {id: payload},
+          {channelId: payload, source:"forceJoinPrivateMsgChannel"},
           (rep:ReturnData) => {
             if (rep.success) {
                 socket?.emit("newMsg", {
                   content: msg.content,
                   channelId: payload,
                   join: msg.join ? true : undefined,
+                  source: "newMsg",
                 });
               } else {
                 toast.error("Something went wrong, please try again!");
@@ -207,13 +228,14 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {
     socket?.emit("forceJoinPrivateMsgChannel", 
-      {id:channel.id},
+      {channelId:channel.id, source:"forceJoinPrivateMsgChannel"},
       (rep:ReturnData) => {
         if (rep.success) {
             socket?.emit("newMsg", {
               content: msg.content,
               channelId: channel.id,
               join: msg.join ? true : undefined,
+              source: "newMsg",
             });
           } else {
             toast.error("Something went wrong, please try again!");
@@ -224,6 +246,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
       content: msg.content,
       channelId: channel.id,
       join: msg.join ? true : undefined,
+      source: "newMsg",
     });
   }
   };

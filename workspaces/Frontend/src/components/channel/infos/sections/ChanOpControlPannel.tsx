@@ -73,11 +73,11 @@ export default function ChanOpControlPannel({
 
   const sendUpdates = async (options: UpdateOptions) => {
     const {
-	  isBoss = undefined,
+      isBoss = undefined,
       isChanOp = undefined,
       joined = undefined,
       isBanned = undefined,
-	  muted = undefined,
+      muted = undefined,
       invited = undefined,
     } = options;
     const rep = await channelService.editRelation(channelId, relation.userId, {
@@ -86,20 +86,20 @@ export default function ChanOpControlPannel({
       joined,
       isBanned,
       invited,
-	  muted
+      muted
     });
     if (rep.success) {
       options.onSuccess();
 
-	  socket?.emit("editRelation", {
+    socket?.emit("editRelation", {
       channelId: channelId,
       newRelation: {
-		isBoss : options.isBoss,
+        isBoss : options.isBoss,
         isChanOp : options.isChanOp,
         joined : options.joined,
         isBanned : options.isBanned,
         invited : options.invited,
-		muted : options.muted,
+        muted : options.muted,
       },
       userId: relation.userId,
     });
