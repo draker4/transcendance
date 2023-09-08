@@ -15,11 +15,17 @@ export HOST_IP
 
 # *********************************** RULES ********************************** #
 
-all : start
+all : 
+	@echo "----Starting Production Servers----"
+	@make write-env-build
+	@make start
 
 ip	: write-env-ip start ipAddress
 
-dev	: write-env-dev start
+dev	: 
+	@echo "----Starting Development Servers----"
+	@make write-env-dev
+	@make start
 
 start :
 	@echo "----Starting all Docker----"
