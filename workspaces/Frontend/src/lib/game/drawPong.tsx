@@ -6,7 +6,6 @@ import {
   Timer,
 } from "@transcendence/shared/types/Game.types";
 import {
-  FONT_MENU,
   PLAYER_WIDTH,
   PLAYER_HEIGHT,
   FONT_SCORE,
@@ -15,6 +14,7 @@ import {
   FONT_TIMER,
   FONT_ROUND,
   MAX_PAUSE,
+  BALL_SIZE,
 } from "@transcendence/shared/constants/Game.constants";
 import {
   COLOR_MENU,
@@ -82,7 +82,9 @@ function drawBall(gameData: GameData, draw: Draw) {
   draw.context.drawImage(
     draw.ballImage,
     gameData.ball.posX,
-    gameData.ball.posY
+    gameData.ball.posY,
+    BALL_SIZE,
+    BALL_SIZE
   );
 }
 
@@ -222,40 +224,6 @@ function applyBlurEffect(draw: Draw) {
   draw.context.fillRect(0, 0, draw.canvas.width, draw.canvas.height);
 }
 
-// function startingMenu(gameData: GameData, draw: Draw) {
-//   applyBlurEffect(draw);
-//   const { r, g, b, a } = COLOR_FONT;
-//   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-//   draw.context.font = FONT_MENU;
-//   draw.context.textAlign = "center";
-//   draw.context.fillText(
-//     "Waiting for Player",
-//     draw.canvas.width / 2,
-//     draw.canvas.height / 2 + 10
-//   );
-// }
-
-// function finishedMenu(gameData: GameData, draw: Draw) {
-//   applyBlurEffect(draw);
-//   const { r, g, b, a } = COLOR_FONT;
-//   draw.context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
-//   draw.context.font = FONT_MENU;
-//   draw.context.textAlign = "center";
-//   let winner = "Error";
-//   if (gameData.result === "Host") {
-//     if (gameData.hostSide === "Left") winner = gameData.playerLeft.name;
-//     else winner = gameData.playerRight.name;
-//   } else if (gameData.result === "Opponent") {
-//     if (gameData.hostSide === "Left") winner = gameData.playerRight.name;
-//     else winner = gameData.playerLeft.name;
-//   }
-//   draw.context.fillText(
-//     `${winner} has won!`,
-//     draw.canvas.width / 2,
-//     draw.canvas.height / 2 + 10
-//   );
-// }
-
 function drawTimer(
   timer: Timer,
   draw: Draw,
@@ -342,8 +310,4 @@ export function drawPong(gameData: GameData, draw: Draw) {
       gameData.actualRound + 1,
       gameData.background
     );
-
-  // Draw the menu
-  // if (gameData.status === "Not Started") startingMenu(gameData, draw);
-  // if (gameData.status === "Finished") finishedMenu(gameData, draw);
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not, Repository } from 'typeorm';
@@ -13,6 +13,7 @@ import {
   confirmBackground,
   confirmBall,
 } from '@transcendence/shared/game/random';
+import { UsersService } from '@/users/service/users.service';
 
 @Injectable()
 export class MatchmakingService {
@@ -21,6 +22,8 @@ export class MatchmakingService {
     private readonly matchmakingRepository: Repository<Matchmaking>,
 
     private readonly gameService: GameService,
+    @Inject(forwardRef(() => UsersService))
+    private readonly userService: UsersService,
   ) {}
 
   public async createMatchmaking(
@@ -114,10 +117,14 @@ export class MatchmakingService {
         sameSearch.sort(
           (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
         );
-        this.stopSearch(sameSearch[0].userId);
-        this.stopSearch(userId);
+        await this.stopSearch(sameSearch[0].userId);
+        await this.stopSearch(userId);
+        const host = await this.userService.getUserById(search.userId);
+        const opponent = await this.userService.getUserById(
+          sameSearch[0].userId,
+        );
         const game: CreateGameDTO = {
-          name: `${search.userId} vs ${sameSearch[0].userId}`,
+          name: `${host.login} vs ${opponent.login}`,
           type: search.type,
           mode: 'League',
           host: search.userId,

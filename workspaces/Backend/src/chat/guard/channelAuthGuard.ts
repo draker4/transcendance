@@ -1,16 +1,15 @@
 /* eslint-disable prettier/prettier */
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
 import { ChannelService } from '@/channels/service/channel.service';
 
 type Required = {
   channelId: number;
+  source?: string;
 };
 
 @Injectable()
 export class ChannelAuthGuard implements CanActivate {
   constructor(
-    private readonly reflector: Reflector,
     private readonly channelService: ChannelService,
   ) {}
 
@@ -27,7 +26,13 @@ export class ChannelAuthGuard implements CanActivate {
       channelId,
     );
 
-    if (!isAllowed) this.log(`user[${userId}] not into channel[${channelId}]`);
+    const endpoint = message.source ? message.source : 'unknown';
+
+    if (!isAllowed) {
+      this.log(`endpoint[${endpoint}] => user[${userId}] not into channel[${channelId}]`);
+    } else {
+      this.log(`endpoint[${endpoint}] => user[${userId}] into channel[${channelId}]`);
+    }
 
     return isAllowed;
   }

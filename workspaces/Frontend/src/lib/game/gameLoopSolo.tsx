@@ -5,6 +5,7 @@ import {
   TIMER_RESTART,
   TIMER_PAUSE,
   FRONT_FPS,
+  BACK_FPS,
 } from "@transcendence/shared/constants/Game.constants";
 import { updatePong } from "@transcendence/shared/game/updatePong";
 import {
@@ -74,7 +75,7 @@ export const gameLoop = (
   const elapsedTime = timestamp - lastTimestampRef.current;
   frameCountRef.current++;
   const updatedGame = { ...game };
-  if (elapsedTime >= FRONT_FPS) {
+  if (elapsedTime >= BACK_FPS) {
     if (updatedGame.status === "Playing") {
       updatePong(updatedGame);
       if (updatedGame.updateScore) {
