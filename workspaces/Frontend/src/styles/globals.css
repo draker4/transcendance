@@ -128,6 +128,8 @@ body {
   color: var(--tertiary1);
   font-family: var(--text-font);
   width: 100%;
+  max-width: 2500px;
+  margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
