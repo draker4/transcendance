@@ -45,7 +45,6 @@ export default function Header({
   };
 
   useEffect(() => {
-    console.log("here useeffect", status, channel.statusPongieId);
     if (
       status &&
       status.size > 0 &&

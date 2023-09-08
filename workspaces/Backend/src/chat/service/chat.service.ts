@@ -392,6 +392,7 @@ export class ChatService {
     try {
       const user = await this.usersService.getUserChannels(userId);
       const channel = await this.channelService.getChannelById(channelId);
+      let   pongieId: number = 0;
 
       if (!user) throw new Error('no channel or user found');
 
@@ -430,31 +431,22 @@ export class ChatService {
 
         if (ids.length !== 2) throw new Error('error in channel name');
 
-        if (ids[0] === userId.toString()) {
-          const pongie = await this.usersService.getUserAvatar(
-            parseInt(ids[1]),
+        if (ids[0] === userId.toString())
+          pongieId = parseInt(ids[1]);
+        else
+          pongieId = parseInt(ids[0]);
+
+        const pongie = await this.usersService.getUserAvatar(
+          pongieId,
+        );
+
+        if (pongie.avatar.decrypt)
+          pongie.avatar.image = await this.cryptoService.decrypt(
+            pongie.avatar.image,
           );
 
-          if (pongie.avatar.decrypt)
-            pongie.avatar.image = await this.cryptoService.decrypt(
-              pongie.avatar.image,
-            );
-
-          channel.avatar = pongie.avatar;
-          channel.name = pongie.login;
-        } else {
-          const pongie = await this.usersService.getUserAvatar(
-            parseInt(ids[0]),
-          );
-
-          if (pongie.avatar.decrypt)
-            pongie.avatar.image = await this.cryptoService.decrypt(
-              pongie.avatar.image,
-            );
-
-          channel.avatar = pongie.avatar;
-          channel.name = pongie.login;
-        }
+        channel.avatar = pongie.avatar;
+        channel.name = pongie.login;
       }
 
       if (!relation.joined && channel.type === 'private')
@@ -525,6 +517,7 @@ export class ChatService {
         invited: relation.invited,
         isChanOp: relation.isChanOp,
         muted: relation.muted,
+        statusPongieId: pongieId,
       };
 
       return {
