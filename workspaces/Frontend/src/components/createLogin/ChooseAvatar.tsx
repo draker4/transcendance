@@ -103,8 +103,8 @@ export default function ChooseAvatar({
             })
           }
           sx={{
-            width: 80,
-            height: 80,
+            width: 'clamp(60px, 8vh, 150px)',
+            height: 'clamp(60px, 8vh, 150px)',
             border: `4px solid ${colorBorder}`,
             backgroundColor: `${backgroundColor}`,
           }}
@@ -132,8 +132,8 @@ export default function ChooseAvatar({
             })
           }
           sx={{
-            width: 80,
-            height: 80,
+            width: 'clamp(60px, 8vh, 150px)',
+            height: 'clamp(60px, 8vh, 150px)',
             border: `4px solid ${colorBorder}`,
             backgroundColor: `${backgroundColor}`,
             fontSize: fontSize,
@@ -165,8 +165,8 @@ export default function ChooseAvatar({
                 })
               }
               sx={{
-                width: 80,
-                height: 80,
+                width: 'clamp(60px, 8vh, 150px)',
+                height: 'clamp(60px, 8vh, 150px)',
                 border: `4px solid ${colorBorder}`,
                 backgroundColor: `${backgroundColor}`,
               }}
@@ -196,8 +196,8 @@ export default function ChooseAvatar({
                 })
               }
               sx={{
-                width: 80,
-                height: 80,
+                width: 'clamp(60px, 8vh, 150px)',
+                height: 'clamp(60px, 8vh, 150px)',
                 border: `4px solid ${colorBorder}`,
                 backgroundColor: `${backgroundColor}`,
               }}

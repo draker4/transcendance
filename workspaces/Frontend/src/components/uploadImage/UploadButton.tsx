@@ -268,8 +268,8 @@ export default function UploadButton({
 						variant="circular"
 						sizes="cover"
 						sx={{
-							width: 80,
-							height: 80,
+							width: 'clamp(60px, 8vh, 150px)',
+							height: 'clamp(60px, 8vh, 150px)',
 							border: `4px solid ${borderColor}`,
 							backgroundColor: {backgroundColor},
 						}}

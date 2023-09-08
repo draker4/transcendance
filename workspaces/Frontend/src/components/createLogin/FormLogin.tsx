@@ -181,7 +181,7 @@ export default function FormLogin({
                 type="text"
                 name="login"
                 placeholder="login"
-                maxLength={10}
+                maxLength={20}
                 value={text}
                 onChange={handleText}
                 className={styles.login}

@@ -24,12 +24,9 @@
 
 .avatar {
   flex: 0 0 auto;
-  width: clamp(60px, 8vh, 150px);
-  height: clamp(60px, 8vh, 150px);
   margin: 0px 10px;
   margin-top: 5px;
   border-radius: 100%;
-  /* border: 1px solid blue; */
   display: flex;
   justify-content: center;
   align-items: center;

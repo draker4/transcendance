@@ -181,10 +181,10 @@ export default function AvatarCloud({
 			  })
 			}
 			sx={{
-			  width: 80,
-			  height: 80,
-			  border: `4px solid ${colorBorder}`,
-			  backgroundColor: `${backgroundColor}`,
+				width: 'clamp(60px, 8vh, 150px)',
+				height: 'clamp(60px, 8vh, 150px)',
+				border: `4px solid ${colorBorder}`,
+				backgroundColor: `${backgroundColor}`,
 			}}
 		  />
 		</Badge>
