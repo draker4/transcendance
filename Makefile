@@ -6,7 +6,7 @@ ENV_FILE = .env
 BUILD=build
 DEV=dev
 
-.phony : all local dev start down rmvolume rmNodeModules rmNetwork clean fclean refront reback redata re relocal redev ipAddress write-env-ip write-env-localhost write-env-dev write-env-build install-deps
+.phony : all local dev devip start down rmvolume rmNodeModules rmNetwork clean fclean refront reback redata re relocal redev redevip ipAddress write-env-ip write-env-localhost write-env-dev write-env-build install-deps
 
 # ******************************** IP ADDRESS ******************************** #
 
@@ -16,21 +16,27 @@ export HOST_IP
 # *********************************** RULES ********************************** #
 
 all : 
-	@echo "----Starting Production Servers----"
+	@echo "----Starting Production Servers with IP----"
 	@make write-env-ip
 	@make write-env-build
 	@make start
 	@echo "ipAddress: $(HOST_IP)"
 
 local	: 
-	@echo "----Starting Production Servers----"
+	@echo "----Starting Production Servers in Localhost----"
 	@make write-env-localhost
 	@make write-env-build
 	@make start
 
 dev	: 
-	@echo "----Starting Development Servers----"
+	@echo "----Starting Development Servers in Localhost----"
 	@make write-env-localhost
+	@make write-env-dev
+	@make start
+
+devip	: 
+	@echo "----Starting Development Servers with IP----"
+	@make write-env-ip
 	@make write-env-dev
 	@make start
 
@@ -117,6 +123,8 @@ re : clean all
 relocal : clean local
 
 redev : clean dev
+
+redevip : clean devip
 
 ipAddress:
 	@echo "Host IP: $(HOST_IP)"
