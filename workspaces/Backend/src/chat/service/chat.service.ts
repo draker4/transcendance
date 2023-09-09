@@ -2061,7 +2061,52 @@ export class ChatService {
       }
       server.to('channel:' + channelId).emit('notifMsg');
     } catch (error) {
-      console.log(error);
+      this.log(`receiveNewMsgNotif error : ${error.message}`);
+    }
+  }
+
+  private async receiveChannelInvitationNotif(
+    channelId: number,
+    userId: number,
+    server: Server,
+  ) {
+    try {
+      const relations = await this.userChannelRelation.find({
+        where: {
+          channelId: channelId,
+          userId: userId,
+          joined: false,
+          isBanned: false,
+          invited: true,
+        },
+        relations: ['user', 'user.notif'],
+      });
+
+      if (relations.length >= 1) {
+        for (const relation of relations) {
+
+          const notifMessages = relation.user.notif.notifMessages.find(
+            (notif) => notif.channelId === channelId,
+          );
+
+          if (notifMessages) {
+            await this.notifMessagesRepository.update(notifMessages.id, {
+              nbMessages: notifMessages.nbMessages + 1,
+            });
+          } else {
+            const notifMessage = new NotifMessages();
+
+            notifMessage.channelId = channelId;
+            notifMessage.nbMessages = 1;
+            notifMessage.notif = relation.user.notif;
+
+            await this.notifMessagesRepository.save(notifMessage);
+          }
+        }
+      }
+
+    } catch (error) {
+      this.log(`receiveChannelInvitationNotif error : ${error.message}`);
     }
   }
 
@@ -2076,7 +2121,7 @@ export class ChatService {
   }
 
   async sendEditRelationNotif(
-    infos: EditChannelRelationDto & { server: Server; from: number },
+    infos: EditChannelRelationDto & { server: Server; from: number, connectedUsers: Map<Socket, string> },
   ): Promise<ReturnData> {
     const rep: ReturnData = {
       success: false,
@@ -2084,9 +2129,43 @@ export class ChatService {
     };
 
     try {
+
       const content: string = await this.makeEditRelationNotifContent(infos);
       await this.sendServerNotifMsg(infos.channelId, content, infos.server);
+
       rep.success = true;
+
+      if (infos.newRelation.invited && infos.newRelation.invited === true) {
+
+        rep.success = false;
+
+        const user = await this.usersService.getUserById(infos.userId);
+        if (!user) throw new Error("can't find the user");
+
+
+        // Create a notif beetween the target user and the channel where he is invited
+        await this.receiveChannelInvitationNotif(infos.channelId, infos.userId, infos.server);
+
+        // Get socket to emit a refresh channel + notifMessage
+        const userSockets: Socket[] = [];
+
+        for (const [key, val] of infos.connectedUsers) {
+           if (val === infos.userId.toString()) userSockets.push(key);
+        }
+
+        if (userSockets.length >= 1) {
+          for (const socket of userSockets) {
+            infos.server.to(socket.id).emit('notif', {
+              why: 'updateChannels',
+            });
+
+            infos.server.to(socket.id).emit('notifMsg');
+          }
+        }
+
+        rep.success = true;
+
+      }
     } catch (e) {
       rep.error = e;
       rep.message = e.message;
@@ -2165,7 +2244,7 @@ export class ChatService {
   }
 
   async makeEditRelationNotifContent(
-    infos: EditChannelRelationDto & { server: Server; from: number },
+    infos: EditChannelRelationDto & { server: Server; from: number, connectedUsers: Map<Socket, string> },
   ) {
     let content: string = '';
     let needEnd: boolean = true;

@@ -6,17 +6,25 @@
 <br/>
 [ ] : a faire |
 <br/>
+[+] : bonus |
+<br/>
 [x] : fait
 <br/>
+
+
 > Game
  - [ ] 2 onglet log sur le meme compte en partie league contre un autre joueur -> un onglet qui quitte proc deco + errorReact? (le joueur a un seul onglet quitte c'est ok)
    C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
  - [!] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
 
+
+
 > Pour qui veut s'en charger ou pour tous
  - [~] Affichage bouton "log out" sur une ligne au lieu de deux
  - [!] Se renseigner sur commment creer la db sans passer par le synchronize a switch
  - [!] Nettoyer ou n'afficher qu'en build tous les consoles.log
+
+
 
 > Bperriol
  - [ ] CSS du badge a agrandir
@@ -29,7 +37,17 @@
  - [~] empecher de pouvoir spam l'invitation pongie (toast en boucle)
  - [~] invite pongies de Party
  - [~] chercher un nom de channel, lorsque test est privee et qu'on ecrit 't' dans la barre
+ - [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite 
+       (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
+
+
 
  > Loumarti
- - [~] Mute ou Unmute qq'un => la notif n'apparait pas chez le sender 
- - [ ] invitation depuis le 3e onglet channel ne proc pas d'invit
+ - [X] invitation depuis le 3e onglet channel ne proc pas d'invit (badge channel (1)) => need help => non c'est ok j'ai reussi tout seul :D !
+
+ - [!] SetUpSectionPongers error :  Error: getPongersData user relation issue // SetUpChannelSecondPart.tsx:123:16 => erreure a surveiller si reproc
+       proc pdt des tests ban / kick invite channel depuis chat (en dev)
+
+ - [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)
+
+ - [+] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail !

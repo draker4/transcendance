@@ -201,7 +201,8 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     join?: boolean;
   }) => {
 
-    console.log(msg);
+    if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
+      console.log("Message : ", msg);
 
     if (msg.opponentId && msg.opponentId !== -1) {
       socket?.emit('getChannelId', msg.opponentId, (payload: number) => {

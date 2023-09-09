@@ -575,6 +575,7 @@ export class ChatGateway implements OnModuleInit {
         ...payload,
         server: this.server,
         from: req.user.id,
+        connectedUsers: this.connectedUsers,
       };
 
       const repNotif =
@@ -776,9 +777,7 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('isUserInChannel')
   async isUserInChannel(@Request() req, @MessageBody() payload: channelIdDto) {
     try {
-      this.log(`isUserInChannel called by user[${req.user.id}] with channelId[${payload.channelId}]`);
       const isInto = await this.channelService.isUserInChannel(req.user.id, payload.channelId);
-      this.log(`isInto = ${isInto}`);
       return isInto;
     } catch (e: any) {
       this.log(`isUserInChannel error : ${e.message}`);

@@ -11,16 +11,17 @@ import {
 } from '@nestjs/common';
 import { AvatarService } from '../service/avatar.service';
 import { UpdateUserAvatarDto } from '../dto/update-user-avatar.dto';
-import { UsersService } from 'src/users/service/users.service';
+// import { UsersService } from 'src/users/service/users.service';
 import { AvatarDto } from '../dto/Avatar.dto';
 
 @Controller('avatar')
 export class AvatarController {
   constructor(
     private readonly avatarService: AvatarService,
-    private readonly userService: UsersService,
+    // private readonly userService: UsersService,
   ) {}
 
+  /* [!][+]
   @Get()
   async getAvatar(@Request() req) {
     const user = await this.userService.getUserAvatar(req.user.id);
@@ -32,9 +33,12 @@ export class AvatarController {
 
     console.log("[!] EST CE QU'ON UTILISE CE ENDPOINT ?");
     // je crois pas on peut supprimer je pense - Baptiste
+    // Ok je le commente alors pour suppression imminente xD - Loup
+    // Virer aussi les import inutiles du coup - loup
 
     return user.avatar;
   }
+  */
 
   @Get(':id/:isChannel')
   async getAvatarById(
