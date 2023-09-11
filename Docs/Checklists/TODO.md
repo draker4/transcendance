@@ -38,7 +38,7 @@
  - [~] 2 mm user sur la page login, cree un loading infini
  - [x] Notif perso en trop lorsque invitation en game (broadcast)
  - [x] empecher de pouvoir spam l'invitation pongie (toast en boucle)
- - [~] invite pongies de Party
+ - [~] invite pongies de Party  ADD STATUS PONGIE CONNECTED ONLY TO INVITE
  - [x] chercher un nom de channel, lorsque test est privee et qu'on ecrit 't' dans la barre
  - [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite 
        (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
