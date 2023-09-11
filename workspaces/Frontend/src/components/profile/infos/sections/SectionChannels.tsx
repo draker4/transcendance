@@ -78,9 +78,11 @@ export default function SectionChannels({socket, isOwner, profile}: {
 		socket?.emit('getChannelsProfile', profile.id, getChannels);
 
 		socket?.on('notif', updateChannels);
+		socket?.on('editRelation', updateChannels);
 
 		return () => {
 			socket?.off('notif', updateChannels);
+			socket?.off('editRelation', updateChannels);
 		}
 
 	}, [socket]);

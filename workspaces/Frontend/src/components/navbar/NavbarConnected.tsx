@@ -66,7 +66,7 @@ export default function NavbarConnected({
         <div className={styles.right}>
           <Theme />
           <Link href={"/home/chat"}>
-            <ChatBtn socket={socket} />
+            <ChatBtn socket={socket} profile={profile} />
           </Link>
           <AvatarMenu avatar={avatar} profile={profile} socket={socket} />
         </div>

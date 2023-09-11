@@ -6,6 +6,7 @@ import { faCheck, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-i
 import { Badge } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useRef } from "react";
 
 const badgeStyle = {
 	"& .MuiBadge-badge": {
@@ -23,6 +24,7 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 }) {
 
 	const	router = useRouter();
+	let		lastToast = useRef<number | undefined>(undefined);
 
 	const	openProfile = () => {
 		if (pongie) {
@@ -31,6 +33,8 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 	}
 
 	const	addFriend = () => {
+		const	currentTime = Date.now();
+
 		socket?.emit('addPongie', pongie.id, (payload: {
 			success: boolean;
 			error: string;
@@ -47,7 +51,10 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 			}
 				
 			if (payload.success && payload.msg === "invited") {
-				toast.success("Invitation sent!");
+				if (!lastToast.current || (lastToast.current && currentTime - lastToast.current >= 2000)) {
+					toast.success("Invitation sent!");
+					lastToast.current = currentTime;
+				}
 				return ;
 			}
 

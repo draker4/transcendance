@@ -36,13 +36,13 @@
  - [x] cancel invitation does not delete the notif
  - [x] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite
  - [~] 2 mm user sur la page login, cree un loading infini
- - [~] Notif perso en trop lorsque invitation en game (broadcast)
- - [~] empecher de pouvoir spam l'invitation pongie (toast en boucle)
+ - [x] Notif perso en trop lorsque invitation en game (broadcast)
+ - [x] empecher de pouvoir spam l'invitation pongie (toast en boucle)
  - [~] invite pongies de Party
  - [x] chercher un nom de channel, lorsque test est privee et qu'on ecrit 't' dans la barre
  - [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite 
        (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
-
+      J'essaye de reproduire mais je trouve pas il faudrait qu'on arrive à trouver dans quel ca precis ca arrive
 
 
  > Loumarti
@@ -53,4 +53,4 @@
 
  - [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)
 
- - [+] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail !
+ - [+] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail ! Trop cool ca :D

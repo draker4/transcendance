@@ -28,7 +28,7 @@ type ReceivedMsg = {
   join?: boolean;
 };
 
-export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
+export default function ChatBtn({ socket, profile }: { socket: Socket | undefined, profile: Profile }) {
   const [totalMsg, setTotalMsg] = useState<number>(0);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function ChatBtn({ socket }: { socket: Socket | undefined }) {
     };
 
     const handleReceivedMsg = (receivedMsg: ReceivedMsg) => {
-      if (receivedMsg.join)
+      if (receivedMsg.join && receivedMsg.sender.id !== profile.id)
         toast.info(`${receivedMsg.sender.login} invited you to a Pong game!`, {
           position: "top-right",
         });
