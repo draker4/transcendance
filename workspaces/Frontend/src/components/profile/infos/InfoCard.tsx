@@ -35,9 +35,9 @@ export default function InfoCard({
       {(() => {
         switch (activeButton) {
           case 0:
-            return <SectionPongStats profile={profile} socket={socket} />;
+            return <SectionPongStats profile={profile} socket={socket} isOwner={isOwner} />;
           case 1:
-            return <SectionAchievements profile={profile} socket={socket} />;
+            return <SectionAchievements profile={profile} socket={socket} isOwner={isOwner} />;
           case 2:
             return (
               <SectionPongies
@@ -63,7 +63,7 @@ export default function InfoCard({
               />
             );
           default:
-            return <SectionPongStats profile={profile} socket={socket} />;
+            return <SectionPongStats profile={profile} socket={socket} isOwner={isOwner} />;
         }
       })()}
     </div>

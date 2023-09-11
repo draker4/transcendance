@@ -14,6 +14,7 @@ type Props = {
   setStats: Function;
   statsService: StatsService;
   socket: Socket | undefined;
+  isOwner?: boolean;
 };
 
 export default function LastAchievements({
@@ -21,6 +22,7 @@ export default function LastAchievements({
   setStats,
   statsService,
   socket,
+  isOwner = true,
 }: Props) {
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const achievementService = new AchievementService();
@@ -69,6 +71,11 @@ export default function LastAchievements({
   const collectXP = async (achievement: UserAchievement) => {
     if (achievement.collected || !achievement.completed) return;
 
+    // you can collect xp only if it's your achievement
+    // cannot click on achievements on the other pongies profiles
+    if (!isOwner)
+      return ;
+
     try {
       await achievementService.collectAchievement(
         profile.id,
@@ -99,15 +106,15 @@ export default function LastAchievements({
         style={{
           opacity: achievement.completed ? 1 : 0.4,
           boxShadow:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "0px 0px 30px var(--achievement)"
               : undefined,
           cursor:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "pointer"
               : "default",
           borderColor:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "var(--achievement)"
               : "var(--tertiary3)",
         }}

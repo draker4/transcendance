@@ -111,7 +111,6 @@ export class AchievementService implements OnModuleInit {
         await this.notifRepository.update(user.notif.id, {
           redAchievements: true,
         });
-      console.log('notif updated');
     } catch (error) {
       throw new Error(error.message);
     }

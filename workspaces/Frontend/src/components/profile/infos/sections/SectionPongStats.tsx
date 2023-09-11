@@ -4,7 +4,6 @@ import MottoDisplayOnly from "./custom/tagline/MottoDisplayOnly";
 import StoryDisplayOnly from "./custom/story/StoryDisplayOnly";
 import { useEffect, useState } from "react";
 import StatsService from "@/services/Stats.service";
-import StoryService from "@/services/Story.service";
 import StoryLevel from "./ItemContent/StoryLevel";
 import Winrate from "./ItemContent/Winrate";
 import Rank from "./ItemContent/Rank";
@@ -18,9 +17,10 @@ import { Socket } from "socket.io-client";
 type Props = {
   profile: Profile;
   socket: Socket | undefined;
+  isOwner: boolean;
 };
 
-export default function SectionPongStats({ profile, socket }: Props) {
+export default function SectionPongStats({ profile, socket, isOwner }: Props) {
   const [stats, setStats] = useState<ShortStats>({
     leagueRank: 0,
     leaguePoints: 0,
@@ -44,7 +44,6 @@ export default function SectionPongStats({ profile, socket }: Props) {
     storyLevelCompleted: 0,
     userLevel: 1,
   });
-  const storyService = new StoryService(undefined);
   const statService = new StatsService(undefined);
   const router = useRouter();
 
@@ -129,6 +128,7 @@ export default function SectionPongStats({ profile, socket }: Props) {
           setStats={setStats}
           statsService={statService}
           socket={socket}
+          isOwner={isOwner}
         />
       </Item>
     </div>

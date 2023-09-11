@@ -16,9 +16,10 @@ import { Socket } from "socket.io-client";
 type Props = {
   profile: Profile;
   socket: Socket | undefined;
+  isOwner: boolean;
 };
 
-export default function SectionAchievements({ profile, socket }: Props) {
+export default function SectionAchievements({ profile, socket, isOwner }: Props) {
   const [achievements, setAchievements] = useState<UserAchievement[]>([]);
   const [stats, setstats] = useState<ShortStats | undefined>(undefined);
   const achievementService = new AchievementService();
@@ -90,6 +91,11 @@ export default function SectionAchievements({ profile, socket }: Props) {
   const collectXP = async (achievement: UserAchievement) => {
     if (achievement.collected || !achievement.completed) return;
 
+    // you can collect xp only if it's your achievement
+    // cannot click on achievements on the other pongies profiles
+    if (!isOwner)
+      return ;
+
     try {
       await achievementService.collectAchievement(
         profile.id,
@@ -119,21 +125,21 @@ export default function SectionAchievements({ profile, socket }: Props) {
         style={{
           opacity: achievement.completed ? 1 : 0.4,
           boxShadow:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "0px 0px 40px var(--achievement)"
               : undefined,
           cursor:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "pointer"
               : "default",
           borderColor:
-            achievement.completed && !achievement.collected
+            achievement.completed && !achievement.collected && isOwner
               ? "var(--achievement)"
               : "var(--tertiary3)",
         }}
         onClick={() => collectXP(achievement)}
       >
-        <AchievementItem achievement={achievement} stats={stats} />
+        <AchievementItem achievement={achievement} stats={stats} isOwner={isOwner} />
       </div>
     );
   });

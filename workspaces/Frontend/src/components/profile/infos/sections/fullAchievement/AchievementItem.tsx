@@ -34,9 +34,11 @@ import { ShortStats } from "@transcendence/shared/types/Stats.types";
 export default function AchievementItem({
   achievement,
   stats,
+  isOwner,
 }: {
   achievement: UserAchievement;
   stats: ShortStats | undefined;
+  isOwner: boolean;
 }) {
   // Define a mapping from achievement.icone to FontAwesome icons
   const iconMapping: { [key: string]: IconProp } = {
@@ -182,7 +184,7 @@ export default function AchievementItem({
 
       {/* text part */}
       <div className={styles.middle}>
-        {achievement.completed && !achievement.collected && (
+        {achievement.completed && !achievement.collected && isOwner && (
           <div className={styles.collect}>
             <h4>Completed!</h4>
             <h4>
@@ -190,7 +192,7 @@ export default function AchievementItem({
             </h4>
           </div>
         )}
-        {(!achievement.completed ||
+        {(!achievement.completed || !isOwner ||
           (achievement.completed && achievement.collected)) && <div></div>}
         <div>
           <h5 style={{ color: color }}>{achievement.name}</h5>
