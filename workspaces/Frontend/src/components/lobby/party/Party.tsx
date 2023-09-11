@@ -10,9 +10,10 @@ type Props = {
   lobbyService: LobbyService;
   profile: Profile;
   socket: Socket;
+  avatar: Avatar;
 };
 
-export default function Party({ lobbyService, profile, socket }: Props) {
+export default function Party({ lobbyService, profile, socket, avatar }: Props) {
   return (
     <div className={styles.party}>
       {
@@ -21,6 +22,7 @@ export default function Party({ lobbyService, profile, socket }: Props) {
           userId={profile.id}
           socket={socket}
           profile={profile}
+          avatar={avatar}
         />
       }
       {<PartyList lobbyService={lobbyService} mode={"Party"} />}

@@ -4,7 +4,6 @@ import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import AvatarUser from "@/components/avatarUser/AvatarUser";
 import PongieFooter from "../footerOptions/PongieFooter";
 import { Badge, Tooltip } from "@mui/material";
-import { PongColors } from "@/lib/enums/PongColors.enum";
 import chooseColorStatus from "@/lib/colorStatus/chooseColorStatus";
 
 const badgeStyle = {

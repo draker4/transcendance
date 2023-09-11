@@ -324,6 +324,12 @@ export class ChatGateway implements OnModuleInit {
     return await this.chatService.getPongies(userId, true);
   }
 
+  @SubscribeMessage('getMyFriends')
+  async getMyFriends(@MessageBody() userId: number) {
+    if (!userId) throw new WsException('no given id');
+    return await this.chatService.getPongies(userId, false, true);
+  }
+
   @SubscribeMessage('getAllPongies')
   async getAllPongies(@Request() req) {
     return await this.chatService.getAllPongies(req.user.id);

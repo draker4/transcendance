@@ -15,9 +15,10 @@ import { Socket } from "socket.io-client";
 type Props = {
   profile: Profile;
   socket: Socket;
+  avatar: Avatar;
 };
 
-export default function Lobby({ profile, socket }: Props) {
+export default function Lobby({ profile, socket, avatar }: Props) {
   const lobbyService = new LobbyService();
   const [menu, setMenu] = useState<string>("League");
 
@@ -31,6 +32,7 @@ export default function Lobby({ profile, socket }: Props) {
             lobbyService={lobbyService}
             profile={profile}
             socket={socket}
+            avatar={avatar}
           />
         )}
         {menu == "Training" && <Training profile={profile} />}

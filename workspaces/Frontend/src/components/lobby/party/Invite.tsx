@@ -3,26 +3,60 @@
 import styles from "@/styles/lobby/party/DefineField.module.css";
 import { Socket } from "socket.io-client";
 import SearchInvite from "./SearchInvite";
+import { MutableRefObject, useState } from "react";
+import InviteSelected from "./InviteSelected";
 
 type Props = {
-  inviteId: number;
-  setInviteId: Function;
+  inviteId: MutableRefObject<number>;
+  isChannel: MutableRefObject<number>;
   socket: Socket;
   profile: Profile;
 };
 
 export default function Invite({
   inviteId,
-  setInviteId,
+  isChannel,
   socket,
   profile,
 }: Props) {
-  // ----------------------------------  CHARGEMENT  ---------------------------------- //
+	const	[invitation, setInvitation] = useState<Pongie | Channel | undefined>(undefined);
+
+  const closeInvite = () => {
+    setInvitation(undefined);
+    inviteId.current = -1;
+    isChannel.current = -1;
+  }
+
+  const selectInvite = (item: Display) => {
+    setInvitation(item);
+    if ('name' in item) {
+      isChannel.current = item.id;
+      inviteId.current = -1;
+    }
+    else {
+      isChannel.current = -1;
+      inviteId.current = item.id;
+    }
+  }
 
   return (
     <div className={styles.invite}>
       <h3 className={styles.section}>Invite Pongies</h3>
-      <SearchInvite socket={socket} profile={profile} />
+      <SearchInvite
+        socket={socket}
+        profile={profile}
+        selectInvite={selectInvite}
+      />
+
+      {
+        invitation &&
+        <InviteSelected
+          invitation={invitation}
+          closeInvite={closeInvite}
+          socket={socket}
+        />
+      }
+
     </div>
   );
 }

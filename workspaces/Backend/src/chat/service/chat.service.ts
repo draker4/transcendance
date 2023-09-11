@@ -773,7 +773,7 @@ export class ChatService {
     }
   }
 
-  async getPongies(id: number, blacklisted: boolean): Promise<getPongieDto[]> {
+  async getPongies(id: number, blacklisted: boolean, friends: boolean = false): Promise<getPongieDto[]> {
     try {
       const relations = await this.userPongieRelation.find({
         where: { userId: id },
@@ -785,6 +785,8 @@ export class ChatService {
       let all = await Promise.all(
         relations.map(async (relation) => {
           if (blacklisted && relation.isBlacklisted) return;
+
+          if (friends && !relation.isFriend) return;
 
           if (
             relation.pongie.avatar?.decrypt &&

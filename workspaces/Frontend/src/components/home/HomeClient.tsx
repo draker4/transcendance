@@ -63,7 +63,7 @@ export default function HomeClient({
   return (
     <div className={styles.lobbyFrame}>
       <HomeProfile profile={profile} avatar={avatar} socket={socket} />
-      <Lobby profile={profile} socket={socket} />
+      <Lobby profile={profile} socket={socket} avatar={avatar} />
     </div>
   );
 }

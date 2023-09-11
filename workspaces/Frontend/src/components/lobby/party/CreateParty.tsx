@@ -26,6 +26,7 @@ type Props = {
   userId: number;
   socket: Socket;
   profile: Profile;
+  avatar: Avatar;
 };
 
 export default function CreateParty({
@@ -33,6 +34,7 @@ export default function CreateParty({
   userId,
   socket,
   profile,
+  avatar,
 }: Props) {
   // ------------------------------------  CREATE  ------------------------------------ //
   //Pong Settings
@@ -55,7 +57,8 @@ export default function CreateParty({
   const router = useRouter();
   const [creatingParty, setCreatingParty] = useState<boolean>(false);
   const defineNameRef = useRef<HTMLDivElement>(null);
-  const [inviteId, setInviteId] = useState<number>(-1);
+  const inviteId = useRef<number>(-1);
+  const channelId = useRef<number>(-1);
 
   async function createGame() {
 
@@ -75,7 +78,8 @@ export default function CreateParty({
         mode: "Party",
         host: userId,
         opponent: -1,
-        invite: inviteId,
+        invite: inviteId.current,
+        channel: channelId.current !== -1 ? true : false,
         hostSide: side,
         maxPoint: maxPoint,
         maxRound: maxRound,
@@ -98,6 +102,55 @@ export default function CreateParty({
         setCreatingParty(false);
         return;
       }
+
+      if (inviteId.current !== -1 || channelId.current !== -1) {
+        // send message
+
+        const newMsg: Message & {
+          opponentId?: number;
+          join: boolean;
+        } = {
+          content: `I invite you to play a ${type} Pong Game!`,
+          sender: { ...profile, avatar: avatar },
+          date: new Date(),
+          isServerNotif: false,
+          opponentId: channelId.current !== -1 ? undefined : inviteId.current,
+          join: true,
+        };
+
+        if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
+          console.log("Message : ", newMsg);
+        
+        if (newMsg.opponentId && newMsg.opponentId !== -1) {
+          socket?.emit('getChannelId', newMsg.opponentId, (payload: number) => {
+            if (payload) {
+              socket?.emit("forceJoinPrivateMsgChannel", 
+              {channelId: payload, source:"forceJoinPrivateMsgChannel"},
+              (rep:ReturnData) => {
+                if (rep.success) {
+                    socket?.emit("newMsg", {
+                      content: newMsg.content,
+                      channelId: payload,
+                      join: true,
+                      source: "newMsg",
+                    });
+                  } else {
+                    toast.error("Something went wrong, please try again!");
+                  }
+              });
+                    }
+              });
+            return ;
+          }
+
+        socket?.emit("newMsg", {
+          content: newMsg.content,
+          channelId: channelId.current,
+          join: true,
+          source: "newMsg",
+        });
+      }
+
       router.push("/home/game/" + res.data);
     }
     catch (error: any) {
@@ -186,7 +239,7 @@ export default function CreateParty({
       />
       <Invite
         inviteId={inviteId}
-        setInviteId={setInviteId}
+        isChannel={channelId}
         socket={socket}
         profile={profile}
       />

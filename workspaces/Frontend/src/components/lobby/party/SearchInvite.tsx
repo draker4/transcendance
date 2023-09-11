@@ -5,9 +5,11 @@ import Search from "@/components/chatPage/searchBar/Search";
 type Props = {
   socket: Socket;
   profile: Profile;
+  selectInvite: (item: Display) => void;
+
 };
 
-export default function SearchInvite({ socket, profile }: Props) {
+export default function SearchInvite({ socket, profile, selectInvite }: Props) {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [pongies, setPongies] = useState<Pongie[]>([]);
   const [list, setList] = useState<(Channel | Pongie | CreateOne)[]>([]);
@@ -35,7 +37,7 @@ export default function SearchInvite({ socket, profile }: Props) {
       return {
         id: -1,
         error: true,
-        msg: "No space in the login please",
+        msg: "No channel found or no space in the login please",
       };
     }
 
@@ -58,7 +60,7 @@ export default function SearchInvite({ socket, profile }: Props) {
     socket?.emit("getChannelsProfile", profile.id, (channels: Channel[]) => {
       setChannels(channels);
     });
-    socket?.emit("getPongies", profile.id, (pongies: Pongie[]) => {
+    socket?.emit("getMyFriends", profile.id, (pongies: Pongie[]) => {
       setPongies(pongies);
     });
 
@@ -67,7 +69,6 @@ export default function SearchInvite({ socket, profile }: Props) {
 
   useEffect(() => {
     const createList = (text: string) => {
-      let hasChannel: boolean = false;
       setError(null);
 
       if (!text) {
@@ -83,8 +84,6 @@ export default function SearchInvite({ socket, profile }: Props) {
           (channel) => channel?.name.toLowerCase().includes(textlowerCase)
         )
       );
-
-      if (channels.find((channel) => channel?.name === text)) hasChannel = true;
 
       list = list.concat(
         pongies.filter(
@@ -131,7 +130,8 @@ export default function SearchInvite({ socket, profile }: Props) {
     setDropdownVisible(false);
     setList([]);
     setError(null);
-    // change to define comportement
+    
+    selectInvite(item);
   };
 
   return (
