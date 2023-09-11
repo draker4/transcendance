@@ -141,26 +141,26 @@ export default function Conversations({
     }
 
     try { 
-    const channelService = new Channel_Service(undefined);
-    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: false});
+      const channelService = new Channel_Service(undefined);
+      const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: false});
 
-    if (rep.success) {
-      const newRelation:EditChannelRelation = {
-        channelId: channel.id,
-        userId: myself.id,
-        senderId: myself.id,
-        newRelation: {
-          joined: false,
-          invited:false,
+      if (rep.success) {
+        const newRelation:EditChannelRelation = {
+          channelId: channel.id,
+          userId: myself.id,
+          senderId: myself.id,
+          newRelation: {
+            joined: false,
+            invited:false,
+          }
         }
-      }
 
-      socket?.emit("editRelation", newRelation);
-      loadData();
-      if ("name" in display && display.id === channel.id)
-        clearDisplay();  
-    } else
-      throw new Error(rep.message);
+        socket?.emit("editRelation", newRelation);
+        loadData();
+        if ("name" in display && display.id === channel.id)
+          clearDisplay();  
+      } else
+        throw new Error(rep.message);
     } catch(e:any) {
       if (e.message === 'disconnect') {
         await disconnect();
@@ -173,24 +173,24 @@ export default function Conversations({
 
   const handleClickAcceptInvite = async (channel: Channel) => {
     try {
-    const channelService = new Channel_Service(undefined);
-    const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: true});
+      const channelService = new Channel_Service(undefined);
+      const rep:ReturnData = await channelService.editRelation(channel.id, myself.id, {invited:false, joined: true});
 
-    if (rep.success) {
-      const newRelation:EditChannelRelation = {
-        channelId: channel.id,
-        userId: myself.id,
-        senderId: myself.id,
-        newRelation: {
-          joined: true,
-          invited:false,
+      if (rep.success) {
+        const newRelation:EditChannelRelation = {
+          channelId: channel.id,
+          userId: myself.id,
+          senderId: myself.id,
+          newRelation: {
+            joined: true,
+            invited:false,
+          }
         }
+        socket?.emit("editRelation", newRelation);
+        openDisplay(channel);
       }
-      socket?.emit("editRelation", newRelation);
-      openDisplay(channel);
-    }
-    else
-      throw new Error(rep.message);
+      else
+        throw new Error(rep.message);
     } catch(e:any) {
       if (e.message === 'disconnect') {
         await disconnect();

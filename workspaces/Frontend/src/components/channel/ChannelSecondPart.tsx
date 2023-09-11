@@ -1,7 +1,6 @@
 import styles from "@/styles/profile/Profile.module.css";
 import ChannelInfoCard from "./infos/ChannelInfoCard";
 import { Socket } from "socket.io-client";
-import { Dispatch, SetStateAction } from "react";
 
 type Props = {
 	relation: ChannelUsersRelation;

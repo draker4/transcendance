@@ -59,7 +59,7 @@ export default function Search({
 
     if (
       "type" in item &&
-      ((item.type === "private" && !item.joined) || item.type === "privateMsg")
+      ((item.type === "private" && !item.joined && !item.invited) || item.type === "privateMsg")
     )
       return;
 

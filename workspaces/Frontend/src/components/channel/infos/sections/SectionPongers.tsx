@@ -38,7 +38,7 @@ const	[invited, setInvited] = useState<UserRelation[]>([]);
 const	[banned, setBanned] = useState<UserRelation[]>([]);
 const	[leavers, setLeavers] = useState<UserRelation[]>([]);
 const	[status, setStatus] = useState<Map<string, string>>(new Map());
-const   [notif, setNotif] = useState<string>("");
+const [notif, setNotif] = useState<string>("");
 
 useEffect(() => {
   const filteredBoss = relation.usersRelation.filter((relation) => (relation.isBoss && relation.joined));

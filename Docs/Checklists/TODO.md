@@ -18,6 +18,8 @@
  - [!] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
  - [+] Ajoutter des boutons pour déplacer le paddle pour que je puisse jouer aussi avec ma tablette ! (@Bboisson elle te plait trop mon idée je suis sur 😂 ! Loup)
 
+- [!] Apres une invitation, ca m'emmene sur la partie directement en attendant que quelqu'un join. Si j'annule en cliquant sur la croix et que quelqu'un join, il ne peut pas rejoindre, ca throw une exception et ca lui met un message d'erreur.
+
 
 > Pour qui veut s'en charger ou pour tous
  - [~] Affichage bouton "log out" sur une ligne au lieu de deux
@@ -30,8 +32,11 @@
  - [x] CSS du badge a agrandir
  - [x] enlever la validation xp des achievement au public
  - [ ] Le bouton join devrait s'afficher que sur la plus recente invitation dans un chat
- - [ ] chatbutton notif invitation
- - [~] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite
+
+ [!][!]c'etait deja fait, pk on a noté ca je me rappelle plus ?
+ - [ ] chatbutton notif invitation, double notif!!!
+
+ - [x] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite
  - [~] 2 mm user sur la page login, cree un loading infini
  - [~] Notif perso en trop lorsque invitation en game (broadcast)
  - [~] empecher de pouvoir spam l'invitation pongie (toast en boucle)

@@ -613,7 +613,14 @@ export class ChatService {
           (relation) => relation.channel.id === channel.id,
         );
 
-        if (myRelation)
+        if (myRelation && myRelation.isBanned)
+          return null;
+
+        if (myRelation && channel.type === 'private' && (
+            myRelation.joined || myRelation.invited))
+          see = true;
+
+        if (myRelation && see)
           return {
             id: channel.id,
             name: channel.name,
@@ -1562,6 +1569,7 @@ export class ChatService {
       // check if user is not joined
       if (!relation.joined && (!isProtected || relation.isBoss)) {
         relation.joined = true;
+        relation.invited = false;
         await this.userChannelRelation.save(relation);
 
         const date = new Date();
