@@ -272,8 +272,8 @@ export default function ChanOpControlPannel({
   };
 
   const updateConfirmation = (status:ConfirmationList) => {
-	setConfirmationList(status);
-	setWaitingConfirmation(true);
+    setConfirmationList(status);
+    setWaitingConfirmation(true);
   }
 
   const buttonData: ButtonData[] = (() => {

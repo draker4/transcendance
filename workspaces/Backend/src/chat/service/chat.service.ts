@@ -23,6 +23,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
 import { ClearNotifDto } from '../dto/clearNotif.dto';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 import { MakeMessage } from '@/messages/dto/makeMessage';
+import { info } from 'console';
 
 @Injectable()
 export class ChatService {
@@ -2076,16 +2077,12 @@ export class ChatService {
   private async receiveChannelInvitationNotif(
     channelId: number,
     userId: number,
-    server: Server,
   ) {
     try {
       const relations = await this.userChannelRelation.find({
         where: {
           channelId: channelId,
           userId: userId,
-          joined: false,
-          isBanned: false,
-          invited: true,
         },
         relations: ['user', 'user.notif'],
       });
@@ -2097,11 +2094,11 @@ export class ChatService {
             (notif) => notif.channelId === channelId,
           );
 
-          if (notifMessages) {
+          if (notifMessages && notifMessages.nbMessages === 0) {
             await this.notifMessagesRepository.update(notifMessages.id, {
               nbMessages: notifMessages.nbMessages + 1,
             });
-          } else {
+          } else if (!notifMessages) {
             const notifMessage = new NotifMessages();
 
             notifMessage.channelId = channelId;
@@ -2141,18 +2138,14 @@ export class ChatService {
       const content: string = await this.makeEditRelationNotifContent(infos);
       await this.sendServerNotifMsg(infos.channelId, content, infos.server);
 
-      rep.success = true;
-
-      if (infos.newRelation.invited && infos.newRelation.invited === true) {
-
-        rep.success = false;
+      if ((infos.newRelation.invited && infos.newRelation.invited === true)
+        || ('isBanned' in infos.newRelation && infos.newRelation.isBanned === false)) {
 
         const user = await this.usersService.getUserById(infos.userId);
         if (!user) throw new Error("can't find the user");
 
-
         // Create a notif beetween the target user and the channel where he is invited
-        await this.receiveChannelInvitationNotif(infos.channelId, infos.userId, infos.server);
+        await this.receiveChannelInvitationNotif(infos.channelId, infos.userId);
 
         // Get socket to emit a refresh channel + notifMessage
         const userSockets: Socket[] = [];
@@ -2170,10 +2163,45 @@ export class ChatService {
             infos.server.to(socket.id).emit('notifMsg');
           }
         }
-
-        rep.success = true;
-
       }
+
+      console.log("before boucle", infos.newRelation);
+
+      if ('isBanned' in infos.newRelation && infos.newRelation.isBanned === true) {
+        // Get socket to emit a refresh channel + notifMessage
+        const userSockets: Socket[] = [];
+
+        for (const [key, val] of infos.connectedUsers) {
+           if (val === infos.userId.toString()) userSockets.push(key);
+        }
+
+        if (userSockets.length >= 1) {
+          for (const socket of userSockets) {
+            infos.server.to(socket.id).emit('notif', {
+              why: 'updateChannels',
+            });
+
+            infos.server.to(socket.id).emit('notifMsg');
+          }
+        }
+      }
+
+      if (('invited' in infos.newRelation && infos.newRelation.invited === false && !infos.newRelation.joined)
+          || ('joined' in infos.newRelation && infos.newRelation.joined === false)) {
+        // Get socket to emit a refresh channel + notifMessage
+        const userSockets: Socket[] = [];
+
+        for (const [key, val] of infos.connectedUsers) {
+           if (val === infos.userId.toString()) userSockets.push(key);
+        }
+        await this.clearNotif(infos.userId, {
+          which: "messages",
+          id: infos.channelId,
+        }, userSockets, infos.server);
+      }
+
+      rep.success = true;
+
     } catch (e) {
       rep.error = e;
       rep.message = e.message;

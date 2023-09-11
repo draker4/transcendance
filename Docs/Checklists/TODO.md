@@ -32,10 +32,8 @@
  - [x] CSS du badge a agrandir
  - [x] enlever la validation xp des achievement au public
  - [ ] Le bouton join devrait s'afficher que sur la plus recente invitation dans un chat
-
- [!][!]c'etait deja fait, pk on a noté ca je me rappelle plus ?
- - [ ] chatbutton notif invitation, double notif!!!
-
+ - [x] chatbutton notif invitation, double notif!
+ - [ ] cancel invitation does not delete the notif
  - [x] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite
  - [~] 2 mm user sur la page login, cree un loading infini
  - [~] Notif perso en trop lorsque invitation en game (broadcast)
