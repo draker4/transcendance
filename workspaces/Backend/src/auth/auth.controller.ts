@@ -113,6 +113,8 @@ export class AuthController {
     try {
       const userCode = await this.authService.verifyCode(code);
 
+      console.log(userCode);
+
       if (!userCode)
         return {
           success: false,

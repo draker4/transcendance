@@ -36,7 +36,7 @@
  - [x] chatbutton notif invitation, double notif!
  - [x] cancel invitation does not delete the notif
  - [x] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite
- - [~] 2 mm user sur la page login, cree un loading infini
+ - [x] 2 mm user sur la page login, cree un loading infini
  - [x] Notif perso en trop lorsque invitation en game (broadcast)
  - [x] empecher de pouvoir spam l'invitation pongie (toast en boucle)
  - [x] invite pongies de Party
@@ -44,6 +44,7 @@
  - [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite 
        (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
       J'essaye de reproduire mais je trouve pas il faudrait qu'on arrive à trouver dans quel ca precis ca arrive
+ - [x] check le temps du verified code depuis la mise a jour des temps dans la db
 
 
  > Loumarti

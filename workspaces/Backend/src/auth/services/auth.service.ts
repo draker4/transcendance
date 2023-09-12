@@ -126,7 +126,7 @@ export class AuthService {
   }
 
   async addUser(CreateUserDto: CreateUserDto) {
-    CreateUserDto.expirationCode = Date.now() + 5 * 60 * 1000;
+    CreateUserDto.expirationCode = Date.now() + 2 * 60 * 1000;
     CreateUserDto.verifyCode = this.generateSecureCode(8);
     CreateUserDto.verified = false;
 
@@ -151,7 +151,7 @@ export class AuthService {
 
     await this.mailService.sendUserConfirmation(email, verifyCode);
     await this.usersService.updateUser(user.id, {
-      expirationCode: Date.now() + 5 * 60 * 1000,
+      expirationCode: Date.now() + 2 * 60 * 1000,
       verifyCode,
     });
   }
