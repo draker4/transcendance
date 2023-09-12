@@ -43,8 +43,7 @@ export default async function fetchClientSide(
       );
 
       if (!res.ok) {
-        // throw new Error("disconnect");
-        console.log("DICONNECT");
+        throw new Error("disconnect");
       }
 
       const data = await res.json();
@@ -75,8 +74,7 @@ export default async function fetchClientSide(
 
       const resAgain = await fetch(url, fetchOptions);
       if (resAgain.status === 401) {
-        // throw new Error("disconnect");
-        console.log("DICONNECT");
+        throw new Error("disconnect");
       }
 
       return resAgain;

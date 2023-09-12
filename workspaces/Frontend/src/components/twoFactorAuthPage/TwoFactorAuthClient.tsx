@@ -109,7 +109,7 @@ export default function TwoFactorAuthClient() {
 
       if (data.success) {
         setButtonText("Loading...");
-        router.push("/home");
+        router.push("/home?home");
         return;
       }
 

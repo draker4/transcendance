@@ -25,6 +25,7 @@
  - [~] Affichage bouton "log out" sur une ligne au lieu de deux
  - [!] Se renseigner sur commment creer la db sans passer par le synchronize a switch
  - [!] Nettoyer ou n'afficher qu'en build tous les consoles.log
+ - [!] error ESLINT next/babel quand on compile en build
 
 
 

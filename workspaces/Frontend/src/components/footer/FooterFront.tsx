@@ -12,7 +12,7 @@ export default function Footer({ profile }: { profile: Profile | undefined }) {
   const router = useRouter();
 
   const signoff = async () => {
-    await disconnect();
+    await disconnect(profile?.id.toString());
     router.replace("/welcome/login");
     return ;
   }

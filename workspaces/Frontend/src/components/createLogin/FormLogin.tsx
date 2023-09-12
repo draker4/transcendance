@@ -107,10 +107,11 @@ export default function FormLogin({
 
         if (!res.ok || data.error) throw new Error();
 
-        router.push("/home");
+        router.push("/home?home");
       } catch (error) {
         console.log(error);
         setNotif("Something went wrong, please try again");
+        setTextButton(textButtonInitial);
       }
     };
 
@@ -159,6 +160,7 @@ export default function FormLogin({
         return;
       }
       toast.error("Something went wrong, please try again!");
+      setTextButton(textButtonInitial);
     }
   };
 
