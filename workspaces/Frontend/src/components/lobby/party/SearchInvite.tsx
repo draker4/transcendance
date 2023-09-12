@@ -115,7 +115,7 @@ export default function SearchInvite({ socket, profile, selectInvite }: Props) {
         const error: ListError = {
           id: -1,
           error: true,
-          msg: "No pongie found...",
+          msg: "Nothing found...",
         };
         setError(error);
       }
