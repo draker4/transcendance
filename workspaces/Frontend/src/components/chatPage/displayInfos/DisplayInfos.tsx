@@ -99,7 +99,7 @@ export default function DisplayInfos({
 					<div></div>
 			</div>
 
-			<p>What's its name? 🖋️</p>
+			<p>What&apos;s its name? 🖋️</p>
 
 			<input
 				type='text'

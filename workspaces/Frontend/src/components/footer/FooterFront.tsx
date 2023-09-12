@@ -25,7 +25,7 @@ export default function Footer({ profile }: { profile: Profile | undefined }) {
         <div className={styles.horizontal}>
           <div className={styles.title}>
             <h5>&copy;Crunchy Pong 2023</h5>
-            <p>Let's play together</p>
+            <p>Let&apos;s play together</p>
           </div>
 
           <div className={styles.ref}>
@@ -54,7 +54,7 @@ export default function Footer({ profile }: { profile: Profile | undefined }) {
         <div className={styles.horizontal}>
           <div className={styles.title}>
             <h5 className={styles.copyright}>&copy;Crunchy Pong 2023</h5>
-            <p>Let's play together</p>
+            <p>Let&apos;s play together</p>
           </div>
 
           <div className={styles.ref}>
