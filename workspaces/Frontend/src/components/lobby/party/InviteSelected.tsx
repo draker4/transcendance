@@ -4,7 +4,7 @@ import styles from "@/styles/lobby/party/DefineField.module.css";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Badge, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 
 interface StatusData {
@@ -15,10 +15,12 @@ export default function InviteSelected({
 	invitation,
 	closeInvite,
 	socket,
+	connected,
 }: {
 	invitation: Pongie | Channel;
 	closeInvite: () => void;
 	socket: Socket | undefined;
+	connected: MutableRefObject<boolean>;
 }) {
 
 	const	[color, setColor] = useState<string>("#edf0f0");
@@ -45,6 +47,10 @@ export default function InviteSelected({
 						const	text = statusMap.get(invitation.id.toString()) as string;
 						setTextStatus(text);
 						setColor(chooseColorStatus(text));
+						if (text === 'connected')
+							connected.current = true;
+						else
+							connected.current = false;
 					}
 				}
 			}

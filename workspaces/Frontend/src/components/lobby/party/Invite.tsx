@@ -9,6 +9,7 @@ import InviteSelected from "./InviteSelected";
 type Props = {
   inviteId: MutableRefObject<number>;
   isChannel: MutableRefObject<number>;
+  connected: MutableRefObject<boolean>;
   socket: Socket;
   profile: Profile;
 };
@@ -16,6 +17,7 @@ type Props = {
 export default function Invite({
   inviteId,
   isChannel,
+  connected,
   socket,
   profile,
 }: Props) {
@@ -25,6 +27,7 @@ export default function Invite({
     setInvitation(undefined);
     inviteId.current = -1;
     isChannel.current = -1;
+    connected.current = false;
   }
 
   const selectInvite = (item: Display) => {
@@ -32,6 +35,7 @@ export default function Invite({
     if ('name' in item) {
       isChannel.current = item.id;
       inviteId.current = -1;
+      connected.current = false;
     }
     else {
       isChannel.current = -1;
@@ -54,6 +58,7 @@ export default function Invite({
           invitation={invitation}
           closeInvite={closeInvite}
           socket={socket}
+          connected={connected}
         />
       }
 

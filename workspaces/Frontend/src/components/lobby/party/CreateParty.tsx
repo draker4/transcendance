@@ -59,6 +59,7 @@ export default function CreateParty({
   const defineNameRef = useRef<HTMLDivElement>(null);
   const inviteId = useRef<number>(-1);
   const channelId = useRef<number>(-1);
+  const connected = useRef<boolean>(false);
 
   async function createGame() {
 
@@ -69,6 +70,11 @@ export default function CreateParty({
         setEnterName(true);
         defineNameRef.current!.scrollIntoView({ behavior: "smooth" });
         return;
+      }
+
+      if (inviteId.current !== -1 && !connected.current) {
+        toast.info("This pongie is not connected, you cannot invite him right now!");
+        return ;
       }
 
       //Creer un objet avec les settings
@@ -121,6 +127,7 @@ export default function CreateParty({
         if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
           console.log("Message : ", newMsg);
         
+        // send message to privateMsg, find channel with pongie Id and join him inside if needed
         if (newMsg.opponentId && newMsg.opponentId !== -1) {
           socket?.emit('getChannelId', newMsg.opponentId, (payload: number) => {
             if (payload) {
@@ -128,27 +135,28 @@ export default function CreateParty({
               {channelId: payload, source:"forceJoinPrivateMsgChannel"},
               (rep:ReturnData) => {
                 if (rep.success) {
-                    socket?.emit("newMsg", {
-                      content: newMsg.content,
-                      channelId: payload,
-                      join: true,
-                      source: "newMsg",
-                    });
-                  } else {
-                    toast.error("Something went wrong, please try again!");
-                  }
+                  socket?.emit("newMsg", {
+                    content: newMsg.content,
+                    channelId: payload,
+                    join: true,
+                    source: "newMsg",
+                  });
+                } else {
+                  toast.error("The invitation could not be sent, please close the game!");
+                }
               });
-                    }
-              });
-            return ;
-          }
+            }
+          });
+        }
 
-        socket?.emit("newMsg", {
-          content: newMsg.content,
-          channelId: channelId.current,
-          join: true,
-          source: "newMsg",
-        });
+        // send message to all channel
+        else
+          socket?.emit("newMsg", {
+            content: newMsg.content,
+            channelId: channelId.current,
+            join: true,
+            source: "newMsg",
+          });
       }
 
       router.push("/home/game/" + res.data);
@@ -240,6 +248,7 @@ export default function CreateParty({
       <Invite
         inviteId={inviteId}
         isChannel={channelId}
+        connected={connected}
         socket={socket}
         profile={profile}
       />
