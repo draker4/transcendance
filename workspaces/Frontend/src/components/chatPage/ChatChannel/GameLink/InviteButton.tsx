@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import LobbyService from "@/services/Lobby.service";
 import { toast } from "react-toastify";
+import disconnect from "@/lib/disconnect/disconnect";
 
 export default function InviteButton({
   setLoading,
@@ -36,74 +37,84 @@ export default function InviteButton({
   async function sendInvitation(
     gameType: "Classic" | "Best3" | "Best5" | "Custom"
   ) {
-    setLoading(true);
-    const settings: GameDTO = {
-      name: `${myself.login} vs ${opponentLogin}`,
-      type: gameType,
-      mode: "Party",
-      host: myself.id,
-      opponent: -1,
-      invite: opponentId,
-      channel: isChannel,
-      hostSide: "Left",
-      maxPoint: 3,
-      maxRound: 1,
-      difficulty: 2,
-      pause: true,
-      push: true,
-      background: confirmBackground("Random"),
-      ball: confirmBall("Random"),
-    };
+    try {
+      setLoading(true);
+      const settings: GameDTO = {
+        name: `${myself.login} vs ${opponentLogin}`,
+        type: gameType,
+        mode: "Party",
+        host: myself.id,
+        opponent: -1,
+        invite: opponentId,
+        channel: isChannel,
+        hostSide: "Left",
+        maxPoint: 3,
+        maxRound: 1,
+        difficulty: 2,
+        pause: true,
+        push: true,
+        background: confirmBackground("Random"),
+        ball: confirmBall("Random"),
+      };
 
-    if (gameType === "Classic") {
-      settings.maxPoint = 9;
-      settings.maxRound = 1;
-      settings.pause = false;
-      settings.push = false;
-      settings.background = "Classic";
-      settings.ball = "Classic";
-    } else if (gameType === "Best3") {
-      settings.maxPoint = 7;
-      settings.maxRound = 3;
-    } else if (gameType === "Best5") {
-      settings.maxPoint = 5;
-      settings.maxRound = 5;
-    } else if (gameType === "Custom") {
-      settings.maxPoint = randomMaxPoint();
-      settings.maxRound = randomMaxRound();
-      settings.push = Math.random() < 0.5;
-      settings.pause = Math.random() < 0.5;
-    }
-
-    //Creer la game
-    const res = await lobbyService.createGame(settings);
-    await toast.promise(
-      new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
-      {
-        pending: "Creating game...",
-        success: "Game created",
-        error: "Error creating game",
+      if (gameType === "Classic") {
+        settings.maxPoint = 9;
+        settings.maxRound = 1;
+        settings.pause = false;
+        settings.push = false;
+        settings.background = "Classic";
+        settings.ball = "Classic";
+      } else if (gameType === "Best3") {
+        settings.maxPoint = 7;
+        settings.maxRound = 3;
+      } else if (gameType === "Best5") {
+        settings.maxPoint = 5;
+        settings.maxRound = 5;
+      } else if (gameType === "Custom") {
+        settings.maxPoint = randomMaxPoint();
+        settings.maxRound = randomMaxRound();
+        settings.push = Math.random() < 0.5;
+        settings.pause = Math.random() < 0.5;
       }
-    );
-    if (!res.success) {
-      console.log(res.message);
-      return;
+
+      //Creer la game
+      const res = await lobbyService.createGame(settings);
+      await toast.promise(
+        new Promise((resolve) => resolve(res)), // Resolve the Promise with 'res'
+        {
+          pending: "Creating game...",
+          success: "Game created",
+          error: "Error creating game",
+        }
+      );
+      if (!res.success) {
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'disconnect')
+          console.log(res.message);
+        return;
+      }
+
+      // send message
+      const newMsg: Message = {
+        content: `I invite you to play a ${gameType} Pong Game!`,
+        sender: myself,
+        date: new Date(),
+        isServerNotif: false,
+        opponentId: isChannel ? undefined : opponentId,
+        join: res.data,
+      };
+
+      addMsg(newMsg);
+      setLoading(false);
+
+      router.push("/home/game/" + res.data);
     }
-
-    // send message
-    const newMsg: Message = {
-      content: `I invite you to play a ${gameType} Pong Game!`,
-      sender: myself,
-      date: new Date(),
-      isServerNotif: false,
-      opponentId: isChannel ? undefined : opponentId,
-      join: res.data,
-    };
-
-    addMsg(newMsg);
-    setLoading(false);
-
-    router.push("/home/game/" + res.data);
+    catch (err: any) {
+      if (err.message === 'disconnect') {
+        await disconnect();
+        router.refresh();
+        return ;
+      }
+    }
   }
 
   return (

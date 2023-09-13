@@ -223,7 +223,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         }
       });
       return ;
-      }
+    }
 
   // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {

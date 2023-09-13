@@ -104,7 +104,8 @@ export default function CreateParty({
         error: "Error creating game",
       });
       if (!res.success) {
-        console.log(res.message);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'disconnect')
+          console.log(res.message);
         setCreatingParty(false);
         return;
       }
@@ -112,16 +113,13 @@ export default function CreateParty({
       if (inviteId.current !== -1 || channelId.current !== -1) {
         // send message
 
-        const newMsg: Message & {
-          opponentId?: number;
-          join: boolean;
-        } = {
+        const newMsg: Message = {
           content: `I invite you to play a ${type} Pong Game!`,
           sender: { ...profile, avatar: avatar },
           date: new Date(),
           isServerNotif: false,
           opponentId: channelId.current !== -1 ? undefined : inviteId.current,
-          join: true,
+          join: res.data,
         };
 
         if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
@@ -138,7 +136,7 @@ export default function CreateParty({
                   socket?.emit("newMsg", {
                     content: newMsg.content,
                     channelId: payload,
-                    join: true,
+                    join: newMsg.join ? newMsg.join : undefined,
                     source: "newMsg",
                   });
                 } else {
@@ -154,7 +152,7 @@ export default function CreateParty({
           socket?.emit("newMsg", {
             content: newMsg.content,
             channelId: channelId.current,
-            join: true,
+            join: newMsg.join ? newMsg.join : undefined,
             source: "newMsg",
           });
       }
