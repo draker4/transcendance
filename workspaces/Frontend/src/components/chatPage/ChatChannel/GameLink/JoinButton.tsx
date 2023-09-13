@@ -33,6 +33,7 @@ export default function JoinButton({ myself, inviterId }: Props) {
     router.push(url);
   }
 
+  // [!] ici enleve button join
   useEffect(() => {
     console.log("ongoing invite");
     const ret = lobbyService.ongoingInvite(inviterId).then((ret) => {
