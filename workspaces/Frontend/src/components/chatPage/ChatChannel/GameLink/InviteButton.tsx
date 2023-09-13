@@ -92,7 +92,7 @@ export default function InviteButton({
 
     // send message
     const newMsg: Message = {
-      content: `I invite you to play a ${gameType} Pong Game! ${res.data}`,
+      content: `I invite you to play a ${gameType} Pong Game!`,
       sender: myself,
       date: new Date(),
       isServerNotif: false,
