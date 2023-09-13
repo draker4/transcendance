@@ -23,16 +23,21 @@ export default function JoinButton({ socket, gameId, group }: Props) {
       const res: ReturnData = await lobbyService.joinGame(gameId);
       await toast.promise(new Promise((resolve) => resolve(res)), {
         pending: "Joining game...",
-        success: "Good Luck !",
-        error: "Something went wrong, please try again!",
       });
       if (!res.success) {
         if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
           console.log(res.message);
           console.log(res.error);
         }
+        if (res.message && res.message === "Game is full") {
+          toast.info('Someone already joined this game!');
+          setVisible(false);
+          return ;
+        }
         throw new Error("join failed");
       }
+      toast.success("Good Luck!");
+      setVisible(false);
       const url = "/home/game/" + res.data;
       router.push(url);
     }
@@ -42,6 +47,7 @@ export default function JoinButton({ socket, gameId, group }: Props) {
         router.refresh();
         return ;
       }
+      toast.error("Something went wrong, please try again!");
     }
   }
 
