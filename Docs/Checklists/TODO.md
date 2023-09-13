@@ -33,7 +33,7 @@
 > Bperriol
  - [x] CSS du badge a agrandir
  - [x] enlever la validation xp des achievement au public
- - [ ] Le bouton join devrait s'afficher que sur la plus recente invitation dans un chat
+ - [x] Le bouton join devrait s'afficher que sur la plus recente invitation dans un chat
  - [x] chatbutton notif invitation, double notif!
  - [x] cancel invitation does not delete the notif
  - [x] une channel privee devrait s'afficher dans la searchBar lorsque l'utilisateur est invite

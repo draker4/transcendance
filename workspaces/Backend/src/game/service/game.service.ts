@@ -19,6 +19,7 @@ import { ScoreService } from '@/score/service/score.service';
 import { CreateScoreDTO } from '@/score/dto/CreateScore.dto';
 import { CryptoService } from 'src/utils/crypto/crypto';
 import { StatusService } from '@/statusService/status.service';
+import { ChatGateway } from '@/chat/chat.gateway';
 
 @Injectable()
 export class GameService {
@@ -33,6 +34,7 @@ export class GameService {
     private readonly avatarService: AvatarService,
     private readonly cryptoService: CryptoService,
     private readonly statusService: StatusService,
+    private readonly chatGateway: ChatGateway,
   ) {}
 
   // --------------------------------  PUBLIC METHODS  -------------------------------- //
@@ -230,6 +232,7 @@ export class GameService {
       game.result = result;
       game.actualRound = actualRound;
       await this.gameRepository.save(game);
+      this.updateJoinButton(game);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -260,6 +263,7 @@ export class GameService {
       }
       await this.gameRepository.save(game);
       this.statusService.add(userId.toString(), 'connected');
+      this.updateJoinButton(game);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -273,5 +277,23 @@ export class GameService {
       .relation(Game, 'score')
       .of(game.id)
       .set(score);
+  }
+
+  private async updateJoinButton(game: Game) {
+    console.log('update status game');
+    // update status button if channel true or invite !== -1
+    if (game.invite !== -1 || game.channel) {
+      if (game.status === 'Not Started')
+        this.chatGateway.server.emit('joinButton', {
+          gameId: game.id,
+          active: true,
+        });
+      else {
+        this.chatGateway.server.emit('joinButton', {
+          gameId: game.id,
+          active: false,
+        });
+      }
+    }
   }
 }

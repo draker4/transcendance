@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable prettier/prettier */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WsException } from '@nestjs/websockets';
 import { ChannelService } from '@/channels/service/channel.service';
@@ -23,7 +23,7 @@ import { Notif } from '@/utils/typeorm/Notif.entity';
 import { ClearNotifDto } from '../dto/clearNotif.dto';
 import { NotifMessages } from '@/utils/typeorm/NotifMessages.entity';
 import { MakeMessage } from '@/messages/dto/makeMessage';
-import { info } from 'console';
+import { Game } from '@/utils/typeorm/Game.entity';
 
 @Injectable()
 export class ChatService {
@@ -33,6 +33,9 @@ export class ChatService {
 
     @InjectRepository(Channel)
     private readonly channelRepository: Repository<Channel>,
+
+    @InjectRepository(Game)
+    private readonly gameRepository: Repository<Game>,
 
     @InjectRepository(UserPongieRelation)
     private readonly userPongieRelation: Repository<UserPongieRelation>,
@@ -52,6 +55,7 @@ export class ChatService {
     private readonly channelService: ChannelService,
     private readonly cryptoService: CryptoService,
     private readonly messageService: MessagesService,
+    @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
   ) {}
 
@@ -2365,6 +2369,29 @@ export class ChatService {
       );
       socket.emit('editRelation', {});
     });
+  }
+
+  async joinButtonActive(gameId: string) {
+    try {
+
+      const game = await this.gameRepository.findOne({
+        where: { id: gameId },
+      });
+
+      if (!game || game.opponent !== -1 || game.status !== 'Not Started')
+        return {
+          active: false,
+          gameId: gameId,
+        };
+    
+      return {
+        active: true,
+        gameId: gameId,
+      };
+    }
+    catch (error) {
+      throw new WsException(error.message);
+    }
   }
 
   private log(message?: any) {

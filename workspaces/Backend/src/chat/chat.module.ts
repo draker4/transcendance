@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Module } from '@nestjs/common';
+import { Module,forwardRef } from '@nestjs/common';
 import { ChatGateway } from './chat.gateway';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/utils/typeorm/User.entity';
@@ -17,11 +17,13 @@ import { UsersModule } from '@/users/users.module';
 import { StatusModule } from '@/statusService/status.module';
 import { AchievementModule } from '@/achievement/achievement.module';
 import { StatsModule } from '@/stats/stats.module';
+import { Game } from '@/utils/typeorm/Game.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Channel,
+      Game,
       Notif,
       NotifMessages,
       SocketToken,
@@ -34,8 +36,9 @@ import { StatsModule } from '@/stats/stats.module';
     MessageModule,
     StatsModule,
     StatusModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
   ],
   providers: [ChatGateway, CryptoService, ChatService],
+  exports: [ChatGateway, ChatService],
 })
 export class ChatModule {}

@@ -87,7 +87,6 @@ export default class ChatService {
 			if (this.nbExceptions === 1)
 				setTimeout(() => {
 					this.nbExceptions = 0;
-					console.log("timeout hereeee");
 				}, 2000);
 
 			this.disconnect();

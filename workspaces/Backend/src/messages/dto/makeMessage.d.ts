@@ -3,5 +3,5 @@ export type MakeMessage = {
   user?: User;
   channel: Channel;
   isServerNotif: boolean;
-  join?: boolean;
+  join?: string;
 };

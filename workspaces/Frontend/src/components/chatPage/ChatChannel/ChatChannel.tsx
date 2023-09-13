@@ -30,7 +30,7 @@ type ReceivedMsg = {
   channelName: string;
   channelId: number;
   isServerNotif: boolean;
-  join?: boolean;
+  join?: string;
 };
 
 // Previous messages loaded from database
@@ -40,7 +40,7 @@ type LoadMsg = {
   user?: User;
   isServerNotif: boolean;
   updatedAt: string;
-  join?: boolean;
+  join?: string;
 };
 
 export default function ChatChannel({ icon, channel, myself, socket, status }: Props) {
@@ -178,7 +178,9 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         sender: receivedMsg.sender,
         date: receivedDate,
         isServerNotif: receivedMsg.isServerNotif,
-        join: receivedMsg.join,
+        join: receivedMsg.join && receivedMsg.join.length > 0
+              ? receivedMsg.join
+              : undefined,
       };
 
       setMessages((previous) => [...previous, msg]);
@@ -196,10 +198,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     
   }, [channel.name, socket]);
 
-  const addMsg = (msg: Message & {
-    opponentId?: number;
-    join?: boolean;
-  }) => {
+  const addMsg = (msg: Message) => {
 
     if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
       console.log("Message : ", msg);
@@ -214,17 +213,17 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
                 socket?.emit("newMsg", {
                   content: msg.content,
                   channelId: payload,
-                  join: msg.join ? true : undefined,
+                  join: msg.join ? msg.join : undefined,
                   source: "newMsg",
                 });
               } else {
                 toast.error("Something went wrong, please try again!");
               }
           });
-            }
+        }
       });
       return ;
-    }
+      }
 
   // Force receiver's socket(s) to join room if needed
   if (channel.type === "privateMsg") {
@@ -235,7 +234,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
             socket?.emit("newMsg", {
               content: msg.content,
               channelId: channel.id,
-              join: msg.join ? true : undefined,
+              join: msg.join ? msg.join : undefined,
               source: "newMsg",
             });
           } else {
@@ -246,7 +245,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
     socket?.emit("newMsg", {
       content: msg.content,
       channelId: channel.id,
-      join: msg.join ? true : undefined,
+      join: msg.join ? msg.join : undefined,
       source: "newMsg",
     });
   }
@@ -255,7 +254,7 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
   return (
     <div className={styles.channelMsgFrame}>
       <Header icon={icon} channel={channel} channelCodeName={codeName} myself={myself} status={status} addMsg={addMsg} />
-      <MessageBoard messages={messages} channel={channel} relNotif={relNotif} status={status} myself={myself} addMsg={addMsg}/>
+      <MessageBoard messages={messages} channel={channel} relNotif={relNotif} status={status} myself={myself} addMsg={addMsg} socket={socket} />
       <Prompt channel={channel} myself={myself} addMsg={addMsg} relNotif={relNotif} isMuted={isMuted}/>
     </div>
   );

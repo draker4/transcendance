@@ -25,7 +25,7 @@ type ReceivedMsg = {
   channelName: string;
   channelId: number;
   isServerNotif: boolean;
-  join?: boolean;
+  join?: string;
 };
 
 export default function ChatBtn({ socket, profile }: { socket: Socket | undefined, profile: Profile }) {

@@ -8,14 +8,7 @@ import InviteButton from "@/components/chatPage/ChatChannel/GameLink/InviteButto
 import WatchButton from "./GameLink/WatchButton";
 import JoinButton from "./GameLink/JoinButton";
 import LoadingComponent from "@/components/loading/Loading";
-
-type GroupedMsgType = {
-  user: Profile & { avatar: Avatar };
-  date: Date;
-  messages: Message[];
-  isServerNotif: boolean;
-  join?: boolean;
-};
+import { Socket } from "socket.io-client";
 
 type Props = {
   groupedMessages: GroupedMsgType;
@@ -23,6 +16,8 @@ type Props = {
   myself: Profile & { avatar: Avatar };
   addMsg: (msg: Message) => void;
   channel: Channel;
+  socket: Socket | undefined;
+  messages: Message[];
 };
 
 export default function MessageItem({
@@ -31,6 +26,8 @@ export default function MessageItem({
   myself,
   addMsg,
   channel,
+  socket,
+  messages,
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const [color, setColor] = useState<string>("#edf0f0");
@@ -207,8 +204,8 @@ export default function MessageItem({
         {/* Content */}
         <div className={styles.flexContentMsg}>
           <div className={styles.content}>{mappingMessages}</div>
-          {groupedMessages.join && groupedMessages.user.id !== myself.id && (
-            <JoinButton myself={myself} inviterId={groupedMessages.user.id} />
+          {groupedMessages.join && groupedMessages.join.length > 0 && groupedMessages.user.id !== myself.id && (
+            <JoinButton gameId={groupedMessages.join} socket={socket} group={groupedMessages} />
           )}
         </div>
       </div>

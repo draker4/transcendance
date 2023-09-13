@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { RelationNotifPack } from "@/types/Channel-linked/RelationNotifPack";
 import { RelationNotif } from "@/lib/enums/relationNotif.enum";
 import MessageBoardPopUp from "./MessageBoardPopUp";
+import { Socket } from "socket.io-client";
 
 type Props = {
   messages: Message[];
@@ -12,17 +13,10 @@ type Props = {
   status: Map<string, string>;
   myself: Profile & { avatar: Avatar };
   addMsg: (msg: Message) => void;
+  socket: Socket | undefined;
 };
 
-type GroupedMsgType = {
-  user: User;
-  date: Date;
-  messages: Message[];
-  isServerNotif: boolean;
-  join?: boolean;
-}
-
-export default function MessageBoard({ messages, channel, relNotif, status, myself, addMsg }: Props) {
+export default function MessageBoard({ messages, channel, relNotif, status, myself, addMsg, socket }: Props) {
   const [groupedMessages, setGroupedMessages] = useState<
     GroupedMsgType[]
   >([]);
@@ -91,7 +85,7 @@ export default function MessageBoard({ messages, channel, relNotif, status, myse
   return (
     <div className={styles.msgBoard}>
       {messages.length > 0 && groupedMessages.map((group, index) => (
-        <MessageItem key={index} groupedMessages={group} status={status} myself={myself} addMsg={addMsg} channel={channel} />
+        <MessageItem key={index} groupedMessages={group} status={status} myself={myself} addMsg={addMsg} channel={channel} socket={socket} messages={messages} />
       ))}
 	  {messages.length === 0 && <p className={styles.placeholder}>{placeholder}</p>}
     </div>

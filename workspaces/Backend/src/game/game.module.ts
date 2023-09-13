@@ -19,11 +19,13 @@ import { ScoreModule } from '@/score/score.module';
 import { UsersModule } from '@/users/users.module';
 import { StatsModule } from '@/stats/stats.module';
 import { GameGateway } from './gateway/game.gateway';
+import { ChatModule } from '@/chat/chat.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Game]),
     AvatarModule,
+    ChatModule,
     ScoreModule,
     StatsModule,
     StatusModule,

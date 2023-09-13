@@ -30,8 +30,8 @@ export class Message {
   @Column()
   content: string;
 
-  @Column({ nullable: true, default: false })
-  join: boolean;
+  @Column({ nullable: true })
+  join?: string;
 
   // Relation Many<Message> [to] one<Channel>
   @ManyToOne(() => Channel, (channel) => channel.messages)

@@ -29,8 +29,8 @@ export class sendMsgDto {
   isServerNotif: boolean;
 
   @IsOptional()
-  @IsBoolean()
-  join?: boolean;
+  @IsString()
+  join?: string;
 }
 
 /*

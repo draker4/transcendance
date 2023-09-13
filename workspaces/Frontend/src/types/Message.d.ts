@@ -5,6 +5,15 @@ type Message = {
     sender?: User; // le user emetteur -- garder le type Pongie ??
     date: Date;// date d'emmission ?
     isServerNotif: boolean;
-    join?: boolean;
+    join?: string;
+    opponentId?: number;
     // destination : channel ou pongie ou channel type privateMsg comme backend ?
 }
+
+type GroupedMsgType = {
+    user: Profile & { avatar: Avatar };
+    date: Date;
+    messages: Message[];
+    isServerNotif: boolean;
+    join?: string;
+};

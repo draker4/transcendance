@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 
 export class newMsgDto {
 
@@ -13,8 +13,8 @@ export class newMsgDto {
   channelId: number;
 
   @IsOptional()
-  @IsBoolean()
-  join?: boolean;
+  @IsString()
+  join?: string;
 
   @IsString()
   @IsOptional()

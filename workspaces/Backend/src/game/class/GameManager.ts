@@ -148,7 +148,6 @@ export class GameManager {
         (user) => user.id !== userId && user.socket.id !== socket.id,
       );
 
-      // [!] bperriol
       this.statusService.add(user.id.toString(), 'connected');
       return { success: true, message: 'User disconnected' };
     } catch (error) {

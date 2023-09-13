@@ -791,6 +791,11 @@ export class ChatGateway implements OnModuleInit {
     }
   }
 
+  @SubscribeMessage('joinButton')
+  async joinButtonActive(@MessageBody() gameId: string) {
+    return await this.chatService.joinButtonActive(gameId);
+  }
+
   // tools
 
   private log(message?: any) {

@@ -91,16 +91,13 @@ export default function InviteButton({
     }
 
     // send message
-    const newMsg: Message & {
-      opponentId?: number;
-      join: boolean;
-    } = {
-      content: `I invite you to play a ${gameType} Pong Game!`,
+    const newMsg: Message = {
+      content: `I invite you to play a ${gameType} Pong Game! ${res.data}`,
       sender: myself,
       date: new Date(),
       isServerNotif: false,
       opponentId: isChannel ? undefined : opponentId,
-      join: true,
+      join: res.data,
     };
 
     addMsg(newMsg);
