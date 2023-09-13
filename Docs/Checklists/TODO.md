@@ -24,8 +24,9 @@
 > Pour qui veut s'en charger ou pour tous
  - [~] Affichage bouton "log out" sur une ligne au lieu de deux
  - [!] Se renseigner sur commment creer la db sans passer par le synchronize a switch
- - [!] Nettoyer ou n'afficher qu'en build tous les consoles.log
- - [!] error ESLINT next/babel quand on compile en build => erreur enelvée mais eslint demande d'update les dépendances de nos useeffects
+ - [!] Nettoyer ou n'afficher qu'en dev tous les consoles.log
+ - [x] error ESLINT next/babel quand on compile en build
+ - [x] all warning after make flcean (depedencies)
 
 
 

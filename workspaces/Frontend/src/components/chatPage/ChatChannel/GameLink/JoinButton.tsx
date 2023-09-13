@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LobbyService from "@/services/Lobby.service";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTv } from "@fortawesome/free-solid-svg-icons";
-import styles from "@/styles/chatPage/ChatChannel/ChatChannel.module.css";
 import { toast } from "react-toastify";
 
 type Props = {
