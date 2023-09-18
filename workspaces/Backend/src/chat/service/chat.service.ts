@@ -538,7 +538,7 @@ export class ChatService {
   async getChannelId(opponentId: number, userId: number) {
     try {
 
-      console.log('chatservice ==> getChannelId() --- start '); // checking
+      console.log(`chatservice ==> getChannelId() ==> userID[${userId}] opponentID${opponentId}`); // checking
 
       const user = await this.usersService.getUserChannels(userId);
       const pongie = await this.usersService.getUserChannels(opponentId);
@@ -584,20 +584,26 @@ export class ChatService {
       }
 
       let relationPongie = await this.userChannelRelation.findOne({
-        where: { channelId: channel.id, userId: opponentId },
+        where: { channelId: channel.id, userId: pongie.id },
         relations: ['user', 'channel'],
       });
 
       if (!relationPongie) {
-        await this.usersService.updateUserChannels(user, channel);
+        await this.usersService.updateUserChannels(pongie, channel);
         relationPongie = await this.userChannelRelation.findOne({
-          where: { channelId: channel.id, userId: userId },
+          where: { channelId: channel.id, userId: pongie.id },
           relations: ['user', 'channel'],
         });
       }
 
       if (!relationPongie || !relationUser)
         throw new Error('cannot create relation');
+
+      // make relations joined to true before leaving
+      relationUser.joined = true;
+      relationPongie.joined = true;
+      await this.userChannelRelation.save(relationUser);
+      await this.userChannelRelation.save(relationPongie);
 
       return channel.id;
     } catch (error) {
