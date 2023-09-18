@@ -283,6 +283,9 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getChannelId')
   async getChannelId(@Req() req, @MessageBody() opponentId: number) {
+
+    this.log(`'getChannelId' event, with opponentId: ${opponentId}`);
+
     if (!opponentId) throw new WsException('no opponent id');
 
     return await this.chatService.getChannelId(opponentId, req.user.id);

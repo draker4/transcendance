@@ -537,8 +537,13 @@ export class ChatService {
 
   async getChannelId(opponentId: number, userId: number) {
     try {
+
+      console.log('chatservice ==> getChannelId() --- start '); // checking
+
       const user = await this.usersService.getUserChannels(userId);
       const pongie = await this.usersService.getUserChannels(opponentId);
+
+      console.log(`user[${user.login}] + pongie[${pongie.login}]`); // checking
 
       if (!pongie || !userId) throw new Error('no user found');
 
@@ -548,12 +553,17 @@ export class ChatService {
           ? userId + ' ' + opponentId
           : opponentId + ' ' + userId;
 
+      console.log(`BEFORE SEARCH CHANNEL NAME`); // checking
+
       let channel = await this.channelService.getChannelByName(
         channelName,
         true,
       );
 
       if (!channel)
+
+        this.log(`user[${user.login}] + pongie[${pongie.login}] ==> need creation of channel [${channelName}]`);
+
         channel = await this.channelService.addChannel(
           channelName,
           'privateMsg',

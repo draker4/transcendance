@@ -88,7 +88,7 @@ export default function InviteButton({
         }
       );
       if (!res.success) {
-        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'disconnect')
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev')
           console.log(res.message);
         return;
       }
