@@ -36,17 +36,18 @@ export default class GameService {
 
     // Catching error or exception will force disconnect then reconnect
     this.socket.on("connect_error", (error: any) => {
-      //   console.log("Socket connection error:", error);
       this.disconnect(true);
     });
 
     this.socket.on("error", (error: any) => {
-      console.log("Socket error:", error);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("Socket error:", error);
       this.disconnect(true);
     });
 
     this.socket.on("exception", (exception: any) => {
-      console.log("WsException:", exception);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("WsException:", exception);
       this.disconnect(true);
     });
   }

@@ -20,7 +20,8 @@ export default function PongDemoHead({ userId, gameData, setShowDemo }: Props) {
   function stopDemo() {
     setShowDemo(false);
     if (userId) {
-      console.log("stop demo");
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("stop demo");
       router.refresh();
     }
   }

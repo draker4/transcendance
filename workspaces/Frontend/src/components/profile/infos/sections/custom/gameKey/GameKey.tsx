@@ -41,7 +41,8 @@ export default function GameKey({ profile }: Props) {
           return;
         }
       }
-      console.log(rep);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(rep);
     }
 
     // Update the database

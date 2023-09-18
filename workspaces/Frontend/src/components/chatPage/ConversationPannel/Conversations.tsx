@@ -59,7 +59,6 @@ export default function Conversations({
         if (!joinedChannels)
           return ;
         nothing.current = false;
-        // console.log("yes its here");
         openDisplay(joinedChannels[0]);
       }
     });
@@ -167,7 +166,8 @@ export default function Conversations({
         router.refresh();
         return ;
       }
-      console.log("Leave channel error : " + e.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("Leave channel error : " + e.message);
     }
   };
 
@@ -197,7 +197,8 @@ export default function Conversations({
         router.refresh();
         return ;
       }
-      console.log("JoinRecent channel error : " + e.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("JoinRecent channel error : " + e.message);
     }
   };
 
@@ -233,7 +234,8 @@ export default function Conversations({
         router.refresh();
         return ;
       }
-      console.log("JoinRecent channel error : " + e.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("JoinRecent channel error : " + e.message);
     }
   };
 

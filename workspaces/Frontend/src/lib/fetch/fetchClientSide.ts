@@ -81,9 +81,10 @@ export default async function fetchClientSide(
     }
     return response;
   } catch (error: any) {
-    console.log(
-      `Error while fetching api on ClientSide: ${url}. Error log: ${error.message}`
-    );
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(
+        `Error while fetching api on ClientSide: ${url}. Error log: ${error.message}`
+      );
     throw new Error(error.message);
   }
 }

@@ -47,7 +47,8 @@ export default async function HomeServer() {
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarbyUserId(profile.id);
   } catch (error: any) {
-    console.log(error.message);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(error.message);
     return <ServerError />;
   }
 

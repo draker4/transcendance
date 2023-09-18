@@ -70,12 +70,13 @@ export default function PopupCodeEmail({
 			setPopup4(true);
 		}
 		catch (error: any) {
-			console.log(error.message);
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			setNotifPopup('Something went wrong, please try again!');
 		}
 	}

@@ -25,7 +25,8 @@ export default async function ChatServer({
     myself = await profilService.getProfileAndAvatar();
     if (myself.id === -1) throw new Error("no user");
   } catch (err) {
-    console.log(err);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(err);
     return <ServerError />;
   }
 

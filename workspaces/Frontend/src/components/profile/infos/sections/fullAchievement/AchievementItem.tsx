@@ -144,7 +144,6 @@ export default function AchievementItem({
         else value = stats.trainingLost;
         break;
       case "demo":
-        console.log("case = ", stats.demoWatched);
         value = stats.demoWatched;
         break ;
       case "level":

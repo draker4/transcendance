@@ -30,18 +30,15 @@ export class WsJwtGuard implements CanActivate {
                     where: { userId: payload.sub },
                 });
                 const   socketToken = await this.findSocketTokenByBearerToken(socketTokens, bearerToken);
-
-				// [!] je tente de commenter car trop de decos,
-                // [!] A RECOMMENTER SI TROP DE DECOS jai essayé de corriger a tester
                 if (!socketToken)
-					// console.log("WsJwtGuard, commented throw error : token already expired");
                     throw new Error('token already expired');
             }
 
             client.user = { id: payload.sub, login: payload.login };
             return true;
         } catch (err) {
-            console.log(err.message);
+            if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+                console.log(err.message);
             throw new WsException('invalid token');
         }
     }

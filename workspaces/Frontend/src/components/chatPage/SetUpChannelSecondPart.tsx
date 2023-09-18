@@ -128,7 +128,8 @@ export default function SetUpChannelSecondPart({
     try {
       getPongersData();
     } catch (err) {
-      console.log("SetUpSectionPongers error : ", err);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("SetUpSectionPongers error : ", err);
     }
   };
 

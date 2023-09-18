@@ -62,7 +62,8 @@ export default function AvatarMenu({ avatar, profile, socket }: Props) {
       await disconnect(profile.id.toString());
       router.push('/welcome');
     } catch (error) {
-      console.log(error);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error);
     }
   };
 

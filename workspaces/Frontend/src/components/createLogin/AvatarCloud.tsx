@@ -127,12 +127,13 @@ export default function AvatarCloud({
 
 		}
 		catch (err: any) {
-			console.log(err.message);
 			if (err.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(err.message);
 			toast.error("Oops, something went wrong, please try again!");
 			setLoading(false);
 		}

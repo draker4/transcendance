@@ -91,7 +91,6 @@ export default function ChatClient({
           setSocket(chatService.socket);
           clearInterval(intervalId);
         }
-        // console.log("chatservice reload here", chatService.socket?.id);
       }, 500);
     }
 

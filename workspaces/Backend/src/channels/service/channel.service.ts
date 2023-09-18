@@ -198,7 +198,7 @@ export class ChannelService {
       rep.data = relation;
     } catch (e: any) {
       this.log(`getOneChannelUserRelation error : `);
-      console.log('error (object) : ', e);
+      this.log(`error (object) : ${e}`);
       rep.error = e;
       rep.message = e.message;
     }
@@ -625,8 +625,6 @@ export class ChannelService {
         channelId,
       );
       
-      console.log("forceJoinPrivateMsgChannel reprelation = ", repRelation);
-
       // creer relation here [!] [!]
       if (!repRelation.success) {
         const other = await this.usersService.getUserById(otherId);

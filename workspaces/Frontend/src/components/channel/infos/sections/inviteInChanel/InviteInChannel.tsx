@@ -17,7 +17,8 @@ export default function InviteInChannel({relation, myRelation, socket}:Props) {
   const router = useRouter();
 
   const handleClickInvite = async (targetId: number) => {
-    console.log(`Wanna invite in ${relation.channel.name} user[${targetId}]`);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Wanna invite in ${relation.channel.name} user[${targetId}]`);
 
     try {
 

@@ -41,7 +41,8 @@ export default function PongHead({
     if (quitStatus) return;
     setQuitStatus(true);
     if (isPlayer === "Spectator") {
-      console.log("Quit Spectator");
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("Quit Spectator");
       router.push("/home");
       return;
     }

@@ -20,7 +20,8 @@ export default class AchievementService {
       return data;
     } catch (error: any) {
       if (error.message === "disconnect") throw new Error("disconnect");
-      console.log(`Error Getting User achievement: ${error}`);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(`Error Getting User achievement: ${error}`);
       return {
         success: false,
         message: "Error Getting User achievement",
@@ -41,7 +42,8 @@ export default class AchievementService {
       return data;
     } catch (error: any) {
       if (error.message === "disconnect") throw new Error("disconnect");
-      console.log(`Error Getting User achievement: ${error}`);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(`Error Getting User achievement: ${error}`);
       return {
         success: false,
         message: "Error Getting User achievement",

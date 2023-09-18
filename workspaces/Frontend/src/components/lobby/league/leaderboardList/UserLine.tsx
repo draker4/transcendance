@@ -14,7 +14,8 @@ export default function UserLine({ userLeaderboard }: Props) {
   const router = useRouter();
 
   function seeProfile(userId: number) {
-    console.log("see profile", userId);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("see profile", userId);
     const url = "home/profile/" + userId;
     router.push(url);
   }

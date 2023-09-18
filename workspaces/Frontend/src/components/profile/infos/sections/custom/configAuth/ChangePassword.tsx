@@ -160,12 +160,13 @@ export default function ChangePassword({
 
 		}
 		catch (error: any) {
-			console.log(error.message);
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			setNotif('Something went wrong, please try again!');
 			if (emailPassword !== initalEmailPasswordText)
 				setTextButton("Send new password by mail");

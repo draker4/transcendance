@@ -32,10 +32,20 @@ export class ScoreService {
         throw new Error('Score not found');
       }
       if (score.leftPlayerId === -1) {
-        console.log('Add Player to left Score');
+        if (
+          process.env &&
+          process.env.ENVIRONNEMENT &&
+          process.env.ENVIRONNEMENT === 'dev'
+        )
+          console.log('Add Player to left Score');
         score.leftPlayerId = opponentId;
       } else if (score.rightPlayerId === -1) {
-        console.log('Add Player to right Score');
+        if (
+          process.env &&
+          process.env.ENVIRONNEMENT &&
+          process.env.ENVIRONNEMENT === 'dev'
+        )
+          console.log('Add Player to right Score');
         score.rightPlayerId = opponentId;
       } else {
         throw new Error('Both players already defined');

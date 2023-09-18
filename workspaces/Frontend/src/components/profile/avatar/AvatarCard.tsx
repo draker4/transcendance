@@ -47,7 +47,6 @@ export default function AvatarCard({
   const avatarService = new Avatar_Service();
 
   const handleArea = (newArea: "border" | "background" | null) => {
-    console.log("la");
     if (newArea) setSelectedArea(newArea);
   };
 
@@ -61,8 +60,6 @@ export default function AvatarCard({
     if (!isOwner) return;
 
     try {
-      console.log(avatarCustomed);
-
       const rep = await avatarService.submitAvatarUser(
         avatarCustomed,
         topColor as string,
@@ -203,7 +200,8 @@ export default function AvatarCard({
           router.refresh();
           return;
         }
-        console.log(err.message);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(err.message);
       }
     };
 

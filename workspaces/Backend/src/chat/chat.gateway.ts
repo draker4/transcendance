@@ -142,7 +142,7 @@ export class ChatGateway implements OnModuleInit {
           }
         }
       } catch (error) {
-        console.log(error);
+        this.log(error);
         socket.disconnect();
       }
     });
@@ -196,7 +196,6 @@ export class ChatGateway implements OnModuleInit {
   @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('newMsg')
   async receiveNewMsg(@MessageBody() message: newMsgDto, @Request() req) {
-    console.log("ChatGateway Message= ", message);
     await this.chatService.receiveNewMsg(
       message,
       req.user.id,

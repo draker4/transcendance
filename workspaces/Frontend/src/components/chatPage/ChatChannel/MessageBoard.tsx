@@ -34,9 +34,11 @@ export default function MessageBoard({ messages, channel, relNotif, status, myse
   const isWithinTwoMinutes = (dateA: Date, dateB: Date) => {
 
     if (!(dateA instanceof Date) || !(dateB instanceof Date)) {
-      console.log("invalid date object");
-      console.log("dateA : ", dateA);
-      console.log("dateB : ", dateB);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev") {
+        console.log("invalid date object");
+        console.log("dateA : ", dateA);
+        console.log("dateB : ", dateB);
+      }
       return false;
     }
 

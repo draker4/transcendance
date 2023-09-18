@@ -35,8 +35,10 @@ export default function GameLine({
         error: "Error joining game",
       });
       if (!res.success) {
-        console.log(res.message);
-        console.log(res.error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev") {
+          console.log(res.message);
+          console.log(res.error);
+        }
         return;
       }
       const url = "home/game/" + res.data;

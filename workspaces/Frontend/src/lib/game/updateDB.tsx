@@ -34,7 +34,8 @@ export async function updateDBScore(game: GameData) {
     scoreUpdate.right = game.score.round[scoreUpdate.actualRound].right;
     await scoreService.updateScore(game.id, scoreUpdate);
   } catch (error) {
-    console.log(`Error Updating Score: ${error}`);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Error Updating Score: ${error}`);
   }
 }
 
@@ -46,7 +47,8 @@ export async function updateDBPause(game: GameData) {
     };
     await scoreService.updatePause(game.id, pauseUpdate);
   } catch (error) {
-    console.log(`Error Updating Pause: ${error}`);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Error Updating Pause: ${error}`);
   }
 }
 
@@ -59,7 +61,8 @@ export async function updateDBStatus(game: GameData) {
     };
     await trainingService.updateTraining(game.id, trainingUpdate);
   } catch (error) {
-    console.log(`Error Updating Status: ${error}`);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Error Updating Status: ${error}`);
   }
 }
 
@@ -79,14 +82,16 @@ export async function updateDBStats(game: GameData) {
       update
     );
   } catch (error) {
-    console.log(`Error Updating Stats: ${error}`);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Error Updating Stats: ${error}`);
   }
 }
 
 export async function updateDBStory(game: GameData) {
   try {
     if (game.storyLevel === undefined) {
-      console.log("No story level defined");
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("No story level defined");
       return;
     }
     const update: StoryUpdate = {
@@ -101,9 +106,11 @@ export async function updateDBStory(game: GameData) {
     ) {
       update.completed = true;
     }
-    console.log("update story", update, game);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("update story", update, game);
     await storyService.updateStory(game.playerLeft.id, update);
   } catch (error) {
-    console.log(`Error Updating Stats: ${error}`);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(`Error Updating Stats: ${error}`);
   }
 }

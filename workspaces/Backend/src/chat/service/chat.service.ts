@@ -68,7 +68,7 @@ export class ChatService {
 
       await this.socketTokenRepository.save(tokenEntity);
     } catch (error) {
-      console.log(error);
+      this.log(error);
     }
   }
 
@@ -92,7 +92,7 @@ export class ChatService {
 
       return user.notif;
     } catch (error) {
-      console.log('ChatGateway getNotif() error : ' + error.message);
+      this.log('ChatGateway getNotif() error : ' + error.message);
       throw new WsException(error.message);
     }
   }
@@ -126,7 +126,7 @@ export class ChatService {
 
       return notifMessages;
     } catch (error) {
-      console.log(error.message);
+      this.log(error);
       throw new WsException(error.message);
     }
   }
@@ -178,7 +178,7 @@ export class ChatService {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      this.log(error.message);
       throw new WsException(error.message);
     }
   }
@@ -197,7 +197,7 @@ export class ChatService {
         avatar: user.avatar,
       };
     } catch (error) {
-      console.log(error.message);
+      this.log(error);
       throw new WsException(error.message);
     }
   }
@@ -490,7 +490,7 @@ export class ChatService {
         try {
           this.messageService.addMessage(saveServerNotif);
         } catch (dbError) {
-          console.log('saving notif in db failed : ' + dbError.message);
+          this.log('saving notif in db failed : ' + dbError.message);
         }
 
         server.to('channel:' + channelId).emit('sendMsg', msg);
@@ -825,7 +825,7 @@ export class ChatService {
 
       return all;
     } catch (error) {
-      console.log(error);
+      this.log(error);
       throw new WsException(error.message);
     }
   }
@@ -911,7 +911,7 @@ export class ChatService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error);
       throw new WsException('cannot delete pongie');
     }
   }
@@ -994,7 +994,7 @@ export class ChatService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error);
       throw new WsException('cannot delete pongie');
     }
   }
@@ -1137,7 +1137,7 @@ export class ChatService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error);
       throw new WsException('cannot delete pongie');
     }
   }
@@ -1282,7 +1282,7 @@ export class ChatService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error);
       throw new WsException('cannot delete pongie');
     }
   }
@@ -1608,7 +1608,7 @@ export class ChatService {
         try {
           this.messageService.addMessage(saveServerNotif);
         } catch (dbError) {
-          console.log('saving notif in db failed : ' + dbError.message);
+          this.log('saving notif in db failed : ' + dbError.message);
         }
 
         server.to('channel:' + channelId).emit('sendMsg', msg);
@@ -1644,8 +1644,6 @@ export class ChatService {
         invited: relation.invited,
         muted: relation.muted,
       };
-
-      console.log(channelRelation);
 
       return {
         success: true,
@@ -1777,7 +1775,7 @@ export class ChatService {
         channel: channelrelation,
       };
     } catch (error) {
-      console.log(error.message);
+      this.log(error.message);
       throw new WsException(error.message);
     }
   }
@@ -1844,7 +1842,7 @@ export class ChatService {
       try {
         this.messageService.addMessage(saveServerNotif);
       } catch (dbError) {
-        console.log('saving notif in db failed : ' + dbError.message);
+        this.log('saving notif in db failed : ' + dbError.message);
       }
 
       return {
@@ -2048,7 +2046,7 @@ export class ChatService {
     pongieBannedIds: string[],
   ) {
     try {
-      console.log(`receiveNewMsgNotif channelid = ${channelId}, userId = ${userId} et pongiebanned = ${pongieBannedIds}`);
+      this.log(`receiveNewMsgNotif channelid = ${channelId}, userId = ${userId} et pongiebanned = ${pongieBannedIds}`);
       const relations = await this.userChannelRelation.find({
         where: {
           channelId: channelId,
@@ -2179,8 +2177,6 @@ export class ChatService {
           }
         }
       }
-
-      console.log("before boucle", infos.newRelation);
 
       if ('isBanned' in infos.newRelation && infos.newRelation.isBanned === true) {
         // Get socket to emit a refresh channel + notifMessage

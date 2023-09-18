@@ -62,7 +62,8 @@ export default function SectionPongStats({ profile, socket, isOwner }: Props) {
         router.refresh();
         return;
       }
-      console.log(`loadStats error : ${error.message}`);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(`loadStats error : ${error.message}`);
     }
   };
 

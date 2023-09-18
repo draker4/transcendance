@@ -68,7 +68,8 @@ export default function JoinButton({ socket, gameId, group }: Props) {
     };
 
     socket?.emit('joinButton', gameId, (payload:any) => {
-      console.log("emit", gameId);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("emit", gameId);
       joinButton(payload);});
 
     socket?.on('joinButton', joinButton);

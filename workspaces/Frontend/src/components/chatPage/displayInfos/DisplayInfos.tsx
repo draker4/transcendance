@@ -85,7 +85,8 @@ export default function DisplayInfos({
 			});
 		}
 		catch (error: any) {
-			console.log(error.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			toast.error('Somethigng went wrong, please try again!')
 			setTextButton(textButtonInitial);
 		}

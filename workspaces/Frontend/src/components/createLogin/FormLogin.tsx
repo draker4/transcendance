@@ -109,7 +109,8 @@ export default function FormLogin({
 
         router.push("/home?home");
       } catch (error) {
-        console.log(error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(error);
         setNotif("Something went wrong, please try again");
         setTextButton(textButtonInitial);
       }

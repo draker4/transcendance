@@ -39,9 +39,10 @@ export default async function fetchData(
 			return response;
 		}
 	} catch (error: any) {
-		console.log(
-			`Error while fetching api: ${apiName} at url: ${url}. Error log: ${error.message}`
-		);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log(
+				`Error while fetching api: ${apiName} at url: ${url}. Error log: ${error.message}`
+			);
 		throw new Error(error.message);
 	}
 }

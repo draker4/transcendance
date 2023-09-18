@@ -10,6 +10,7 @@ export default async function disconnect(id?: string) {
 		);
 	}
 	catch (error) {
-		console.log(error);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log(error);
 	}
 }
