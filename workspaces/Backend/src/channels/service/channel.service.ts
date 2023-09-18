@@ -36,15 +36,10 @@ export class ChannelService {
   async getChannelByName(name: string, privateMsg: boolean) {
     if (privateMsg) {
 
-
-      console.log("getChannelByName => BEFORE FindOne"); // checking
-
       const channel = await this.channelRepository.findOne({
         where: { name: name, type: 'privateMsg' },
         relations: ['avatar'],
       });
-
-      console.log('getChannelByName channel[' + name + '] ==> ', channel); // checking
 
       return channel;
 
