@@ -23,7 +23,7 @@ export const PLAYER_PING = 2;
 export const SPECTATOR_PING = 1;
 export const CHECK_INTERVAL = 2000;
 
-export const FRONT_FPS = 1000 / 60;
+export const FRONT_FPS = 1000 / 40;
 export const BACK_FPS = 1000 / 30;
 
 export const BLUR_INTENSITY = 100;

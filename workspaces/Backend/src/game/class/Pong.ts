@@ -57,8 +57,8 @@ export class Pong {
   private pauseLoopRunning: 'Left' | 'Right' | null = null;
 
   // Game data
-  private playerLeft: UserInfo | null = null;
-  private playerRight: UserInfo | null = null;
+  private playerLeft: UserInfo[] = [];
+  private playerRight: UserInfo[] = [];
   private spectators: UserInfo[] = [];
   private data: GameData;
 
@@ -239,11 +239,11 @@ export class Pong {
   private handleStop(action: ActionDTO) {
     if (this.data.status === 'Playing') {
       // Check if player is allowed to pause
-      if (this.playerLeft.id === action.userId && this.data.pause.left) {
+      if (this.playerLeft[0].id === action.userId && this.data.pause.left) {
         this.data.pause.left--;
         this.data.pause.status = 'Left';
       } else if (
-        this.playerRight.id === action.userId &&
+        this.playerRight[0].id === action.userId &&
         this.data.pause.right
       ) {
         this.data.pause.right--;
@@ -252,17 +252,17 @@ export class Pong {
 
       // Pause the game
       this.startPauseLoop(
-        this.playerLeft.id === action.userId ? 'Left' : 'Right',
+        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
       );
     } else if (this.data.status === 'Stopped') {
       // Check if player is allowed to restart
       if (
-        this.playerLeft.id === action.userId &&
+        this.playerLeft[0].id === action.userId &&
         this.data.pause.status === 'Right'
       ) {
         return;
       } else if (
-        this.playerRight.id === action.userId &&
+        this.playerRight[0].id === action.userId &&
         this.data.pause.status === 'Left'
       ) {
         return;
@@ -270,19 +270,19 @@ export class Pong {
 
       // Restart the game
       this.stopPauseLoop(
-        this.playerLeft.id === action.userId ? 'Left' : 'Right',
+        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
       );
     }
   }
 
   private handlePush(action: ActionDTO) {
     if (
-      this.playerLeft.id === action.userId &&
+      this.playerLeft[0].id === action.userId &&
       !this.data.playerLeftDynamic.push
     )
       this.data.playerLeftDynamic.push = 1;
     else if (
-      this.playerRight.id === action.userId &&
+      this.playerRight[0].id === action.userId &&
       !this.data.playerRightDynamic.push
     )
       this.data.playerRightDynamic.push = 1;
@@ -290,17 +290,17 @@ export class Pong {
 
   public playerAction(action: ActionDTO) {
     if (
-      this.playerLeft.id === action.userId ||
-      this.playerRight.id === action.userId
+      this.playerLeft[0].id === action.userId ||
+      this.playerRight[0].id === action.userId
     ) {
       if (action.move === 'Stop' && this.data.pause.active) {
         this.handleStop(action);
       } else if (action.move === 'Push') {
         this.handlePush(action);
       } else {
-        if (this.playerLeft.id === action.userId)
+        if (this.playerLeft[0].id === action.userId)
           this.data.playerLeftDynamic.move = action.move;
-        else if (this.playerRight.id === action.userId)
+        else if (this.playerRight[0].id === action.userId)
           this.data.playerRightDynamic.move = action.move;
       }
     }
@@ -502,9 +502,9 @@ export class Pong {
     }
     // Update status if ready to play
     if (
-      this.playerLeft &&
+      this.playerLeft.length > 0 &&
       this.data.playerLeftStatus === 'Connected' &&
-      this.playerRight &&
+      this.playerRight.length > 0 &&
       this.data.playerRightStatus === 'Connected'
     ) {
       if (this.data.status === 'Not Started') {
@@ -524,11 +524,11 @@ export class Pong {
   private joinAsHost(user: UserInfo) {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
-      this.playerLeft = user;
+      this.playerLeft.push(user);
       this.data.playerLeftStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
     } else if (this.gameDB.hostSide === 'Right') {
-      this.playerRight = user;
+      this.playerRight.push(user);
       this.data.playerRightStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Right') this.stopDisconnectLoop();
     }
@@ -537,7 +537,7 @@ export class Pong {
   private async joinAsOpponent(user: UserInfo) {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
-      this.playerRight = user;
+      this.playerRight.push(user);
       if (this.data.playerRight.id === -1) {
         this.data.playerRight = await this.gameService.definePlayer(
           user.id,
@@ -549,7 +549,7 @@ export class Pong {
       this.data.playerRightStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
     } else if (this.gameDB.hostSide === 'Right') {
-      this.playerLeft = user;
+      this.playerLeft.push(user);
       if (this.data.playerLeft.id === -1) {
         this.data.playerLeft = await this.gameService.definePlayer(
           user.id,
@@ -570,12 +570,16 @@ export class Pong {
       success: false,
       message: '',
     };
-    if (this.playerLeft && this.playerLeft === user) {
-      this.playerLeft = null;
+    if (this.playerLeft.length > 0 && this.playerLeft.includes(user)) {
+      this.playerLeft = this.playerLeft.filter(
+        (player) => player.socket.id !== user.socket.id,
+      );
       if (manual && this.data.status === 'Playing') this.rageQuit('Left');
       else this.disconnectPlayer('Left');
-    } else if (this.playerRight && this.playerRight === user) {
-      this.playerRight = null;
+    } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
+      this.playerRight = this.playerRight.filter(
+        (player) => player.socket.id !== user.socket.id,
+      );
       if (manual && this.data.status === 'Playing') this.rageQuit('Right');
       else this.disconnectPlayer('Right');
     } else {
@@ -635,6 +639,7 @@ export class Pong {
 
   private disconnectPlayer(side: 'Left' | 'Right') {
     if (side === 'Left') {
+      if (this.playerLeft.length > 0) return;
       this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
@@ -649,6 +654,7 @@ export class Pong {
         else this.stopDisconnectLoop();
       }
     } else if (side === 'Right') {
+      if (this.playerRight.length > 0) return;
       this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';

@@ -99,8 +99,9 @@ export const gameLoop = (
 ) => {
   if (!isMountedRef.current) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
-  frameCountRef.current++;
-  if (elapsedTime >= 16.67) {
+
+  if (elapsedTime >= FRONT_FPS) {
+    frameCountRef.current++;
     game = updateGame(game);
     drawPong(game, draw);
 
@@ -122,13 +123,7 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  const remainingDelay = Math.max(
-    FRONT_FPS - (performance.now() - timestamp),
-    0
+  requestAnimationFrame((timestamp) =>
+    gameLoop(timestamp, game, draw, isMountedRef)
   );
-  setTimeout(() => {
-    requestAnimationFrame((timestamp) =>
-      gameLoop(timestamp, game, draw, isMountedRef)
-    );
-  }, remainingDelay);
 };

@@ -5,7 +5,6 @@ import {
   TIMER_RESTART,
   TIMER_PAUSE,
   FRONT_FPS,
-  BACK_FPS,
 } from "@transcendence/shared/constants/Game.constants";
 import { updatePong } from "@transcendence/shared/game/updatePong";
 import {
@@ -73,9 +72,9 @@ export const gameLoop = (
 ) => {
   if (!isMountedRef.current || !gameLoopRunning) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
-  frameCountRef.current++;
   const updatedGame = { ...game };
-  if (elapsedTime >= BACK_FPS) {
+  if (elapsedTime >= FRONT_FPS) {
+    frameCountRef.current++;
     if (updatedGame.status === "Playing") {
       updatePong(updatedGame);
       if (updatedGame.updateScore) {
@@ -102,6 +101,7 @@ export const gameLoop = (
       updatedGame.updatePause = false;
     }
     drawPong(updatedGame, draw);
+    setGameData(updatedGame);
     lastTimestampRef.current = timestamp;
   }
 
@@ -121,14 +121,7 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  const remainingDelay = Math.max(
-    FRONT_FPS - (performance.now() - timestamp),
-    0
+  requestAnimationFrame((timestamp) =>
+    gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)
   );
-  setTimeout(() => {
-    requestAnimationFrame((timestamp) =>
-      gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)
-    );
-  }, remainingDelay);
-  setGameData(updatedGame);
 };
