@@ -40,6 +40,8 @@ type Props = {
   isPlayer: "Left" | "Right" | "Spectator";
   gameService: GameService;
   lobby: LobbyService;
+  background: HTMLImageElement;
+  ball: HTMLImageElement;
 };
 
 export default function Pong({
@@ -50,6 +52,8 @@ export default function Pong({
   isPlayer,
   gameService,
   lobby,
+  background,
+  ball,
 }: Props) {
   const pongRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -58,25 +62,13 @@ export default function Pong({
   const [showPreview, setShowPreview] = useState(true);
   const [showGameEnd, setShowGameEnd] = useState(false);
 
-  const backgroundImage = useMemo(() => {
-    const image = new Image();
-    image.src = `/images/background/${gameData.background}.png`;
-    return image;
-  }, [gameData.background]);
-
-  const ballImage = useMemo(() => {
-    const image = new Image();
-    image.src = `/images/ball/${gameData.ballImg}.png`;
-    return image;
-  }, [gameData.ballImg]);
-
   useEffect(() => {
     if (showPreview) return;
     const draw: Draw = {
       canvas: canvasRef.current!,
       context: canvasRef.current!.getContext("2d")!,
-      backgroundImage: backgroundImage,
-      ballImage: ballImage,
+      backgroundImage: background,
+      ballImage: ball,
     };
     draw.canvas.focus();
 

@@ -16,6 +16,7 @@ import GameService from "@/services/Game.service";
 import Pong from "./Pong";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import LoadingComponent from "../loading/Loading";
+import { set } from "react-hook-form";
 
 type Props = {
   profile: Profile;
@@ -34,22 +35,33 @@ export default function Game({ profile, token, gameId }: Props) {
   const [isPlayer, setIsPlayer] = useState<"Left" | "Right" | "Spectator">(
     "Spectator"
   );
+  const [background, setBackground] = useState<HTMLImageElement | undefined>(
+    undefined
+  );
+  const [ball, setBall] = useState<HTMLImageElement | undefined>(undefined);
 
   //------------------------------------Chargement------------------------------------//
 
   useEffect(() => {
     if (!joinEmitter) {
       setJoinEmitter(true);
-      gameService.socket?.emit("join", gameId, (gameData: any) => {
-        if (gameData.success == false) {
+      gameService.socket?.emit("join", gameId, (ret: any) => {
+        if (ret.success == false) {
           setError(true);
         } else {
-          setGameData(gameData.data);
+          const defineBackground = new Image();
+          defineBackground.src = `/images/background/${ret.data.background}.png`;
+          setBackground(defineBackground);
+          const defineBall = new Image();
+          defineBall.src = `/images/ball/${ret.data.ballImg}.png`;
+          setBall(defineBall);
+
+          setGameData(ret.data);
           setIsLoading(false);
           setIsPlayer(
-            gameData.data.playerLeft.id === profile.id
+            ret.data.playerLeft.id === profile.id
               ? "Left"
-              : gameData.data.playerRight.id === profile.id
+              : ret.data.playerRight.id === profile.id
               ? "Right"
               : "Spectator"
           );
@@ -88,7 +100,7 @@ export default function Game({ profile, token, gameId }: Props) {
     );
   }
 
-  if (!isLoading && gameData && gameService.socket) {
+  if (!isLoading && gameData && gameService.socket && background && ball) {
     return (
       <div className={styles.game}>
         <Pong
@@ -99,6 +111,8 @@ export default function Game({ profile, token, gameId }: Props) {
           isPlayer={isPlayer}
           gameService={gameService}
           lobby={lobby}
+          background={background}
+          ball={ball}
         ></Pong>
       </div>
     );
