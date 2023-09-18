@@ -624,6 +624,8 @@ export class ChannelService {
         otherId,
         channelId,
       );
+      
+      console.log("forceJoinPrivateMsgChannel reprelation = ", repRelation);
 
       // creer relation here [!] [!]
       if (!repRelation.success) {

@@ -45,10 +45,18 @@ export default function PongHead({
       router.push("/home");
       return;
     }
-    const res = await lobby.quitGame().then(() => {
+    const res = await lobby.quitGame()
+      .then(() => {
       gameService.socket?.emit("quit");
       router.push("/home");
-    });
+      })
+      .catch(async (err) => {
+        if (err.message === "disconnect") {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
+      });
     await toast.promise(new Promise((resolve) => resolve(res)), {
       pending: "Leaving game...",
       success: "You have left the game",

@@ -128,7 +128,6 @@ export default function CreateParty({
         // send message to privateMsg, find channel with pongie Id and join him inside if needed
         if (newMsg.opponentId && newMsg.opponentId !== -1) {
           socket?.emit('getChannelId', newMsg.opponentId, (payload: number) => {
-
             if (payload) {
               socket?.emit("forceJoinPrivateMsgChannel", 
               {channelId: payload, createIfNeeded:true, source:"forceJoinPrivateMsgChannel"},
@@ -144,7 +143,9 @@ export default function CreateParty({
                   toast.error("The invitation could not be sent, please close the game!");
                 }
               });
-
+            }
+            else {
+              toast.info("Could not send the invitation message...");
             }
           });
         }
