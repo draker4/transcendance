@@ -59,6 +59,8 @@ export default function SectionAchievements({ profile, socket, isOwner }: Props)
 
       setAchievements(newAchievements);
       setstats(data.stats);
+
+      console.log(data.stats);
     } catch (error: any) {
       if (error.message === "disconnect") {
         await disconnect();
