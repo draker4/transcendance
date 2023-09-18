@@ -124,27 +124,11 @@ export default function CreateParty({
 
         if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
           console.log("Message : ", newMsg);
-
-        console.log("juste before => getChannelId with opponent id = ", newMsg.opponentId); // checking
         
         // send message to privateMsg, find channel with pongie Id and join him inside if needed
         if (newMsg.opponentId && newMsg.opponentId !== -1) {
           socket?.emit('getChannelId', newMsg.opponentId, (payload: number) => {
 
-            console.log("getChannelId => PAYLOAD = ", payload); // checking
-
-            // [A] the channelPrivateMessage doesn't exist yet
-            if (!payload) {
-
-              if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
-                console.log("forceCreatePrivateMessage beetween " + userId + " and " + newMsg.opponentId);
-
-              // socket.emit("forceCreateprivateMessage", )
-
-
-              // finir par payload = le channelId de la channelPrivateMessage ainsi créée
-            }
-            // [B] the channelPrivateMessage already exist
             if (payload) {
               socket?.emit("forceJoinPrivateMsgChannel", 
               {channelId: payload, createIfNeeded:true, source:"forceJoinPrivateMsgChannel"},

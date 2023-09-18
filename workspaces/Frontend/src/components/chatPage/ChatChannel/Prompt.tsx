@@ -41,7 +41,6 @@ export default function Prompt({ channel, myself, addMsg, relNotif, isMuted}: Pr
     e?.preventDefault();
 
     if (text.length > 0 && relNotif.notif === RelationNotif.nothing && !isMuted) {
-    //   console.log("Message to send :", text); // [!] checking
       const newMsg: Message = {
         content: text,
         sender: myself,
