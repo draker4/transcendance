@@ -625,7 +625,6 @@ export class ChatGateway implements OnModuleInit {
     return rep;
   }
 
-  @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('forceJoinPrivateMsgChannel')
   async forceJoinPrivateMsgChannel(
     @Request() req,

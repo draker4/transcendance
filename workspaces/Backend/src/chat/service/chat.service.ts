@@ -108,8 +108,6 @@ export class ChatService {
 
       let notifMessages = user.notif.notifMessages;
 
-      console.log("notifmessages=", notifMessages);
-
       if (notifMessages.length !== 0) {
         notifMessages = await Promise.all(
           notifMessages.map(async (notif) => {

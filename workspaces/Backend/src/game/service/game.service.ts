@@ -280,7 +280,6 @@ export class GameService {
   }
 
   private async updateJoinButton(game: Game) {
-    console.log('update status game');
     // update status button if channel true or invite !== -1
     if (game.invite !== -1 || game.channel) {
       if (game.status === 'Not Started')
