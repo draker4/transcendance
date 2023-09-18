@@ -56,7 +56,8 @@ export async function POST(req: NextRequest) {
 		});
 	}
 	catch (error) {
-		console.log(error);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log(error);
 	}
 
 	return NextResponse.json({

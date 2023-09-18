@@ -2,10 +2,6 @@ import { LinearProgress, linearProgressClasses } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 
-type Props = {
-  profile: Profile;
-};
-
 export default function HeaderAchievement({ achievements }: {
   achievements: UserAchievement[];
 }) {

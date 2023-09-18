@@ -115,7 +115,8 @@ export const gameLoop = (
     );
 
     // Display FPS
-    if (showFpsRef) console.log("FPS:", fpsRef.current);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" && showFpsRef)
+      console.log("FPS:", fpsRef.current);
 
     frameCountRef.current = 0;
     lastFpsUpdateTimeRef.current = currentTime;

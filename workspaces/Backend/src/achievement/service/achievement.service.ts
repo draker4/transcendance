@@ -252,7 +252,12 @@ export class AchievementService implements OnModuleInit {
       ret.data = fullAchievement;
       return ret;
     } catch (error) {
-      console.log(error.message);
+      if (
+        !process.env ||
+        !process.env.ENVIRONNEMENT ||
+        process.env.ENVIRONNEMENT !== 'dev'
+      )
+        console.log(error.message);
       ret.error = error.message;
       return ret;
     }
@@ -316,7 +321,12 @@ export class AchievementService implements OnModuleInit {
         .slice(0, 5);
       return ret;
     } catch (error) {
-      console.log(error.message);
+      if (
+        !process.env ||
+        !process.env.ENVIRONNEMENT ||
+        process.env.ENVIRONNEMENT !== 'dev'
+      )
+        console.log(error.message);
       ret.error = error.message;
       return ret;
     }

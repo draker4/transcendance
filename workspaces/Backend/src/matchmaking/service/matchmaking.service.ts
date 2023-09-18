@@ -43,7 +43,12 @@ export class MatchmakingService {
       message: 'Catched an error',
     };
     try {
-      console.log(userId, search);
+      if (
+        process.env &&
+        process.env.ENVIRONNEMENT &&
+        process.env.ENVIRONNEMENT === 'dev'
+      )
+        console.log(userId, search);
       const matchmaking = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });

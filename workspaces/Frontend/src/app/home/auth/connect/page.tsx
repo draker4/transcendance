@@ -29,7 +29,8 @@ export default function ConnectPage() {
         router.replace('/home');
   
       } catch (error) {
-        console.log(error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(error);
     
         await disconnect();
         router.replace("/welcome/login/wrong");

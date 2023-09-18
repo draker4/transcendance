@@ -43,7 +43,7 @@ export default function LastAchievements({
         router.refresh();
         return;
       }
-      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error.message);
       toast.error("Something went wrong, please refresh the page!");
     }
@@ -88,7 +88,8 @@ export default function LastAchievements({
       if (res.success) setStats(res.data);
       toast.info(`${achievement.xp}xp collected!`);
     } catch (error: any) {
-      console.log(error);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error);
       if (error.message === "disconnect") {
         await disconnect();
         router.refresh();

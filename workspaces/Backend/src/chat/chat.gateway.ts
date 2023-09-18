@@ -142,7 +142,7 @@ export class ChatGateway implements OnModuleInit {
           }
         }
       } catch (error) {
-        console.log(error);
+        this.log(error);
         socket.disconnect();
       }
     });
@@ -624,7 +624,6 @@ export class ChatGateway implements OnModuleInit {
     return rep;
   }
 
-  @UseGuards(ChannelAuthGuard)
   @SubscribeMessage('forceJoinPrivateMsgChannel')
   async forceJoinPrivateMsgChannel(
     @Request() req,

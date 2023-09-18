@@ -6,7 +6,15 @@ import { transports, format } from 'winston';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
-// process.env.TZ = 'Africa/Maputo';
+function log(message?: any) {
+  const cyan = '\x1b[36m';
+  const stop = '\x1b[0m';
+
+  if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev") return;
+
+  process.stdout.write(cyan + '[main]  ' + stop);
+  console.log(message);
+}
 
 async function bootstrap() {
   try {
@@ -68,9 +76,10 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe());
 
     await app.listen(parseInt(process.env.PORT_NESTJS));
-    console.log(`Application is running on port ${process.env.PORT_NESTJS}`);
+    log(`Application is running on port ${process.env.PORT_NESTJS}`);
+
   } catch (error) {
-    console.error('Error during bootstrap:', error);
+    log(`Error during bootstrap: ${error}`);
     process.exit(1);
   }
 }

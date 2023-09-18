@@ -236,7 +236,8 @@ export default function AvatarProfile({
 				router.refresh();
 				return ;
 			}
-      console.log(error.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
 			toast.error("Oops, something went wrong, please try again!");
 			setLoading(false);
 		}
@@ -329,12 +330,13 @@ export default function AvatarProfile({
         setLoading(false);
 		}
 		catch (err: any) {
-			console.log(err.message);
-			if (err.message === "disconnect") {
-				await disconnect();
+      if (err.message === "disconnect") {
+        await disconnect();
 				router.refresh();
 				return ;
 			}
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(err.message);
 			toast.error("Oops, something went wrong, please try again!");
 			setLoading(false);
 		}

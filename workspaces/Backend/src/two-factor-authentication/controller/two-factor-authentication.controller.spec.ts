@@ -46,7 +46,8 @@ export class TwoFactorAuthenticationController {
 
       this.twoFactorAuthenticationService.sendMail(user);
     } catch (error) {
-      console.log(error.message);
+		  if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }
@@ -78,7 +79,8 @@ export class TwoFactorAuthenticationController {
         success: true,
       };
     } catch (error) {
-      console.log(error.message);
+		  if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }
@@ -113,7 +115,8 @@ export class TwoFactorAuthenticationController {
         success: true,
       };
     } catch (error) {
-      console.log(error.message);
+		  if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }
@@ -148,7 +151,8 @@ export class TwoFactorAuthenticationController {
         success: true,
       };
     } catch (error) {
-      console.log(error.message);
+		  if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }

@@ -31,7 +31,8 @@ export async function GET() {
 			return response;
 
 		} catch (err) {
-			console.log(err);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(err);
 		}
 	}
 	return NextResponse.json({status: 400});

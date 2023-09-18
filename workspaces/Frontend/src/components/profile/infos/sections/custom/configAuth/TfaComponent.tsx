@@ -95,12 +95,13 @@ export default function SectionCustom({ profile }: {
 				await deactivate2fa();
 		}
 		catch (error: any) {
-			console.log(error.message);
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			setNotif1('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
 		}
@@ -140,12 +141,13 @@ export default function SectionCustom({ profile }: {
 			setPopup5(false);
 		}
 		catch (error: any) {
-			console.log(error.message);
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			setNotif2('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
 		}
@@ -189,12 +191,13 @@ export default function SectionCustom({ profile }: {
 
 		}
 		catch (error: any) {
-			console.log(error.message);
 			if (error.message === "disconnect") {
 				await disconnect();
 				router.refresh();
 				return ;
 			}
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 			setNotif2('Something went wrong, please try again!');
 			setNotifPopup('Something went wrong, please try again!');
 		}

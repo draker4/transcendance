@@ -98,7 +98,8 @@ export default class Avatar_Service {
         throw new Error("submitAvatarColors error");
 
       const data:ReturnData = await response.json();
-      console.log(data);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(data);
       return (data);
     } catch(e:any) {
       throw new Error(e.message);

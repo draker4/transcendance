@@ -65,7 +65,7 @@ export default function SectionAchievements({ profile, socket, isOwner }: Props)
         router.refresh();
         return;
       }
-      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error.message);
       toast.error("Something went wrong, please refresh the page!");
     }
@@ -106,7 +106,7 @@ export default function SectionAchievements({ profile, socket, isOwner }: Props)
         why: "updateAchievements",
       });
     } catch (error: any) {
-      if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error);
       if (error.message === "disconnect") {
         await disconnect();

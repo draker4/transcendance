@@ -80,7 +80,8 @@ export default function Searching({ profile }: {
         router.refresh();
         return ;
       }
-      console.log(error.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
     }
   };
 

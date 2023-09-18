@@ -105,7 +105,8 @@ export class AuthService {
       try {
         await this.updateRefreshToken(user, refresh_token, nbOfRefreshes);
       } catch (error) {
-        console.log(error);
+        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+          console.log(error);
       }
     } else
       access_token = await this.jwtService.signAsync(payload, {
@@ -256,7 +257,8 @@ export class AuthService {
 
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
-        console.log('NOT VALID=', refreshToken);
+        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+          console.log('NOT VALID=', refreshToken);
         throw new Error('token not valid!');
       }
 
@@ -267,12 +269,14 @@ export class AuthService {
 
       setTimeout(() => {
         this.usersService.deleteToken(isMatch);
-        console.log('JUST DELETED=', refreshToken);
+        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+          console.log('JUST DELETED=', refreshToken);
       }, 20000);
 
       return this.login(user, isMatch.NbOfRefreshes + 1, false);
     } catch (error) {
-      console.log(error.message);
+      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        console.log(error.message);
       throw new BadRequestException(error.message);
     }
   }
@@ -300,7 +304,8 @@ export class AuthService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        console.log(error);
       throw new BadRequestException();
     }
   }
@@ -330,7 +335,8 @@ export class AuthService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        console.log(error);
       throw new BadRequestException();
     }
   }

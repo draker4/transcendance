@@ -12,7 +12,8 @@ export function GET(req: NextRequest) {
 			});
 		}
 		catch (error: any) {
-			console.log(error.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 		}
 	}
 	else if (crunchyToken) {
@@ -23,7 +24,8 @@ export function GET(req: NextRequest) {
 			});
 		}
 		catch (error: any) {
-			console.log(error.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log(error.message);
 		}
 	}
 	

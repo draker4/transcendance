@@ -57,3 +57,23 @@
  - [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)
 
  - [+] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail ! Trop cool ca :D
+
+
+
+
+# TO DO LIST (2e session)
+
+> All
+- [!] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
+
+> Bperriol
+- [~~] La notif des achievement disparait mais ne revient pas au moment du level up qui arrive au meme moment
+- [!] achievement les demos sont compte avec le niveau du joueur !! @_@' 
+
+> Chat
+- [!] WsException: Object { status: "error", message: "Forbidden resource" } => inviation a une game de Jiji vers loup ... dans le cas 2 onglets : Mozilla & MozillaPrivate
+  Probleme besoin d'avoir un message prive avant d'envoyer une invitation de jeu
+
+> Loumarti
+- [X] Le prompt reste a la taille du dernier message envoye => c'est ok
+- [!] verifier mes switch (breaks !)

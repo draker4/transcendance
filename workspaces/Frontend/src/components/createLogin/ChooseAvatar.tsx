@@ -69,7 +69,8 @@ export default function ChooseAvatar({
         setAvatarsAdded(prev => [...prev, ...data]);
       }
       catch (err: any) {
-        console.log(err.message);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(err.message);
         if (err.message === "disconnect")
           await disconnect();
           router.refresh();

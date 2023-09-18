@@ -34,7 +34,6 @@ export default function DefineName({
   // ------------------------------------  CREATE  ------------------------------------ //
   function generateRandomName() {
     const randomName = uniqueNamesGenerator(config);
-    console.log(randomName);
     setName(randomName);
   }
   // -------------------------------------  RENDU  ------------------------------------ //

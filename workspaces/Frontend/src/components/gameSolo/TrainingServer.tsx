@@ -44,7 +44,8 @@ export default async function GameServer({
     profile = await profileService.getProfileByToken();
     if (profile.id === -1) throw new Error("no user");
   } catch (err) {
-    console.log(err);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log(err);
     error = true;
   }
   if (

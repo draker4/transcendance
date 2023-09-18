@@ -10,16 +10,15 @@ export async function middleware(req: NextRequest) {
   let verifiedToken =
     crunchyToken &&
     (await verifyAuth(crunchyToken).catch((err) => {
-      console.log(err);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(err);
     }));
   // const url = req.nextUrl;
   // console.log(url.href);
   // console.log(verifiedToken);
 
-  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google") {
-    // console.log("do nothing go to auth");
+  if (verifiedToken && req.nextUrl.pathname === "/home/auth/google")
     return;
-  }
 
   if (
     verifiedToken &&
@@ -52,7 +51,8 @@ export async function middleware(req: NextRequest) {
         refreshToken = data.refresh_token;
         changeCookies = true;
       } catch (error) {
-        console.log(error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(error);
         verifiedToken = undefined;
       }
     }
@@ -63,7 +63,6 @@ export async function middleware(req: NextRequest) {
     verifiedToken.login &&
     req.nextUrl.pathname === "/home/create"
   ) {
-    // console.log("redirect go to home")
     const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -86,7 +85,6 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/home") &&
     req.nextUrl.pathname !== "/home/create"
   ) {
-    // console.log("redirect go create");
     const response = NextResponse.redirect(new URL("/home/create", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -104,7 +102,6 @@ export async function middleware(req: NextRequest) {
   }
 
   if (req.nextUrl.pathname === "/" && !verifiedToken && !changeCookies) {
-    // console.log("redirect go to welcome")
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const response = NextResponse.redirect(new URL("/welcome", req.url));
@@ -121,11 +118,9 @@ export async function middleware(req: NextRequest) {
       expires: yesterday,
     });
     return response;
-    // return NextResponse.redirect(new URL("/welcome", req.url));
   }
 
   if (req.nextUrl.pathname === "/" && (verifiedToken || changeCookies)) {
-    // console.log("redirect go to home from /")
     const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -146,8 +141,6 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/welcome") &&
     (verifiedToken || changeCookies)
   ) {
-    // console.log("redirect go to home from /welcome")
-
     const response = NextResponse.redirect(new URL("/home", req.url));
     if (changeCookies && refreshToken) {
       response.cookies.set("crunchy-token", crunchyToken as string, {
@@ -169,7 +162,6 @@ export async function middleware(req: NextRequest) {
     !verifiedToken &&
     !changeCookies
   ) {
-    // console.log("redirect go to welcome from /home");
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const response = NextResponse.redirect(new URL("/welcome/notif", req.url));
@@ -187,7 +179,6 @@ export async function middleware(req: NextRequest) {
     });
     return response;
 
-    // return NextResponse.redirect(new URL("/welcome/notif", req.url));
   }
 
   // Check if user is in a multiplayer game and redirect to page
@@ -196,13 +187,11 @@ export async function middleware(req: NextRequest) {
     (verifiedToken || changeCookies) &&
     !req.nextUrl.pathname.startsWith("/home/game")
   ) {
-    // console.log("check if user is in game");
     
     try {
       const lobbyService = new LobbyService(crunchyToken);
       const ret: ReturnData = await lobbyService.userInGame();
       if (ret.success) {
-        // console.log("redirect to game: " + ret.data);
         const response = NextResponse.redirect(
           new URL("/home/game/" + ret.data, req.url)
         );
@@ -225,8 +214,6 @@ export async function middleware(req: NextRequest) {
       
     }
   }
-
-  // console.log("nothing redirected");
 
   if (changeCookies && refreshToken) {
     const response = NextResponse.next();

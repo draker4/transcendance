@@ -59,7 +59,8 @@ export default function Story({ profile, trainingService }: Props) {
         error: "Error creating training",
       });
       if (!res.success) {
-        console.log(res.message);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(res.message);
         setCreatingStory(false);
         return;
       }
@@ -87,7 +88,7 @@ export default function Story({ profile, trainingService }: Props) {
           }
           setCurrentLevel(checkLevel);
         } else if (ret) {
-          if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+          if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
             console.log(ret.message);
           toast.error("Something went wrong, please refresh the page!");
         }
@@ -98,7 +99,7 @@ export default function Story({ profile, trainingService }: Props) {
           router.refresh();
           return;
         }
-        if (process.env.DISCONNECT && process.env.DISCONNECT === 'dev')
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
           console.log(err.message);
         toast.error("Something went wrong, please refresh the page!");
       });

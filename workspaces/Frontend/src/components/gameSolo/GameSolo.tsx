@@ -41,7 +41,8 @@ export default function GameSolo({ profile, trainingId }: Props) {
           if (ret.success == false) {
             setError(true);
           } else {
-            console.log(ret.data);
+            if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+              console.log(ret.data);
             if (ret.data.status === "Finished") {
               router.push("/home");
             } else {

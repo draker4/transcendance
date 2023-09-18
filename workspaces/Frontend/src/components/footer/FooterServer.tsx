@@ -25,7 +25,6 @@ export default async function FooterServer() {
     const profileData = new Profile_Service(token);
     profile = await profileData.getProfileByToken();
   } catch (error: any) {
-    // console.log(error.message);
   }
 
   return <FooterFront profile={profile} />;

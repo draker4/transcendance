@@ -26,7 +26,8 @@ export class MailService {
 	async sendUserConfirmation(email: string, code: string) {
 		const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
-		console.log("code email: ", code); // [!]
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log("code email: ", code); // [!]
 		return this.transporter.sendMail({
 			to: email,
 			subject: 'Welcome to Crunchy Pong! Confirm your Email',
@@ -37,7 +38,8 @@ export class MailService {
 	async sendUser2faVerification(email: string, code: string) {
 		const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
-		console.log("code email: ", code); // [!]
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log("code email: ", code); // [!]
 		return this.transporter.sendMail({
 			to: email,
 			subject: 'Crunchy Pong, Verify your identity!',
@@ -46,7 +48,8 @@ export class MailService {
 	}
 
 	async sendUserNewPassword(email: string, password: string) {
-		console.log(password);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log(password);
 		return this.transporter.sendMail({
 			to: email,
 			subject: 'Crunchy Pong: here your new account access!',

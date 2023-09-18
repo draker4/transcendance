@@ -145,8 +145,10 @@ export default function AchievementItem({
         break;
       case "demo":
         value = stats.demoWatched;
+        break ;
       case "level":
         value = stats.userLevel;
+        break ;
       default:
         break;
     }

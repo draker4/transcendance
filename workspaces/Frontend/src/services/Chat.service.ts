@@ -8,34 +8,24 @@ export default class ChatService {
 	public	loading: boolean = false;
 	public	nbExceptions: number = 0;
 
-	// public static nbTimes = 0;
-
 	// Singleton
     constructor(token?: string) {
-		// console.log(ChatService.nbTimes);
-
-		// ChatService.nbTimes++;
 		
         if (ChatService.instance) {
-			// console.log("instance returned");
 			return ChatService.instance;
 		}
 		
 		if (token) {
-			// console.log("socket initialized");
 			this.initializeSocket(token);
 			ChatService.instance = this;
 		}
 		else {
-			// console.log("socket disconnected");
 			this.disconnect();
 		}
     }
 
 	// Create socket + listen errors & exceptions
 	public initializeSocket(token: string) {
-
-		// console.log("initialization with token = ", token);
 
 		while (this.loading) {}
 
@@ -54,11 +44,9 @@ export default class ChatService {
 
 		this.socket.on('connect', () => {
 			this.loading = false;
-			// console.log('WebSocket connected id=', this.socket?.id);
 		});
 		  
 		this.socket.on('disconnect', async () => {
-			// console.log('WebSocket disconnected id=', this.socket?.id);
 			this.disconnect();
 		  	await this.refreshSocket();
 		});
@@ -66,18 +54,21 @@ export default class ChatService {
 		// Catching error or exception will force disconnect then reconnect
 		this.socket.on("connect_error", async (error: any) => {
 			this.loading = false;
-			console.log("Socket connection error:", error);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+				console.log("Socket connection error:", error);
 			this.disconnect();
 			await this.refreshSocket();
 		});
 	
 		this.socket.on("error", (error: any) => {
-		  console.log("Socket error:", error);
-		  this.disconnect();
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+		  		console.log("Socket error:", error);
+			this.disconnect();
 		});
 	
 		this.socket.on("exception", (exception: any) => {
-		  	console.log("WsException:", exception);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+		  		console.log("WsException:", exception);
 			if (exception.message === "invalid token")
 				this.disconnectClient = true;
 
@@ -111,8 +102,6 @@ export default class ChatService {
 			return ;
 
 		try {
-			// console.log("trying to refresh tokens and socket");
-
 			const res = await fetch(
 				`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`, {
 					method: "POST",
@@ -142,7 +131,6 @@ export default class ChatService {
 		  this.initializeSocket(data.access_token);
 		}
 		catch (error: any) {
-			// console.log(error.message, "in chat service");
 			this.disconnectClient = true;
 		}
 	}

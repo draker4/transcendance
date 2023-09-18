@@ -61,18 +61,6 @@ export class UsersController {
     return user;
   }
 
-  @Get('avatar/:id')
-  async getUserWithAvatar(@Param('id') id: string) {
-    id = decodeURIComponent(id);
-    const user = await this.usersService.getUserAvatar(parseInt(id));
-
-    console.log('=== userWithAvatar ===\n', user);
-
-    if (!user) throw new NotFoundException();
-
-    // return user;
-  }
-
   @Public()
   @Get('email')
   async checkDoubleEmail(@Query('email') email: string) {
@@ -97,7 +85,8 @@ export class UsersController {
       if (user) return { exists: true };
       return { exists: false };
     } catch (error) {
-      console.log(error.message);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }
@@ -152,7 +141,8 @@ export class UsersController {
 
       if (user) return await this.usersService.deleteAllUserTokens(user);
     } catch (error) {
-      console.log(error.message);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
     }
   }
 
@@ -163,7 +153,8 @@ export class UsersController {
 
       if (user) return await this.usersService.deleteAllUserTokens(user);
     } catch (error) {
-      console.log(error.message);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
     }
   }
 
@@ -195,7 +186,8 @@ export class UsersController {
         success: true,
       };
     } catch (error) {
-      console.log(error.message);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log(error.message);
       throw new BadGatewayException();
     }
   }

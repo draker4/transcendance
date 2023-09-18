@@ -40,7 +40,8 @@ export default function LogInComponent() {
           return;
         } else throw new Error("cant change cookies");
       } catch (error) {
-        console.log(error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(error);
         setNotif("Something went wrong, please try again!");
         setTextButton("Continue");
       }

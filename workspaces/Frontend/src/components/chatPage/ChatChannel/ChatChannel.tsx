@@ -128,7 +128,8 @@ export default function ChatChannel({ icon, channel, myself, socket, status }: P
         router.refresh();
         return ;
       }
-      console.log("ChatChannel, checkIfMuted() error : ", e.message);
+			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("ChatChannel, checkIfMuted() error : ", e.message);
       toast.error("Something went wrong, please try again!");
     }
   }

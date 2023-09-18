@@ -35,7 +35,8 @@ export async function POST(
 		return response;
 	}
 	catch (err) {
-		console.log(err);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+			console.log(err);
 		const	data = {
 			error: true,
 		}

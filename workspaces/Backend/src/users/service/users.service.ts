@@ -95,7 +95,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }
@@ -346,7 +346,7 @@ export class UsersService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }
@@ -367,7 +367,7 @@ export class UsersService {
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }
@@ -401,7 +401,7 @@ export class UsersService {
 
       return imageSaved;
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }
@@ -426,7 +426,7 @@ export class UsersService {
 
       return user.images;
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }
@@ -443,7 +443,7 @@ export class UsersService {
 
       await this.imageRepository.remove(image);
     } catch (error) {
-      console.log(error);
+      this.log(error.message);
       throw new BadRequestException();
     }
   }

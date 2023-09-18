@@ -179,7 +179,8 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   draw.context.textAlign = "center";
   let actualRound = gameData.actualRound;
   if (actualRound > gameData.maxRound) {
-    console.log("actualRound", actualRound);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("actualRound", actualRound);
     actualRound--;
   }
 

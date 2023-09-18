@@ -76,7 +76,8 @@ export default function Practice({ profile, showDemo, setShowDemo }: Props) {
         error: "Error creating training",
       });
       if (!res.success) {
-        console.log(res.message);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log(res.message);
         setCreatingPractice(false);
         return;
       }

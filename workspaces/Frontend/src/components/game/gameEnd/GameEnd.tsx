@@ -45,11 +45,13 @@ export default function GameEnd({ gameData, isPlayer, userId }: Props) {
           router.refresh();
           return;
         }
-        console.log("Error fetching score: " + error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log("Error fetching score: " + error);
       }
       try {
       } catch (error) {
-        console.log("error");
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log("error");
       }
     };
 

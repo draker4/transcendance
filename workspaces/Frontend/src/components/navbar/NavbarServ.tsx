@@ -40,7 +40,6 @@ export default async function NavbarServ() {
     const Avatar = new Avatar_Service(token);
     avatar = await Avatar.getAvatarbyUserId(profile.id);
   } catch (error: any) {
-    // console.log(error.message);
   }
 
   return <NavbarFront avatar={avatar} profile={profile} token={token} />;

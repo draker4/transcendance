@@ -82,7 +82,8 @@ const updateGame = (game: GameData) => {
   }
   if (scoreMessage.length > 0) {
     const scoreData = scoreMessage.shift()!;
-    console.log("Score Update", scoreData);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("Score Update", scoreData);
     const newGameData = { ...game };
     newGameData.score = scoreData.score;
     newGameData.actualRound = scoreData.actualRound;
@@ -117,7 +118,8 @@ export const gameLoop = (
     );
 
     // Display FPS
-    if (showFpsRef) console.log("FPS:", fpsRef.current);
+		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" && showFpsRef)
+      console.log("FPS:", fpsRef.current);
 
     frameCountRef.current = 0;
     lastFpsUpdateTimeRef.current = currentTime;

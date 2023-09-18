@@ -30,7 +30,8 @@ export default function GameDetails({ scoreService, gameInfo }: Props) {
           router.refresh();
           return ;
         }
-        console.log("Error fetching score: " + error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log("Error fetching score: " + error);
       }
     };
 
