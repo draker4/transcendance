@@ -143,8 +143,8 @@ export class MatchmakingService {
           push: search.type == 'Classic' ? false : true,
           pause: search.type == 'Classic' ? false : true,
           background:
-            search.type == 'Classic' ? 'classic' : confirmBackground('Random'),
-          ball: search.type == 'Classic' ? 'classic' : confirmBall('Random'),
+            search.type == 'Classic' ? 'Classic' : confirmBackground('Random'),
+          ball: search.type == 'Classic' ? 'Classic' : confirmBall('Random'),
         };
         const gameId = await this.gameService.createGame(game);
         ret.success = true;
