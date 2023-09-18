@@ -133,18 +133,19 @@ export default function CreateParty({
 
             console.log("getChannelId => PAYLOAD = ", payload); // checking
 
-            // [A] the channelPrivateMessage doesn't exist yet
-            if (!payload) {
+            // // [A] the channelPrivateMessage doesn't exist yet
+            // if (!payload) {
 
-              if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
-                console.log("forceCreatePrivateMessage beetween " + userId + " and " + newMsg.opponentId);
+            //   if (process.env && process.env.ENVIRONNEMENT &&  process.env.ENVIRONNEMENT === "dev")
+            //     console.log("forceCreatePrivateMessage beetween " + userId + " and " + newMsg.opponentId);
 
-              // socket.emit("forceCreateprivateMessage", )
+            //   // socket.emit("forceCreateprivateMessage", )
 
 
-              // finir par payload = le channelId de la channelPrivateMessage ainsi créée
-            }
+            //   // finir par payload = le channelId de la channelPrivateMessage ainsi créée
+            // }
             // [B] the channelPrivateMessage already exist
+
             if (payload) {
               socket?.emit("forceJoinPrivateMsgChannel", 
               {channelId: payload, createIfNeeded:true, source:"forceJoinPrivateMsgChannel"},
@@ -160,7 +161,9 @@ export default function CreateParty({
                   toast.error("The invitation could not be sent, please close the game!");
                 }
               });
-
+            }
+            else {
+              toast.info("Could not send the invitation message...");
             }
           });
         }

@@ -4,6 +4,7 @@ import LobbyService from "@/services/Lobby.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Tooltip } from "@mui/material";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   userId: number;
@@ -23,9 +24,17 @@ export default function WatchButton({ userId, setLoading }: Props) {
   }
 
   useEffect(() => {
-    lobbyService.otherInGame(userId).then((ret) => {
-      setGameId(ret.data);
-    });
+    lobbyService.otherInGame(userId)
+      .then((ret) => {
+        setGameId(ret.data);
+      })
+      .catch(async (err) => {
+        if (err.message === 'disconnect') {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
+      })
 
   }, []);
 

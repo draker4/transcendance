@@ -108,6 +108,8 @@ export class ChatService {
 
       let notifMessages = user.notif.notifMessages;
 
+      console.log("notifmessages=", notifMessages);
+
       if (notifMessages.length !== 0) {
         notifMessages = await Promise.all(
           notifMessages.map(async (notif) => {
@@ -560,7 +562,7 @@ export class ChatService {
         true,
       );
 
-      if (!channel)
+      if (!channel) {
 
         this.log(`user[${user.login}] + pongie[${pongie.login}] ==> need creation of channel [${channelName}]`);
 
@@ -568,6 +570,10 @@ export class ChatService {
           channelName,
           'privateMsg',
         );
+      }
+
+      if (!channel)
+        throw new Error('no channel');
 
       // check if relation exists for both pongers
       let relationUser = await this.userChannelRelation.findOne({
@@ -598,12 +604,6 @@ export class ChatService {
 
       if (!relationPongie || !relationUser)
         throw new Error('cannot create relation');
-
-      // make relations joined to true before leaving
-      relationUser.joined = true;
-      relationPongie.joined = true;
-      await this.userChannelRelation.save(relationUser);
-      await this.userChannelRelation.save(relationPongie);
 
       return channel.id;
     } catch (error) {
@@ -2056,6 +2056,7 @@ export class ChatService {
     pongieBannedIds: string[],
   ) {
     try {
+      console.log(`receiveNewMsgNotif channelid = ${channelId}, userId = ${userId} et pongiebanned = ${pongieBannedIds}`);
       const relations = await this.userChannelRelation.find({
         where: {
           channelId: channelId,
