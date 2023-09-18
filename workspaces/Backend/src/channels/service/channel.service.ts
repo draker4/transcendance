@@ -35,7 +35,6 @@ export class ChannelService {
 
   async getChannelByName(name: string, privateMsg: boolean) {
     if (privateMsg) {
-
       const channel = await this.channelRepository.findOne({
         where: { name: name, type: 'privateMsg' },
         relations: ['avatar'],
@@ -614,22 +613,27 @@ export class ChannelService {
       )
         throw new Error(`channel[${channelId}] is not a privateMsg channel`);
 
-      // [1] check channel relation exists
+      // [1] check channel relations exists
       const otherId: number = this.getOtherIdFromPrivateMsg(
         senderId,
         channel.name,
       );
 
-      const repRelation = await this.getOneChannelUserRelation(
+      const repReceiverRelation = await this.getOneChannelUserRelation(
         otherId,
         channelId,
       );
+
+      const repSenderRelation = await this.getOneChannelUserRelation(
+        senderId,
+        channelId,
+      );
       
-      // creer relation here [!] [!]
-      if (!repRelation.success) {
+      // [2] create receiver relation if not exists
+      if (!repReceiverRelation.success) {
         const other = await this.usersService.getUserById(otherId);
 
-        if (!other) throw new Error('no user found');
+        if (!other) throw new Error('receiver user not found');
 
         await this.usersService.updateUserChannels(other, channel);
         const relationUser = await this.userChannelRelation.findOne({
@@ -637,30 +641,49 @@ export class ChannelService {
           relations: ['user', 'channel'],
         });
 
-        if (!relationUser) throw new Error('cannot create relation');
+        if (!relationUser) throw new Error('cannot create receiver relation');
 
-        repRelation.data = relationUser;
-        repRelation.success = true;
+        repReceiverRelation.data = relationUser;
+        repReceiverRelation.success = true;
       }
 
-      // [2] update receiver joined relation to true if needed
+      // [3] create sender relation if not exists
+      if (!repSenderRelation.success) {
+          const sender = await this.usersService.getUserById(senderId);
+
+          if (!sender) throw new Error('sender user not found');
+
+          await this.usersService.updateUserChannels(sender, channel);
+          const relationSender = await this.userChannelRelation.findOne({
+            where: { userId: senderId, channelId: channel.id },
+          relations: ['user', 'channel'],
+        });
+
+        if (!relationSender) throw new Error('cannot create sender relation');
+
+        repSenderRelation.data = relationSender;
+        repSenderRelation.success = true;
+      }
+
+      // [+] extract [4] + [5]
+      // [4] update receiver joined relation to true if needed
       if (
-        repRelation.success &&
-        repRelation.data &&
-        repRelation.data.joined === false
+        repReceiverRelation.success &&
+        repReceiverRelation.data &&
+        repReceiverRelation.data.joined === false
       ) {
-        repRelation.data.joined = true;
+        repReceiverRelation.data.joined = true;
 
         const repDatabase: ReturnData = await this.updateChannelUserRelation(
-          repRelation.data,
+          repReceiverRelation.data,
         );
         if (!repDatabase.success)
           throw new Error(
-            'Error occured while updating user channel relation in database : ' +
+            'Error occured while updating receiver user channel relation in database : ' +
               repDatabase.message,
           );
         else {
-          // [3] emit an editRelation to receiver (if offline np ?)
+          // [4.1] emit an editRelation to receiver
           const sockets: Socket[] = [];
           for (const [socket, value] of connectedUsers) {
             if (value === otherId.toString()) sockets.push(socket);
@@ -674,6 +697,41 @@ export class ChannelService {
             socket.join('channel:' + channelId);
           });
         }
+      }
+
+      // [5] update sender joined relation to true if needed (case when invite to game without privateMessage channel created yet)
+      if (
+        repSenderRelation.success &&
+        repSenderRelation.data &&
+        repSenderRelation.data.joined === false
+      ) {
+        repSenderRelation.data.joined = true;
+
+        const repDatabase: ReturnData = await this.updateChannelUserRelation(
+          repSenderRelation.data,
+        );
+
+        if (!repDatabase.success) {
+          throw new Error(
+            'Error occured while updating sender user channel relation in database : ' +
+              repDatabase.message,
+          );
+        
+          } else {
+            // [5.1] emit an editRelation to sender
+            const sockets: Socket[] = [];
+            for (const [socket, value] of connectedUsers) {
+              if (value === senderId.toString()) sockets.push(socket);
+            }
+  
+            sockets.forEach((socket) => {
+              this.log(
+                `forceJoinPrivateMsgChannel emit empty editRelation to user[${senderId}]->socket[${socket.id}]`,
+              );
+              socket.emit('editRelation', {});
+              socket.join('channel:' + channelId);
+            });
+          }
       }
 
       rep.success = true;
