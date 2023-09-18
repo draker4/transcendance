@@ -57,7 +57,6 @@ export default function Game({ profile, token, gameId }: Props) {
             defineBall.src = `/images/ball/${ret.data.ballImg}.png`;
             defineBall.onload = () => {
               setBall(defineBall);
-
               setGameData(ret.data);
               setIsLoading(false);
               setIsPlayer(
