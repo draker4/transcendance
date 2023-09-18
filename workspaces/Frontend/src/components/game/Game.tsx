@@ -51,20 +51,24 @@ export default function Game({ profile, token, gameId }: Props) {
         } else {
           const defineBackground = new Image();
           defineBackground.src = `/images/background/${ret.data.background}.png`;
-          setBackground(defineBackground);
-          const defineBall = new Image();
-          defineBall.src = `/images/ball/${ret.data.ballImg}.png`;
-          setBall(defineBall);
+          defineBackground.onload = () => {
+            setBackground(defineBackground);
+            const defineBall = new Image();
+            defineBall.src = `/images/ball/${ret.data.ballImg}.png`;
+            defineBall.onload = () => {
+              setBall(defineBall);
 
-          setGameData(ret.data);
-          setIsLoading(false);
-          setIsPlayer(
-            ret.data.playerLeft.id === profile.id
-              ? "Left"
-              : ret.data.playerRight.id === profile.id
-              ? "Right"
-              : "Spectator"
-          );
+              setGameData(ret.data);
+              setIsLoading(false);
+              setIsPlayer(
+                ret.data.playerLeft.id === profile.id
+                  ? "Left"
+                  : ret.data.playerRight.id === profile.id
+                  ? "Right"
+                  : "Spectator"
+              );
+            };
+          };
         }
       });
     }
