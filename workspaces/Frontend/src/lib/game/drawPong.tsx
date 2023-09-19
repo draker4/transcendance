@@ -109,7 +109,7 @@ function drawRound(draw: Draw, gameData: GameData, side: "Left" | "Right") {
 
   draw.context.fillStyle = `rgba(${wonR}, ${wonG}, ${wonB}, ${wonA})`;
   draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
-  draw.context.lineWidth = 3;
+  draw.context.lineWidth = 5;
 
   const sign = side === "Left" ? -1 : 1;
   const rondWon =
@@ -119,9 +119,9 @@ function drawRound(draw: Draw, gameData: GameData, side: "Left" | "Right") {
       draw.context.fillStyle = `rgba(${emptyR}, ${emptyG}, ${emptyB}, ${emptyA})`;
     draw.context.beginPath();
     draw.context.arc(
-      draw.canvas.width / 2 + 140 * sign + i * 35 * sign,
-      32,
-      10,
+      draw.canvas.width / 2 + 200 * sign + i * 50 * sign,
+      55,
+      16,
       0,
       Math.PI * 2
     );
@@ -148,7 +148,7 @@ function drawPause(draw: Draw, gameData: GameData, side: "Left" | "Right") {
 
   draw.context.fillStyle = `rgba(${pauseR}, ${pauseG}, ${pauseB}, ${pauseA})`;
   draw.context.strokeStyle = `rgba(${borderR}, ${borderG}, ${borderB}, ${borderA})`;
-  draw.context.lineWidth = 3;
+  draw.context.lineWidth = 5;
 
   const sign = side === "Left" ? -1 : 1;
   const available =
@@ -158,9 +158,9 @@ function drawPause(draw: Draw, gameData: GameData, side: "Left" | "Right") {
       draw.context.fillStyle = `rgba(${emptyR}, ${emptyG}, ${emptyB}, ${emptyA})`;
     draw.context.beginPath();
     draw.context.arc(
-      draw.canvas.width / 2 + 440 * sign + i * 35 * sign,
-      32,
-      10,
+      draw.canvas.width / 2 + 900 * sign + i * 50 * sign,
+      55,
+      16,
       0,
       Math.PI * 2
     );
@@ -179,7 +179,11 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
   draw.context.textAlign = "center";
   let actualRound = gameData.actualRound;
   if (actualRound > gameData.maxRound) {
-    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === "dev"
+    )
       console.log("actualRound", actualRound);
     actualRound--;
   }
@@ -191,7 +195,7 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
       actualRound === gameData.maxRound ? actualRound - 1 : actualRound
     ].left,
     draw.canvas.width / 4,
-    50
+    85
   );
   drawScore(
     draw,
@@ -199,13 +203,13 @@ function drawScoreTable(gameData: GameData, draw: Draw) {
       actualRound === gameData.maxRound ? actualRound - 1 : actualRound
     ].right,
     draw.canvas.width / 4 + draw.canvas.width / 2,
-    50
+    85
   );
 
   // Draw actual round
   if (gameData.maxRound > 1) {
     draw.context.font = FONT_ROUND;
-    draw.context.fillText("Round " + actualRound, draw.canvas.width / 2, 45);
+    draw.context.fillText("Round " + actualRound, draw.canvas.width / 2, 75);
   }
 
   // Draw player round won
@@ -263,7 +267,7 @@ function drawTimer(
     draw.context.fillText(
       reason,
       draw.canvas.width / 2,
-      draw.canvas.height / 2 - 20
+      draw.canvas.height / 2 - 40
     );
 
     // Draw timer
@@ -271,7 +275,7 @@ function drawTimer(
       draw.context.fillText(
         showTimer.toString() + "s",
         draw.canvas.width / 2,
-        draw.canvas.height / 2 + 50
+        draw.canvas.height / 2 + 70
       );
     } else if (
       showTimer === 0 &&
@@ -281,7 +285,7 @@ function drawTimer(
       draw.context.fillText(
         "GO!",
         draw.canvas.width / 2,
-        draw.canvas.height / 2 + 50
+        draw.canvas.height / 2 + 70
       );
     }
   }
@@ -304,11 +308,10 @@ export function drawPong(gameData: GameData, draw: Draw) {
   if (gameData.status === "Playing") drawBall(gameData, draw);
 
   // Draw the Timer
-  if (gameData.timer)
-    drawTimer(
-      gameData.timer,
-      draw,
-      gameData.actualRound + 1,
-      gameData.background
-    );
+  drawTimer(
+    gameData.timer,
+    draw,
+    gameData.actualRound + 1,
+    gameData.background
+  );
 }

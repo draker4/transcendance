@@ -68,15 +68,18 @@ export function moveAI(
     // Move the player's paddle gradually towards the center of the court
     if (
       playerDynamic.posY >
-      GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2 + playerDynamic.speed
+      GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2 + playerDynamic.speed / 2
     ) {
-      playerDynamic.posY -= Math.min(playerDynamic.speed, playerDynamic.posY);
+      playerDynamic.posY -= Math.min(
+        playerDynamic.speed / 2,
+        playerDynamic.posY
+      );
     } else if (
       playerDynamic.posY <
-      GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2 - playerDynamic.speed
+      GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2 - playerDynamic.speed / 2
     ) {
       playerDynamic.posY += Math.min(
-        playerDynamic.speed,
+        playerDynamic.speed / 2,
         GAME_HEIGHT - PLAYER_HEIGHT - playerDynamic.posY
       );
     }
@@ -96,15 +99,15 @@ export function moveAI(
       playerDynamic.posY - targetYWithPrediction
     );
 
-    // Calculate a variable movement speed based on the distance
+    // Calculate a variable movement speed based on the distance and on the direction of the ball
     const maxSpeed = playerDynamic.speed;
     const minSpeed = playerDynamic.speed / 3;
-    const movementSpeed =
+    let movementSpeed =
       minSpeed +
       ((maxSpeed - minSpeed) * distanceToTarget) /
         (GAME_HEIGHT - PLAYER_HEIGHT);
+    if (movementSpeed > maxSpeed) movementSpeed = maxSpeed;
 
-    // Move the player's paddle gradually towards the target position
     if (playerDynamic.posY > targetYWithPrediction + PLAYER_HEIGHT / 3) {
       playerDynamic.posY -= Math.min(
         movementSpeed,

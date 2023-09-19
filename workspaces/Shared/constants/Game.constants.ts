@@ -1,22 +1,21 @@
-export const GAME_WIDTH = 1344;
-export const GAME_HEIGHT = 768;
+export const GAME_WIDTH = 2688;
+export const GAME_HEIGHT = 1536;
 
-export const PLAYER_WIDTH = 15;
-export const PLAYER_HEIGHT = 140;
-export const PLAYER_START_SPEED = 10;
+export const PLAYER_WIDTH = 20;
+export const PLAYER_HEIGHT = 200;
+export const PLAYER_START_SPEED = 20;
 
-export const BALL_SIZE = 18;
-export const BALL_START_SPEED = 16;
+export const BALL_SIZE = 30;
+export const BALL_START_SPEED = 30;
 
-export const PUSH_SIZE = 6;
+export const PUSH_SIZE = 10;
 
 export const AI_ID = -2;
 export const AI_DEMO = -3;
 
-export const FONT_MENU = "60px Arial";
-export const FONT_SCORE = "50px Arial";
-export const FONT_ROUND = "40px Arial";
-export const FONT_TIMER = "60px Arial";
+export const FONT_SCORE = "bold 80px Quicksand";
+export const FONT_ROUND = "bold 60px Quicksand";
+export const FONT_TIMER = "bold 90px Quicksand";
 export const MENU_COLOR = "#FFFFFF";
 
 export const PLAYER_PING = 2;
