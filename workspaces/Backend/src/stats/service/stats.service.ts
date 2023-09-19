@@ -104,7 +104,6 @@ export class StatsService {
         stats.levelUp = await this.checkLevelUp(stats, userId);
       }
       await this.checkAchievement(stats, userId);
-      console.log('stats', stats);
       return await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
