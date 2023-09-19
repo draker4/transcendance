@@ -54,6 +54,7 @@
   padding: 5px;
   background-color: var(--primary1);
   border-radius: 5px;
+  white-space: nowrap;
 }
 
 .list li:hover {
