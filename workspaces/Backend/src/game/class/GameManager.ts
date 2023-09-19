@@ -1,6 +1,6 @@
 // import standard nest packages
 import { Server, Socket } from 'socket.io';
-import { WsException } from '@nestjs/websockets';
+// import { WsException } from '@nestjs/websockets';
 import { Injectable } from '@nestjs/common';
 
 // import game classes
@@ -68,7 +68,8 @@ export class GameManager {
           'joinGame',
           error,
         ); // Use 'joinGame' as the context for this log message
-        throw new WsException("Can't create Pong Session");
+        // throw new WsException("Can't create Pong Session");
+        return;
       }
     }
 
@@ -86,7 +87,8 @@ export class GameManager {
         'joinGame',
         error,
       );
-      throw new WsException('Error while joining game');
+      // throw new WsException('Error while joining game');
+      return;
     }
   }
 
@@ -94,13 +96,20 @@ export class GameManager {
   public async playerAction(action: ActionDTO, socket: Socket): Promise<any> {
     const pong = this.pongOnGoing.get(action.gameId);
     if (!pong) {
-      throw new WsException('Game not found');
+      // throw new WsException('Game not found');
+      this.logger.error(
+        `Game with ID ${action.gameId} not found`,
+        'playerAction',
+      );
+      return;
     }
     const user = this.usersConnected.find(
       (user) => user.socket.id === socket.id,
     );
     if (!user) {
-      throw new WsException('User not found');
+      // throw new WsException('User not found');
+      this.logger.error(`User with ID ${action.userId} not found`);
+      return;
     }
     user.pingSend = 0;
     return pong.playerAction(action);
@@ -113,7 +122,8 @@ export class GameManager {
     );
     if (!user) {
       this.logger.error(`User with ID ${userId} not found`, 'updatePong');
-      throw new WsException('User not found');
+      // throw new WsException('User not found');
+      return;
     }
     user.pingSend = 0;
     //this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
@@ -131,12 +141,20 @@ export class GameManager {
         (user) => user.socket.id === socket.id,
       );
       if (!user) {
+        this.logger.error(
+          `User with ID ${userId} not found`,
+          'Manager - disconnect',
+        );
         return;
       }
 
       //Find the game linked to the user
       const pong = this.pongOnGoing.get(user.gameId);
       if (!pong) {
+        this.logger.error(
+          `Game with ID ${user.gameId} not found`,
+          'Manager - disconnect',
+        );
         return;
       }
 
@@ -154,7 +172,7 @@ export class GameManager {
         'Manager - disconnect',
         error,
       );
-      throw new WsException('Error while disconnecting user');
+      // throw new WsException('Error while disconnecting user');
     }
   }
 
@@ -168,7 +186,9 @@ export class GameManager {
   ): Promise<any> {
     let pong: Pong = this.pongOnGoing.get(gameId);
     if (pong) {
-      throw new WsException('Game already exists');
+      // throw new WsException('Game already exists');
+      this.logger.error(`Game with ID ${gameId} already exists`, 'createPong');
+      return;
     }
     try {
       const game: Game = await this.gameService.getGameById(gameId);
@@ -195,7 +215,8 @@ export class GameManager {
         'createPong',
         error,
       );
-      throw new WsException('Error while creating Pong Session');
+      // throw new WsException('Error while creating Pong Session');
+      return;
     }
   }
 
