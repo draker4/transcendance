@@ -22,7 +22,10 @@ export default function League({ profile }: { profile: Profile }) {
     const getLeaderboard = async () => {
       try {
         const ret = await lobbyService.getLeaderboard();
-        if (!ret.success) throw new Error(ret.message);
+        if (!ret.success) {
+          console.error("Error fetching leaderboard", ret);
+          return;
+        }
         setLeadeboardData(ret.data);
       } catch (error: any) {
         if (error.message === "disconnect") {
