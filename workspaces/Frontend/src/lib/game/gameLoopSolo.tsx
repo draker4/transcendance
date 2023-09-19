@@ -5,6 +5,9 @@ import {
   TIMER_RESTART,
   TIMER_PAUSE,
   FRONT_FPS,
+  GAME_WIDTH,
+  GAME_HEIGHT,
+  BALL_SIZE,
 } from "@transcendence/shared/constants/Game.constants";
 import { updatePong } from "@transcendence/shared/game/updatePong";
 import {
@@ -22,6 +25,8 @@ const fpsRef = { current: 0 };
 const showFpsRef = false;
 let gameLoopRunning = true;
 let pauseLoopRunning: "Left" | "Right" | null = null;
+let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
+let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
 
 function pauseCheck(side: "Left" | "Right", gameData: GameData) {
   const actualTime = new Date().getTime();
@@ -62,6 +67,10 @@ export function stopPause(side: "Left" | "Right", gameData: GameData) {
   pauseLoopRunning = null;
 }
 
+function lerp(start: number, end: number, t: number): number {
+  return start + t * (end - start);
+}
+
 export const gameLoop = (
   timestamp: number,
   game: GameData,
@@ -76,6 +85,8 @@ export const gameLoop = (
   if (elapsedTime >= FRONT_FPS) {
     frameCountRef.current++;
     if (updatedGame.status === "Playing") {
+      ballX = game.ball.posX;
+      ballY = game.ball.posY;
       updatePong(updatedGame);
       if (updatedGame.updateScore) {
         if (!demo) updateDBScore(updatedGame);
@@ -100,7 +111,6 @@ export const gameLoop = (
       if (!demo) updateDBPause(updatedGame);
       updatedGame.updatePause = false;
     }
-    drawPong(updatedGame, draw);
     setGameData(updatedGame);
     lastTimestampRef.current = timestamp;
   }
@@ -115,12 +125,22 @@ export const gameLoop = (
     );
 
     // Display FPS
-		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev" && showFpsRef)
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === "dev" &&
+      showFpsRef
+    )
       console.log("FPS:", fpsRef.current);
 
     frameCountRef.current = 0;
     lastFpsUpdateTimeRef.current = currentTime;
   }
+  const delta = elapsedTime / FRONT_FPS;
+  ballX = lerp(ballX, game.ball.posX, delta * 0.1);
+  ballY = lerp(ballY, game.ball.posY, delta * 0.1);
+
+  drawPong(game, draw, ballX, ballY);
 
   requestAnimationFrame((timestamp) =>
     gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)

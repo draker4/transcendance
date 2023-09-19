@@ -22,7 +22,10 @@ export default function LeaderboardList({ leaderboardData }: Props) {
           <p className={styles.loss}>Loss</p>
         </div>
         {!leaderboardData && <p className={styles.loading}>Loading...</p>}
-        {leaderboardData && (
+        {leaderboardData && leaderboardData.length === 0 && (
+          <p className={styles.loading}>No user founded</p>
+        )}
+        {leaderboardData && leaderboardData.length > 0 && (
           <div className={styles.listBody}>
             {leaderboardData.map((userLeaderboard: UserLeaderboard) => (
               <UserLine

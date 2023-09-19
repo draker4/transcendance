@@ -6,6 +6,11 @@ import {
   StatusMessage,
   ScoreMessage,
 } from "@transcendence/shared/types/Message.types";
+import {
+  GAME_HEIGHT,
+  GAME_WIDTH,
+  BALL_SIZE,
+} from "@transcendence/shared/constants/Game.constants";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
 
@@ -90,6 +95,12 @@ const updateGame = (game: GameData) => {
   return game;
 };
 
+function lerp(start: number, end: number, t: number): number {
+  return start + t * (end - start);
+}
+let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
+let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
+
 export const gameLoop = (
   timestamp: number,
   game: GameData,
@@ -101,8 +112,9 @@ export const gameLoop = (
 
   if (elapsedTime >= FRONT_FPS) {
     frameCountRef.current++;
+    ballX = game.ball.posX;
+    ballY = game.ball.posY;
     game = updateGame(game);
-    drawPong(game, draw);
 
     lastTimestampRef.current = timestamp;
   }
@@ -127,6 +139,12 @@ export const gameLoop = (
     frameCountRef.current = 0;
     lastFpsUpdateTimeRef.current = currentTime;
   }
+
+  const delta = elapsedTime / FRONT_FPS;
+  ballX = lerp(ballX, game.ball.posX, delta * 0.1);
+  ballY = lerp(ballY, game.ball.posY, delta * 0.1);
+
+  drawPong(game, draw, ballX, ballY);
 
   requestAnimationFrame((timestamp) =>
     gameLoop(timestamp, game, draw, isMountedRef)
