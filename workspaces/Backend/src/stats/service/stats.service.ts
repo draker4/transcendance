@@ -104,6 +104,7 @@ export class StatsService {
         stats.levelUp = await this.checkLevelUp(stats, userId);
       }
       await this.checkAchievement(stats, userId);
+      console.log('stats', stats);
       return await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -162,8 +163,13 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
-      stats.playerXP += xp;
-      stats.levelUp = await this.checkLevelUp(stats, userId);
+      await this.statsRepository.update(
+        { userId: userId },
+        {
+          leagueXP: stats.leagueXP + xp,
+          levelUp: await this.checkLevelUp(stats, userId),
+        },
+      );
       await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);

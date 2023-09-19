@@ -17,9 +17,7 @@ function defineXP(
     pointWin: 0,
     pointLost: 0,
   };
-  if (winSide === "Left") {
-    result.win = true;
-  } else if (side === "Right") {
+  if (winSide === side) {
     result.win = true;
   }
   if (score.rageQuit) {
