@@ -320,6 +320,7 @@ export class Pong {
       winSide: this.data.winSide,
       playerLeft: this.data.playerLeftStatus,
       playerRight: this.data.playerRightStatus,
+      playerServe: this.data.playerServe,
       timer: this.data.timer,
       pause: this.data.pause,
     };

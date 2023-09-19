@@ -83,6 +83,7 @@ const updateGame = (game: GameData) => {
     newGameData.winSide = statusData.winSide;
     newGameData.playerLeftStatus = statusData.playerLeft;
     newGameData.playerRightStatus = statusData.playerRight;
+    newGameData.playerServe = statusData.playerServe;
     newGameData.timer = statusData.timer;
     newGameData.pause = statusData.pause;
     game = newGameData;

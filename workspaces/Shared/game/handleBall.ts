@@ -134,4 +134,5 @@ export function handleServe(ball: Ball, game: GameData): void {
   }
   ball.moveY = -Math.sin(newAngle);
   game.playerServe = null;
+  game.sendStatus = true;
 }
