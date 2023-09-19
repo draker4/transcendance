@@ -80,8 +80,6 @@ export default function Pong({
     };
     draw.canvas.focus();
 
-    isMountedRef.current = true;
-
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
         gameLoop(timestamp, gameData, draw, isMountedRef)
@@ -117,7 +115,6 @@ export default function Pong({
   }, [socket, profile, isPlayer, gameData]);
 
   useEffect(() => {
-    isMountedRef.current = true;
     socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
     socket.on("status", handleStatusMessage(setGameData, isMountedRef));
     socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
@@ -133,7 +130,6 @@ export default function Pong({
   }, [socket, setGameData]);
 
   useEffect(() => {
-    isMountedRef.current = true;
     socket.on("ping", handlePing(socket, profile.id, isMountedRef));
 
     return () => {

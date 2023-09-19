@@ -40,26 +40,14 @@ export default function PongHead({
   const [prof, setProf] = useState<Profile>(profile);
 
   async function quit() {
-    if (quitStatus) return;
+    if (quitStatus) {
+      return;
+    }
     setQuitStatus(true);
-    isMountedRef.current = false;
-    const res = await lobby.quitGame()
-      .then(() => {
-      gameService.socket?.emit("quit");
+    gameService.socket?.emit("quit");
+    if (isPlayer === "Spectator") {
       router.push("/home");
-      })
-      .catch(async (err) => {
-        if (err.message === "disconnect") {
-          await disconnect();
-          router.refresh();
-          return ;
-        }
-      });
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Leaving game...",
-      success: "You have left the game",
-      error: "Error leaving game",
-    });
+    }
   }
 
   async function changeKey() {
@@ -100,9 +88,12 @@ export default function PongHead({
         </button>
       )}
       <h2 className={styles.title}>{gameData.name}</h2>
-      <button onClick={quit} className={styles.quitBtn}>
+      {gameData.result !== "Not Finished" && <div className={styles.quitBlock}></div>}
+      {gameData.result === "Not Finished" &&
+        <button onClick={quit} className={styles.quitBtn}>
         <MdClose />
       </button>
+      }
     </div>
   );
 }
