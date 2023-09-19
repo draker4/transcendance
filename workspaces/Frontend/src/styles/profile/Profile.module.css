@@ -84,7 +84,6 @@ p.icon {
   .main {
     margin-left: 0;
     width: 90%;
-    max-width: 1500px;
     margin: 0 auto;
   }
 
@@ -96,5 +95,6 @@ p.icon {
   .profileMainFrame .first {
     margin-bottom: 0;
     justify-content: center;
+    max-width: 45%;
   }
 }

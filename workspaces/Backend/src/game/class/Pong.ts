@@ -574,13 +574,21 @@ export class Pong {
       this.playerLeft = this.playerLeft.filter(
         (player) => player.socket.id !== user.socket.id,
       );
-      if (manual && this.data.status === 'Playing') this.rageQuit('Left');
+      if (
+        manual &&
+        (this.data.status === 'Playing' || this.data.status === 'Stopped')
+      )
+        this.rageQuit('Left');
       else this.disconnectPlayer('Left');
     } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
       this.playerRight = this.playerRight.filter(
         (player) => player.socket.id !== user.socket.id,
       );
-      if (manual && this.data.status === 'Playing') this.rageQuit('Right');
+      if (
+        manual &&
+        (this.data.status === 'Playing' || this.data.status === 'Stopped')
+      )
+        this.rageQuit('Right');
       else this.disconnectPlayer('Right');
     } else {
       if (this.spectators.length === 0) {
@@ -641,7 +649,7 @@ export class Pong {
     if (side === 'Left') {
       if (this.playerLeft.length > 0) return;
       this.data.playerLeftStatus = 'Disconnected';
-      if (this.data.status === 'Playing') {
+      if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
         this.data.status = 'Stopped';
         this.data.sendStatus = true;
         this.data.timer = defineTimer(
@@ -656,7 +664,7 @@ export class Pong {
     } else if (side === 'Right') {
       if (this.playerRight.length > 0) return;
       this.data.playerRightStatus = 'Disconnected';
-      if (this.data.status === 'Playing') {
+      if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
         this.data.status = 'Stopped';
         this.data.sendStatus = true;
         this.data.timer = defineTimer(

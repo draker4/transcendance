@@ -9,6 +9,16 @@
   min-width: 300px;
 }
 
+/* AVATAR CARD */
+
+.avatarCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  width: 100%;
+}
+
 /* SETTINGS CARD */
 .settingsCard {
   width: 100%;
@@ -18,16 +28,6 @@
   flex-direction: column;
   margin-top: 20px;
   gap: 1rem;
-}
-
-/* AVATAR CARD */
-
-.avatarCard {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: column;
-  width: 100%;
 }
 
 .icon {
@@ -108,15 +108,20 @@
 /* LOGIN MODULE */
 .loginCard {
   user-select: none;
+  width: 100%;
 }
 
-.loginCard .login {
+.login {
   color: var(--primary1);
   background-color: var(--accent1);
-  margin-top: 42px;
   padding: 5px;
   border-radius: 8px;
   width: fit-content;
+  max-width: 90%;
+  margin: 0 auto;
+  margin-top: 42px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 p.notif {

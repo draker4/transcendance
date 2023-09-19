@@ -16,7 +16,7 @@ import {
   PLAYER_HEIGHT,
   PLAYER_WIDTH,
   PLAYER_START_SPEED,
-  AI_DEMO,
+  DIFFICULTY_RATIO,
   AI_ID,
 } from "@transcendence/shared/constants/Game.constants";
 import { ScoreInfo } from "../types/Score.types";
@@ -29,7 +29,7 @@ export function initPlayerDynamic(
   return {
     posX: side === "Left" ? PLAYER_WIDTH * 3 : GAME_WIDTH - PLAYER_WIDTH * 4,
     posY: GAME_HEIGHT / 2 - PLAYER_HEIGHT / 2,
-    speed: PLAYER_START_SPEED + difficulty + actualRound,
+    speed: PLAYER_START_SPEED + difficulty * DIFFICULTY_RATIO + actualRound,
     move: Action.Idle,
     push: 0,
   };
@@ -42,7 +42,7 @@ export function initBall(
   return {
     posX: GAME_WIDTH / 2 - BALL_SIZE / 2,
     posY: GAME_HEIGHT / 2 - BALL_SIZE / 2,
-    speed: BALL_START_SPEED + difficulty + actualRound,
+    speed: BALL_START_SPEED + difficulty * DIFFICULTY_RATIO + actualRound,
     moveX: 0,
     moveY: 0,
     push: 0,

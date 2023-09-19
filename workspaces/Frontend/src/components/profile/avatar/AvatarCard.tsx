@@ -1,5 +1,4 @@
 import styles from "@/styles/profile/AvatarCard.module.css";
-import ProfileLogin from "./ProfileLogin";
 import { CSSProperties, useEffect, useState } from "react";
 import SettingsCard from "./SettingsCard";
 import { Color } from "react-color";
@@ -200,7 +199,11 @@ export default function AvatarCard({
           router.refresh();
           return;
         }
-        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        if (
+          process.env &&
+          process.env.ENVIRONNEMENT &&
+          process.env.ENVIRONNEMENT === "dev"
+        )
           console.log(err.message);
       }
     };
@@ -267,7 +270,7 @@ export default function AvatarCard({
           )}
         </div>
       </div>
-      <ProfileLogin name={login} isOwner={isOwner} />
+      <h2 className={styles.login}>{login}</h2>
       {displaySettings && !uploadButton && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

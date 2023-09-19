@@ -1,6 +1,5 @@
 "use client";
 import AvatarProfile from "@/components/profile/avatar/Avatar";
-import ProfileLogin from "@/components/profile/avatar/ProfileLogin";
 import SettingsCard from "@/components/profile/avatar/SettingsCard";
 import disconnect from "@/lib/disconnect/disconnect";
 import Avatar_Service from "@/services/Avatar.service";
@@ -64,9 +63,9 @@ export default function ChannelAvatarCard({
       if (e.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
-      toast.error('Something went wrong, please try again!');
+      toast.error("Something went wrong, please try again!");
     }
     setDisplaySettings(false);
   };
@@ -105,10 +104,7 @@ export default function ChannelAvatarCard({
           />
         </div>
       </div>
-      <ProfileLogin
-        name={channelAndUsersRelation.channel.name}
-        isOwner={myRelation.isChanOp || myRelation.isBoss}
-      />
+      <h2 className={styles.login}>{channelAndUsersRelation.channel.name}</h2>
       {displaySettings && (
         <SettingsCard
           previewChangeTopColor={previewChangeTopColor}

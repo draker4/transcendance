@@ -20,6 +20,7 @@ type Props = {
   gameService: GameService;
   lobby: LobbyService;
   isPlayer: "Left" | "Right" | "Spectator";
+  isMountedRef: React.MutableRefObject<boolean>;
 };
 
 export default function PongHead({
@@ -28,6 +29,7 @@ export default function PongHead({
   gameService,
   lobby,
   isPlayer,
+  isMountedRef,
 }: Props) {
   const router = useRouter();
   const [quitStatus, setQuitStatus] = useState<boolean>(false);
@@ -40,12 +42,7 @@ export default function PongHead({
   async function quit() {
     if (quitStatus) return;
     setQuitStatus(true);
-    if (isPlayer === "Spectator") {
-			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
-        console.log("Quit Spectator");
-      router.push("/home");
-      return;
-    }
+    isMountedRef.current = false;
     const res = await lobby.quitGame()
       .then(() => {
       gameService.socket?.emit("quit");

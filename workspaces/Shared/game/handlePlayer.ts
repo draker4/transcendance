@@ -109,15 +109,9 @@ export function moveAI(
     if (movementSpeed > maxSpeed) movementSpeed = maxSpeed;
 
     if (playerDynamic.posY > targetYWithPrediction + PLAYER_HEIGHT / 3) {
-      playerDynamic.posY -= Math.min(
-        movementSpeed,
-        playerDynamic.posY - targetYWithPrediction
-      );
+      playerDynamic.posY -= movementSpeed;
     } else if (playerDynamic.posY < targetYWithPrediction - PLAYER_HEIGHT / 3) {
-      playerDynamic.posY += Math.min(
-        movementSpeed,
-        targetYWithPrediction - playerDynamic.posY
-      );
+      playerDynamic.posY += movementSpeed;
     }
 
     // Handle Push

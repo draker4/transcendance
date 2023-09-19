@@ -35,3 +35,5 @@ export const TIMER_PAUSE = 15;
 export const TIMER_DECONNECTION = 30;
 
 export const MAX_PAUSE = 3;
+
+export const DIFFICULTY_RATIO = 1.5;

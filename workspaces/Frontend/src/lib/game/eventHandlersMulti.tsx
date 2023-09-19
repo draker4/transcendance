@@ -23,8 +23,11 @@ export const pongKeyDown = (
   game: GameData,
   socket: Socket,
   profile: Profile,
-  isPlayer: "Left" | "Right" | "Spectator"
+  isPlayer: "Left" | "Right" | "Spectator",
+  isMountedRef: React.MutableRefObject<boolean>,
+
 ) => {
+  if (!isMountedRef.current) return;
   if (game.status === "Playing") {
     // handle player move Up
     if (
@@ -121,7 +124,8 @@ export const pongKeyUp = (
   game: GameData,
   socket: Socket,
   profile: Profile,
-  isPlayer: "Left" | "Right" | "Spectator"
+  isPlayer: "Left" | "Right" | "Spectator",
+  isMountedRef: React.MutableRefObject<boolean>
 ) => {
   const action: ActionDTO = {
     userId: profile.id,
@@ -129,6 +133,7 @@ export const pongKeyUp = (
     move: Action.Idle,
     playerSide: isPlayer === "Left" ? "Left" : "Right",
   };
+  if (!isMountedRef.current) return;
   if (isPlayer === "Left" && game.playerLeftDynamic.move !== Action.Idle) {
     socket.emit("action", action);
   } else if (

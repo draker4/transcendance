@@ -99,11 +99,11 @@ export default function Pong({
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, socket, profile, isPlayer);
+      pongKeyDown(event, gameData, socket, profile, isPlayer, isMountedRef);
     }
 
     function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, socket, profile, isPlayer);
+      pongKeyUp(event, gameData, socket, profile, isPlayer, isMountedRef);
     }
     // Add key event listeners when the component mounts
     window.addEventListener("keydown", handleKeyDown);
@@ -156,12 +156,6 @@ export default function Pong({
         clearTimeout(delayTimeout);
       };
     } else if (gameData.status === "Finished") {
-      //   if (!gameData.winSide) {
-      //     socket?.emit("updateData", gameData.id, (gameData: any) => {
-      //       setGameData(gameData.data);
-      //     }
-      //   )
-      // };
       setShowGameEnd(true);
       setShowPreview(false);
     } else {
@@ -181,6 +175,7 @@ export default function Pong({
         gameService={gameService}
         lobby={lobby}
         isPlayer={isPlayer}
+        isMountedRef={isMountedRef}
       />
       <div className={styles.canvasContainer}>
         {showPreview && <PlayerPreview gameData={gameData} />}

@@ -15,7 +15,7 @@
 
 - [x] 2 onglet log sur le meme compte en partie league contre un autre joueur -> un onglet qui quitte proc deco + errorReact? (le joueur a un seul onglet quitte c'est ok)
       C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
-- [x] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
+- [!] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
 - [+] Ajouter des boutons pour déplacer le paddle pour que je puisse jouer aussi avec ma tablette ! (@Bboisson elle te plait trop mon idée je suis sur 😂 ! Loup)
 
 - [!] Apres une invitation, ca m'emmene sur la partie directement en attendant que quelqu'un join. Si j'annule en cliquant sur la croix et que quelqu'un join, il ne peut pas rejoindre, ca throw une exception et ca lui met un message d'erreur.
