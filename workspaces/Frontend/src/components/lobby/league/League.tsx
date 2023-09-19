@@ -22,7 +22,9 @@ export default function League({ profile }: { profile: Profile }) {
     const getLeaderboard = async () => {
       try {
         const ret = await lobbyService.getLeaderboard();
-        if (!ret.success) throw new Error(ret.message);
+        if (!ret.success) {
+          console.log("Error fetching leaderboard", ret);
+        }
         setLeadeboardData(ret.data);
       } catch (error: any) {
         if (error.message === "disconnect") {
@@ -36,7 +38,7 @@ export default function League({ profile }: { profile: Profile }) {
 
     getLeaderboard();
 
-    const interval = setInterval(getLeaderboard, 30000);
+    const interval = setInterval(getLeaderboard, 5000);
 
     return () => clearInterval(interval);
   }, []);

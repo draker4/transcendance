@@ -316,7 +316,7 @@ export class StatsService {
     };
     try {
       const stats = await this.statsRepository.find();
-      if (!stats) {
+      if (!stats || stats.length === 0) {
         ret.message = 'Stats not found';
         return ret;
       }
