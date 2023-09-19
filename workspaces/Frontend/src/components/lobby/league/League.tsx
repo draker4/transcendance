@@ -11,9 +11,7 @@ import { UserLeaderboard } from "@transcendence/shared/types/Leaderboard.types";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
 
-export default function League({ profile }: {
-  profile: Profile;
-}) {
+export default function League({ profile }: { profile: Profile }) {
   const lobbyService = new LobbyService();
   const [leaderboardData, setLeadeboardData] = useState<
     UserLeaderboard[] | undefined
@@ -24,12 +22,13 @@ export default function League({ profile }: {
     const getLeaderboard = async () => {
       try {
         const ret = await lobbyService.getLeaderboard();
+        if (!ret.success) throw new Error(ret.message);
         setLeadeboardData(ret.data);
       } catch (error: any) {
-        if (error.message === 'disconnect') {
+        if (error.message === "disconnect") {
           await disconnect();
           router.refresh();
-          return ;
+          return;
         }
         console.error("Error fetching leaderboard", error);
       }

@@ -24,8 +24,7 @@ export const pongKeyDown = (
   socket: Socket,
   profile: Profile,
   isPlayer: "Left" | "Right" | "Spectator",
-  isMountedRef: React.MutableRefObject<boolean>,
-
+  isMountedRef: React.MutableRefObject<boolean>
 ) => {
   if (!isMountedRef.current) return;
   if (game.status === "Playing") {

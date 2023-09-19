@@ -19,8 +19,7 @@ export default class LobbyService {
       );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -28,11 +27,15 @@ export default class LobbyService {
   //Recupere l'etat du joueur ( in game or not )
   public async userInGame(): Promise<ReturnData> {
     try {
-      const response = await fetchData(this.token, "lobby", `userInGame`, "GET");
+      const response = await fetchData(
+        this.token,
+        "lobby",
+        `userInGame`,
+        "GET"
+      );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -48,8 +51,7 @@ export default class LobbyService {
       );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -64,8 +66,7 @@ export default class LobbyService {
       );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -81,14 +82,13 @@ export default class LobbyService {
       );
       const data: ReturnData = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
 
   //Get leaderboard data
-  public async getLeaderboard(): Promise<any> {
+  public async getLeaderboard(): Promise<ReturnData> {
     try {
       const response = await fetchData(
         this.token,
@@ -98,8 +98,7 @@ export default class LobbyService {
       );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -114,8 +113,7 @@ export default class LobbyService {
       );
       const data = await response.json();
       return data;
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
@@ -124,8 +122,7 @@ export default class LobbyService {
   public async quitGame(): Promise<void> {
     try {
       await fetchData(this.token, "lobby", "quit", "POST");
-    }
-    catch (error: any) {
+    } catch (error: any) {
       throw new Error(error.message);
     }
   }
