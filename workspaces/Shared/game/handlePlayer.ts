@@ -100,7 +100,7 @@ export function moveAI(
     );
 
     // Calculate a variable movement speed based on the distance and on the direction of the ball
-    const maxSpeed = playerDynamic.speed;
+    const maxSpeed = playerDynamic.speed * 1.2;
     const minSpeed = playerDynamic.speed / 3;
     let movementSpeed =
       minSpeed +

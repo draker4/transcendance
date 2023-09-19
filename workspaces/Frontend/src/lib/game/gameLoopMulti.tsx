@@ -19,6 +19,8 @@ const lastFpsUpdateTimeRef = { current: 0 };
 const frameCountRef = { current: 0 };
 const fpsRef = { current: 0 };
 const showFpsRef = false;
+let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
+let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
 
 const updateMessage: UpdateData[] = [];
 const playerMessage: Player[] = [];
@@ -95,11 +97,10 @@ const updateGame = (game: GameData) => {
   return game;
 };
 
-function lerp(start: number, end: number, t: number): number {
-  return start + t * (end - start);
+function lerp(start: number, end: number): number {
+  const delta = end - start;
+  return start + delta * (frameCountRef.current / 30);
 }
-let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
-let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
 
 export const gameLoop = (
   timestamp: number,
@@ -140,9 +141,8 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  const delta = elapsedTime / FRONT_FPS;
-  ballX = lerp(ballX, game.ball.posX, delta * 0.1);
-  ballY = lerp(ballY, game.ball.posY, delta * 0.1);
+  ballX = lerp(ballX, game.ball.posX);
+  ballY = lerp(ballY, game.ball.posY);
 
   drawPong(game, draw, ballX, ballY);
 

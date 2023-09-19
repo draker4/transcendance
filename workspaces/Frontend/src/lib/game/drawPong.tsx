@@ -300,7 +300,7 @@ export function drawPong(
   drawScoreTable(gameData, draw);
 
   // Draw the ball
-  if (gameData.status === "Playing") {
+  if (gameData.status === "Playing" && !gameData.playerServe) {
     draw.context.drawImage(draw.ballImage, ballX, ballY, BALL_SIZE, BALL_SIZE);
   }
   // Draw the Timer
