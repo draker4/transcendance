@@ -158,21 +158,21 @@ export class LobbyService {
         ret.message = 'No stats found';
         return ret;
       }
-      console.log("usersStats", usersStats);
       const leaderboard: UserLeaderboard[] = [];
       for (const userStats of usersStats) {
         const user = await this.userService.getUserById(userStats.userId);
         if (!user) {
           ret.message = 'User not found';
-          return ret;
+          continue;
         }
-        const avatar = await this.avatarService.getAvatarById(
-          userStats.userId,
-          false,
-        );
-        if (!avatar) {
-          ret.message = 'Avatar not found';
-          return ret;
+        let avatar;
+        try {
+          avatar = await this.avatarService.getAvatarById(
+            userStats.userId,
+            false,
+          );
+        } catch (error) {
+          continue;
         }
         if (avatar?.decrypt && avatar?.image.length > 0) {
           avatar.image = await this.cryptoService.decrypt(avatar.image);
