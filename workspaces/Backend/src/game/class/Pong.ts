@@ -566,56 +566,44 @@ export class Pong {
 
   // --------------------------------  DISCONNECT METHODS  -------------------------------- //
 
-  public async disconnect(user: UserInfo, manual: boolean): Promise<any> {
+  public disconnect(user: UserInfo, manual: boolean) {
     const data: ReturnData = {
       success: false,
       message: '',
     };
-    try {
-      if (this.playerLeft.length > 0 && this.playerLeft.includes(user)) {
-        this.playerLeft = this.playerLeft.filter(
-          (player) => player.socket.id !== user.socket.id,
-        );
-        if (
-          manual &&
-          (this.data.status === 'Playing' || this.data.status === 'Stopped')
-        )
-          await this.rageQuit('Left');
-        else this.disconnectPlayer('Left');
-      } else if (
-        this.playerRight.length > 0 &&
-        this.playerRight.includes(user)
-      ) {
-        this.playerRight = this.playerRight.filter(
-          (player) => player.socket.id !== user.socket.id,
-        );
-        if (
-          manual &&
-          (this.data.status === 'Playing' || this.data.status === 'Stopped')
-        )
-          await this.rageQuit('Right');
-        else this.disconnectPlayer('Right');
-      } else {
-        if (this.spectators.length === 0) {
-          data.message = 'No spectators in the game';
-          return data;
-        }
-        this.spectators = this.spectators.filter(
-          (spectator) => spectator !== user,
-        );
-      }
-      // user.socket.leave(this.gameId);
-      data.success = true;
-      data.message = 'User disconnected from game';
-      return data;
-    } catch (error) {
-      this.logger.error(
-        `Error while disconnecting user: ${error.message}`,
-        'Pong - Disconnect',
-        error,
+    if (this.playerLeft.length > 0 && this.playerLeft.includes(user)) {
+      this.playerLeft = this.playerLeft.filter(
+        (player) => player.socket.id !== user.socket.id,
       );
-      // throw new WsException('Error while disconnecting user');
+      if (
+        manual &&
+        (this.data.status === 'Playing' || this.data.status === 'Stopped')
+      )
+        this.rageQuit('Left');
+      else this.disconnectPlayer('Left');
+    } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
+      this.playerRight = this.playerRight.filter(
+        (player) => player.socket.id !== user.socket.id,
+      );
+      if (
+        manual &&
+        (this.data.status === 'Playing' || this.data.status === 'Stopped')
+      )
+        this.rageQuit('Right');
+      else this.disconnectPlayer('Right');
+    } else {
+      if (this.spectators.length === 0) {
+        data.message = 'No spectators in the game';
+        return data;
+      }
+      this.spectators = this.spectators.filter(
+        (spectator) => spectator !== user,
+      );
     }
+    // user.socket.leave(this.gameId);
+    data.success = true;
+    data.message = 'User disconnected from game';
+    return data;
   }
 
   private disconnectLoop(side: 'Left' | 'Right') {
@@ -692,30 +680,18 @@ export class Pong {
     }
   }
 
-  private async rageQuit(side: 'Left' | 'Right') {
-    try {
-      this.data.status = 'Finished';
-      this.data.sendStatus = true;
-      this.data.updateScore = true;
-      if (side === 'Left') {
-        this.data.result =
-          this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
-        this.data.winSide = 'Right';
-        this.data.score.rageQuit = 'Left';
-        await this.scoreService.updateRageQuit(this.gameId, 'Left');
-      } else if (side === 'Right') {
-        this.data.result =
-          this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
-        this.data.winSide = 'Left';
-        this.data.score.rageQuit = 'Right';
-        await this.scoreService.updateRageQuit(this.gameId, 'Right');
-      }
-    } catch (error) {
-      this.logger.error(
-        `Error while rage quitting: ${error.message}`,
-        'Pong - rageQuit',
-        error,
-      );
+  private rageQuit(side: 'Left' | 'Right') {
+    this.data.status = 'Finished';
+    this.data.sendStatus = true;
+    this.data.updateScore = true;
+    if (side === 'Left') {
+      this.data.result = this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
+      this.data.winSide = 'Right';
+      this.data.score.rageQuit = 'Left';
+    } else if (side === 'Right') {
+      this.data.result = this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
+      this.data.winSide = 'Left';
+      this.data.score.rageQuit = 'Right';
     }
   }
 }

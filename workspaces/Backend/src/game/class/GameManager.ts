@@ -130,50 +130,37 @@ export class GameManager {
   }
 
   // Method to handle user disconnection from a game
-  public async disconnect(
-    userId: number,
-    socket: Socket,
-    manual: boolean,
-  ): Promise<any> {
-    try {
-      // Find user in the collection based on userId and socketId
-      const user = this.usersConnected.find(
-        (user) => user.socket.id === socket.id,
-      );
-      if (!user) {
-        this.logger.error(
-          `User with ID ${userId} not found`,
-          'Manager - disconnect',
-        );
-        return;
-      }
-
-      //Find the game linked to the user
-      const pong = this.pongOnGoing.get(user.gameId);
-      if (!pong) {
-        this.logger.error(
-          `Game with ID ${user.gameId} not found`,
-          'Manager - disconnect',
-        );
-        return;
-      }
-
-      // Remove the user from the game and userConnected array
-      await pong.disconnect(user, manual);
-      this.usersConnected = this.usersConnected.filter(
-        (user) => user.socket.id !== socket.id,
-      );
-
-      this.statusService.add(user.id.toString(), 'connected');
-      return { success: true, message: 'User disconnected' };
-    } catch (error) {
+  public disconnect(userId: number, socket: Socket, manual: boolean) {
+    // Find user in the collection based on userId and socketId
+    const user = this.usersConnected.find(
+      (user) => user.socket.id === socket.id,
+    );
+    if (!user) {
       this.logger.error(
-        `Error while disconnecting user: ${error.message}`,
+        `User with ID ${userId} not found`,
         'Manager - disconnect',
-        error,
       );
-      // throw new WsException('Error while disconnecting user');
+      return;
     }
+
+    //Find the game linked to the user
+    const pong = this.pongOnGoing.get(user.gameId);
+    if (!pong) {
+      this.logger.error(
+        `Game with ID ${user.gameId} not found`,
+        'Manager - disconnect',
+      );
+      return;
+    }
+
+    // Remove the user from the game and userConnected array
+    pong.disconnect(user, manual);
+    this.usersConnected = this.usersConnected.filter(
+      (user) => user.socket.id !== socket.id,
+    );
+
+    this.statusService.add(user.id.toString(), 'connected');
+    return { success: true, message: 'User disconnected' };
   }
 
   // ---------------------------------  PRIVATE METHODS  -------------------------------- //
@@ -227,13 +214,7 @@ export class GameManager {
         (!user.isPlayer && user.pingSend >= SPECTATOR_PING)
       ) {
         this.logger.log(`User with ID ${user.id} disconnected`);
-        this.disconnect(user.id, user.socket, false).catch((error) => {
-          this.logger.error(
-            `Error while disconnecting user: ${error.message}`,
-            'checkConnexion',
-            error,
-          );
-        });
+        this.disconnect(user.id, user.socket, false);
       } else {
         user.sendPing();
       }
