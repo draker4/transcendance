@@ -158,6 +158,7 @@ export class LobbyService {
         ret.message = 'No stats found';
         return ret;
       }
+      console.log("usersStats", usersStats);
       const leaderboard: UserLeaderboard[] = [];
       for (const userStats of usersStats) {
         const user = await this.userService.getUserById(userStats.userId);

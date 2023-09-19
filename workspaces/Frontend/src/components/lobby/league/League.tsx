@@ -23,7 +23,8 @@ export default function League({ profile }: { profile: Profile }) {
       try {
         const ret = await lobbyService.getLeaderboard();
         if (!ret.success) {
-          console.log("Error fetching leaderboard", ret);
+          console.error("Error fetching leaderboard", ret);
+          return;
         }
         setLeadeboardData(ret.data);
       } catch (error: any) {

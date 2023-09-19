@@ -28,6 +28,8 @@
 - [x] error ESLINT next/babel quand on compile en build
 - [x] all warning after make flcean (depedencies)
 
+- [~] font size letters create page in avatar text
+
 > Bperriol
 
 - [x] CSS du badge a agrandir
