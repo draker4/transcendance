@@ -23,13 +23,11 @@ import {
 import { PongColors } from "@/lib/enums/PongColors.enum";
 import {
   Badge,
-  LinearProgress,
   Tooltip,
-  linearProgressClasses,
-  styled,
 } from "@mui/material";
 import { UserAchievement } from "@transcendence/shared/types/Achievement.types";
 import { ShortStats } from "@transcendence/shared/types/Stats.types";
+import ProgressBar from "./ProgressBar";
 
 export default function AchievementItem({
   achievement,
@@ -94,20 +92,6 @@ export default function AchievementItem({
     default:
       color = "var(--tertiary1)";
   }
-
-  const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    height: 5,
-    borderRadius: 5,
-    margin: "5px auto",
-    width: "80%",
-    [`&.${linearProgressClasses.colorPrimary}`]: {
-      backgroundColor: "var(--primary2)",
-    },
-    [`& .${linearProgressClasses.bar}`]: {
-      borderRadius: 5,
-      backgroundColor: color,
-    },
-  }));
 
   const badgeStyle = {
     "& .MuiBadge-badge": {
@@ -209,9 +193,10 @@ export default function AchievementItem({
             arrow
           >
             <div className={styles.bottom}>
-              <BorderLinearProgress
-                variant="determinate"
+              <ProgressBar
+                barColor={color}
                 value={(value / achievement.value) * 100}
+                height={5}
               />
             </div>
           </Tooltip>

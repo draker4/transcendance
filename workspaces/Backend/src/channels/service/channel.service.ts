@@ -743,6 +743,21 @@ export class ChannelService {
     return rep;
   }
 
+  // [+] LOUP A FINIR OU ABANDONNER
+  // private async forceJoinedRelationToTrue(repRelation: ReturnDataTyped<UserChannelRelation>) {
+  //   if (
+  //     repRelation.success &&
+  //     repRelation.data &&
+  //     repRelation.data.joined === false
+  //   ) {
+  //     repRelation.data.joined = true;
+
+  //     const repDatabase: ReturnData = await this.updateChannelUserRelation(
+  //       repRelation.data,
+  //     );
+  //   }  
+  // }
+
   public async editChannelPassword(
     senderId: number,
     channelId: number,

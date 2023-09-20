@@ -78,6 +78,7 @@ dkms.conf
 
 # Database
 Database
+/workspaces/Backend/db/migrations/*
 
 /node_modules
 yarn.lock

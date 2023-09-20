@@ -69,6 +69,11 @@ export default function StoryEditable({ profile }: Props) {
     }
   };
 
+  const doesStoryhasLineBreaks = (story:string) => {
+    const numberOfLineBreaks = (story.match(/\n/g) || []).length;
+    return numberOfLineBreaks > 0;
+  }
+
   return (
     <>
       <p className={styles.tinyTitle}>Crunchy story</p>
@@ -78,7 +83,8 @@ export default function StoryEditable({ profile }: Props) {
           className={styles.story}
           onClick={handleClickEdit}
         >
-          <textarea value={story} rows={6} readOnly />
+          {doesStoryhasLineBreaks(story) && <textarea value={story} rows={6} readOnly />}
+          {!doesStoryhasLineBreaks(story) && <p className={styles.storyOneLine}>{story}</p>}
         </div>
       )}
 

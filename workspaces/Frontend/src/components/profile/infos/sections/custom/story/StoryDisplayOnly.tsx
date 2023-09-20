@@ -1,22 +1,20 @@
 import styles from "@/styles/profile/InfoCard.module.css";
-import { useState } from "react";
 
 type Props = {
   profile: Profile;
 };
 
 export default function StoryDisplayOnly({ profile }: Props) {
-  // [?] pas besoin d'un useState pour le moment je pense
-  const [story, setStory] = useState<string>(
-    profile.story === null ? "" : profile.story
-  );
+  const rowMax = 6;
+  const numberOfLineBreaks = (profile.story.match(/\n/g) || []).length;
 
   return (
     <>
-      {story !== "" && <p className={styles.tinyTitle}>Crunchy story</p>}
-      {story !== "" && (
+      {profile.story !== "" && <p className={styles.tinyTitle}>Crunchy story</p>}
+      {profile.story !== "" && (
         <div className={styles.story}>
-          <textarea value={story} rows={6} readOnly />
+          {numberOfLineBreaks > 0 && <textarea value={profile.story} rows={rowMax} readOnly />}
+          {numberOfLineBreaks === 0 && <p className={styles.storyOneLine}>{profile.story}</p>}
         </div>
       )}
     </>
