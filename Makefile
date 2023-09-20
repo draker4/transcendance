@@ -59,6 +59,7 @@ rmvolume :
 	else \
 		echo "No volumes to remove."; \
 	fi
+	rm -rf ./workspaces/Backend/db/migrations/*
 	@echo "----All Volumes deleted-----"
 
 rmNodeModules :

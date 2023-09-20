@@ -16,6 +16,16 @@ fi
 # Check the value of ENVIRONNEMENT variable in .env file
 ENVIRONNEMENT=$(grep -i 'ENVIRONNEMENT' .env | cut -d'=' -f2)
 
+if [ -z "$(ls -A ./workspaces/Backend/db/migrations)" ]; then
+  echo "Creating tables in database"
+  cd ./workspaces/Backend
+  yarn run migration:generate
+  yarn run migration:run
+  cd /home
+else
+  echo "Database already created"
+fi
+
 if [ "$ENVIRONNEMENT" == "dev" ]; then
   # Start dev env
   echo "Starting dev backend environment"

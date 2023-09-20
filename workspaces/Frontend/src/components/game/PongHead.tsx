@@ -20,7 +20,6 @@ type Props = {
   gameService: GameService;
   lobby: LobbyService;
   isPlayer: "Left" | "Right" | "Spectator";
-  isMountedRef: React.MutableRefObject<boolean>;
 };
 
 export default function PongHead({
@@ -29,7 +28,6 @@ export default function PongHead({
   gameService,
   lobby,
   isPlayer,
-  isMountedRef,
 }: Props) {
   const router = useRouter();
   const [quitStatus, setQuitStatus] = useState<boolean>(false);
@@ -40,32 +38,35 @@ export default function PongHead({
   const [prof, setProf] = useState<Profile>(profile);
 
   async function quit() {
-    if (quitStatus) {
-      return;
-    }
+    if (quitStatus) return;
     setQuitStatus(true);
     if (isPlayer === "Spectator") {
-      gameService.socket?.emit("quit");
-      router.push("/home");
+      console.log("emit quit Spectator");
+      gameService.socket?.emit("quit", (ret: any) => {
+        console.log("quit emitted Spectator", ret);
+        router.push("/home?home");
+      });
+      return;
     }
     const res = await lobby.quitGame()
-    .then(() => {
-      gameService.socket?.emit("quit");
-      router.push("/home");
-    })
-    .catch((err) => {
-      if (err.message === "disconnect") {
-        disconnect();
-        router.refresh();
-        return;
-      }
-      toast.error(err.message);
-    }
-    );
+      .then(() => {
+      console.log("emit quit");
+      gameService.socket?.emit("quit", (ret: any) => {
+        console.log("quit emitted", ret);
+        router.push("/home?home");
+      });
+      })
+      .catch(async (err) => {
+        if (err.message === "disconnect") {
+          await disconnect();
+          router.refresh();
+          return ;
+        }
+      });
     await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Quitting...",
-      success: "Quitted !",
-      error: "Error while quitting",
+      pending: "Leaving game...",
+      success: "You have left the game",
+      error: "Error leaving game",
     });
   }
 
@@ -107,12 +108,9 @@ export default function PongHead({
         </button>
       )}
       <h2 className={styles.title}>{gameData.name}</h2>
-      {gameData.result !== "Not Finished" && <div className={styles.quitBlock}></div>}
-      {gameData.result === "Not Finished" &&
-        <button onClick={quit} className={styles.quitBtn}>
+      <button onClick={quit} className={styles.quitBtn}>
         <MdClose />
       </button>
-      }
     </div>
   );
 }

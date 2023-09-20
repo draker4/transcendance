@@ -101,10 +101,14 @@ export class StatsService {
       }
       if (result.win) {
         stats.playerXP += xp.total;
-        stats.levelUp = await this.checkLevelUp(stats, userId);
+        stats.levelUp = await this.checkLevelUp(
+          stats.level,
+          stats.playerXP + xp.total,
+          userId,
+        );
+        stats.level = stats.levelUp ? stats.level + 1 : stats.level;
       }
       await this.checkAchievement(stats, userId);
-      console.log('Stats', stats);
       return await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -172,11 +176,17 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
+      const levelUp = await this.checkLevelUp(
+        stats.level,
+        stats.playerXP + xp,
+        userId,
+      );
       await this.statsRepository.update(
         { userId: userId },
         {
-          leagueXP: stats.playerXP + xp,
-          levelUp: await this.checkLevelUp(stats, userId),
+          playerXP: stats.playerXP + xp,
+          levelUp: levelUp,
+          level: levelUp ? stats.level + 1 : stats.level,
         },
       );
     } catch (error) {
@@ -702,20 +712,22 @@ export class StatsService {
     }
   }
 
-  private async checkLevelUp(stats: Stats, userId: number): Promise<boolean> {
+  private async checkLevelUp(
+    level: number,
+    playerXP: number,
+    userId: number,
+  ): Promise<boolean> {
     try {
-      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
-        stats.level,
-      );
+      const nextLevel: NextLevel =
+        await this.experienceService.getNextLevelXp(level);
       if (!nextLevel)
         throw new Error('Error while getting next level experience');
-      if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
-        stats.level += 1;
+      if (playerXP >= nextLevel.cumulativeXpToNext) {
+        level += 1;
         this.levelUpAnnonce.push({
-          userId: stats.userId.toString(),
-          level: stats.level,
+          userId: userId.toString(),
+          level: level,
         });
-        const level = stats.level;
         if (
           level === 2 ||
           level === 5 ||
