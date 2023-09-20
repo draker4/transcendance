@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
 
-export default function PopupCodeEmail({
+export default function PopupDeactivate({
 	closePopup,
 	setCode,
 	notifPopup,
@@ -83,7 +83,7 @@ export default function PopupCodeEmail({
 			/>
 		</div>
 		<p>
-			Please enter the code generated in the authentifiaction application in your phone.
+			Please enter the code generated in the authentification application in your phone.
 		</p>
 		<input
 			type="text"
@@ -94,6 +94,7 @@ export default function PopupCodeEmail({
 				setCode(e.target.value);
 			}}
 		/>
+		<div className={styles.line}></div>
 		<button className={styles.activate} onClick={deactivateCode2fa}>
 			Deactivate
 		</button>

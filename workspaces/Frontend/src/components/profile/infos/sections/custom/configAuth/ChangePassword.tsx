@@ -214,6 +214,7 @@ export default function ChangePassword({
 								setPassword(e.target.value);
 							}}
 						/>
+						<div className={styles.line}></div>
 					</>
 				}
 
@@ -240,6 +241,7 @@ export default function ChangePassword({
 							setPassword(e.target.value);
 						}}
 					/>
+					<div className={styles.line}></div>
 					<p>Confirm password:</p>
 					<input
 						type="password"
@@ -251,6 +253,7 @@ export default function ChangePassword({
 							setVerifyPassword(e.target.value);
 						}}
 					/>
+					<div className={styles.line}></div>
 				</>
 			}
 
