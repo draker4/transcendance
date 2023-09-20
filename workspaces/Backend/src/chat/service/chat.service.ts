@@ -1419,7 +1419,6 @@ export class ChatService {
 
       // if invitation already sent add Friend
       if (relationPongie.hasInvited || relationUser.isInvited) {
-        // [!]HERE BEFORE !!!
         relationUser.isFriend = true;
         relationPongie.isFriend = true;
         relationUser.isInvited = false;
@@ -1830,7 +1829,7 @@ export class ChatService {
         senderId: userId,
       });
 
-      // send message server [!]
+      // send message server
       server.to('channel:' + channelId).emit('sendMsg', msg);
 
       const saveServerNotif: MakeMessage = {

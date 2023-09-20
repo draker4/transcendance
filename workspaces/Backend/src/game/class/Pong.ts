@@ -578,25 +578,25 @@ export class Pong {
       message: '',
     };
     if (this.playerLeft.length > 0 && this.playerLeft.includes(user)) {
-      this.playerLeft = this.playerLeft.filter(
-        (player) => player.socket.id !== user.socket.id,
-      );
       if (
         manual &&
         (this.data.status === 'Playing' || this.data.status === 'Stopped')
       )
         this.rageQuit('Left');
       else this.disconnectPlayer('Left');
-    } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
-      this.playerRight = this.playerRight.filter(
+      this.playerLeft = this.playerLeft.filter(
         (player) => player.socket.id !== user.socket.id,
       );
+    } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
       if (
         manual &&
         (this.data.status === 'Playing' || this.data.status === 'Stopped')
       )
         this.rageQuit('Right');
       else this.disconnectPlayer('Right');
+      this.playerRight = this.playerRight.filter(
+        (player) => player.socket.id !== user.socket.id,
+      );
     } else {
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';
@@ -653,7 +653,9 @@ export class Pong {
 
   private disconnectPlayer(side: 'Left' | 'Right') {
     if (side === 'Left') {
-      if (this.playerLeft.length > 0) return;
+      console.log('Disconnect Left');
+      if (this.playerLeft.length > 1) return;
+      console.log('Disconnect Left 2');
       this.data.playerLeftStatus = 'Disconnected';
       if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
         this.data.status = 'Stopped';
@@ -668,7 +670,9 @@ export class Pong {
         else this.stopDisconnectLoop();
       }
     } else if (side === 'Right') {
-      if (this.playerRight.length > 0) return;
+      console.log('Disconnect Right');
+      if (this.playerRight.length > 1) return;
+      console.log('Disconnect Right 2');
       this.data.playerRightStatus = 'Disconnected';
       if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
         this.data.status = 'Stopped';
@@ -686,6 +690,7 @@ export class Pong {
   }
 
   private rageQuit(side: 'Left' | 'Right') {
+    console.log('Rage Quit');
     this.data.status = 'Finished';
     this.data.sendStatus = true;
     this.data.updateScore = true;

@@ -6,7 +6,6 @@ type Props = {
 };
 
 export default function ColorSelector({ handleColorSelection }: Props) {
-  // [!] voir comment partager cette donnee pour tous, si necessaire [?]
   const colorLine1: string[] = [
     PongColors.paprika,
     PongColors.fuschia,

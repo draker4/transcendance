@@ -42,16 +42,7 @@ export const pongKeyDown = (
         move: Action.Up,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (!isMountedRef.current) {
-        return;
-      } else if (
-        isPlayer === "Right" &&
-        game.playerRightDynamic.move !== "Up"
-      ) {
-        socket.emit("action", action);
-      } else if (isPlayer === "Left" && game.playerLeftDynamic.move !== "Up") {
-        socket.emit("action", action);
-      }
+      socket.emit("action", action);
 
       // handle player move Down
     } else if (
@@ -67,19 +58,7 @@ export const pongKeyDown = (
         move: Action.Down,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (!isMountedRef.current) {
-        return;
-      } else if (
-        isPlayer === "Right" &&
-        game.playerRightDynamic.move !== Action.Down
-      ) {
-        socket.emit("action", action);
-      } else if (
-        isPlayer === "Left" &&
-        game.playerLeftDynamic.move !== Action.Down
-      ) {
-        socket.emit("action", action);
-      }
+      socket.emit("action", action);
 
       // handle player push
     } else if (event.key === " ") {
@@ -91,13 +70,7 @@ export const pongKeyDown = (
           move: Action.Push,
           playerSide: isPlayer === "Left" ? "Left" : "Right",
         };
-        if (!isMountedRef.current) {
-          return;
-        } else if (isPlayer === "Right" && game.playerRightDynamic.push === 0) {
-          socket.emit("action", action);
-        } else if (isPlayer === "Left" && game.playerLeftDynamic.push === 0) {
-          socket.emit("action", action);
-        }
+        socket.emit("action", action);
       }
     }
   }
@@ -112,19 +85,7 @@ export const pongKeyDown = (
         move: Action.Stop,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (!isMountedRef.current) {
-        return;
-      } else if (
-        isPlayer === "Right" &&
-        game.playerRightDynamic.move !== Action.Stop
-      ) {
-        socket.emit("action", action);
-      } else if (
-        isPlayer === "Left" &&
-        game.playerLeftDynamic.move !== Action.Stop
-      ) {
-        socket.emit("action", action);
-      }
+      socket.emit("action", action);
     }
   }
 };
@@ -144,16 +105,7 @@ export const pongKeyUp = (
     playerSide: isPlayer === "Left" ? "Left" : "Right",
   };
   if (!isMountedRef.current || isPlayer === "Spectator") return;
-  if (game.status === "Playing" || game.status === "Stopped") {
-    if (isPlayer === "Left" && game.playerLeftDynamic.move !== Action.Idle) {
-      socket.emit("action", action);
-    } else if (
-      isPlayer === "Right" &&
-      game.playerRightDynamic.move !== Action.Idle
-    ) {
-      socket.emit("action", action);
-    }
-  }
+  socket.emit("action", action);
 };
 
 // Handler for "player" event
