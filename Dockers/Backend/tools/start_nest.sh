@@ -16,14 +16,15 @@ fi
 # Check the value of ENVIRONNEMENT variable in .env file
 ENVIRONNEMENT=$(grep -i 'ENVIRONNEMENT' .env | cut -d'=' -f2)
 
-if [ -z "$(ls -A ./workspaces/Backend/db/migrations)" ]; then
+if [ -d "./workspaces/Backend/db/migrations" ]; then
+  echo "Database already created"
+else
   echo "Creating tables in database"
+  mkdir -p "./workspaces/Backend/db/migrations"
   cd ./workspaces/Backend
   yarn run migration:generate
   yarn run migration:run
   cd /home
-else
-  echo "Database already created"
 fi
 
 if [ "$ENVIRONNEMENT" == "dev" ]; then
