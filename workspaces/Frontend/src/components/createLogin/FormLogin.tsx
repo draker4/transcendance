@@ -211,7 +211,7 @@ export default function FormLogin({
                 text={text}
                 avatars={avatars}
                 avatarCrypted={avatarCrypted}
-                fontSize="3rem"
+                fontSize="1.3rem"
                 textButton={textButton}
                 textButtonInitial={textButtonInitial}
               />

@@ -127,18 +127,23 @@ export class AuthService {
   }
 
   async addUser(CreateUserDto: CreateUserDto) {
-    CreateUserDto.expirationCode = Date.now() + 2 * 60 * 1000;
-    CreateUserDto.verifyCode = this.generateSecureCode(8);
-    CreateUserDto.verified = false;
+    try {
+      
+      CreateUserDto.expirationCode = Date.now() + 2 * 60 * 1000;
+      CreateUserDto.verifyCode = this.generateSecureCode(8);
+      CreateUserDto.verified = false;
+      
+      const email = await this.cryptoService.decrypt(CreateUserDto.email);
+      await this.mailService.sendUserConfirmation(
+        email,
+        CreateUserDto.verifyCode,
+      );
 
-    const email = await this.cryptoService.decrypt(CreateUserDto.email);
-
-    await this.mailService.sendUserConfirmation(
-      email,
-      CreateUserDto.verifyCode,
-    );
-
-    return await this.usersService.addUser(CreateUserDto);
+      return await this.usersService.addUser(CreateUserDto);
+    }
+    catch (error) {
+      throw new Error('cannot add user');
+    }
   }
 
   async verifyCode(code: string) {
@@ -188,8 +193,11 @@ export class AuthService {
   }
 
   async updateAvatarLogin(userId: number, login: string, avatar: Avatar) {
-    const user = await this.usersService.getUserById(userId);
+    const user = await this.usersService.getUserAvatar(userId);
     if (!user) throw new Error('No user found');
+
+    if (user.login && user.login !== "" && user.avatar && user.avatar.backgroundColor)
+      return user;
 
     user.login = login;
     await this.usersService.updateUser(user.id, {
@@ -271,7 +279,7 @@ export class AuthService {
         this.usersService.deleteToken(isMatch);
         if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
           console.log('JUST DELETED=', refreshToken);
-      }, 20000);
+      }, 60000);
 
       return this.login(user, isMatch.NbOfRefreshes + 1, false);
     } catch (error) {

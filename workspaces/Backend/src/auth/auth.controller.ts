@@ -25,12 +25,14 @@ import { AuthService } from './services/auth.service';
 import { HttpExceptionFilter } from '@/utils/filter/http-exception.filter';
 import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
 import { AchievementService } from '@/achievement/service/achievement.service';
+import { UsersService } from '@/users/service/users.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly achievementService: AchievementService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Public()
@@ -91,6 +93,13 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
     try {
+      const check = await this.usersService.getUserByEmail(createUserDto.email, 'email');
+      if (check)
+        return {
+          message: 'ok',
+          id: -1,
+        };
+
       const user = await this.authService.addUser(createUserDto);
       
       if (!user)
@@ -120,30 +129,33 @@ export class AuthController {
           message: 'This code does not exist. Please try again!'
         };
 
-      if (id !== userCode.id.toString())
-        return {
-          error: 'wrong user',
-        };
+      if (userCode && !userCode.verified) {
 
-      if (userCode.expirationCode < Date.now()) {
-        await this.authService.sendNewCode(userCode);
-        return {
-          success: false,
-          message:
-            'This code has expired. A new one has been sent to your email address',
-        };
+        if (id !== userCode.id.toString())
+          return {
+            error: 'wrong user',
+          };
+
+        if (userCode.expirationCode < Date.now()) {
+          await this.authService.sendNewCode(userCode);
+          return {
+            success: false,
+            message:
+              'This code has expired. A new one has been sent to your email address',
+          };
+        }
+
+        await this.authService.updateUser(userCode.id, {
+          verified: true,
+        });
+
+        // complete achievement
+        await this.achievementService.achievementCompleted(
+          userCode.id, {
+            code: "VERIFY_EMAIL",
+          },
+        );
       }
-
-      await this.authService.updateUser(userCode.id, {
-        verified: true,
-      });
-
-      // complete achievement
-      await this.achievementService.achievementCompleted(
-        userCode.id, {
-          code: "VERIFY_EMAIL",
-        },
-      );
 
       const { access_token, refresh_token } = await this.authService.login(
         userCode,

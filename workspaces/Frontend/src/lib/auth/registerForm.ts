@@ -107,7 +107,7 @@ export async function registerFormPassword(
 
     return {
       passwordSecured: "",
-      register: res.id,
+      register: res.id.toString(),
       login: "",
     };
   } catch (err) {
