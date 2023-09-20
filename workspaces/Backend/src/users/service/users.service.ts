@@ -213,7 +213,7 @@ export class UsersService {
 
   async getUserByCode(code: string) {
     return await this.userRepository.findOne({
-      where: { verifyCode: code, verified: false },
+      where: { verifyCode: code },
     });
   }
 

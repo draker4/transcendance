@@ -58,7 +58,7 @@ export default function LogInComponent() {
       }
     }
 
-    if (register.length !== 0) {
+    if (register.length !== 0 && register !== '-1') {
       router.push(`/welcome/confirm/${register}`);
       return;
     }

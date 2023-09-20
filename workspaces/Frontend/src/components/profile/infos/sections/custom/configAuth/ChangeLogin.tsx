@@ -112,6 +112,7 @@ export default function ChangeLogin({
 					setLoginText(e.target.value);
 				}}
 			/>
+			<div className={styles.line}></div>
 
 			<div className={stylesButton.flexButtons}>
 				<button

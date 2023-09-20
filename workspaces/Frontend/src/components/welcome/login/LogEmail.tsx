@@ -169,6 +169,15 @@ export default function LogEmail({
       if (res.register.length === 0 && res.login.length === 0)
         setTextButton("Continue");
 
+      if (res.register === "-1") {
+        setEmail("");
+        setPassword(false);
+        setPasswordSecured("");
+        setTextButton("Continue");
+        setNotif("Your account has already been created, please log again!");
+        return ;
+      }
+
       setRegister(res.register);
       setLogin(res.login);
     } catch (error) {

@@ -26,6 +26,7 @@ export class MailService {
 	async sendUserConfirmation(email: string, code: string) {
 		const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
+		console.log("code = ", code);
 		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
 			console.log("code email: ", code); // [!]
 		return this.transporter.sendMail({
@@ -38,6 +39,7 @@ export class MailService {
 	async sendUser2faVerification(email: string, code: string) {
 		const codeFormated = code.substring(0, 4) + " - " + code.substring(4);
 
+		console.log("code = ", code);
 		if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
 			console.log("code email: ", code); // [!]
 		return this.transporter.sendMail({

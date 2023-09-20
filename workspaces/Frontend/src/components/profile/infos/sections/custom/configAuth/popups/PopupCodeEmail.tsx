@@ -17,6 +17,7 @@ export default function PopupCodeEmail({ setCode }: {
 					setCode(e.target.value);
 				}}
 			/>
+			<div className={styles.line}></div>
 		</div>
 	)
 }
