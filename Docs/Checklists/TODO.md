@@ -80,3 +80,16 @@
 - [x] verifier mes switch (breaks !) => ok j'utilisais des return lorsque pas de break no problemo
 - [x] Barre des achievement a refaire pour pas avoir de soucis de dependences
 - [ ] fonction a extraire pour etre plus propre dans le forceJoinPrivateMessage
+
+
+
+# TO DO LIST (3e session)
+
+> all
+
+[!] console.log d'un user apres creation (passe par 42)
+
+
+> Loup
+
+[!] t.story is null ! // TypeError: t.story is null => match
