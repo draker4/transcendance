@@ -28,7 +28,6 @@
     "bcryptjs": "^2.4.3",
     "bufferutil": "^4.0.7",
     "cloudinary": "^1.40.0",
-    "cookies-next": "^3.0.0",
     "crypto-js": "^4.1.1",
     "jose": "^4.14.6",
     "next": "^13.4.19",

@@ -11,14 +11,14 @@ export default class ChatService {
   // Singleton
   constructor(token?: string) {
     if (ChatService.instance) {
-      return ChatService.instance;
+    	return ChatService.instance;
     }
 
     if (token) {
-      this.initializeSocket(token);
-      ChatService.instance = this;
+		this.initializeSocket(token);
+		ChatService.instance = this;
     } else {
-      this.disconnect();
+    	this.disconnect();
     }
   }
 
@@ -44,7 +44,7 @@ export default class ChatService {
 
     this.socket.on("disconnect", async () => {
       this.disconnect();
-      await this.refreshSocket();
+    //   await this.refreshSocket();
     });
 
     // Catching error or exception will force disconnect then reconnect
@@ -60,17 +60,17 @@ export default class ChatService {
       await this.refreshSocket();
     });
 
-    this.socket.on("error", (error: any) => {
+    this.socket.on("error", async (error: any) => {
       if (
         process.env &&
         process.env.ENVIRONNEMENT &&
         process.env.ENVIRONNEMENT === "dev"
       )
         console.log("Socket error:", error);
-      this.disconnect();
+      await this.refreshSocket();
     });
 
-    this.socket.on("exception", (exception: any) => {
+    this.socket.on("exception", async (exception: any) => {
       if (
         process.env &&
         process.env.ENVIRONNEMENT &&
@@ -86,7 +86,7 @@ export default class ChatService {
           this.nbExceptions = 0;
         }, 2000);
 
-      this.disconnect();
+      await this.refreshSocket();
     });
   }
 
@@ -106,13 +106,14 @@ export default class ChatService {
     if (this.disconnectClient) return;
 
     try {
-      const res = await fetch(
-        `http://${process.env.HOST_IP}:4000/api/auth/refreshToken`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+
+		const res = await fetch(
+			`http://${process.env.HOST_IP}:4000/api/auth/refreshToken`,
+			{
+			method: "POST",
+			credentials: "include",
+			}
+		);
 
       if (!res.ok) throw new Error("fetch failed");
 
@@ -134,6 +135,7 @@ export default class ChatService {
 
       if (!resApi.ok) throw new Error("fetch api failed");
 
+	  this.disconnect();
       this.initializeSocket(data.access_token);
     } catch (error: any) {
       this.disconnectClient = true;

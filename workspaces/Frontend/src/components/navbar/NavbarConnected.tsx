@@ -10,6 +10,7 @@ import { Socket } from "socket.io-client";
 import { toast } from "react-toastify";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
+import { getCookie } from "cookies-next";
 
 export default function NavbarConnected({
   avatar,
@@ -35,14 +36,31 @@ export default function NavbarConnected({
     };
 
     if (!socket) {
-      const intervalId = setInterval(() => {
-        const chatService = new ChatService(token);
-        if (chatService.disconnectClient) {
-          clearInterval(intervalId);
-          disconnectClient();
-        } else if (chatService.socket) {
-          setSocket(chatService.socket);
-          clearInterval(intervalId);
+      const intervalId = setInterval( async () => {
+        try {
+          const res = await fetch(`http://${process.env.HOST_IP}:3000/api/getToken`);
+          if (!res.ok)
+            throw new Error('fetch failed');
+
+          const data = await res.json();
+
+          if (!data.success)
+            throw new Error('no cookie');
+
+          const cookie = data.cookie;
+
+          const chatService = new ChatService(cookie);
+          if (chatService.disconnectClient) {
+            clearInterval(intervalId);
+            disconnectClient();
+          } else if (chatService.socket) {
+            setSocket(chatService.socket);
+            clearInterval(intervalId);
+          }
+        }
+        catch (err: any) {
+          if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+            console.log(err.message);
         }
       }, 500);
     }
