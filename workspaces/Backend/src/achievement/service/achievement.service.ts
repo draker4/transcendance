@@ -253,9 +253,9 @@ export class AchievementService implements OnModuleInit {
       return ret;
     } catch (error) {
       if (
-        !process.env ||
-        !process.env.ENVIRONNEMENT ||
-        process.env.ENVIRONNEMENT !== 'dev'
+        process.env ||
+        process.env.ENVIRONNEMENT ||
+        process.env.ENVIRONNEMENT === 'dev'
       )
         console.log(error.message);
       ret.error = error.message;
@@ -322,9 +322,9 @@ export class AchievementService implements OnModuleInit {
       return ret;
     } catch (error) {
       if (
-        !process.env ||
-        !process.env.ENVIRONNEMENT ||
-        process.env.ENVIRONNEMENT !== 'dev'
+        process.env ||
+        process.env.ENVIRONNEMENT ||
+        process.env.ENVIRONNEMENT === 'dev'
       )
         console.log(error.message);
       ret.error = error.message;

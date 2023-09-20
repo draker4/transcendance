@@ -37,7 +37,7 @@ export class WsJwtGuard implements CanActivate {
             client.user = { id: payload.sub, login: payload.login };
             return true;
         } catch (err) {
-            if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+            if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
                 console.log(err.message);
             throw new WsException('invalid token');
         }

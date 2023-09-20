@@ -105,7 +105,7 @@ export class AuthService {
       try {
         await this.updateRefreshToken(user, refresh_token, nbOfRefreshes);
       } catch (error) {
-        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
           console.log(error);
       }
     } else
@@ -113,6 +113,8 @@ export class AuthService {
         secret: process.env.JWT_SECRET,
         expiresIn: '1d',
       });
+
+      console.log("here its gonna return refresh = ", refresh_token);
 
     return {
       access_token,
@@ -237,12 +239,14 @@ export class AuthService {
     refreshToken: string,
     tokens: Token[],
   ): Promise<Token | undefined> {
+    console.log("begin search match");
     for (const token of tokens) {
       const isMatch = await argon2.verify(token.value, refreshToken);
       if (isMatch) {
         return token;
       }
     }
+    console.log("end search match", refreshToken);
     return undefined;
   }
 
@@ -263,9 +267,10 @@ export class AuthService {
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
 
+      console.log("ismatch = ", isMatch.NbOfRefreshes);
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
-        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
           console.log('NOT VALID=', refreshToken);
         throw new Error('token not valid!');
       }
@@ -275,15 +280,20 @@ export class AuthService {
         throw new Error('Too long, needs to reconnect');
       }
 
-      setTimeout(() => {
-        this.usersService.deleteToken(isMatch);
-        if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
-          console.log('JUST DELETED=', refreshToken);
-      }, 60000);
+      // console.log("before timeout");
+      // setTimeout(async () => {
+      //   console.log("in timeout");
+      //   await this.usersService.deleteToken(isMatch);
+      //   if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      //     console.log('JUST DELETED=', refreshToken);
+      // }, 1000);
 
-      return this.login(user, isMatch.NbOfRefreshes + 1, false);
+      const data = await this.login(user, isMatch.NbOfRefreshes + 1, false);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log('new=', data);
+      return data;
     } catch (error) {
-      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error.message);
       throw new BadRequestException(error.message);
     }
@@ -312,7 +322,7 @@ export class AuthService {
         success: true,
       };
     } catch (error) {
-      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error);
       throw new BadRequestException();
     }
@@ -343,7 +353,7 @@ export class AuthService {
         success: true,
       };
     } catch (error) {
-      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error);
       throw new BadRequestException();
     }

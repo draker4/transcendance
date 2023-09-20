@@ -55,6 +55,8 @@ export default function NavbarConnected({
       socket?.off("error");
       socket?.off("exception");
       socket?.off("refresh");
+      socket?.off("disconnect");
+      socket?.off("connect");
       socket?.disconnect();
     };
   }, [socket]);

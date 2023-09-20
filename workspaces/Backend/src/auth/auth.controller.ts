@@ -83,7 +83,7 @@ export class AuthController {
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
     }
     catch (error) {
-      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error);
       return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
     }
@@ -240,7 +240,7 @@ export class AuthController {
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
     // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
     } catch (error) {
-      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error);
       return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
     }
@@ -285,14 +285,14 @@ export class AuthController {
   @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  loginEmail(@Request() req) {
+  async loginEmail(@Request() req) {
     if (!req.user.verified)
       return {
         msg: 'not verified',
         id: req.user.id,
       }
     
-    return this.authService.login(
+    return await this.authService.login(
       req.user,
       0,
       req.user.isTwoFactorAuthenticationEnabled,
@@ -307,7 +307,7 @@ export class AuthController {
     @Headers('authorization') header: string
   ) {
     const [, refreshToken] = header.split(' ');
-    return this.authService.refreshToken(req.user.id, refreshToken);
+    return await this.authService.refreshToken(req.user.id, refreshToken);
   }
 
   @Public()
@@ -315,7 +315,7 @@ export class AuthController {
   @Post('refreshToken')
   async refreshToken(@Request() req) {
     const refreshToken = req.cookies['refresh-token'];
-    return this.authService.refreshToken(req.user.id, refreshToken);
+    return await this.authService.refreshToken(req.user.id, refreshToken);
   }
 
   @Post('sendPassword')
