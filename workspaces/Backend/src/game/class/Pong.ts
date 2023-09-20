@@ -1,6 +1,6 @@
 // import standard nest packages
 import { Server } from 'socket.io';
-// import { WsException } from '@nestjs/websockets';
+import { WsException } from '@nestjs/websockets';
 
 // import game engine logic
 import { ActionDTO } from '../dto/Action.dto';
@@ -120,7 +120,7 @@ export class Pong {
         'Pong - initPlayer',
         error,
       );
-      // return new WsException('Error while initializing players');
+      throw new WsException('Error while initializing players');
     }
   }
 
@@ -144,7 +144,7 @@ export class Pong {
           'Pong - Join',
           error,
         );
-        // throw new WsException('Error while updating game opponent');
+        throw new WsException('Error while updating game opponent');
       }
     }
 
@@ -164,7 +164,7 @@ export class Pong {
           'Pong - Join',
           error,
         );
-        // throw new WsException('Error while joining as player');
+        throw new WsException('Error while joining as player');
       }
     } else {
       this.spectators.push(user);
@@ -504,7 +504,7 @@ export class Pong {
           'Pong - JoinAsOpponent',
           error,
         );
-        // throw new WsException('Error while joining as opponent');
+        throw new WsException('Error while joining as opponent');
       }
     }
     // Update status if ready to play

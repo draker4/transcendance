@@ -81,7 +81,8 @@ export class AuthController {
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
     }
     catch (error) {
-      console.log(error);
+      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        console.log(error);
       return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
     }
   }
@@ -112,8 +113,6 @@ export class AuthController {
   ) {
     try {
       const userCode = await this.authService.verifyCode(code);
-
-      console.log(userCode);
 
       if (!userCode)
         return {
@@ -229,7 +228,8 @@ export class AuthController {
       return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
     // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
     } catch (error) {
-      console.log(error);
+      if (!process.env || !process.env.ENVIRONNEMENT || process.env.ENVIRONNEMENT !== "dev")
+        console.log(error);
       return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
     }
   }
