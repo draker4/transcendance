@@ -19,7 +19,7 @@
 - [+] Ajouter des boutons pour déplacer le paddle pour que je puisse jouer aussi avec ma tablette ! (@Bboisson elle te plait trop mon idée je suis sur 😂 ! Loup)
 
 - [!] Apres une invitation, ca m'emmene sur la partie directement en attendant que quelqu'un join. Si j'annule en cliquant sur la croix et que quelqu'un join, il ne peut pas rejoindre, ca throw une exception et ca lui met un message d'erreur.
-- [!] timer 4s or 2s in the game but not the same time
+- [x] timer 4s or 2s in the game but not the same time => ok cest mon ordi qui a deux secondes davance chais pas pk
 - [!] probleme avec l'xp donne par les achievments
 
 
@@ -30,11 +30,11 @@
 - [x] error ESLINT next/babel quand on compile en build
 - [x] all warning after make flcean (depedencies)
 
-- [~] font size letters create page in avatar text
+- [x] font size letters create page in avatar text
 
-- [!] Nettoyer ou n'afficher qu'en dev tous les consoles.log
-- [!] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
-- [!] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
+- [x] Nettoyer ou n'afficher qu'en dev tous les consoles.log
+- [x] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
+- [x] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
 
 > Bperriol
 
@@ -56,7 +56,7 @@
 - [x] console.log d'un user apres creation (passe par 42)
 - [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite
 - [~] La notif des achievement disparait mais ne revient pas au moment du level up qui arrive au meme moment
-- [~] pb de css de la barre en bas de certains input en border-bottom
+- [x] pb de css de la barre en bas de certains input en border-bottom
 
 > Loumarti
 
