@@ -21,6 +21,7 @@ import { ScoreService } from '@/score/service/score.service';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import { StatsService } from '@/stats/service/stats.service';
 import { StatusService } from '@/statusService/status.service';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class GameManager {
@@ -85,7 +86,7 @@ export class GameManager {
         'joinGame',
         error,
       );
-      return;
+      throw new WsException(`Error while joining game: ${error.message}`);
     }
   }
 

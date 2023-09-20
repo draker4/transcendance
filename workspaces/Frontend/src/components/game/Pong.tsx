@@ -129,11 +129,11 @@ export default function Pong({
   }, [socket, setGameData]);
 
   useEffect(() => {
-    socket.on("ping", handlePing(socket, profile.id, isMountedRef));
+    socket.on("ping", handlePing(socket, profile.id));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, profile.id, isMountedRef));
+      socket.off("ping", handlePing(socket, profile.id));
     };
   }, [socket, profile]);
 

@@ -26,7 +26,7 @@ export const pongKeyDown = (
   isPlayer: "Left" | "Right" | "Spectator",
   isMountedRef: React.MutableRefObject<boolean>
 ) => {
-  if (!isMountedRef.current) return;
+  if (!isMountedRef.current || isPlayer === "Spectator") return;
   if (game.status === "Playing" || game.status === "Stopped") {
     // handle player move Up
     if (
@@ -44,7 +44,10 @@ export const pongKeyDown = (
       };
       if (!isMountedRef.current) {
         return;
-      } else if (isPlayer === "Right" && game.playerRightDynamic.move !== "Up") {
+      } else if (
+        isPlayer === "Right" &&
+        game.playerRightDynamic.move !== "Up"
+      ) {
         socket.emit("action", action);
       } else if (isPlayer === "Left" && game.playerLeftDynamic.move !== "Up") {
         socket.emit("action", action);
@@ -91,7 +94,7 @@ export const pongKeyDown = (
         if (!isMountedRef.current) {
           return;
         } else if (isPlayer === "Right" && game.playerRightDynamic.push === 0) {
-          socket.emit("action", action)
+          socket.emit("action", action);
         } else if (isPlayer === "Left" && game.playerLeftDynamic.push === 0) {
           socket.emit("action", action);
         }
@@ -140,21 +143,22 @@ export const pongKeyUp = (
     move: Action.Idle,
     playerSide: isPlayer === "Left" ? "Left" : "Right",
   };
-  if (!isMountedRef.current || game.status === "Finished" || game.status === "Deleted") return;
-  if (isPlayer === "Left" && game.playerLeftDynamic.move !== Action.Idle) {
-    socket.emit("action", action);
-  } else if (
-    isPlayer === "Right" &&
-    game.playerRightDynamic.move !== Action.Idle
-  ) {
-    socket.emit("action", action);
+  if (!isMountedRef.current || isPlayer === "Spectator") return;
+  if (game.status === "Playing" || game.status === "Stopped") {
+    if (isPlayer === "Left" && game.playerLeftDynamic.move !== Action.Idle) {
+      socket.emit("action", action);
+    } else if (
+      isPlayer === "Right" &&
+      game.playerRightDynamic.move !== Action.Idle
+    ) {
+      socket.emit("action", action);
+    }
   }
 };
 
 // Handler for "player" event
 export const handlePlayerMessage =
-  (setGameData: Function) =>
-  (player: Player) => {
+  (setGameData: Function) => (player: Player) => {
     addPlayerMessage(player);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
@@ -169,8 +173,7 @@ export const handlePlayerMessage =
 
 // Handler for "status" event
 export const handleStatusMessage =
-  (setGameData: Function) =>
-  (fullStatus: StatusMessage) => {
+  (setGameData: Function) => (fullStatus: StatusMessage) => {
     addStatusMessage(fullStatus);
     setGameData((prevGameData: GameData) => ({
       ...prevGameData,
@@ -184,8 +187,7 @@ export const handleStatusMessage =
   };
 
 export const handleUpdateMessage =
-  (setGameData: Function) =>
-  (updateData: UpdateData) => {
+  (setGameData: Function) => (updateData: UpdateData) => {
     addUpdateMessage(updateData);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
@@ -197,8 +199,7 @@ export const handleUpdateMessage =
   };
 
 export const handleScoreMessage =
-  (setGameData: Function) =>
-  (scoreData: ScoreMessage) => {
+  (setGameData: Function) => (scoreData: ScoreMessage) => {
     addScoreMessage(scoreData);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
@@ -209,13 +210,6 @@ export const handleScoreMessage =
   };
 
 // Handler for "ping" event
-export const handlePing =
-  (
-    socket: Socket,
-    userId: number,
-    isMountedRef: React.MutableRefObject<boolean>
-  ) =>
-  () => {
-    if (!isMountedRef.current) return;
-    socket.emit("pong", userId);
-  };
+export const handlePing = (socket: Socket, userId: number) => () => {
+  socket.emit("pong", userId);
+};
