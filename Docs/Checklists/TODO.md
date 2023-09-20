@@ -19,18 +19,22 @@
 - [+] Ajouter des boutons pour déplacer le paddle pour que je puisse jouer aussi avec ma tablette ! (@Bboisson elle te plait trop mon idée je suis sur 😂 ! Loup)
 
 - [!] Apres une invitation, ca m'emmene sur la partie directement en attendant que quelqu'un join. Si j'annule en cliquant sur la croix et que quelqu'un join, il ne peut pas rejoindre, ca throw une exception et ca lui met un message d'erreur.
+- [!] timer 4s or 2s in the game but not the same time
+- [!] probleme avec l'xp donne par les achievments
+
 
 > Pour qui veut s'en charger ou pour tous
 
 - [x] Affichage bouton "log out" sur une ligne au lieu de deux
-- [!] Se renseigner sur commment creer la db sans passer par le synchronize a switch
-- [!] Nettoyer ou n'afficher qu'en dev tous les consoles.log
+- [x] Se renseigner sur commment creer la db sans passer par le synchronize a switch
 - [x] error ESLINT next/babel quand on compile en build
 - [x] all warning after make flcean (depedencies)
 
 - [~] font size letters create page in avatar text
 
-- [!] timer 4s or 2s in the game but not the same time
+- [!] Nettoyer ou n'afficher qu'en dev tous les consoles.log
+- [!] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
+- [!] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
 
 > Bperriol
 
@@ -45,53 +49,27 @@
 - [x] empecher de pouvoir spam l'invitation pongie (toast en boucle)
 - [x] invite pongies de Party
 - [x] chercher un nom de channel, lorsque test est privee et qu'on ecrit 't' dans la barre
-- [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite
-  (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
-  J'essaye de reproduire mais je trouve pas il faudrait qu'on arrive à trouver dans quel ca precis ca arrive
+      (Il y a peut etre eu une demande d'ami puis un ban un truc du genre). Rien de dramatique je note si tu arrive a reproduire le pb
+      J'essaye de reproduire mais je trouve pas il faudrait qu'on arrive à trouver dans quel ca precis ca arrive
 - [x] check le temps du verified code depuis la mise a jour des temps dans la db
+- [x] achievement les demos sont compte avec le niveau du joueur !! @_@'
+- [x] console.log d'un user apres creation (passe par 42)
+- [~] Apres les tests faits hiers, j'ai une notif (badge rouge) sur l'avatar de la nav bar, qui disparait qaund je vais dans l'onglet pongies mais qui repop ensuite
+- [~] La notif des achievement disparait mais ne revient pas au moment du level up qui arrive au meme moment
+- [~] pb de css de la barre en bas de certains input en border-bottom
 
 > Loumarti
 
-- [x] invitation depuis le 3e onglet channel ne proc pas d'invit (badge channel (1)) => need help => non c'est ok j'ai reussi tout seul :D !
 - [!] SetUpSectionPongers error : Error: getPongersData user relation issue // SetUpChannelSecondPart.tsx:123:16 => erreure a surveiller si reproc
       proc pdt des tests ban / kick invite channel depuis chat (en dev)
-- [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)
+- [x] invitation depuis le 3e onglet channel ne proc pas d'invit (badge channel (1)) => need help => non c'est ok j'ai reussi tout seul :D !
 - [x] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail ! Trop cool ca :D
-
-# TO DO LIST (2e session)
-
-> All
-
-- [!] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
-- [!] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
-
-> Bperriol
-
-- [~~] La notif des achievement disparait mais ne revient pas au moment du level up qui arrive au meme moment
-- [x] achievement les demos sont compte avec le niveau du joueur !! @\_@'
-
-> Chat
-
-- [!] WsException: Object { status: "error", message: "Forbidden resource" } => inviation a une game de Jiji vers loup ... dans le cas 2 onglets : Mozilla & MozillaPrivate
-  Probleme besoin d'avoir un message prive avant d'envoyer une invitation de jeu
-
-> Loumarti
-
 - [x] Amelioration de l'affichage du story  
 - [x] Le prompt reste a la taille du dernier message envoye => c'est ok
 - [x] verifier mes switch (breaks !) => ok j'utilisais des return lorsque pas de break no problemo
 - [x] Barre des achievement a refaire pour pas avoir de soucis de dependences
-- [ ] fonction a extraire pour etre plus propre dans le forceJoinPrivateMessage
-
-
-
-# TO DO LIST (3e session)
-
-> all
-
-[!] console.log d'un user apres creation (passe par 42)
-
-
-> Loup
-
-[!] t.story is null ! // TypeError: t.story is null => match
+- [x] WsException: Object { status: "error", message: "Forbidden resource" } => inviation a une game de Jiji vers loup ... dans le cas 2 onglets : Mozilla & MozillaPrivate
+  Probleme besoin d'avoir un message prive avant d'envoyer une invitation de jeu
+- [x] fonction a extraire pour etre plus propre dans le forceJoinPrivateMessage
+- [x] t.story is null ! // TypeError: t.story is null => match
+- [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)

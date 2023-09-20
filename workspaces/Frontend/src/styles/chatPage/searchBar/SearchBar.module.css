@@ -16,9 +16,6 @@
   width: 100%;
   height: 30px;
   border: none;
-  /* [!] STYLE BORDURES */
-	/* border-bottom: 1px solid grey; */
-  /* border-bottom: 1px solid var(--tertiary1); */
   border-bottom: 3px solid var(--secondary1);
   font-size: 1.1rem;
   background-color: var(--primary1);

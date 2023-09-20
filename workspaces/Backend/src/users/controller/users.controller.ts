@@ -51,7 +51,6 @@ export class UsersController {
     return user;
   }
 
-  // [!] secu + dto
   @Get('profile/:id')
   async getUserByLogin(@Param('id') id: number) {
     const user = await this.usersService.getUserById(id);

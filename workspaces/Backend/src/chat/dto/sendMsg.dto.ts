@@ -32,16 +32,3 @@ export class sendMsgDto {
   @IsString()
   join?: string;
 }
-
-/*
-
-  [N][!] note :
-  passer la date en tant que type @IsDate génère des problèmes.
-  J'essaie une méthode qui consiste à convertir en string avec :
-      const dateString = date.toISOString()
-  
-  Avant de faire passer au backend avec websocket.
-  Coté front on récupère la dateString de cette façon :
-      const date = new Date(dateString);
-
-*/
