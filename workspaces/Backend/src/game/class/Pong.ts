@@ -602,7 +602,7 @@ export class Pong {
     }
     // user.socket.leave(this.gameId);
     data.success = true;
-    data.message = 'User disconnected from game';
+    data.message = `User ${user.id} socket ${user.socket.id} disconnected from game`;
     return data;
   }
 

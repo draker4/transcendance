@@ -154,7 +154,8 @@ export class GameManager {
     }
 
     // Remove the user from the game and userConnected array
-    pong.disconnect(user, manual);
+    const ret = pong.disconnect(user, manual);
+    this.logger.log(ret, 'Manager - disconnect');
     this.usersConnected = this.usersConnected.filter(
       (user) => user.socket.id !== socket.id,
     );

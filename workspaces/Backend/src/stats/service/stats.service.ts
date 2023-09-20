@@ -104,6 +104,7 @@ export class StatsService {
         stats.levelUp = await this.checkLevelUp(stats, userId);
       }
       await this.checkAchievement(stats, userId);
+      console.log('Stats', stats);
       return await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
@@ -128,7 +129,12 @@ export class StatsService {
           code: `DEMO_${stats.demoWatched}`,
         });
       }
-      await this.statsRepository.save(stats);
+      await this.statsRepository.update(
+        { userId: userId },
+        {
+          demoWatched: stats.demoWatched,
+        },
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -146,8 +152,12 @@ export class StatsService {
         throw new Error('Stats not found');
       }
       if (stats.storyLevelCompleted < storyLevelCompleted) {
-        stats.storyLevelCompleted = storyLevelCompleted;
-        await this.statsRepository.save(stats);
+        await this.statsRepository.update(
+          { userId: userId },
+          {
+            storyLevelCompleted: storyLevelCompleted,
+          },
+        );
       }
     } catch (error) {
       throw new Error(error.message);
@@ -169,7 +179,6 @@ export class StatsService {
           levelUp: await this.checkLevelUp(stats, userId),
         },
       );
-      await this.statsRepository.save(stats);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -302,8 +311,12 @@ export class StatsService {
         ret.message = 'User level not up';
         return ret;
       }
-      stats.levelUp = false;
-      await this.statsRepository.save(stats);
+      await this.statsRepository.update(
+        { userId: userId },
+        {
+          levelUp: false,
+        },
+      );
       ret.success = true;
       ret.message = 'User level up';
       ret.data = stats.level;

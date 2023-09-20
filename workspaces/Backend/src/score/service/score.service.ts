@@ -32,25 +32,22 @@ export class ScoreService {
         throw new Error('Score not found');
       }
       if (score.leftPlayerId === -1) {
-        if (
-          process.env &&
-          process.env.ENVIRONNEMENT &&
-          process.env.ENVIRONNEMENT === 'dev'
-        )
-          console.log('Add Player to left Score');
-        score.leftPlayerId = opponentId;
+        await this.scoreRepository.update(
+          { gameId: gameId },
+          {
+            leftPlayerId: opponentId,
+          },
+        );
       } else if (score.rightPlayerId === -1) {
-        if (
-          process.env &&
-          process.env.ENVIRONNEMENT &&
-          process.env.ENVIRONNEMENT === 'dev'
-        )
-          console.log('Add Player to right Score');
-        score.rightPlayerId = opponentId;
+        await this.scoreRepository.update(
+          { gameId: gameId },
+          {
+            rightPlayerId: opponentId,
+          },
+        );
       } else {
         throw new Error('Both players already defined');
       }
-      await this.scoreRepository.save(score);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -128,47 +125,15 @@ export class ScoreService {
       if (!score) {
         throw new Error('Score not found');
       }
-      score.leftPlayerRoundWon = scoreInfo.leftRound;
-      score.rightPlayerRoundWon = scoreInfo.rightRound;
-      switch (scoreInfo.actualRound) {
-        case 0:
-          score.leftPlayerRound1 = scoreInfo.left;
-          score.rightPlayerRound1 = scoreInfo.right;
-          break;
-        case 1:
-          score.leftPlayerRound2 = scoreInfo.left;
-          score.rightPlayerRound2 = scoreInfo.right;
-          break;
-        case 2:
-          score.leftPlayerRound3 = scoreInfo.left;
-          score.rightPlayerRound3 = scoreInfo.right;
-          break;
-        case 3:
-          score.leftPlayerRound4 = scoreInfo.left;
-          score.rightPlayerRound4 = scoreInfo.right;
-          break;
-        case 4:
-          score.leftPlayerRound5 = scoreInfo.left;
-          score.rightPlayerRound5 = scoreInfo.right;
-          break;
-        case 5:
-          score.leftPlayerRound6 = scoreInfo.left;
-          score.rightPlayerRound6 = scoreInfo.right;
-          break;
-        case 6:
-          score.leftPlayerRound7 = scoreInfo.left;
-          score.rightPlayerRound7 = scoreInfo.right;
-          break;
-        case 7:
-          score.leftPlayerRound8 = scoreInfo.left;
-          score.rightPlayerRound8 = scoreInfo.right;
-          break;
-        case 8:
-          score.leftPlayerRound9 = scoreInfo.left;
-          score.rightPlayerRound9 = scoreInfo.right;
-          break;
-      }
-      await this.scoreRepository.save(score);
+      await this.scoreRepository.update(
+        { gameId: gameId },
+        {
+          leftPlayerRoundWon: scoreInfo.leftRound,
+          rightPlayerRoundWon: scoreInfo.rightRound,
+          [`leftPlayerRound${scoreInfo.actualRound}`]: scoreInfo.left,
+          [`rightPlayerRound${scoreInfo.actualRound}`]: scoreInfo.right,
+        },
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -185,9 +150,13 @@ export class ScoreService {
       if (!score) {
         throw new Error('Score not found');
       }
-      score.leftPause = pauseInfo.left;
-      score.rightPause = pauseInfo.right;
-      await this.scoreRepository.save(score);
+      await this.scoreRepository.update(
+        { gameId: gameId },
+        {
+          leftPause: pauseInfo.left,
+          rightPause: pauseInfo.right,
+        },
+      );
     } catch (error) {
       throw new Error(error.message);
     }
@@ -204,8 +173,12 @@ export class ScoreService {
       if (!score) {
         throw new Error('Score not found');
       }
-      score.rageQuit = rageQuit;
-      await this.scoreRepository.save(score);
+      await this.scoreRepository.update(
+        { gameId: gameId },
+        {
+          rageQuit: rageQuit,
+        },
+      );
     } catch (error) {
       throw new Error(error.message);
     }

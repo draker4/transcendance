@@ -228,17 +228,21 @@ export class GameService {
       if (!game) {
         throw new Error('Game not found');
       }
-      game.status = status;
-      game.result = result;
-      game.actualRound = actualRound;
-      await this.gameRepository.save(game);
-      this.updateJoinButton(game);
+      await this.gameRepository.update(
+        { id: gameId },
+        {
+          status: status,
+          result: result,
+          actualRound: actualRound,
+        },
+      );
+      await this.updateJoinButton(game);
     } catch (error) {
       throw new Error(error.message);
     }
   }
 
-  public async quitGame(gameId: string, userId): Promise<any> {
+  public async quitGame(gameId: string, userId: number): Promise<void> {
     try {
       const game = await this.gameRepository.findOne({
         where: { id: gameId },
@@ -261,9 +265,15 @@ export class GameService {
       } else {
         throw new Error('Game already finnished');
       }
-      await this.gameRepository.save(game);
+      await this.gameRepository.update(
+        { id: gameId },
+        {
+          status: game.status,
+          result: game.result,
+        },
+      );
       this.statusService.add(userId.toString(), 'connected');
-      this.updateJoinButton(game);
+      await this.updateJoinButton(game);
     } catch (error) {
       throw new Error(error.message);
     }
