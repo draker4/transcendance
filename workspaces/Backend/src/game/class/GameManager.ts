@@ -1,6 +1,6 @@
 // import standard nest packages
 import { Server, Socket } from 'socket.io';
-// import { WsException } from '@nestjs/websockets';
+import { WsException } from '@nestjs/websockets';
 import { Injectable } from '@nestjs/common';
 
 // import game classes
@@ -21,7 +21,6 @@ import { ScoreService } from '@/score/service/score.service';
 import { ScoreInfo } from '@transcendence/shared/types/Score.types';
 import { StatsService } from '@/stats/service/stats.service';
 import { StatusService } from '@/statusService/status.service';
-import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class GameManager {
@@ -59,6 +58,7 @@ export class GameManager {
     socket: Socket,
   ): Promise<any> {
     const game = this.pongOnGoing.get(gameId);
+    // If Pong Session doesn't exist, create it
     if (!game) {
       try {
         return this.createPong(gameId, userId, socket);
@@ -67,12 +67,14 @@ export class GameManager {
           `Can't create Pong Session: ${error.message}`,
           'joinGame',
           error,
-        );
-        return;
+        ); // Use 'joinGame' as the context for this log message
+        throw new WsException("Can't create Pong Session");
       }
     }
 
-    let user = this.usersConnected.find((user) => user.socket.id === socket.id);
+    let user = this.usersConnected.find(
+      (user) => user.id === userId && user.socket.id === socket.id,
+    );
     if (!user) {
       user = new UserInfo(userId, socket, gameId, false);
       this.usersConnected.push(user);
@@ -86,7 +88,7 @@ export class GameManager {
         'joinGame',
         error,
       );
-      throw new WsException(`Error while joining game: ${error.message}`);
+      throw new WsException('Error while joining game');
     }
   }
 
@@ -94,74 +96,68 @@ export class GameManager {
   public async playerAction(action: ActionDTO, socket: Socket): Promise<any> {
     const pong = this.pongOnGoing.get(action.gameId);
     if (!pong) {
-      this.logger.error(
-        `Game with ID ${action.gameId} not found`,
-        'playerAction',
-      );
-      return { status: false, message: 'Game not found' };
+      throw new WsException('Game not found');
     }
     const user = this.usersConnected.find(
-      (user) => user.socket.id === socket.id,
+      (user) => user.id === action.userId && user.socket.id === socket.id,
     );
     if (!user) {
-      this.logger.error(`User with ID ${action.userId} not found`);
-      return { status: false, message: 'User not found' };
+      throw new WsException('User not found');
     }
     user.pingSend = 0;
-    pong.playerAction(action);
-    return {
-      status: true,
-      message: `Action ${action.move} realised for player ${action.userId}`,
-    };
+    return pong.playerAction(action);
   }
 
   // Method to handle user updating their heartbeat to stay connected
   public updatePong(userId: number, socket: Socket): void {
     const user = this.usersConnected.find(
-      (user) => user.socket.id === socket.id,
+      (user) => user.id === userId && user.socket.id === socket.id,
     );
     if (!user) {
       this.logger.error(`User with ID ${userId} not found`, 'updatePong');
-      return;
+      throw new WsException('User not found');
     }
     user.pingSend = 0;
+    //this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
   }
 
   // Method to handle user disconnection from a game
-  public disconnect(userId: number, socket: Socket, manual: boolean) {
-    const user = this.usersConnected.find(
-      (user) => user.socket.id === socket.id,
-    );
-    if (!user) {
-      this.logger.error(
-        `User with ID ${userId} not found`,
-        'Manager - disconnect',
+  public async disconnect(
+    userId: number,
+    socket: Socket,
+    manual: boolean,
+  ): Promise<any> {
+    try {
+      // Find user in the collection based on userId and socketId
+      const user = this.usersConnected.find(
+        (user) => user.id === userId && user.socket.id === socket.id,
       );
-      return { success: false, message: `User with ID ${userId} not found` };
-    }
+      if (!user) {
+        return;
+      }
 
-    //Find the game linked to the user
-    const pong = this.pongOnGoing.get(user.gameId);
-    if (!pong) {
-      this.logger.error(
-        `Game with ID ${user.gameId} not found`,
-        'Manager - disconnect',
+      //Find the game linked to the user
+      const pong = this.pongOnGoing.get(user.gameId);
+      if (!pong) {
+        return;
+      }
+
+      // Remove the user from the game and userConnected array
+      await pong.disconnect(user, manual);
+      this.usersConnected = this.usersConnected.filter(
+        (user) => user.id !== userId && user.socket.id !== socket.id,
       );
-      return {
-        success: false,
-        message: `Game with ID ${user.gameId} not found`,
-      };
+
+      this.statusService.add(user.id.toString(), 'connected');
+      return { success: true, message: 'User disconnected' };
+    } catch (error) {
+      this.logger.error(
+        `Error while disconnecting user: ${error.message}`,
+        'Manager - disconnect',
+        error,
+      );
+      throw new WsException('Error while disconnecting user');
     }
-
-    // Remove the user from the game and userConnected array
-    const ret = pong.disconnect(user, manual);
-    this.logger.log(`Pong disconnect message ${ret.message}`, 'disconnect');
-    this.usersConnected = this.usersConnected.filter(
-      (user) => user.socket.id !== socket.id,
-    );
-
-    this.statusService.add(user.id.toString(), 'connected');
-    return { success: true, message: 'User disconnected' };
   }
 
   // ---------------------------------  PRIVATE METHODS  -------------------------------- //
@@ -174,8 +170,7 @@ export class GameManager {
   ): Promise<any> {
     let pong: Pong = this.pongOnGoing.get(gameId);
     if (pong) {
-      this.logger.error(`Game with ID ${gameId} already exists`, 'createPong');
-      return;
+      throw new WsException('Game already exists');
     }
     try {
       const game: Game = await this.gameService.getGameById(gameId);
@@ -202,7 +197,7 @@ export class GameManager {
         'createPong',
         error,
       );
-      return;
+      throw new WsException('Error while creating Pong Session');
     }
   }
 
@@ -213,7 +208,13 @@ export class GameManager {
         (!user.isPlayer && user.pingSend >= SPECTATOR_PING)
       ) {
         this.logger.log(`User with ID ${user.id} disconnected`);
-        this.disconnect(user.id, user.socket, false);
+        this.disconnect(user.id, user.socket, false).catch((error) => {
+          this.logger.error(
+            `Error while disconnecting user: ${error.message}`,
+            'checkConnexion',
+            error,
+          );
+        });
       } else {
         user.sendPing();
       }

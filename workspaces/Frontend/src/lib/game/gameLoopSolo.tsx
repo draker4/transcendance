@@ -5,9 +5,7 @@ import {
   TIMER_RESTART,
   TIMER_PAUSE,
   FRONT_FPS,
-  GAME_WIDTH,
-  GAME_HEIGHT,
-  BALL_SIZE,
+  BACK_FPS,
 } from "@transcendence/shared/constants/Game.constants";
 import { updatePong } from "@transcendence/shared/game/updatePong";
 import {
@@ -25,8 +23,6 @@ const fpsRef = { current: 0 };
 const showFpsRef = false;
 let gameLoopRunning = true;
 let pauseLoopRunning: "Left" | "Right" | null = null;
-let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
-let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
 
 function pauseCheck(side: "Left" | "Right", gameData: GameData) {
   const actualTime = new Date().getTime();
@@ -67,11 +63,6 @@ export function stopPause(side: "Left" | "Right", gameData: GameData) {
   pauseLoopRunning = null;
 }
 
-function lerp(start: number, end: number): number {
-  const delta = end - start;
-  return start + delta * (frameCountRef.current / 30);
-}
-
 export const gameLoop = (
   timestamp: number,
   game: GameData,
@@ -82,12 +73,10 @@ export const gameLoop = (
 ) => {
   if (!isMountedRef.current || !gameLoopRunning) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
+  frameCountRef.current++;
   const updatedGame = { ...game };
-  if (elapsedTime >= FRONT_FPS) {
-    frameCountRef.current++;
+  if (elapsedTime >= BACK_FPS) {
     if (updatedGame.status === "Playing") {
-      ballX = game.ball.posX;
-      ballY = game.ball.posY;
       updatePong(updatedGame);
       if (updatedGame.updateScore) {
         if (!demo) updateDBScore(updatedGame);
@@ -112,7 +101,7 @@ export const gameLoop = (
       if (!demo) updateDBPause(updatedGame);
       updatedGame.updatePause = false;
     }
-    setGameData(updatedGame);
+    drawPong(updatedGame, draw);
     lastTimestampRef.current = timestamp;
   }
 
@@ -138,12 +127,14 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  ballX = lerp(ballX, game.ball.posX);
-  ballY = lerp(ballY, game.ball.posY);
-
-  drawPong(game, draw, ballX, ballY);
-
-  requestAnimationFrame((timestamp) =>
-    gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)
+  const remainingDelay = Math.max(
+    FRONT_FPS - (performance.now() - timestamp),
+    0
   );
+  setTimeout(() => {
+    requestAnimationFrame((timestamp) =>
+      gameLoop(timestamp, updatedGame, setGameData, draw, isMountedRef, demo)
+    );
+  }, remainingDelay);
+  setGameData(updatedGame);
 };

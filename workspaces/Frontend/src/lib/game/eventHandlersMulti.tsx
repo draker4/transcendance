@@ -1,167 +1,29 @@
-import {
-  Action,
-  GameData,
-  Player,
-} from "@transcendence/shared/types/Game.types";
+import { ScoreInfo } from "./Score.types";
+import { Timer, PlayerDynamic, Ball, Action } from "./Game.types";
+import { Pause } from "./Pause.types";
 
-import {
-  StatusMessage,
-  UpdateData,
-  ScoreMessage,
-} from "@transcendence/shared/types/Message.types";
-
-import { Socket } from "socket.io-client";
-import {
-  addUpdateMessage,
-  addPlayerMessage,
-  addStatusMessage,
-  addScoreMessage,
-} from "@/lib/game/gameLoopMulti";
-
-export const pongKeyDown = (
-  event: KeyboardEvent,
-  game: GameData,
-  socket: Socket,
-  profile: Profile,
-  isPlayer: "Left" | "Right" | "Spectator",
-  isMountedRef: React.MutableRefObject<boolean>
-) => {
-  if (!isMountedRef.current || isPlayer === "Spectator") return;
-  if (game.status === "Playing" || game.status === "Stopped") {
-    // handle player move Up
-    if (
-      (profile.gameKey === "Arrow" && event.key === "ArrowUp") ||
-      (profile.gameKey === "ZQSD" &&
-        (event.key === "z" || event.key === "Z")) ||
-      (profile.gameKey === "WASD" && (event.key === "w" || event.key === "W"))
-    ) {
-      event.preventDefault();
-      const action: ActionDTO = {
-        userId: profile.id,
-        gameId: game.id,
-        move: Action.Up,
-        playerSide: isPlayer === "Left" ? "Left" : "Right",
-      };
-      socket.emit("action", action);
-
-      // handle player move Down
-    } else if (
-      (profile.gameKey === "Arrow" && event.key === "ArrowDown") ||
-      (profile.gameKey === "ZQSD" &&
-        (event.key === "s" || event.key === "S")) ||
-      (profile.gameKey === "WASD" && (event.key === "s" || event.key === "S"))
-    ) {
-      event.preventDefault();
-      const action: ActionDTO = {
-        userId: profile.id,
-        gameId: game.id,
-        move: Action.Down,
-        playerSide: isPlayer === "Left" ? "Left" : "Right",
-      };
-      socket.emit("action", action);
-
-      // handle player push
-    } else if (event.key === " ") {
-      event.preventDefault();
-      if (game.push) {
-        const action: ActionDTO = {
-          userId: profile.id,
-          gameId: game.id,
-          move: Action.Push,
-          playerSide: isPlayer === "Left" ? "Left" : "Right",
-        };
-        socket.emit("action", action);
-      }
-    }
-  }
-
-  // handle player start/stop
-  if (event.key === "Enter") {
-    event.preventDefault();
-    if (game.status === "Stopped" || game.status === "Playing") {
-      const action: ActionDTO = {
-        userId: profile.id,
-        gameId: game.id,
-        move: Action.Stop,
-        playerSide: isPlayer === "Left" ? "Left" : "Right",
-      };
-      socket.emit("action", action);
-    }
-  }
+export type StatusMessage = {
+  status: "Not Started" | "Stopped" | "Playing" | "Finished" | "Deleted";
+  result: "Not Finished" | "Host" | "Opponent" | "Deleted";
+  winSide: "Left" | "Right";
+  playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
+  playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
+  timer: Timer;
+  pause: Pause;
 };
 
-export const pongKeyUp = (
-  event: KeyboardEvent,
-  game: GameData,
-  socket: Socket,
-  profile: Profile,
-  isPlayer: "Left" | "Right" | "Spectator",
-  isMountedRef: React.MutableRefObject<boolean>
-) => {
-  const action: ActionDTO = {
-    userId: profile.id,
-    gameId: game.id,
-    move: Action.Idle,
-    playerSide: isPlayer === "Left" ? "Left" : "Right",
-  };
-  if (!isMountedRef.current || isPlayer === "Spectator") return;
-  socket.emit("action", action);
+export type UpdateData = {
+  playerLeftDynamic: PlayerDynamic;
+  playerRightDynamic: PlayerDynamic;
+  ball: Ball;
 };
 
-// Handler for "player" event
-export const handlePlayerMessage =
-  (setGameData: Function) => (player: Player) => {
-    addPlayerMessage(player);
-    setGameData((prevGameData: GameData) => {
-      const newGameData = { ...prevGameData };
-      if (player.side === "Left") {
-        newGameData.playerLeft = player;
-      } else if (player.side === "Right") {
-        newGameData.playerRight = player;
-      }
-      return newGameData;
-    });
-  };
+export type ScoreMessage = {
+  score: ScoreInfo;
+  actualRound: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+};
 
-// Handler for "status" event
-export const handleStatusMessage =
-  (setGameData: Function) => (fullStatus: StatusMessage) => {
-    addStatusMessage(fullStatus);
-    setGameData((prevGameData: GameData) => ({
-      ...prevGameData,
-      status: fullStatus.status,
-      result: fullStatus.result,
-      playerLeftStatus: fullStatus.playerLeft,
-      playerRightStatus: fullStatus.playerRight,
-      timer: fullStatus.timer,
-      pause: fullStatus.pause,
-    }));
-  };
-
-export const handleUpdateMessage =
-  (setGameData: Function) => (updateData: UpdateData) => {
-    addUpdateMessage(updateData);
-    setGameData((prevGameData: GameData) => {
-      const newGameData = { ...prevGameData };
-      newGameData.playerLeftDynamic = updateData.playerLeftDynamic;
-      newGameData.playerRightDynamic = updateData.playerRightDynamic;
-      newGameData.ball = updateData.ball;
-      return newGameData;
-    });
-  };
-
-export const handleScoreMessage =
-  (setGameData: Function) => (scoreData: ScoreMessage) => {
-    addScoreMessage(scoreData);
-    setGameData((prevGameData: GameData) => {
-      const newGameData = { ...prevGameData };
-      newGameData.score = scoreData.score;
-      newGameData.actualRound = scoreData.actualRound;
-      return newGameData;
-    });
-  };
-
-// Handler for "ping" event
-export const handlePing = (socket: Socket, userId: number) => () => {
-  socket.emit("pong", userId);
+export type ActionSolo = {
+  action: Action;
+  side: "Left" | "Right" | "";
 };

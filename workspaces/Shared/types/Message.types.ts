@@ -8,7 +8,6 @@ export type StatusMessage = {
   winSide: "Left" | "Right";
   playerLeft: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
   playerRight: "Unknown" | "Connected" | "Playing" | "Paused" | "Disconnected";
-  playerServe: "Left" | "Right" | null;
   timer: Timer;
   pause: Pause;
 };

@@ -120,12 +120,12 @@ export class GameGateway implements OnModuleInit {
   handleAction(
     @MessageBody() action: ActionDTO,
     @ConnectedSocket() socket: Socket,
-  ) {
-    return this.gameManager.playerAction(action, socket);
+  ): void {
+    this.gameManager.playerAction(action, socket);
   }
 
   @SubscribeMessage('quit')
-  quitGame(@ConnectedSocket() socket: Socket, @Req() req) {
-    return this.gameManager.disconnect(req.user.id, socket, true);
+  quitGame(@ConnectedSocket() socket: Socket, @Req() req): void {
+    this.gameManager.disconnect(req.user.id, socket, true);
   }
 }

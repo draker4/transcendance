@@ -57,8 +57,8 @@ export class Pong {
   private pauseLoopRunning: 'Left' | 'Right' | null = null;
 
   // Game data
-  private playerLeft: UserInfo[] = [];
-  private playerRight: UserInfo[] = [];
+  private playerLeft: UserInfo | null = null;
+  private playerRight: UserInfo | null = null;
   private spectators: UserInfo[] = [];
   private data: GameData;
 
@@ -239,11 +239,11 @@ export class Pong {
   private handleStop(action: ActionDTO) {
     if (this.data.status === 'Playing') {
       // Check if player is allowed to pause
-      if (this.playerLeft[0].id === action.userId && this.data.pause.left) {
+      if (this.playerLeft.id === action.userId && this.data.pause.left) {
         this.data.pause.left--;
         this.data.pause.status = 'Left';
       } else if (
-        this.playerRight[0].id === action.userId &&
+        this.playerRight.id === action.userId &&
         this.data.pause.right
       ) {
         this.data.pause.right--;
@@ -252,17 +252,17 @@ export class Pong {
 
       // Pause the game
       this.startPauseLoop(
-        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
+        this.playerLeft.id === action.userId ? 'Left' : 'Right',
       );
     } else if (this.data.status === 'Stopped') {
       // Check if player is allowed to restart
       if (
-        this.playerLeft[0].id === action.userId &&
+        this.playerLeft.id === action.userId &&
         this.data.pause.status === 'Right'
       ) {
         return;
       } else if (
-        this.playerRight[0].id === action.userId &&
+        this.playerRight.id === action.userId &&
         this.data.pause.status === 'Left'
       ) {
         return;
@@ -270,19 +270,19 @@ export class Pong {
 
       // Restart the game
       this.stopPauseLoop(
-        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
+        this.playerLeft.id === action.userId ? 'Left' : 'Right',
       );
     }
   }
 
   private handlePush(action: ActionDTO) {
     if (
-      this.playerLeft[0].id === action.userId &&
+      this.playerLeft.id === action.userId &&
       !this.data.playerLeftDynamic.push
     )
       this.data.playerLeftDynamic.push = 1;
     else if (
-      this.playerRight[0].id === action.userId &&
+      this.playerRight.id === action.userId &&
       !this.data.playerRightDynamic.push
     )
       this.data.playerRightDynamic.push = 1;
@@ -290,23 +290,17 @@ export class Pong {
 
   public playerAction(action: ActionDTO) {
     if (
-      (this.playerLeft.length > 0 && this.playerLeft[0].id === action.userId) ||
-      (this.playerRight.length > 0 && this.playerRight[0].id === action.userId)
+      this.playerLeft.id === action.userId ||
+      this.playerRight.id === action.userId
     ) {
       if (action.move === 'Stop' && this.data.pause.active) {
         this.handleStop(action);
       } else if (action.move === 'Push') {
         this.handlePush(action);
       } else {
-        if (
-          this.playerLeft.length > 0 &&
-          this.playerLeft[0].id === action.userId
-        )
+        if (this.playerLeft.id === action.userId)
           this.data.playerLeftDynamic.move = action.move;
-        else if (
-          this.playerRight.length > 0 &&
-          this.playerRight[0].id === action.userId
-        )
+        else if (this.playerRight.id === action.userId)
           this.data.playerRightDynamic.move = action.move;
       }
     }
@@ -326,7 +320,6 @@ export class Pong {
       winSide: this.data.winSide,
       playerLeft: this.data.playerLeftStatus,
       playerRight: this.data.playerRightStatus,
-      playerServe: this.data.playerServe,
       timer: this.data.timer,
       pause: this.data.pause,
     };
@@ -370,11 +363,11 @@ export class Pong {
     }
     if (this.data.updateScore) {
       this.sendScore();
-      await this.updateDBScore();
+      this.updateDBScore();
       this.data.updateScore = false;
     }
     if (this.data.sendStatus) {
-      await this.updateDBStatus();
+      this.updateDBStatus();
       if (this.data.status === 'Finished') {
         this.stopGameLoop();
         await this.updateDBStats();
@@ -383,7 +376,7 @@ export class Pong {
       this.data.sendStatus = false;
     }
     if (this.data.updatePause) {
-      await this.updateDBPause();
+      this.updateDBPause();
       this.data.updatePause = false;
     }
 
@@ -509,9 +502,9 @@ export class Pong {
     }
     // Update status if ready to play
     if (
-      this.playerLeft.length > 0 &&
+      this.playerLeft &&
       this.data.playerLeftStatus === 'Connected' &&
-      this.playerRight.length > 0 &&
+      this.playerRight &&
       this.data.playerRightStatus === 'Connected'
     ) {
       if (this.data.status === 'Not Started') {
@@ -531,11 +524,11 @@ export class Pong {
   private joinAsHost(user: UserInfo) {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
-      this.playerLeft.push(user);
+      this.playerLeft = user;
       this.data.playerLeftStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
     } else if (this.gameDB.hostSide === 'Right') {
-      this.playerRight.push(user);
+      this.playerRight = user;
       this.data.playerRightStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Right') this.stopDisconnectLoop();
     }
@@ -544,7 +537,7 @@ export class Pong {
   private async joinAsOpponent(user: UserInfo) {
     user.isPlayer = true;
     if (this.gameDB.hostSide === 'Left') {
-      this.playerRight.push(user);
+      this.playerRight = user;
       if (this.data.playerRight.id === -1) {
         this.data.playerRight = await this.gameService.definePlayer(
           user.id,
@@ -556,7 +549,7 @@ export class Pong {
       this.data.playerRightStatus = 'Connected';
       if (this.disconnectLoopRunning === 'Left') this.stopDisconnectLoop();
     } else if (this.gameDB.hostSide === 'Right') {
-      this.playerLeft.push(user);
+      this.playerLeft = user;
       if (this.data.playerLeft.id === -1) {
         this.data.playerLeft = await this.gameService.definePlayer(
           user.id,
@@ -572,31 +565,19 @@ export class Pong {
 
   // --------------------------------  DISCONNECT METHODS  -------------------------------- //
 
-  public disconnect(user: UserInfo, manual: boolean) {
+  public async disconnect(user: UserInfo, manual: boolean): Promise<any> {
     const data: ReturnData = {
       success: false,
       message: '',
     };
-    if (this.playerLeft.length > 0 && this.playerLeft.includes(user)) {
-      if (
-        manual &&
-        (this.data.status === 'Playing' || this.data.status === 'Stopped')
-      )
-        this.rageQuit('Left');
+    if (this.playerLeft && this.playerLeft === user) {
+      this.playerLeft = null;
+      if (manual && this.data.status === 'Playing') this.rageQuit('Left');
       else this.disconnectPlayer('Left');
-      this.playerLeft = this.playerLeft.filter(
-        (player) => player.socket.id !== user.socket.id,
-      );
-    } else if (this.playerRight.length > 0 && this.playerRight.includes(user)) {
-      if (
-        manual &&
-        (this.data.status === 'Playing' || this.data.status === 'Stopped')
-      )
-        this.rageQuit('Right');
+    } else if (this.playerRight && this.playerRight === user) {
+      this.playerRight = null;
+      if (manual && this.data.status === 'Playing') this.rageQuit('Right');
       else this.disconnectPlayer('Right');
-      this.playerRight = this.playerRight.filter(
-        (player) => player.socket.id !== user.socket.id,
-      );
     } else {
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';
@@ -608,7 +589,7 @@ export class Pong {
     }
     user.socket.leave(this.gameId);
     data.success = true;
-    data.message = `User ${user.id} socket ${user.socket.id} disconnected from game`;
+    data.message = 'User disconnected from game';
     return data;
   }
 
@@ -633,6 +614,7 @@ export class Pong {
         }
         this.data.sendStatus = true;
       } else {
+        // continue checking every second
         setTimeout(() => {
           this.disconnectLoop(side);
         }, 1000);
@@ -653,11 +635,8 @@ export class Pong {
 
   private disconnectPlayer(side: 'Left' | 'Right') {
     if (side === 'Left') {
-      console.log('Disconnect Left');
-      if (this.playerLeft.length > 1) return;
-      console.log('Disconnect Left 2');
       this.data.playerLeftStatus = 'Disconnected';
-      if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
+      if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
         this.data.sendStatus = true;
         this.data.timer = defineTimer(
@@ -670,11 +649,8 @@ export class Pong {
         else this.stopDisconnectLoop();
       }
     } else if (side === 'Right') {
-      console.log('Disconnect Right');
-      if (this.playerRight.length > 1) return;
-      console.log('Disconnect Right 2');
       this.data.playerRightStatus = 'Disconnected';
-      if (this.data.status === 'Playing' || this.data.status === 'Stopped') {
+      if (this.data.status === 'Playing') {
         this.data.status = 'Stopped';
         this.data.sendStatus = true;
         this.data.timer = defineTimer(
@@ -689,8 +665,7 @@ export class Pong {
     }
   }
 
-  private rageQuit(side: 'Left' | 'Right') {
-    console.log('Rage Quit');
+  private async rageQuit(side: 'Left' | 'Right') {
     this.data.status = 'Finished';
     this.data.sendStatus = true;
     this.data.updateScore = true;
@@ -698,10 +673,12 @@ export class Pong {
       this.data.result = this.gameDB.hostSide === 'Left' ? 'Opponent' : 'Host';
       this.data.winSide = 'Right';
       this.data.score.rageQuit = 'Left';
+      await this.scoreService.updateRageQuit(this.gameId, 'Left');
     } else if (side === 'Right') {
       this.data.result = this.gameDB.hostSide === 'Right' ? 'Opponent' : 'Host';
       this.data.winSide = 'Left';
       this.data.score.rageQuit = 'Right';
+      await this.scoreService.updateRageQuit(this.gameId, 'Right');
     }
   }
 }
