@@ -114,19 +114,11 @@
 
 /* ----------------- MESSAGE BOARD ----------------- */
 
-/* a améliorer pour que le conenu suppl devienne scrollable */
 .channelMsgFrame .msgBoard {
   background-color: var(--primary1);
   padding: 6px 20px 6px 10px;
-
-  /* min-height: 0px; */
   flex-grow: 1;
   overflow-y: scroll;
-
-  /* [!] pas idéal */
-  /* max-height: 900px; */
-
-  /* mieux [?] mais rapetisse le tout [?] depend des parents ? */
   height: 0px;
   display: flex;
   flex-direction: column-reverse;
@@ -292,15 +284,8 @@
 
   background-color: var(--primary1);
   padding: 6px 20px 6px 10px;
-
-  /* min-height: 0px; */
   flex-grow: 1;
   overflow-y: scroll;
-
-  /* [!] pas idéal */
-  /* max-height: 900px; */
-
-  /* mieux [?] mais rapetisse le tout [?] depend des parents ? */
   height: 0px;
 }
 

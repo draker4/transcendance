@@ -665,76 +665,10 @@ export class ChannelService {
         repSenderRelation.success = true;
       }
 
-      // [+] extract [4] + [5]
-      // [4] update receiver joined relation to true if needed
-      if (
-        repReceiverRelation.success &&
-        repReceiverRelation.data &&
-        repReceiverRelation.data.joined === false
-      ) {
-        repReceiverRelation.data.joined = true;
-
-        const repDatabase: ReturnData = await this.updateChannelUserRelation(
-          repReceiverRelation.data,
-        );
-        if (!repDatabase.success)
-          throw new Error(
-            'Error occured while updating receiver user channel relation in database : ' +
-              repDatabase.message,
-          );
-        else {
-          // [4.1] emit an editRelation to receiver
-          const sockets: Socket[] = [];
-          for (const [socket, value] of connectedUsers) {
-            if (value === otherId.toString()) sockets.push(socket);
-          }
-
-          sockets.forEach((socket) => {
-            this.log(
-              `forceJoinPrivateMsgChannel emit empty editRelation to user[${otherId}]->socket[${socket.id}]`,
-            );
-            socket.emit('editRelation', {});
-            socket.join('channel:' + channelId);
-          });
-        }
-      }
-
-      // [5] update sender joined relation to true if needed (case when invite to game without privateMessage channel created yet)
-      if (
-        repSenderRelation.success &&
-        repSenderRelation.data &&
-        repSenderRelation.data.joined === false
-      ) {
-        repSenderRelation.data.joined = true;
-
-        const repDatabase: ReturnData = await this.updateChannelUserRelation(
-          repSenderRelation.data,
-        );
-
-        if (!repDatabase.success) {
-          throw new Error(
-            'Error occured while updating sender user channel relation in database : ' +
-              repDatabase.message,
-          );
-        
-          } else {
-            // [5.1] emit an editRelation to sender
-            const sockets: Socket[] = [];
-            for (const [socket, value] of connectedUsers) {
-              if (value === senderId.toString()) sockets.push(socket);
-            }
-  
-            sockets.forEach((socket) => {
-              this.log(
-                `forceJoinPrivateMsgChannel emit empty editRelation to user[${senderId}]->socket[${socket.id}]`,
-              );
-              socket.emit('editRelation', {});
-              socket.join('channel:' + channelId);
-            });
-          }
-      }
-
+      this.forceJoinedRelationToTrue(repReceiverRelation, connectedUsers);
+      this.forceJoinedRelationToTrue(repSenderRelation, connectedUsers);
       rep.success = true;
+
     } catch (error: any) {
       rep.error = error;
       rep.message = error.message;
@@ -743,20 +677,38 @@ export class ChannelService {
     return rep;
   }
 
-  // [+] LOUP A FINIR OU ABANDONNER
-  // private async forceJoinedRelationToTrue(repRelation: ReturnDataTyped<UserChannelRelation>) {
-  //   if (
-  //     repRelation.success &&
-  //     repRelation.data &&
-  //     repRelation.data.joined === false
-  //   ) {
-  //     repRelation.data.joined = true;
+  private async forceJoinedRelationToTrue(repRelation: ReturnDataTyped<UserChannelRelation>, connectedUsers: Map<Socket, string>) {
+    if (
+      repRelation.success &&
+      repRelation.data &&
+      repRelation.data.joined === false
+    ) {
+      repRelation.data.joined = true;
 
-  //     const repDatabase: ReturnData = await this.updateChannelUserRelation(
-  //       repRelation.data,
-  //     );
-  //   }  
-  // }
+      const repDatabase: ReturnData = await this.updateChannelUserRelation(
+        repRelation.data,
+      );
+      if (!repDatabase.success) {
+          throw new Error(
+            'Error occured while updating receiver user channel relation in database : ' +
+              repDatabase.message,
+          );
+      } else {
+         const sockets: Socket[] = [];
+          for (const [socket, value] of connectedUsers) {
+            if (value === repRelation.data.userId.toString()) sockets.push(socket);
+          }
+
+          sockets.forEach((socket) => {
+            this.log(
+              `forceJoinPrivateMsgChannel emit empty editRelation to user[${repRelation.data.userId}]->socket[${socket.id}]`,
+            );
+            socket.emit('editRelation', {});
+            socket.join('channel:' + repRelation.data.channelId);
+          });
+      }
+    }  
+  }
 
   public async editChannelPassword(
     senderId: number,
