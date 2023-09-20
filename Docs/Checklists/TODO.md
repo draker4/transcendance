@@ -51,19 +51,17 @@
 > Loumarti
 
 - [x] invitation depuis le 3e onglet channel ne proc pas d'invit (badge channel (1)) => need help => non c'est ok j'ai reussi tout seul :D !
-
 - [!] SetUpSectionPongers error : Error: getPongersData user relation issue // SetUpChannelSecondPart.tsx:123:16 => erreure a surveiller si reproc
-  proc pdt des tests ban / kick invite channel depuis chat (en dev)
-
+      proc pdt des tests ban / kick invite channel depuis chat (en dev)
 - [~] Channel relation notif ~ effet clignotement des notifs pb affichage (dans la db tout est ok)
-
-- [+] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail ! Trop cool ca :D
+- [x] Si j'ai la motiv un logo-icon pour remplacer la raquette de ping pong (+ favicon ?) => Rofl cte qualite de travail ! Trop cool ca :D
 
 # TO DO LIST (2e session)
 
 > All
 
 - [!] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
+- [!] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
 
 > Bperriol
 
@@ -77,5 +75,8 @@
 
 > Loumarti
 
+- [x] Amelioration de l'affichage du story  
 - [x] Le prompt reste a la taille du dernier message envoye => c'est ok
-- [!] verifier mes switch (breaks !)
+- [x] verifier mes switch (breaks !) => ok j'utilisais des return lorsque pas de break no problemo
+- [x] Barre des achievement a refaire pour pas avoir de soucis de dependences
+- [ ] fonction a extraire pour etre plus propre dans le forceJoinPrivateMessage
