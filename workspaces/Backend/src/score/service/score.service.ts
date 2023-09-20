@@ -125,15 +125,18 @@ export class ScoreService {
       if (!score) {
         throw new Error('Score not found');
       }
+      const actualRound = scoreInfo.actualRound + 1;
+      if (actualRound <= 9) {
       await this.scoreRepository.update(
         { gameId: gameId },
         {
           leftPlayerRoundWon: scoreInfo.leftRound,
           rightPlayerRoundWon: scoreInfo.rightRound,
-          [`leftPlayerRound${scoreInfo.actualRound}`]: scoreInfo.left,
-          [`rightPlayerRound${scoreInfo.actualRound}`]: scoreInfo.right,
+          [`leftPlayerRound${actualRound}`]: scoreInfo.left,
+          [`rightPlayerRound${actualRound}`]: scoreInfo.right,
         },
       );
+      }
     } catch (error) {
       throw new Error(error.message);
     }

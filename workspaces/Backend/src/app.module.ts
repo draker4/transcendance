@@ -82,7 +82,7 @@ import { ExperienceData } from './utils/typeorm/ExperienceData.entity';
         UserChannelRelation,
         UserPongieRelation,
       ],
-      synchronize: false,
+      synchronize: true,
     }),
     AchievementModule,
     AuthModule,

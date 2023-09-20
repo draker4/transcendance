@@ -44,10 +44,29 @@ export default function PongHead({
       return;
     }
     setQuitStatus(true);
-    gameService.socket?.emit("quit");
     if (isPlayer === "Spectator") {
+      gameService.socket?.emit("quit");
       router.push("/home");
     }
+    const res = await lobby.quitGame()
+    .then(() => {
+      gameService.socket?.emit("quit");
+      router.push("/home");
+    })
+    .catch((err) => {
+      if (err.message === "disconnect") {
+        disconnect();
+        router.refresh();
+        return;
+      }
+      toast.error(err.message);
+    }
+    );
+    await toast.promise(new Promise((resolve) => resolve(res)), {
+      pending: "Quitting...",
+      success: "Quitted !",
+      error: "Error while quitting",
+    });
   }
 
   async function changeKey() {
