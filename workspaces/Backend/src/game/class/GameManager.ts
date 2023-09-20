@@ -58,7 +58,6 @@ export class GameManager {
     socket: Socket,
   ): Promise<any> {
     const game = this.pongOnGoing.get(gameId);
-    // If Pong Session doesn't exist, create it
     if (!game) {
       try {
         return this.createPong(gameId, userId, socket);
@@ -67,8 +66,7 @@ export class GameManager {
           `Can't create Pong Session: ${error.message}`,
           'joinGame',
           error,
-        ); // Use 'joinGame' as the context for this log message
-        // throw new WsException("Can't create Pong Session");
+        );
         return;
       }
     }
@@ -87,7 +85,6 @@ export class GameManager {
         'joinGame',
         error,
       );
-      // throw new WsException('Error while joining game');
       return;
     }
   }
@@ -96,7 +93,6 @@ export class GameManager {
   public async playerAction(action: ActionDTO, socket: Socket): Promise<any> {
     const pong = this.pongOnGoing.get(action.gameId);
     if (!pong) {
-      // throw new WsException('Game not found');
       this.logger.error(
         `Game with ID ${action.gameId} not found`,
         'playerAction',
@@ -107,7 +103,6 @@ export class GameManager {
       (user) => user.socket.id === socket.id,
     );
     if (!user) {
-      // throw new WsException('User not found');
       this.logger.error(`User with ID ${action.userId} not found`);
       return { status: false, message: 'User not found' };
     }
@@ -126,16 +121,13 @@ export class GameManager {
     );
     if (!user) {
       this.logger.error(`User with ID ${userId} not found`, 'updatePong');
-      // throw new WsException('User not found');
       return;
     }
     user.pingSend = 0;
-    //this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
   }
 
   // Method to handle user disconnection from a game
   public disconnect(userId: number, socket: Socket, manual: boolean) {
-    // Find user in the collection based on userId and socketId
     const user = this.usersConnected.find(
       (user) => user.socket.id === socket.id,
     );
@@ -181,7 +173,6 @@ export class GameManager {
   ): Promise<any> {
     let pong: Pong = this.pongOnGoing.get(gameId);
     if (pong) {
-      // throw new WsException('Game already exists');
       this.logger.error(`Game with ID ${gameId} already exists`, 'createPong');
       return;
     }
@@ -210,7 +201,6 @@ export class GameManager {
         'createPong',
         error,
       );
-      // throw new WsException('Error while creating Pong Session');
       return;
     }
   }
