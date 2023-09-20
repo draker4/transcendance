@@ -41,18 +41,14 @@ export default function PongHead({
     if (quitStatus) return;
     setQuitStatus(true);
     if (isPlayer === "Spectator") {
-      console.log("emit quit Spectator");
       gameService.socket?.emit("quit", (ret: any) => {
-        console.log("quit emitted Spectator", ret);
         router.push("/home?home");
       });
       return;
     }
     const res = await lobby.quitGame()
       .then(() => {
-      console.log("emit quit");
       gameService.socket?.emit("quit", (ret: any) => {
-        console.log("quit emitted", ret);
         router.push("/home?home");
       });
       })

@@ -82,7 +82,7 @@ export default function Pong({
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef)
+        gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
 
@@ -129,11 +129,11 @@ export default function Pong({
   }, [socket, setGameData]);
 
   useEffect(() => {
-    socket.on("ping", handlePing(socket, profile.id, gameData, isMountedRef));
+    socket.on("ping", handlePing(socket, profile.id, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, profile.id, gameData, isMountedRef));
+      socket.off("ping", handlePing(socket, profile.id, isMountedRef));
     };
   }, [socket, profile]);
 

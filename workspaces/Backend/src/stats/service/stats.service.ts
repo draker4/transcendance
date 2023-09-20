@@ -185,7 +185,6 @@ export class StatsService {
         { userId: userId },
         {
           playerXP: stats.playerXP + xp,
-          levelUp: levelUp,
           level: levelUp ? stats.level + 1 : stats.level,
         },
       );
