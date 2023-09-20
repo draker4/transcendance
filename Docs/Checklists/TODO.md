@@ -13,14 +13,15 @@
 
 > Game
 
-- [x] 2 onglet log sur le meme compte en partie league contre un autre joueur -> un onglet qui quitte proc deco + errorReact? (le joueur a un seul onglet quitte c'est ok)
-      C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
 - [!] Parfois quitter une game fait planter et redemarer le backend (pas reussi a trouver un test qui le fait crash a 100%)
 - [+] Ajouter des boutons pour déplacer le paddle pour que je puisse jouer aussi avec ma tablette ! (@Bboisson elle te plait trop mon idée je suis sur 😂 ! Loup)
 
 - [!] Apres une invitation, ca m'emmene sur la partie directement en attendant que quelqu'un join. Si j'annule en cliquant sur la croix et que quelqu'un join, il ne peut pas rejoindre, ca throw une exception et ca lui met un message d'erreur.
 - [x] timer 4s or 2s in the game but not the same time => ok cest mon ordi qui a deux secondes davance chais pas pk
 - [!] probleme avec l'xp donne par les achievments
+- [!] [assez_souvent] A l'acces a une partie le jeu ne s'affiche pas chez un des deux joueurs
+- [!] [parfois] Au moment de quitter il y a juste un retour home la partie reste en jeu
+- [x] 2 onglet log sur le meme compte en partie league contre un autre joueur -> un onglet qui quitte proc deco + errorReact? (le joueur a un seul onglet quitte c'est ok) C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
 
 
 > Pour qui veut s'en charger ou pour tous
@@ -35,6 +36,8 @@
 - [x] Nettoyer ou n'afficher qu'en dev tous les consoles.log
 - [x] Error while fetching api: avatar at url: 3/false. Error log: fetched failed at http://backend:4000/api/avatar/3/false (log du front depuis la home page)
 - [x] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
+- [!] [parfois] probleme de deco : token not valid!
+- [!] Return to Home Page module erreur pb d'affichage (le CSS ? et l'histoire du query ?)
 
 > Bperriol
 
