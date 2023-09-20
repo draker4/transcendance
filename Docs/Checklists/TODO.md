@@ -30,6 +30,8 @@
 
 - [~] font size letters create page in avatar text
 
+- [!] timer 4s or 2s in the game but not the same time
+
 > Bperriol
 
 - [x] CSS du badge a agrandir

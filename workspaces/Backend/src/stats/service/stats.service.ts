@@ -101,12 +101,7 @@ export class StatsService {
       }
       if (result.win) {
         stats.playerXP += xp.total;
-        stats.levelUp = await this.checkLevelUp(
-          stats.level,
-          stats.playerXP + xp.total,
-          userId,
-        );
-        stats.level = stats.levelUp ? stats.level + 1 : stats.level;
+        stats.levelUp = await this.checkLevelUp(stats, userId);
       }
       await this.checkAchievement(stats, userId);
       return await this.statsRepository.save(stats);
@@ -176,16 +171,12 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
-      const levelUp = await this.checkLevelUp(
-        stats.level,
-        stats.playerXP + xp,
-        userId,
-      );
+      await this.checkLevelUp(stats, userId);
       await this.statsRepository.update(
         { userId: userId },
         {
-          playerXP: stats.playerXP + xp,
-          level: levelUp ? stats.level + 1 : stats.level,
+          playerXP: stats.playerXP,
+          level: stats.level,
         },
       );
     } catch (error) {
@@ -711,22 +702,20 @@ export class StatsService {
     }
   }
 
-  private async checkLevelUp(
-    level: number,
-    playerXP: number,
-    userId: number,
-  ): Promise<boolean> {
+  private async checkLevelUp(stats: Stats, userId: number): Promise<boolean> {
     try {
-      const nextLevel: NextLevel =
-        await this.experienceService.getNextLevelXp(level);
+      const nextLevel: NextLevel = await this.experienceService.getNextLevelXp(
+        stats.level,
+      );
       if (!nextLevel)
         throw new Error('Error while getting next level experience');
-      if (playerXP >= nextLevel.cumulativeXpToNext) {
-        level += 1;
+      if (stats.playerXP >= nextLevel.cumulativeXpToNext) {
+        stats.level += 1;
         this.levelUpAnnonce.push({
-          userId: userId.toString(),
-          level: level,
+          userId: stats.userId.toString(),
+          level: stats.level,
         });
+        const level = stats.level;
         if (
           level === 2 ||
           level === 5 ||
