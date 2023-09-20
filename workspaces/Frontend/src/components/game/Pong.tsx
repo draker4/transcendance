@@ -82,7 +82,7 @@ export default function Pong({
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef)
+        gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
 
