@@ -290,17 +290,23 @@ export class Pong {
 
   public playerAction(action: ActionDTO) {
     if (
-      this.playerLeft[0].id === action.userId ||
-      this.playerRight[0].id === action.userId
+      (this.playerLeft.length > 0 && this.playerLeft[0].id === action.userId) ||
+      (this.playerRight.length > 0 && this.playerRight[0].id === action.userId)
     ) {
       if (action.move === 'Stop' && this.data.pause.active) {
         this.handleStop(action);
       } else if (action.move === 'Push') {
         this.handlePush(action);
       } else {
-        if (this.playerLeft[0].id === action.userId)
+        if (
+          this.playerLeft.length > 0 &&
+          this.playerLeft[0].id === action.userId
+        )
           this.data.playerLeftDynamic.move = action.move;
-        else if (this.playerRight[0].id === action.userId)
+        else if (
+          this.playerRight.length > 0 &&
+          this.playerRight[0].id === action.userId
+        )
           this.data.playerRightDynamic.move = action.move;
       }
     }
@@ -364,11 +370,11 @@ export class Pong {
     }
     if (this.data.updateScore) {
       this.sendScore();
-      this.updateDBScore();
+      await this.updateDBScore();
       this.data.updateScore = false;
     }
     if (this.data.sendStatus) {
-      this.updateDBStatus();
+      await this.updateDBStatus();
       if (this.data.status === 'Finished') {
         this.stopGameLoop();
         await this.updateDBStats();
@@ -377,7 +383,7 @@ export class Pong {
       this.data.sendStatus = false;
     }
     if (this.data.updatePause) {
-      this.updateDBPause();
+      await this.updateDBPause();
       this.data.updatePause = false;
     }
 
@@ -600,7 +606,7 @@ export class Pong {
         (spectator) => spectator !== user,
       );
     }
-    // user.socket.leave(this.gameId);
+    user.socket.leave(this.gameId);
     data.success = true;
     data.message = `User ${user.id} socket ${user.socket.id} disconnected from game`;
     return data;
@@ -627,7 +633,6 @@ export class Pong {
         }
         this.data.sendStatus = true;
       } else {
-        // continue checking every second
         setTimeout(() => {
           this.disconnectLoop(side);
         }, 1000);

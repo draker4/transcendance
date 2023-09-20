@@ -89,11 +89,11 @@ export class GameGateway implements OnModuleInit {
               error,
             );
           }
-          //socket.disconnect();
+          socket.disconnect();
         });
       } catch (error) {
         this.logger.error(error, 'OnModuleInit');
-        //socket.disconnect();
+        socket.disconnect();
       }
     });
   }
@@ -120,12 +120,12 @@ export class GameGateway implements OnModuleInit {
   handleAction(
     @MessageBody() action: ActionDTO,
     @ConnectedSocket() socket: Socket,
-  ): void {
-    this.gameManager.playerAction(action, socket);
+  ) {
+    return this.gameManager.playerAction(action, socket);
   }
 
   @SubscribeMessage('quit')
-  quitGame(@ConnectedSocket() socket: Socket, @Req() req): void {
-    this.gameManager.disconnect(req.user.id, socket, true);
+  quitGame(@ConnectedSocket() socket: Socket, @Req() req) {
+    return this.gameManager.disconnect(req.user.id, socket, true);
   }
 }

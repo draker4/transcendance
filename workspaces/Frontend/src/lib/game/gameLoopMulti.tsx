@@ -13,6 +13,7 @@ import {
 } from "@transcendence/shared/constants/Game.constants";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
+import { set } from "react-hook-form";
 
 const lastTimestampRef = { current: 0 };
 const lastFpsUpdateTimeRef = { current: 0 };
@@ -106,6 +107,7 @@ function lerp(start: number, end: number): number {
 export const gameLoop = (
   timestamp: number,
   game: GameData,
+  setGameData: Function,
   draw: Draw,
   isMountedRef: React.MutableRefObject<boolean>
 ) => {
@@ -117,7 +119,7 @@ export const gameLoop = (
     ballX = game.ball.posX;
     ballY = game.ball.posY;
     game = updateGame(game);
-
+    setGameData(game);
     lastTimestampRef.current = timestamp;
   }
 
@@ -148,6 +150,6 @@ export const gameLoop = (
   drawPong(game, draw, ballX, ballY);
 
   requestAnimationFrame((timestamp) =>
-    gameLoop(timestamp, game, draw, isMountedRef)
+    gameLoop(timestamp, game, setGameData, draw, isMountedRef)
   );
 };
