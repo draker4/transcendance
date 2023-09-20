@@ -145,7 +145,7 @@ export class GameManager {
       // Remove the user from the game and userConnected array
       await pong.disconnect(user, manual);
       this.usersConnected = this.usersConnected.filter(
-        (user) => user.id !== userId && user.socket.id !== socket.id,
+        (user) => user.socket.id !== socket.id,
       );
 
       this.statusService.add(user.id.toString(), 'connected');
