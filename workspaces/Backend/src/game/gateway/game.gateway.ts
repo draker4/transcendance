@@ -93,7 +93,7 @@ export class GameGateway implements OnModuleInit {
         });
       } catch (error) {
         this.logger.error(error, 'OnModuleInit');
-        socket.disconnect();
+        //socket.disconnect();
       }
     });
   }
