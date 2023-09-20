@@ -171,6 +171,7 @@ export class StatsService {
       if (!stats) {
         throw new Error('Stats not found');
       }
+      stats.playerXP += xp;
       await this.checkLevelUp(stats, userId);
       await this.statsRepository.update(
         { userId: userId },
