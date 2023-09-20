@@ -47,14 +47,14 @@ export default function PongHead({
         process.env.ENVIRONNEMENT === "dev"
       )
         console.log("Quit Spectator");
-      router.push("/home");
+      router.push("/home?home");
       return;
     }
     const res = await lobby
       .quitGame()
       .then(() => {
         gameService.socket?.emit("quit");
-        router.push("/home");
+        router.push("/home?home");
       })
       .catch(async (err) => {
         if (err.message === "disconnect") {

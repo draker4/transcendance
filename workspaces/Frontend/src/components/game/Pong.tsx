@@ -146,28 +146,20 @@ export default function Pong({
     if (gameData.status === "Not Started") {
       setShowPreview(true);
     } else if (
-      gameData.status === "Playing" &&
-      gameData.timer.end > new Date().getTime() + 3000
+      gameData.status === "Finished" ||
+      gameData.status === "Deleted"
     ) {
-      const delayTimeout = setTimeout(() => {
-        setShowPreview(false);
-      }, 2000);
-      return () => {
-        clearTimeout(delayTimeout);
-      };
-    } else if (gameData.status === "Finished") {
-      //   if (!gameData.winSide) {
-      //     socket?.emit("updateData", gameData.id, (gameData: any) => {
-      //       setGameData(gameData.data);
-      //     }
-      //   )
-      // };
       setShowGameEnd(true);
       setShowPreview(false);
     } else {
-      setShowPreview(false);
+      const delayTimeout = setTimeout(() => {
+        setShowPreview(false);
+      }, 1900);
+      return () => {
+        clearTimeout(delayTimeout);
+      };
     }
-  }, [gameData]);
+  }, [gameData.status]);
 
   useEffect(() => {
     pongRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -139,7 +139,7 @@ export default function Pong({
       } else {
         gameData.timer = defineTimer(TIMER_RESTART, "ReStart");
       }
-    }, 2000);
+    }, 1900);
 
     return () => {
       clearTimeout(delayTimeout);

@@ -40,7 +40,7 @@ export default function PongHead({
         error: "Error leaving training",
       });
     }
-    router.push("/home");
+    router.push("/home?home");
   }
 
   async function changeKey() {
