@@ -175,7 +175,7 @@ export class StatsService {
       await this.statsRepository.update(
         { userId: userId },
         {
-          leagueXP: stats.leagueXP + xp,
+          leagueXP: stats.playerXP + xp,
           levelUp: await this.checkLevelUp(stats, userId),
         },
       );

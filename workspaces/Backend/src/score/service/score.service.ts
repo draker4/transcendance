@@ -127,15 +127,15 @@ export class ScoreService {
       }
       const actualRound = scoreInfo.actualRound + 1;
       if (actualRound <= 9) {
-      await this.scoreRepository.update(
-        { gameId: gameId },
-        {
-          leftPlayerRoundWon: scoreInfo.leftRound,
-          rightPlayerRoundWon: scoreInfo.rightRound,
-          [`leftPlayerRound${actualRound}`]: scoreInfo.left,
-          [`rightPlayerRound${actualRound}`]: scoreInfo.right,
-        },
-      );
+        await this.scoreRepository.update(
+          { gameId: gameId },
+          {
+            leftPlayerRoundWon: scoreInfo.leftRound,
+            rightPlayerRoundWon: scoreInfo.rightRound,
+            [`leftPlayerRound${actualRound}`]: scoreInfo.left,
+            [`rightPlayerRound${actualRound}`]: scoreInfo.right,
+          },
+        );
       }
     } catch (error) {
       throw new Error(error.message);
