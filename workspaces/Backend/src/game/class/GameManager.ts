@@ -101,7 +101,7 @@ export class GameManager {
         `Game with ID ${action.gameId} not found`,
         'playerAction',
       );
-      return;
+      return { status: false, message: 'Game not found' };
     }
     const user = this.usersConnected.find(
       (user) => user.socket.id === socket.id,
@@ -109,10 +109,14 @@ export class GameManager {
     if (!user) {
       // throw new WsException('User not found');
       this.logger.error(`User with ID ${action.userId} not found`);
-      return;
+      return { status: false, message: 'User not found' };
     }
     user.pingSend = 0;
-    return pong.playerAction(action);
+    pong.playerAction(action);
+    return {
+      status: true,
+      message: `Action ${action.move} realised for player ${action.userId}`,
+    };
   }
 
   // Method to handle user updating their heartbeat to stay connected
@@ -140,7 +144,7 @@ export class GameManager {
         `User with ID ${userId} not found`,
         'Manager - disconnect',
       );
-      return;
+      return { success: false, message: `User with ID ${userId} not found` };
     }
 
     //Find the game linked to the user
@@ -150,12 +154,15 @@ export class GameManager {
         `Game with ID ${user.gameId} not found`,
         'Manager - disconnect',
       );
-      return;
+      return {
+        success: false,
+        message: `Game with ID ${user.gameId} not found`,
+      };
     }
 
     // Remove the user from the game and userConnected array
     const ret = pong.disconnect(user, manual);
-    this.logger.log(ret, 'Manager - disconnect');
+    this.logger.log(`Pong disconnect message ${ret.message}`, 'disconnect');
     this.usersConnected = this.usersConnected.filter(
       (user) => user.socket.id !== socket.id,
     );

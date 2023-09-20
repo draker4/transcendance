@@ -28,7 +28,7 @@ export default function GameEnd({ gameData, isPlayer, userId }: Props) {
       : "Left";
 
   function backHome() {
-    router.push("/home");
+    router.push("/home?home");
     setLoading(true);
   }
 

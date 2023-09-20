@@ -82,7 +82,7 @@ export default function Pong({
 
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
-        gameLoop(timestamp, gameData, draw, isMountedRef)
+        gameLoop(timestamp, gameData, setGameData, draw, isMountedRef)
       );
     }
 
@@ -115,26 +115,25 @@ export default function Pong({
   }, [socket, profile, isPlayer, gameData]);
 
   useEffect(() => {
-    socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
-    socket.on("status", handleStatusMessage(setGameData, isMountedRef));
-    socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
-    socket.on("score", handleScoreMessage(setGameData, isMountedRef));
+    socket.on("player", handlePlayerMessage(setGameData));
+    socket.on("status", handleStatusMessage(setGameData));
+    socket.on("update", handleUpdateMessage(setGameData));
+    socket.on("score", handleScoreMessage(setGameData));
 
     return () => {
-      isMountedRef.current = false;
-      socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
-      socket.off("status", handleStatusMessage(setGameData, isMountedRef));
-      socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
-      socket.off("score", handleScoreMessage(setGameData, isMountedRef));
+      socket.off("player", handlePlayerMessage(setGameData));
+      socket.off("status", handleStatusMessage(setGameData));
+      socket.off("update", handleUpdateMessage(setGameData));
+      socket.off("score", handleScoreMessage(setGameData));
     };
   }, [socket, setGameData]);
 
   useEffect(() => {
-    socket.on("ping", handlePing(socket, profile.id, isMountedRef));
+    socket.on("ping", handlePing(socket, profile.id, gameData, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, profile.id, isMountedRef));
+      socket.off("ping", handlePing(socket, profile.id, gameData, isMountedRef));
     };
   }, [socket, profile]);
 
@@ -171,7 +170,6 @@ export default function Pong({
         gameService={gameService}
         lobby={lobby}
         isPlayer={isPlayer}
-        isMountedRef={isMountedRef}
       />
       <div className={styles.canvasContainer}>
         {showPreview && <PlayerPreview gameData={gameData} />}
