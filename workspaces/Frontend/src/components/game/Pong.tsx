@@ -86,16 +86,6 @@ export default function Pong({
       );
     }
 
-    return () => {
-      isMountedRef.current = false;
-      if (animationFrameIdRef.current !== undefined) {
-        cancelAnimationFrame(animationFrameIdRef.current);
-        animationFrameIdRef.current = undefined;
-      }
-    };
-  }, [showPreview]);
-
-  useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       pongKeyDown(event, gameData, socket, profile, isPlayer, isMountedRef);
     }
@@ -107,12 +97,16 @@ export default function Pong({
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    // Remove key event listeners when the component unmounts
     return () => {
+      isMountedRef.current = false;
+      if (animationFrameIdRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameIdRef.current);
+        animationFrameIdRef.current = undefined;
+      }
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
     };
-  }, [socket, profile, isPlayer, gameData]);
+  }, [showPreview]);
 
   useEffect(() => {
     socket.on("player", handlePlayerMessage(setGameData));
@@ -138,25 +132,22 @@ export default function Pong({
   }, [socket, profile]);
 
   useEffect(() => {
-    if (gameData.status === "Not Started") {
-      setShowPreview(true);
-    } else if (
-      gameData.status === "Playing" &&
-      gameData.timer.end > new Date().getTime() + 3000
-    ) {
-      const delayTimeout = setTimeout(() => {
+    switch (gameData.status) {
+      case "Not Started":
+        setShowPreview(true);
+        setShowGameEnd(false);
+        break;
+      case "Finished":
         setShowPreview(false);
-      }, 2000);
-      return () => {
-        clearTimeout(delayTimeout);
-      };
-    } else if (gameData.status === "Finished") {
-      setShowGameEnd(true);
-      setShowPreview(false);
-    } else {
-      setShowPreview(false);
+        setShowGameEnd(true);
+        break;
+      default:
+        const timer = setTimeout(() => {
+          setShowPreview(false);
+        }, 1500);
+        return () => clearTimeout(timer);
     }
-  }, [gameData]);
+  }, [gameData.status]);
 
   useEffect(() => {
     pongRef.current?.scrollIntoView({ behavior: "smooth" });
