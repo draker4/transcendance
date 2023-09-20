@@ -42,7 +42,9 @@ export const pongKeyDown = (
         move: Action.Up,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (isPlayer === "Right" && game.playerRightDynamic.move !== "Up") {
+      if (!isMountedRef.current) {
+        return;
+      } else if (isPlayer === "Right" && game.playerRightDynamic.move !== "Up") {
         socket.emit("action", action);
       } else if (isPlayer === "Left" && game.playerLeftDynamic.move !== "Up") {
         socket.emit("action", action);
@@ -62,7 +64,9 @@ export const pongKeyDown = (
         move: Action.Down,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (
+      if (!isMountedRef.current) {
+        return;
+      } else if (
         isPlayer === "Right" &&
         game.playerRightDynamic.move !== Action.Down
       ) {
@@ -84,7 +88,9 @@ export const pongKeyDown = (
           move: Action.Push,
           playerSide: isPlayer === "Left" ? "Left" : "Right",
         };
-        if (isPlayer === "Right" && game.playerRightDynamic.push === 0) {
+        if (!isMountedRef.current) {
+          return;
+        } else if (isPlayer === "Right" && game.playerRightDynamic.push === 0) {
           socket.emit("action", action);
         } else if (isPlayer === "Left" && game.playerLeftDynamic.push === 0) {
           socket.emit("action", action);
@@ -103,7 +109,9 @@ export const pongKeyDown = (
         move: Action.Stop,
         playerSide: isPlayer === "Left" ? "Left" : "Right",
       };
-      if (
+      if (!isMountedRef.current) {
+        return;
+      } else if (
         isPlayer === "Right" &&
         game.playerRightDynamic.move !== Action.Stop
       ) {
@@ -145,9 +153,8 @@ export const pongKeyUp = (
 
 // Handler for "player" event
 export const handlePlayerMessage =
-  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (setGameData: Function) =>
   (player: Player) => {
-    if (!isMountedRef.current) return;
     addPlayerMessage(player);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
@@ -162,9 +169,8 @@ export const handlePlayerMessage =
 
 // Handler for "status" event
 export const handleStatusMessage =
-  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (setGameData: Function) =>
   (fullStatus: StatusMessage) => {
-    if (!isMountedRef.current) return;
     addStatusMessage(fullStatus);
     setGameData((prevGameData: GameData) => ({
       ...prevGameData,
@@ -178,9 +184,8 @@ export const handleStatusMessage =
   };
 
 export const handleUpdateMessage =
-  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (setGameData: Function) =>
   (updateData: UpdateData) => {
-    if (!isMountedRef.current) return;
     addUpdateMessage(updateData);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
@@ -192,9 +197,8 @@ export const handleUpdateMessage =
   };
 
 export const handleScoreMessage =
-  (setGameData: Function, isMountedRef: React.MutableRefObject<boolean>) =>
+  (setGameData: Function) =>
   (scoreData: ScoreMessage) => {
-    if (!isMountedRef.current) return;
     addScoreMessage(scoreData);
     setGameData((prevGameData: GameData) => {
       const newGameData = { ...prevGameData };
