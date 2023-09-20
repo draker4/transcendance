@@ -57,8 +57,8 @@ export class Pong {
   private pauseLoopRunning: 'Left' | 'Right' | null = null;
 
   // Game data
-  private playerLeft: UserInfo[] = [];
-  private playerRight: UserInfo[] = [];
+  private playerLeft: UserInfo[];
+  private playerRight: UserInfo[];
   private spectators: UserInfo[] = [];
   private data: GameData;
 
@@ -131,6 +131,7 @@ export class Pong {
       success: false,
       message: '',
     };
+
     // Update gameDB if opponent is not set
     if (this.gameDB.opponent === -1) {
       try {
@@ -176,21 +177,6 @@ export class Pong {
     data.success = true;
     data.message = 'User joined game';
     data.data = this.data;
-    if (
-      process.env &&
-      process.env.ENVIROMENT &&
-      process.env.ENVIROMENT === 'DEV'
-    ) {
-      this.playerLeft.forEach((player) => {
-        console.log('Actual Player Left', player.id, player.socket.id);
-      });
-      this.playerRight.forEach((player) => {
-        console.log('Actual Player Right', player.id, player.socket.id);
-      });
-      this.spectators.forEach((spectator) => {
-        console.log('Actual Spectator', spectator.id, spectator.socket.id);
-      });
-    }
     return data;
   }
 
@@ -525,9 +511,9 @@ export class Pong {
     }
     // Update status if ready to play
     if (
-      this.playerLeft.length > 0 &&
+      this.playerLeft &&
       this.data.playerLeftStatus === 'Connected' &&
-      this.playerRight.length > 0 &&
+      this.playerRight &&
       this.data.playerRightStatus === 'Connected'
     ) {
       if (this.data.status === 'Not Started') {
@@ -603,7 +589,7 @@ export class Pong {
     };
     if (this.playerLeft.length > 0 && this.playerLeft[0].id === user.id) {
       this.playerLeft = this.playerLeft.filter(
-        (player) => player.socket.id.toString() !== user.socket.id.toString(),
+        (player) => player.socket.id !== user.socket.id,
       );
       if (manual && this.data.status === 'Playing') this.rageQuit('Left');
       else if (this.playerLeft.length === 0) this.disconnectPlayer('Left');
@@ -611,11 +597,9 @@ export class Pong {
       this.playerRight.length > 0 &&
       this.playerRight[0].id === user.id
     ) {
-      this.playerRight = this.playerRight.filter(
-        (player) => player.socket.id.toString() !== user.socket.id.toString(),
-      );
+      this.playerRight = null;
       if (manual && this.data.status === 'Playing') this.rageQuit('Right');
-      else if (this.playerRight.length === 0) this.disconnectPlayer('Right');
+      else if (this.playerLeft.length === 0) this.disconnectPlayer('Right');
     } else {
       if (this.spectators.length === 0) {
         data.message = 'No spectators in the game';

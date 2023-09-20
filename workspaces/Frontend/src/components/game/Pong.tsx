@@ -80,22 +80,13 @@ export default function Pong({
     };
     draw.canvas.focus();
 
+    isMountedRef.current = true;
+
     if (animationFrameIdRef.current === undefined) {
       animationFrameIdRef.current = requestAnimationFrame((timestamp) =>
         gameLoop(timestamp, gameData, draw, isMountedRef)
       );
     }
-
-    function handleKeyDown(event: KeyboardEvent) {
-      pongKeyDown(event, gameData, socket, profile, isPlayer, isMountedRef);
-    }
-
-    function handleKeyUp(event: KeyboardEvent) {
-      pongKeyUp(event, gameData, socket, profile, isPlayer, isMountedRef);
-    }
-    // Add key event listeners when the component mounts
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
       isMountedRef.current = false;
@@ -103,49 +94,70 @@ export default function Pong({
         cancelAnimationFrame(animationFrameIdRef.current);
         animationFrameIdRef.current = undefined;
       }
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
     };
   }, [showPreview]);
 
   useEffect(() => {
-    socket.on("player", handlePlayerMessage(setGameData));
-    socket.on("status", handleStatusMessage(setGameData));
-    socket.on("update", handleUpdateMessage(setGameData));
-    socket.on("score", handleScoreMessage(setGameData));
+    function handleKeyDown(event: KeyboardEvent) {
+      pongKeyDown(event, gameData, socket, profile, isPlayer);
+    }
+
+    function handleKeyUp(event: KeyboardEvent) {
+      pongKeyUp(event, gameData, socket, profile, isPlayer);
+    }
+    // Add key event listeners when the component mounts
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    // Remove key event listeners when the component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, [socket, profile, isPlayer, gameData]);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    socket.on("player", handlePlayerMessage(setGameData, isMountedRef));
+    socket.on("status", handleStatusMessage(setGameData, isMountedRef));
+    socket.on("update", handleUpdateMessage(setGameData, isMountedRef));
+    socket.on("score", handleScoreMessage(setGameData, isMountedRef));
 
     return () => {
-      socket.off("player", handlePlayerMessage(setGameData));
-      socket.off("status", handleStatusMessage(setGameData));
-      socket.off("update", handleUpdateMessage(setGameData));
-      socket.off("score", handleScoreMessage(setGameData));
+      isMountedRef.current = false;
+      socket.off("player", handlePlayerMessage(setGameData, isMountedRef));
+      socket.off("status", handleStatusMessage(setGameData, isMountedRef));
+      socket.off("update", handleUpdateMessage(setGameData, isMountedRef));
+      socket.off("score", handleScoreMessage(setGameData, isMountedRef));
     };
   }, [socket, setGameData]);
 
   useEffect(() => {
-    socket.on("ping", handlePing(socket, profile.id));
+    isMountedRef.current = true;
+    socket.on("ping", handlePing(socket, profile.id, isMountedRef));
 
     return () => {
       isMountedRef.current = false;
-      socket.off("ping", handlePing(socket, profile.id));
+      socket.off("ping", handlePing(socket, profile.id, isMountedRef));
     };
   }, [socket, profile]);
 
   useEffect(() => {
-    switch (gameData.status) {
-      case "Not Started":
-        setShowPreview(true);
-        setShowGameEnd(false);
-        break;
-      case "Finished":
+    if (gameData.status === "Not Started") {
+      setShowPreview(true);
+    } else if (
+      gameData.status === "Finished" ||
+      gameData.status === "Deleted"
+    ) {
+      setShowGameEnd(true);
+      setShowPreview(false);
+    } else {
+      const delayTimeout = setTimeout(() => {
         setShowPreview(false);
-        setShowGameEnd(true);
-        break;
-      default:
-        const timer = setTimeout(() => {
-          setShowPreview(false);
-        }, 1500);
-        return () => clearTimeout(timer);
+      }, 1900);
+      return () => {
+        clearTimeout(delayTimeout);
+      };
     }
   }, [gameData.status]);
 

@@ -6,11 +6,6 @@ import {
   StatusMessage,
   ScoreMessage,
 } from "@transcendence/shared/types/Message.types";
-import {
-  GAME_HEIGHT,
-  GAME_WIDTH,
-  BALL_SIZE,
-} from "@transcendence/shared/constants/Game.constants";
 
 import { FRONT_FPS } from "@transcendence/shared/constants/Game.constants";
 
@@ -19,8 +14,6 @@ const lastFpsUpdateTimeRef = { current: 0 };
 const frameCountRef = { current: 0 };
 const fpsRef = { current: 0 };
 const showFpsRef = false;
-let ballX: number = GAME_WIDTH / 2 - BALL_SIZE / 2;
-let ballY: number = GAME_HEIGHT / 2 - BALL_SIZE / 2;
 
 const updateMessage: UpdateData[] = [];
 const playerMessage: Player[] = [];
@@ -83,13 +76,18 @@ const updateGame = (game: GameData) => {
     newGameData.winSide = statusData.winSide;
     newGameData.playerLeftStatus = statusData.playerLeft;
     newGameData.playerRightStatus = statusData.playerRight;
-    newGameData.playerServe = statusData.playerServe;
     newGameData.timer = statusData.timer;
     newGameData.pause = statusData.pause;
     game = newGameData;
   }
   if (scoreMessage.length > 0) {
     const scoreData = scoreMessage.shift()!;
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === "dev"
+    )
+      console.log("Score Update", scoreData);
     const newGameData = { ...game };
     newGameData.score = scoreData.score;
     newGameData.actualRound = scoreData.actualRound;
@@ -97,11 +95,6 @@ const updateGame = (game: GameData) => {
   }
   return game;
 };
-
-function lerp(start: number, end: number): number {
-  const delta = end - start;
-  return start + delta * (frameCountRef.current / 30);
-}
 
 export const gameLoop = (
   timestamp: number,
@@ -111,12 +104,11 @@ export const gameLoop = (
 ) => {
   if (!isMountedRef.current) return;
   const elapsedTime = timestamp - lastTimestampRef.current;
-
-  if (elapsedTime >= FRONT_FPS) {
-    frameCountRef.current++;
-    ballX = game.ball.posX;
-    ballY = game.ball.posY;
+  frameCountRef.current++;
+  if (elapsedTime >= 16.67) {
     game = updateGame(game);
+    drawPong(game, draw);
+
     lastTimestampRef.current = timestamp;
   }
 
@@ -141,12 +133,13 @@ export const gameLoop = (
     lastFpsUpdateTimeRef.current = currentTime;
   }
 
-  ballX = lerp(ballX, game.ball.posX);
-  ballY = lerp(ballY, game.ball.posY);
-
-  drawPong(game, draw, ballX, ballY);
-
-  requestAnimationFrame((timestamp) =>
-    gameLoop(timestamp, game, draw, isMountedRef)
+  const remainingDelay = Math.max(
+    FRONT_FPS - (performance.now() - timestamp),
+    0
   );
+  setTimeout(() => {
+    requestAnimationFrame((timestamp) =>
+      gameLoop(timestamp, game, draw, isMountedRef)
+    );
+  }, remainingDelay);
 };

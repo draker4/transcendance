@@ -78,6 +78,16 @@ function drawPlayer(draw: Draw, player: Player, playerDynamic: PlayerDynamic) {
   draw.context.fill();
 }
 
+function drawBall(gameData: GameData, draw: Draw) {
+  draw.context.drawImage(
+    draw.ballImage,
+    gameData.ball.posX,
+    gameData.ball.posY,
+    BALL_SIZE,
+    BALL_SIZE
+  );
+}
+
 function drawScore(draw: Draw, score: number, posX: number, posY: number) {
   draw.context.fillText(score.toString(), posX, posY);
 }
@@ -281,12 +291,7 @@ function drawTimer(
   }
 }
 
-export function drawPong(
-  gameData: GameData,
-  draw: Draw,
-  ballX: number,
-  ballY: number
-) {
+export function drawPong(gameData: GameData, draw: Draw) {
   // Clear the Canvas
   draw.context.clearRect(0, 0, draw.canvas.width, draw.canvas.height);
   // Draw the background image
@@ -300,9 +305,8 @@ export function drawPong(
   drawScoreTable(gameData, draw);
 
   // Draw the ball
-  if (gameData.status === "Playing" && !gameData.playerServe) {
-    draw.context.drawImage(draw.ballImage, ballX, ballY, BALL_SIZE, BALL_SIZE);
-  }
+  if (gameData.status === "Playing") drawBall(gameData, draw);
+
   // Draw the Timer
   drawTimer(
     gameData.timer,
