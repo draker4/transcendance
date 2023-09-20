@@ -6,7 +6,7 @@ type Props = {
 
 export default function StoryDisplayOnly({ profile }: Props) {
   const rowMax = 6;
-  const numberOfLineBreaks = (profile.story.match(/\n/g) || []).length;
+  const numberOfLineBreaks = profile.story ? (profile.story.match(/\n/g) || []).length : 0;
 
   return (
     <>

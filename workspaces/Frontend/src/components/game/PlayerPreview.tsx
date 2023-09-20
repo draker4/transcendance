@@ -49,7 +49,7 @@ export default function PlayerPreview({ gameData }: Props) {
             borderSize={"3px"}
             backgroundColor={gameData.playerLeft.avatar.backgroundColor}
             borderColor={gameData.playerLeft.avatar.borderColor}
-            fontSize="2rem"
+            fontSize="3rem"
           />
         </div>
         <h3 className={styles.playerName}>{gameData.playerLeft.name}</h3>
@@ -62,7 +62,7 @@ export default function PlayerPreview({ gameData }: Props) {
             borderSize={"3px"}
             backgroundColor={gameData.playerRight.avatar.backgroundColor}
             borderColor={gameData.playerRight.avatar.borderColor}
-            fontSize="2rem"
+            fontSize="3rem"
           />
         </div>
         <h3 className={styles.playerName}>{gameData.playerRight.name}</h3>
