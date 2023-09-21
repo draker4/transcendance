@@ -38,7 +38,7 @@ export default function ErrorHandler({
 
   const returnHome = async () => {
     if (inGame && refresh) {
-      router.refresh();
+      router.back();
       console.log("refresh");
     } else if (inGame && !refresh) {
       try {
