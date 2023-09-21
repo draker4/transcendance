@@ -10,7 +10,6 @@ import { Socket } from "socket.io-client";
 import { toast } from "react-toastify";
 import disconnect from "@/lib/disconnect/disconnect";
 import { useRouter } from "next/navigation";
-import { getCookie } from "cookies-next";
 
 export default function NavbarConnected({
   avatar,
