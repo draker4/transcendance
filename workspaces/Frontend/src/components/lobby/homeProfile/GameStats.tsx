@@ -24,6 +24,7 @@ export default function GameStats({ profile, socket }: Props) {
 
   useEffect(() => {
     const getStats = async () => {
+      console.log("getstats");
       try {
         const ret = await statsService.getShortStats(profile.id);
         if (ret.success) {
@@ -35,13 +36,26 @@ export default function GameStats({ profile, socket }: Props) {
           router.refresh();
           return;
         }
-        console.error("Error fetching stats:", error);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.error("Error fetching stats:", error);
       }
     };
 
+    const updateNotif = (payload: {
+      why: string;
+    }) => {
+      if (payload && payload.why && payload.why === "updateAchievements")
+        getStats();
+    };
+
     getStats();
-    const interval = setInterval(getStats, 300000);
-    return () => clearInterval(interval);
+
+    socket?.on('achievement', getStats);
+    socket?.on('notif', updateNotif);
+    return () => {
+      socket?.off('achievement', getStats);
+      socket?.off('notif', updateNotif);
+    }
   }, []);
 
   if (!stats) {
