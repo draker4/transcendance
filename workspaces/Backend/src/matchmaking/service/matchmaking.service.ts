@@ -128,8 +128,18 @@ export class MatchmakingService {
         const opponent = await this.userService.getUserById(
           sameSearch[0].userId,
         );
+        let hostLogin = host.login;
+        if (hostLogin.length > 10) {
+          hostLogin = hostLogin.substring(0, 10);
+          hostLogin += '...';
+        }
+        let opponentLogin = opponent.login;
+        if (opponentLogin.length > 10) {
+          opponentLogin = opponentLogin.substring(0, 10);
+          opponentLogin += '...';
+        }
         const game: CreateGameDTO = {
-          name: `${host.login} vs ${opponent.login}`,
+          name: `${hostLogin} vs ${opponentLogin}`,
           type: search.type,
           mode: 'League',
           host: search.userId,

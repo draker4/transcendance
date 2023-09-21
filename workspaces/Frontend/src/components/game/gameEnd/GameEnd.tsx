@@ -19,6 +19,16 @@ export default function GameEnd({ gameData, isPlayer, userId }: Props) {
   const statsService = new StatsService();
   const [newLevel, setNewLevel] = useState<number>(0);
   const router = useRouter();
+  let winner =
+    gameData.result === "Host" && gameData.hostSide === "Left"
+      ? gameData.playerLeft.name
+      : gameData.result === "Opponent" && gameData.hostSide === "Right"
+      ? gameData.playerLeft.name
+      : gameData.playerRight.name;
+
+  if (winner.length > 10) {
+    winner = winner.substring(0, 10) + "...";
+  }
 
   gameData.winSide =
     gameData.result === "Host"
@@ -45,12 +55,20 @@ export default function GameEnd({ gameData, isPlayer, userId }: Props) {
           router.refresh();
           return;
         }
-        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        if (
+          process.env &&
+          process.env.ENVIRONNEMENT &&
+          process.env.ENVIRONNEMENT === "dev"
+        )
           console.log("Error fetching score: " + error);
       }
       try {
       } catch (error) {
-        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        if (
+          process.env &&
+          process.env.ENVIRONNEMENT &&
+          process.env.ENVIRONNEMENT === "dev"
+        )
           console.log("error");
       }
     };
@@ -60,16 +78,10 @@ export default function GameEnd({ gameData, isPlayer, userId }: Props) {
 
   return (
     <div className={styles.gameEnd}>
-      <h2 className={styles.winner}>
-        {`${
-          gameData.result === "Host" && gameData.hostSide === "Left"
-            ? gameData.playerLeft.name
-            : gameData.result === "Opponent" && gameData.hostSide === "Right"
-            ? gameData.playerLeft.name
-            : gameData.playerRight.name
-        }
-         won the game !`}
-      </h2>
+      <div className={styles.winner}>
+        <h2 className={styles.winnerName}>{winner}</h2>
+        <h3 className={styles.winnerText}>{`won the game !`}</h3>
+      </div>
       {isPlayer !== "Spectator" && newLevel === 0 && gameData.winSide && (
         <>
           <DisplayXP

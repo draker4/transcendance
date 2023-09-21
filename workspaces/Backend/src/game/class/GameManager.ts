@@ -119,7 +119,6 @@ export class GameManager {
       throw new WsException('User not found');
     }
     user.pingSend = 0;
-    //this.logger.log(`User with ID ${userId} Pong`, 'updatePong');
   }
 
   // Method to handle user disconnection from a game
@@ -209,6 +208,7 @@ export class GameManager {
         (!user.isPlayer && user.pingSend >= SPECTATOR_PING)
       ) {
         this.logger.log(`User with ID ${user.id} disconnected`);
+        user.socket.disconnect();
         this.disconnect(user.id, user.socket, false).catch((error) => {
           this.logger.error(
             `Error while disconnecting user: ${error.message}`,
