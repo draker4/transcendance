@@ -121,7 +121,10 @@ export class ChatGateway implements OnModuleInit {
               this.statusService.add(payload.sub.toString(), 'disconnected');
           }
 
-          if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
+          if (
+            process.env.ENVIRONNEMENT &&
+            process.env.ENVIRONNEMENT === 'dev'
+          ) {
             this.log(`User with ID ${payload.sub} disconnected`); // [?]
             for (const connect of this.connectedUsers) {
               console.log(
@@ -283,7 +286,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getChannelId')
   async getChannelId(@Req() req, @MessageBody() opponentId: number) {
-
     this.log(`'getChannelId' event, with opponentId: ${opponentId}`);
 
     if (!opponentId) throw new WsException('no opponent id');
@@ -311,7 +313,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllChannels')
   async getAllChannels(@Request() req) {
-    throw new WsException('test');
     return await this.chatService.getAllChannels(req.user.id);
   }
 
@@ -532,7 +533,9 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('getChannelName')
   async getChannelName(@MessageBody() payload: channelIdDto) {
     this.log(`'getChannelName' event, with channelId: ${payload.channelId}`);
-    const channel: Channel = await this.chatService.getChannelById(payload.channelId);
+    const channel: Channel = await this.chatService.getChannelById(
+      payload.channelId,
+    );
     return {
       success: channel ? true : false,
       message: channel ? channel.name : '',
@@ -786,7 +789,10 @@ export class ChatGateway implements OnModuleInit {
   @SubscribeMessage('isUserInChannel')
   async isUserInChannel(@Request() req, @MessageBody() payload: channelIdDto) {
     try {
-      const isInto = await this.channelService.isUserInChannel(req.user.id, payload.channelId);
+      const isInto = await this.channelService.isUserInChannel(
+        req.user.id,
+        payload.channelId,
+      );
       return isInto;
     } catch (e: any) {
       this.log(`isUserInChannel error : ${e.message}`);
