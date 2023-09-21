@@ -8,6 +8,13 @@ export class ColoredLogger extends Logger {
   }
 
   log(message: any, context?: string) {
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === 'build'
+    )
+      return;
+
     const blue = '\x1b[34m';
     process.stdout.write(
       this.getColorPrefix(blue, context) + ' ' + message + '\n',
@@ -15,6 +22,13 @@ export class ColoredLogger extends Logger {
   }
 
   error(message: any, context?: string, trace?: string) {
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === 'build'
+    )
+      return;
+
     const red = '\x1b[31m';
     process.stderr.write(
       this.getColorPrefix(red, context) + ' ' + message + '\n',
@@ -25,6 +39,12 @@ export class ColoredLogger extends Logger {
   }
 
   warn(message: any, context?: string) {
+    if (
+      process.env &&
+      process.env.ENVIRONNEMENT &&
+      process.env.ENVIRONNEMENT === 'build'
+    )
+      return;
     const yellow = '\x1b[33m';
     process.stdout.write(
       this.getColorPrefix(yellow, context) + ' ' + message + '\n',

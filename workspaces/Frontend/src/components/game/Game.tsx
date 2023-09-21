@@ -40,25 +40,30 @@ export default function Game({ profile, token, gameId }: Props) {
   useEffect(() => {
     if (!joinEmitter) {
       setJoinEmitter(true);
-      console.log("join");
-      // gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
-      //   if (ret.success == true) {
-      //     setIsLoading(false);
-      //     setGameData(ret.data);
-      //     setIsPlayer(
-      //       ret.data.playerLeft.id === profile.id
-      //         ? "Left"
-      //         : ret.data.playerRight.id === profile.id
-      //         ? "Right"
-      //         : "Spectator"
-      //     );
-      //   } else {
-      //     setIsLoading(false);
-      //     setError(true);
-      //     console.log(ret.message);
-      //     console.log(ret.error);
-      //   }
-      // });
+      gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
+        if (ret.success == true) {
+          setIsLoading(false);
+          setGameData(ret.data);
+          setIsPlayer(
+            ret.data.playerLeft.id === profile.id
+              ? "Left"
+              : ret.data.playerRight.id === profile.id
+              ? "Right"
+              : "Spectator"
+          );
+        } else {
+          setIsLoading(false);
+          setError(true);
+          if (
+            process.env &&
+            process.env.ENVIRONNEMENT &&
+            process.env.ENVIRONNEMENT === "dev"
+          ) {
+            console.log(ret.message);
+            console.log(ret.error);
+          }
+        }
+      });
     }
 
     setTimeout(() => {
