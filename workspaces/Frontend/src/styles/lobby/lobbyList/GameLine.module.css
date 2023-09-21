@@ -14,9 +14,13 @@
   background-color: transparent;
   cursor: pointer;
   width: 150px;
+  padding: 3px;
   font-size: 16px;
   font-weight: bold;
   color: var(--tertiary1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .nameBtn:hover {
