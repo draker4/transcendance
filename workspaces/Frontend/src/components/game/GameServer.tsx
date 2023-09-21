@@ -5,6 +5,7 @@ import Game from "./Game";
 import { cookies } from "next/headers";
 import ProfileService from "@/services/Profile.service";
 import Link from "next/link";
+import ErrorHandler from "../error/ErrorHandler";
 
 export default async function GameServer({
   gameId,
@@ -39,12 +40,7 @@ export default async function GameServer({
     if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
       console.log(err);
     return (
-      <div className={styles.error}>
-        <h2>Oops... Something went wrong!</h2>
-        <Link href={"/home"} className={styles.errorLink}>
-          <p>Return to Home Page!</p>
-        </Link>
-      </div>
+      <ErrorHandler errorTitle={"Oops, something went wrong"} errorNotif={"Please try again later"} />
     );
   }
 

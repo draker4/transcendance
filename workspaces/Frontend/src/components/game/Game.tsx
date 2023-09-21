@@ -16,6 +16,7 @@ import GameService from "@/services/Game.service";
 import Pong from "./Pong";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import LoadingComponent from "../loading/Loading";
+import ErrorHandler from "../error/ErrorHandler";
 
 type Props = {
   profile: Profile;
@@ -40,19 +41,22 @@ export default function Game({ profile, token, gameId }: Props) {
   useEffect(() => {
     if (!joinEmitter) {
       setJoinEmitter(true);
-      gameService.socket?.emit("join", gameId, (gameData: any) => {
-        if (gameData.success == false) {
-          setError(true);
-        } else {
-          setGameData(gameData.data);
+      gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
+        if (ret.success == true) {
           setIsLoading(false);
+          setGameData(ret.data);
           setIsPlayer(
-            gameData.data.playerLeft.id === profile.id
+            ret.data.playerLeft.id === profile.id
               ? "Left"
-              : gameData.data.playerRight.id === profile.id
+              : ret.data.playerRight.id === profile.id
               ? "Right"
               : "Spectator"
           );
+        } else {
+          setIsLoading(false);
+          setError(true);
+          console.log(ret.message);
+          console.log(ret.error)
         }
       });
     }
@@ -70,12 +74,7 @@ export default function Game({ profile, token, gameId }: Props) {
   //Si une erreur est survenue
   if (!gameService.socket || error) {
     return (
-      <div className={stylesError.socketError}>
-        <h2>Oops... Something went wrong!</h2>
-        <Link href={"/home"} className={stylesError.errorLink}>
-          <p>Return to Home Page!</p>
-        </Link>
-      </div>
+        <ErrorHandler errorTitle={"Oops, something went wrong"} errorNotif={"Please try again later"} />
     );
   }
 
