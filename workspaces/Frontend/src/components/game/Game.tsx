@@ -15,6 +15,7 @@ import Pong from "./Pong";
 import { GameData } from "@transcendence/shared/types/Game.types";
 import LoadingComponent from "../loading/Loading";
 import ErrorHandler from "../error/ErrorHandler";
+import { set } from "react-hook-form";
 
 type Props = {
   profile: Profile;
@@ -59,6 +60,7 @@ export default function Game({ profile, token, gameId }: Props) {
           console.log(ret.error);
         }
       });
+      console.log("joinned");
     }
 
     gameService.socket?.on("exception", () => {
