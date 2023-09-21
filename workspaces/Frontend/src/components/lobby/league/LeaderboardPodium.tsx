@@ -68,7 +68,7 @@ export default function LeaderboardPodium({ leaderboardData }: Props) {
             fontSize="1.3rem"
           />
         </div>
-        {cruncher.login}
+        <span>{cruncher.login}</span>
       </button>
     );
   }

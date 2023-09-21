@@ -313,7 +313,6 @@ export class ChatGateway implements OnModuleInit {
 
   @SubscribeMessage('getAllChannels')
   async getAllChannels(@Request() req) {
-    throw new WsException('gtest');
     return await this.chatService.getAllChannels(req.user.id);
   }
 

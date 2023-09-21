@@ -14,6 +14,7 @@
   height: 60px;
   color: var(--primary1);
   margin: 5px;
+  flex-shrink: 0;
 }
 
 .cruncher {
@@ -28,6 +29,13 @@
   padding-inline: 5px;
   font-weight: bold;
   color: var(--tertiary1);
+}
+
+.cruncher span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .cruncher:hover {
