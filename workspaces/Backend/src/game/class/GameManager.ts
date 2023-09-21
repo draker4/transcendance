@@ -72,12 +72,13 @@ export class GameManager {
       }
     }
 
-    let user = this.usersConnected.find(
-      (user) => user.id === userId && user.socket.id === socket.id,
-    );
+    let user = this.usersConnected.find((user) => user.socket.id === socket.id);
     if (!user) {
       user = new UserInfo(userId, socket, gameId, false);
       this.usersConnected.push(user);
+    }
+    if (user.gameId !== game.gameId) {
+      throw new WsException('this user is already in an other game');
     }
     try {
       const data: ReturnData = await game.join(user);
@@ -99,7 +100,7 @@ export class GameManager {
       throw new WsException('Game not found');
     }
     const user = this.usersConnected.find(
-      (user) => user.id === action.userId && user.socket.id === socket.id,
+      (user) => user.socket.id === socket.id,
     );
     if (!user) {
       throw new WsException('User not found');
@@ -111,7 +112,7 @@ export class GameManager {
   // Method to handle user updating their heartbeat to stay connected
   public updatePong(userId: number, socket: Socket): void {
     const user = this.usersConnected.find(
-      (user) => user.id === userId && user.socket.id === socket.id,
+      (user) => user.socket.id === socket.id,
     );
     if (!user) {
       this.logger.error(`User with ID ${userId} not found`, 'updatePong');
@@ -130,7 +131,7 @@ export class GameManager {
     try {
       // Find user in the collection based on userId and socketId
       const user = this.usersConnected.find(
-        (user) => user.id === userId && user.socket.id === socket.id,
+        (user) => user.socket.id === socket.id,
       );
       if (!user) {
         return;
