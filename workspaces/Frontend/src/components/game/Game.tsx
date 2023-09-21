@@ -40,6 +40,7 @@ export default function Game({ profile, token, gameId }: Props) {
   useEffect(() => {
     if (!joinEmitter) {
       setJoinEmitter(true);
+      console.log("join");
       // gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
       //   if (ret.success == true) {
       //     setIsLoading(false);
