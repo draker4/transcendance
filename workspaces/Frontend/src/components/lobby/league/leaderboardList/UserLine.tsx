@@ -51,7 +51,7 @@ export default function UserLine({ userLeaderboard }: Props) {
             fontSize="1rem"
           />
         </div>
-        {userLeaderboard.login}
+        <span>{userLeaderboard.login}</span>
       </button>
       <p className={styles.rank}>{displayRank()}</p>
       <p className={styles.points}>{userLeaderboard.points}</p>

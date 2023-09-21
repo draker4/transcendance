@@ -21,6 +21,12 @@
   color: var(--tertiary1);
 }
 
+.cruncher span {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .cruncher:hover {
   color: var(--accent1);
 }
@@ -37,6 +43,7 @@
   height: 40px;
   color: var(--primary1);
   margin: 5px;
+  flex-shrink: 0;
 }
 
 .typeInfo {

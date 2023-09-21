@@ -80,7 +80,7 @@ export default function ChatClient({
 
     if (!socket) {
       const intervalId = setInterval(() => {
-        const chatService = new ChatService(token);
+        const chatService = new ChatService();
 
         if (chatService.disconnectClient) {
           clearInterval(intervalId);

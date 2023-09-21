@@ -10,13 +10,22 @@ export default class ChatService {
 
   // Singleton
   constructor(token?: string) {
+    console.log("ChatService.instance = ", ChatService.instance);
+
+    if (token && ChatService.instance && !this.socket) {
+      this.initializeSocket(token);
+      ChatService.instance = this;
+    }
+
     if (ChatService.instance) {
     	return ChatService.instance;
     }
 
+    console.log("after return instance");
+
     if (token) {
-		this.initializeSocket(token);
-		ChatService.instance = this;
+      this.initializeSocket(token);
+      ChatService.instance = this;
     } else {
     	this.disconnect();
     }
@@ -24,12 +33,15 @@ export default class ChatService {
 
   // Create socket + listen errors & exceptions
   public initializeSocket(token: string) {
+    console.log("initialize socket beginning loading = ", this.loading);
     while (this.loading) {}
 
+    console.log("after while socket = ", this.socket);
     if (this.socket) return;
 
     this.loading = true;
 
+    console.log("before creating socket token = ", token);
     this.socket = io(`ws://${process.env.HOST_IP}:4000/chat`, {
       extraHeaders: {
         Authorization: "Bearer " + token,
@@ -40,10 +52,12 @@ export default class ChatService {
 
     this.socket.on("connect", () => {
       this.loading = false;
+      console.log("socket connected");
     });
 
     this.socket.on("disconnect", async () => {
       this.disconnect();
+      console.log("socket disconnected");
     //   await this.refreshSocket();
     });
 
@@ -135,8 +149,8 @@ export default class ChatService {
 
       if (!resApi.ok) throw new Error("fetch api failed");
 
-	  this.disconnect();
-      this.initializeSocket(data.access_token);
+	    this.disconnect();
+      // this.initializeSocket(data.access_token);
     } catch (error: any) {
       this.disconnectClient = true;
     }
