@@ -37,10 +37,9 @@ export default function Game({ profile, token, gameId }: Props) {
 
   //------------------------------------Chargement------------------------------------//
 
-  useEffect(() => {
+  const getData = async () => {
     if (!joinEmitter) {
       setJoinEmitter(true);
-      console.log("join");
       gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
         console.log(ret);
         if (ret.success == true) {
@@ -60,8 +59,19 @@ export default function Game({ profile, token, gameId }: Props) {
           console.log(ret.error);
         }
       });
-      console.log("joinned");
     }
+    if (isLoading) {
+      setTimeout(() => {
+        if (isLoading && !gameData) {
+          setJoinEmitter(false);
+          getData();
+        }
+      }, 2000);
+    }
+  };
+
+  useEffect(() => {
+    getData();
 
     gameService.socket?.on("exception", () => {
       setError(true);

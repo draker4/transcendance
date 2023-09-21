@@ -61,7 +61,6 @@ export class GameManager {
       success: false,
       message: 'An Error as Occured',
     };
-    console.log(`joinGame ${userId}`);
     let game: Pong = this.pongOnGoing.get(gameId);
     // If Pong Session doesn't exist, create it
     if (!game) {
@@ -78,7 +77,6 @@ export class GameManager {
         return ret;
       }
     }
-    console.log(`game found ${userId}`);
 
     let user = this.usersConnected.find((user) => user.socket.id === socket.id);
     if (!user) {
@@ -88,7 +86,6 @@ export class GameManager {
     if (user.gameId !== game.gameId) {
       user.gameId = game.gameId;
     }
-    console.log(`user found ${userId}`);
     try {
       const data: ReturnData = await game.join(user);
       return data;
