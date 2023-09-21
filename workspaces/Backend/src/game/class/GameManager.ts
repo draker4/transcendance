@@ -61,17 +61,17 @@ export class GameManager {
       success: false,
       message: 'An Error as Occured',
     };
-    const game = this.pongOnGoing.get(gameId);
+    let game: Pong = this.pongOnGoing.get(gameId);
     // If Pong Session doesn't exist, create it
     if (!game) {
       try {
-        return this.createPong(gameId, userId, socket);
+        game = await this.createPong(gameId);
       } catch (error) {
         this.logger.error(
           `Can't create Pong Session: ${error.message}`,
           'joinGame',
           error,
-        ); // Use 'joinGame' as the context for this log message
+        );
         ret.message = "Can't create Pong Session";
         ret.error = error;
         return ret;
@@ -172,11 +172,7 @@ export class GameManager {
   // ---------------------------------  PRIVATE METHODS  -------------------------------- //
 
   // Method to create a new Pong session
-  private async createPong(
-    gameId: string,
-    userId: number,
-    socket: Socket,
-  ): Promise<any> {
+  private async createPong(gameId: string): Promise<Pong> {
     let pong: Pong = this.pongOnGoing.get(gameId);
     if (pong) {
       throw new WsException('Game already exists');
@@ -199,14 +195,16 @@ export class GameManager {
       );
       await pong.initPlayer();
       this.pongOnGoing.set(gameId, pong);
-      return this.joinGame(gameId, userId, socket);
+      return pong;
     } catch (error) {
       this.logger.error(
         `Error while creating Pong Session: ${error.message}`,
         'createPong',
         error,
       );
-      throw new WsException('Error while creating Pong Session');
+      throw new WsException(
+        `Error while creating Pong Session: ${error.message}`,
+      );
     }
   }
 
