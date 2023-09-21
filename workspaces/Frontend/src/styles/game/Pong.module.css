@@ -21,7 +21,7 @@
 
 .canvas {
   margin: 0px auto;
-  width: 96%;
+  max-width: 96%;
   max-height: 75vh;
   border-radius: clamp(0.15rem, 0.05rem + 1vw, 1.2rem);
 }
