@@ -114,9 +114,6 @@ export class AuthService {
         expiresIn: '1d',
       });
 
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
-        console.log("here its gonna return refresh = ", refresh_token);
-
     return {
       access_token,
       refresh_token,
