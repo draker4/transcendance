@@ -125,7 +125,7 @@ export class ChatGateway implements OnModuleInit {
           //   process.env.ENVIRONNEMENT &&
           //   process.env.ENVIRONNEMENT === 'dev'
           // ) {
-            this.log(`User with ID ${payload.sub} disconnected`); // [?]
+            console.log(`User with ID ${payload.sub} disconnected`); // [?]
             for (const connect of this.connectedUsers) {
               console.log(
                 'Socket id: ',
@@ -136,7 +136,7 @@ export class ChatGateway implements OnModuleInit {
         });
 
         // if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
-          this.log('connected users = '); // [?]
+          console.log('connected users = '); // [?]
           for (const connect of this.connectedUsers) {
             console.log(
               'Socket id: ',
