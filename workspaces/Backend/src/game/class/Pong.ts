@@ -253,13 +253,15 @@ export class Pong {
   private handleStop(action: ActionDTO) {
     if (this.data.status === 'Playing') {
       // Check if player is allowed to pause
-      if (
+      if (this.playerLeft.length === 0 || this.playerRight.length === 0) return;
+      else if (
         this.playerLeft.length > 0 &&
         this.playerLeft[0].id === action.userId &&
         this.data.pause.left
       ) {
         this.data.pause.left--;
         this.data.pause.status = 'Left';
+        this.startPauseLoop('Left');
       } else if (
         this.playerRight.length > 0 &&
         this.playerRight[0].id === action.userId &&
@@ -267,32 +269,24 @@ export class Pong {
       ) {
         this.data.pause.right--;
         this.data.pause.status = 'Right';
+        this.startPauseLoop('Right');
       } else return;
-
-      // Pause the game
-      this.startPauseLoop(
-        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
-      );
     } else if (this.data.status === 'Stopped') {
       // Check if player is allowed to restart
-      if (
+      if (this.playerLeft.length === 0 || this.playerRight.length === 0) return;
+      else if (
         this.playerLeft.length > 0 &&
         this.playerLeft[0].id === action.userId &&
-        this.data.pause.status === 'Right'
+        this.data.pause.status === 'Left'
       ) {
-        return;
+        this.stopPauseLoop('Left');
       } else if (
         this.playerRight.length > 0 &&
         this.playerRight[0].id === action.userId &&
-        this.data.pause.status === 'Left'
+        this.data.pause.status === 'Right'
       ) {
-        return;
-      }
-
-      // Restart the game
-      this.stopPauseLoop(
-        this.playerLeft[0].id === action.userId ? 'Left' : 'Right',
-      );
+        this.stopPauseLoop('Right');
+      } else return;
     }
   }
 
@@ -321,9 +315,15 @@ export class Pong {
       } else if (action.move === 'Push') {
         this.handlePush(action);
       } else {
-        if (this.playerLeft[0].id === action.userId)
+        if (
+          this.playerLeft.length > 0 &&
+          this.playerLeft[0].id === action.userId
+        )
           this.data.playerLeftDynamic.move = action.move;
-        else if (this.playerRight[0].id === action.userId)
+        else if (
+          this.playerRight.length > 0 &&
+          this.playerRight[0].id === action.userId
+        )
           this.data.playerRightDynamic.move = action.move;
       }
     }
