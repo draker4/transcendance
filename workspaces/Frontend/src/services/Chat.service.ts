@@ -32,7 +32,6 @@ export default class ChatService {
   public initializeSocket(token: string) {
     while (this.loading) {}
 
-    console.log("after while socket = ", this.socket);
     if (this.socket) return;
 
     this.loading = true;
@@ -46,12 +45,10 @@ export default class ChatService {
 
     this.socket.on("connect", () => {
       this.loading = false;
-      console.log("socket connected");
     });
 
     this.socket.on("disconnect", async () => {
       this.disconnect();
-      console.log("socket disconnected");
     });
 
     // Catching error or exception will force disconnect then reconnect

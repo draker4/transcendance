@@ -631,7 +631,7 @@ export class ChannelService {
       
       // [2] create receiver relation if not exists
       if (!repReceiverRelation.success) {
-        const other = await this.usersService.getUserById(otherId);
+        const other = await this.usersService.getUserChannels(otherId);
 
         if (!other) throw new Error('receiver user not found');
 
@@ -649,7 +649,7 @@ export class ChannelService {
 
       // [3] create sender relation if not exists
       if (!repSenderRelation.success) {
-          const sender = await this.usersService.getUserById(senderId);
+          const sender = await this.usersService.getUserChannels(senderId);
 
           if (!sender) throw new Error('sender user not found');
 
