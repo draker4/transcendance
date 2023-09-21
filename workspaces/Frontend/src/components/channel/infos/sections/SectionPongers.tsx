@@ -125,7 +125,7 @@ useEffect(() => {
 
   return <div className={styles.sections}>
     {
-      myRelation.isBoss &&
+      (myRelation.isBoss || myRelation.isChanOp) &&
       <InviteInChannel relation={relation} myRelation={myRelation} socket={socket}/>
     }
     <p className={styles.notif}>{notif}</p>

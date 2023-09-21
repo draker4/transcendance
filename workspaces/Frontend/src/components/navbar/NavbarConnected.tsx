@@ -53,7 +53,6 @@ export default function NavbarConnected({
             clearInterval(intervalId);
             disconnectClient();
           } else if (chatService.socket) {
-            console.log("socket = ", chatService.socket);
             setSocket(chatService.socket);
             clearInterval(intervalId);
           }

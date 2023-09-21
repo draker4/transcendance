@@ -13,9 +13,6 @@ export async function middleware(req: NextRequest) {
       if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(err);
     }));
-  // const url = req.nextUrl;
-  // console.log(url.href);
-  // console.log(verifiedToken);
 
   if (verifiedToken && req.nextUrl.pathname === "/home/auth/google")
     return;

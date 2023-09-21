@@ -95,43 +95,6 @@ export class UsersController {
     return await this.usersService.editUser(req.user.id, properties);
   }
 
-  // @Public()
-  // @Get('join')
-  // async joinChannel() {
-  //   const user1 = await this.usersService.getUserChannels(1);
-  //   const user2 = await this.usersService.getUserChannels(2);
-  //   // const user3 = await this.usersService.getUserChannels(3);
-
-  //   const channel1 = await this.usersService.getChannelByName("test1");
-  //   // const channel2 = await this.usersService.getChannelByName("test2");
-  //   // const channel3 = await this.usersService.getChannelByName("test3");
-
-  //   await this.usersService.updateUserChannels(user1, channel1);
-  //   // await this.usersService.updateUserChannels(user1, channel2);
-  //   // await this.usersService.updateUserChannels(user1, channel3);
-  //   await this.usersService.updateUserChannels(user2, channel1);
-  //   // await this.usersService.updateUserChannels(user2, channel2);
-  //   // await this.usersService.updateUserChannels(user2, channel3);
-  //   // await this.usersService.updateUserChannels(user3, channel1);
-  //   // await this.usersService.updateUserChannels(user3, channel2);
-  //   // await this.usersService.updateUserChannels(user3, channel3);
-  // }
-
-  // @Public()
-  // @Get('addPongie')
-  // async addPongie() {
-  //   const user1 = await this.usersService.getUserPongies(1);
-  //   const user2 = await this.usersService.getUserPongies(2);
-  //   // const user3 = await this.usersService.getUserPongies(3);
-
-  //   await this.usersService.updateUserPongies(user1, user2);
-  //   // await this.usersService.updateUserPongies(user1, user3);
-  //   await this.usersService.updateUserPongies(user2, user1);
-  //   // await this.usersService.updateUserPongies(user2, user3);
-  //   // await this.usersService.updateUserPongies(user3, user1);
-  //   // await this.usersService.updateUserPongies(user3, user2);
-  // }
-
   @Public()
   @Delete('disconnect/:id')
   async deleteTokens(@Param('id', ParseIntPipe) id: number) {
