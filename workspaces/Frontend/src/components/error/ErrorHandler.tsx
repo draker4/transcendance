@@ -39,11 +39,13 @@ export default function ErrorHandler({
   const returnHome = async () => {
     if (inGame && refresh) {
       router.refresh();
+      console.log("refresh");
     } else if (inGame && !refresh) {
       try {
         await lobby.quitGame();
         router.push("/home?home");
       } catch (error: any) {
+        console.log(error);
         await disconnect();
         router.refresh();
       }
