@@ -7,6 +7,15 @@
   margin: 0 auto;
 }
 
+.title {
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 70%;
+}
+
 .keyBtn {
   display: flex;
   justify-content: center;
@@ -29,14 +38,6 @@
 
 .keyBtn:active {
   scale: 0.95;
-}
-
-.title {
-  display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
 .quitBtn {
