@@ -56,7 +56,11 @@ export class GameManager {
     gameId: string,
     userId: number,
     socket: Socket,
-  ): Promise<any> {
+  ): Promise<ReturnData> {
+    const ret: ReturnData = {
+      success: false,
+      message: 'An Error as Occured',
+    };
     const game = this.pongOnGoing.get(gameId);
     // If Pong Session doesn't exist, create it
     if (!game) {
@@ -68,7 +72,9 @@ export class GameManager {
           'joinGame',
           error,
         ); // Use 'joinGame' as the context for this log message
-        throw new WsException("Can't create Pong Session");
+        ret.message = "Can't create Pong Session";
+        ret.error = error;
+        return ret;
       }
     }
 
@@ -78,7 +84,8 @@ export class GameManager {
       this.usersConnected.push(user);
     }
     if (user.gameId !== game.gameId) {
-      throw new WsException('this user is already in an other game');
+      ret.message = 'this user is already in an other game';
+      return ret;
     }
     try {
       const data: ReturnData = await game.join(user);
@@ -89,7 +96,9 @@ export class GameManager {
         'joinGame',
         error,
       );
-      throw new WsException('Error while joining game');
+      ret.message = `Error while joining game: ${error.message}`;
+      ret.error = error;
+      return ret;
     }
   }
 

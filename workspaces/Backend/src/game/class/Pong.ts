@@ -126,7 +126,7 @@ export class Pong {
 
   // --------------------------------  JOIN METHODS  --------------------------------- //
 
-  public async join(user: UserInfo): Promise<any> {
+  public async join(user: UserInfo): Promise<ReturnData> {
     const data: ReturnData = {
       success: false,
       message: '',
