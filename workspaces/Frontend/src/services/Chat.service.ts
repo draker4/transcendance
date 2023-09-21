@@ -10,7 +10,7 @@ export default class ChatService {
 
   // Singleton
   constructor(token?: string) {
-    console.log("ChatService.instance = ", ChatService.instance);
+    // console.log("ChatService.instance = ", ChatService.instance);
 
     if (token && ChatService.instance && !this.socket) {
       this.initializeSocket(token);
@@ -21,7 +21,7 @@ export default class ChatService {
     	return ChatService.instance;
     }
 
-    console.log("after return instance");
+    // console.log("after return instance");
 
     if (token) {
       this.initializeSocket(token);
@@ -33,7 +33,7 @@ export default class ChatService {
 
   // Create socket + listen errors & exceptions
   public initializeSocket(token: string) {
-    console.log("initialize socket beginning loading = ", this.loading);
+    // console.log("initialize socket beginning loading = ", this.loading);
     while (this.loading) {}
 
     console.log("after while socket = ", this.socket);
@@ -41,7 +41,7 @@ export default class ChatService {
 
     this.loading = true;
 
-    console.log("before creating socket token = ", token);
+    // console.log("before creating socket token = ", token);
     this.socket = io(`ws://${process.env.HOST_IP}:4000/chat`, {
       extraHeaders: {
         Authorization: "Bearer " + token,
