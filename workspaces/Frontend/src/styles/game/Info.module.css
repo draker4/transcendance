@@ -51,6 +51,13 @@
   scale: 0.95;
 }
 
+.playerName {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
 .showScore {
   display: flex;
   flex-flow: row wrap;
