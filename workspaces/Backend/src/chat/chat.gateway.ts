@@ -121,21 +121,21 @@ export class ChatGateway implements OnModuleInit {
               this.statusService.add(payload.sub.toString(), 'disconnected');
           }
 
-          if (
-            process.env.ENVIRONNEMENT &&
-            process.env.ENVIRONNEMENT === 'dev'
-          ) {
+          // if (
+          //   process.env.ENVIRONNEMENT &&
+          //   process.env.ENVIRONNEMENT === 'dev'
+          // ) {
             this.log(`User with ID ${payload.sub} disconnected`); // [?]
             for (const connect of this.connectedUsers) {
               console.log(
                 'Socket id: ',
                 connect[0].id + ' , user id : ' + connect[1],
               );
-            }
+            // }
           }
         });
 
-        if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
+        // if (process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === 'dev') {
           this.log('connected users = '); // [?]
           for (const connect of this.connectedUsers) {
             console.log(
@@ -143,7 +143,7 @@ export class ChatGateway implements OnModuleInit {
               connect[0].id + ' , user id : ' + connect[1],
             );
           }
-        }
+        // }
       } catch (error) {
         this.log(error);
         socket.disconnect();
