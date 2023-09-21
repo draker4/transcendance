@@ -40,6 +40,7 @@ export default function Game({ profile, token, gameId }: Props) {
   const getData = async () => {
     if (!joinEmitter) {
       setJoinEmitter(true);
+      console.log("join");
       gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
         console.log(ret);
         if (ret.success == true) {
@@ -79,7 +80,7 @@ export default function Game({ profile, token, gameId }: Props) {
     return () => {
       gameService.socket?.off("exception");
     };
-  }, [gameId, gameService.socket, profile, joinEmitter]);
+  }, [gameService.socket]);
 
   //------------------------------------RENDU------------------------------------//
 
