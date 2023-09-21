@@ -4,13 +4,13 @@ import styles from "@/styles/game/Game.module.css";
 // Import des composants projets
 import { cookies } from "next/dist/client/components/headers";
 import GameSolo from "@/components/gameSolo/GameSolo";
-import ErrorGameSolo from "@/components/gameSolo/ErrorGameSolo";
 
 // Import des services
 import ProfileService from "@/services/Profile.service";
 
 // Import des types
 import { GameData } from "@transcendence/shared/types/Game.types";
+import ErrorHandler from "../error/ErrorHandler";
 
 export default async function GameServer({
   trainingId,
@@ -56,7 +56,7 @@ export default async function GameServer({
         (gameData.hostSide === "Right" &&
           gameData.playerRight.id !== profile.id)))
   ) {
-    return <ErrorGameSolo />;
+    return <ErrorHandler errorTitle={"Oops, something went wrong"} errorNotif={"Please try again later"} />;
   }
 
   return (
