@@ -10,7 +10,7 @@ import {
 export class CreateGameDTO {
   @IsString()
   @IsNotEmpty()
-  @Length(1, 20)
+  @Length(1, 31)
   name: string;
 
   @IsString()
