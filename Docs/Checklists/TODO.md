@@ -22,9 +22,11 @@
 - [!] [assez_souvent] A l'acces a une partie le jeu ne s'affiche pas chez un des deux joueurs
 - [!] [parfois] Au moment de quitter il y a juste un retour home la partie reste en jeu
 - [x] 2 onglet log sur le meme compte en partie league contre un autre joueur -> un onglet qui quitte proc deco + errorReact? (le joueur a un seul onglet quitte c'est ok) C'est lorsque le 1er onglet arrive dans le jeu qui quitte que ca provoque le pb
-
+- [~] Une invitation
 
 > Pour qui veut s'en charger ou pour tous
+
+- [!] penser a enlever les consoles.logs ajoutes (ex les sockets)
 
 - [x] Affichage bouton "log out" sur une ligne au lieu de deux
 - [x] Se renseigner sur commment creer la db sans passer par le synchronize a switch
