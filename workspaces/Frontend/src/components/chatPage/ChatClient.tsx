@@ -89,7 +89,6 @@ export default function ChatClient({
 
         if (chatService.socket) {
           setSocket(chatService.socket);
-          // chatService.socket.disconnect();
           clearInterval(intervalId);
         }
       }, 500);
