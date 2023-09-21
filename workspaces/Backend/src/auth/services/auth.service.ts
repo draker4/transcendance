@@ -280,18 +280,13 @@ export class AuthService {
         throw new Error('Too long, needs to reconnect');
       }
 
-      // console.log("before timeout");
-      // setTimeout(async () => {
-      //   console.log("in timeout");
-      //   await this.usersService.deleteToken(isMatch);
-      //   if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
-      //     console.log('JUST DELETED=', refreshToken);
-      // }, 1000);
+      setTimeout(async () => {
+        await this.usersService.deleteToken(isMatch);
+        if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+          console.log('JUST DELETED=', refreshToken);
+      }, 60000);
 
-      const data = await this.login(user, isMatch.NbOfRefreshes + 1, false);
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
-          console.log('new=', data);
-      return data;
+      return await this.login(user, isMatch.NbOfRefreshes + 1, false);
     } catch (error) {
       if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
         console.log(error.message);
