@@ -4,12 +4,16 @@ import { useRouter } from "next/navigation";
 import styles from "@/styles/error/ErrorsMerged.module.css";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import LobbyService from "@/services/Lobby.service";
+import disconnect from "@/lib/disconnect/disconnect";
 
 type Props = {
   errorTitle?: string;
   errorNotif?: string;
   returnLink?: string;
   returnLinkName?: string;
+  refresh?: boolean;
+  inGame?: boolean;
 };
 
 export default function ErrorHandler({
@@ -17,6 +21,8 @@ export default function ErrorHandler({
   errorNotif,
   returnLink,
   returnLinkName,
+  refresh,
+  inGame,
 }: Props) {
   const router = useRouter();
   const title = errorTitle ? errorTitle : "Oops, something went wrong";
@@ -28,9 +34,22 @@ export default function ErrorHandler({
       ? errorNotif
       : "Please try again later";
   const linkName = returnLinkName ? returnLinkName : "return to home page";
+  const lobby = new LobbyService();
 
-  const returnHome = () => {
-    router.push("/home?home");
+  const returnHome = async () => {
+    if (inGame && refresh) {
+      router.refresh();
+    } else if (inGame && !refresh) {
+      try {
+        await lobby.quitGame();
+        router.push("/home?home");
+      } catch (error: any) {
+        await disconnect();
+        router.refresh();
+      }
+    } else {
+      router.push("/home?home");
+    }
   };
 
   return (

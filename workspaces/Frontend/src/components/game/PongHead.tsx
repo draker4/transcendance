@@ -50,7 +50,7 @@ export default function PongHead({
       router.push("/home?home");
       return;
     }
-    const res = await lobby
+    await lobby
       .quitGame()
       .then(() => {
         gameService.socket?.emit("quit");
@@ -63,11 +63,6 @@ export default function PongHead({
           return;
         }
       });
-    await toast.promise(new Promise((resolve) => resolve(res)), {
-      pending: "Leaving game...",
-      success: "You have left the game",
-      error: "Error leaving game",
-    });
   }
 
   async function changeKey() {

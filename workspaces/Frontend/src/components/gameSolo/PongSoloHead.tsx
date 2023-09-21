@@ -33,12 +33,7 @@ export default function PongHead({
 
   async function quitTraining() {
     if (gameData && gameData.status !== "Finished") {
-      const ret = await trainingService.quitTraining(gameData.id);
-      await toast.promise(new Promise((resolve) => resolve(ret)), {
-        pending: "Leaving training...",
-        success: "You have left this training",
-        error: "Error leaving training",
-      });
+      await trainingService.quitTraining(gameData.id);
     }
     router.push("/home?home");
   }

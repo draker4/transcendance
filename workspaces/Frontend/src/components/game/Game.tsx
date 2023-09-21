@@ -75,11 +75,24 @@ export default function Game({ profile, token, gameId }: Props) {
   //------------------------------------RENDU------------------------------------//
 
   //Si une erreur est survenue
-  if (!gameService.socket || error || (!isLoading && !gameData)) {
+  if (!gameService.socket || error) {
     return (
       <ErrorHandler
         errorTitle={"Oops, something went wrong"}
         errorNotif={"Please try again later"}
+        inGame={true}
+        refresh={false}
+      />
+    );
+  }
+
+  if (!isLoading && !gameData) {
+    return (
+      <ErrorHandler
+        errorTitle={"Oops, something went wrong"}
+        errorNotif={"Please try again later"}
+        inGame={true}
+        refresh={true}
       />
     );
   }
