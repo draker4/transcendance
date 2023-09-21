@@ -41,7 +41,9 @@ export default function Game({ profile, token, gameId }: Props) {
   useEffect(() => {
     if (!joinEmitter) {
       setJoinEmitter(true);
+      console.log("join");
       gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
+        console.log(ret);
         if (ret.success == true) {
           setIsLoading(false);
           setGameData(ret.data);
@@ -78,7 +80,7 @@ export default function Game({ profile, token, gameId }: Props) {
     );
   }
 
-  //Si la page n'est pas chargé
+  //Si la page n'est pas chargé 
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
