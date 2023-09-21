@@ -3,10 +3,7 @@
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  width: 40%;
-  @media screen and (max-width: 1100px) {
-    width: 100%;
-  }
+  width: 100%;
 }
 
 .listTitle {
@@ -22,7 +19,7 @@
   border: 3px solid var(--primary3);
   border-radius: 8px;
   overflow: auto;
-  max-height: 380px;
+  height: 380px;
   position: relative;
   @media screen and (min-width: 1100px) {
     height: 380px;
@@ -90,4 +87,10 @@
   font-size: 16px;
   width: 100%;
   margin: auto;
+}
+
+@media (min-width: 70rem) {
+  .partyList {
+    width: 40%;
+  }
 }

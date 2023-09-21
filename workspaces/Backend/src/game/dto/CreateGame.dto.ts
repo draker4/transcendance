@@ -4,11 +4,13 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsOptional,
+  Length,
 } from 'class-validator';
 
 export class CreateGameDTO {
   @IsString()
   @IsNotEmpty()
+  @Length(1, 20)
   name: string;
 
   @IsString()

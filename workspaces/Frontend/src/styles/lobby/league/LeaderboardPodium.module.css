@@ -3,8 +3,21 @@
   flex-flow: row nowrap;
   justify-content: center;
   align-items: flex-end;
-  width: 300px;
+  width: 100%;
+  min-width: 300px;
+  max-width: 600px;
   margin: 25px;
+}
+
+.third,
+.first,
+.second {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  max-width: 200px;
 }
 
 .avatar {
@@ -24,7 +37,7 @@
   border: none;
   background-color: transparent;
   cursor: pointer;
-  width: 90px;
+  width: 90%;
   font-size: 16px;
   padding-inline: 5px;
   font-weight: bold;
@@ -53,17 +66,17 @@
   justify-content: center;
   align-items: center;
   background-color: var(--primary3);
-  width: 100px;
+  width: 100%;
 }
 
 .first .pad {
-  height: 100px;
+  height: 130px;
 }
 
 .second .pad {
-  height: 75px;
+  height: 95px;
 }
 
 .third .pad {
-  height: 50px;
+  height: 70px;
 }
