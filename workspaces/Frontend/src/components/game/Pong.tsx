@@ -154,7 +154,7 @@ export default function Pong({
     } else {
       const delayTimeout = setTimeout(() => {
         setShowPreview(false);
-      }, 1900);
+      }, 1500);
       return () => {
         clearTimeout(delayTimeout);
       };
