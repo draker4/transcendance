@@ -28,10 +28,10 @@ export default function RolesList({ channelId, relations, role, myRelation, list
               relation={relation}
               myRelation={myRelation}
               role={role}
-              onFocusOn={() => {/*console.log("Focused")*/}}
-              onFocusOff={() => {/* console.log("Blurred") */}}
-              onHover={() => {/* console.log("Hoover") */}}
-              onLeave={() => {/* console.log("Leave") */}}
+              onFocusOn={() => {}}
+              onFocusOff={() => {}}
+              onHover={() => {}}
+              onLeave={() => {}}
               lists={lists}
               socket={socket}
               status={status}

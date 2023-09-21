@@ -114,7 +114,8 @@ export class AuthService {
         expiresIn: '1d',
       });
 
-      console.log("here its gonna return refresh = ", refresh_token);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("here its gonna return refresh = ", refresh_token);
 
     return {
       access_token,
@@ -239,14 +240,16 @@ export class AuthService {
     refreshToken: string,
     tokens: Token[],
   ): Promise<Token | undefined> {
-    console.log("begin search match");
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("begin search match");
     for (const token of tokens) {
       const isMatch = await argon2.verify(token.value, refreshToken);
       if (isMatch) {
         return token;
       }
     }
-    console.log("end search match", refreshToken);
+    if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      console.log("end search match", refreshToken);
     return undefined;
   }
 
@@ -266,8 +269,9 @@ export class AuthService {
       }
 
       const isMatch = await this.findMatchingToken(refreshToken, user.tokens);
-
-      console.log("ismatch = ", isMatch.NbOfRefreshes);
+      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+        console.log("ismatch = ", isMatch.NbOfRefreshes);
+        
       if (!isMatch) {
         await this.usersService.deleteAllUserTokens(user);
         if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")

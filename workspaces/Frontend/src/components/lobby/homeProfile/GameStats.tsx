@@ -24,7 +24,6 @@ export default function GameStats({ profile, socket }: Props) {
 
   useEffect(() => {
     const getStats = async () => {
-      console.log("getstats");
       try {
         const ret = await statsService.getShortStats(profile.id);
         if (ret.success) {
