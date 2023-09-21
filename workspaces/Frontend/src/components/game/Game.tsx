@@ -74,7 +74,7 @@ export default function Game({ profile, token, gameId }: Props) {
     return () => {
       gameService.socket?.off("exception");
     };
-  }, []);
+  }, [gameId, gameService.socket, profile, joinEmitter]);
 
   useEffect(() => {
     if (isLoading && time) {
