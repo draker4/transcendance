@@ -84,8 +84,7 @@ export class GameManager {
       this.usersConnected.push(user);
     }
     if (user.gameId !== game.gameId) {
-      ret.message = 'this user is already in an other game';
-      return ret;
+      user.gameId = game.gameId;
     }
     try {
       const data: ReturnData = await game.join(user);

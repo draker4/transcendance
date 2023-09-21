@@ -2,11 +2,9 @@
 
 // Import des composants react
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 // Import du style
 import styles from "@/styles/game/Game.module.css";
-import stylesError from "@/styles/game/GameError.module.css";
 
 // Import des services
 import LobbyService from "@/services/Lobby.service";
@@ -58,7 +56,7 @@ export default function Game({ profile, token, gameId }: Props) {
           setIsLoading(false);
           setError(true);
           console.log(ret.message);
-          console.log(ret.error)
+          console.log(ret.error);
         }
       });
     }
@@ -76,11 +74,14 @@ export default function Game({ profile, token, gameId }: Props) {
   //Si une erreur est survenue
   if (!gameService.socket || error) {
     return (
-        <ErrorHandler errorTitle={"Oops, something went wrong"} errorNotif={"Please try again later"} />
+      <ErrorHandler
+        errorTitle={"Oops, something went wrong"}
+        errorNotif={"Please try again later"}
+      />
     );
   }
 
-  //Si la page n'est pas chargé 
+  //Si la page n'est pas chargé
   if (isLoading) {
     return (
       <div className={styles.gameLoading}>
