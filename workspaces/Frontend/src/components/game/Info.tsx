@@ -70,7 +70,9 @@ function showPlayer(
           fontSize="1rem"
         />
       </div>
-      <h2 style={nameStyle}>{player.name}</h2>
+      <h2 style={nameStyle} className={styles.playerName}>
+        {player.name}
+      </h2>
     </button>
   );
 }
