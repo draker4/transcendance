@@ -34,12 +34,14 @@ export default function Game({ profile, token, gameId }: Props) {
   const [isPlayer, setIsPlayer] = useState<"Left" | "Right" | "Spectator">(
     "Spectator"
   );
+  const [time, setTime] = useState<boolean>(false);
 
   //------------------------------------Chargement------------------------------------//
 
   const getData = async () => {
     if (!joinEmitter) {
       setJoinEmitter(true);
+      setTime(true);
       console.log("join");
       gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
         console.log(ret);
@@ -61,14 +63,6 @@ export default function Game({ profile, token, gameId }: Props) {
         }
       });
     }
-    if (isLoading) {
-      setTimeout(() => {
-        if (isLoading && !gameData) {
-          setJoinEmitter(false);
-          getData();
-        }
-      }, 2000);
-    }
   };
 
   useEffect(() => {
@@ -81,6 +75,17 @@ export default function Game({ profile, token, gameId }: Props) {
       gameService.socket?.off("exception");
     };
   }, []);
+
+  useEffect(() => {
+    if (isLoading && time) {
+      setTimeout(() => {
+        if (isLoading && !gameData) {
+          setJoinEmitter(false);
+          getData();
+        }
+      }, 2000);
+    }
+  }, [time]);
 
   //------------------------------------RENDU------------------------------------//
 
