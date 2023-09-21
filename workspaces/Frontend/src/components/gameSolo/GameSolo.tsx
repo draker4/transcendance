@@ -13,9 +13,9 @@ import TrainingService from "@/services/Training.service";
 // Import des composants
 import { GameData } from "@transcendence/shared/types/Game.types";
 import PongSolo from "./PongSolo";
-import ErrorGameSolo from "./ErrorGameSolo";
 import LoadingComponent from "../loading/Loading";
 import disconnect from "@/lib/disconnect/disconnect";
+import ErrorHandler from "../error/ErrorHandler";
 
 type Props = {
   profile: Profile;
@@ -77,7 +77,7 @@ export default function GameSolo({ profile, trainingId }: Props) {
 
   //Si une erreur est survenue
   if (error) {
-    return <ErrorGameSolo />;
+    return <ErrorHandler errorTitle={"Oops, something went wrong"} errorNotif={"Please try again later"} />;
   }
 
   //Si la page n'est pas chargé
