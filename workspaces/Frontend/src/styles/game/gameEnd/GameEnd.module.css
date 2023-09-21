@@ -6,22 +6,16 @@
   position: absolute;
   border-radius: 10px;
   background-color: var(--secondary1T);
-  min-width: 400px;
-  @media screen and (max-width: 550px) {
-    min-width: 300px;
-  }
+  width: 70%;
+  max-width: 400px;
 }
 
 .winner {
   color: var(--primary1);
   text-align: center;
   margin: 5px;
-  padding: 10px;
+  padding: 5px;
   border-bottom: 3px solid var(--accent1);
-  @media screen and (max-width: 550px) {
-    font-size: 18px;
-    padding: 6px;
-  }
 }
 
 .homeBtn {
@@ -36,10 +30,6 @@
   color: var(--primary1);
   background-color: var(--secondary1);
   border: 3px solid var(--accent1);
-  @media screen and (max-width: 550px) {
-    font-size: 14px;
-    padding: 4px 14px;
-  }
 }
 
 .homeBtn:checked {
@@ -55,4 +45,19 @@
   scale: 0.8;
   color: var(--accent1);
   border: 3px solid var(--accent2);
+}
+
+@media screen and (max-width: 550px) {
+  .winnerName {
+    font-size: 18px;
+  }
+
+  .winnerText {
+    font-size: 14px;
+  }
+
+  .homeBtn {
+    font-size: 14px;
+    padding: 4px 10px;
+  }
 }

@@ -10,7 +10,6 @@
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
-  height: 80px;
 }
 
 .details {
@@ -20,9 +19,6 @@
   justify-content: space-between;
   width: 120px;
   color: var(--primary1);
-  @media screen and (max-width: 550px) {
-    font-size: 12px;
-  }
 }
 
 .total {
@@ -35,7 +31,13 @@
   width: 120px;
   border-top: 3px solid var(--accent1);
   color: var(--primary1);
-  @media screen and (max-width: 550px) {
+}
+
+@media (max-width: 550px) {
+  .details {
+    font-size: 12px;
+  }
+  .total {
     font-size: 14px;
   }
 }
