@@ -28,4 +28,11 @@
   align-items: center;
   justify-content: center;
   min-width: fit-content;
+  width: 100%;
+}
+
+@media (min-width: 70rem) {
+  .resume {
+    width: 59%;
+  }
 }

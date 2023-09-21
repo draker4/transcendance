@@ -48,6 +48,7 @@ export default function DefineName({
           id="name"
           name="name"
           value={name}
+          maxLength={20}
           onChange={(event) => {
             setName(event.target.value);
             setEnterName(false);
