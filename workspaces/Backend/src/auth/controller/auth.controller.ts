@@ -17,13 +17,13 @@ import {
 } from '@nestjs/common';
 import { Public } from 'src/utils/decorators/public.decorator';
 import { CreateUserDto } from 'src/users/dto/CreateUser.dto';
-import { GoogleOauthGuard } from './guards/google-oauth.guard';
+import { GoogleOauthGuard } from '../guards/google-oauth.guard';
 import { Response } from 'express';
 import { AvatarDto } from 'src/avatar/dto/Avatar.dto';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './services/auth.service';
+import { LocalAuthGuard } from '../guards/local-auth.guard';
+import { AuthService } from '../services/auth.service';
 import { HttpExceptionFilter } from '@/utils/filter/http-exception.filter';
-import { JwtRefreshGuard } from './guards/jwtRefresh.guard';
+import { JwtRefreshGuard } from '../guards/jwtRefresh.guard';
 import { AchievementService } from '@/achievement/service/achievement.service';
 import { UsersService } from '@/users/service/users.service';
 
@@ -37,28 +37,20 @@ export class AuthController {
 
   @Public()
   @Get('42')
-  async logIn42(
-    @Query('code') code: string,
-    @Res() res: Response,
-  ) {
+  async logIn42(@Query('code') code: string, @Res() res: Response) {
     try {
-      if (!code)
-        throw new Error('no code');
-          
+      if (!code) throw new Error('no code');
+
       const dataToken = await this.authService.getToken42(code);
-      if (!dataToken)
-        throw new Error('no 42 token');
+      if (!dataToken) throw new Error('no 42 token');
 
       const user42logged = await this.authService.logUser(dataToken);
-      if (!user42logged)
-        throw new Error('no 42 user');
+      if (!user42logged) throw new Error('no 42 user');
 
       // Achievement completed
-      await this.achievementService.achievementCompleted(
-        user42logged.id, {
-          code: "LOGIN_42",
-        },
-      );
+      await this.achievementService.achievementCompleted(user42logged.id, {
+        code: 'LOGIN_42',
+      });
 
       const { access_token, refresh_token } = await this.authService.login(
         user42logged,
@@ -80,12 +72,19 @@ export class AuthController {
         secure: false,
       });
 
-      return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
-    }
-    catch (error) {
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      return res.redirect(
+        `http://${process.env.HOST_IP}:3000/home/auth/connect`,
+      );
+    } catch (error) {
+      if (
+        process.env &&
+        process.env.ENVIRONNEMENT &&
+        process.env.ENVIRONNEMENT === 'dev'
+      )
         console.log(error);
-      return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
+      return res.redirect(
+        `http://${process.env.HOST_IP}:3000/welcome/login/wrong`,
+      );
     }
   }
 
@@ -93,7 +92,10 @@ export class AuthController {
   @Post('register')
   async registerUser(@Body() createUserDto: CreateUserDto) {
     try {
-      const check = await this.usersService.getUserByEmail(createUserDto.email, 'email');
+      const check = await this.usersService.getUserByEmail(
+        createUserDto.email,
+        'email',
+      );
       if (check)
         return {
           message: 'ok',
@@ -101,9 +103,8 @@ export class AuthController {
         };
 
       const user = await this.authService.addUser(createUserDto);
-      
-      if (!user)
-        throw new BadRequestException();
+
+      if (!user) throw new BadRequestException();
 
       return {
         message: 'ok',
@@ -116,21 +117,17 @@ export class AuthController {
 
   @Public()
   @Get('verifyCode/:code/:id')
-  async verifyCode(
-    @Param('code') code: string,
-    @Param('id') id: string,
-  ) {
+  async verifyCode(@Param('code') code: string, @Param('id') id: string) {
     try {
       const userCode = await this.authService.verifyCode(code);
 
       if (!userCode)
         return {
           success: false,
-          message: 'This code does not exist. Please try again!'
+          message: 'This code does not exist. Please try again!',
         };
 
       if (userCode && !userCode.verified) {
-
         if (id !== userCode.id.toString())
           return {
             error: 'wrong user',
@@ -150,11 +147,9 @@ export class AuthController {
         });
 
         // complete achievement
-        await this.achievementService.achievementCompleted(
-          userCode.id, {
-            code: "VERIFY_EMAIL",
-          },
-        );
+        await this.achievementService.achievementCompleted(userCode.id, {
+          code: 'VERIFY_EMAIL',
+        });
       }
 
       const { access_token, refresh_token } = await this.authService.login(
@@ -180,8 +175,7 @@ export class AuthController {
     try {
       const user = await this.authService.getUserById(id);
 
-      if (!user)
-        throw new Error('no user found');
+      if (!user) throw new Error('no user found');
 
       await this.authService.sendNewCode(user);
 
@@ -207,15 +201,12 @@ export class AuthController {
     try {
       const user = await this.authService.loginWithGoogle(req.user);
 
-      if (!user)
-        throw new Error('cannot create user');
+      if (!user) throw new Error('cannot create user');
 
       // Achievement completed
-      await this.achievementService.achievementCompleted(
-        user.id, {
-          code: "LOGIN_GOOGLE",
-        },
-      );
+      await this.achievementService.achievementCompleted(user.id, {
+        code: 'LOGIN_GOOGLE',
+      });
 
       const { access_token, refresh_token } = await this.authService.login(
         user,
@@ -237,12 +228,20 @@ export class AuthController {
         secure: false,
       });
 
-      return res.redirect(`http://${process.env.HOST_IP}:3000/home/auth/connect`);
-    // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
+      return res.redirect(
+        `http://${process.env.HOST_IP}:3000/home/auth/connect`,
+      );
+      // return res.redirect(`http://${process.env.HOST_IP}:3000/home`);
     } catch (error) {
-      if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      if (
+        process.env &&
+        process.env.ENVIRONNEMENT &&
+        process.env.ENVIRONNEMENT === 'dev'
+      )
         console.log(error);
-      return res.redirect(`http://${process.env.HOST_IP}:3000/welcome/login/wrong`);
+      return res.redirect(
+        `http://${process.env.HOST_IP}:3000/welcome/login/wrong`,
+      );
     }
   }
 
@@ -290,8 +289,8 @@ export class AuthController {
       return {
         msg: 'not verified',
         id: req.user.id,
-      }
-    
+      };
+
     return await this.authService.login(
       req.user,
       0,
@@ -302,10 +301,7 @@ export class AuthController {
   @Public()
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
-  async refresh(
-    @Request() req,
-    @Headers('authorization') header: string
-  ) {
+  async refresh(@Request() req, @Headers('authorization') header: string) {
     const [, refreshToken] = header.split(' ');
     return await this.authService.refreshToken(req.user.id, refreshToken);
   }
@@ -325,15 +321,12 @@ export class AuthController {
 
   @Public()
   @Post('forgotPassword')
-  async forgotPassword(
-    @Body('email') email: string,
-  ) {
+  async forgotPassword(@Body('email') email: string) {
     return await this.authService.forgotPassword(email);
   }
 
   @Public()
   @Get('healthCheck')
   @HttpCode(200)
-  healthCheck() {
-  }
+  healthCheck() {}
 }
