@@ -80,7 +80,7 @@ export default function Game({ profile, token, gameId }: Props) {
     return () => {
       gameService.socket?.off("exception");
     };
-  }, [gameService.socket]);
+  }, []);
 
   //------------------------------------RENDU------------------------------------//
 
