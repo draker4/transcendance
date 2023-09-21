@@ -22,6 +22,12 @@ all :
 	@make start
 	@echo "ipAddress: $(HOST_IP)"
 
+env : 
+	@echo "----Writing IP address in .env file----"
+	@make write-env-ip
+	@make write-env-build
+	@echo "ipAddress: $(HOST_IP)"
+
 local	: 
 	@echo "----Starting Production Servers in Localhost----"
 	@make write-env-localhost
