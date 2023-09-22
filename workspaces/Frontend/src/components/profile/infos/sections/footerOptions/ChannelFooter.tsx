@@ -3,7 +3,7 @@ import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAddressCard, faMessage } from "@fortawesome/free-regular-svg-icons";
 import { faCheck, faPeopleGroup, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Badge } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -91,57 +91,67 @@ export default function ChannelFooter({channel, socket, crossFunction}: {
 
 			{
 				!channel?.joined && !channel.isBanned &&
-				<div onClick={addChannel}>
-					<Badge badgeContent={
-						<FontAwesomeIcon
-							icon={faPlus}
-						/>} sx={badgeStyle}
-						style={{cursor: 'pointer'}}
-						overlap="circular"
-					>
-						<FontAwesomeIcon
-							icon={faPeopleGroup}
-							className={styles.icon}
-						/>
-					</Badge>
-				</div>
+				<Tooltip title="Join" placement="bottom" arrow>
+					<div onClick={addChannel}>
+						<Badge badgeContent={
+							<FontAwesomeIcon
+								icon={faPlus}
+							/>} sx={badgeStyle}
+							style={{cursor: 'pointer'}}
+							overlap="circular"
+						>
+							<FontAwesomeIcon
+								icon={faPeopleGroup}
+								className={styles.icon}
+							/>
+						</Badge>
+					</div>
+				</Tooltip>
 			}
 
 			{
 				channel?.joined && !channel.isBanned &&
-				<Badge badgeContent={
-					<FontAwesomeIcon
-						icon={faCheck}
-					/>
-				} sx={badgeStyle} overlap="circular" >
-					<FontAwesomeIcon
-						icon={faPeopleGroup}
-						className={styles.iconFriend}
-						style={{color: "#8bc34a"}}
-					/>
-				</Badge>
+				<Tooltip title="Joined" placement="bottom" arrow>
+					<Badge badgeContent={
+						<FontAwesomeIcon
+							icon={faCheck}
+						/>
+					} sx={badgeStyle} overlap="circular" >
+						<FontAwesomeIcon
+							icon={faPeopleGroup}
+							className={styles.iconFriend}
+							style={{color: "#8bc34a"}}
+						/>
+					</Badge>
+				</Tooltip>
 			}
 
-			<FontAwesomeIcon
-				icon={faAddressCard}
-				className={styles.icon}
-				onClick={openProfile}
-			/>
+			<Tooltip title="See Profile" placement="bottom" arrow>
+				<FontAwesomeIcon
+					icon={faAddressCard}
+					className={styles.icon}
+					onClick={openProfile}
+				/>
+			</Tooltip>
 
 			{
 				!channel.isBanned &&
-				<FontAwesomeIcon
-					icon={faMessage}
-					className={styles.icon}
-					onClick={openChat}
-				/>
+				<Tooltip title="Open Chat" placement="bottom" arrow>
+					<FontAwesomeIcon
+						icon={faMessage}
+						className={styles.icon}
+						onClick={openChat}
+					/>
+				</Tooltip>
 			}
 
-			<FontAwesomeIcon
-				icon={faXmark}
-				className={styles.icon}
-				onClick={() => crossFunction(channel)}
-			/>
+			<Tooltip title="Cancel" placement="bottom" arrow>
+				<FontAwesomeIcon
+					icon={faXmark}
+					className={styles.icon}
+					onClick={() => crossFunction(channel)}
+				/>
+			</Tooltip>
 			
 		</div>
 	);

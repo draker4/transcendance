@@ -3,7 +3,7 @@ import styles from "@/styles/profile/Pongies/SectionPongies.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAddressCard, faFaceLaughBeam, faMessage } from "@fortawesome/free-regular-svg-icons";
 import { faCheck, faPlus, faSkull, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Badge } from "@mui/material";
+import { Badge, Tooltip } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useRef } from "react";
@@ -101,6 +101,7 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 
 			{
 				!pongie?.isFriend && !pongie.hasBlacklisted &&
+				<Tooltip title="Add Friend" placement="bottom" arrow>
 				<div onClick={addFriend}>
 					<Badge badgeContent={
 						<FontAwesomeIcon
@@ -115,52 +116,63 @@ export default function PongieFooter({pongie, socket, crossFunction}: {
 						/>
 					</Badge>
 				</div>
+				</Tooltip>
 			}
 
 			{
 				pongie?.isFriend && !pongie.hasBlacklisted &&
-				<Badge badgeContent={
-					<FontAwesomeIcon
-						icon={faCheck}
-					/>
-				} sx={badgeStyle} overlap="circular" >
-					<FontAwesomeIcon
-						icon={faFaceLaughBeam}
-						className={styles.iconFriend}
-						style={{color: "#8bc34a"}}
-					/>
-				</Badge>
+				<Tooltip title="Friend" placement="bottom" arrow>
+					<Badge badgeContent={
+						<FontAwesomeIcon
+							icon={faCheck}
+						/>
+					} sx={badgeStyle} overlap="circular" >
+						<FontAwesomeIcon
+							icon={faFaceLaughBeam}
+							className={styles.iconFriend}
+							style={{color: "#8bc34a"}}
+						/>
+					</Badge>
+				</Tooltip>
 			}
 
-			<FontAwesomeIcon
-				icon={faAddressCard}
-				className={styles.icon}
-				onClick={openProfile}
-			/>
+			<Tooltip title="See Profile" placement="bottom" arrow>
+				<FontAwesomeIcon
+					icon={faAddressCard}
+					className={styles.icon}
+					onClick={openProfile}
+				/>
+			</Tooltip>
 
 			{
 				!pongie.hasBlacklisted &&
-				<FontAwesomeIcon
-					icon={faMessage}
-					className={styles.icon}
-					onClick={openChat}
-				/>
+				<Tooltip title="Open Chat" placement="bottom" arrow>
+					<FontAwesomeIcon
+						icon={faMessage}
+						className={styles.icon}
+						onClick={openChat}
+					/>
+				</Tooltip>
 			}
 
 			{
 				!pongie.hasBlacklisted &&
-				<FontAwesomeIcon
-					icon={faSkull}
-					className={styles.icon}
-					onClick={blackList}
-				/>
+				<Tooltip title="Blacklist" placement="bottom" arrow>
+					<FontAwesomeIcon
+						icon={faSkull}
+						className={styles.icon}
+						onClick={blackList}
+					/>
+				</Tooltip>
 			}
 
-			<FontAwesomeIcon
-				icon={faXmark}
-				className={styles.icon}
-				onClick={() => crossFunction(pongie)}
-			/>
+			<Tooltip title="Cancel" placement="bottom" arrow>
+				<FontAwesomeIcon
+					icon={faXmark}
+					className={styles.icon}
+					onClick={() => crossFunction(pongie)}
+				/>
+			</Tooltip>
 			
 		</div>
 	);
