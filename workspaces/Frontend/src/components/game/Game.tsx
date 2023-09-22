@@ -37,20 +37,29 @@ export default function Game({ profile, token, gameId }: Props) {
   //------------------------------------Chargement------------------------------------//
 
   useEffect(() => {
-    if (!joinEmitter && gameService.socket) {
-      setJoinEmitter(true);
-      gameService.socket.emit("join", gameId, (ret: ReturnData) => {
-        if (ret.success == true) {
-          setIsLoading(false);
-          setGameData(ret.data);
-          setIsPlayer(
-            ret.data.playerLeft.id === profile.id
-              ? "Left"
-              : ret.data.playerRight.id === profile.id
-              ? "Right"
-              : "Spectator"
-          );
-        } else {
+    const joinGame = async () => {
+      if (!joinEmitter && gameService.socket) {
+        setJoinEmitter(true);
+        console.log("join");
+        try {
+          const response = await new Promise(() => {
+            gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
+              if (ret.success) {
+                setIsLoading(false);
+                setGameData(ret.data);
+                setIsPlayer(
+                  ret.data.playerLeft.id === profile.id
+                    ? "Left"
+                    : ret.data.playerRight.id === profile.id
+                    ? "Right"
+                    : "Spectator"
+                );
+              } else {
+                throw new Error(ret.message);
+              }
+            });
+          });
+        } catch (error) {
           setIsLoading(false);
           setError(true);
           if (
@@ -58,16 +67,18 @@ export default function Game({ profile, token, gameId }: Props) {
             process.env.ENVIRONNEMENT &&
             process.env.ENVIRONNEMENT === "dev"
           ) {
-            console.log(ret.message);
-            console.log(ret.error);
+            console.error(error);
           }
         }
-      });
-    }
+      }
+    };
+
+    joinGame();
 
     gameService.socket?.on("exception", () => {
       setError(true);
     });
+
     return () => {
       gameService.socket?.off("exception");
     };
