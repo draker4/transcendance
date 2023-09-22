@@ -40,7 +40,6 @@ export default function Game({ profile, token, gameId }: Props) {
     const joinGame = async () => {
       if (!joinEmitter && gameService.socket) {
         setJoinEmitter(true);
-        console.log(`join ${gameId}`);
         try {
           const response = await new Promise(() => {
             gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
