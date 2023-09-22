@@ -82,7 +82,7 @@ export default function NavbarConnected({
   }, [socket]);
 
   return (
-    <header>
+    <div>
       <nav className={styles.nav}>
         <NavbarLogo link="/home" />
         <div className={styles.right}>
@@ -94,6 +94,6 @@ export default function NavbarConnected({
         </div>
       </nav>
       <div className={styles.barBottom}></div>
-    </header>
+    </div>
   );
 }
