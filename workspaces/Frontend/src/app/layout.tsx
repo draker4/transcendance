@@ -5,8 +5,6 @@ import ScrollBtn from "@/components/scrollBtn/ScrollBtn";
 import Navbar from "@/components/navbar/Navbar";
 import "react-toastify/dist/ReactToastify.min.css";
 
-// export const dynamic = "force-dynamic";
-
 export const metadata = {
   title: "Transcendence",
   description:
