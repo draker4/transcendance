@@ -37,10 +37,9 @@ export default function Game({ profile, token, gameId }: Props) {
   //------------------------------------Chargement------------------------------------//
 
   useEffect(() => {
-    if (!joinEmitter) {
-      while (!gameService.socket) {}
+    if (!joinEmitter && gameService.socket) {
       setJoinEmitter(true);
-      gameService.socket?.emit("join", gameId, (ret: ReturnData) => {
+      gameService.socket.emit("join", gameId, (ret: ReturnData) => {
         if (ret.success == true) {
           setIsLoading(false);
           setGameData(ret.data);
