@@ -6,9 +6,11 @@ import { useRouter } from "next/navigation";
 import LoadingComponent from "@/components/loading/Loading";
 import { toast } from "react-toastify";
 import disconnect from "@/lib/disconnect/disconnect";
+import LobbyService from "@/services/Lobby.service";
 
 export default function Searching({ profile }: { profile: Profile }) {
   const matchmakingService = new MatchmakingService();
+  const lobby = new LobbyService();
   const [type, setType] = useState<"Classic" | "Best3" | "Best5">("Classic");
   const [searching, setSearching] = useState(false);
   const [startingGame, setStartingGame] = useState(false);
@@ -42,6 +44,13 @@ export default function Searching({ profile }: { profile: Profile }) {
         if (res.data) {
           router.push(`/home/game/${res.data}`);
           setStartingGame(true);
+        } else {
+          lobby.userInGame().then((res) => {
+            if (res.success) {
+              router.push(`/home/game/${res.data}`);
+              setStartingGame(true);
+            }
+          });
         }
       } else {
         const timeoutId = setTimeout(() => {

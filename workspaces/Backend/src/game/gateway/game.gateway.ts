@@ -104,6 +104,7 @@ export class GameGateway implements OnModuleInit {
     @Req() req,
     @MessageBody() gameId: string,
   ) {
+    console.log('join');
     return await this.gameManager.joinGame(gameId, req.user.id, socket);
   }
 
