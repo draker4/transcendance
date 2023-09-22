@@ -180,7 +180,7 @@ export class GameService {
     }
   }
 
-  public async createGame(game: CreateGameDTO): Promise<any> {
+  public async createGame(game: CreateGameDTO): Promise<string> {
     try {
       const newGame = await this.gameRepository.save(game);
       const newScore: CreateScoreDTO = {

@@ -43,12 +43,6 @@ export class MatchmakingService {
       message: 'Catched an error',
     };
     try {
-      if (
-        process.env &&
-        process.env.ENVIRONNEMENT &&
-        process.env.ENVIRONNEMENT === 'dev'
-      )
-        console.log(userId, search);
       const matchmaking = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });
@@ -56,9 +50,10 @@ export class MatchmakingService {
         throw new Error('Matchmaking not found');
       }
 
-      matchmaking.searching = true;
-      matchmaking.type = search.type;
-      await this.matchmakingRepository.save(matchmaking);
+      await this.matchmakingRepository.update(
+        { userId: userId },
+        { searching: true, type: search.type },
+      );
 
       ret.success = true;
       ret.message = 'You are now in matchmaking ';
@@ -78,8 +73,18 @@ export class MatchmakingService {
       const matchmaking = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });
-      matchmaking.searching = false;
-      await this.matchmakingRepository.save(matchmaking);
+      if (!matchmaking) {
+        ret.message = 'Matchmaking not found';
+        return ret;
+      }
+      if (!matchmaking.searching) {
+        ret.message = 'You are not in matchmaking';
+        return ret;
+      }
+      await this.matchmakingRepository.update(
+        { userId: userId },
+        { searching: false },
+      );
 
       ret.success = true;
       ret.message = 'You are no longer in matchmaking ';
@@ -96,6 +101,7 @@ export class MatchmakingService {
       message: 'Catched an error',
     };
     try {
+      // check if user in game
       const gameId = await this.gameService.getGameByUserId(userId);
       if (gameId) {
         ret.success = true;
@@ -104,6 +110,7 @@ export class MatchmakingService {
         return ret;
       }
 
+      //check is still in matchmaking
       const search = await this.matchmakingRepository.findOne({
         where: { userId: userId },
       });
@@ -113,7 +120,7 @@ export class MatchmakingService {
         return ret;
       }
 
-      //check autre joueur en matchmaking
+      //check if other player are searching
       const sameSearch = await this.matchmakingRepository.find({
         where: { searching: true, type: search.type, userId: Not(userId) },
       });
@@ -122,44 +129,46 @@ export class MatchmakingService {
         sameSearch.sort(
           (a, b) => a.updatedAt.getTime() - b.updatedAt.getTime(),
         );
-        await this.stopSearch(sameSearch[0].userId);
-        await this.stopSearch(userId);
-        const host = await this.userService.getUserById(search.userId);
-        const opponent = await this.userService.getUserById(
-          sameSearch[0].userId,
+        //try to stop search of the player search
+        const retPlay = await this.stopSearch(userId);
+        if (!retPlay.success) {
+          const gameId = await this.gameService.getGameByUserId(userId);
+          if (gameId) {
+            ret.success = true;
+            ret.message = 'You are in game';
+            ret.data = gameId;
+            return ret;
+          }
+          ret.error = retPlay.error;
+          return ret;
+        }
+        //try to stop search of one of the player found
+        let i = 0;
+        while (i < sameSearch.length) {
+          const retOpponnent = await this.stopSearch(sameSearch[i].userId);
+          if (retOpponnent.success) {
+            break;
+          }
+          i++;
+        }
+        // if no opponent found then restart search
+        if (i == sameSearch.length) {
+          this.matchmakingRepository.update(
+            { userId: userId },
+            { searching: true },
+          );
+          ret.message = 'No opponent found';
+          return ret;
+        }
+        // else create game session
+        const newGame = await this.createGame(
+          userId,
+          sameSearch[i].userId,
+          search.type,
         );
-        let hostLogin = host.login;
-        if (hostLogin.length > 10) {
-          hostLogin = hostLogin.substring(0, 10);
-          hostLogin += '...';
-        }
-        let opponentLogin = opponent.login;
-        if (opponentLogin.length > 10) {
-          opponentLogin = opponentLogin.substring(0, 10);
-          opponentLogin += '...';
-        }
-        const game: CreateGameDTO = {
-          name: `${hostLogin} vs ${opponentLogin}`,
-          type: search.type,
-          mode: 'League',
-          host: search.userId,
-          opponent: sameSearch[0].userId,
-          hostSide: 'Left',
-          maxPoint:
-            search.type == 'Classic' ? 9 : search.type == 'Best3' ? 7 : 5,
-          maxRound:
-            search.type == 'Classic' ? 1 : search.type == 'Best3' ? 3 : 5,
-          difficulty: 2,
-          push: search.type == 'Classic' ? false : true,
-          pause: search.type == 'Classic' ? false : true,
-          background:
-            search.type == 'Classic' ? 'Classic' : confirmBackground('Random'),
-          ball: search.type == 'Classic' ? 'Classic' : confirmBall('Random'),
-        };
-        const gameId = await this.gameService.createGame(game);
         ret.success = true;
         ret.message = 'Game created';
-        ret.data = gameId;
+        ret.data = newGame;
       } else {
         ret.success = false;
         ret.message = 'No match found';
@@ -173,5 +182,41 @@ export class MatchmakingService {
       };
       return Data;
     }
+  }
+
+  private async createGame(
+    hostId: number,
+    opponentId: number,
+    type: 'Classic' | 'Best3' | 'Best5' | 'Custom',
+  ): Promise<string> {
+    const host = await this.userService.getUserById(hostId);
+    const opponent = await this.userService.getUserById(opponentId);
+    let hostLogin = host.login;
+    if (hostLogin.length > 10) {
+      hostLogin = hostLogin.substring(0, 10);
+      hostLogin += '...';
+    }
+    let opponentLogin = opponent.login;
+    if (opponentLogin.length > 10) {
+      opponentLogin = opponentLogin.substring(0, 10);
+      opponentLogin += '...';
+    }
+    const game: CreateGameDTO = {
+      name: `${hostLogin} vs ${opponentLogin}`,
+      type: type,
+      mode: 'League',
+      host: hostId,
+      opponent: opponentId,
+      hostSide: 'Left',
+      maxPoint: type == 'Classic' ? 9 : type == 'Best3' ? 7 : 5,
+      maxRound: type == 'Classic' ? 1 : type == 'Best3' ? 3 : 5,
+      difficulty: 2,
+      push: type == 'Classic' ? false : true,
+      pause: type == 'Classic' ? false : true,
+      background: type == 'Classic' ? 'Classic' : confirmBackground('Random'),
+      ball: type == 'Classic' ? 'Classic' : confirmBall('Random'),
+    };
+    const gameId = await this.gameService.createGame(game);
+    return gameId;
   }
 }

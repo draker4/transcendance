@@ -7,9 +7,7 @@ import LoadingComponent from "@/components/loading/Loading";
 import { toast } from "react-toastify";
 import disconnect from "@/lib/disconnect/disconnect";
 
-export default function Searching({ profile }: {
-  profile: Profile;
-}) {
+export default function Searching({ profile }: { profile: Profile }) {
   const matchmakingService = new MatchmakingService();
   const [type, setType] = useState<"Classic" | "Best3" | "Best5">("Classic");
   const [searching, setSearching] = useState(false);
@@ -25,15 +23,12 @@ export default function Searching({ profile }: {
       if (res.success) {
         setSearching(true);
         checkSearch();
-      }
-      else
-        throw new Error('search failed');
-    }
-    catch (error: any) {
-      if (error.message === 'disconnect') {
+      } else throw new Error("search failed");
+    } catch (error: any) {
+      if (error.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
       toast.info("Something went wrong, please try again!");
     }
@@ -54,12 +49,11 @@ export default function Searching({ profile }: {
         }, 1000);
         setSearchTimeoutId(timeoutId);
       }
-    }
-    catch (error: any) {
-      if (error.message === 'disconnect') {
+    } catch (error: any) {
+      if (error.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
       toast.info("No game found, please try again!");
     }
@@ -71,16 +65,18 @@ export default function Searching({ profile }: {
       clearTimeout(searchTimeoutId);
     }
     try {
-      if (profile.id !== -1)
-        await matchmakingService.stopSearch(profile.id);
-    }
-    catch (error: any) {
-      if (error.message === 'disconnect') {
+      if (profile.id !== -1) await matchmakingService.stopSearch(profile.id);
+    } catch (error: any) {
+      if (error.message === "disconnect") {
         await disconnect();
         router.refresh();
-        return ;
+        return;
       }
-			if (process.env && process.env.ENVIRONNEMENT && process.env.ENVIRONNEMENT === "dev")
+      if (
+        process.env &&
+        process.env.ENVIRONNEMENT &&
+        process.env.ENVIRONNEMENT === "dev"
+      )
         console.log(error.message);
     }
   };
